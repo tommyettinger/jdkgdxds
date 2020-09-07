@@ -61,9 +61,7 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T> 
 	 * minus 1. If {@link #place(Object)} is overriden, this can be used instead of {@link #shift} to isolate usable bits of a
 	 * hash. */
 	protected int mask;
-
-	private ObjectSetIterator iterator1, iterator2;
-
+	
 	/** Creates a new set with an initial capacity of 51 and a load factor of 0.8. */
 	public ObjectSet () {
 		this(51, 0.8f);
@@ -139,25 +137,6 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T> 
 		return true;
 	}
 
-	/**
-	 * Returns <tt>true</tt> if this set contains all of the elements of the
-	 * specified collection.  If the specified collection is also a set, this
-	 * method returns <tt>true</tt> if it is a <i>subset</i> of this set.
-	 *
-	 * @param c collection to be checked for containment in this set
-	 * @return <tt>true</tt> if this set contains all of the elements of the
-	 * specified collection
-	 * @throws ClassCastException   if the types of one or more elements
-	 *                              in the specified collection are incompatible with this
-	 *                              set
-	 *                              (<a href="Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException if the specified collection contains one
-	 *                              or more null elements and this set does not permit null
-	 *                              elements
-	 *                              (<a href="Collection.html#optional-restrictions">optional</a>),
-	 *                              or if the specified collection is null
-	 * @see #contains(Object)
-	 */
 	@Override
 	public boolean containsAll(@NotNull Collection<?> c) {
 		for(Object o : c)
@@ -177,27 +156,6 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T> 
 
 	}
 
-	/**
-	 * Retains only the elements in this set that are contained in the
-	 * specified collection (optional operation).  In other words, removes
-	 * from this set all of its elements that are not contained in the
-	 * specified collection.  If the specified collection is also a set, this
-	 * operation effectively modifies this set so that its value is the
-	 * <i>intersection</i> of the two sets.
-	 *
-	 * @param c collection containing elements to be retained in this set
-	 * @return <tt>true</tt> if this set changed as a result of the call
-	 * @throws UnsupportedOperationException if the <tt>retainAll</tt> operation
-	 *                                       is not supported by this set
-	 * @throws ClassCastException            if the class of an element of this set
-	 *                                       is incompatible with the specified collection
-	 *                                       (<a href="Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException          if this set contains a null element and the
-	 *                                       specified collection does not permit null elements
-	 *                                       (<a href="Collection.html#optional-restrictions">optional</a>),
-	 *                                       or if the specified collection is null
-	 * @see #remove(Object)
-	 */
 	@Override
 	public boolean retainAll(@NotNull Collection<?> c) {
 		boolean modified = false;
@@ -209,27 +167,6 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T> 
 		return modified;
 	}
 
-	/**
-	 * Removes from this set all of its elements that are contained in the
-	 * specified collection (optional operation).  If the specified
-	 * collection is also a set, this operation effectively modifies this
-	 * set so that its value is the <i>asymmetric set difference</i> of
-	 * the two sets.
-	 *
-	 * @param c collection containing elements to be removed from this set
-	 * @return <tt>true</tt> if this set changed as a result of the call
-	 * @throws UnsupportedOperationException if the <tt>removeAll</tt> operation
-	 *                                       is not supported by this set
-	 * @throws ClassCastException            if the class of an element of this set
-	 *                                       is incompatible with the specified collection
-	 *                                       (<a href="Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException          if this set contains a null element and the
-	 *                                       specified collection does not permit null elements
-	 *                                       (<a href="Collection.html#optional-restrictions">optional</a>),
-	 *                                       or if the specified collection is null
-	 * @see #remove(Object)
-	 * @see #contains(Object)
-	 */
 	@Override
 	public boolean removeAll(@NotNull Collection<?> c) {
 		boolean modified = false;
@@ -429,8 +366,8 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T> 
 	/** Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
 	 * Permits nested or multithreaded iteration, but allocates a new {@link ObjectSetIterator} per-call. */
-	public ObjectSetIterator<T> iterator () {
-		return new ObjectSetIterator(this);
+	public @NotNull ObjectSetIterator<T> iterator () {
+		return new ObjectSetIterator<>(this);
 	}
 	
 	@SafeVarargs
