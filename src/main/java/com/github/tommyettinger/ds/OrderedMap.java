@@ -184,7 +184,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> {
 	 * <p>
 	 * Permits nested or multithreaded iteration, but allocates a new {@link Entries} instance per-call.
 	 *
-	 * @return a {@link Set} of {@link Map.Entry>} key-value pairs
+	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
 	public @NotNull Set<Map.Entry<K, V>> entrySet() {

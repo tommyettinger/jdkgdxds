@@ -107,7 +107,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>> {
 		}
 	}
 
-	/** Returns an index >= 0 and <= {@link #mask} for the specified {@code item}.
+	/** Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * The default implementation uses Fibonacci hashing on the item's {@link Object#hashCode()}: the hashcode is multiplied by a
 	 * long constant (2 to the 64th, divided by the golden ratio) then the uppermost bits are shifted into the lowest positions to
@@ -511,7 +511,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>> {
 	/** Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
 	 * <p>
 	 * Permits nested or multithreaded iteration, but allocates a new {@link Entries} instance per-call.
-	 * @return a {@link Set} of {@link Map.Entry>} key-value pairs
+	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
 	public @NotNull Set<Map.Entry<K, V>> entrySet() {
