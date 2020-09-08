@@ -23,9 +23,7 @@ import org.junit.Test;
 
 import java.util.*;
 
-//import org.apache.harmony.testframework.serialization.SerializationTest;
-
-public class HashMapTest extends junit.framework.TestCase {
+public class ObjectMapTest extends junit.framework.TestCase {
 
 	ObjectMap hm;
 
@@ -43,11 +41,40 @@ public class HashMapTest extends junit.framework.TestCase {
 			objArray2[i] = objArray[i].toString();
 		}
 	}
+	public void runBattery(Map<String, String> map) {
+		try {
+			map.put("one", "1");
+			assertEquals("size should be one", 1, map.size());
+			map.clear();
+			assertEquals("size should be zero", 0, map.size());
+			assertTrue("Should not have entries", !map.entrySet().iterator()
+					.hasNext());
+			assertTrue("Should not have keys", !map.keySet().iterator()
+					.hasNext());
+			assertTrue("Should not have values", !map.values().iterator()
+					.hasNext());
+		} catch (UnsupportedOperationException e) {
+		}
+
+		try {
+			map.put("one", "1");
+			assertEquals("size should be one", 1, map.size());
+			map.remove("one");
+			assertEquals("size should be zero", 0, map.size());
+			assertTrue("Should not have entries", !map.entrySet().iterator()
+					.hasNext());
+			assertTrue("Should not have keys", !map.keySet().iterator()
+					.hasNext());
+			assertTrue("Should not have values", !map.values().iterator()
+					.hasNext());
+		} catch (UnsupportedOperationException e) {
+		}
+	}
 
 	@Test
 	public void test_Constructor () {
 		// Test for method com.github.tommyettinger.merry.ObjectMap()
-		new Support_MapTest2(new ObjectMap<String, String>()).runTest();
+		runBattery(new ObjectMap<String, String>());
 
 		ObjectMap hm2 = new ObjectMap<>();
 		Assert.assertEquals("Created incorrect ObjectMap", 0, hm2.size);
