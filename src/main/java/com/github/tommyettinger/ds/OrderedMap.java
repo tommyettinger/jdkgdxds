@@ -61,6 +61,13 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> {
 		super(map);
 		keys = new ArrayList<>(map.keys);
 	}
+	/** Creates a new map identical to the specified map. */
+	public OrderedMap (Map<? extends K, ? extends V> map) {
+		this(map.size());
+		for(K k : map.keySet()){
+			put(k, map.get(k));
+		}
+	}
 
 	public V put (K key, V value) {
 		int i = locateKey(key);

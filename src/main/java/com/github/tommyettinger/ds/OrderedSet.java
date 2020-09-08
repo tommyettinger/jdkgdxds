@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 
 /** A {@link ObjectSet} that also stores keys in an {@link ArrayList} using the insertion order. Null keys are not allowed. No
@@ -60,7 +61,13 @@ public class OrderedSet<T> extends ObjectSet<T> {
 		super(set);
 		items = new ArrayList(set.items);
 	}
-
+	
+	/** Creates a new set that contains all distinct elements in {@code coll}. */
+	public OrderedSet (Collection<? extends T> coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+	
 	public boolean add (T key) {
 		if (!super.add(key)) return false;
 		items.add(key);

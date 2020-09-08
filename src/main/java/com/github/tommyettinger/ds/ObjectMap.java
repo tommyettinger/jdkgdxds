@@ -99,6 +99,14 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>> {
 		size = map.size;
 	}
 
+	/** Creates a new map identical to the specified map. */
+	public ObjectMap (Map<? extends K, ? extends V> map) {
+		this(map.size());
+		for(K k : map.keySet()){
+			put(k, map.get(k));
+		}
+	}
+
 	/** Returns an index >= 0 and <= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * The default implementation uses Fibonacci hashing on the item's {@link Object#hashCode()}: the hashcode is multiplied by a

@@ -95,7 +95,13 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T> 
 		System.arraycopy(set.keyTable, 0, keyTable, 0, set.keyTable.length);
 		size = set.size;
 	}
-
+	
+	/** Creates a new set that contains all distinct elements in {@code coll}. */
+	public ObjectSet (Collection<? extends T> coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+	
 	/** Returns an index >= 0 and <= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * The default implementation uses Fibonacci hashing on the item's {@link Object#hashCode()}: the hashcode is multiplied by a
