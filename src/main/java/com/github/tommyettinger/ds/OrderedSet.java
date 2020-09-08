@@ -178,7 +178,7 @@ public class OrderedSet<T> extends ObjectSet<T> {
 
 		public K next () {
 			if (!hasNext) throw new NoSuchElementException();
-			if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+			if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 			K key = items.get(nextIndex);
 			nextIndex++;
 			hasNext = nextIndex < set.size;

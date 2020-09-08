@@ -222,13 +222,13 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> {
 				}
 
 				public boolean hasNext () {
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
 				public Entry<K, V> next () {
 					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					currentIndex = nextIndex;
 					entry.key = keys.get(nextIndex);
 					entry.value = map.get(entry.key);
@@ -259,7 +259,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> {
 				}
 
 				public boolean hasNext () {
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
@@ -271,7 +271,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> {
 
 				public K next () {
 					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					K key = keys.get(nextIndex);
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -316,7 +316,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> {
 
 				@Override
 				public boolean hasNext() {
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
@@ -328,7 +328,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> {
 
 				public V next () {
 					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					V value = map.get(keys.get(nextIndex));
 					currentIndex = nextIndex;
 					nextIndex++;

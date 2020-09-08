@@ -19,18 +19,18 @@ package com.github.tommyettinger.ds;
 /** Typed runtime exception used throughout jdkgdxds.
  * 
  * @author mzechner */
-public class GdxRuntimeException extends RuntimeException {
+public class JdkgdxdsRuntimeException extends RuntimeException {
 	private static final long serialVersionUID = 0x1F10F0L;
 
-	public GdxRuntimeException (String message) {
+	public JdkgdxdsRuntimeException(String message) {
 		super(message);
 	}
 
-	public GdxRuntimeException (Throwable t) {
+	public JdkgdxdsRuntimeException(Throwable t) {
 		super(t);
 	}
 
-	public GdxRuntimeException (String message, Throwable t) {
+	public JdkgdxdsRuntimeException(String message, Throwable t) {
 		super(message, t);
 	}
 }

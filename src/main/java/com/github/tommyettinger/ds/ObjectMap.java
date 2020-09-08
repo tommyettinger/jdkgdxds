@@ -661,7 +661,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>> {
 				/** Note the same entry instance is returned each time this method is called. */
 				public Map.Entry<K, V> next () {
 					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					K[] keyTable = map.keyTable;
 					entry.key = keyTable[nextIndex];
 					entry.value = map.valueTable[nextIndex];
@@ -671,7 +671,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>> {
 				}
 
 				public boolean hasNext () {
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
@@ -721,14 +721,14 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>> {
 
 				@Override
 				public boolean hasNext() { 
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
 				@Override
 				public V next() {
 					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					V value = map.valueTable[nextIndex];
 					currentIndex = nextIndex;
 					findNextIndex();
@@ -752,13 +752,13 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>> {
 				}
 
 				public boolean hasNext () {
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
 				public K next () {
 					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new GdxRuntimeException("#iterator() cannot be used nested.");
+					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					K key = map.keyTable[nextIndex];
 					currentIndex = nextIndex;
 					findNextIndex();
