@@ -65,7 +65,10 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * minus 1. If {@link #place(Object)} is overriden, this can be used instead of {@link #shift} to isolate usable bits of a
 	 * hash. */
 	protected int mask;
-	
+	protected Entries<K, V> entries1, entries2;
+	protected Values<V> values1, values2;
+	protected Keys<K> keys1, keys2;
+
 	/** Creates a new map with an initial capacity of 51 and a load factor of 0.8. */
 	public ObjectMap () {
 		this(51, 0.8f);
@@ -289,27 +292,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		Arrays.fill(keyTable, null);
 		Arrays.fill(valueTable, null);
 	}
-
-	/**
-	 * Returns a {@link Set} view of the keys contained in this map.
-	 * The set is backed by the map, so changes to the map are
-	 * reflected in the set, and vice-versa.  If the map is modified
-	 * while an iteration over the set is in progress (except through
-	 * the iterator's own <tt>remove</tt> operation), the results of
-	 * the iteration are undefined.  The set supports element removal,
-	 * which removes the corresponding mapping from the map, via the
-	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
-	 * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
-	 * operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
-	 * operations.
-	 *
-	 * @return a set view of the keys contained in this map
-	 */
-	@Override
-	public @NotNull Set<K> keySet() {
-		return new ObjectMap.Keys(this);
-	}
-
+	
 	/** Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
 	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
@@ -501,6 +484,38 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	public @NotNull Iterator<Map.Entry<K, V>> iterator () {
 		return entrySet().iterator();
 	}
+	/**
+	 * Returns a {@link Set} view of the keys contained in this map.
+	 * The set is backed by the map, so changes to the map are
+	 * reflected in the set, and vice-versa.  If the map is modified
+	 * while an iteration over the set is in progress (except through
+	 * the iterator's own <tt>remove</tt> operation), the results of
+	 * the iteration are undefined.  The set supports element removal,
+	 * which removes the corresponding mapping from the map, via the
+	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
+	 * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
+	 * operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
+	 * operations.
+	 *
+	 * @return a set view of the keys contained in this map
+	 */
+	@Override
+	public @NotNull Set<K> keySet() {
+		if (keys1 == null) {
+			keys1 = new Keys<>(this);
+			keys2 = new Keys<>(this);
+		}
+		if (!keys1.iter.valid) {
+			keys1.iter.reset();
+			keys1.iter.valid = true;
+			keys2.iter.valid = false;
+			return keys1;
+		}
+		keys2.iter.reset();
+		keys2.iter.valid = true;
+		keys1.iter.valid = false;
+		return keys2;
+	}
 
 	/** Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
 	 * <p>
@@ -508,7 +523,21 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @return a {@link Collection} of V values
 	 */
 	public @NotNull Collection<V> values () {
-		return new ObjectMap.Values<>(this);
+		if (values1 == null) {
+			values1 = new Values<>(this);
+			values2 = new Values<>(this);
+		}
+		if (!values1.iter.valid) {
+			values1.iter.reset();
+			values1.iter.valid = true;
+			values2.iter.valid = false;
+			return values1;
+		}
+		values2.iter.reset();
+		values2.iter.valid = true;
+		values1.iter.valid = false;
+		return values2;
+
 	}
 
 	/** Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
@@ -518,7 +547,21 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 */
 	@Override
 	public @NotNull Set<Map.Entry<K, V>> entrySet() {
-		return new ObjectMap.Entries<>(this);
+		if (entries1 == null) {
+			entries1 = new Entries<>(this);
+			entries2 = new Entries<>(this);
+		}
+		if (!entries1.iter.valid) {
+			entries1.iter.reset();
+			entries1.iter.valid = true;
+			entries2.iter.valid = false;
+			return entries1;
+		}
+		entries2.iter.reset();
+		entries2.iter.valid = true;
+		entries1.iter.valid = false;
+		return entries2;
+
 	}
 
 	static public class Entry<K, V> implements Map.Entry<K, V> {
@@ -688,8 +731,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 
 			};
 		}
-
-
+		
 		/**
 		 * Returns an iterator over the elements contained in this collection.
 		 *

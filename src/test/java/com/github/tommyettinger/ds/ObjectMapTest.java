@@ -177,7 +177,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 		// Test for method boolean
 		// com.github.tommyettinger.merry.ObjectMap.containsValue(java.lang.Object)
 		Assert.assertTrue("Returned false for valid value", hm.containsValue(new Integer(875), false));
-		Assert.assertTrue("Returned true for invalid valie", !hm.containsValue(new Integer(-9), false));
+		Assert.assertTrue("Returned true for invalid value", !hm.containsValue(new Integer(-9), false));
 	}
 
 	@Test public void test_entrySet () {
@@ -190,7 +190,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 			Assert.assertTrue("Returned incorrect entry set", hm.containsKey(m.key) && hm.containsValue(m.value, false));
 		}
 
-		Iterator<Map.Entry> iter = hm.entrySet().iterator();
+		Iterator<Map.Entry> iter = new ObjectMap.Entries<>(hm).iterator();
 		s.remove(iter.next());
 		Assert.assertEquals(1001, s.size());
 	}
