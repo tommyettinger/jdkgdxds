@@ -166,7 +166,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NotNull Set<K> keySet() {
+	public @NotNull OrderedMapKeys<K> keySet() {
 		return new OrderedMapKeys<>(this);
 	}
 
@@ -178,7 +178,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NotNull Collection<V> values() {
+	public @NotNull OrderedMapValues<V> values() {
 		return new OrderedMapValues<>(this);
 	}
 
@@ -190,7 +190,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NotNull Set<Map.Entry<K, V>> entrySet() {
+	public @NotNull OrderedMapEntries<K, V> entrySet() {
 		return new OrderedMapEntries<>(this);
 	}
 

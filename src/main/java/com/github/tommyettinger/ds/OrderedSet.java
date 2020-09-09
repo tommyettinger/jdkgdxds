@@ -16,9 +16,12 @@
 
 package com.github.tommyettinger.ds;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /** A {@link ObjectSet} that also stores keys in an {@link ArrayList} using the insertion order. Null keys are not allowed. No
@@ -150,8 +153,22 @@ public class OrderedSet<T> extends ObjectSet<T> implements Serializable {
 		return items;
 	}
 
-	public OrderedSetIterator<T> iterator () {
-		return new OrderedSetIterator(this);
+	public @NotNull Iterator<T> iterator () {
+		if (Collections.allocateIterators) return new OrderedSetIterator<>(this);
+		if (iterator1 == null) {
+			iterator1 = new OrderedSetIterator<>(this);
+			iterator2 = new OrderedSetIterator<>(this);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset();
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset();
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
 	}
 
 	public String toString (String separator) {
@@ -201,6 +218,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Serializable {
 		}
 	}
 
+	@SafeVarargs
 	static public <T> OrderedSet<T> with (T... array) {
 		OrderedSet<T> set = new OrderedSet<T>();
 		set.addAll(array);

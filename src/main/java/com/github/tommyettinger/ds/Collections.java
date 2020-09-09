@@ -19,6 +19,8 @@ package com.github.tommyettinger.ds;
  * Utility code shared by various data structures in this package.
  */
 public class Collections {
+	public static boolean allocateIterators = false;
+
 	public static int tableSize (int capacity, float loadFactor) {
 		if (capacity < 0) throw new IllegalArgumentException("capacity must be >= 0: " + capacity);
 		int tableSize = 1 << -Integer.numberOfLeadingZeros(Math.max(2, (int)Math.ceil(capacity / loadFactor)) - 1);

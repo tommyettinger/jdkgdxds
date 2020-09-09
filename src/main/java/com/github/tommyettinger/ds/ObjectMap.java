@@ -500,7 +500,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NotNull Set<K> keySet() {
+	public @NotNull Keys<K> keySet() {
 		if (keys1 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
@@ -517,12 +517,11 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		return keys2;
 	}
 
-	/** Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
-	 * <p>
-	 * Permits nested or multithreaded iteration, but allocates a new {@link Values} instance per-call.
+	/** Returns an iterator for the values in the map. Remove is supported. Note that the same iterator instance is returned each
+	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
 	 * @return a {@link Collection} of V values
 	 */
-	public @NotNull Collection<V> values () {
+	public @NotNull Values<V> values () {
 		if (values1 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
@@ -541,12 +540,12 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	}
 
 	/** Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
-	 * <p>
-	 * Permits nested or multithreaded iteration, but allocates a new {@link Entries} instance per-call.
+	 * Note that the same iterator instance is returned each time this method is called. 
+	 * Use the {@link Entries} constructor for nested or multithreaded iteration.
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NotNull Set<Map.Entry<K, V>> entrySet() {
+	public @NotNull Entries<K, V> entrySet() {
 		if (entries1 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);

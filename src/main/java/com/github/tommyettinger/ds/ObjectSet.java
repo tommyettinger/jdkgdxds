@@ -45,10 +45,10 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 
 	public int size;
 
-	T[] keyTable;
+	protected T[] keyTable;
 
-	float loadFactor;
-	int threshold;
+	protected float loadFactor;
+	protected int threshold;
 
 	/** Used by {@link #place(Object)} to bit shift the upper bits of a {@code long} into a usable range (&gt;= 0 and &lt;=
 	 * {@link #mask}). The shift can be negative, which is convenient to match the number of bits in mask: if mask is a 7-bit
@@ -64,7 +64,7 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 	 * minus 1. If {@link #place(Object)} is overriden, this can be used instead of {@link #shift} to isolate usable bits of a
 	 * hash. */
 	protected int mask;
-	
+	protected ObjectSetIterator<T> iterator1, iterator2;
 	/** Creates a new set with an initial capacity of 51 and a load factor of 0.8. */
 	public ObjectSet () {
 		this(51, 0.8f);
@@ -375,8 +375,22 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 	/** Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
 	 * Permits nested or multithreaded iteration, but allocates a new {@link ObjectSetIterator} per-call. */
-	public @NotNull ObjectSetIterator<T> iterator () {
-		return new ObjectSetIterator<>(this);
+	public @NotNull Iterator<T> iterator () {
+		if (Collections.allocateIterators) return new ObjectSetIterator<>(this);
+		if (iterator1 == null) {
+			iterator1 = new ObjectSetIterator<>(this);
+			iterator2 = new ObjectSetIterator<>(this);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset();
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset();
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
 	}
 	
 	@SafeVarargs
