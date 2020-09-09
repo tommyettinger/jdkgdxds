@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static com.github.tommyettinger.ds.Collections.tableSize;
@@ -39,7 +40,9 @@ import static com.github.tommyettinger.ds.Collections.tableSize;
  * Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.
  * @author Nathan Sweet
  * @author Tommy Ettinger */
-public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T> {
+public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>, Serializable {
+	private static final long serialVersionUID = 0L;
+
 	public int size;
 
 	T[] keyTable;

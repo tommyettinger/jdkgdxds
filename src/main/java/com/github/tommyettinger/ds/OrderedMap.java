@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.*;
 
 /** An {@link ObjectMap} that also stores keys in an {@link java.util.ArrayList} using the insertion order. Null keys are not allowed. No
@@ -40,7 +41,9 @@ import java.util.*;
  * Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.
  * @author Nathan Sweet
  * @author Tommy Ettinger */
-public class OrderedMap<K, V> extends ObjectMap<K, V> {
+public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
+	private static final long serialVersionUID = 0L;
+
 	final ArrayList<K> keys;
 
 	public OrderedMap () {

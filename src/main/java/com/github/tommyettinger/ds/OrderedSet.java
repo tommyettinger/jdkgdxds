@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -40,7 +41,8 @@ import java.util.NoSuchElementException;
  * Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.
  * @author Nathan Sweet
  * @author Tommy Ettinger */
-public class OrderedSet<T> extends ObjectSet<T> {
+public class OrderedSet<T> extends ObjectSet<T> implements Serializable {
+	private static final long serialVersionUID = 0L;
 	final ArrayList<T> items;
 
 	public OrderedSet () {
