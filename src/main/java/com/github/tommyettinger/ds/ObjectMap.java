@@ -501,6 +501,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 */
 	@Override
 	public @NotNull Keys<K> keySet() {
+		if(Collections.allocateIterators) return new Keys<>(this);
 		if (keys1 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
@@ -522,6 +523,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @return a {@link Collection} of V values
 	 */
 	public @NotNull Values<V> values () {
+		if(Collections.allocateIterators) return new Values<>(this);
 		if (values1 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
@@ -536,7 +538,6 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		values2.iter.valid = true;
 		values1.iter.valid = false;
 		return values2;
-
 	}
 
 	/** Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
@@ -546,6 +547,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 */
 	@Override
 	public @NotNull Entries<K, V> entrySet() {
+		if(Collections.allocateIterators) return new Entries<>(this);
 		if (entries1 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);
@@ -560,7 +562,6 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		entries2.iter.valid = true;
 		entries1.iter.valid = false;
 		return entries2;
-
 	}
 
 	static public class Entry<K, V> implements Map.Entry<K, V> {

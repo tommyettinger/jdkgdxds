@@ -166,8 +166,22 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NotNull OrderedMapKeys<K> keySet() {
-		return new OrderedMapKeys<>(this);
+	public @NotNull Keys<K> keySet() {
+		if (Collections.allocateIterators) return new OrderedMapKeys<>(this);
+		if (keys1 == null) {
+			keys1 = new OrderedMapKeys<>(this);
+			keys2 = new OrderedMapKeys<>(this);
+		}
+		if (!keys1.iter.valid) {
+			keys1.iter.reset();
+			keys1.iter.valid = true;
+			keys2.iter.valid = false;
+			return keys1;
+		}
+		keys2.iter.reset();
+		keys2.iter.valid = true;
+		keys1.iter.valid = false;
+		return keys2;
 	}
 
 	/**
@@ -178,8 +192,22 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NotNull OrderedMapValues<V> values() {
-		return new OrderedMapValues<>(this);
+	public @NotNull Values<V> values() {
+		if(Collections.allocateIterators) return new OrderedMapValues<>(this);
+		if (values1 == null) {
+			values1 = new OrderedMapValues<>(this);
+			values2 = new OrderedMapValues<>(this);
+		}
+		if (!values1.iter.valid) {
+			values1.iter.reset();
+			values1.iter.valid = true;
+			values2.iter.valid = false;
+			return values1;
+		}
+		values2.iter.reset();
+		values2.iter.valid = true;
+		values1.iter.valid = false;
+		return values2;
 	}
 
 	/**
@@ -190,8 +218,22 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NotNull OrderedMapEntries<K, V> entrySet() {
-		return new OrderedMapEntries<>(this);
+	public @NotNull Entries<K, V> entrySet() {
+		if(Collections.allocateIterators) return new OrderedMapEntries<>(this);
+		if (entries1 == null) {
+			entries1 = new OrderedMapEntries<>(this);
+			entries2 = new OrderedMapEntries<>(this);
+		}
+		if (!entries1.iter.valid) {
+			entries1.iter.reset();
+			entries1.iter.valid = true;
+			entries2.iter.valid = false;
+			return entries1;
+		}
+		entries2.iter.reset();
+		entries2.iter.valid = true;
+		entries1.iter.valid = false;
+		return entries2;
 	}
 
 	public @NotNull Iterator<Map.Entry<K, V>> iterator () {
@@ -255,6 +297,11 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 				}
 			};
 		}
+
+		@Override
+		public @NotNull Iterator<Map.Entry<K, V>> iterator() {
+			return iter;
+		}
 	}
 
 	static public class OrderedMapKeys<K> extends Keys<K> {
@@ -298,6 +345,11 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 
 			};
 
+		}
+
+		@Override
+		public @NotNull Iterator<K> iterator() {
+			return iter;
 		}
 
 		@NotNull
@@ -353,6 +405,11 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 					currentIndex = -1;
 				}
 			};
+		}
+		
+		@Override
+		public @NotNull Iterator<V> iterator() {
+			return iter;
 		}
 	}
 }
