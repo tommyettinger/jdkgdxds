@@ -85,16 +85,23 @@ public class ObjectSetX<T> extends AbstractSet<T> implements Iterable<T>, Set<T>
 	}
 
 	/** Creates a new set identical to the specified set. */
-	public ObjectSetX(@NotNull ObjectSetX<? extends T> set) {
+	public ObjectSetX(ObjectSetX<? extends T> set) {
 		this((int)(set.keyTable.length * set.loadFactor), set.loadFactor);
 		System.arraycopy(set.keyTable, 0, keyTable, 0, set.keyTable.length);
 		size = set.size;
 	}
 	
 	/** Creates a new set that contains all distinct elements in {@code coll}. */
-	public ObjectSetX(@NotNull Collection<? extends T> coll) {
+	public ObjectSetX(Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);
+	}
+	
+	/** Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
+	 * @param item a non-null Object; its hashCode() method should be used by most implementations. */
+	protected int place (@NotNull Object item) {
+		final int h = item.hashCode();
+		return ((h ^ (h << 11 | h >>> 21) ^ (h << 23 | h >>> 9)) & mask);
 	}
 
 	/** Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
@@ -102,7 +109,7 @@ public class ObjectSetX<T> extends AbstractSet<T> implements Iterable<T>, Set<T>
 	 * @param key a non-null Object that should probably be a T */
 	protected int locateKey (@NotNull Object key) {
 		T[] keyTable = this.keyTable;
-		for (int i = ((key.hashCode() * 0x9E3B ^ 0x91E10DA5) * 0x9E3B >>> shift);; i = i + 1 & mask) {
+		for (int i = place(key);; i = i + 1 & mask) {
 			T other = keyTable[i];
 			if (other == null) return ~i; // Empty space is available.
 			if (other.equals(key)) return i; // Same key was found.
@@ -183,7 +190,7 @@ public class ObjectSetX<T> extends AbstractSet<T> implements Iterable<T>, Set<T>
 	/** Skips checks for existing keys, doesn't increment size. */
 	private void addResize (@NotNull T key) {
 		T[] keyTable = this.keyTable;
-		for (int i = ((key.hashCode() * 0x9E3B ^ 0x91E10DA5) * 0x9E3B >>> shift);; i = (i + 1) & mask) {
+		for (int i = place(key);; i = (i + 1) & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
 				return;
@@ -198,7 +205,7 @@ public class ObjectSetX<T> extends AbstractSet<T> implements Iterable<T>, Set<T>
 		T[] keyTable = this.keyTable;
 		int mask = this.mask, next = i + 1 & mask;
 		while ((key = keyTable[next]) != null) {
-			int placement = ((key.hashCode() * 0x9E3B ^ 0x91E10DA5) * 0x9E3B >>> shift);
+			int placement = place(key);
 			if ((next - placement & mask) > (i - placement & mask)) {
 				keyTable[i] = (T)key;
 				i = next;
@@ -410,7 +417,7 @@ public class ObjectSetX<T> extends AbstractSet<T> implements Iterable<T>, Set<T>
 			int mask = set.mask, next = i + 1 & mask;
 			K key;
 			while ((key = keyTable[next]) != null) {
-				int placement = ((key.hashCode() * 0x9E3B ^ 0x91E10DA5) * 0x9E3B >>> set.shift);
+				int placement = set.place(key);
 				if ((next - placement & mask) > (i - placement & mask)) {
 					keyTable[i] = key;
 					i = next;

@@ -105,13 +105,20 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 		}
 	}
 
+	/** Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
+	 * @param item a non-null Object; its hashCode() method should be used by most implementations. */
+	protected int place (@NotNull Object item) {
+		final int h = item.hashCode();
+		return ((h ^ (h << 11 | h >>> 21) ^ (h << 23 | h >>> 9)) & mask);
+	}
+
 	/** Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
 	 * to compare for equality differently than {@link Object#equals(Object)}. 
 	 * @param key a non-null Object that should probably be a K */
 	protected int locateKey (Object key) {
 		if (key == null) throw new IllegalArgumentException("key cannot be null.");
 		K[] keyTable = this.keyTable;
-		for (int i = ((key.hashCode() * 0x9E3B ^ 0x91E10DA5) * 0x9E3B >>> shift);; i = i + 1 & mask) {
+		for (int i = place(key);; i = i + 1 & mask) {
 			K other = keyTable[i];
 			if (other == null) return ~i; // Empty space is available.
 			if (other.equals(key)) return i; // Same key was found.
@@ -148,7 +155,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	/** Skips checks for existing keys, doesn't increment size. */
 	private void putResize (K key, @Nullable V value) {
 		K[] keyTable = this.keyTable;
-		for (int i = ((key.hashCode() * 0x9E3B ^ 0x91E10DA5) * 0x9E3B >>> shift);; i = (i + 1) & mask) {
+		for (int i = place(key);; i = (i + 1) & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
 				valueTable[i] = value;
@@ -178,7 +185,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 		V oldValue = valueTable[i];
 		int mask = this.mask, next = i + 1 & mask;
 		while ((key = keyTable[next]) != null) {
-			int placement = ((key.hashCode() * 0x9E3B ^ 0x91E10DA5) * 0x9E3B >>> shift);
+			int placement = place(key);
 			if ((next - placement & mask) > (i - placement & mask)) {
 				keyTable[i] = (K) key;
 				valueTable[i] = valueTable[next];
@@ -656,7 +663,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 			int mask = map.mask, next = i + 1 & mask;
 			K key;
 			while ((key = keyTable[next]) != null) {
-				int placement = ((key.hashCode() * 0x9E3B ^ 0x91E10DA5) * 0x9E3B >>> map.shift);
+				int placement = map.place(key);
 				if ((next - placement & mask) > (i - placement & mask)) {
 					keyTable[i] = key;
 					valueTable[i] = valueTable[next];
