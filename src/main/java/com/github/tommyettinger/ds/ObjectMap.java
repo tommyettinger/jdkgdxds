@@ -124,23 +124,23 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
 	 * Skarupke's blog post</a>).
 	 * <p>
-	 * This method can be overriden to customizing hashing. This may be useful eg in the unlikely event that most hashcodes are
-	 * Fibonacci numbers, if keys provide poor or incorrect hashcodes, or to simplify hashing if keys provide high quality
-	 * hashcodes and don't need Fibonacci hashing: {@code return item.hashCode() & mask;}
-	 * @param item*/
+	 * This method can be overridden to customize hashing. This may be useful, e.g. in the unlikely event that most hashcodes are
+	 * Fibonacci numbers, if keys provide poor or incorrect hashcodes, or to simplify hashing. If keys provide high quality
+	 * hashcodes and don't need Fibonacci hashing, a good implementation is: {@code return item.hashCode() & mask;}
+	 * @param item a non-null Object; its hashCode() method should be used by most implementations. */
 	protected int place (Object item) {
 		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
-	/** Returns the index of the key if already present, else -(index + 1) for the next empty index. This can be overridden in this
-	 * pacakge to compare for equality differently than {@link Object#equals(Object)}. 
-	 * @param key*/
-	int locateKey (Object key) {
+	/** Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
+	 * to compare for equality differently than {@link Object#equals(Object)}. 
+	 * @param key a non-null Object that should probably be a K */
+	protected int locateKey (Object key) {
 		if (key == null) throw new IllegalArgumentException("key cannot be null.");
 		K[] keyTable = this.keyTable;
 		for (int i = place(key);; i = i + 1 & mask) {
 			K other = keyTable[i];
-			if (other == null) return -(i + 1); // Empty space is available.
+			if (other == null) return ~i; // Empty space is available.
 			if (other.equals(key)) return i; // Same key was found.
 		}
 	}
@@ -154,7 +154,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			valueTable[i] = value;
 			return oldValue;
 		}
-		i = -(i + 1); // Empty space was found.
+		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
 		if (++size >= threshold) resize(keyTable.length << 1);

@@ -49,22 +49,22 @@ public class OrderedSet<T> extends ObjectSet<T> implements Serializable {
 	final ArrayList<T> items;
 
 	public OrderedSet () {
-		items = new ArrayList();
+		items = new ArrayList<>();
 	}
 
 	public OrderedSet (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
-		items = new ArrayList(initialCapacity);
+		items = new ArrayList<>(initialCapacity);
 	}
 
 	public OrderedSet (int initialCapacity) {
 		super(initialCapacity);
-		items = new ArrayList(initialCapacity);
+		items = new ArrayList<>(initialCapacity);
 	}
 
 	public OrderedSet (OrderedSet<? extends T> set) {
 		super(set);
-		items = new ArrayList(set.items);
+		items = new ArrayList<>(set.items);
 	}
 	
 	/** Creates a new set that contains all distinct elements in {@code coll}. */

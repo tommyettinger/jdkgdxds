@@ -79,7 +79,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 			valueTable[i] = value;
 			return oldValue;
 		}
-		i = -(i + 1); // Empty space was found.
+		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
