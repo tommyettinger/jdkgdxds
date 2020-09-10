@@ -109,14 +109,13 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations. */
 	protected int place (@NotNull Object item) {
 		final int h = item.hashCode();
-		return ((h ^ (h << 11 | h >>> 21) ^ (h << 23 | h >>> 9)) & mask);
+		return (h & mask) ^ h >>> shift;
 	}
 
 	/** Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
 	 * to compare for equality differently than {@link Object#equals(Object)}. 
 	 * @param key a non-null Object that should probably be a K */
-	protected int locateKey (Object key) {
-		if (key == null) throw new IllegalArgumentException("key cannot be null.");
+	protected int locateKey (@NotNull Object key) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key);; i = i + 1 & mask) {
 			K other = keyTable[i];
