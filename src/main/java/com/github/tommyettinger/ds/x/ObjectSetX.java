@@ -100,8 +100,8 @@ public class ObjectSetX<T> extends AbstractSet<T> implements Iterable<T>, Set<T>
 	/** Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations. */
 	protected int place (@NotNull Object item) {
-		final int h = item.hashCode();
-		return (h & mask) ^ h >>> shift;
+		final int h = item.hashCode() * 0x9E377;
+		return (h ^ h >>> shift) & mask;
 	}
 
 	/** Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
