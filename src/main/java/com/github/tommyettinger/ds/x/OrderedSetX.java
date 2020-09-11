@@ -75,9 +75,7 @@ public class OrderedSetX<T> extends ObjectSetX<T> implements Serializable {
 	}
 	
 	public boolean add (@NotNull T key) {
-		if (!super.add(key)) return false;
-		items.add(key);
-		return true;
+		return super.add(key) && items.add(key);
 	}
 
 	/** Sets the key at the specfied index. Returns true if the key was not already in the set. If this set already contains the
@@ -100,9 +98,7 @@ public class OrderedSetX<T> extends ObjectSetX<T> implements Serializable {
 	}
 
 	public boolean remove (@NotNull Object key) {
-		if (!super.remove(key)) return false;
-		items.remove(key);
-		return true;
+		return super.remove(key) && items.remove(key); 
 	}
 
 	public T removeIndex (int index) {
