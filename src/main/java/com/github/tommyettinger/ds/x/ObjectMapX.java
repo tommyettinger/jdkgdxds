@@ -90,7 +90,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	}
 
 	/** Creates a new map identical to the specified map. */
-	public ObjectMapX(ObjectMapX<? extends K, ? extends V> map) {
+	public ObjectMapX(@NotNull ObjectMapX<? extends K, ? extends V> map) {
 		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
@@ -98,7 +98,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	}
 
 	/** Creates a new map identical to the specified map. */
-	public ObjectMapX(Map<? extends K, ? extends V> map) {
+	public ObjectMapX(@NotNull Map<? extends K, ? extends V> map) {
 		this(map.size());
 		for(K k : map.keySet()){
 			put(k, map.get(k));
@@ -125,8 +125,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	}
 
 	/** Returns the old value associated with the specified key, or null. */
-	public @Nullable
-	V put (K key, @Nullable V value) {
+	public @Nullable V put (@NotNull K key, @Nullable V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -140,7 +139,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 		return null;
 	}
 
-	public void putAll (ObjectMapX<? extends K, ? extends V> map) {
+	public void putAll (@NotNull ObjectMapX<? extends K, ? extends V> map) {
 		ensureCapacity(map.size);
 		K[] keyTable = map.keyTable;
 		V[] valueTable = map.valueTable;
@@ -152,7 +151,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	}
 
 	/** Skips checks for existing keys, doesn't increment size. */
-	private void putResize (K key, @Nullable V value) {
+	private void putResize (@NotNull K key, @Nullable V value) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key);; i = (i + 1) & mask) {
 			if (keyTable[i] == null) {
@@ -176,7 +175,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 		return i < 0 ? defaultValue : valueTable[i];
 	}
 
-	public @Nullable V remove (Object key) {
+	public @Nullable V remove (@NotNull Object key) {
 		int i = locateKey(key);
 		if (i < 0) return null;
 		K[] keyTable = this.keyTable;
@@ -218,7 +217,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	 *                                       the specified map prevents it from being stored in this map
 	 */
 	@Override
-	public void putAll(Map<? extends K, ? extends V> m) {
+	public void putAll(@NotNull Map<? extends K, ? extends V> m) {
 		for(K key : m.keySet())
 			put(key, m.get(key));
 	}
@@ -292,7 +291,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 		return false;
 	}
 
-	public boolean containsKey (Object key) {
+	public boolean containsKey (@NotNull Object key) {
 		return locateKey(key) >= 0;
 	}
 
@@ -547,7 +546,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 		public K key;
 		public @Nullable V value;
 
-		public String toString () {
+		public @Nullable String toString () {
 			return key + "=" + value;
 		}
 
@@ -575,7 +574,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 		 *                               removed from the backing map.
 		 */
 		@Override
-		public V getValue() {
+		public @Nullable V getValue() {
 			return value;
 		}
 
@@ -600,14 +599,14 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 		 *                                       removed from the backing map.
 		 */
 		@Override
-		public V setValue(V value) {
+		public @Nullable V setValue(V value) {
 			V old = this.value;
 			this.value = value;
 			return old;
 		}
 
 		@Override
-		public boolean equals(Object o) {
+		public boolean equals(@Nullable Object o) {
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
 
@@ -679,7 +678,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	}
 
 	static public class Entries<K, V> extends AbstractSet<Map.Entry<K, V>> {
-		protected Entry<K, V> entry = new Entry<K, V>();
+		protected @NotNull Entry<K, V> entry = new Entry<K, V>();
 		protected MapIterator<K, V, Map.Entry<K, V>> iter;
 
 		protected Entries(){}
@@ -692,7 +691,7 @@ public class ObjectMapX<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 				}
 
 				/** Note the same entry instance is returned each time this method is called. */
-				public Map.Entry<K, V> next () {
+				public @NotNull Map.Entry<K, V> next () {
 					if (!hasNext) throw new NoSuchElementException();
 					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					K[] keyTable = map.keyTable;

@@ -61,19 +61,19 @@ public class OrderedMapX<K, V> extends ObjectMapX<K, V> implements Serializable 
 		keys = new ArrayList<>(initialCapacity);
 	}
 
-	public OrderedMapX(OrderedMapX<? extends K, ? extends V> map) {
+	public OrderedMapX(@NotNull OrderedMapX<? extends K, ? extends V> map) {
 		super(map);
 		keys = new ArrayList<>(map.keys);
 	}
 	/** Creates a new map identical to the specified map. */
-	public OrderedMapX(Map<? extends K, ? extends V> map) {
+	public OrderedMapX(@NotNull Map<? extends K, ? extends V> map) {
 		this(map.size());
 		for(K k : map.keySet()){
 			put(k, map.get(k));
 		}
 	}
 
-	public V put (K key, V value) {
+	public V put (@NotNull K key, V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -99,7 +99,7 @@ public class OrderedMapX<K, V> extends ObjectMapX<K, V> implements Serializable 
 		}
 	}
 
-	public V remove (Object key) {
+	public V remove (@NotNull Object key) {
 		if(!keys.remove(key)) return null;
 		return super.remove(key);
 	}
@@ -115,7 +115,7 @@ public class OrderedMapX<K, V> extends ObjectMapX<K, V> implements Serializable 
 	 * @param before a key that must be present for this to succeed
 	 * @param after a key that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise */
-	public boolean alter (K before, K after) {
+	public boolean alter (@NotNull K before, @NotNull K after) {
 		if (containsKey(after)) return false;
 		int index = keys.indexOf(before);
 		if (index == -1) return false;
@@ -130,7 +130,7 @@ public class OrderedMapX<K, V> extends ObjectMapX<K, V> implements Serializable 
 	 * @param index the index in the order of the key to change; must be non-negative and less than {@link #size}
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise */
-	public boolean alterIndex (int index, K after) {
+	public boolean alterIndex (int index, @NotNull K after) {
 		if (index < 0 || index >= size || containsKey(after)) return false;
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);

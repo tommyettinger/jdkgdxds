@@ -63,13 +63,13 @@ public class OrderedSetX<T> extends ObjectSetX<T> implements Serializable {
 		items = new ArrayList<>(initialCapacity);
 	}
 
-	public OrderedSetX(OrderedSetX<? extends T> set) {
+	public OrderedSetX(@NotNull OrderedSetX<? extends T> set) {
 		super(set);
 		items = new ArrayList<>(set.items);
 	}
 	
 	/** Creates a new set that contains all distinct elements in {@code coll}. */
-	public OrderedSetX(Collection<? extends T> coll) {
+	public OrderedSetX(@NotNull Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -82,7 +82,7 @@ public class OrderedSetX<T> extends ObjectSetX<T> implements Serializable {
 
 	/** Sets the key at the specfied index. Returns true if the key was not already in the set. If this set already contains the
 	 * key, the existing key's index is changed if needed and false is returned. */
-	public boolean add (T key, int index) {
+	public boolean add (@NotNull T key, int index) {
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
 			if (oldIndex != index) items.add(index, items.remove(oldIndex));
@@ -92,7 +92,7 @@ public class OrderedSetX<T> extends ObjectSetX<T> implements Serializable {
 		return true;
 	}
 
-	public void addAll (OrderedSetX<T> set) {
+	public void addAll (@NotNull OrderedSetX<T> set) {
 		ensureCapacity(set.size);
 		ArrayList<T> si = set.items;
 		for (int i = 0, n = si.size(); i < n; i++)
@@ -118,7 +118,7 @@ public class OrderedSetX<T> extends ObjectSetX<T> implements Serializable {
 	 * @param before an item that must be present for this to succeed
 	 * @param after an item that must not be in this set for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise */
-	public boolean alter (T before, T after) {
+	public boolean alter (@NotNull T before, @NotNull T after) {
 		if (contains(after)) return false;
 		if (!super.remove(before)) return false;
 		super.add(after);
@@ -132,7 +132,7 @@ public class OrderedSetX<T> extends ObjectSetX<T> implements Serializable {
 	 * @param index the index in the order of the item to change; must be non-negative and less than {@link #size}
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise */
-	public boolean alterIndex (int index, T after) {
+	public boolean alterIndex (int index, @NotNull T after) {
 		if (index < 0 || index >= size || contains(after)) return false;
 		super.remove(items.get(index));
 		super.add(after);

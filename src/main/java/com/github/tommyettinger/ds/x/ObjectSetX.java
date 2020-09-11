@@ -85,14 +85,14 @@ public class ObjectSetX<T> extends AbstractSet<T> implements Iterable<T>, Set<T>
 	}
 
 	/** Creates a new set identical to the specified set. */
-	public ObjectSetX(ObjectSetX<? extends T> set) {
+	public ObjectSetX(@NotNull ObjectSetX<? extends T> set) {
 		this((int)(set.keyTable.length * set.loadFactor), set.loadFactor);
 		System.arraycopy(set.keyTable, 0, keyTable, 0, set.keyTable.length);
 		size = set.size;
 	}
 	
 	/** Creates a new set that contains all distinct elements in {@code coll}. */
-	public ObjectSetX(Collection<? extends T> coll) {
+	public ObjectSetX(@NotNull Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -136,7 +136,7 @@ public class ObjectSetX<T> extends AbstractSet<T> implements Iterable<T>, Set<T>
 		return true;
 	}
 
-	public boolean addAll (Collection<? extends T> coll) {
+	public boolean addAll (@NotNull Collection<? extends T> coll) {
 		final int length = coll.size();
 		ensureCapacity(length);
 		int oldSize = size;
@@ -375,7 +375,7 @@ public class ObjectSetX<T> extends AbstractSet<T> implements Iterable<T>, Set<T>
 	}
 	
 	@SafeVarargs
-	static public <T> ObjectSetX<T> with (T... array) {
+	static public @NotNull <T> ObjectSetX<T> with (@NotNull T... array) {
 		ObjectSetX<T> set = new ObjectSetX<T>();
 		set.addAll(array);
 		return set;
