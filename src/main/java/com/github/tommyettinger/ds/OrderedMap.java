@@ -19,9 +19,15 @@ package com.github.tommyettinger.ds;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
-/** An {@link ObjectMap} that also stores keys in an {@link java.util.ArrayList} using the insertion order. Null keys are not allowed. No
+/**
+ * An {@link ObjectMap} that also stores keys in an {@link ArrayList} using the insertion order. Null keys are not allowed. No
  * allocation is done except when growing the table size.
  * <p>
  * Iteration over the {@link #entrySet()} ()}, {@link #keySet()} ()}, and {@link #values()} is ordered and faster than an unordered map. Keys
@@ -39,8 +45,10 @@ import java.util.*;
  * hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
  * "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
  * Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.
+ *
  * @author Nathan Sweet
- * @author Tommy Ettinger */
+ * @author Tommy Ettinger
+ */
 public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	private static final long serialVersionUID = 0L;
 
@@ -60,19 +68,22 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 		keys = new ArrayList<>(initialCapacity);
 	}
 
-	public OrderedMap (OrderedMap<? extends K, ? extends V> map) {
+	public OrderedMap (@NotNull OrderedMap<? extends K, ? extends V> map) {
 		super(map);
 		keys = new ArrayList<>(map.keys);
 	}
-	/** Creates a new map identical to the specified map. */
-	public OrderedMap (Map<? extends K, ? extends V> map) {
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 */
+	public OrderedMap (@NotNull Map<? extends K, ? extends V> map) {
 		this(map.size());
-		for(K k : map.keySet()){
+		for (K k : map.keySet()) {
 			put(k, map.get(k));
 		}
 	}
 
-	public V put (K key, V value) {
+	public V put (@NotNull K key, V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -83,7 +94,8 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
-		if (++size >= threshold) resize(keyTable.length << 1);
+		if (++size >= threshold)
+			resize(keyTable.length << 1);
 		return null;
 	}
 
@@ -98,8 +110,9 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 		}
 	}
 
-	public V remove (Object key) {
-		if(!keys.remove(key)) return null;
+	public V remove (@NotNull Object key) {
+		if (!keys.remove(key))
+			return null;
 		return super.remove(key);
 	}
 
@@ -107,30 +120,39 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 		return super.remove(keys.remove(index));
 	}
 
-	/** Changes the key {@code before} to {@code after} without changing its position in the order or its value. Returns true if
+	/**
+	 * Changes the key {@code before} to {@code after} without changing its position in the order or its value. Returns true if
 	 * {@code after} has been added to the OrderedMap and {@code before} has been removed; returns false if {@code after} is
 	 * already present or {@code before} is not present. If you are iterating over an OrderedMap and have an index, you should
 	 * prefer {@link #alterIndex(int, Object)}, which doesn't need to search for an index like this does and so can be faster.
+	 *
 	 * @param before a key that must be present for this to succeed
-	 * @param after a key that must not be in this map for this to succeed
-	 * @return true if {@code before} was removed and {@code after} was added, false otherwise */
-	public boolean alter (K before, K after) {
-		if (containsKey(after)) return false;
+	 * @param after  a key that must not be in this map for this to succeed
+	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
+	 */
+	public boolean alter (@NotNull K before, @NotNull K after) {
+		if (containsKey(after))
+			return false;
 		int index = keys.indexOf(before);
-		if (index == -1) return false;
+		if (index == -1)
+			return false;
 		super.put(after, super.remove(before));
 		keys.set(index, after);
 		return true;
 	}
 
-	/** Changes the key at the given {@code index} in the order to {@code after}, without changing the ordering of other entries or
+	/**
+	 * Changes the key at the given {@code index} in the order to {@code after}, without changing the ordering of other entries or
 	 * any values. If {@code after} is already present, this returns false; it will also return false if {@code index} is invalid
 	 * for the size of this map. Otherwise, it returns true. Unlike {@link #alter(Object, Object)}, this operates in constant time.
+	 *
 	 * @param index the index in the order of the key to change; must be non-negative and less than {@link #size}
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
-	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise */
-	public boolean alterIndex (int index, K after) {
-		if (index < 0 || index >= size || containsKey(after)) return false;
+	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
+	 */
+	public boolean alterIndex (int index, @NotNull K after) {
+		if (index < 0 || index >= size || containsKey(after))
+			return false;
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);
 		return true;
@@ -166,8 +188,9 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NotNull Keys<K> keySet() {
-		if (Collections.allocateIterators) return new OrderedMapKeys<>(this);
+	public @NotNull Keys<K> keySet () {
+		if (Collections.allocateIterators)
+			return new OrderedMapKeys<>(this);
 		if (keys1 == null) {
 			keys1 = new OrderedMapKeys<>(this);
 			keys2 = new OrderedMapKeys<>(this);
@@ -192,8 +215,9 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NotNull Values<V> values() {
-		if(Collections.allocateIterators) return new OrderedMapValues<>(this);
+	public @NotNull Values<V> values () {
+		if (Collections.allocateIterators)
+			return new OrderedMapValues<>(this);
 		if (values1 == null) {
 			values1 = new OrderedMapValues<>(this);
 			values2 = new OrderedMapValues<>(this);
@@ -218,8 +242,9 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NotNull Entries<K, V> entrySet() {
-		if(Collections.allocateIterators) return new OrderedMapEntries<>(this);
+	public @NotNull Entries<K, V> entrySet () {
+		if (Collections.allocateIterators)
+			return new OrderedMapEntries<>(this);
 		if (entries1 == null) {
 			entries1 = new OrderedMapEntries<>(this);
 			entries2 = new OrderedMapEntries<>(this);
@@ -241,32 +266,38 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	}
 
 	protected String toString (String separator, boolean braces) {
-		if (size == 0) return braces ? "{}" : "";
-		java.lang.StringBuilder buffer = new java.lang.StringBuilder(32);
-		if (braces) buffer.append('{');
+		if (size == 0)
+			return braces ? "{}" : "";
+		StringBuilder buffer = new StringBuilder(32);
+		if (braces)
+			buffer.append('{');
 		ArrayList<K> keys = this.keys;
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			K key = keys.get(i);
-			if (i > 0) buffer.append(separator);
+			if (i > 0)
+				buffer.append(separator);
 			buffer.append(key == this ? "(this)" : key);
 			buffer.append('=');
 			V value = get(key);
 			buffer.append(value == this ? "(this)" : value);
 		}
-		if (braces) buffer.append('}');
+		if (braces)
+			buffer.append('}');
 		return buffer.toString();
 	}
 
 	static public class OrderedMapEntries<K, V> extends Entries<K, V> {
 		protected ArrayList<K> keys;
+
 		public OrderedMapEntries (OrderedMap<K, V> map) {
 			keys = map.keys;
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@NotNull
 				@Override
-				public Iterator<Map.Entry<K, V>> iterator() {
+				public Iterator<Map.Entry<K, V>> iterator () {
 					return this;
 				}
+
 				public void reset () {
 					currentIndex = -1;
 					nextIndex = 0;
@@ -274,13 +305,16 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 				}
 
 				public boolean hasNext () {
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
 				public Entry<K, V> next () {
-					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+					if (!hasNext)
+						throw new NoSuchElementException();
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					currentIndex = nextIndex;
 					entry.key = keys.get(nextIndex);
 					entry.value = map.get(entry.key);
@@ -290,7 +324,8 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 				}
 
 				public void remove () {
-					if (currentIndex < 0) throw new IllegalStateException("next must be called before remove.");
+					if (currentIndex < 0)
+						throw new IllegalStateException("next must be called before remove.");
 					map.remove(entry.key);
 					nextIndex--;
 					currentIndex = -1;
@@ -299,7 +334,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 		}
 
 		@Override
-		public @NotNull Iterator<Map.Entry<K, V>> iterator() {
+		public @NotNull Iterator<Map.Entry<K, V>> iterator () {
 			return iter;
 		}
 	}
@@ -309,14 +344,15 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 
 		public OrderedMapKeys (OrderedMap<K, ?> map) {
 			keys = map.keys;
-			iter = new MapIterator<K, Object, K>((OrderedMap) map) {
+			iter = new MapIterator<K, Object, K>((OrderedMap)map) {
 				@Override
-				public @NotNull Iterator<K> iterator() {
+				public @NotNull Iterator<K> iterator () {
 					return this;
 				}
 
 				public boolean hasNext () {
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
@@ -327,8 +363,10 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 				}
 
 				public K next () {
-					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+					if (!hasNext)
+						throw new NoSuchElementException();
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					K key = keys.get(nextIndex);
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -337,7 +375,8 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 				}
 
 				public void remove () {
-					if (currentIndex < 0) throw new IllegalStateException("next must be called before remove.");
+					if (currentIndex < 0)
+						throw new IllegalStateException("next must be called before remove.");
 					((OrderedMap)map).removeIndex(currentIndex);
 					nextIndex = currentIndex;
 					currentIndex = -1;
@@ -348,19 +387,19 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 		}
 
 		@Override
-		public @NotNull Iterator<K> iterator() {
+		public @NotNull Iterator<K> iterator () {
 			return iter;
 		}
 
 		@NotNull
 		@Override
-		public Object[] toArray() {
+		public Object[] toArray () {
 			return super.toArray();
 		}
-		
+
 		@NotNull
 		@Override
-		public <T> T[] toArray(@NotNull T[] a) {
+		public <T> T[] toArray (@NotNull T[] a) {
 			return super.toArray(a);
 		}
 	}
@@ -370,15 +409,16 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 
 		public OrderedMapValues (OrderedMap<?, V> map) {
 			keys = map.keys;
-			iter = new MapIterator<Object, V, V>((ObjectMap<Object, V>) map) {
+			iter = new MapIterator<Object, V, V>((ObjectMap<Object, V>)map) {
 				@Override
-				public @NotNull Iterator<V> iterator() {
+				public @NotNull Iterator<V> iterator () {
 					return this;
 				}
 
 				@Override
-				public boolean hasNext() {
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+				public boolean hasNext () {
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
@@ -389,8 +429,10 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 				}
 
 				public V next () {
-					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+					if (!hasNext)
+						throw new NoSuchElementException();
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					V value = map.get(keys.get(nextIndex));
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -399,16 +441,17 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 				}
 
 				public void remove () {
-					if (currentIndex < 0) throw new IllegalStateException("next must be called before remove.");
+					if (currentIndex < 0)
+						throw new IllegalStateException("next must be called before remove.");
 					((OrderedMap)map).removeIndex(currentIndex);
 					nextIndex = currentIndex;
 					currentIndex = -1;
 				}
 			};
 		}
-		
+
 		@Override
-		public @NotNull Iterator<V> iterator() {
+		public @NotNull Iterator<V> iterator () {
 			return iter;
 		}
 	}

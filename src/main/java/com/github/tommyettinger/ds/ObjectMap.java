@@ -13,18 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.github.tommyettinger.ds;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.AbstractCollection;
+import java.util.AbstractSet;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static com.github.tommyettinger.ds.Collections.dummy;
 import static com.github.tommyettinger.ds.Collections.tableSize;
 
-/** An unordered map where the keys and values are objects. Null keys are not allowed. No allocation is done except when growing
+/**
+ * An unordered map where the keys and values are objects. Null keys are not allowed. No allocation is done except when growing
  * the table size.
  * <p>
  * This class performs fast contains and remove (typically O(1), worst case O(n) but that is rare in practice). Add may be
@@ -38,8 +47,10 @@ import static com.github.tommyettinger.ds.Collections.tableSize;
  * hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
  * "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
  * Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.
+ *
  * @author Nathan Sweet
- * @author Tommy Ettinger */
+ * @author Tommy Ettinger
+ */
 public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Serializable {
 	private static final long serialVersionUID = 0L;
 
@@ -51,38 +62,39 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	float loadFactor;
 	int threshold;
 
-	/** Used by {@link #place(Object)} to bit shift the upper bits of a {@code long} into a usable range (&gt;= 0 and &lt;=
-	 * {@link #mask}). The shift can be negative, which is convenient to match the number of bits in mask: if mask is a 7-bit
-	 * number, a shift of -7 shifts the upper 7 bits into the lowest 7 positions. This class sets the shift &gt; 32 and &lt; 64,
-	 * which if used with an int will still move the upper bits of an int to the lower bits due to Java's implicit modulus on
-	 * shifts.
-	 * <p>
-	 * {@link #mask} can also be used to mask the low bits of a number, which may be faster for some hashcodes, if
-	 * {@link #place(Object)} is overridden. */
 	protected int shift;
 
-	/** A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
-	 * minus 1. If {@link #place(Object)} is overriden, this can be used instead of {@link #shift} to isolate usable bits of a
-	 * hash. */
+	/**
+	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+	 * minus 1.
+	 */
 	protected int mask;
 	protected Entries<K, V> entries1, entries2;
 	protected Values<V> values1, values2;
 	protected Keys<K> keys1, keys2;
 
-	/** Creates a new map with an initial capacity of 51 and a load factor of 0.8. */
+	/**
+	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
+	 */
 	public ObjectMap () {
 		this(51, 0.8f);
 	}
 
-	/** Creates a new map with a load factor of 0.8.
-	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two. */
+	/**
+	 * Creates a new map with a load factor of 0.8.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
 	public ObjectMap (int initialCapacity) {
 		this(initialCapacity, 0.8f);
 	}
 
-	/** Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
 	 * growing the backing table.
-	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two. */
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
 	public ObjectMap (int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f)
 			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
@@ -97,57 +109,57 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		valueTable = (V[])new Object[tableSize];
 	}
 
-	/** Creates a new map identical to the specified map. */
-	public ObjectMap (ObjectMap<? extends K, ? extends V> map) {
+	/**
+	 * Creates a new map identical to the specified map.
+	 */
+	public ObjectMap (@NotNull ObjectMap<? extends K, ? extends V> map) {
 		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
 	}
 
-	/** Creates a new map identical to the specified map. */
-	public ObjectMap (Map<? extends K, ? extends V> map) {
+	/**
+	 * Creates a new map identical to the specified map.
+	 */
+	public ObjectMap (@NotNull Map<? extends K, ? extends V> map) {
 		this(map.size());
-		for(K k : map.keySet()){
+		for (K k : map.keySet()) {
 			put(k, map.get(k));
 		}
 	}
 
-	/** Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
-	 * <p>
-	 * The default implementation uses Fibonacci hashing on the item's {@link Object#hashCode()}: the hashcode is multiplied by a
-	 * long constant (2 to the 64th, divided by the golden ratio) then the uppermost bits are shifted into the lowest positions to
-	 * obtain an index in the desired range. Multiplication by a long may be slower than int (eg on GWT) but greatly improves
-	 * rehashing, allowing even very poor hashcodes, such as those that only differ in their upper bits, to be used without high
-	 * collision rates. Fibonacci hashing has increased collision rates when all or most hashcodes are multiples of larger
-	 * Fibonacci numbers (see <a href=
-	 * "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
-	 * Skarupke's blog post</a>).
-	 * <p>
-	 * This method can be overridden to customize hashing. This may be useful, e.g. in the unlikely event that most hashcodes are
-	 * Fibonacci numbers, if keys provide poor or incorrect hashcodes, or to simplify hashing. If keys provide high quality
-	 * hashcodes and don't need Fibonacci hashing, a good implementation is: {@code return item.hashCode() & mask;}
-	 * @param item a non-null Object; its hashCode() method should be used by most implementations. */
-	protected int place (Object item) {
-		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+	/**
+	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
+	 *
+	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
+	 */
+	protected int place (@NotNull Object item) {
+		final int h = item.hashCode() * 0x9E377;
+		return (h ^ h >>> shift) & mask;
 	}
 
-	/** Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
-	 * to compare for equality differently than {@link Object#equals(Object)}. 
-	 * @param key a non-null Object that should probably be a K */
-	protected int locateKey (Object key) {
-		if (key == null) throw new IllegalArgumentException("key cannot be null.");
+	/**
+	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
+	 * to compare for equality differently than {@link Object#equals(Object)}.
+	 *
+	 * @param key a non-null Object that should probably be a K
+	 */
+	protected int locateKey (@NotNull Object key) {
 		K[] keyTable = this.keyTable;
-		for (int i = place(key);; i = i + 1 & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
-			if (other == null) return ~i; // Empty space is available.
-			if (other.equals(key)) return i; // Same key was found.
+			if (other == null)
+				return ~i; // Empty space is available.
+			if (other.equals(key))
+				return i; // Same key was found.
 		}
 	}
 
-	/** Returns the old value associated with the specified key, or null. */
-	public @Nullable
-	V put (K key, @Nullable V value) {
+	/**
+	 * Returns the old value associated with the specified key, or null.
+	 */
+	public @Nullable V put (@NotNull K key, @Nullable V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -157,25 +169,29 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) resize(keyTable.length << 1);
+		if (++size >= threshold)
+			resize(keyTable.length << 1);
 		return null;
 	}
 
-	public void putAll (ObjectMap<? extends K, ? extends V> map) {
+	public void putAll (@NotNull ObjectMap<? extends K, ? extends V> map) {
 		ensureCapacity(map.size);
 		K[] keyTable = map.keyTable;
 		V[] valueTable = map.valueTable;
 		K key;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
-			if (key != null) put(key, valueTable[i]);
+			if (key != null)
+				put(key, valueTable[i]);
 		}
 	}
 
-	/** Skips checks for existing keys, doesn't increment size. */
-	private void putResize (K key, @Nullable V value) {
+	/**
+	 * Skips checks for existing keys, doesn't increment size.
+	 */
+	private void putResize (@NotNull K key, @Nullable V value) {
 		K[] keyTable = this.keyTable;
-		for (int i = place(key);; i = (i + 1) & mask) {
+		for (int i = place(key); ; i = (i + 1) & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
 				valueTable[i] = value;
@@ -184,22 +200,28 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		}
 	}
 
-	/** Returns the value for the specified key, or null if the key is not in the map. 
-	 * @param key*/
+	/**
+	 * Returns the value for the specified key, or null if the key is not in the map.
+	 *
+	 * @param key
+	 */
 	public @Nullable V get (@NotNull Object key) {
 		int i = locateKey(key);
 		return i < 0 ? null : valueTable[i];
 	}
 
-	/** Returns the value for the specified key, or the default value if the key is not in the map. */
+	/**
+	 * Returns the value for the specified key, or the default value if the key is not in the map.
+	 */
 	public @Nullable V get (@NotNull Object key, @Nullable V defaultValue) {
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
 
-	public @Nullable V remove (Object key) {
+	public @Nullable V remove (@NotNull Object key) {
 		int i = locateKey(key);
-		if (i < 0) return null;
+		if (i < 0)
+			return null;
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		V oldValue = valueTable[i];
@@ -207,7 +229,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		while ((key = keyTable[next]) != null) {
 			int placement = place(key);
 			if ((next - placement & mask) > (i - placement & mask)) {
-				keyTable[i] = (K) key;
+				keyTable[i] = (K)key;
 				valueTable[i] = valueTable[next];
 				i = next;
 			}
@@ -239,12 +261,14 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 *                                       the specified map prevents it from being stored in this map
 	 */
 	@Override
-	public void putAll(Map<? extends K, ? extends V> m) {
-		for(K key : m.keySet())
+	public void putAll (@NotNull Map<? extends K, ? extends V> m) {
+		for (K key : m.keySet())
 			put(key, m.get(key));
 	}
 
-	/** Returns true if the map has one or more items. */
+	/**
+	 * Returns true if the map has one or more items.
+	 */
 	public boolean notEmpty () {
 		return size > 0;
 	}
@@ -257,25 +281,33 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @return the number of key-value mappings in this map
 	 */
 	@Override
-	public int size() {
+	public int size () {
 		return size;
 	}
 
-	/** Returns true if the map is empty. */
+	/**
+	 * Returns true if the map is empty.
+	 */
 	public boolean isEmpty () {
 		return size == 0;
 	}
 
-	/** Reduces the size of the backing arrays to be the specified capacity / loadFactor, or less. If the capacity is already less,
+	/**
+	 * Reduces the size of the backing arrays to be the specified capacity / loadFactor, or less. If the capacity is already less,
 	 * nothing is done. If the map contains more items than the specified capacity, the next highest power of two capacity is used
-	 * instead. */
+	 * instead.
+	 */
 	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		if (maximumCapacity < 0)
+			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
 		int tableSize = tableSize(maximumCapacity, loadFactor);
-		if (keyTable.length > tableSize) resize(tableSize);
+		if (keyTable.length > tableSize)
+			resize(tableSize);
 	}
 
-	/** Clears the map and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger. */
+	/**
+	 * Clears the map and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
+	 */
 	public void clear (int maximumCapacity) {
 		int tableSize = tableSize(maximumCapacity, loadFactor);
 		if (keyTable.length <= tableSize) {
@@ -287,33 +319,40 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	}
 
 	public void clear () {
-		if (size == 0) return;
+		if (size == 0)
+			return;
 		size = 0;
 		Arrays.fill(keyTable, null);
 		Arrays.fill(valueTable, null);
 	}
-	
-	/** Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
+
+	/**
+	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
+	 *
 	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
-	 *           {@link #equals(Object)}. */
+	 *                 {@link #equals(Object)}.
+	 */
 	public boolean containsValue (@Nullable Object value, boolean identity) {
 		V[] valueTable = this.valueTable;
 		if (value == null) {
 			K[] keyTable = this.keyTable;
 			for (int i = valueTable.length - 1; i >= 0; i--)
-				if (keyTable[i] != null && valueTable[i] == null) return true;
+				if (keyTable[i] != null && valueTable[i] == null)
+					return true;
 		} else if (identity) {
 			for (int i = valueTable.length - 1; i >= 0; i--)
-				if (valueTable[i] == value) return true;
+				if (valueTable[i] == value)
+					return true;
 		} else {
 			for (int i = valueTable.length - 1; i >= 0; i--)
-				if (value.equals(valueTable[i])) return true;
+				if (value.equals(valueTable[i]))
+					return true;
 		}
 		return false;
 	}
 
-	public boolean containsKey (Object key) {
+	public boolean containsKey (@NotNull Object key) {
 		return locateKey(key) >= 0;
 	}
 
@@ -336,35 +375,44 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 *                              (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
-	public boolean containsValue(Object value) {
+	public boolean containsValue (Object value) {
 		return containsValue(value, false);
 	}
 
-	/** Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
+	/**
+	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation.
+	 *
 	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
-	 *           {@link #equals(Object)}. */
+	 *                 {@link #equals(Object)}.
+	 */
 	public @Nullable K findKey (@Nullable Object value, boolean identity) {
 		V[] valueTable = this.valueTable;
 		if (value == null) {
 			K[] keyTable = this.keyTable;
 			for (int i = valueTable.length - 1; i >= 0; i--)
-				if (keyTable[i] != null && valueTable[i] == null) return keyTable[i];
+				if (keyTable[i] != null && valueTable[i] == null)
+					return keyTable[i];
 		} else if (identity) {
 			for (int i = valueTable.length - 1; i >= 0; i--)
-				if (valueTable[i] == value) return keyTable[i];
+				if (valueTable[i] == value)
+					return keyTable[i];
 		} else {
 			for (int i = valueTable.length - 1; i >= 0; i--)
-				if (value.equals(valueTable[i])) return keyTable[i];
+				if (value.equals(valueTable[i]))
+					return keyTable[i];
 		}
 		return null;
 	}
 
-	/** Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
-	 * adding many items to avoid multiple backing array resizes. */
+	/**
+	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
+	 * adding many items to avoid multiple backing array resizes.
+	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) resize(tableSize);
+		if (keyTable.length < tableSize)
+			resize(tableSize);
 	}
 
 	final void resize (int newSize) {
@@ -382,7 +430,8 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				K key = oldKeyTable[i];
-				if (key != null) putResize(key, oldValueTable[i]);
+				if (key != null)
+					putResize(key, oldValueTable[i]);
 			}
 		}
 	}
@@ -396,17 +445,21 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			if (key != null) {
 				h += key.hashCode();
 				V value = valueTable[i];
-				if (value != null) h += value.hashCode();
+				if (value != null)
+					h += value.hashCode();
 			}
 		}
 		return h;
 	}
 
 	public boolean equals (Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof ObjectMap)) return false;
+		if (obj == this)
+			return true;
+		if (!(obj instanceof ObjectMap))
+			return false;
 		ObjectMap other = (ObjectMap)obj;
-		if (other.size != size) return false;
+		if (other.size != size)
+			return false;
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -414,26 +467,34 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
-					if (other.get(key, dummy) != null) return false;
+					if (other.get(key, dummy) != null)
+						return false;
 				} else {
-					if (!value.equals(other.get(key))) return false;
+					if (!value.equals(other.get(key)))
+						return false;
 				}
 			}
 		}
 		return true;
 	}
 
-	/** Uses == for comparison of each value. */
+	/**
+	 * Uses == for comparison of each value.
+	 */
 	public boolean equalsIdentity (@Nullable Object obj) {
-		if (obj == this) return true;
-		if (!(obj instanceof ObjectMap)) return false;
+		if (obj == this)
+			return true;
+		if (!(obj instanceof ObjectMap))
+			return false;
 		ObjectMap other = (ObjectMap)obj;
-		if (other.size != size) return false;
+		if (other.size != size)
+			return false;
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
-			if (key != null && valueTable[i] != other.get(key, dummy)) return false;
+			if (key != null && valueTable[i] != other.get(key, dummy))
+				return false;
 		}
 		return true;
 	}
@@ -447,15 +508,18 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	}
 
 	protected String toString (String separator, boolean braces) {
-		if (size == 0) return braces ? "{}" : "";
+		if (size == 0)
+			return braces ? "{}" : "";
 		StringBuilder buffer = new StringBuilder(32);
-		if (braces) buffer.append('{');
+		if (braces)
+			buffer.append('{');
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			K key = keyTable[i];
-			if (key == null) continue;
+			if (key == null)
+				continue;
 			buffer.append(key == this ? "(this)" : key);
 			buffer.append('=');
 			V value = valueTable[i];
@@ -464,14 +528,16 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		}
 		while (i-- > 0) {
 			K key = keyTable[i];
-			if (key == null) continue;
+			if (key == null)
+				continue;
 			buffer.append(separator);
 			buffer.append(key == this ? "(this)" : key);
 			buffer.append('=');
 			V value = valueTable[i];
 			buffer.append(value == this ? "(this)" : value);
 		}
-		if (braces) buffer.append('}');
+		if (braces)
+			buffer.append('}');
 		return buffer.toString();
 	}
 
@@ -479,11 +545,13 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * Allows iterating over the key-value pairs as {@link Map.Entry} items. Allocates a new {@link Entries} and an
 	 * Iterator object each time this is called, but reuses one Entry per Entries object. You can remove an Entry from
 	 * this ObjectMap using this Iterator.
+	 *
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
 	public @NotNull Iterator<Map.Entry<K, V>> iterator () {
 		return entrySet().iterator();
 	}
+
 	/**
 	 * Returns a {@link Set} view of the keys contained in this map.
 	 * The set is backed by the map, so changes to the map are
@@ -500,8 +568,9 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NotNull Keys<K> keySet() {
-		if(Collections.allocateIterators) return new Keys<>(this);
+	public @NotNull Keys<K> keySet () {
+		if (Collections.allocateIterators)
+			return new Keys<>(this);
 		if (keys1 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
@@ -518,12 +587,15 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		return keys2;
 	}
 
-	/** Returns an iterator for the values in the map. Remove is supported. Note that the same iterator instance is returned each
+	/**
+	 * Returns an iterator for the values in the map. Remove is supported. Note that the same iterator instance is returned each
 	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
+	 *
 	 * @return a {@link Collection} of V values
 	 */
 	public @NotNull Values<V> values () {
-		if(Collections.allocateIterators) return new Values<>(this);
+		if (Collections.allocateIterators)
+			return new Values<>(this);
 		if (values1 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
@@ -540,14 +612,17 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		return values2;
 	}
 
-	/** Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
-	 * Note that the same iterator instance is returned each time this method is called. 
+	/**
+	 * Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
+	 * Note that the same iterator instance is returned each time this method is called.
 	 * Use the {@link Entries} constructor for nested or multithreaded iteration.
+	 *
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NotNull Entries<K, V> entrySet() {
-		if(Collections.allocateIterators) return new Entries<>(this);
+	public @NotNull Entries<K, V> entrySet () {
+		if (Collections.allocateIterators)
+			return new Entries<>(this);
 		if (entries1 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);
@@ -568,7 +643,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		public K key;
 		public @Nullable V value;
 
-		public String toString () {
+		public @Nullable String toString () {
 			return key + "=" + value;
 		}
 
@@ -581,7 +656,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		 *                               removed from the backing map.
 		 */
 		@Override
-		public K getKey() {
+		public K getKey () {
 			return key;
 		}
 
@@ -596,7 +671,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		 *                               removed from the backing map.
 		 */
 		@Override
-		public V getValue() {
+		public @Nullable V getValue () {
 			return value;
 		}
 
@@ -621,25 +696,28 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		 *                                       removed from the backing map.
 		 */
 		@Override
-		public V setValue(V value) {
+		public @Nullable V setValue (V value) {
 			V old = this.value;
 			this.value = value;
 			return old;
 		}
 
 		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
+		public boolean equals (@Nullable Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
 
-			Entry<?, ?> entry = (Entry<?, ?>) o;
+			Entry<?, ?> entry = (Entry<?, ?>)o;
 
-			if (key != null ? !key.equals(entry.key) : entry.key != null) return false;
+			if (key != null ? !key.equals(entry.key) : entry.key != null)
+				return false;
 			return value != null ? value.equals(entry.value) : entry.value == null;
 		}
 
 		@Override
-		public int hashCode() {
+		public int hashCode () {
 			int result = key != null ? key.hashCode() : 0;
 			result = 31 * result + (value != null ? value.hashCode() : 0);
 			return result;
@@ -666,7 +744,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 
 		void findNextIndex () {
 			K[] keyTable = map.keyTable;
-			for (int n = keyTable.length; ++nextIndex < n;) {
+			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != null) {
 					hasNext = true;
 					return;
@@ -677,7 +755,8 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 
 		public void remove () {
 			int i = currentIndex;
-			if (i < 0) throw new IllegalStateException("next must be called before remove.");
+			if (i < 0)
+				throw new IllegalStateException("next must be called before remove.");
 			K[] keyTable = map.keyTable;
 			V[] valueTable = map.valueTable;
 			int mask = map.mask, next = i + 1 & mask;
@@ -694,28 +773,32 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			keyTable[i] = null;
 			valueTable[i] = null;
 			map.size--;
-			if (i != currentIndex) --nextIndex;
+			if (i != currentIndex)
+				--nextIndex;
 			currentIndex = -1;
 		}
 	}
 
 	static public class Entries<K, V> extends AbstractSet<Map.Entry<K, V>> {
-		protected ObjectMap.Entry<K, V> entry = new ObjectMap.Entry<K, V>();
+		protected @NotNull Entry<K, V> entry = new Entry<K, V>();
 		protected MapIterator<K, V, Map.Entry<K, V>> iter;
 
-		protected Entries(){}
-		
+		protected Entries () {
+		}
+
 		public Entries (ObjectMap<K, V> map) {
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
-				public @NotNull Iterator<Map.Entry<K, V>> iterator() {
+				public @NotNull Iterator<Map.Entry<K, V>> iterator () {
 					return this;
 				}
 
 				/** Note the same entry instance is returned each time this method is called. */
-				public Map.Entry<K, V> next () {
-					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+				public @NotNull Map.Entry<K, V> next () {
+					if (!hasNext)
+						throw new NoSuchElementException();
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					K[] keyTable = map.keyTable;
 					entry.key = keyTable[nextIndex];
 					entry.value = map.valueTable[nextIndex];
@@ -725,63 +808,71 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 				}
 
 				public boolean hasNext () {
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
 			};
 		}
-		
+
 		/**
 		 * Returns an iterator over the elements contained in this collection.
 		 *
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull Iterator<Map.Entry<K, V>> iterator() {
+		public @NotNull Iterator<Map.Entry<K, V>> iterator () {
 			return iter;
 		}
 
 		@Override
-		public int size() {
+		public int size () {
 			return iter.map.size;
 		}
 	}
 
 	static public class Values<V> extends AbstractCollection<V> {
 		protected MapIterator<Object, V, V> iter;
+
 		/**
 		 * Returns an iterator over the elements contained in this collection.
 		 *
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull Iterator<V> iterator() {
+		public @NotNull Iterator<V> iterator () {
 			return iter;
 		}
 
 		@Override
-		public int size() {
+		public int size () {
 			return iter.map.size;
 		}
-		protected Values(){}
+
+		protected Values () {
+		}
+
 		public Values (ObjectMap<?, V> map) {
-			iter = new MapIterator<Object, V, V>((ObjectMap<Object, V>) map) {
+			iter = new MapIterator<Object, V, V>((ObjectMap<Object, V>)map) {
 				@Override
-				public @NotNull Iterator<V> iterator() {
+				public @NotNull Iterator<V> iterator () {
 					return this;
 				}
 
 				@Override
-				public boolean hasNext() { 
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+				public boolean hasNext () {
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
 				@Override
-				public V next() {
-					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+				public V next () {
+					if (!hasNext)
+						throw new NoSuchElementException();
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					V value = map.valueTable[nextIndex];
 					currentIndex = nextIndex;
 					findNextIndex();
@@ -790,28 +881,32 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			};
 		}
 
-		
 	}
 
 	static public class Keys<K> extends AbstractSet<K> {
 		protected MapIterator<K, Object, K> iter;
 
-		protected Keys(){}
+		protected Keys () {
+		}
+
 		public Keys (ObjectMap<K, ?> map) {
-			iter = new MapIterator<K, Object, K>((ObjectMap<K, Object>) map) {
+			iter = new MapIterator<K, Object, K>((ObjectMap<K, Object>)map) {
 				@Override
-				public @NotNull Iterator<K> iterator() {
+				public @NotNull Iterator<K> iterator () {
 					return this;
 				}
 
 				public boolean hasNext () {
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
 				public K next () {
-					if (!hasNext) throw new NoSuchElementException();
-					if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+					if (!hasNext)
+						throw new NoSuchElementException();
+					if (!valid)
+						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 					K key = map.keyTable[nextIndex];
 					currentIndex = nextIndex;
 					findNextIndex();
@@ -826,12 +921,12 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull Iterator<K> iterator() {
+		public @NotNull Iterator<K> iterator () {
 			return iter;
 		}
 
 		@Override
-		public int size() {
+		public int size () {
 			return iter.map.size;
 		}
 	}

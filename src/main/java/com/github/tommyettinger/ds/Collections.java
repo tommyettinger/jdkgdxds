@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.github.tommyettinger.ds;
 
 /**
@@ -22,9 +23,11 @@ public class Collections {
 	public static boolean allocateIterators = false;
 
 	public static int tableSize (int capacity, float loadFactor) {
-		if (capacity < 0) throw new IllegalArgumentException("capacity must be >= 0: " + capacity);
+		if (capacity < 0)
+			throw new IllegalArgumentException("capacity must be >= 0: " + capacity);
 		int tableSize = 1 << -Integer.numberOfLeadingZeros(Math.max(2, (int)Math.ceil(capacity / loadFactor)) - 1);
-		if (tableSize > 1 << 30 || tableSize < 0) throw new IllegalArgumentException("The required capacity is too large: " + capacity);
+		if (tableSize > 1 << 30 || tableSize < 0)
+			throw new IllegalArgumentException("The required capacity is too large: " + capacity);
 		return tableSize;
 	}
 

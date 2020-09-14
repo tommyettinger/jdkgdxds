@@ -20,11 +20,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.AbstractSet;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static com.github.tommyettinger.ds.Collections.tableSize;
 
-/** An unordered set where the keys are objects. Null keys are not allowed. No allocation is done except when growing the table
+/**
+ * An unordered set where the keys are objects. Null keys are not allowed. No allocation is done except when growing the table
  * size.
  * <p>
  * This class performs fast contains and remove (typically O(1), worst case O(n) but that is rare in practice). Add may be
@@ -38,8 +44,10 @@ import static com.github.tommyettinger.ds.Collections.tableSize;
  * hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
  * "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
  * Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.
+ *
  * @author Nathan Sweet
- * @author Tommy Ettinger */
+ * @author Tommy Ettinger
+ */
 public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>, Serializable {
 	private static final long serialVersionUID = 0L;
 
@@ -50,37 +58,39 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 	protected float loadFactor;
 	protected int threshold;
 
-	/** Used by {@link #place(Object)} to bit shift the upper bits of a {@code long} into a usable range (&gt;= 0 and &lt;=
-	 * {@link #mask}). The shift can be negative, which is convenient to match the number of bits in mask: if mask is a 7-bit
-	 * number, a shift of -7 shifts the upper 7 bits into the lowest 7 positions. This class sets the shift &gt; 32 and &lt; 64,
-	 * which if used with an int will still move the upper bits of an int to the lower bits due to Java's implicit modulus on
-	 * shifts.
-	 * <p>
-	 * {@link #mask} can also be used to mask the low bits of a number, which may be faster for some hashcodes, if
-	 * {@link #place(Object)} is overridden. */
 	protected int shift;
 
-	/** A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
-	 * minus 1. If {@link #place(Object)} is overriden, this can be used instead of {@link #shift} to isolate usable bits of a
-	 * hash. */
+	/**
+	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+	 * minus 1.
+	 */
 	protected int mask;
 	protected ObjectSetIterator<T> iterator1, iterator2;
-	/** Creates a new set with an initial capacity of 51 and a load factor of 0.8. */
+
+	/**
+	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
+	 */
 	public ObjectSet () {
 		this(51, 0.8f);
 	}
 
-	/** Creates a new set with a load factor of 0.8.
-	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two. */
+	/**
+	 * Creates a new set with a load factor of 0.8.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
 	public ObjectSet (int initialCapacity) {
 		this(initialCapacity, 0.8f);
 	}
 
-	/** Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
+	/**
+	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
 	 * growing the backing table.
-	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two. */
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
 	public ObjectSet (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor >= 1f)
+		if (loadFactor <= 0f || loadFactor > 1f)
 			throw new IllegalArgumentException("loadFactor must be > 0 and < 1: " + loadFactor);
 		this.loadFactor = loadFactor;
 
@@ -92,106 +102,109 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 		keyTable = (T[])new Object[tableSize];
 	}
 
-	/** Creates a new set identical to the specified set. */
-	public ObjectSet (ObjectSet<? extends T> set) {
+	/**
+	 * Creates a new set identical to the specified set.
+	 */
+	public ObjectSet (@NotNull ObjectSet<? extends T> set) {
 		this((int)(set.keyTable.length * set.loadFactor), set.loadFactor);
 		System.arraycopy(set.keyTable, 0, keyTable, 0, set.keyTable.length);
 		size = set.size;
 	}
-	
-	/** Creates a new set that contains all distinct elements in {@code coll}. */
-	public ObjectSet (Collection<? extends T> coll) {
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code coll}.
+	 */
+	public ObjectSet (@NotNull Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);
 	}
-	
-	/** Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
-	 * <p>
-	 * The default implementation uses Fibonacci hashing on the item's {@link Object#hashCode()}: the hashcode is multiplied by a
-	 * long constant (2 to the 64th, divided by the golden ratio) then the uppermost bits are shifted into the lowest positions to
-	 * obtain an index in the desired range. Multiplication by a long may be slower than int (eg on GWT) but greatly improves
-	 * rehashing, allowing even very poor hashcodes, such as those that only differ in their upper bits, to be used without high
-	 * collision rates. Fibonacci hashing has increased collision rates when all or most hashcodes are multiples of larger
-	 * Fibonacci numbers (see <a href=
-	 * "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
-	 * Skarupke's blog post</a>).
-	 * <p>
-	 * This method can be overridden to customize hashing. This may be useful, e.g. in the unlikely event that most hashcodes are
-	 * Fibonacci numbers, if keys provide poor or incorrect hashcodes, or to simplify hashing. If keys provide high quality
-	 * hashcodes and don't need Fibonacci hashing, a good implementation is: {@code return item.hashCode() & mask;}
-	 * @param item a non-null Object; its hashCode() method should be used by most implementations. */
+
+	/**
+	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
+	 *
+	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
+	 */
 	protected int place (@NotNull Object item) {
-		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+		final int h = item.hashCode() * 0x9E377;
+		return (h ^ h >>> shift) & mask;
 	}
 
-	/** Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
+	/**
+	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
 	 * to compare for equality differently than {@link Object#equals(Object)}.
-	 * @param key a non-null Object that should probably be a T */
-	protected int locateKey (Object key) {
-		if (key == null) throw new IllegalArgumentException("key cannot be null.");
+	 *
+	 * @param key a non-null Object that should probably be a T
+	 */
+	protected int locateKey (@NotNull Object key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key);; i = i + 1 & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
-			if (other == null) return ~i; // Empty space is available.
-			if (other.equals(key)) return i; // Same key was found.
+			if (other == null)
+				return ~i; // Empty space is available.
+			if (other.equals(key))
+				return i; // Same key was found.
 		}
 	}
 
-	/** Returns true if the key was not already in the set. If this set already contains the key, the call leaves the set unchanged
-	 * and returns false. */
-	public boolean add (T key) {
+	/**
+	 * Returns true if the key was not already in the set. If this set already contains the key, the call leaves the set unchanged
+	 * and returns false.
+	 */
+	public boolean add (@NotNull T key) {
 		int i = locateKey(key);
-		if (i >= 0) return false; // Existing key was found.
+		if (i >= 0)
+			return false; // Existing key was found.
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
-		if (++size >= threshold) resize(keyTable.length << 1);
+		if (++size >= threshold)
+			resize(keyTable.length << 1);
 		return true;
 	}
 
 	@Override
-	public boolean containsAll(@NotNull Collection<?> c) {
-		for(Object o : c)
-		{
-			if(!contains(o)) return false;
+	public boolean containsAll (@NotNull Collection<?> c) {
+		for (Object o : c) {
+			if (!contains(o))
+				return false;
 		}
 		return true;
 	}
 
-	public boolean addAll (Collection<? extends T> coll) {
+	public boolean addAll (@NotNull Collection<? extends T> coll) {
 		final int length = coll.size();
 		ensureCapacity(length);
 		int oldSize = size;
-		for(T t : coll)
+		for (T t : coll)
 			add(t);
 		return oldSize != size;
 
 	}
 
 	@Override
-	public boolean retainAll(@NotNull Collection<?> c) {
+	public boolean retainAll (@NotNull Collection<?> c) {
 		boolean modified = false;
-		for(Object o : this){
-			if(!c.contains(o)) 
+		for (Object o : this) {
+			if (!c.contains(o))
 				modified |= remove(o);
-			
+
 		}
 		return modified;
 	}
 
 	@Override
-	public boolean removeAll(@NotNull Collection<?> c) {
+	public boolean removeAll (@NotNull Collection<?> c) {
 		boolean modified = false;
-		for(Object o : c){
+		for (Object o : c) {
 			modified |= remove(o);
 		}
 		return modified;
 	}
 
-	public boolean addAll (T[] array) {
+	public boolean addAll (@NotNull T[] array) {
 		return addAll(array, 0, array.length);
 	}
 
-	public boolean addAll (T[] array, int offset, int length) {
+	public boolean addAll (@NotNull T[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size;
 		for (int i = offset, n = i + length; i < n; i++)
@@ -199,19 +212,22 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 		return oldSize != size;
 	}
 
-	public void addAll (ObjectSet<T> set) {
+	public void addAll (@NotNull ObjectSet<T> set) {
 		ensureCapacity(set.size);
 		T[] keyTable = set.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null) add(key);
+			if (key != null)
+				add(key);
 		}
 	}
 
-	/** Skips checks for existing keys, doesn't increment size. */
-	private void addResize (T key) {
+	/**
+	 * Skips checks for existing keys, doesn't increment size.
+	 */
+	private void addResize (@NotNull T key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key);; i = (i + 1) & mask) {
+		for (int i = place(key); ; i = (i + 1) & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
 				return;
@@ -219,10 +235,13 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 		}
 	}
 
-	/** Returns true if the key was removed. */
-	public boolean remove (Object key) {
+	/**
+	 * Returns true if the key was removed.
+	 */
+	public boolean remove (@NotNull Object key) {
 		int i = locateKey(key);
-		if (i < 0) return false;
+		if (i < 0)
+			return false;
 		T[] keyTable = this.keyTable;
 		int mask = this.mask, next = i + 1 & mask;
 		while ((key = keyTable[next]) != null) {
@@ -238,7 +257,9 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 		return true;
 	}
 
-	/** Returns true if the set has one or more items. */
+	/**
+	 * Returns true if the set has one or more items.
+	 */
 	public boolean notEmpty () {
 		return size > 0;
 	}
@@ -251,27 +272,35 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 	 * @return the number of elements in this set (its cardinality)
 	 */
 	@Override
-	public int size() {
+	public int size () {
 		return size;
 	}
 
-	/** Returns true if the set is empty. */
+	/**
+	 * Returns true if the set is empty.
+	 */
 	public boolean isEmpty () {
 		return size == 0;
 	}
 
-	/** Reduces the size of the backing arrays to be the specified capacity / loadFactor, or less. If the capacity is already less,
+	/**
+	 * Reduces the size of the backing arrays to be the specified capacity / loadFactor, or less. If the capacity is already less,
 	 * nothing is done. If the set contains more items than the specified capacity, the next highest power of two capacity is used
-	 * instead. */
+	 * instead.
+	 */
 	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		if (maximumCapacity < 0)
+			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
 		int tableSize = tableSize(maximumCapacity, loadFactor);
-		if (keyTable.length > tableSize) resize(tableSize);
+		if (keyTable.length > tableSize)
+			resize(tableSize);
 	}
 
-	/** Clears the set and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
+	/**
+	 * Clears the set and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
 	 * The reduction is done by allocating new arrays, though for large arrays this can be faster than clearing the existing
-	 * array. */
+	 * array.
+	 */
 	public void clear (int maximumCapacity) {
 		int tableSize = tableSize(maximumCapacity, loadFactor);
 		if (keyTable.length <= tableSize) {
@@ -282,19 +311,22 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 		resize(tableSize);
 	}
 
-	/** Clears the set, leaving the backing arrays at the current capacity. When the capacity is high and the population is low,
-	 * iteration can be unnecessarily slow. {@link #clear(int)} can be used to reduce the capacity. */
+	/**
+	 * Clears the set, leaving the backing arrays at the current capacity. When the capacity is high and the population is low,
+	 * iteration can be unnecessarily slow. {@link #clear(int)} can be used to reduce the capacity.
+	 */
 	public void clear () {
-		if (size == 0) return;
+		if (size == 0)
+			return;
 		size = 0;
 		Arrays.fill(keyTable, null);
 	}
 
-	public boolean contains (Object key) {
+	public boolean contains (@NotNull Object key) {
 		return locateKey(key) >= 0;
 	}
 
-	public @Nullable T get (T key) {
+	public @Nullable T get (@NotNull T key) {
 		int i = locateKey(key);
 		return i < 0 ? null : keyTable[i];
 	}
@@ -302,15 +334,19 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 	public T first () {
 		T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++)
-			if (keyTable[i] != null) return keyTable[i];
+			if (keyTable[i] != null)
+				return keyTable[i];
 		throw new IllegalStateException("ObjectSet is empty.");
 	}
 
-	/** Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
-	 * adding many items to avoid multiple backing array resizes. */
+	/**
+	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
+	 * adding many items to avoid multiple backing array resizes.
+	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) resize(tableSize);
+		if (keyTable.length < tableSize)
+			resize(tableSize);
 	}
 
 	private void resize (int newSize) {
@@ -325,7 +361,8 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				T key = oldKeyTable[i];
-				if (key != null) addResize(key);
+				if (key != null)
+					addResize(key);
 			}
 		}
 	}
@@ -335,18 +372,22 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 		T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null) h += key.hashCode();
+			if (key != null)
+				h += key.hashCode();
 		}
 		return h;
 	}
 
 	public boolean equals (Object obj) {
-		if (!(obj instanceof ObjectSet)) return false;
+		if (!(obj instanceof ObjectSet))
+			return false;
 		ObjectSet other = (ObjectSet)obj;
-		if (other.size != size) return false;
+		if (other.size != size)
+			return false;
 		T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++)
-			if (keyTable[i] != null && !other.contains(keyTable[i])) return false;
+			if (keyTable[i] != null && !other.contains(keyTable[i]))
+				return false;
 		return true;
 	}
 
@@ -355,30 +396,36 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 	}
 
 	public String toString (String separator) {
-		if (size == 0) return "";
-		java.lang.StringBuilder buffer = new java.lang.StringBuilder(32);
+		if (size == 0)
+			return "";
+		StringBuilder buffer = new StringBuilder(32);
 		T[] keyTable = this.keyTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null) continue;
+			if (key == null)
+				continue;
 			buffer.append(key == this ? "(this)" : key);
 			break;
 		}
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null) continue;
+			if (key == null)
+				continue;
 			buffer.append(separator);
 			buffer.append(key == this ? "(this)" : key);
 		}
 		return buffer.toString();
 	}
 
-	/** Returns an iterator for the keys in the set. Remove is supported.
+	/**
+	 * Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
-	 * Permits nested or multithreaded iteration, but allocates a new {@link ObjectSetIterator} per-call. */
+	 * Permits nested or multithreaded iteration, but allocates a new {@link ObjectSetIterator} per-call.
+	 */
 	public @NotNull Iterator<T> iterator () {
-		if (Collections.allocateIterators) return new ObjectSetIterator<>(this);
+		if (Collections.allocateIterators)
+			return new ObjectSetIterator<>(this);
 		if (iterator1 == null) {
 			iterator1 = new ObjectSetIterator<>(this);
 			iterator2 = new ObjectSetIterator<>(this);
@@ -394,9 +441,9 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 		iterator1.valid = false;
 		return iterator2;
 	}
-	
+
 	@SafeVarargs
-	static public <T> ObjectSet<T> with (T... array) {
+	static public @NotNull <T> ObjectSet<T> with (@NotNull T... array) {
 		ObjectSet<T> set = new ObjectSet<T>();
 		set.addAll(array);
 		return set;
@@ -422,7 +469,7 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 
 		private void findNextIndex () {
 			K[] keyTable = set.keyTable;
-			for (int n = set.keyTable.length; ++nextIndex < n;) {
+			for (int n = set.keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != null) {
 					hasNext = true;
 					return;
@@ -433,7 +480,8 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 
 		public void remove () {
 			int i = currentIndex;
-			if (i < 0) throw new IllegalStateException("next must be called before remove.");
+			if (i < 0)
+				throw new IllegalStateException("next must be called before remove.");
 			K[] keyTable = set.keyTable;
 			int mask = set.mask, next = i + 1 & mask;
 			K key;
@@ -447,18 +495,22 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 			}
 			keyTable[i] = null;
 			set.size--;
-			if (i != currentIndex) --nextIndex;
+			if (i != currentIndex)
+				--nextIndex;
 			currentIndex = -1;
 		}
 
 		public boolean hasNext () {
-			if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+			if (!valid)
+				throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 			return hasNext;
 		}
 
 		public K next () {
-			if (!hasNext) throw new NoSuchElementException();
-			if (!valid) throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+			if (!hasNext)
+				throw new NoSuchElementException();
+			if (!valid)
+				throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
 			K key = set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
