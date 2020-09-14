@@ -502,7 +502,7 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 
 		public boolean hasNext () {
 			if (!valid)
-				throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+				throw new RuntimeException("#iterator() cannot be used nested.");
 			return hasNext;
 		}
 
@@ -510,7 +510,7 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 			if (!hasNext)
 				throw new NoSuchElementException();
 			if (!valid)
-				throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+				throw new RuntimeException("#iterator() cannot be used nested.");
 			K key = set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();

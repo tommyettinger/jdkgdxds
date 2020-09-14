@@ -49,7 +49,7 @@ import java.util.NoSuchElementException;
  */
 public class OrderedSet<T> extends ObjectSet<T> implements Serializable {
 	private static final long serialVersionUID = 0L;
-	final ArrayList<T> items;
+	protected final ArrayList<T> items;
 
 	public OrderedSet () {
 		items = new ArrayList<>();
@@ -221,7 +221,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Serializable {
 			if (!hasNext)
 				throw new NoSuchElementException();
 			if (!valid)
-				throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+				throw new RuntimeException("#iterator() cannot be used nested.");
 			K key = items.get(nextIndex);
 			nextIndex++;
 			hasNext = nextIndex < set.size;

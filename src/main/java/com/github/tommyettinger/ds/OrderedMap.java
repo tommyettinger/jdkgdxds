@@ -52,7 +52,7 @@ import java.util.Set;
 public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 	private static final long serialVersionUID = 0L;
 
-	final ArrayList<K> keys;
+	protected final ArrayList<K> keys;
 
 	public OrderedMap () {
 		keys = new ArrayList<>();
@@ -306,7 +306,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 
 				public boolean hasNext () {
 					if (!valid)
-						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+						throw new RuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
@@ -314,7 +314,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 					if (!hasNext)
 						throw new NoSuchElementException();
 					if (!valid)
-						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+						throw new RuntimeException("#iterator() cannot be used nested.");
 					currentIndex = nextIndex;
 					entry.key = keys.get(nextIndex);
 					entry.value = map.get(entry.key);
@@ -352,7 +352,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 
 				public boolean hasNext () {
 					if (!valid)
-						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+						throw new RuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
@@ -366,7 +366,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 					if (!hasNext)
 						throw new NoSuchElementException();
 					if (!valid)
-						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+						throw new RuntimeException("#iterator() cannot be used nested.");
 					K key = keys.get(nextIndex);
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -418,7 +418,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 				@Override
 				public boolean hasNext () {
 					if (!valid)
-						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+						throw new RuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
@@ -432,7 +432,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 					if (!hasNext)
 						throw new NoSuchElementException();
 					if (!valid)
-						throw new JdkgdxdsRuntimeException("#iterator() cannot be used nested.");
+						throw new RuntimeException("#iterator() cannot be used nested.");
 					V value = map.get(keys.get(nextIndex));
 					currentIndex = nextIndex;
 					nextIndex++;
