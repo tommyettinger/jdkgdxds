@@ -47,7 +47,7 @@ import java.util.NoSuchElementException;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class OrderedSet<T> extends ObjectSet<T> implements Serializable {
+public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializable {
 	private static final long serialVersionUID = 0L;
 	protected final ArrayList<T> items;
 
@@ -161,8 +161,28 @@ public class OrderedSet<T> extends ObjectSet<T> implements Serializable {
 		items.clear();
 		super.clear();
 	}
-
+	
+	/**
+	 * Gets the ArrayList of items in the order this class will iterate through them.
+	 * Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+	 * also change the iteration order here.
+	 * <br>
+	 * This method is provided for backwards-compatibility; {@link #order()} is preferred for new code
+	 * because it allows order-changing methods to be written once for an arbitrary {@link Ordered} type.
+	 * @return the ArrayList of items, in iteration order (usually insertion-order), that this uses
+	 */
 	public ArrayList<T> orderedItems () {
+		return items;
+	}
+
+	/**
+	 * Gets the ArrayList of items in the order this class will iterate through them.
+	 * Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+	 * also change the iteration order here.
+	 * @return the ArrayList of items, in iteration order (usually insertion-order), that this uses
+	 */
+	@Override
+	public ArrayList<T> order () {
 		return items;
 	}
 

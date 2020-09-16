@@ -49,7 +49,7 @@ import java.util.Set;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
+public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Serializable {
 	private static final long serialVersionUID = 0L;
 
 	protected final ArrayList<K> keys;
@@ -168,7 +168,27 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Serializable {
 		super.clear();
 	}
 
+	/**
+	 * Gets the ArrayList of keys in the order this class will iterate through them.
+	 * Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+	 * also change the iteration order here.
+	 * <br>
+	 * This method is provided for backwards-compatibility; {@link #order()} is preferred for new code
+	 * because it allows order-changing methods to be written once for an arbitrary {@link Ordered} type.
+	 * @return the ArrayList of keys, in iteration order (usually insertion-order), that this uses
+	 */
 	public ArrayList<K> orderedKeys () {
+		return keys;
+	}
+	
+	/**
+	 * Gets the ArrayList of keys in the order this class will iterate through them.
+	 * Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+	 * also change the iteration order here.
+	 * @return the ArrayList of keys, in iteration order (usually insertion-order), that this uses
+	 */
+	@Override
+	public ArrayList<K> order () {
 		return keys;
 	}
 
