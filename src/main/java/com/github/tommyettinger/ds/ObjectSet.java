@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -48,7 +47,7 @@ import static com.github.tommyettinger.ds.Collections.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>, Serializable {
+public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	private static final long serialVersionUID = 0L;
 
 	public int size;
@@ -365,6 +364,43 @@ public class ObjectSet<T> extends AbstractSet<T> implements Iterable<T>, Set<T>,
 					addResize(key);
 			}
 		}
+	}
+
+	@Override
+	public Object[] toArray() {
+		return toArray(new Object[size()]);
+	}
+
+	/**
+	 * Returns an array containing all of the elements in this set; the
+	 * runtime type of the returned array is that of the specified array.
+	 * If the set fits in the specified array, it is returned therein.
+	 * Otherwise, a new array is allocated with the runtime type of the
+	 * specified array and the size of this set.
+	 * <br>
+	 * Implementation is mostly copied from GWT, but uses Arrays.copyOf() instead of their internal APIs.
+	 *
+	 * @param a the array into which the elements of this set are to be
+	 *        stored, if it is big enough; otherwise, a new array of the same
+	 *        runtime type is allocated for this purpose.
+	 * @param <E> must be the same as {@code T} or a superclass/interface of it; not checked
+	 * @return an array containing all the elements in this set
+	 */
+	@Override
+	public <E> E[] toArray(E[] a) {
+		int size = size();
+		if (a.length < size) {
+			a = Arrays.copyOf(a, size);
+		}
+		Object[] result = a;
+		Iterator<T> it = iterator();
+		for (int i = 0; i < size; ++i) {
+			result[i] = it.next();
+		}
+		if (a.length > size) {
+			a[size] = null;
+		}
+		return a;
 	}
 
 	public int hashCode () {
