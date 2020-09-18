@@ -29,8 +29,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static com.github.tommyettinger.ds.Collections.dummy;
-import static com.github.tommyettinger.ds.Collections.tableSize;
+import static com.github.tommyettinger.ds.Utilities.dummy;
+import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
  * An unordered map where the keys and values are objects. Null keys are not allowed. No allocation is done except when growing
@@ -569,7 +569,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 */
 	@Override
 	public @NotNull Keys<K> keySet () {
-		if (Collections.allocateIterators)
+		if (Utilities.allocateIterators)
 			return new Keys<>(this);
 		if (keys1 == null) {
 			keys1 = new Keys<>(this);
@@ -594,7 +594,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @return a {@link Collection} of V values
 	 */
 	public @NotNull Values<V> values () {
-		if (Collections.allocateIterators)
+		if (Utilities.allocateIterators)
 			return new Values<>(this);
 		if (values1 == null) {
 			values1 = new Values<>(this);
@@ -621,7 +621,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 */
 	@Override
 	public @NotNull Entries<K, V> entrySet () {
-		if (Collections.allocateIterators)
+		if (Utilities.allocateIterators)
 			return new Entries<>(this);
 		if (entries1 == null) {
 			entries1 = new Entries<>(this);

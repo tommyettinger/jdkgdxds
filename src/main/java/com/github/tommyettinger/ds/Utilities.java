@@ -19,7 +19,7 @@ package com.github.tommyettinger.ds;
 /**
  * Utility code shared by various data structures in this package.
  */
-public class Collections {
+public class Utilities {
 	public static boolean allocateIterators = false;
 
 	public static int tableSize (int capacity, float loadFactor) {

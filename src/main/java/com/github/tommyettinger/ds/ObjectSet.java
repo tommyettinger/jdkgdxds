@@ -26,7 +26,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static com.github.tommyettinger.ds.Collections.tableSize;
+import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
  * An unordered set where the keys are objects. Null keys are not allowed. No allocation is done except when growing the table
@@ -460,7 +460,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * Permits nested or multithreaded iteration, but allocates a new {@link ObjectSetIterator} per-call.
 	 */
 	public @NotNull Iterator<T> iterator () {
-		if (Collections.allocateIterators)
+		if (Utilities.allocateIterators)
 			return new ObjectSetIterator<>(this);
 		if (iterator1 == null) {
 			iterator1 = new ObjectSetIterator<>(this);

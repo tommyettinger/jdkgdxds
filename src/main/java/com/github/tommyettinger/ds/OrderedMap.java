@@ -209,7 +209,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 */
 	@Override
 	public @NotNull Keys<K> keySet () {
-		if (Collections.allocateIterators)
+		if (Utilities.allocateIterators)
 			return new OrderedMapKeys<>(this);
 		if (keys1 == null) {
 			keys1 = new OrderedMapKeys<>(this);
@@ -236,7 +236,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 */
 	@Override
 	public @NotNull Values<V> values () {
-		if (Collections.allocateIterators)
+		if (Utilities.allocateIterators)
 			return new OrderedMapValues<>(this);
 		if (values1 == null) {
 			values1 = new OrderedMapValues<>(this);
@@ -263,7 +263,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 */
 	@Override
 	public @NotNull Entries<K, V> entrySet () {
-		if (Collections.allocateIterators)
+		if (Utilities.allocateIterators)
 			return new OrderedMapEntries<>(this);
 		if (entries1 == null) {
 			entries1 = new OrderedMapEntries<>(this);

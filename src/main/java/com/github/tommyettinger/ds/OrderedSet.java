@@ -187,7 +187,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	}
 
 	public @NotNull Iterator<T> iterator () {
-		if (Collections.allocateIterators)
+		if (Utilities.allocateIterators)
 			return new OrderedSetIterator<>(this);
 		if (iterator1 == null) {
 			iterator1 = new OrderedSetIterator<>(this);
