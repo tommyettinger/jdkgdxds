@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import java.util.Arrays;
+import java.util.Random;
 
 /** A resizable, ordered or unordered int array. Avoids the boxing that occurs with ArrayList<Integer>. If unordered, this class
  * avoids a memory copy when removing elements (the last element is moved to the removed element's position).
@@ -25,8 +26,6 @@ public class IntList implements Arrangeable {
 	public int[] items;
 	public int size;
 	public boolean ordered;
-	
-	protected long randomState;
 	
 	/** Creates an ordered array with a capacity of 16. */
 	public IntList () {
@@ -44,18 +43,16 @@ public class IntList implements Arrangeable {
 	public IntList (boolean ordered, int capacity) {
 		this.ordered = ordered;
 		items = new int[capacity];
-		randomState = System.identityHashCode(items);
 	}
 
 	/** @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
 	 *           memory copy.
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
-	 * @param randomSeed any long; if this is the same for different IntList instances, their randomized methods like {@link #shuffle()}
+	 * @param randomSeed any long; if this is the same for different IntList instances, their randomized methods like {@link Arrangeable#shuffle(Random)}
 	 *                   will have the same results when called in the same order (on the same items). */
 	public IntList (boolean ordered, int capacity, long randomSeed) {
 		this.ordered = ordered;
-		items = new int[capacity];
-		randomState = randomSeed;
+		items = new int[capacity]; 
 	}
 
 	/** Creates a new array containing the elements in the specific array. The new array will be ordered if the specific array is
@@ -66,7 +63,6 @@ public class IntList implements Arrangeable {
 		size = array.size;
 		items = new int[size];
 		System.arraycopy(array.items, 0, items, 0, size);
-		randomState = array.randomState;
 	}
 
 	/** Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
@@ -361,24 +357,11 @@ public class IntList implements Arrangeable {
 			items[ii] = temp;
 		}
 	}
-
-	/**
-	 * Unrelated to the contents of this IntList, this updates the {@link #randomState} and uses it to generate a
-	 * pseudo-random int that is between 0 (inclusive) and bound (exclusive).
-	 * @param bound the exclusive upper bound; must be positive
-	 * @return a pseudo-random int between 0 (inclusive) and bound (exclusive)
-	 */
-	protected int randomInt(int bound){
-		long z = (randomState += 0x9E3779B97F4A7C15L);
-		z = (z ^ (z >>> 30)) * 0xBF58476D1CE4E5B9L;
-		z = (z ^ (z >>> 27)) * 0x94D049BB133111EBL;
-		return (int) ((bound * ((z ^ (z >>> 31)) & 0xFFFFFFFFL)) >>> 32);
-	}
-
-	public void shuffle () {
+	
+	public void shuffle (Random random) {
 		int[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) {
-			int ii = randomInt(i+1);
+			int ii = random.nextInt(i+1);
 			int temp = items[i];
 			items[i] = items[ii];
 			items[ii] = temp;
@@ -392,9 +375,9 @@ public class IntList implements Arrangeable {
 	}
 
 	/** Returns a random item from the array, or zero if the array is empty. */
-	public int random () {
+	public int random (Random random) {
 		if (size == 0) return 0;
-		return items[randomInt(size)];
+		return items[random.nextInt(size)];
 	}
 
 	public int[] toArray () {

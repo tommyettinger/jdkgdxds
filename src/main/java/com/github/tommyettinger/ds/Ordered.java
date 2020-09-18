@@ -1,11 +1,14 @@
 package com.github.tommyettinger.ds;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Ensures that implementors allow access to the order of {@code T} items as an ArrayList.
  * This is meant to allow different (typically insertion-ordered) data structures to all have their order
- * manipulated by the same methods.
+ * manipulated by the same methods. This interface extends {@link Arrangeable}, which itself is compatible
+ * both with primitive-backed collections like {@link IntList} and generic ones like the implementations of
+ * Ordered. This has default implementations of {@link Arrangeable#swap(int, int)} and {@link Arrangeable#shuffle(Random)}.
  */
 public interface Ordered<T> extends Arrangeable {
 	/**
@@ -29,16 +32,14 @@ public interface Ordered<T> extends Arrangeable {
 	}
 
 	/**
-	 * Pseudo-randomly shuffles the order of this Arrangeable in-place.
-	 * <br>
-	 * This implementation is currently kinda bad and uses Math.random(); it will likely change.
+	 * Pseudo-randomly shuffles the order of this Ordered in-place.
+	 * @param random any {@link Random} implementation; prefer {@link LaserRandom} in this library
 	 */
 	@Override
-	default void shuffle (){
+	default void shuffle (Random random){
 		ArrayList<T> order = order();
 		for (int i = order.size() - 1; i >= 0; i--) {
-			int j = (int)(Math.random() * (i+1));
-			order.set(i, order.set(j, order.get(i)));
+			order.set(i, order.set(random.nextInt(i+1), order.get(i)));
 		}
 	}
 }
