@@ -16,6 +16,8 @@
 
 package com.github.tommyettinger.ds;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -217,6 +219,22 @@ public class IntList implements Arrangeable {
 		return false;
 	}
 
+	/**
+	 * Returns true if this IntList contains, at least once, every item in {@code other}; otherwise returns false.
+	 * @param other an IntList
+	 * @return true if this contains every item in {@code other}, otherwise false
+	 */
+	public boolean containsAll(@NotNull IntList other) {
+		int[] others = other.items;
+		int otherSize = other.size;
+		for (int i = 0; i < otherSize; i++) {
+			if (!contains(others[i]))
+				return false;
+		}
+		return true;
+	}
+
+
 	public int indexOf (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
@@ -285,7 +303,7 @@ public class IntList implements Arrangeable {
 	 * will be removed for each occurrence of that value in {@code array}. If {@code array} has the same
 	 * contents as this IntList or has additional items, then removing all of {@code array} will clear this.
 	 * @return true if this array was modified. */
-	public boolean removeAll (IntList array) {
+	public boolean removeAll (@NotNull IntList array) {
 		int size = this.size;
 		int startSize = size;
 		int[] items = this.items;
@@ -302,6 +320,24 @@ public class IntList implements Arrangeable {
 		return size != startSize;
 	}
 
+	/**
+	 * Removes all items from this IntList that are not present somewhere in {@code other}, any number of times.
+	 * @param other an IntList that contains the items that this should keep, whenever present
+	 * @return true if this IntList changed as a result of this call, otherwise false
+	 */
+	public boolean retainAll (@NotNull IntList other) {
+		final int size = this.size;
+		final int[] items = this.items;
+		int r = 0, w = 0;
+		for (; r < size; r++) {
+			if (other.contains(items[r])) {
+				items[w++] = items[r];
+			}
+		}
+		
+		return size != (this.size = w);
+	}
+
 	/** Removes and returns the last item. */
 	public int pop () {
 		return items[--size];
@@ -314,7 +350,7 @@ public class IntList implements Arrangeable {
 
 	/** Returns the first item. */
 	public int first () {
-		if (size == 0) throw new IllegalStateException("Array is empty.");
+		if (size == 0) throw new IndexOutOfBoundsException("Array is empty.");
 		return items[0];
 	}
 
@@ -381,7 +417,7 @@ public class IntList implements Arrangeable {
 		}
 	}
 	
-	public void shuffle (Random random) {
+	public void shuffle (@NotNull Random random) {
 		int[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) {
 			int ii = random.nextInt(i+1);
@@ -398,7 +434,7 @@ public class IntList implements Arrangeable {
 	}
 
 	/** Returns a random item from the array, or zero if the array is empty. */
-	public int random (Random random) {
+	public int random (@NotNull Random random) {
 		if (size == 0) return 0;
 		return items[random.nextInt(size)];
 	}
