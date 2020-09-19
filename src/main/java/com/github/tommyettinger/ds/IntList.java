@@ -81,10 +81,15 @@ public class IntList implements Arrangeable {
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
-	public void add (int value) {
+	public int size(){
+		return size;
+	}
+	
+	public boolean add (int value) {
 		int[] items = this.items;
 		if (size == items.length) items = resize(Math.max(8, (int)(size * 1.75f)));
 		items[size++] = value;
+		return true;
 	}
 
 	public void add (int value1, int value2) {
@@ -114,8 +119,8 @@ public class IntList implements Arrangeable {
 		size += 4;
 	}
 
-	public void addAll (IntList array) {
-		addAll(array.items, 0, array.size);
+	public boolean addAll (IntList array) {
+		return addAll(array.items, 0, array.size);
 	}
 
 	public void addAll (IntList array, int offset, int length) {
@@ -124,45 +129,50 @@ public class IntList implements Arrangeable {
 		addAll(array.items, offset, length);
 	}
 
-	public void addAll (int... array) {
-		addAll(array, 0, array.length);
+	public boolean addAll (int... array) {
+		return addAll(array, 0, array.length);
 	}
 
-	public void addAll (int[] array, int offset, int length) {
+	public boolean addAll (int[] array, int offset, int length) {
 		int[] items = this.items;
 		int sizeNeeded = size + length;
 		if (sizeNeeded > items.length) items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));
 		System.arraycopy(array, offset, items, size, length);
 		size += length;
+		return true;
 	}
 
+	//Kotlin-friendly operator
 	public int get (int index) {
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		return items[index];
 	}
 
+	//Kotlin-friendly operator
 	public void set (int index, int value) {
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		items[index] = value;
 	}
-
-	public void incr (int index, int value) {
+	
+	public void plus (int index, int value) {
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		items[index] += value;
 	}
 
-	public void incr (int value) {
+	//Kotlin-friendly operator
+	public void plus (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] += value;
 	}
 
-	public void mul (int index, int value) {
+	public void times (int index, int value) {
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		items[index] *= value;
 	}
 
-	public void mul (int value) {
+	//Kotlin-friendly operator
+	public void times (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] *= value;
@@ -221,7 +231,13 @@ public class IntList implements Arrangeable {
 		return -1;
 	}
 
-	public boolean removeValue (int value) {
+	/**
+	 * Removes the first occurrence of {@code value} from this IntList, returning true if anything was removed.
+	 * Otherwise, this returns false.
+	 * @param value the value to (attempt to) remove
+	 * @return true if a value was removed, false if the IntList is unchanged
+	 */
+	public boolean remove (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
 			if (items[i] == value) {
@@ -232,7 +248,11 @@ public class IntList implements Arrangeable {
 		return false;
 	}
 
-	/** Removes and returns the item at the specified index. */
+	/** Removes and returns the item at the specified index.
+	 * Note that this is equivalent to {@link java.util.List#remove(int)}, but can't have that name because
+	 * we also have {@link #remove(int)} that removes a value, rather than an index.
+	 * @param index the index of the item to remove and return
+	 * @return the removed item */
 	public int removeIndex (int index) {
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		int[] items = this.items;
@@ -246,21 +266,24 @@ public class IntList implements Arrangeable {
 	}
 
 	/** Removes the items between the specified indices, inclusive. */
-	public void removeRange (int start, int end) {
+	public void removeRange (int startIndex, int endIndex) {
 		int n = size;
-		if (end >= n) throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);
-		if (start > end) throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
-		int count = end - start + 1, lastIndex = n - count;
+		if (endIndex >= n) throw new IndexOutOfBoundsException("end can't be >= size: " + endIndex + " >= " + size);
+		if (startIndex > endIndex) throw new IndexOutOfBoundsException("start can't be > end: " + startIndex + " > " + endIndex);
+		int count = endIndex - startIndex + 1, lastIndex = n - count;
 		if (ordered)
-			System.arraycopy(items, start + count, items, start, n - (start + count));
+			System.arraycopy(items, startIndex + count, items, startIndex, n - (startIndex + count));
 		else {
-			int i = Math.max(lastIndex, end + 1);
-			System.arraycopy(items, i, items, start, n - i);
+			int i = Math.max(lastIndex, endIndex + 1);
+			System.arraycopy(items, i, items, startIndex, n - i);
 		}
 		size = n - count;
 	}
 
 	/** Removes from this array all of elements contained in the specified array.
+	 * Note that if a value is present more than once in this IntList, only one of those occurrences
+	 * will be removed for each occurrence of that value in {@code array}. If {@code array} has the same
+	 * contents as this IntList or has additional items, then removing all of {@code array} will clear this.
 	 * @return true if this array was modified. */
 	public boolean removeAll (IntList array) {
 		int size = this.size;
