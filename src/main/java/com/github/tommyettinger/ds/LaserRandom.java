@@ -11,7 +11,7 @@ import java.util.Random;
  * Pew pew!
  */
 public class LaserRandom extends Random implements Serializable {
-	private static final long serialVersionUID = 5L;
+	private static final long serialVersionUID = 0L;
 	/**
 	 * Can be any long value.
 	 */
