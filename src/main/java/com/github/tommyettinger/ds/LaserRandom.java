@@ -218,7 +218,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * probability.
 	 * 
 	 * <p>Note that this advances the state by the same amount as a single call to
-	 * {@link #nextLong())}, which allows methods like {@link #skip(long)} to function
+	 * {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
 	 * correctly, but introduces some bias when {@code bound} is very large. This will
 	 * also advance the state if {@code bound} is 0 or negative, so usage with a variable
 	 * bound will advance the state reliably.

@@ -74,14 +74,191 @@
 <li class="blockList">
 <h2 title="Package">Package&nbsp;com.github.tommyettinger.ds</h2>
 <ul class="blockList">
-<li class="blockList"><a name="com.github.tommyettinger.ds.JdkgdxdsRuntimeException">
+<li class="blockList"><a name="com.github.tommyettinger.ds.LaserRandom">
 <!--   -->
 </a>
-<h3>Class <a href="com/github/tommyettinger/ds/JdkgdxdsRuntimeException.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.JdkgdxdsRuntimeException</a> extends java.lang.RuntimeException implements Serializable</h3>
+<h3>Class <a href="com/github/tommyettinger/ds/LaserRandom.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.LaserRandom</a> extends java.util.Random implements Serializable</h3>
 <dl class="nameValue">
 <dt>serialVersionUID:</dt>
-<dd>2035952L</dd>
+<dd>5L</dd>
 </dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>stateA</h4>
+<pre>long stateA</pre>
+<div class="block">Can be any long value.</div>
+</li>
+<li class="blockListLast">
+<h4>stateB</h4>
+<pre>long stateB</pre>
+<div class="block">Must be odd.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.github.tommyettinger.ds.ObjectMap">
+<!--   -->
+</a>
+<h3>Class <a href="com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.ObjectMap</a> extends java.lang.Object implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>0L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>size</h4>
+<pre>int size</pre>
+</li>
+<li class="blockList">
+<h4>keyTable</h4>
+<pre>java.lang.Object[] keyTable</pre>
+</li>
+<li class="blockList">
+<h4>valueTable</h4>
+<pre>java.lang.Object[] valueTable</pre>
+</li>
+<li class="blockList">
+<h4>loadFactor</h4>
+<pre>float loadFactor</pre>
+</li>
+<li class="blockList">
+<h4>threshold</h4>
+<pre>int threshold</pre>
+</li>
+<li class="blockList">
+<h4>shift</h4>
+<pre>int shift</pre>
+</li>
+<li class="blockList">
+<h4>mask</h4>
+<pre>int mask</pre>
+<div class="block">A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+ minus 1.</div>
+</li>
+<li class="blockList">
+<h4>entries1</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="com/github/tommyettinger/ds/ObjectMap.Entries.html" title="type parameter in ObjectMap.Entries">K</a>,<a href="com/github/tommyettinger/ds/ObjectMap.Entries.html" title="type parameter in ObjectMap.Entries">V</a>&gt; entries1</pre>
+</li>
+<li class="blockList">
+<h4>entries2</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="com/github/tommyettinger/ds/ObjectMap.Entries.html" title="type parameter in ObjectMap.Entries">K</a>,<a href="com/github/tommyettinger/ds/ObjectMap.Entries.html" title="type parameter in ObjectMap.Entries">V</a>&gt; entries2</pre>
+</li>
+<li class="blockList">
+<h4>values1</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="com/github/tommyettinger/ds/ObjectMap.Values.html" title="type parameter in ObjectMap.Values">V</a>&gt; values1</pre>
+</li>
+<li class="blockList">
+<h4>values2</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="com/github/tommyettinger/ds/ObjectMap.Values.html" title="type parameter in ObjectMap.Values">V</a>&gt; values2</pre>
+</li>
+<li class="blockList">
+<h4>keys1</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="com/github/tommyettinger/ds/ObjectMap.Keys.html" title="type parameter in ObjectMap.Keys">K</a>&gt; keys1</pre>
+</li>
+<li class="blockListLast">
+<h4>keys2</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="com/github/tommyettinger/ds/ObjectMap.Keys.html" title="type parameter in ObjectMap.Keys">K</a>&gt; keys2</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.github.tommyettinger.ds.ObjectSet">
+<!--   -->
+</a>
+<h3>Class <a href="com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.ObjectSet</a> extends java.lang.Object implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>0L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>size</h4>
+<pre>int size</pre>
+</li>
+<li class="blockList">
+<h4>keyTable</h4>
+<pre>java.lang.Object[] keyTable</pre>
+</li>
+<li class="blockList">
+<h4>loadFactor</h4>
+<pre>float loadFactor</pre>
+</li>
+<li class="blockList">
+<h4>threshold</h4>
+<pre>int threshold</pre>
+</li>
+<li class="blockList">
+<h4>shift</h4>
+<pre>int shift</pre>
+</li>
+<li class="blockList">
+<h4>mask</h4>
+<pre>int mask</pre>
+<div class="block">A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+ minus 1.</div>
+</li>
+<li class="blockList">
+<h4>iterator1</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">ObjectSet.ObjectSetIterator</a>&lt;<a href="com/github/tommyettinger/ds/ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a>&gt; iterator1</pre>
+</li>
+<li class="blockListLast">
+<h4>iterator2</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">ObjectSet.ObjectSetIterator</a>&lt;<a href="com/github/tommyettinger/ds/ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a>&gt; iterator2</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.github.tommyettinger.ds.OrderedMap">
+<!--   -->
+</a>
+<h3>Class <a href="com/github/tommyettinger/ds/OrderedMap.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.OrderedMap</a> extends <a href="com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;<a href="com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt; implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>0L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>keys</h4>
+<pre>java.util.ArrayList&lt;E&gt; keys</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.github.tommyettinger.ds.OrderedSet">
+<!--   -->
+</a>
+<h3>Class <a href="com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.OrderedSet</a> extends <a href="com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a>&lt;<a href="com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt; implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>0L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockListLast">
+<h4>items</h4>
+<pre>java.util.ArrayList&lt;E&gt; items</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 </ul>
 </li>

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Random;
 
-/** A resizable, ordered or unordered int array. Avoids the boxing that occurs with ArrayList<Integer>. If unordered, this class
+/** A resizable, ordered or unordered int array. Avoids the boxing that occurs with an ArrayList of Integer. If unordered, this class
  * avoids a memory copy when removing elements (the last element is moved to the removed element's position).
  * @author Nathan Sweet */
 public class IntList implements Arrangeable {
@@ -45,16 +45,6 @@ public class IntList implements Arrangeable {
 	public IntList (boolean ordered, int capacity) {
 		this.ordered = ordered;
 		items = new int[capacity];
-	}
-
-	/** @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *           memory copy.
-	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
-	 * @param randomSeed any long; if this is the same for different IntList instances, their randomized methods like {@link Arrangeable#shuffle(Random)}
-	 *                   will have the same results when called in the same order (on the same items). */
-	public IntList (boolean ordered, int capacity, long randomSeed) {
-		this.ordered = ordered;
-		items = new int[capacity]; 
 	}
 
 	/** Creates a new array containing the elements in the specific array. The new array will be ordered if the specific array is
@@ -83,10 +73,12 @@ public class IntList implements Arrangeable {
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
+	// Newly-added
 	public int size(){
 		return size;
 	}
-	
+
+	// Modified from libGDX
 	public boolean add (int value) {
 		int[] items = this.items;
 		if (size == items.length) items = resize(Math.max(8, (int)(size * 1.75f)));
@@ -121,20 +113,24 @@ public class IntList implements Arrangeable {
 		size += 4;
 	}
 
+	// Modified from libGDX
 	public boolean addAll (IntList array) {
 		return addAll(array.items, 0, array.size);
 	}
 
-	public void addAll (IntList array, int offset, int length) {
+	// Modified from libGDX
+	public boolean addAll (IntList array, int offset, int length) {
 		if (offset + length > array.size)
 			throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);
-		addAll(array.items, offset, length);
+		return addAll(array.items, offset, length);
 	}
 
+	// Modified from libGDX
 	public boolean addAll (int... array) {
 		return addAll(array, 0, array.length);
 	}
 
+	// Modified from libGDX
 	public boolean addAll (int[] array, int offset, int length) {
 		int[] items = this.items;
 		int sizeNeeded = size + length;
@@ -150,30 +146,33 @@ public class IntList implements Arrangeable {
 		return items[index];
 	}
 
-	//Kotlin-friendly operator
+	// Kotlin-friendly operator
 	public void set (int index, int value) {
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		items[index] = value;
 	}
-	
+
+	// Modified from libGDX
 	public void plus (int index, int value) {
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		items[index] += value;
 	}
 
-	//Kotlin-friendly operator
+	// Modified from libGDX
+	// Kotlin-friendly operator
 	public void plus (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] += value;
 	}
-
+	// Modified from libGDX
 	public void times (int index, int value) {
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		items[index] *= value;
 	}
 
-	//Kotlin-friendly operator
+	// Modified from libGDX
+	// Kotlin-friendly operator
 	public void times (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
@@ -224,6 +223,7 @@ public class IntList implements Arrangeable {
 	 * @param other an IntList
 	 * @return true if this contains every item in {@code other}, otherwise false
 	 */
+	// Newly-added
 	public boolean containsAll(@NotNull IntList other) {
 		int[] others = other.items;
 		int otherSize = other.size;
@@ -255,6 +255,7 @@ public class IntList implements Arrangeable {
 	 * @param value the value to (attempt to) remove
 	 * @return true if a value was removed, false if the IntList is unchanged
 	 */
+	// Modified from libGDX
 	public boolean remove (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
@@ -325,6 +326,7 @@ public class IntList implements Arrangeable {
 	 * @param other an IntList that contains the items that this should keep, whenever present
 	 * @return true if this IntList changed as a result of this call, otherwise false
 	 */
+	// Newly-added
 	public boolean retainAll (@NotNull IntList other) {
 		final int size = this.size;
 		final int[] items = this.items;
@@ -349,6 +351,7 @@ public class IntList implements Arrangeable {
 	}
 
 	/** Returns the first item. */
+	// Modified from libGDX
 	public int first () {
 		if (size == 0) throw new IndexOutOfBoundsException("Array is empty.");
 		return items[0];
@@ -417,6 +420,7 @@ public class IntList implements Arrangeable {
 		}
 	}
 	
+	// Modified from libGDX
 	public void shuffle (@NotNull Random random) {
 		int[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) {
@@ -434,6 +438,7 @@ public class IntList implements Arrangeable {
 	}
 
 	/** Returns a random item from the array, or zero if the array is empty. */
+	// Modified from libGDX
 	public int random (@NotNull Random random) {
 		if (size == 0) return 0;
 		return items[random.nextInt(size)];

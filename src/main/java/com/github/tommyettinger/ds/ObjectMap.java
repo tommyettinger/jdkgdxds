@@ -202,8 +202,11 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 
 	/**
 	 * Returns the value for the specified key, or null if the key is not in the map.
-	 *
-	 * @param key
+	 * Note that null is also a valid value that can be assigned to a legitimate key, so
+	 * checking that the result of this method is null does not guarantee that the
+	 * {@code key} is not present.
+	 * 
+	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
 	public @Nullable V get (@NotNull Object key) {
 		int i = locateKey(key);

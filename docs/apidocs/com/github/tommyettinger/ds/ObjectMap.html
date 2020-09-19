@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -46,7 +46,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/github/tommyettinger/ds/JdkgdxdsRuntimeException.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -106,7 +106,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd>java.lang.Iterable&lt;java.util.Map.Entry&lt;K,V&gt;&gt;, java.util.Map&lt;K,V&gt;</dd>
+<dd>java.io.Serializable, java.lang.Iterable&lt;java.util.Map.Entry&lt;K,V&gt;&gt;, java.util.Map&lt;K,V&gt;</dd>
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
@@ -116,7 +116,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">ObjectMap&lt;K,V&gt;</span>
 extends java.lang.Object
-implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&lt;K,V&gt;&gt;</pre>
+implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&lt;K,V&gt;&gt;, java.io.Serializable</pre>
 <div class="block">An unordered map where the keys and values are objects. Null keys are not allowed. No allocation is done except when growing
  the table size.
  <p>
@@ -131,6 +131,10 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
  hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
  "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
  Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../serialized-form.html#com.github.tommyettinger.ds.ObjectMap">Serialized Form</a></dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -185,6 +189,30 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#entries1">entries1</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#entries2">entries2</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#keys1">keys1</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#keys2">keys2</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#keyTable">keyTable</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected float</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#loadFactor">loadFactor</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#mask">mask</a></span></code>
 <div class="block">A bitmask used to confine hashcodes to the size of the table.</div>
@@ -192,14 +220,27 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#shift">shift</a></span></code>
-<div class="block">Used by <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#place-java.lang.Object-"><code>place(Object)</code></a> to bit shift the upper bits of a <code>long</code> into a usable range (&gt;= 0 and &lt;=
- <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#mask"><code>mask</code></a>).</div>
-</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#shift">shift</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#size">size</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#threshold">threshold</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#values1">values1</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#values2">values2</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#valueTable">valueTable</a></span></code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -232,12 +273,12 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#ObjectMap-java.util.Map-">ObjectMap</a></span>(java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#ObjectMap-java.util.Map-">ObjectMap</a></span>(@NotNull java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</code>
 <div class="block">Creates a new map identical to the specified map.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#ObjectMap-com.github.tommyettinger.ds.ObjectMap-">ObjectMap</a></span>(<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#ObjectMap-com.github.tommyettinger.ds.ObjectMap-">ObjectMap</a></span>(@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</code>
 <div class="block">Creates a new map identical to the specified map.</div>
 </td>
 </tr>
@@ -268,7 +309,7 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#containsKey-java.lang.Object-">containsKey</a></span>(java.lang.Object&nbsp;key)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#containsKey-java.lang.Object-">containsKey</a></span>(@NotNull java.lang.Object&nbsp;key)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
@@ -291,7 +332,7 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 </td>
 </tr>
 <tr id="i6" class="altColor">
-<td class="colFirst"><code>@NotNull java.util.Set&lt;java.util.Map.Entry&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&gt;</code></td>
+<td class="colFirst"><code>@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#entrySet--">entrySet</a></span>()</code>
 <div class="block">Returns a Set of Map.Entry, containing the entries in the map.</div>
 </td>
@@ -343,74 +384,80 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 </td>
 </tr>
 <tr id="i15" class="rowColor">
-<td class="colFirst"><code>@NotNull java.util.Set&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;</code></td>
+<td class="colFirst"><code>@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#keySet--">keySet</a></span>()</code>
 <div class="block">Returns a <code>Set</code> view of the keys contained in this map.</div>
 </td>
 </tr>
 <tr id="i16" class="altColor">
+<td class="colFirst"><code>protected int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#locateKey-java.lang.Object-">locateKey</a></span>(@NotNull java.lang.Object&nbsp;key)</code>
+<div class="block">Returns the index of the key if already present, else <code>~index</code> for the next empty index.</div>
+</td>
+</tr>
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#notEmpty--">notEmpty</a></span>()</code>
 <div class="block">Returns true if the map has one or more items.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>protected int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#place-java.lang.Object-">place</a></span>(java.lang.Object&nbsp;item)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#place-java.lang.Object-">place</a></span>(@NotNull java.lang.Object&nbsp;item)</code>
 <div class="block">Returns an index &gt;= 0 and &lt;= <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#mask"><code>mask</code></a> for the specified <code>item</code>.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#put-K-V-">put</a></span>(<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>&nbsp;key,
    <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&nbsp;value)</code>
 <div class="block">Returns the old value associated with the specified key, or null.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#putAll-java.util.Map-">putAll</a></span>(java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;m)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#putAll-java.util.Map-">putAll</a></span>(@NotNull java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;m)</code>
 <div class="block">Copies all of the mappings from the specified map to this map
  (optional operation).</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#putAll-com.github.tommyettinger.ds.ObjectMap-">putAll</a></span>(<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</code>&nbsp;</td>
-</tr>
 <tr id="i21" class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#remove-java.lang.Object-">remove</a></span>(java.lang.Object&nbsp;key)</code>&nbsp;</td>
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#putAll-com.github.tommyettinger.ds.ObjectMap-">putAll</a></span>(@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</code>&nbsp;</td>
 </tr>
 <tr id="i22" class="altColor">
+<td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#remove-java.lang.Object-">remove</a></span>(@NotNull java.lang.Object&nbsp;key)</code>&nbsp;</td>
+</tr>
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#shrink-int-">shrink</a></span>(int&nbsp;maximumCapacity)</code>
 <div class="block">Reduces the size of the backing arrays to be the specified capacity / loadFactor, or less.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#size--">size</a></span>()</code>
 <div class="block">Returns the number of key-value mappings in this map.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#toString-java.lang.String-">toString</a></span>(java.lang.String&nbsp;separator)</code>&nbsp;</td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#toString-java.lang.String-boolean-">toString</a></span>(java.lang.String&nbsp;separator,
         boolean&nbsp;braces)</code>&nbsp;</td>
 </tr>
-<tr id="i27" class="rowColor">
-<td class="colFirst"><code>@NotNull java.util.Collection&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
+<tr id="i28" class="altColor">
+<td class="colFirst"><code>@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#values--">values</a></span>()</code>
-<div class="block">Returns a Collection for the values in the map.</div>
+<div class="block">Returns an iterator for the values in the map.</div>
 </td>
 </tr>
 </table>
@@ -458,6 +505,42 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 <pre>public&nbsp;int size</pre>
 </li>
 </ul>
+<a name="keyTable">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>keyTable</h4>
+<pre>protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>[] keyTable</pre>
+</li>
+</ul>
+<a name="valueTable">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>valueTable</h4>
+<pre>protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>[] valueTable</pre>
+</li>
+</ul>
+<a name="loadFactor">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>loadFactor</h4>
+<pre>protected&nbsp;float loadFactor</pre>
+</li>
+</ul>
+<a name="threshold">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>threshold</h4>
+<pre>protected&nbsp;int threshold</pre>
+</li>
+</ul>
 <a name="shift">
 <!--   -->
 </a>
@@ -465,26 +548,71 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 <li class="blockList">
 <h4>shift</h4>
 <pre>protected&nbsp;int shift</pre>
-<div class="block">Used by <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#place-java.lang.Object-"><code>place(Object)</code></a> to bit shift the upper bits of a <code>long</code> into a usable range (&gt;= 0 and &lt;=
- <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#mask"><code>mask</code></a>). The shift can be negative, which is convenient to match the number of bits in mask: if mask is a 7-bit
- number, a shift of -7 shifts the upper 7 bits into the lowest 7 positions. This class sets the shift &gt; 32 and &lt; 64,
- which if used with an int will still move the upper bits of an int to the lower bits due to Java's implicit modulus on
- shifts.
- <p>
- <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#mask"><code>mask</code></a> can also be used to mask the low bits of a number, which may be faster for some hashcodes, if
- <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#place-java.lang.Object-"><code>place(Object)</code></a> is overridden.</div>
 </li>
 </ul>
 <a name="mask">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>mask</h4>
 <pre>protected&nbsp;int mask</pre>
 <div class="block">A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
- minus 1. If <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#place-java.lang.Object-"><code>place(Object)</code></a> is overriden, this can be used instead of <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#shift"><code>shift</code></a> to isolate usable bits of a
- hash.</div>
+ minus 1.</div>
+</li>
+</ul>
+<a name="entries1">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>entries1</h4>
+<pre>protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt; entries1</pre>
+</li>
+</ul>
+<a name="entries2">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>entries2</h4>
+<pre>protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt; entries2</pre>
+</li>
+</ul>
+<a name="values1">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>values1</h4>
+<pre>protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt; values1</pre>
+</li>
+</ul>
+<a name="values2">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>values2</h4>
+<pre>protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt; values2</pre>
+</li>
+</ul>
+<a name="keys1">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>keys1</h4>
+<pre>protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt; keys1</pre>
+</li>
+</ul>
+<a name="keys2">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>keys2</h4>
+<pre>protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt; keys2</pre>
 </li>
 </ul>
 </li>
@@ -541,7 +669,8 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 <ul class="blockList">
 <li class="blockList">
 <h4>ObjectMap</h4>
-<pre>public&nbsp;ObjectMap(<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</pre>
+<pre>public&nbsp;ObjectMap(@NotNull
+                 @NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</pre>
 <div class="block">Creates a new map identical to the specified map.</div>
 </li>
 </ul>
@@ -551,7 +680,8 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ObjectMap</h4>
-<pre>public&nbsp;ObjectMap(java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</pre>
+<pre>public&nbsp;ObjectMap(@NotNull
+                 @NotNull java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</pre>
 <div class="block">Creates a new map identical to the specified map.</div>
 </li>
 </ul>
@@ -569,24 +699,28 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 <ul class="blockList">
 <li class="blockList">
 <h4>place</h4>
-<pre>protected&nbsp;int&nbsp;place(java.lang.Object&nbsp;item)</pre>
-<div class="block">Returns an index &gt;= 0 and &lt;= <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#mask"><code>mask</code></a> for the specified <code>item</code>.
- <p>
- The default implementation uses Fibonacci hashing on the item's <code>Object.hashCode()</code>: the hashcode is multiplied by a
- long constant (2 to the 64th, divided by the golden ratio) then the uppermost bits are shifted into the lowest positions to
- obtain an index in the desired range. Multiplication by a long may be slower than int (eg on GWT) but greatly improves
- rehashing, allowing even very poor hashcodes, such as those that only differ in their upper bits, to be used without high
- collision rates. Fibonacci hashing has increased collision rates when all or most hashcodes are multiples of larger
- Fibonacci numbers (see <a href=
- "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
- Skarupke's blog post</a>).
- <p>
- This method can be overriden to customizing hashing. This may be useful eg in the unlikely event that most hashcodes are
- Fibonacci numbers, if keys provide poor or incorrect hashcodes, or to simplify hashing if keys provide high quality
- hashcodes and don't need Fibonacci hashing: <code>return item.hashCode() &amp; mask;</code></div>
+<pre>protected&nbsp;int&nbsp;place(@NotNull
+                    @NotNull java.lang.Object&nbsp;item)</pre>
+<div class="block">Returns an index &gt;= 0 and &lt;= <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#mask"><code>mask</code></a> for the specified <code>item</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>item</code> - </dd>
+<dd><code>item</code> - a non-null Object; its hashCode() method should be used by most implementations.</dd>
+</dl>
+</li>
+</ul>
+<a name="locateKey-java.lang.Object-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>locateKey</h4>
+<pre>protected&nbsp;int&nbsp;locateKey(@NotNull
+                        @NotNull java.lang.Object&nbsp;key)</pre>
+<div class="block">Returns the index of the key if already present, else <code>~index</code> for the next empty index. This can be overridden
+ to compare for equality differently than <code>Object.equals(Object)</code>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - a non-null Object that should probably be a K</dd>
 </dl>
 </li>
 </ul>
@@ -599,7 +733,8 @@ implements java.util.Map&lt;K,V&gt;, java.lang.Iterable&lt;java.util.Map.Entry&l
 <li class="blockList">
 <h4>put</h4>
 <pre>@Nullable
-public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&nbsp;put(<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>&nbsp;key,
+public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&nbsp;put(@NotNull
+                        <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>&nbsp;key,
                         @Nullable
                         <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&nbsp;value)</pre>
 <div class="block">Returns the old value associated with the specified key, or null.</div>
@@ -615,7 +750,8 @@ public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" tit
 <ul class="blockList">
 <li class="blockList">
 <h4>putAll</h4>
-<pre>public&nbsp;void&nbsp;putAll(<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</pre>
+<pre>public&nbsp;void&nbsp;putAll(@NotNull
+                   @NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;map)</pre>
 </li>
 </ul>
 <a name="get-java.lang.Object-">
@@ -627,12 +763,15 @@ public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" tit
 <pre>@Nullable
 public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&nbsp;get(@NotNull
                         @NotNull java.lang.Object&nbsp;key)</pre>
-<div class="block">Returns the value for the specified key, or null if the key is not in the map.</div>
+<div class="block">Returns the value for the specified key, or null if the key is not in the map.
+ Note that null is also a valid value that can be assigned to a legitimate key, so
+ checking that the result of this method is null does not guarantee that the
+ <code>key</code> is not present.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>get</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>key</code> - </dd>
+<dd><code>key</code> - a non-null Object that should almost always be a <code>K</code> (or an instance of a subclass of <code>K</code>)</dd>
 </dl>
 </li>
 </ul>
@@ -659,7 +798,8 @@ public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" tit
 <li class="blockList">
 <h4>remove</h4>
 <pre>@Nullable
-public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&nbsp;remove(java.lang.Object&nbsp;key)</pre>
+public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&nbsp;remove(@NotNull
+                           @NotNull java.lang.Object&nbsp;key)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>remove</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></dd>
@@ -672,7 +812,8 @@ public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" tit
 <ul class="blockList">
 <li class="blockList">
 <h4>putAll</h4>
-<pre>public&nbsp;void&nbsp;putAll(java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;m)</pre>
+<pre>public&nbsp;void&nbsp;putAll(@NotNull
+                   @NotNull java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;m)</pre>
 <div class="block">Copies all of the mappings from the specified map to this map
  (optional operation).  The effect of this call is equivalent to that
  of calling <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#put-K-V-"><code>put(k, v)</code></a> on this map once
@@ -774,33 +915,6 @@ public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" tit
 </dl>
 </li>
 </ul>
-<a name="keySet--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>keySet</h4>
-<pre>@NotNull
-public&nbsp;@NotNull java.util.Set&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;&nbsp;keySet()</pre>
-<div class="block">Returns a <code>Set</code> view of the keys contained in this map.
- The set is backed by the map, so changes to the map are
- reflected in the set, and vice-versa.  If the map is modified
- while an iteration over the set is in progress (except through
- the iterator's own <tt>remove</tt> operation), the results of
- the iteration are undefined.  The set supports element removal,
- which removes the corresponding mapping from the map, via the
- <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
- <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
- operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
- operations.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>keySet</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a set view of the keys contained in this map</dd>
-</dl>
-</li>
-</ul>
 <a name="containsValue-java.lang.Object-boolean-">
 <!--   -->
 </a>
@@ -815,7 +929,7 @@ public&nbsp;@NotNull java.util.Set&lt;<a href="../../../../com/github/tommyettin
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>identity</code> - If true, uses == to compare the specified value with values in the map. If false, uses
-           <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#equals-java.lang.Object-"><code>equals(Object)</code></a>.</dd>
+                 <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#equals-java.lang.Object-"><code>equals(Object)</code></a>.</dd>
 </dl>
 </li>
 </ul>
@@ -825,7 +939,8 @@ public&nbsp;@NotNull java.util.Set&lt;<a href="../../../../com/github/tommyettin
 <ul class="blockList">
 <li class="blockList">
 <h4>containsKey</h4>
-<pre>public&nbsp;boolean&nbsp;containsKey(java.lang.Object&nbsp;key)</pre>
+<pre>public&nbsp;boolean&nbsp;containsKey(@NotNull
+                           @NotNull java.lang.Object&nbsp;key)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>containsKey</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></dd>
@@ -878,7 +993,7 @@ public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" tit
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>identity</code> - If true, uses == to compare the specified value with values in the map. If false, uses
-           <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#equals-java.lang.Object-"><code>equals(Object)</code></a>.</dd>
+                 <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#equals-java.lang.Object-"><code>equals(Object)</code></a>.</dd>
 </dl>
 </li>
 </ul>
@@ -985,6 +1100,33 @@ public&nbsp;@NotNull java.util.Iterator&lt;java.util.Map.Entry&lt;<a href="../..
 </dl>
 </li>
 </ul>
+<a name="keySet--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>keySet</h4>
+<pre>@NotNull
+public&nbsp;@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;&nbsp;keySet()</pre>
+<div class="block">Returns a <code>Set</code> view of the keys contained in this map.
+ The set is backed by the map, so changes to the map are
+ reflected in the set, and vice-versa.  If the map is modified
+ while an iteration over the set is in progress (except through
+ the iterator's own <tt>remove</tt> operation), the results of
+ the iteration are undefined.  The set supports element removal,
+ which removes the corresponding mapping from the map, via the
+ <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
+ <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
+ operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
+ operations.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>keySet</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a set view of the keys contained in this map</dd>
+</dl>
+</li>
+</ul>
 <a name="values--">
 <!--   -->
 </a>
@@ -992,10 +1134,9 @@ public&nbsp;@NotNull java.util.Iterator&lt;java.util.Map.Entry&lt;<a href="../..
 <li class="blockList">
 <h4>values</h4>
 <pre>@NotNull
-public&nbsp;@NotNull java.util.Collection&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;values()</pre>
-<div class="block">Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
- <p>
- Permits nested or multithreaded iteration, but allocates a new <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap.Values</code></a> instance per-call.</div>
+public&nbsp;@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;values()</pre>
+<div class="block">Returns an iterator for the values in the map. Remove is supported. Note that the same iterator instance is returned each
+ time this method is called. Use the <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap.Values</code></a> constructor for nested or multithreaded iteration.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>values</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></dd>
@@ -1011,10 +1152,10 @@ public&nbsp;@NotNull java.util.Collection&lt;<a href="../../../../com/github/tom
 <li class="blockList">
 <h4>entrySet</h4>
 <pre>@NotNull
-public&nbsp;@NotNull java.util.Set&lt;java.util.Map.Entry&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&gt;&nbsp;entrySet()</pre>
+public&nbsp;@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;&nbsp;entrySet()</pre>
 <div class="block">Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
- <p>
- Permits nested or multithreaded iteration, but allocates a new <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap.Entries</code></a> instance per-call.</div>
+ Note that the same iterator instance is returned each time this method is called.
+ Use the <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap.Entries</code></a> constructor for nested or multithreaded iteration.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>entrySet</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></dd>
@@ -1049,7 +1190,7 @@ public&nbsp;@NotNull java.util.Set&lt;java.util.Map.Entry&lt;<a href="../../../.
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/github/tommyettinger/ds/JdkgdxdsRuntimeException.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

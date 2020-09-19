@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":9};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -72,13 +72,13 @@ var activeTableTab = "activeTableTab";
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
-<li><a href="#fields.inherited.from.class.com.github.tommyettinger.ds.ObjectSet">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -97,20 +97,10 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>java.util.AbstractCollection&lt;E&gt;</li>
-<li>
-<ul class="inheritance">
-<li>java.util.AbstractSet&lt;T&gt;</li>
-<li>
-<ul class="inheritance">
 <li><a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.ObjectSet</a>&lt;T&gt;</li>
 <li>
 <ul class="inheritance">
 <li>com.github.tommyettinger.ds.OrderedSet&lt;T&gt;</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -121,12 +111,13 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd>java.lang.Iterable&lt;T&gt;, java.util.Collection&lt;T&gt;, java.util.Set&lt;T&gt;</dd>
+<dd><a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a>, <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;T&gt;, java.io.Serializable, java.lang.Iterable&lt;T&gt;, java.util.Collection&lt;T&gt;, java.util.Set&lt;T&gt;</dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">OrderedSet&lt;T&gt;</span>
-extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a>&lt;T&gt;</pre>
+extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a>&lt;T&gt;
+implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;T&gt;, java.io.Serializable</pre>
 <div class="block">A <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds"><code>ObjectSet</code></a> that also stores keys in an <code>ArrayList</code> using the insertion order. Null keys are not allowed. No
  allocation is done except when growing the table size.
  <p>
@@ -145,6 +136,10 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
  hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
  "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
  Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../serialized-form.html#com.github.tommyettinger.ds.OrderedSet">Serialized Form</a></dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -183,12 +178,23 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <!--   -->
 </a>
 <h3>Field Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Field and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#items">items</a></span></code>&nbsp;</td>
+</tr>
+</table>
 <ul class="blockList">
 <li class="blockList"><a name="fields.inherited.from.class.com.github.tommyettinger.ds.ObjectSet">
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;com.github.tommyettinger.ds.<a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a></h3>
-<code><a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#mask">mask</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#shift">shift</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#size">size</a></code></li>
+<code><a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#iterator1">iterator1</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#iterator2">iterator2</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#keyTable">keyTable</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#loadFactor">loadFactor</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#mask">mask</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#shift">shift</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#size">size</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#threshold">threshold</a></code></li>
 </ul>
 </li>
 </ul>
@@ -207,7 +213,7 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#OrderedSet--">OrderedSet</a></span>()</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#OrderedSet-java.util.Collection-">OrderedSet</a></span>(java.util.Collection&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;coll)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#OrderedSet-java.util.Collection-">OrderedSet</a></span>(@NotNull java.util.Collection&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;coll)</code>
 <div class="block">Creates a new set that contains all distinct elements in <code>coll</code>.</div>
 </td>
 </tr>
@@ -219,7 +225,7 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
           float&nbsp;loadFactor)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#OrderedSet-com.github.tommyettinger.ds.OrderedSet-">OrderedSet</a></span>(<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;set)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#OrderedSet-com.github.tommyettinger.ds.OrderedSet-">OrderedSet</a></span>(@NotNull <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;set)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -251,7 +257,7 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#addAll-com.github.tommyettinger.ds.OrderedSet-">addAll</a></span>(<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;set)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#addAll-com.github.tommyettinger.ds.OrderedSet-">addAll</a></span>(@NotNull <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;set)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
@@ -280,34 +286,42 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 </td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/OrderedSet.OrderedSetIterator.html" title="class in com.github.tommyettinger.ds">OrderedSet.OrderedSetIterator</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></td>
+<td class="colFirst"><code>@NotNull java.util.Iterator&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#iterator--">iterator</a></span>()</code>
 <div class="block">Returns an iterator for the keys in the set.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#orderedItems--">orderedItems</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#order--">order</a></span>()</code>
+<div class="block">Gets the ArrayList of items in the order this class will iterate through them.</div>
+</td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#remove-java.lang.Object-">remove</a></span>(java.lang.Object&nbsp;key)</code>
-<div class="block">Returns true if the key was removed.</div>
+<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#orderedItems--">orderedItems</a></span>()</code>
+<div class="block">Gets the ArrayList of items in the order this class will iterate through them.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#remove-java.lang.Object-">remove</a></span>(@NotNull java.lang.Object&nbsp;key)</code>
+<div class="block">Returns true if the key was removed.</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#removeIndex-int-">removeIndex</a></span>(int&nbsp;index)</code>&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#toString-java.lang.String-">toString</a></span>(java.lang.String&nbsp;separator)</code>&nbsp;</td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a>&lt;T&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#with-T...-">with</a></span>(T...&nbsp;array)</code>&nbsp;</td>
 </tr>
@@ -317,14 +331,7 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.github.tommyettinger.ds.<a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a></h3>
-<code><a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#addAll-java.util.Collection-">addAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#addAll-com.github.tommyettinger.ds.ObjectSet-">addAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#addAll-T:A-">addAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#addAll-T:A-int-int-">addAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#contains-java.lang.Object-">contains</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#containsAll-java.util.Collection-">containsAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#ensureCapacity-int-">ensureCapacity</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#equals-java.lang.Object-">equals</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#first--">first</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#get-T-">get</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#hashCode--">hashCode</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#isEmpty--">isEmpty</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#notEmpty--">notEmpty</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#place-java.lang.Object-">place</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#removeAll-java.util.Collection-">removeAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#retainAll-java.util.Collection-">retainAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#shrink-int-">shrink</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#size--">size</a></code></li>
-</ul>
-<ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.java.util.AbstractCollection">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;java.util.AbstractCollection</h3>
-<code>toArray, toArray</code></li>
+<code><a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#addAll-java.util.Collection-">addAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#addAll-com.github.tommyettinger.ds.ObjectSet-">addAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#addAll-T:A-">addAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#addAll-T:A-int-int-">addAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#contains-java.lang.Object-">contains</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#containsAll-java.util.Collection-">containsAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#ensureCapacity-int-">ensureCapacity</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#equals-java.lang.Object-">equals</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#first--">first</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#get-T-">get</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#hashCode--">hashCode</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#isEmpty--">isEmpty</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#locateKey-java.lang.Object-">locateKey</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#notEmpty--">notEmpty</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#place-java.lang.Object-">place</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#removeAll-java.util.Collection-">removeAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#retainAll-java.util.Collection-">retainAll</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#shrink-int-">shrink</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#size--">size</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#toArray--">toArray</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#toArray-E:A-">toArray</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -334,11 +341,18 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <code>clone, finalize, getClass, notify, notifyAll, wait, wait, wait</code></li>
 </ul>
 <ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.github.tommyettinger.ds.Ordered">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;com.github.tommyettinger.ds.<a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a></h3>
+<code><a href="../../../../com/github/tommyettinger/ds/Ordered.html#shuffle-java.util.Random-">shuffle</a>, <a href="../../../../com/github/tommyettinger/ds/Ordered.html#swap-int-int-">swap</a></code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.util.Set">
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;java.util.Set</h3>
-<code>spliterator, toArray, toArray</code></li>
+<code>spliterator</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.util.Collection">
@@ -362,6 +376,23 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a name="items">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>items</h4>
+<pre>protected final&nbsp;java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt; items</pre>
+</li>
+</ul>
+</li>
+</ul>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.detail">
@@ -402,7 +433,8 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <ul class="blockList">
 <li class="blockList">
 <h4>OrderedSet</h4>
-<pre>public&nbsp;OrderedSet(<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;set)</pre>
+<pre>public&nbsp;OrderedSet(@NotNull
+                  @NotNull <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;set)</pre>
 </li>
 </ul>
 <a name="OrderedSet-java.util.Collection-">
@@ -411,7 +443,8 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <ul class="blockListLast">
 <li class="blockList">
 <h4>OrderedSet</h4>
-<pre>public&nbsp;OrderedSet(java.util.Collection&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;coll)</pre>
+<pre>public&nbsp;OrderedSet(@NotNull
+                  @NotNull java.util.Collection&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;coll)</pre>
 <div class="block">Creates a new set that contains all distinct elements in <code>coll</code>.</div>
 </li>
 </ul>
@@ -431,7 +464,8 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <ul class="blockList">
 <li class="blockList">
 <h4>add</h4>
-<pre>public&nbsp;boolean&nbsp;add(<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&nbsp;key)</pre>
+<pre>public&nbsp;boolean&nbsp;add(@NotNull
+                   <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&nbsp;key)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#add-T-">ObjectSet</a></code></span></div>
 <div class="block">Returns true if the key was not already in the set. If this set already contains the key, the call leaves the set unchanged
  and returns false.</div>
@@ -453,7 +487,8 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <ul class="blockList">
 <li class="blockList">
 <h4>add</h4>
-<pre>public&nbsp;boolean&nbsp;add(<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&nbsp;key,
+<pre>public&nbsp;boolean&nbsp;add(@NotNull
+                   <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&nbsp;key,
                    int&nbsp;index)</pre>
 <div class="block">Sets the key at the specfied index. Returns true if the key was not already in the set. If this set already contains the
  key, the existing key's index is changed if needed and false is returned.</div>
@@ -465,7 +500,8 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <ul class="blockList">
 <li class="blockList">
 <h4>addAll</h4>
-<pre>public&nbsp;void&nbsp;addAll(<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;set)</pre>
+<pre>public&nbsp;void&nbsp;addAll(@NotNull
+                   @NotNull <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;set)</pre>
 </li>
 </ul>
 <a name="remove-java.lang.Object-">
@@ -474,7 +510,8 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <ul class="blockList">
 <li class="blockList">
 <h4>remove</h4>
-<pre>public&nbsp;boolean&nbsp;remove(java.lang.Object&nbsp;key)</pre>
+<pre>public&nbsp;boolean&nbsp;remove(@NotNull
+                      @NotNull java.lang.Object&nbsp;key)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#remove-java.lang.Object-">ObjectSet</a></code></span></div>
 <div class="block">Returns true if the key was removed.</div>
 <dl>
@@ -504,7 +541,9 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <ul class="blockList">
 <li class="blockList">
 <h4>alter</h4>
-<pre>public&nbsp;boolean&nbsp;alter(<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&nbsp;before,
+<pre>public&nbsp;boolean&nbsp;alter(@NotNull
+                     <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&nbsp;before,
+                     @NotNull
                      <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&nbsp;after)</pre>
 <div class="block">Changes the item <code>before</code> to <code>after</code> without changing its position in the order. Returns true if <code>after</code>
  has been added to the OrderedSet and <code>before</code> has been removed; returns false if <code>after</code> is already present or
@@ -528,6 +567,7 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <li class="blockList">
 <h4>alterIndex</h4>
 <pre>public&nbsp;boolean&nbsp;alterIndex(int&nbsp;index,
+                          @NotNull
                           <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&nbsp;after)</pre>
 <div class="block">Changes the item at the given <code>index</code> in the order to <code>after</code>, without changing the ordering of other items. If
  <code>after</code> is already present, this returns false; it will also return false if <code>index</code> is invalid for the size of
@@ -585,6 +625,34 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <li class="blockList">
 <h4>orderedItems</h4>
 <pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;orderedItems()</pre>
+<div class="block">Gets the ArrayList of items in the order this class will iterate through them.
+ Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+ also change the iteration order here.
+ <br>
+ This method is provided for backwards-compatibility; <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#order--"><code>order()</code></a> is preferred for new code
+ because it allows order-changing methods to be written once for an arbitrary <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds"><code>Ordered</code></a> type.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the ArrayList of items, in iteration order (usually insertion-order), that this uses</dd>
+</dl>
+</li>
+</ul>
+<a name="order--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>order</h4>
+<pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;order()</pre>
+<div class="block">Gets the ArrayList of items in the order this class will iterate through them.
+ Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+ also change the iteration order here.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../com/github/tommyettinger/ds/Ordered.html#order--">order</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the ArrayList of items, in iteration order (usually insertion-order), that this uses</dd>
+</dl>
 </li>
 </ul>
 <a name="iterator--">
@@ -593,7 +661,8 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <ul class="blockList">
 <li class="blockList">
 <h4>iterator</h4>
-<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.OrderedSetIterator.html" title="class in com.github.tommyettinger.ds">OrderedSet.OrderedSetIterator</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;iterator()</pre>
+<pre>@NotNull
+public&nbsp;@NotNull java.util.Iterator&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;iterator()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/ObjectSet.html#iterator--">ObjectSet</a></code></span></div>
 <div class="block">Returns an iterator for the keys in the set. Remove is supported.
  <p>
@@ -644,7 +713,8 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <ul class="blockListLast">
 <li class="blockList">
 <h4>with</h4>
-<pre>public static&nbsp;&lt;T&gt;&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a>&lt;T&gt;&nbsp;with(T...&nbsp;array)</pre>
+<pre>@SafeVarargs
+public static&nbsp;&lt;T&gt;&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a>&lt;T&gt;&nbsp;with(T...&nbsp;array)</pre>
 </li>
 </ul>
 </li>
@@ -699,13 +769,13 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
-<li><a href="#fields.inherited.from.class.com.github.tommyettinger.ds.ObjectSet">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

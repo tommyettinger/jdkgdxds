@@ -17,6 +17,12 @@
     catch(err) {
     }
 //-->
+var methods = {"i0":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var altColor = "altColor";
+var rowColor = "rowColor";
+var tableTab = "tableTab";
+var activeTableTab = "activeTableTab";
 </script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -68,13 +74,13 @@
 <li>Nested&nbsp;|&nbsp;</li>
 <li><a href="#fields.inherited.from.class.com.github.tommyettinger.ds.ObjectMap.Values">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#methods.inherited.from.class.com.github.tommyettinger.ds.ObjectMap.Values">Method</a></li>
+<li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 <a name="skip.navbar.top">
@@ -164,12 +170,25 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" 
 <!--   -->
 </a>
 <h3>Method Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr id="i0" class="altColor">
+<td class="colFirst"><code>@NotNull java.util.Iterator&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapValues.html" title="type parameter in OrderedMap.OrderedMapValues">V</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapValues.html#iterator--">iterator</a></span>()</code>
+<div class="block">Returns an iterator over the elements contained in this collection.</div>
+</td>
+</tr>
+</table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.github.tommyettinger.ds.ObjectMap.Values">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.github.tommyettinger.ds.<a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a></h3>
-<code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html#iterator--">iterator</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html#size--">size</a></code></li>
+<code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html#size--">size</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.util.AbstractCollection">
@@ -220,6 +239,36 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" 
 <li class="blockList">
 <h4>OrderedMapValues</h4>
 <pre>public&nbsp;OrderedMapValues(<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>&lt;?,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapValues.html" title="type parameter in OrderedMap.OrderedMapValues">V</a>&gt;&nbsp;map)</pre>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method.detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="iterator--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>iterator</h4>
+<pre>@NotNull
+public&nbsp;@NotNull java.util.Iterator&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapValues.html" title="type parameter in OrderedMap.OrderedMapValues">V</a>&gt;&nbsp;iterator()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html#iterator--">ObjectMap.Values</a></code></span></div>
+<div class="block">Returns an iterator over the elements contained in this collection.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>iterator</code>&nbsp;in interface&nbsp;<code>java.lang.Iterable&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapValues.html" title="type parameter in OrderedMap.OrderedMapValues">V</a>&gt;</code></dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>iterator</code>&nbsp;in interface&nbsp;<code>java.util.Collection&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapValues.html" title="type parameter in OrderedMap.OrderedMapValues">V</a>&gt;</code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html#iterator--">iterator</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapValues.html" title="type parameter in OrderedMap.OrderedMapValues">V</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>an iterator over the elements contained in this collection</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -276,13 +325,13 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" 
 <li>Nested&nbsp;|&nbsp;</li>
 <li><a href="#fields.inherited.from.class.com.github.tommyettinger.ds.ObjectMap.Values">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#methods.inherited.from.class.com.github.tommyettinger.ds.ObjectMap.Values">Method</a></li>
+<li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 <a name="skip.navbar.bottom">
