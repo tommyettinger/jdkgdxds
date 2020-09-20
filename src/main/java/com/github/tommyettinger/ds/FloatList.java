@@ -162,12 +162,20 @@ public class FloatList implements Arrangeable, Serializable {
 		items[index] += value;
 	}
 
+	/**
+	 * Adds {@code value} to each item in this FloatList, stores it in this and returns it.
+	 * The presence of this method allows Kotlin code to use the {@code +} operator (though it
+	 * shouldn't be used more than once in an expression, because this method modifies this FloatList).
+	 * @param value each item in this will be assigned {@code item + value}
+	 * @return this for chaining and Kotlin compatibility
+	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public void plus (float value) {
+	public FloatList plus (float value) {
 		float[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] += value;
+		return this;
 	}
 
 	// Modified from libGDX
@@ -176,12 +184,88 @@ public class FloatList implements Arrangeable, Serializable {
 		items[index] *= value;
 	}
 
+
+	/**
+	 * Multiplies each item in this FloatList by {@code value}, stores it in this and returns it.
+	 * The presence of this method allows Kotlin code to use the {@code *} operator (though it
+	 * shouldn't be used more than once in an expression, because this method modifies this FloatList).
+	 * @param value each item in this will be assigned {@code item * value}
+	 * @return this for chaining and Kotlin compatibility
+	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public void times (float value) {
+	public FloatList times (float value) {
 		float[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] *= value;
+		return this;
+	}
+
+	// Newly-added
+	public void minus (int index, float value) {
+		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		items[index] -= value;
+	}
+
+	/**
+	 * Takes each item in this FloatList and subtracts {@code value}, stores it in this and returns it.
+	 * This is just a minor convenience in Java, but the presence of this method allows Kotlin code to use
+	 * the {@code -} operator (though it shouldn't be used more than once in an expression, because
+	 * this method modifies this FloatList).
+	 * @param value each item in this will be assigned {@code item - value}
+	 * @return this for chaining and Kotlin compatibility
+	 */
+	// Newly-added
+	// Kotlin-friendly operator
+	public FloatList minus (float value) {
+		float[] items = this.items;
+		for (int i = 0, n = size; i < n; i++)
+			items[i] -= value;
+		return this;
+	}
+
+	// Newly-added
+	public void div (int index, float value) {
+		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		items[index] /= value;
+	}
+
+	/**
+	 * Divides each item in this FloatList by {@code value}, stores it in this and returns it.
+	 * The presence of this method allows Kotlin code to use the {@code /} operator (though it
+	 * shouldn't be used more than once in an expression, because this method modifies this FloatList).
+	 * @param value each item in this will be assigned {@code item / value}
+	 * @return this for chaining and Kotlin compatibility
+	 */
+	// Newly-added
+	// Kotlin-friendly operator
+	public FloatList div (float value) {
+		float[] items = this.items;
+		for (int i = 0, n = size; i < n; i++)
+			items[i] /= value;
+		return this;
+	}
+
+	// Newly-added
+	public void rem (int index, float value) {
+		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		items[index] %= value;
+	}
+
+	/**
+	 * Gets the remainder of each item in this FloatList with {@code value}, stores it in this and returns it.
+	 * The presence of this method allows Kotlin code to use the {@code %} operator (though it
+	 * shouldn't be used more than once in an expression, because this method modifies this FloatList).
+	 * @param value each item in this will be assigned {@code item % value}
+	 * @return this for chaining and Kotlin compatibility
+	 */
+	// Newly-added
+	// Kotlin-friendly operator
+	public FloatList rem (float value) {
+		float[] items = this.items;
+		for (int i = 0, n = size; i < n; i++)
+			items[i] %= value;
+		return this;
 	}
 
 	public void insert (int index, float value) {

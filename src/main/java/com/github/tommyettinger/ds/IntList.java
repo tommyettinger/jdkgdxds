@@ -162,25 +162,110 @@ public class IntList implements Arrangeable, Serializable {
 		items[index] += value;
 	}
 
+	/**
+	 * Adds {@code value} to each item in this IntList, stores it in this and returns it.
+	 * The presence of this method allows Kotlin code to use the {@code +} operator (though it
+	 * shouldn't be used more than once in an expression, because this method modifies this IntList).
+	 * @param value each item in this will be assigned {@code item + value}
+	 * @return this for chaining and Kotlin compatibility
+	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public void plus (int value) {
+	public IntList plus (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] += value;
+		return this;
 	}
+
 	// Modified from libGDX
 	public void times (int index, int value) {
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		items[index] *= value;
 	}
 
+
+	/**
+	 * Multiplies each item in this IntList by {@code value}, stores it in this and returns it.
+	 * The presence of this method allows Kotlin code to use the {@code *} operator (though it
+	 * shouldn't be used more than once in an expression, because this method modifies this IntList).
+	 * @param value each item in this will be assigned {@code item * value}
+	 * @return this for chaining and Kotlin compatibility
+	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public void times (int value) {
+	public IntList times (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] *= value;
+		return this;
+	}
+
+	// Newly-added
+	public void minus (int index, int value) {
+		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		items[index] -= value;
+	}
+
+	/**
+	 * Takes each item in this IntList and subtracts {@code value}, stores it in this and returns it.
+	 * This is just a minor convenience in Java, but the presence of this method allows Kotlin code to use
+	 * the {@code -} operator (though it shouldn't be used more than once in an expression, because
+	 * this method modifies this IntList).
+	 * @param value each item in this will be assigned {@code item - value}
+	 * @return this for chaining and Kotlin compatibility
+	 */
+	// Newly-added
+	// Kotlin-friendly operator
+	public IntList minus (int value) {
+		int[] items = this.items;
+		for (int i = 0, n = size; i < n; i++)
+			items[i] -= value;
+		return this;
+	}
+
+	// Newly-added
+	public void div (int index, int value) {
+		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		items[index] /= value;
+	}
+
+	/**
+	 * Divides each item in this IntList by {@code value}, stores it in this and returns it.
+	 * The presence of this method allows Kotlin code to use the {@code /} operator (though it
+	 * shouldn't be used more than once in an expression, because this method modifies this IntList).
+	 * @param value each item in this will be assigned {@code item / value}
+	 * @return this for chaining and Kotlin compatibility
+	 */
+	// Newly-added
+	// Kotlin-friendly operator
+	public IntList div (int value) {
+		int[] items = this.items;
+		for (int i = 0, n = size; i < n; i++)
+			items[i] /= value;
+		return this;
+	}
+
+	// Newly-added
+	public void rem (int index, int value) {
+		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		items[index] %= value;
+	}
+
+	/**
+	 * Gets the remainder of each item in this IntList with {@code value}, stores it in this and returns it.
+	 * The presence of this method allows Kotlin code to use the {@code %} operator (though it
+	 * shouldn't be used more than once in an expression, because this method modifies this IntList).
+	 * @param value each item in this will be assigned {@code item % value}
+	 * @return this for chaining and Kotlin compatibility
+	 */
+	// Newly-added
+	// Kotlin-friendly operator
+	public IntList rem (int value) {
+		int[] items = this.items;
+		for (int i = 0, n = size; i < n; i++)
+			items[i] %= value;
+		return this;
 	}
 
 	public void insert (int index, int value) {
