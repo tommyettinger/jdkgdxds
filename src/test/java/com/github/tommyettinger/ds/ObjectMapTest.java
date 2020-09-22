@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -597,7 +598,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 			super(m);
 		}
 
-		public V put (K key, V value) {
+		public V put (@NotNull K key, V value) {
 			throw new UnsupportedOperationException();
 		}
 	}

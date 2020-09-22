@@ -57,6 +57,6 @@ repositories {
 }
 
 dependencies {
-    api "org.jetbrains:annotations:16.0.2"
+    api 'org.realityforge.org.jetbrains.annotations:org.jetbrains.annotations:1.6.0'
     testImplementation "junit:junit:4.12"
 }
