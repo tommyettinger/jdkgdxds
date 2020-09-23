@@ -63,7 +63,7 @@ public class IntList implements Arrangeable, Serializable {
 
 	/** Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown. */
-	public IntList (int @NotNull [] array) {
+	public IntList (@NotNull int[] array) {
 		this(true, array, 0, array.length);
 	}
 
@@ -71,7 +71,7 @@ public class IntList implements Arrangeable, Serializable {
 	 * subsequent elements added will cause the backing array to be grown.
 	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
 	 *           memory copy. */
-	public IntList (boolean ordered, int @NotNull [] array, int startIndex, int count) {
+	public IntList (boolean ordered, @NotNull int[] array, int startIndex, int count) {
 		this(ordered, count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
@@ -130,12 +130,12 @@ public class IntList implements Arrangeable, Serializable {
 	}
 
 	// Modified from libGDX
-	public boolean addAll (int @NotNull ... array) {
+	public boolean addAll (@NotNull int... array) {
 		return addAll(array, 0, array.length);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (int @NotNull [] array, int offset, int length) {
+	public boolean addAll (@NotNull int[] array, int offset, int length) {
 		int[] items = this.items;
 		int sizeNeeded = size + length;
 		if (sizeNeeded > items.length) items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));
@@ -487,7 +487,7 @@ public class IntList implements Arrangeable, Serializable {
 		return items;
 	}
 
-	protected int @NotNull [] resize (int newSize) {
+	protected @NotNull int[] resize (int newSize) {
 		int[] newItems = new int[newSize];
 		int[] items = this.items;
 		System.arraycopy(items, 0, newItems, 0, Math.min(size, newItems.length));
@@ -533,7 +533,7 @@ public class IntList implements Arrangeable, Serializable {
 		return items[random.nextInt(size)];
 	}
 
-	public int @NotNull [] toArray () {
+	public @NotNull int[] toArray () {
 		int[] array = new int[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
@@ -589,7 +589,7 @@ public class IntList implements Arrangeable, Serializable {
 	}
 
 	/** @see #IntList(int[]) */
-	static public @NotNull IntList with (int @NotNull ... array) {
+	static public @NotNull IntList with (@NotNull int... array) {
 		return new IntList(array);
 	}
 }

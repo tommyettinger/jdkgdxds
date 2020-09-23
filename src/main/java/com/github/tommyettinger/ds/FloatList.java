@@ -63,7 +63,7 @@ public class FloatList implements Arrangeable, Serializable {
 
 	/** Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown. */
-	public FloatList (float @NotNull [] array) {
+	public FloatList (@NotNull float[] array) {
 		this(true, array, 0, array.length);
 	}
 
@@ -71,7 +71,7 @@ public class FloatList implements Arrangeable, Serializable {
 	 * subsequent elements added will cause the backing array to be grown.
 	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
 	 *           memory copy. */
-	public FloatList (boolean ordered, float @NotNull [] array, int startIndex, int count) {
+	public FloatList (boolean ordered, @NotNull float[] array, int startIndex, int count) {
 		this(ordered, count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
@@ -130,12 +130,12 @@ public class FloatList implements Arrangeable, Serializable {
 	}
 
 	// Modified from libGDX
-	public boolean addAll (float @NotNull ... array) {
+	public boolean addAll (@NotNull float... array) {
 		return addAll(array, 0, array.length);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (float @NotNull [] array, int offset, int length) {
+	public boolean addAll (@NotNull float[] array, int offset, int length) {
 		float[] items = this.items;
 		int sizeNeeded = size + length;
 		if (sizeNeeded > items.length) items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));
@@ -486,7 +486,7 @@ public class FloatList implements Arrangeable, Serializable {
 		return items;
 	}
 
-	protected float @NotNull [] resize (int newSize) {
+	protected @NotNull float[] resize (int newSize) {
 		float[] newItems = new float[newSize];
 		float[] items = this.items;
 		System.arraycopy(items, 0, newItems, 0, Math.min(size, newItems.length));
@@ -531,7 +531,7 @@ public class FloatList implements Arrangeable, Serializable {
 		return items[random.nextInt(size)];
 	}
 
-	public float @NotNull [] toArray () {
+	public @NotNull float[] toArray () {
 		float[] array = new float[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
@@ -603,7 +603,7 @@ public class FloatList implements Arrangeable, Serializable {
 	}
 
 	/** @see #FloatList(float[]) */
-	static public @NotNull FloatList with (float @NotNull ... array) {
+	static public @NotNull FloatList with (@NotNull float... array) {
 		return new FloatList(array);
 	}
 }

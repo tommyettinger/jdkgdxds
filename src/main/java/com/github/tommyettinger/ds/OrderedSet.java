@@ -257,7 +257,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	}
 
 	@SafeVarargs
-	static public <T> @NotNull OrderedSet<T> with (T @NotNull ... array) {
+	static public <T> @NotNull OrderedSet<T> with (@NotNull T... array) {
 		OrderedSet<T> set = new OrderedSet<T>();
 		set.addAll(array);
 		return set;
