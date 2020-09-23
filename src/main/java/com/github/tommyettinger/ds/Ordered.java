@@ -1,5 +1,7 @@
 package com.github.tommyettinger.ds;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -36,7 +38,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * @param random any {@link Random} implementation; prefer {@link LaserRandom} in this library
 	 */
 	@Override
-	default void shuffle (Random random){
+	default void shuffle (@NotNull Random random){
 		ArrayList<T> order = order();
 		for (int i = order.size() - 1; i >= 0; i--) {
 			order.set(i, order.set(random.nextInt(i+1), order.get(i)));

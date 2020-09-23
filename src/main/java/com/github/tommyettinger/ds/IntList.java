@@ -54,7 +54,7 @@ public class IntList implements Arrangeable, Serializable {
 	/** Creates a new array containing the elements in the specific array. The new array will be ordered if the specific array is
 	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
 	 * grown. */
-	public IntList (IntList array) {
+	public IntList (@NotNull IntList array) {
 		this.ordered = array.ordered;
 		size = array.size;
 		items = new int[size];
@@ -63,7 +63,7 @@ public class IntList implements Arrangeable, Serializable {
 
 	/** Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown. */
-	public IntList (int[] array) {
+	public IntList (int @NotNull [] array) {
 		this(true, array, 0, array.length);
 	}
 
@@ -71,7 +71,7 @@ public class IntList implements Arrangeable, Serializable {
 	 * subsequent elements added will cause the backing array to be grown.
 	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
 	 *           memory copy. */
-	public IntList (boolean ordered, int[] array, int startIndex, int count) {
+	public IntList (boolean ordered, int @NotNull [] array, int startIndex, int count) {
 		this(ordered, count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
@@ -118,24 +118,24 @@ public class IntList implements Arrangeable, Serializable {
 	}
 
 	// Modified from libGDX
-	public boolean addAll (IntList array) {
+	public boolean addAll (@NotNull IntList array) {
 		return addAll(array.items, 0, array.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (IntList array, int offset, int length) {
+	public boolean addAll (@NotNull IntList array, int offset, int length) {
 		if (offset + length > array.size)
 			throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);
 		return addAll(array.items, offset, length);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (int... array) {
+	public boolean addAll (int @NotNull ... array) {
 		return addAll(array, 0, array.length);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (int[] array, int offset, int length) {
+	public boolean addAll (int @NotNull [] array, int offset, int length) {
 		int[] items = this.items;
 		int sizeNeeded = size + length;
 		if (sizeNeeded > items.length) items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));
@@ -171,7 +171,7 @@ public class IntList implements Arrangeable, Serializable {
 	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public IntList plus (int value) {
+	public @NotNull IntList plus (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] += value;
@@ -194,7 +194,7 @@ public class IntList implements Arrangeable, Serializable {
 	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public IntList times (int value) {
+	public @NotNull IntList times (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] *= value;
@@ -217,7 +217,7 @@ public class IntList implements Arrangeable, Serializable {
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public IntList minus (int value) {
+	public @NotNull IntList minus (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] -= value;
@@ -239,7 +239,7 @@ public class IntList implements Arrangeable, Serializable {
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public IntList div (int value) {
+	public @NotNull IntList div (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] /= value;
@@ -261,7 +261,7 @@ public class IntList implements Arrangeable, Serializable {
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public IntList rem (int value) {
+	public @NotNull IntList rem (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] %= value;
@@ -487,7 +487,7 @@ public class IntList implements Arrangeable, Serializable {
 		return items;
 	}
 
-	protected int[] resize (int newSize) {
+	protected int @NotNull [] resize (int newSize) {
 		int[] newItems = new int[newSize];
 		int[] items = this.items;
 		System.arraycopy(items, 0, newItems, 0, Math.min(size, newItems.length));
@@ -533,7 +533,7 @@ public class IntList implements Arrangeable, Serializable {
 		return items[random.nextInt(size)];
 	}
 
-	public int[] toArray () {
+	public int @NotNull [] toArray () {
 		int[] array = new int[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
@@ -562,7 +562,7 @@ public class IntList implements Arrangeable, Serializable {
 		return true;
 	}
 
-	public String toString () {
+	public @NotNull String toString () {
 		if (size == 0) return "[]";
 		int[] items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
@@ -576,7 +576,7 @@ public class IntList implements Arrangeable, Serializable {
 		return buffer.toString();
 	}
 
-	public String toString (String separator) {
+	public @NotNull String toString (String separator) {
 		if (size == 0) return "";
 		int[] items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
@@ -589,7 +589,7 @@ public class IntList implements Arrangeable, Serializable {
 	}
 
 	/** @see #IntList(int[]) */
-	static public IntList with (int... array) {
+	static public @NotNull IntList with (int @NotNull ... array) {
 		return new IntList(array);
 	}
 }

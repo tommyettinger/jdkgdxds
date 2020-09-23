@@ -49,7 +49,7 @@ import java.util.NoSuchElementException;
  */
 public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializable {
 	private static final long serialVersionUID = 0L;
-	protected final ArrayList<T> items;
+	protected final @NotNull ArrayList<T> items;
 
 	public OrderedSet () {
 		items = new ArrayList<>();
@@ -171,7 +171,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * because it allows order-changing methods to be written once for an arbitrary {@link Ordered} type.
 	 * @return the ArrayList of items, in iteration order (usually insertion-order), that this uses
 	 */
-	public ArrayList<T> orderedItems () {
+	public @NotNull ArrayList<T> orderedItems () {
 		return items;
 	}
 
@@ -182,7 +182,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * @return the ArrayList of items, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public ArrayList<T> order () {
+	public @NotNull ArrayList<T> order () {
 		return items;
 	}
 
@@ -205,7 +205,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		return iterator2;
 	}
 
-	public String toString (String separator) {
+	public @NotNull String toString (String separator) {
 		if (size == 0)
 			return "{}";
 		ArrayList<T> items = this.items;
@@ -220,14 +220,14 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		return buffer.toString();
 	}
 
-	public String toString () {
+	public @NotNull String toString () {
 		return toString(", ");
 	}
 
 	static public class OrderedSetIterator<K> extends ObjectSetIterator<K> {
 		private ArrayList<K> items;
 
-		public OrderedSetIterator (OrderedSet<K> set) {
+		public OrderedSetIterator (@NotNull OrderedSet<K> set) {
 			super(set);
 			items = set.items;
 		}
@@ -257,7 +257,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	}
 
 	@SafeVarargs
-	static public <T> OrderedSet<T> with (T... array) {
+	static public <T> @NotNull OrderedSet<T> with (T @NotNull ... array) {
 		OrderedSet<T> set = new OrderedSet<T>();
 		set.addAll(array);
 		return set;

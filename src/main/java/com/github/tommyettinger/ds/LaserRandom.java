@@ -1,5 +1,7 @@
 package com.github.tommyettinger.ds;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.Random;
 
@@ -145,7 +147,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * @throws NullPointerException if the byte array is null
 	 */
 	@Override
-	public void nextBytes (byte[] bytes) {
+	public void nextBytes (byte @NotNull [] bytes) {
 		for (int i = 0; i < bytes.length; )
 			for (long r = nextLong(), n = Math.min(bytes.length - i, 8); n-- > 0; r >>>= 8)
 				bytes[i++] = (byte) r;
@@ -363,7 +365,7 @@ public class LaserRandom extends Random implements Serializable {
 		return z ^ z >>> 26 ^ z >>> 6;
 	}
 	
-	public LaserRandom copy(){
+	public @NotNull LaserRandom copy(){
 		return new LaserRandom(stateA, stateB);
 	}
 	

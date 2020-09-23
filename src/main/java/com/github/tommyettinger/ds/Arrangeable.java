@@ -1,5 +1,7 @@
 package com.github.tommyettinger.ds;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Random;
 
 /**
@@ -18,5 +20,5 @@ public interface Arrangeable {
 	 * Pseudo-randomly shuffles the order of this Arrangeable in-place.
 	 * @param random any {@link Random} implementation; prefer {@link LaserRandom} in this library
 	 */
-	void shuffle(Random random);
+	void shuffle(@NotNull Random random);
 }

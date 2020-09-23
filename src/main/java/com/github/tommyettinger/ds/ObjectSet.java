@@ -199,7 +199,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return modified;
 	}
 
-	public boolean addAll (@NotNull T[] array) {
+	public boolean addAll (@NotNull T @NotNull [] array) {
 		return addAll(array, 0, array.length);
 	}
 
@@ -367,7 +367,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	@Override
-	public Object[] toArray() {
+	public Object @NotNull [] toArray() {
 		return toArray(new Object[size()]);
 	}
 
@@ -387,7 +387,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * @return an array containing all the elements in this set
 	 */
 	@Override
-	public <E> E[] toArray(E[] a) {
+	public <E> E @NotNull [] toArray(E @NotNull [] a) {
 		int size = size();
 		if (a.length < size) {
 			a = Arrays.copyOf(a, size);
@@ -427,11 +427,11 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return true;
 	}
 
-	public String toString () {
+	public @NotNull String toString () {
 		return '{' + toString(", ") + '}';
 	}
 
-	public String toString (String separator) {
+	public @NotNull String toString (String separator) {
 		if (size == 0)
 			return "";
 		StringBuilder buffer = new StringBuilder(32);
@@ -479,7 +479,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	@SafeVarargs
-	static public @NotNull <T> ObjectSet<T> with (@NotNull T... array) {
+	static public @NotNull <T> ObjectSet<T> with (@NotNull T @NotNull ... array) {
 		ObjectSet<T> set = new ObjectSet<T>();
 		set.addAll(array);
 		return set;
