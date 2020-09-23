@@ -8,8 +8,9 @@
      <inherits name="jdkgdxds" />
   -->
 <module>
+    <inherits name='com.google.gwt.core.Core'/>
     <inherits name="com.google.gwt.typedarrays.TypedArrays"/>
-    <inherits name="org.jetbrains.annotations.Annotations"/>
     <super-source path="emu" />
+    <source path="org/jetbrains/annotations"/>
     <source path="com/github/tommyettinger/ds" />
 </module>
