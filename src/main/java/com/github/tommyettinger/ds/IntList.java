@@ -20,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /** A resizable, ordered or unordered int list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Integer.
@@ -32,6 +34,7 @@ public class IntList implements Arrangeable, Serializable {
 	public int[] items;
 	public int size;
 	public boolean ordered;
+	protected IntListIterator iterator1, iterator2;
 	
 	/** Creates an ordered array with a capacity of 16. */
 	public IntList () {
@@ -586,6 +589,77 @@ public class IntList implements Arrangeable, Serializable {
 			buffer.append(items[i]);
 		}
 		return buffer.toString();
+	}
+
+	/**
+	 * Returns a Java 8 primitive iterator over the int items in this IntList. Iterates in order if {@link #ordered}
+	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
+	 * <br>
+	 * This will reuse one of two iterators in this IntList if {@link Utilities#allocateIterators} is false; otherwise,
+	 * this will allocate a new primitive iterator each time it is called.
+	 * @return a {@link PrimitiveIterator.OfInt}; use its nextInt() method instead of next()
+	 */
+	public IntListIterator iterator(){
+		if(Utilities.allocateIterators) return new IntListIterator(this);
+		if (iterator1 == null) {
+			iterator1 = new IntListIterator(this);
+			iterator2 = new IntListIterator(this);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset();
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset();
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
+
+
+	}
+	
+	public static class IntListIterator implements PrimitiveIterator.OfInt {
+		protected int index = 0;
+		protected IntList list;
+		protected boolean valid = true;
+
+		public IntListIterator (IntList list) {
+			this.list = list;
+		}
+
+		/**
+		 * Returns the next {@code int} element in the iteration.
+		 *
+		 * @return the next {@code int} element in the iteration
+		 * @throws NoSuchElementException if the iteration has no more elements
+		 */
+		@Override
+		public int nextInt () {
+			if (!valid)
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (index >= list.size)
+				throw new NoSuchElementException();
+			return list.get(index++);
+		}
+
+		/**
+		 * Returns {@code true} if the iteration has more elements.
+		 * (In other words, returns {@code true} if {@link #next} would
+		 * return an element rather than throwing an exception.)
+		 *
+		 * @return {@code true} if the iteration has more elements
+		 */
+		@Override
+		public boolean hasNext () {
+			if (!valid)
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			return index < list.size;
+		}
+
+		public void reset () {
+			index = -1;
+		}
 	}
 
 	/** @see #IntList(int[]) */
