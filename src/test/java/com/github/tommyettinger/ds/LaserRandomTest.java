@@ -1,0 +1,55 @@
+package com.github.tommyettinger.ds;
+
+import java.util.Random;
+import java.util.SplittableRandom;
+
+/**
+ * Created by Tommy Ettinger on 9/23/2020.
+ */
+public class LaserRandomTest {
+	public static void main(String[] args) {
+		int upperBound = 79;
+		System.out.println("Consecutive seeds:");
+		System.out.println("\nRandom");
+		for(int i = 0; i < 50; i++) System.out.print(new java.util.Random(i).nextInt(upperBound) + " ");
+		System.out.println("\nSplittableRandom");
+		for(int i = 0; i < 50; i++) System.out.print(new java.util.SplittableRandom(i).nextInt(upperBound) + " ");
+		System.out.println("\nLaserRandom");
+		for(int i = 0; i < 50; i++) System.out.print(new LaserRandom(i).nextInt(upperBound) + " ");
+
+		System.out.println("\n\nNormal usage");
+		System.out.println("\nRandom");
+		Random jur = new java.util.Random(10);
+		for(int i = 0; i < 50; i++) System.out.print(jur.nextInt(upperBound) + " ");
+		System.out.println("\nSplittableRandom");
+		SplittableRandom jusr = new java.util.SplittableRandom(10);
+		for(int i = 0; i < 50; i++) System.out.print(jusr.nextInt(upperBound) + " ");
+		System.out.println("\nLaserRandom");
+		LaserRandom lr = new LaserRandom(10);
+		for(int i = 0; i < 50; i++) System.out.print(lr.nextInt(upperBound) + " ");
+
+		System.out.println("\n\nRepeat count:");
+		jur = new java.util.Random(100);
+		jusr = new java.util.SplittableRandom(100);
+		lr = new LaserRandom(100);
+		int prev, count;
+		prev = -1;
+		count = 0;
+		for (int i = upperBound * 1000; i >= 0; i--) {
+			if(prev == (prev = jur.nextInt(upperBound))) ++count;
+		}
+		System.out.println("\nRandom: " + count);
+		prev = -1;
+		count = 0;
+		for (int i = upperBound * 1000; i >= 0; i--) {
+			if(prev == (prev = jusr.nextInt(upperBound))) ++count;
+		}
+		System.out.println("\nSplittableRandom: " + count);
+		prev = -1;
+		count = 0;
+		for (int i = upperBound * 1000; i >= 0; i--) {
+			if(prev == (prev = lr.nextInt(upperBound))) ++count;
+		}
+		System.out.println("\nLaserRandom: " + count);
+	}
+}
