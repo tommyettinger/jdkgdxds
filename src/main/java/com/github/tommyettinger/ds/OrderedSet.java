@@ -186,9 +186,13 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		return items;
 	}
 
+	/**
+	 * Iterates through items in the same order as {@link #order()}.
+	 * Reuses one of two iterators, and does not permit nested iteration;
+	 * use {@link OrderedSetIterator#OrderedSetIterator(OrderedSet)} to nest iterators.
+	 * @return an {@link Iterator} over the T items in this, in order
+	 */
 	public @NotNull Iterator<T> iterator () {
-		if (Utilities.allocateIterators)
-			return new OrderedSetIterator<>(this);
 		if (iterator1 == null) {
 			iterator1 = new OrderedSetIterator<>(this);
 			iterator2 = new OrderedSetIterator<>(this);

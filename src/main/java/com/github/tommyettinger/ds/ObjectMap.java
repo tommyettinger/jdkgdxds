@@ -545,9 +545,10 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	}
 
 	/**
-	 * Allows iterating over the key-value pairs as {@link Map.Entry} items. Allocates a new {@link Entries} and an
-	 * Iterator object each time this is called, but reuses one Entry per Entries object. You can remove an Entry from
-	 * this ObjectMap using this Iterator.
+	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
+	 * does not permit nested iteration. Iterate over {@link Entries#Entries(ObjectMap)} if you
+	 * need nested or multithreaded iteration. You can remove an Entry from this ObjectMap
+	 * using this Iterator.
 	 *
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
@@ -567,13 +568,14 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
 	 * operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
 	 * operations.
+	 * 
+	 * <p>Note that the same Collection instance is returned each time this
+	 * method is called. Use the {@link Keys} constructor for nested or
+	 * multithreaded iteration.
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	@Override
-	public @NotNull Keys<K> keySet () {
-		if (Utilities.allocateIterators)
-			return new Keys<>(this);
+	public @NotNull Keys<K> keySet () { 
 		if (keys1 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
@@ -589,16 +591,15 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		keys1.iter.valid = false;
 		return keys2;
 	}
-
+	
 	/**
-	 * Returns an iterator for the values in the map. Remove is supported. Note that the same iterator instance is returned each
+	 * Returns a Collection of the values in the map. Remove is supported. Note that the same Collection instance is returned each
 	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
 	 *
 	 * @return a {@link Collection} of V values
 	 */
+	@Override
 	public @NotNull Values<V> values () {
-		if (Utilities.allocateIterators)
-			return new Values<>(this);
 		if (values1 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
@@ -624,8 +625,6 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 */
 	@Override
 	public @NotNull Entries<K, V> entrySet () {
-		if (Utilities.allocateIterators)
-			return new Entries<>(this);
 		if (entries1 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);

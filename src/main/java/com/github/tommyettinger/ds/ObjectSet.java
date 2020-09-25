@@ -457,11 +457,11 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
-	 * Permits nested or multithreaded iteration, but allocates a new {@link ObjectSetIterator} per-call.
+	 * Reuses one of two iterators for this set. For nested or multithreaded
+	 * iteration, use {@link ObjectSetIterator#ObjectSetIterator(ObjectSet)}.
 	 */
+	@Override
 	public @NotNull Iterator<T> iterator () {
-		if (Utilities.allocateIterators)
-			return new ObjectSetIterator<>(this);
 		if (iterator1 == null) {
 			iterator1 = new ObjectSetIterator<>(this);
 			iterator2 = new ObjectSetIterator<>(this);

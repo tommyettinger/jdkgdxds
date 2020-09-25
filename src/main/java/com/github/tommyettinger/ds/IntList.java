@@ -595,12 +595,11 @@ public class IntList implements Arrangeable, Serializable {
 	 * Returns a Java 8 primitive iterator over the int items in this IntList. Iterates in order if {@link #ordered}
 	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
 	 * <br>
-	 * This will reuse one of two iterators in this IntList if {@link Utilities#allocateIterators} is false; otherwise,
-	 * this will allocate a new primitive iterator each time it is called.
+	 * This will reuse one of two iterators in this IntList; this does not allow nested iteration.
+	 * Use {@link IntListIterator#IntListIterator(IntList)} to nest iterators.
 	 * @return a {@link PrimitiveIterator.OfInt}; use its nextInt() method instead of next()
 	 */
 	public IntListIterator iterator(){
-		if(Utilities.allocateIterators) return new IntListIterator(this);
 		if (iterator1 == null) {
 			iterator1 = new IntListIterator(this);
 			iterator2 = new IntListIterator(this);

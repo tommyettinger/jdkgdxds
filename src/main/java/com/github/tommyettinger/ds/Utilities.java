@@ -20,8 +20,14 @@ package com.github.tommyettinger.ds;
  * Utility code shared by various data structures in this package.
  */
 public class Utilities {
-	public static boolean allocateIterators = false;
-
+	/**
+	 * Used to establish the size of a hash table for {@link ObjectSet}, {@link ObjectMap}, and related code.
+	 * The table size will always be a power of two, and should be the next power of two that is at least equal
+	 * to {@code capacity / loadFactor}.
+	 * @param capacity the amount of items the hash table should be able to hold
+	 * @param loadFactor between 0.0 (exclusive) and 1.0 (inclusive); the fraction of how much of the table can be filled
+	 * @return the size of a hash table that can handle the specified capacity with the given loadFactor
+	 */
 	public static int tableSize (int capacity, float loadFactor) {
 		if (capacity < 0)
 			throw new IllegalArgumentException("capacity must be >= 0: " + capacity);

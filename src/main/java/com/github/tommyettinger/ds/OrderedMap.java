@@ -206,12 +206,14 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
 	 * operations.
 	 *
+	 * <p>Note that the same Collection instance is returned each time this
+	 * method is called. Use the {@link OrderedMapKeys#OrderedMapKeys(OrderedMap)}
+	 * constructor for nested or multithreaded iteration.
+	 *
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
 	public @NotNull Keys<K> keySet () {
-		if (Utilities.allocateIterators)
-			return new OrderedMapKeys<>(this);
 		if (keys1 == null) {
 			keys1 = new OrderedMapKeys<>(this);
 			keys2 = new OrderedMapKeys<>(this);
@@ -230,15 +232,13 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 
 	/**
 	 * Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
-	 * <p>
-	 * Permits nested or multithreaded iteration, but allocates a new {@link Values} instance per-call.
+	 * <p>Note that the same Collection instance is returned each time this method is called. Use the
+	 * {@link OrderedMapValues#OrderedMapValues(OrderedMap)} constructor for nested or multithreaded iteration.
 	 *
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
 	public @NotNull Values<V> values () {
-		if (Utilities.allocateIterators)
-			return new OrderedMapValues<>(this);
 		if (values1 == null) {
 			values1 = new OrderedMapValues<>(this);
 			values2 = new OrderedMapValues<>(this);
@@ -257,15 +257,14 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 
 	/**
 	 * Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
-	 * <p>
-	 * Permits nested or multithreaded iteration, but allocates a new {@link Entries} instance per-call.
+	 * 
+	 * <p>Note that the same iterator instance is returned each time this method is called.
+	 * Use the {@link OrderedMapEntries#OrderedMapEntries(OrderedMap)} constructor for nested or multithreaded iteration.
 	 *
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
 	public @NotNull Entries<K, V> entrySet () {
-		if (Utilities.allocateIterators)
-			return new OrderedMapEntries<>(this);
 		if (entries1 == null) {
 			entries1 = new OrderedMapEntries<>(this);
 			entries2 = new OrderedMapEntries<>(this);
@@ -282,6 +281,15 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		return entries2;
 	}
 
+	/**
+	 * Reuses the iterator of the reused {@link com.github.tommyettinger.ds.ObjectMap.Entries}
+	 * produced by {@link #entrySet()}; does not permit nested iteration. Iterate over
+	 * {@link OrderedMapEntries#OrderedMapEntries(OrderedMap)} if you need nested or
+	 * multithreaded iteration. You can remove an Entry from this OrderedMap
+	 * using this Iterator.
+	 * 	 
+	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
+	 */
 	public @NotNull Iterator<Map.Entry<K, V>> iterator () {
 		return entrySet().iterator();
 	}
