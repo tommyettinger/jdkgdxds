@@ -192,6 +192,23 @@ public class LaserRandom extends Random implements Serializable {
 	}
 
 	/**
+	 * Returns a pseudorandom, uniformly distributed {@code int} value between an
+	 * inner bound of 0 (inclusive) and the specified {@code outerBound} (exclusive).
+	 * This is meant for cases where the outer bound may be negative, especially if
+	 * the bound is unknown or may be user-specified. A negative outer bound is used
+	 * as the lower bound; a positive outer bound is used as the upper bound. An outer
+	 * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
+	 * for outer bound 0).
+	 * @param outerBound the outer exclusive bound; may be any int value, allowing negative
+	 * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
+	 */
+	public int nextSignedInt (int outerBound) {
+		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
+		return (int) ((outerBound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL)) >> 32) + (outerBound >>> 31);
+	}
+
+	/**
 	 * Returns the next pseudorandom, uniformly distributed {@code long}
 	 * value from this random number generator's sequence. The general
 	 * contract of {@code nextLong} is that one {@code long} value is
@@ -242,8 +259,34 @@ public class LaserRandom extends Random implements Serializable {
 		final long b = randLow * boundLow;
 		return (((b >>> 32) + (rand + randLow) * (bound + boundLow) - a - b) >>> 32) + a;
 	}
-
-
+	/**
+	 * Returns a pseudorandom, uniformly distributed {@code long} value between an
+	 * inner bound of 0 (inclusive) and the specified {@code outerBound} (exclusive).
+	 * This is meant for cases where the outer bound may be negative, especially if
+	 * the bound is unknown or may be user-specified. A negative outer bound is used
+	 * as the lower bound; a positive outer bound is used as the upper bound. An outer
+	 * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
+	 * for outer bound 0).
+	 *
+	 * <p>Note that this advances the state by the same amount as a single call to
+	 * {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
+	 * correctly, but introduces some bias when {@code bound} is very large.
+	 * @param outerBound the outer exclusive bound; may be any long value, allowing negative
+	 * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
+	 */
+	public long nextSignedLong(long outerBound) {
+		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
+		long rand = z ^ z >>> 26 ^ z >>> 6;
+		final long randLow = rand & 0xFFFFFFFFL;
+		final long boundLow = outerBound & 0xFFFFFFFFL;
+		rand >>>= 32;
+		outerBound >>= 32;
+		final long a = rand * outerBound;
+		final long b = randLow * boundLow;
+		return (((b >>> 32) + (rand + randLow) * (outerBound + boundLow) - a - b) >>> 32) + a + (outerBound >>> 63);
+	}
+	
 	/**
 	 * Returns the next pseudorandom, uniformly distributed
 	 * {@code boolean} value from this random number generator's
