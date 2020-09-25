@@ -209,6 +209,35 @@ public class LaserRandom extends Random implements Serializable {
 	}
 
 	/**
+	 * Returns a pseudorandom, uniformly distributed {@code int} value between the
+	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
+	 * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
+	 * this always returns {@code innerBound}.
+	 *
+	 * <br> For any case where outerBound might be valid but less than innerBound, you
+	 * can use {@link #nextSignedInt(int, int)}.
+	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
+	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
+	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
+	 */
+	public int nextInt(int innerBound, int outerBound){
+		return innerBound + nextInt(outerBound - innerBound);
+	}
+
+	/**
+	 * Returns a pseudorandom, uniformly distributed {@code int} value between the
+	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
+	 * (exclusive). This is meant for cases where either bound may be negative,
+	 * especially if the bounds are unknown or may be user-specified. 
+	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
+	 * @param outerBound the exclusive outer bound; may be any int, allowing negative
+	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
+	 */
+	public int nextSignedInt(int innerBound, int outerBound){
+		return innerBound + nextSignedInt(outerBound - innerBound);
+	}
+
+	/**
 	 * Returns the next pseudorandom, uniformly distributed {@code long}
 	 * value from this random number generator's sequence. The general
 	 * contract of {@code nextLong} is that one {@code long} value is
@@ -285,6 +314,35 @@ public class LaserRandom extends Random implements Serializable {
 		final long a = rand * outerBound;
 		final long b = randLow * boundLow;
 		return (((b >>> 32) + (rand + randLow) * (outerBound + boundLow) - a - b) >>> 32) + a + (outerBound >>> 63);
+	}
+
+	/**
+	 * Returns a pseudorandom, uniformly distributed {@code long} value between the
+	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
+	 * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
+	 * this always returns {@code innerBound}.
+	 * 
+	 * <br> For any case where outerBound might be valid but less than innerBound, you
+	 * can use {@link #nextSignedLong(long, long)}.
+	 * @param innerBound the inclusive inner bound; may be any long, allowing negative
+	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
+	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
+	 */
+	public long nextLong(long innerBound, long outerBound){
+		return innerBound + nextLong(outerBound - innerBound);
+	}
+
+	/**
+	 * Returns a pseudorandom, uniformly distributed {@code long} value between the
+	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
+	 * (exclusive). This is meant for cases where either bound may be negative,
+	 * especially if the bounds are unknown or may be user-specified. 
+	 * @param innerBound the inclusive inner bound; may be any long, allowing negative
+	 * @param outerBound the exclusive outer bound; may be any long, allowing negative
+	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
+	 */
+	public long nextSignedLong(long innerBound, long outerBound){
+		return innerBound + nextSignedLong(outerBound - innerBound);
 	}
 	
 	/**
