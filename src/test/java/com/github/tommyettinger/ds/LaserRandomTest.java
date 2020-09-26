@@ -62,5 +62,18 @@ public class LaserRandomTest {
 			if(prev == (prev = lr.nextInt(upperBound))) ++count;
 		}
 		System.out.println("\nLaserRandom: " + count);
+
+		System.out.println("Generating 2 to the 34 longs, should all be 0 or -1...");
+		lr = new LaserRandom(-0xC6BC279692B5C323L, -0x9E3779B97F4A7C15L);
+		for (int i = 0; i < 0x20000; i++) {
+			for (int j = 0; j < 0x20000; j++) {
+				if(lr.nextSignedLong(-2) > 0) {
+					System.out.println("nextSignedLong(-2) had an incorrect result.\nFAILURE!");
+					System.out.printf("0x%016XL, 0x%016XL", lr.stateA, lr.stateB);
+					return;
+				}
+			}
+		}
+		System.out.println("Success!");
 	}
 }

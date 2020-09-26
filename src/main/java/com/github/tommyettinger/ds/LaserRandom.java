@@ -205,7 +205,8 @@ public class LaserRandom extends Random implements Serializable {
 	public int nextSignedInt (int outerBound) {
 		final long s = (stateA += 0xC6BC279692B5C323L);
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		return (int) ((outerBound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL)) >> 32) + (outerBound >>> 31);
+		outerBound = (int) ((outerBound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL)) >> 32);
+		return outerBound + (outerBound >>> 31);
 	}
 
 	/**
@@ -311,9 +312,10 @@ public class LaserRandom extends Random implements Serializable {
 		final long boundLow = outerBound & 0xFFFFFFFFL;
 		rand >>>= 32;
 		outerBound >>= 32;
-		final long a = rand * outerBound;
+		long a = rand * outerBound;
 		final long b = randLow * boundLow;
-		return (((b >>> 32) + (rand + randLow) * (outerBound + boundLow) - a - b) >>> 32) + a + (outerBound >>> 63);
+		a += (((b >>> 32) + (rand + randLow) * (outerBound + boundLow) - a - b) >> 32);
+		return a + (a >>> 63);
 	}
 
 	/**
