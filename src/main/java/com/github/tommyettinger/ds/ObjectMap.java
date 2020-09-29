@@ -16,9 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -112,7 +110,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	/**
 	 * Creates a new map identical to the specified map.
 	 */
-	public ObjectMap (@NotNull ObjectMap<? extends K, ? extends V> map) {
+	public ObjectMap (ObjectMap<? extends K, ? extends V> map) {
 		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
@@ -122,7 +120,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	/**
 	 * Creates a new map identical to the specified map.
 	 */
-	public ObjectMap (@NotNull Map<? extends K, ? extends V> map) {
+	public ObjectMap (Map<? extends K, ? extends V> map) {
 		this(map.size());
 		for (K k : map.keySet()) {
 			put(k, map.get(k));
@@ -134,7 +132,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 *
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
 	 */
-	protected int place (@NotNull Object item) {
+	protected int place (Object item) {
 		final int h = item.hashCode() * 0x9E377;
 		return (h ^ h >>> shift) & mask;
 	}
@@ -145,7 +143,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 *
 	 * @param key a non-null Object that should probably be a K
 	 */
-	protected int locateKey (@NotNull Object key) {
+	protected int locateKey (Object key) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -159,7 +157,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	/**
 	 * Returns the old value associated with the specified key, or null.
 	 */
-	public @Nullable V put (@NotNull K key, @Nullable V value) {
+	public @Nullable V put (K key, @Nullable V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -174,7 +172,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		return null;
 	}
 
-	public void putAll (@NotNull ObjectMap<? extends K, ? extends V> map) {
+	public void putAll (ObjectMap<? extends K, ? extends V> map) {
 		ensureCapacity(map.size);
 		K[] keyTable = map.keyTable;
 		V[] valueTable = map.valueTable;
@@ -189,7 +187,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	private void putResize (@NotNull K key, @Nullable V value) {
+	private void putResize (K key, @Nullable V value) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = (i + 1) & mask) {
 			if (keyTable[i] == null) {
@@ -208,7 +206,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * 
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
-	public @Nullable V get (@NotNull Object key) {
+	public @Nullable V get (Object key) {
 		int i = locateKey(key);
 		return i < 0 ? null : valueTable[i];
 	}
@@ -216,12 +214,12 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	/**
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
-	public @Nullable V get (@NotNull Object key, @Nullable V defaultValue) {
+	public @Nullable V get (Object key, @Nullable V defaultValue) {
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
 
-	public @Nullable V remove (@NotNull Object key) {
+	public @Nullable V remove (Object key) {
 		int i = locateKey(key);
 		if (i < 0)
 			return null;
@@ -264,7 +262,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 *                                       the specified map prevents it from being stored in this map
 	 */
 	@Override
-	public void putAll (@NotNull Map<? extends K, ? extends V> m) {
+	public void putAll (Map<? extends K, ? extends V> m) {
 		for (K key : m.keySet())
 			put(key, m.get(key));
 	}
@@ -355,7 +353,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		return false;
 	}
 
-	public boolean containsKey (@NotNull Object key) {
+	public boolean containsKey (Object key) {
 		return locateKey(key) >= 0;
 	}
 
@@ -552,7 +550,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 *
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
-	public @NotNull Iterator<Map.Entry<K, V>> iterator () {
+	public Iterator<Map.Entry<K, V>> iterator () {
 		return entrySet().iterator();
 	}
 
@@ -575,7 +573,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	public @NotNull Keys<K> keySet () { 
+	public Keys<K> keySet () { 
 		if (keys1 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
@@ -599,7 +597,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NotNull Values<V> values () {
+	public Values<V> values () {
 		if (values1 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
@@ -624,7 +622,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NotNull Entries<K, V> entrySet () {
+	public Entries<K, V> entrySet () {
 		if (entries1 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);
@@ -782,7 +780,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	}
 
 	static public class Entries<K, V> extends AbstractSet<Map.Entry<K, V>> {
-		protected @NotNull Entry<K, V> entry = new Entry<K, V>();
+		protected Entry<K, V> entry = new Entry<K, V>();
 		protected MapIterator<K, V, Map.Entry<K, V>> iter;
 
 		protected Entries () {
@@ -791,12 +789,12 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		public Entries (ObjectMap<K, V> map) {
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
-				public @NotNull Iterator<Map.Entry<K, V>> iterator () {
+				public Iterator<Map.Entry<K, V>> iterator () {
 					return this;
 				}
 
 				/** Note the same entry instance is returned each time this method is called. */
-				public @NotNull Map.Entry<K, V> next () {
+				public Map.Entry<K, V> next () {
 					if (!hasNext)
 						throw new NoSuchElementException();
 					if (!valid)
@@ -824,7 +822,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull Iterator<Map.Entry<K, V>> iterator () {
+		public Iterator<Map.Entry<K, V>> iterator () {
 			return iter;
 		}
 
@@ -843,7 +841,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull Iterator<V> iterator () {
+		public Iterator<V> iterator () {
 			return iter;
 		}
 
@@ -858,7 +856,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		public Values (ObjectMap<?, V> map) {
 			iter = new MapIterator<Object, V, V>((ObjectMap<Object, V>)map) {
 				@Override
-				public @NotNull Iterator<V> iterator () {
+				public Iterator<V> iterator () {
 					return this;
 				}
 
@@ -894,7 +892,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		public Keys (ObjectMap<K, ?> map) {
 			iter = new MapIterator<K, Object, K>((ObjectMap<K, Object>)map) {
 				@Override
-				public @NotNull Iterator<K> iterator () {
+				public Iterator<K> iterator () {
 					return this;
 				}
 
@@ -923,7 +921,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull Iterator<K> iterator () {
+		public Iterator<K> iterator () {
 			return iter;
 		}
 

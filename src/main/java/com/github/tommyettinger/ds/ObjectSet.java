@@ -16,8 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -104,7 +103,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Creates a new set identical to the specified set.
 	 */
-	public ObjectSet (@NotNull ObjectSet<? extends T> set) {
+	public ObjectSet (ObjectSet<? extends T> set) {
 		this((int)(set.keyTable.length * set.loadFactor), set.loadFactor);
 		System.arraycopy(set.keyTable, 0, keyTable, 0, set.keyTable.length);
 		size = set.size;
@@ -113,7 +112,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public ObjectSet (@NotNull Collection<? extends T> coll) {
+	public ObjectSet (Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -123,7 +122,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 *
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
 	 */
-	protected int place (@NotNull Object item) {
+	protected int place (Object item) {
 		final int h = item.hashCode() * 0x9E377;
 		return (h ^ h >>> shift) & mask;
 	}
@@ -134,7 +133,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 *
 	 * @param key a non-null Object that should probably be a T
 	 */
-	protected int locateKey (@NotNull Object key) {
+	protected int locateKey (Object key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
@@ -149,7 +148,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * Returns true if the key was not already in the set. If this set already contains the key, the call leaves the set unchanged
 	 * and returns false.
 	 */
-	public boolean add (@NotNull T key) {
+	public boolean add (T key) {
 		int i = locateKey(key);
 		if (i >= 0)
 			return false; // Existing key was found.
@@ -161,7 +160,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	@Override
-	public boolean containsAll (@NotNull Collection<?> c) {
+	public boolean containsAll (Collection<?> c) {
 		for (Object o : c) {
 			if (!contains(o))
 				return false;
@@ -169,7 +168,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return true;
 	}
 
-	public boolean addAll (@NotNull Collection<? extends T> coll) {
+	public boolean addAll (Collection<? extends T> coll) {
 		final int length = coll.size();
 		ensureCapacity(length);
 		int oldSize = size;
@@ -180,7 +179,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	@Override
-	public boolean retainAll (@NotNull Collection<?> c) {
+	public boolean retainAll (Collection<?> c) {
 		boolean modified = false;
 		for (Object o : this) {
 			if (!c.contains(o))
@@ -191,7 +190,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	@Override
-	public boolean removeAll (@NotNull Collection<?> c) {
+	public boolean removeAll (Collection<?> c) {
 		boolean modified = false;
 		for (Object o : c) {
 			modified |= remove(o);
@@ -199,11 +198,11 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return modified;
 	}
 
-	public boolean addAll (@NotNull T[] array) {
+	public boolean addAll (T[] array) {
 		return addAll(array, 0, array.length);
 	}
 
-	public boolean addAll (@NotNull T[] array, int offset, int length) {
+	public boolean addAll (T[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size;
 		for (int i = offset, n = i + length; i < n; i++)
@@ -211,7 +210,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return oldSize != size;
 	}
 
-	public void addAll (@NotNull ObjectSet<T> set) {
+	public void addAll (ObjectSet<T> set) {
 		ensureCapacity(set.size);
 		T[] keyTable = set.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -224,7 +223,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	private void addResize (@NotNull T key) {
+	private void addResize (T key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = (i + 1) & mask) {
 			if (keyTable[i] == null) {
@@ -237,7 +236,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Returns true if the key was removed.
 	 */
-	public boolean remove (@NotNull Object key) {
+	public boolean remove (Object key) {
 		int i = locateKey(key);
 		if (i < 0)
 			return false;
@@ -321,11 +320,11 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		Arrays.fill(keyTable, null);
 	}
 
-	public boolean contains (@NotNull Object key) {
+	public boolean contains (Object key) {
 		return locateKey(key) >= 0;
 	}
 
-	public @Nullable T get (@NotNull T key) {
+	public @Nullable T get (T key) {
 		int i = locateKey(key);
 		return i < 0 ? null : keyTable[i];
 	}
@@ -367,7 +366,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	@Override
-	public @NotNull Object[] toArray() {
+	public Object[] toArray() {
 		return toArray(new Object[size()]);
 	}
 
@@ -387,7 +386,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * @return an array containing all the elements in this set
 	 */
 	@Override
-	public <E> @NotNull E[] toArray(@NotNull E[] a) {
+	public <E> E[] toArray(E[] a) {
 		int size = size();
 		if (a.length < size) {
 			a = Arrays.copyOf(a, size);
@@ -427,11 +426,11 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return true;
 	}
 
-	public @NotNull String toString () {
+	public String toString () {
 		return '{' + toString(", ") + '}';
 	}
 
-	public @NotNull String toString (String separator) {
+	public String toString (String separator) {
 		if (size == 0)
 			return "";
 		StringBuilder buffer = new StringBuilder(32);
@@ -461,7 +460,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * iteration, use {@link ObjectSetIterator#ObjectSetIterator(ObjectSet)}.
 	 */
 	@Override
-	public @NotNull Iterator<T> iterator () {
+	public Iterator<T> iterator () {
 		if (iterator1 == null) {
 			iterator1 = new ObjectSetIterator<>(this);
 			iterator2 = new ObjectSetIterator<>(this);
@@ -479,7 +478,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	@SafeVarargs
-	static public @NotNull <T> ObjectSet<T> with (@NotNull T... array) {
+	static public <T> ObjectSet<T> with (T... array) {
 		ObjectSet<T> set = new ObjectSet<T>();
 		set.addAll(array);
 		return set;
@@ -553,7 +552,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 			return key;
 		}
 
-		public @NotNull ObjectSetIterator<K> iterator () {
+		public ObjectSetIterator<K> iterator () {
 			return this;
 		}
 	}

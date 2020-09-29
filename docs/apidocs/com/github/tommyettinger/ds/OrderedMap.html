@@ -36,7 +36,8 @@ var activeTableTab = "activeTableTab";
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../com/github/tommyettinger/ds/package-summary.html">Package</a></li>
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
@@ -228,12 +229,12 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
           float&nbsp;loadFactor)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#OrderedMap-java.util.Map-">OrderedMap</a></span>(@NotNull java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;map)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#OrderedMap-java.util.Map-">OrderedMap</a></span>(java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;map)</code>
 <div class="block">Creates a new map identical to the specified map.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#OrderedMap-com.github.tommyettinger.ds.OrderedMap-">OrderedMap</a></span>(@NotNull <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;map)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#OrderedMap-com.github.tommyettinger.ds.OrderedMap-">OrderedMap</a></span>(<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;map)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -276,19 +277,20 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#entrySet--">entrySet</a></span>()</code>
 <div class="block">Returns a Set of Map.Entry, containing the entries in the map.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>@NotNull java.util.Iterator&lt;java.util.Map.Entry&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&gt;</code></td>
+<td class="colFirst"><code>java.util.Iterator&lt;java.util.Map.Entry&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#iterator--">iterator</a></span>()</code>
-<div class="block">Allows iterating over the key-value pairs as <code>Map.Entry</code> items.</div>
+<div class="block">Reuses the iterator of the reused <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap.Entries</code></a>
+ produced by <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#entrySet--"><code>entrySet()</code></a>; does not permit nested iteration.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
-<td class="colFirst"><code>@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#keySet--">keySet</a></span>()</code>
 <div class="block">Returns a <code>Set</code> view of the keys contained in this map.</div>
 </td>
@@ -318,7 +320,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#remove-java.lang.Object-">remove</a></span>(@NotNull java.lang.Object&nbsp;key)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#remove-java.lang.Object-">remove</a></span>(java.lang.Object&nbsp;key)</code>&nbsp;</td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a></code></td>
@@ -330,7 +332,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
         boolean&nbsp;braces)</code>&nbsp;</td>
 </tr>
 <tr id="i14" class="altColor">
-<td class="colFirst"><code>@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#values--">values</a></span>()</code>
 <div class="block">Returns a Collection for the values in the map.</div>
 </td>
@@ -436,8 +438,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <ul class="blockList">
 <li class="blockList">
 <h4>OrderedMap</h4>
-<pre>public&nbsp;OrderedMap(@NotNull
-                  @NotNull <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;map)</pre>
+<pre>public&nbsp;OrderedMap(<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;map)</pre>
 </li>
 </ul>
 <a name="OrderedMap-java.util.Map-">
@@ -446,8 +447,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <ul class="blockListLast">
 <li class="blockList">
 <h4>OrderedMap</h4>
-<pre>public&nbsp;OrderedMap(@NotNull
-                  @NotNull java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;map)</pre>
+<pre>public&nbsp;OrderedMap(java.util.Map&lt;? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,? extends <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;map)</pre>
 <div class="block">Creates a new map identical to the specified map.</div>
 </li>
 </ul>
@@ -467,8 +467,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <ul class="blockList">
 <li class="blockList">
 <h4>put</h4>
-<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&nbsp;put(@NotNull
-             <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&nbsp;key,
+<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&nbsp;put(<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&nbsp;key,
              <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&nbsp;value)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#put-K-V-">ObjectMap</a></code></span></div>
 <div class="block">Returns the old value associated with the specified key, or null.</div>
@@ -495,8 +494,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <ul class="blockList">
 <li class="blockList">
 <h4>remove</h4>
-<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&nbsp;remove(@NotNull
-                @NotNull java.lang.Object&nbsp;key)</pre>
+<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&nbsp;remove(java.lang.Object&nbsp;key)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>remove</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></dd>
@@ -511,7 +509,8 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <ul class="blockList">
 <li class="blockList">
 <h4>removeIndex</h4>
-<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&nbsp;removeIndex(int&nbsp;index)</pre>
+<pre>@Nullable
+public&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&nbsp;removeIndex(int&nbsp;index)</pre>
 </li>
 </ul>
 <a name="alter-java.lang.Object-java.lang.Object-">
@@ -522,9 +521,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <ul class="blockList">
 <li class="blockList">
 <h4>alter</h4>
-<pre>public&nbsp;boolean&nbsp;alter(@NotNull
-                     <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&nbsp;before,
-                     @NotNull
+<pre>public&nbsp;boolean&nbsp;alter(<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&nbsp;before,
                      <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&nbsp;after)</pre>
 <div class="block">Changes the key <code>before</code> to <code>after</code> without changing its position in the order or its value. Returns true if
  <code>after</code> has been added to the OrderedMap and <code>before</code> has been removed; returns false if <code>after</code> is
@@ -548,7 +545,6 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <li class="blockList">
 <h4>alterIndex</h4>
 <pre>public&nbsp;boolean&nbsp;alterIndex(int&nbsp;index,
-                          @NotNull
                           <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&nbsp;after)</pre>
 <div class="block">Changes the key at the given <code>index</code> in the order to <code>after</code>, without changing the ordering of other entries or
  any values. If <code>after</code> is already present, this returns false; it will also return false if <code>index</code> is invalid
@@ -635,8 +631,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <ul class="blockList">
 <li class="blockList">
 <h4>keySet</h4>
-<pre>@NotNull
-public&nbsp;@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;&nbsp;keySet()</pre>
+<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;&nbsp;keySet()</pre>
 <div class="block">Returns a <code>Set</code> view of the keys contained in this map.
  The set is backed by the map, so changes to the map are
  reflected in the set, and vice-versa.  If the map is modified
@@ -647,7 +642,11 @@ public&nbsp;@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.
  <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
  <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
  operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
- operations.</div>
+ operations.
+
+ <p>Note that the same Collection instance is returned each time this
+ method is called. Use the <code>OrderedMapKeys#OrderedMapKeys(OrderedMap)</code>
+ constructor for nested or multithreaded iteration.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>keySet</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></dd>
@@ -664,11 +663,10 @@ public&nbsp;@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.
 <ul class="blockList">
 <li class="blockList">
 <h4>values</h4>
-<pre>@NotNull
-public&nbsp;@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;values()</pre>
+<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;values()</pre>
 <div class="block">Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
- <p>
- Permits nested or multithreaded iteration, but allocates a new <code>Values</code> instance per-call.</div>
+ <p>Note that the same Collection instance is returned each time this method is called. Use the
+ <code>OrderedMapValues#OrderedMapValues(OrderedMap)</code> constructor for nested or multithreaded iteration.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>values</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></dd>
@@ -685,11 +683,11 @@ public&nbsp;@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.
 <ul class="blockList">
 <li class="blockList">
 <h4>entrySet</h4>
-<pre>@NotNull
-public&nbsp;@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;entrySet()</pre>
+<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;entrySet()</pre>
 <div class="block">Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
- <p>
- Permits nested or multithreaded iteration, but allocates a new <code>Entries</code> instance per-call.</div>
+ 
+ <p>Note that the same iterator instance is returned each time this method is called.
+ Use the <code>OrderedMapEntries#OrderedMapEntries(OrderedMap)</code> constructor for nested or multithreaded iteration.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>entrySet</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></dd>
@@ -706,19 +704,19 @@ public&nbsp;@NotNull <a href="../../../../com/github/tommyettinger/ds/ObjectMap.
 <ul class="blockList">
 <li class="blockList">
 <h4>iterator</h4>
-<pre>@NotNull
-public&nbsp;@NotNull java.util.Iterator&lt;java.util.Map.Entry&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&gt;&nbsp;iterator()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#iterator--">ObjectMap</a></code></span></div>
-<div class="block">Allows iterating over the key-value pairs as <code>Map.Entry</code> items. Allocates a new <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap.Entries</code></a> and an
- Iterator object each time this is called, but reuses one Entry per Entries object. You can remove an Entry from
- this ObjectMap using this Iterator.</div>
+<pre>public&nbsp;java.util.Iterator&lt;java.util.Map.Entry&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&gt;&nbsp;iterator()</pre>
+<div class="block">Reuses the iterator of the reused <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap.Entries</code></a>
+ produced by <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#entrySet--"><code>entrySet()</code></a>; does not permit nested iteration. Iterate over
+ <code>OrderedMapEntries#OrderedMapEntries(OrderedMap)</code> if you need nested or
+ multithreaded iteration. You can remove an Entry from this OrderedMap
+ using this Iterator.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>iterator</code>&nbsp;in interface&nbsp;<code>java.lang.Iterable&lt;java.util.Map.Entry&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&gt;</code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html#iterator--">iterator</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>,<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>an <code>Iterator</code> over <code>Map.Entry</code> key-value pairs; remove is supported.</dd>
+<dd>an <code>Iterator</code> over key-value pairs as <code>Map.Entry</code> values</dd>
 </dl>
 </li>
 </ul>
@@ -752,7 +750,8 @@ public&nbsp;@NotNull java.util.Iterator&lt;java.util.Map.Entry&lt;<a href="../..
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../com/github/tommyettinger/ds/package-summary.html">Package</a></li>
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>

@@ -36,7 +36,8 @@ var activeTableTab = "activeTableTab";
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../com/github/tommyettinger/ds/package-summary.html">Package</a></li>
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
@@ -72,13 +73,13 @@ var activeTableTab = "activeTableTab";
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -115,25 +116,6 @@ extends java.lang.Object</pre>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- =========== FIELD SUMMARY =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.summary">
-<!--   -->
-</a>
-<h3>Field Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
-<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Field and Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/Utilities.html#allocateIterators">allocateIterators</a></span></code>&nbsp;</td>
-</tr>
-</table>
-</li>
-</ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.summary">
@@ -166,7 +148,9 @@ extends java.lang.Object</pre>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/Utilities.html#tableSize-int-float-">tableSize</a></span>(int&nbsp;capacity,
-         float&nbsp;loadFactor)</code>&nbsp;</td>
+         float&nbsp;loadFactor)</code>
+<div class="block">Used to establish the size of a hash table for <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds"><code>ObjectSet</code></a>, <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap</code></a>, and related code.</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -184,23 +168,6 @@ extends java.lang.Object</pre>
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
-<!-- ============ FIELD DETAIL =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="field.detail">
-<!--   -->
-</a>
-<h3>Field Detail</h3>
-<a name="allocateIterators">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>allocateIterators</h4>
-<pre>public static&nbsp;boolean allocateIterators</pre>
-</li>
-</ul>
-</li>
-</ul>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.detail">
@@ -232,6 +199,16 @@ extends java.lang.Object</pre>
 <h4>tableSize</h4>
 <pre>public static&nbsp;int&nbsp;tableSize(int&nbsp;capacity,
                             float&nbsp;loadFactor)</pre>
+<div class="block">Used to establish the size of a hash table for <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds"><code>ObjectSet</code></a>, <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap</code></a>, and related code.
+ The table size will always be a power of two, and should be the next power of two that is at least equal
+ to <code>capacity / loadFactor</code>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>capacity</code> - the amount of items the hash table should be able to hold</dd>
+<dd><code>loadFactor</code> - between 0.0 (exclusive) and 1.0 (inclusive); the fraction of how much of the table can be filled</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the size of a hash table that can handle the specified capacity with the given loadFactor</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -250,7 +227,8 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../com/github/tommyettinger/ds/package-summary.html">Package</a></li>
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
@@ -286,13 +264,13 @@ extends java.lang.Object</pre>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

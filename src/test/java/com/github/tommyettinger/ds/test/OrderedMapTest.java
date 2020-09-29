@@ -15,8 +15,10 @@
  *  limitations under the License.
  */
 
-package com.github.tommyettinger.ds;
+package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.ObjectMap;
+import com.github.tommyettinger.ds.OrderedMap;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

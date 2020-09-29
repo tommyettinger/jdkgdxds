@@ -15,14 +15,20 @@
  *  limitations under the License.
  */
 
-package com.github.tommyettinger.ds;
+package com.github.tommyettinger.ds.test;
 
-import org.jetbrains.annotations.NotNull;
+import com.github.tommyettinger.ds.ObjectMap;
+import com.github.tommyettinger.ds.OrderedMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class ObjectMapTest extends junit.framework.TestCase {
 
@@ -598,7 +604,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 			super(m);
 		}
 
-		public V put (@NotNull K key, V value) {
+		public V put (K key, V value) {
 			throw new UnsupportedOperationException();
 		}
 	}

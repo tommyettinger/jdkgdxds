@@ -1,4 +1,6 @@
-package com.github.tommyettinger.ds;
+package com.github.tommyettinger.ds.test;
+
+import com.github.tommyettinger.ds.LaserRandom;
 
 import java.util.Random;
 import java.util.SplittableRandom;
@@ -69,7 +71,7 @@ public class LaserRandomTest {
 			for (int j = 0; j < 0x20000; j++) {
 				if(lr.nextSignedLong(-2) > 0) {
 					System.out.println("nextSignedLong(-2) had an incorrect result.\nFAILURE!");
-					System.out.printf("0x%016XL, 0x%016XL", lr.stateA, lr.stateB);
+					System.out.printf("0x%016XL, 0x%016XL", lr.getStateA(), lr.getStateB());
 					return;
 				}
 			}

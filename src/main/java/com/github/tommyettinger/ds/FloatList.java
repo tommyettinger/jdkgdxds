@@ -16,8 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Random;
@@ -54,7 +52,7 @@ public class FloatList implements Arrangeable, Serializable {
 	/** Creates a new array containing the elements in the specific array. The new array will be ordered if the specific array is
 	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
 	 * grown. */
-	public FloatList (@NotNull FloatList array) {
+	public FloatList (FloatList array) {
 		this.ordered = array.ordered;
 		size = array.size;
 		items = new float[size];
@@ -63,7 +61,7 @@ public class FloatList implements Arrangeable, Serializable {
 
 	/** Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown. */
-	public FloatList (@NotNull float[] array) {
+	public FloatList (float[] array) {
 		this(true, array, 0, array.length);
 	}
 
@@ -71,7 +69,7 @@ public class FloatList implements Arrangeable, Serializable {
 	 * subsequent elements added will cause the backing array to be grown.
 	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
 	 *           memory copy. */
-	public FloatList (boolean ordered, @NotNull float[] array, int startIndex, int count) {
+	public FloatList (boolean ordered, float[] array, int startIndex, int count) {
 		this(ordered, count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
@@ -118,24 +116,24 @@ public class FloatList implements Arrangeable, Serializable {
 	}
 
 	// Modified from libGDX
-	public boolean addAll (@NotNull FloatList array) {
+	public boolean addAll (FloatList array) {
 		return addAll(array.items, 0, array.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (@NotNull FloatList array, int offset, int length) {
+	public boolean addAll (FloatList array, int offset, int length) {
 		if (offset + length > array.size)
 			throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);
 		return addAll(array.items, offset, length);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (@NotNull float... array) {
+	public boolean addAll (float... array) {
 		return addAll(array, 0, array.length);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (@NotNull float[] array, int offset, int length) {
+	public boolean addAll (float[] array, int offset, int length) {
 		float[] items = this.items;
 		int sizeNeeded = size + length;
 		if (sizeNeeded > items.length) items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));
@@ -171,7 +169,7 @@ public class FloatList implements Arrangeable, Serializable {
 	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public @NotNull FloatList plus (float value) {
+	public FloatList plus (float value) {
 		float[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] += value;
@@ -194,7 +192,7 @@ public class FloatList implements Arrangeable, Serializable {
 	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public @NotNull FloatList times (float value) {
+	public FloatList times (float value) {
 		float[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] *= value;
@@ -217,7 +215,7 @@ public class FloatList implements Arrangeable, Serializable {
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public @NotNull FloatList minus (float value) {
+	public FloatList minus (float value) {
 		float[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] -= value;
@@ -239,7 +237,7 @@ public class FloatList implements Arrangeable, Serializable {
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public @NotNull FloatList div (float value) {
+	public FloatList div (float value) {
 		float[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] /= value;
@@ -261,7 +259,7 @@ public class FloatList implements Arrangeable, Serializable {
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public @NotNull FloatList rem (float value) {
+	public FloatList rem (float value) {
 		float[] items = this.items;
 		for (int i = 0, n = size; i < n; i++)
 			items[i] %= value;
@@ -313,7 +311,7 @@ public class FloatList implements Arrangeable, Serializable {
 	 * @return true if this contains every item in {@code other}, otherwise false
 	 */
 	// Newly-added
-	public boolean containsAll(@NotNull FloatList other) {
+	public boolean containsAll(FloatList other) {
 		float[] others = other.items;
 		int otherSize = other.size;
 		for (int i = 0; i < otherSize; i++) {
@@ -392,7 +390,7 @@ public class FloatList implements Arrangeable, Serializable {
 	 * will be removed for each occurrence of that value in {@code array}. If {@code array} has the same
 	 * contents as this FloatList or has additional items, then removing all of {@code array} will clear this.
 	 * @return true if this array was modified. */
-	public boolean removeAll (@NotNull FloatList array) {
+	public boolean removeAll (FloatList array) {
 		int size = this.size;
 		int startSize = size;
 		float[] items = this.items;
@@ -415,7 +413,7 @@ public class FloatList implements Arrangeable, Serializable {
 	 * @return true if this FloatList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (@NotNull FloatList other) {
+	public boolean retainAll (FloatList other) {
 		final int size = this.size;
 		final float[] items = this.items;
 		int r = 0, w = 0;
@@ -486,7 +484,7 @@ public class FloatList implements Arrangeable, Serializable {
 		return items;
 	}
 
-	protected @NotNull float[] resize (int newSize) {
+	protected float[] resize (int newSize) {
 		float[] newItems = new float[newSize];
 		float[] items = this.items;
 		System.arraycopy(items, 0, newItems, 0, Math.min(size, newItems.length));
@@ -509,7 +507,7 @@ public class FloatList implements Arrangeable, Serializable {
 	}
 
 	// Modified from libGDX
-	public void shuffle (@NotNull Random random) {
+	public void shuffle (Random random) {
 		float[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) {
 			int ii = random.nextInt(i+1);
@@ -526,12 +524,12 @@ public class FloatList implements Arrangeable, Serializable {
 	}
 
 	/** Returns a random item from the array, or zero if the array is empty. */
-	public float random (@NotNull Random random) {
+	public float random (Random random) {
 		if (size == 0) return 0;
 		return items[random.nextInt(size)];
 	}
 
-	public @NotNull float[] toArray () {
+	public float[] toArray () {
 		float[] array = new float[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
@@ -576,7 +574,7 @@ public class FloatList implements Arrangeable, Serializable {
 		return true;
 	}
 
-	public @NotNull String toString () {
+	public String toString () {
 		if (size == 0) return "[]";
 		float[] items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
@@ -590,7 +588,7 @@ public class FloatList implements Arrangeable, Serializable {
 		return buffer.toString();
 	}
 
-	public @NotNull String toString (String separator) {
+	public String toString (String separator) {
 		if (size == 0) return "";
 		float[] items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
@@ -603,7 +601,7 @@ public class FloatList implements Arrangeable, Serializable {
 	}
 
 	/** @see #FloatList(float[]) */
-	static public @NotNull FloatList with (@NotNull float... array) {
+	static public FloatList with (float... array) {
 		return new FloatList(array);
 	}
 }

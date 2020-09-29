@@ -16,8 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,7 +47,7 @@ import java.util.NoSuchElementException;
  */
 public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializable {
 	private static final long serialVersionUID = 0L;
-	protected final @NotNull ArrayList<T> items;
+	protected final ArrayList<T> items;
 
 	public OrderedSet () {
 		items = new ArrayList<>();
@@ -65,7 +63,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		items = new ArrayList<>(initialCapacity);
 	}
 
-	public OrderedSet (@NotNull OrderedSet<? extends T> set) {
+	public OrderedSet (OrderedSet<? extends T> set) {
 		super(set);
 		items = new ArrayList<>(set.items);
 	}
@@ -73,12 +71,12 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public OrderedSet (@NotNull Collection<? extends T> coll) {
+	public OrderedSet (Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);
 	}
 
-	public boolean add (@NotNull T key) {
+	public boolean add (T key) {
 		return super.add(key) && items.add(key);
 	}
 
@@ -86,7 +84,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * Sets the key at the specfied index. Returns true if the key was not already in the set. If this set already contains the
 	 * key, the existing key's index is changed if needed and false is returned.
 	 */
-	public boolean add (@NotNull T key, int index) {
+	public boolean add (T key, int index) {
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
 			if (oldIndex != index)
@@ -97,14 +95,14 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		return true;
 	}
 
-	public void addAll (@NotNull OrderedSet<T> set) {
+	public void addAll (OrderedSet<T> set) {
 		ensureCapacity(set.size);
 		ArrayList<T> si = set.items;
 		for (int i = 0, n = si.size(); i < n; i++)
 			add(si.get(i));
 	}
 
-	public boolean remove (@NotNull Object key) {
+	public boolean remove (Object key) {
 		return super.remove(key) && items.remove(key);
 	}
 
@@ -124,7 +122,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * @param after  an item that must not be in this set for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (@NotNull T before, @NotNull T after) {
+	public boolean alter (T before, T after) {
 		if (contains(after))
 			return false;
 		if (!super.remove(before))
@@ -143,7 +141,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
-	public boolean alterIndex (int index, @NotNull T after) {
+	public boolean alterIndex (int index, T after) {
 		if (index < 0 || index >= size || contains(after))
 			return false;
 		super.remove(items.get(index));
@@ -171,7 +169,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * because it allows order-changing methods to be written once for an arbitrary {@link Ordered} type.
 	 * @return the ArrayList of items, in iteration order (usually insertion-order), that this uses
 	 */
-	public @NotNull ArrayList<T> orderedItems () {
+	public ArrayList<T> orderedItems () {
 		return items;
 	}
 
@@ -182,7 +180,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * @return the ArrayList of items, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public @NotNull ArrayList<T> order () {
+	public ArrayList<T> order () {
 		return items;
 	}
 
@@ -192,7 +190,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * use {@link OrderedSetIterator#OrderedSetIterator(OrderedSet)} to nest iterators.
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
-	public @NotNull Iterator<T> iterator () {
+	public Iterator<T> iterator () {
 		if (iterator1 == null) {
 			iterator1 = new OrderedSetIterator<>(this);
 			iterator2 = new OrderedSetIterator<>(this);
@@ -209,7 +207,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		return iterator2;
 	}
 
-	public @NotNull String toString (String separator) {
+	public String toString (String separator) {
 		if (size == 0)
 			return "{}";
 		ArrayList<T> items = this.items;
@@ -224,14 +222,14 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		return buffer.toString();
 	}
 
-	public @NotNull String toString () {
+	public String toString () {
 		return toString(", ");
 	}
 
 	static public class OrderedSetIterator<K> extends ObjectSetIterator<K> {
 		private ArrayList<K> items;
 
-		public OrderedSetIterator (@NotNull OrderedSet<K> set) {
+		public OrderedSetIterator (OrderedSet<K> set) {
 			super(set);
 			items = set.items;
 		}
@@ -261,7 +259,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	}
 
 	@SafeVarargs
-	static public <T> @NotNull OrderedSet<T> with (@NotNull T... array) {
+	static public <T> OrderedSet<T> with (T... array) {
 		OrderedSet<T> set = new OrderedSet<T>();
 		set.addAll(array);
 		return set;

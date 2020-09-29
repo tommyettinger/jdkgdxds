@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":9,"i15":10,"i16":10,"i17":10,"i18":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":9,"i21":10,"i22":10,"i23":10,"i24":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -36,7 +36,8 @@ var activeTableTab = "activeTableTab";
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../com/github/tommyettinger/ds/package-summary.html">Package</a></li>
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
@@ -46,7 +47,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/github/tommyettinger/ds/IntList.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../com/github/tommyettinger/ds/IntList.IntListIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -288,13 +289,22 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i12" class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#nextInt-int-int-">nextInt</a></span>(int&nbsp;innerBound,
+       int&nbsp;outerBound)</code>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive).</div>
+</td>
+</tr>
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#nextLong--">nextLong</a></span>()</code>
 <div class="block">Returns the next pseudorandom, uniformly distributed <code>long</code>
  value from this random number generator's sequence.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#nextLong-long-">nextLong</a></span>(long&nbsp;bound)</code>
 <div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value
@@ -302,33 +312,74 @@ implements java.io.Serializable</pre>
  this random number generator's sequence.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
+<td class="colFirst"><code>long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#nextLong-long-long-">nextLong</a></span>(long&nbsp;innerBound,
+        long&nbsp;outerBound)</code>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive).</div>
+</td>
+</tr>
+<tr id="i16" class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#nextSignedInt-int-">nextSignedInt</a></span>(int&nbsp;outerBound)</code>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value between an
+ inner bound of 0 (inclusive) and the specified <code>outerBound</code> (exclusive).</div>
+</td>
+</tr>
+<tr id="i17" class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#nextSignedInt-int-int-">nextSignedInt</a></span>(int&nbsp;innerBound,
+             int&nbsp;outerBound)</code>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive).</div>
+</td>
+</tr>
+<tr id="i18" class="altColor">
+<td class="colFirst"><code>long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#nextSignedLong-long-">nextSignedLong</a></span>(long&nbsp;outerBound)</code>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value between an
+ inner bound of 0 (inclusive) and the specified <code>outerBound</code> (exclusive).</div>
+</td>
+</tr>
+<tr id="i19" class="rowColor">
+<td class="colFirst"><code>long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#nextSignedLong-long-long-">nextSignedLong</a></span>(long&nbsp;innerBound,
+              long&nbsp;outerBound)</code>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive).</div>
+</td>
+</tr>
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>static double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#probit-double-">probit</a></span>(double&nbsp;d)</code>
 <div class="block">A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
  inputs correspond to high outputs, and similarly for the low range.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#setSeed-long-">setSeed</a></span>(long&nbsp;seed)</code>
 <div class="block">Sets the seed of this random number generator using a single
  <code>long</code> seed.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#setStateA-long-">setStateA</a></span>(long&nbsp;stateA)</code>
 <div class="block">Set the "A" part of the internal state with a long.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#setStateB-long-">setStateB</a></span>(long&nbsp;stateB)</code>
 <div class="block">Set the "B" part of the internal state with a long; the least significant bit is ignored (will always be odd).</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#skip-long-">skip</a></span>(long&nbsp;advance)</code>
 <div class="block">Advances or rolls back the <code>LaserRandom</code>' state without actually generating each number.</div>
@@ -622,6 +673,73 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
+<a name="nextSignedInt-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>nextSignedInt</h4>
+<pre>public&nbsp;int&nbsp;nextSignedInt(int&nbsp;outerBound)</pre>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value between an
+ inner bound of 0 (inclusive) and the specified <code>outerBound</code> (exclusive).
+ This is meant for cases where the outer bound may be negative, especially if
+ the bound is unknown or may be user-specified. A negative outer bound is used
+ as the lower bound; a positive outer bound is used as the upper bound. An outer
+ bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
+ for outer bound 0).</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>outerBound</code> - the outer exclusive bound; may be any int value, allowing negative</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a pseudorandom int between 0 (inclusive) and outerBound (exclusive)</dd>
+</dl>
+</li>
+</ul>
+<a name="nextInt-int-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>nextInt</h4>
+<pre>public&nbsp;int&nbsp;nextInt(int&nbsp;innerBound,
+                   int&nbsp;outerBound)</pre>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive). If <code>outerBound</code> is less than or equal to <code>innerBound</code>,
+ this always returns <code>innerBound</code>.
+
+ <br> For any case where outerBound might be valid but less than innerBound, you
+ can use <a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#nextSignedInt-int-int-"><code>nextSignedInt(int, int)</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>innerBound</code> - the inclusive inner bound; may be any int, allowing negative</dd>
+<dd><code>outerBound</code> - the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</dd>
+</dl>
+</li>
+</ul>
+<a name="nextSignedInt-int-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>nextSignedInt</h4>
+<pre>public&nbsp;int&nbsp;nextSignedInt(int&nbsp;innerBound,
+                         int&nbsp;outerBound)</pre>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive). This is meant for cases where either bound may be negative,
+ especially if the bounds are unknown or may be user-specified.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>innerBound</code> - the inclusive inner bound; may be any int, allowing negative</dd>
+<dd><code>outerBound</code> - the exclusive outer bound; may be any int, allowing negative</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</dd>
+</dl>
+</li>
+</ul>
 <a name="nextLong--">
 <!--   -->
 </a>
@@ -673,6 +791,77 @@ implements java.io.Serializable</pre>
 <dd>the next pseudorandom, uniformly distributed <code>long</code>
  value between zero (inclusive) and <code>bound</code> (exclusive)
  from this random number generator's sequence</dd>
+</dl>
+</li>
+</ul>
+<a name="nextSignedLong-long-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>nextSignedLong</h4>
+<pre>public&nbsp;long&nbsp;nextSignedLong(long&nbsp;outerBound)</pre>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value between an
+ inner bound of 0 (inclusive) and the specified <code>outerBound</code> (exclusive).
+ This is meant for cases where the outer bound may be negative, especially if
+ the bound is unknown or may be user-specified. A negative outer bound is used
+ as the lower bound; a positive outer bound is used as the upper bound. An outer
+ bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
+ for outer bound 0).
+
+ <p>Note that this advances the state by the same amount as a single call to
+ <a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#nextLong--"><code>nextLong()</code></a>, which allows methods like <a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#skip-long-"><code>skip(long)</code></a> to function
+ correctly, but introduces some bias when <code>bound</code> is very large.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>outerBound</code> - the outer exclusive bound; may be any long value, allowing negative</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a pseudorandom long between 0 (inclusive) and outerBound (exclusive)</dd>
+</dl>
+</li>
+</ul>
+<a name="nextLong-long-long-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>nextLong</h4>
+<pre>public&nbsp;long&nbsp;nextLong(long&nbsp;innerBound,
+                     long&nbsp;outerBound)</pre>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive). If <code>outerBound</code> is less than or equal to <code>innerBound</code>,
+ this always returns <code>innerBound</code>.
+ 
+ <br> For any case where outerBound might be valid but less than innerBound, you
+ can use <a href="../../../../com/github/tommyettinger/ds/LaserRandom.html#nextSignedLong-long-long-"><code>nextSignedLong(long, long)</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>innerBound</code> - the inclusive inner bound; may be any long, allowing negative</dd>
+<dd><code>outerBound</code> - the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</dd>
+</dl>
+</li>
+</ul>
+<a name="nextSignedLong-long-long-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>nextSignedLong</h4>
+<pre>public&nbsp;long&nbsp;nextSignedLong(long&nbsp;innerBound,
+                           long&nbsp;outerBound)</pre>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive). This is meant for cases where either bound may be negative,
+ especially if the bounds are unknown or may be user-specified.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>innerBound</code> - the inclusive inner bound; may be any long, allowing negative</dd>
+<dd><code>outerBound</code> - the exclusive outer bound; may be any long, allowing negative</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</dd>
 </dl>
 </li>
 </ul>
@@ -908,7 +1097,8 @@ implements java.io.Serializable</pre>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../com/github/tommyettinger/ds/package-summary.html">Package</a></li>
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
@@ -918,7 +1108,7 @@ implements java.io.Serializable</pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../com/github/tommyettinger/ds/IntList.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../com/github/tommyettinger/ds/IntList.IntListIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

@@ -16,9 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,7 +51,7 @@ import java.util.Set;
 public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Serializable {
 	private static final long serialVersionUID = 0L;
 
-	protected final @NotNull ArrayList<K> keys;
+	protected final ArrayList<K> keys;
 
 	public OrderedMap () {
 		keys = new ArrayList<>();
@@ -69,7 +67,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		keys = new ArrayList<>(initialCapacity);
 	}
 
-	public OrderedMap (@NotNull OrderedMap<? extends K, ? extends V> map) {
+	public OrderedMap (OrderedMap<? extends K, ? extends V> map) {
 		super(map);
 		keys = new ArrayList<>(map.keys);
 	}
@@ -77,14 +75,14 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	/**
 	 * Creates a new map identical to the specified map.
 	 */
-	public OrderedMap (@NotNull Map<? extends K, ? extends V> map) {
+	public OrderedMap (Map<? extends K, ? extends V> map) {
 		this(map.size());
 		for (K k : map.keySet()) {
 			put(k, map.get(k));
 		}
 	}
 
-	public V put (@NotNull K key, V value) {
+	public V put (K key, V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -100,7 +98,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		return null;
 	}
 
-	public <T extends K> void putAll (@NotNull OrderedMap<T, ? extends V> map) {
+	public <T extends K> void putAll (OrderedMap<T, ? extends V> map) {
 		ensureCapacity(map.size);
 		ArrayList<T> ks = map.keys;
 		int kl = ks.size();
@@ -111,7 +109,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		}
 	}
 
-	public V remove (@NotNull Object key) {
+	public V remove (Object key) {
 		if (!keys.remove(key))
 			return null;
 		return super.remove(key);
@@ -131,7 +129,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * @param after  a key that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (@NotNull K before, @NotNull K after) {
+	public boolean alter (K before, K after) {
 		if (containsKey(after))
 			return false;
 		int index = keys.indexOf(before);
@@ -151,7 +149,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterIndex (int index, @NotNull K after) {
+	public boolean alterIndex (int index, K after) {
 		if (index < 0 || index >= size || containsKey(after))
 			return false;
 		super.put(after, super.remove(keys.get(index)));
@@ -178,7 +176,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * because it allows order-changing methods to be written once for an arbitrary {@link Ordered} type.
 	 * @return the ArrayList of keys, in iteration order (usually insertion-order), that this uses
 	 */
-	public @NotNull ArrayList<K> orderedKeys () {
+	public ArrayList<K> orderedKeys () {
 		return keys;
 	}
 	
@@ -189,7 +187,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * @return the ArrayList of keys, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public @NotNull ArrayList<K> order () {
+	public ArrayList<K> order () {
 		return keys;
 	}
 
@@ -213,7 +211,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NotNull Keys<K> keySet () {
+	public Keys<K> keySet () {
 		if (keys1 == null) {
 			keys1 = new OrderedMapKeys<>(this);
 			keys2 = new OrderedMapKeys<>(this);
@@ -238,7 +236,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NotNull Values<V> values () {
+	public Values<V> values () {
 		if (values1 == null) {
 			values1 = new OrderedMapValues<>(this);
 			values2 = new OrderedMapValues<>(this);
@@ -264,7 +262,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NotNull Entries<K, V> entrySet () {
+	public Entries<K, V> entrySet () {
 		if (entries1 == null) {
 			entries1 = new OrderedMapEntries<>(this);
 			entries2 = new OrderedMapEntries<>(this);
@@ -290,11 +288,11 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * 	 
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
-	public @NotNull Iterator<Map.Entry<K, V>> iterator () {
+	public Iterator<Map.Entry<K, V>> iterator () {
 		return entrySet().iterator();
 	}
 
-	protected @NotNull String toString (String separator, boolean braces) {
+	protected String toString (String separator, boolean braces) {
 		if (size == 0)
 			return braces ? "{}" : "";
 		StringBuilder buffer = new StringBuilder(32);
@@ -318,10 +316,9 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	static public class OrderedMapEntries<K, V> extends Entries<K, V> {
 		protected ArrayList<K> keys;
 
-		public OrderedMapEntries (@NotNull OrderedMap<K, V> map) {
+		public OrderedMapEntries (OrderedMap<K, V> map) {
 			keys = map.keys;
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
-				@NotNull
 				@Override
 				public Iterator<Map.Entry<K, V>> iterator () {
 					return this;
@@ -339,7 +336,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 					return hasNext;
 				}
 
-				public @NotNull Entry<K, V> next () {
+				public Entry<K, V> next () {
 					if (!hasNext)
 						throw new NoSuchElementException();
 					if (!valid)
@@ -363,7 +360,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		}
 
 		@Override
-		public @NotNull Iterator<Map.Entry<K, V>> iterator () {
+		public Iterator<Map.Entry<K, V>> iterator () {
 			return iter;
 		}
 	}
@@ -371,11 +368,11 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	static public class OrderedMapKeys<K> extends Keys<K> {
 		protected ArrayList<K> keys;
 
-		public OrderedMapKeys (@NotNull OrderedMap<K, ?> map) {
+		public OrderedMapKeys (OrderedMap<K, ?> map) {
 			keys = map.keys;
 			iter = new MapIterator<K, Object, K>((OrderedMap)map) {
 				@Override
-				public @NotNull Iterator<K> iterator () {
+				public Iterator<K> iterator () {
 					return this;
 				}
 
@@ -416,19 +413,19 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		}
 
 		@Override
-		public @NotNull Iterator<K> iterator () {
+		public Iterator<K> iterator () {
 			return iter;
 		}
 
-		@NotNull
+		
 		@Override
 		public Object[] toArray () {
 			return super.toArray();
 		}
 
-		@NotNull
+		
 		@Override
-		public <T> T[] toArray (@NotNull T[] a) {
+		public <T> T[] toArray (T[] a) {
 			return super.toArray(a);
 		}
 	}
@@ -436,11 +433,11 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	static public class OrderedMapValues<V> extends Values<V> {
 		private ArrayList<?> keys;
 
-		public OrderedMapValues (@NotNull OrderedMap<?, V> map) {
+		public OrderedMapValues (OrderedMap<?, V> map) {
 			keys = map.keys;
 			iter = new MapIterator<Object, V, V>((ObjectMap<Object, V>)map) {
 				@Override
-				public @NotNull Iterator<V> iterator () {
+				public Iterator<V> iterator () {
 					return this;
 				}
 
@@ -480,7 +477,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		}
 
 		@Override
-		public @NotNull Iterator<V> iterator () {
+		public Iterator<V> iterator () {
 			return iter;
 		}
 	}
