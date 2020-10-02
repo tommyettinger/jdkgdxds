@@ -416,18 +416,6 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		public Iterator<K> iterator () {
 			return iter;
 		}
-
-		
-		@Override
-		public Object[] toArray () {
-			return super.toArray();
-		}
-
-		
-		@Override
-		public <T> T[] toArray (T[] a) {
-			return super.toArray(a);
-		}
 	}
 
 	static public class OrderedMapValues<V> extends Values<V> {

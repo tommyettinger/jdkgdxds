@@ -536,11 +536,16 @@ public class FloatList implements Arrangeable, Serializable {
 	}
 
 	public int hashCode () {
-		if (!ordered) return super.hashCode();
 		float[] items = this.items;
 		int h = 1;
-		for (int i = 0, n = size; i < n; i++)
-			h = h * 31 + BitConversion.floatToRawIntBits(items[i]);
+		if(ordered) {
+			for (int i = 0, n = size; i < n; i++)
+				h = h * 31 + BitConversion.floatToRawIntBits(items[i]);
+		} else {
+			for (int i = 0, n = size; i < n; i++) {
+				h += BitConversion.floatToRawIntBits(items[i]);
+			}
+		}
 		return h;
 	}
 
