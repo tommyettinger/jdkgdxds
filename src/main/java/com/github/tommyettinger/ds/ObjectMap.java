@@ -157,6 +157,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	/**
 	 * Returns the old value associated with the specified key, or null.
 	 */
+	@Override
 	public @Nullable V put (K key, @Nullable V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
@@ -206,6 +207,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * 
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
+	@Override
 	public @Nullable V get (Object key) {
 		int i = locateKey(key);
 		return i < 0 ? null : valueTable[i];
@@ -219,6 +221,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		return i < 0 ? defaultValue : valueTable[i];
 	}
 
+	@Override
 	public @Nullable V remove (Object key) {
 		int i = locateKey(key);
 		if (i < 0)
@@ -289,6 +292,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	/**
 	 * Returns true if the map is empty.
 	 */
+	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
@@ -319,6 +323,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		resize(tableSize);
 	}
 
+	@Override
 	public void clear () {
 		if (size == 0)
 			return;
@@ -353,6 +358,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		return false;
 	}
 
+	@Override
 	public boolean containsKey (Object key) {
 		return locateKey(key) >= 0;
 	}
@@ -550,6 +556,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 *
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
+	@Override
 	public Iterator<Map.Entry<K, V>> iterator () {
 		return entrySet().iterator();
 	}
@@ -573,6 +580,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
+	@Override
 	public Keys<K> keySet () { 
 		if (keys1 == null) {
 			keys1 = new Keys<>(this);
@@ -753,6 +761,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			hasNext = false;
 		}
 
+		@Override
 		public void remove () {
 			int i = currentIndex;
 			if (i < 0)
@@ -794,6 +803,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 				}
 
 				/** Note the same entry instance is returned each time this method is called. */
+				@Override
 				public Map.Entry<K, V> next () {
 					if (!hasNext)
 						throw new NoSuchElementException();
@@ -807,6 +817,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 					return entry;
 				}
 
+				@Override
 				public boolean hasNext () {
 					if (!valid)
 						throw new RuntimeException("#iterator() cannot be used nested.");
@@ -896,12 +907,14 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 					return this;
 				}
 
+				@Override
 				public boolean hasNext () {
 					if (!valid)
 						throw new RuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
+				@Override
 				public K next () {
 					if (!hasNext)
 						throw new NoSuchElementException();

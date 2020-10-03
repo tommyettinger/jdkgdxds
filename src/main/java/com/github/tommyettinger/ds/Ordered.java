@@ -1,6 +1,7 @@
 package com.github.tommyettinger.ds;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -41,5 +42,10 @@ public interface Ordered<T> extends Arrangeable {
 		for (int i = order.size() - 1; i >= 0; i--) {
 			order.set(i, order.set(random.nextInt(i+1), order.get(i)));
 		}
+	}
+
+	@Override
+	default void reverse () {
+		Collections.reverse(order());
 	}
 }

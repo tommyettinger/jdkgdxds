@@ -76,6 +76,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		addAll(coll);
 	}
 
+	@Override
 	public boolean add (T key) {
 		return super.add(key) && items.add(key);
 	}
@@ -102,6 +103,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 			add(si.get(i));
 	}
 
+	@Override
 	public boolean remove (Object key) {
 		return super.remove(key) && items.remove(key);
 	}
@@ -150,11 +152,13 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		return true;
 	}
 
+	@Override
 	public void clear (int maximumCapacity) {
 		items.clear();
 		super.clear(maximumCapacity);
 	}
 
+	@Override
 	public void clear () {
 		items.clear();
 		super.clear();
@@ -190,6 +194,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * use {@link OrderedSetIterator#OrderedSetIterator(OrderedSet)} to nest iterators.
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
+	@Override
 	public Iterator<T> iterator () {
 		if (iterator1 == null) {
 			iterator1 = new OrderedSetIterator<>(this);
@@ -207,6 +212,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		return iterator2;
 	}
 
+	@Override
 	public String toString (String separator) {
 		if (size == 0)
 			return "{}";
@@ -234,11 +240,13 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 			items = set.items;
 		}
 
+		@Override
 		public void reset () {
 			nextIndex = 0;
 			hasNext = set.size > 0;
 		}
 
+		@Override
 		public K next () {
 			if (!hasNext)
 				throw new NoSuchElementException();
@@ -250,6 +258,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 			return key;
 		}
 
+		@Override
 		public void remove () {
 			if (nextIndex < 0)
 				throw new IllegalStateException("next must be called before remove.");

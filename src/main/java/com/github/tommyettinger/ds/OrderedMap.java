@@ -82,6 +82,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		}
 	}
 
+	@Override
 	public V put (K key, V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
@@ -109,6 +110,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		}
 	}
 
+	@Override
 	public V remove (Object key) {
 		if (!keys.remove(key))
 			return null;
@@ -157,11 +159,13 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		return true;
 	}
 
+	@Override
 	public void clear (int maximumCapacity) {
 		keys.clear();
 		super.clear(maximumCapacity);
 	}
 
+	@Override
 	public void clear () {
 		keys.clear();
 		super.clear();
@@ -288,10 +292,12 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * 	 
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
+	@Override
 	public Iterator<Map.Entry<K, V>> iterator () {
 		return entrySet().iterator();
 	}
 
+	@Override
 	protected String toString (String separator, boolean braces) {
 		if (size == 0)
 			return braces ? "{}" : "";
@@ -324,18 +330,21 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 					return this;
 				}
 
+				@Override
 				public void reset () {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
+				@Override
 				public boolean hasNext () {
 					if (!valid)
 						throw new RuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
+				@Override
 				public Entry<K, V> next () {
 					if (!hasNext)
 						throw new NoSuchElementException();
@@ -349,6 +358,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 					return entry;
 				}
 
+				@Override
 				public void remove () {
 					if (currentIndex < 0)
 						throw new IllegalStateException("next must be called before remove.");
@@ -376,18 +386,21 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 					return this;
 				}
 
+				@Override
 				public boolean hasNext () {
 					if (!valid)
 						throw new RuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
 
+				@Override
 				public void reset () {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
+				@Override
 				public K next () {
 					if (!hasNext)
 						throw new NoSuchElementException();
@@ -400,6 +413,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 					return key;
 				}
 
+				@Override
 				public void remove () {
 					if (currentIndex < 0)
 						throw new IllegalStateException("next must be called before remove.");
@@ -436,12 +450,14 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 					return hasNext;
 				}
 
+				@Override
 				public void reset () {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
+				@Override
 				public @Nullable V next () {
 					if (!hasNext)
 						throw new NoSuchElementException();
@@ -454,6 +470,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 					return value;
 				}
 
+				@Override
 				public void remove () {
 					if (currentIndex < 0)
 						throw new IllegalStateException("next must be called before remove.");

@@ -590,6 +590,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 	 * Sets up the fixture, for example, open a network connection. This method
 	 * is called before a test is executed.
 	 */
+	@Override
 	@Before
 	public void setUp () {
 		hm = new ObjectMap();
@@ -604,6 +605,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 			super(m);
 		}
 
+		@Override
 		public V put (K key, V value) {
 			throw new UnsupportedOperationException();
 		}

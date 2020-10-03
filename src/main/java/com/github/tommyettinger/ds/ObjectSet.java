@@ -148,6 +148,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * Returns true if the key was not already in the set. If this set already contains the key, the call leaves the set unchanged
 	 * and returns false.
 	 */
+	@Override
 	public boolean add (T key) {
 		int i = locateKey(key);
 		if (i >= 0)
@@ -168,6 +169,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return true;
 	}
 
+	@Override
 	public boolean addAll (Collection<? extends T> coll) {
 		final int length = coll.size();
 		ensureCapacity(length);
@@ -236,6 +238,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Returns true if the key was removed.
 	 */
+	@Override
 	public boolean remove (Object key) {
 		int i = locateKey(key);
 		if (i < 0)
@@ -277,6 +280,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Returns true if the set is empty.
 	 */
+	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
@@ -313,6 +317,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * Clears the set, leaving the backing arrays at the current capacity. When the capacity is high and the population is low,
 	 * iteration can be unnecessarily slow. {@link #clear(int)} can be used to reduce the capacity.
 	 */
+	@Override
 	public void clear () {
 		if (size == 0)
 			return;
@@ -320,6 +325,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		Arrays.fill(keyTable, null);
 	}
 
+	@Override
 	public boolean contains (Object key) {
 		return locateKey(key) >= 0;
 	}
@@ -513,6 +519,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 			hasNext = false;
 		}
 
+		@Override
 		public void remove () {
 			int i = currentIndex;
 			if (i < 0)
@@ -535,12 +542,14 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 			currentIndex = -1;
 		}
 
+		@Override
 		public boolean hasNext () {
 			if (!valid)
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			return hasNext;
 		}
 
+		@Override
 		public K next () {
 			if (!hasNext)
 				throw new NoSuchElementException();
@@ -552,6 +561,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 			return key;
 		}
 
+		@Override
 		public ObjectSetIterator<K> iterator () {
 			return this;
 		}

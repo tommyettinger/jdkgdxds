@@ -19,4 +19,6 @@ public interface Arrangeable {
 	 * @param random any {@link Random} implementation; prefer {@link LaserRandom} in this library
 	 */
 	void shuffle(Random random);
+	
+	void reverse();
 }

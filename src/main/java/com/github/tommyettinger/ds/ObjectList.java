@@ -102,7 +102,24 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		}
 		return true;
 	}
+	
+	public boolean duplicateRange(int index, int count) {
+		if (index + count >= size()) 
+			throw new IllegalStateException("Sum of index and count is too large: " + (index + count) + " must not be >= " + size());
+		addAll(index, subList(index, index + count));
+		return count > 0;
+	}
 
+	/** Returns true if this ObjectList contains any the specified values.
+	 * @param values May contains nulls.
+	 * @return true if this ObjectList contains any of the items in {@code values}, false otherwise
+	 */
+	public boolean containsAny (Collection<? extends T> values) {
+		for(T v : values) {
+			if (contains(v)) return true;
+		}
+		return false;
+	}
 	/**
 	 * Adds up to {@code count} items, starting from {@code offset}, in the array {@code a} to this ObjectList, inserting starting at {@code insertionIndex}.
 	 * @param insertionIndex where to insert into this ObjectList
@@ -229,5 +246,16 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		for (int i = size() - 1; i >= 0; i--) {
 			set(i, set(random.nextInt(i+1), get(i)));
 		}
+	}
+	
+	public T random(Random random){
+		int n = size();
+		if (n == 0) throw new IllegalStateException("ObjectList is empty.");
+		return get(random.nextInt(n));
+	}
+
+	@Override
+	public void reverse () {
+		Collections.reverse(this);
 	}
 }
