@@ -69,18 +69,41 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 			add(a[i]);
 		}
 	}
+	
+	/** Removes and returns the last item. */
+	public T pop() {
+		int n = size();
+		if (n == 0) throw new IllegalStateException("ObjectList is empty.");
+		return remove(n - 1);
+	}
 
+	/** Returns the last item. */
+	public T peek() {
+		int n = size();
+		if (n == 0) throw new IllegalStateException("ObjectList is empty.");
+		return get(n - 1);
+	}
 
+	/** Returns the first item. */
+	public T first() {
+		if (size() == 0) throw new IllegalStateException("ObjectList is empty.");
+		return get(0);
+	}
 
-	/** Uses == for comparison of each item. Returns false if either array is unordered. */
+	/** Returns true if the array has one or more items. */
+	public boolean notEmpty () {
+		return size() != 0;
+	}
+
+	/** Uses == for comparison of each item. */
 	public boolean equalsIdentity (Object object) {
 		if (object == this) return true;
 		if (!(object instanceof ObjectList)) return false;
-		ObjectList array = (ObjectList)object;
+		ObjectList list = (ObjectList)object;
 		int n = size();
-		if (n != array.size()) return false;
+		if (n != list.size()) return false;
 		for (int i = 0; i < n; i++)
-			if (get(i) != array.get(i)) return false;
+			if (get(i) != list.get(i)) return false;
 		return true;
 	}
 
@@ -122,8 +145,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 	
 	@SafeVarargs
-	static public <T> ObjectList<T> with (T... array) {
-		return new ObjectList<>(array);
+	static public <T> ObjectList<T> with (T... varargs) {
+		return new ObjectList<>(varargs);
 	}
 	/**
 	 * Gets the ArrayList of T items that this data structure holds, in the order it uses for iteration.
