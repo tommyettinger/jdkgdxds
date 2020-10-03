@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -25,6 +26,7 @@ import java.util.Random;
 /** A resizable, ordered or unordered int list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Integer.
  * If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
+ * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
  * 
  * @author Nathan Sweet */
 public class IntList implements Arrangeable, Serializable {
@@ -32,7 +34,7 @@ public class IntList implements Arrangeable, Serializable {
 	public int[] items;
 	public int size;
 	public boolean ordered;
-	protected IntListIterator iterator1, iterator2;
+	protected @Nullable IntListIterator iterator1, iterator2;
 	
 	/** Creates an ordered array with a capacity of 16. */
 	public IntList () {
