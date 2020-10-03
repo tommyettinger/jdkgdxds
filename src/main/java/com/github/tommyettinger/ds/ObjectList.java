@@ -69,6 +69,54 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 			add(a[i]);
 		}
 	}
+
+	/**
+	 * Adds each item in the array {@code a} to this ObjectList, appending to the end.
+	 * @param a a non-null array of {@code T}
+	 * @return true, as {@link #addAll(Collection)} does
+	 */
+	public boolean addAll(T[] a) {
+		return Collections.addAll(this, a);
+	}
+
+	/**
+	 * Adds each item in the array {@code a} to this ObjectList, inserting starting at {@code insertionIndex}.
+	 * @param insertionIndex where to insert into this ObjectList
+	 * @param a a non-null array of {@code T}
+	 * @return true, as {@link #addAll(Collection)} does
+	 */
+	public boolean addAll(int insertionIndex, T[] a) {
+		return addAll(insertionIndex, a, 0, a.length);
+	}
+
+	/**
+	 * Adds up to {@code count} items, starting from {@code offset}, in the array {@code a} to this ObjectList, appending to the end.
+	 * @param a a non-null array of {@code T}
+	 * @param offset the first index in {@code a} to use
+	 * @param count how many indices in {@code a} to use
+	 * @return true, as {@link #addAll(Collection)} does
+	 */
+	public boolean addAll(T[] a, int offset, int count) {
+		for (int i = offset, n = Math.min(offset + count, a.length); i < n; i++) {
+			add(a[i]);
+		}
+		return true;
+	}
+
+	/**
+	 * Adds up to {@code count} items, starting from {@code offset}, in the array {@code a} to this ObjectList, inserting starting at {@code insertionIndex}.
+	 * @param insertionIndex where to insert into this ObjectList
+	 * @param a a non-null array of {@code T}
+	 * @param offset the first index in {@code a} to use
+	 * @param count how many indices in {@code a} to use
+	 * @return true, as {@link #addAll(Collection)} does
+	 */
+	public boolean addAll(int insertionIndex, T[] a, int offset, int count) {
+		for (int i = offset, n = Math.min(offset + count, a.length); i < n; i++) {
+			add(insertionIndex++, a[i]);
+		}
+		return true;
+	}
 	
 	/** Removes and returns the last item. */
 	public T pop() {
