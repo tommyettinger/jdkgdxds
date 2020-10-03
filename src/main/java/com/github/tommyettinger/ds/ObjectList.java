@@ -69,7 +69,62 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 			add(a[i]);
 		}
 	}
+
+
+
+	/** Uses == for comparison of each item. Returns false if either array is unordered. */
+	public boolean equalsIdentity (Object object) {
+		if (object == this) return true;
+		if (!(object instanceof ObjectList)) return false;
+		ObjectList array = (ObjectList)object;
+		int n = size();
+		if (n != array.size()) return false;
+		for (int i = 0; i < n; i++)
+			if (get(i) != array.get(i)) return false;
+		return true;
+	}
+
+	public String toString () {
+		int n = size();
+		if (n == 0) return "[]";
+		StringBuilder buffer = new StringBuilder(32);
+		buffer.append('[');
+		buffer.append(get(0));
+		for (int i = 1; i < n; i++) {
+			buffer.append(", ");
+			buffer.append(get(i));
+		}
+		buffer.append(']');
+		return buffer.toString();
+	}
+
+	public String toString (String separator) {
+		int n = size();
+		if (n == 0) return "";
+		StringBuilder builder = new StringBuilder(32);
+		builder.append(get(0));
+		for (int i = 1; i < n; i++) {
+			builder.append(separator);
+			builder.append(get(i));
+		}
+		return builder.toString();
+	}
 	
+	public StringBuilder builderAppend (StringBuilder builder, String separator) {
+		int n = size();
+		if (n == 0) return builder;
+		builder.append(get(0));
+		for (int i = 1; i < n; i++) {
+			builder.append(separator);
+			builder.append(get(i));
+		}
+		return builder;
+	}
+	
+	@SafeVarargs
+	static public <T> ObjectList<T> with (T... array) {
+		return new ObjectList<>(array);
+	}
 	/**
 	 * Gets the ArrayList of T items that this data structure holds, in the order it uses for iteration.
 	 * This method actually returns this ObjectList directly, since it extends ArrayList. 
