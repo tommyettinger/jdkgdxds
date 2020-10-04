@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static com.github.tommyettinger.ds.Utilities.dummy;
+import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
@@ -474,7 +474,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
-					if (other.get(key, dummy) != null)
+					if (other.get(key, neverIdentical) != null)
 						return false;
 				} else {
 					if (!value.equals(other.get(key)))
@@ -500,7 +500,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
-			if (key != null && valueTable[i] != other.get(key, dummy))
+			if (key != null && valueTable[i] != other.get(key, neverIdentical))
 				return false;
 		}
 		return true;

@@ -17,13 +17,12 @@
 package com.github.tommyettinger.ds;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * A {@link ObjectSet} that also stores keys in an {@link ArrayList} using the insertion order. Null keys are not allowed. No
+ * A {@link ObjectSet} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
  * allocation is done except when growing the table size.
  * <p>
  * {@link #iterator() Iteration} is ordered and faster than an unordered set. Keys can also be accessed and the order changed
@@ -47,25 +46,25 @@ import java.util.NoSuchElementException;
  */
 public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializable {
 	private static final long serialVersionUID = 0L;
-	protected final ArrayList<T> items;
+	protected final ObjectList<T> items;
 
 	public OrderedSet () {
-		items = new ArrayList<>();
+		items = new ObjectList<>();
 	}
 
 	public OrderedSet (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
-		items = new ArrayList<>(initialCapacity);
+		items = new ObjectList<>(initialCapacity);
 	}
 
 	public OrderedSet (int initialCapacity) {
 		super(initialCapacity);
-		items = new ArrayList<>(initialCapacity);
+		items = new ObjectList<>(initialCapacity);
 	}
 
 	public OrderedSet (OrderedSet<? extends T> set) {
 		super(set);
-		items = new ArrayList<>(set.items);
+		items = new ObjectList<>(set.items);
 	}
 
 	/**
@@ -98,7 +97,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 
 	public void addAll (OrderedSet<T> set) {
 		ensureCapacity(set.size);
-		ArrayList<T> si = set.items;
+		ObjectList<T> si = set.items;
 		for (int i = 0, n = si.size(); i < n; i++)
 			add(si.get(i));
 	}
@@ -165,26 +164,26 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	}
 	
 	/**
-	 * Gets the ArrayList of items in the order this class will iterate through them.
-	 * Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+	 * Gets the ObjectList of items in the order this class will iterate through them.
+	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
 	 * also change the iteration order here.
 	 * <br>
 	 * This method is provided for backwards-compatibility; {@link #order()} is preferred for new code
 	 * because it allows order-changing methods to be written once for an arbitrary {@link Ordered} type.
-	 * @return the ArrayList of items, in iteration order (usually insertion-order), that this uses
+	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
 	 */
-	public ArrayList<T> orderedItems () {
+	public ObjectList<T> orderedItems () {
 		return items;
 	}
 
 	/**
-	 * Gets the ArrayList of items in the order this class will iterate through them.
-	 * Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+	 * Gets the ObjectList of items in the order this class will iterate through them.
+	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
 	 * also change the iteration order here.
-	 * @return the ArrayList of items, in iteration order (usually insertion-order), that this uses
+	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public ArrayList<T> order () {
+	public ObjectList<T> order () {
 		return items;
 	}
 
@@ -216,7 +215,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	public String toString (String separator) {
 		if (size == 0)
 			return "{}";
-		ArrayList<T> items = this.items;
+		ObjectList<T> items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('{');
 		buffer.append(items.get(0));
@@ -233,7 +232,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	}
 
 	static public class OrderedSetIterator<K> extends ObjectSetIterator<K> {
-		private ArrayList<K> items;
+		private ObjectList<K> items;
 
 		public OrderedSetIterator (OrderedSet<K> set) {
 			super(set);

@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectMap;
 import com.github.tommyettinger.ds.OrderedMap;
 import org.junit.After;
@@ -223,7 +224,7 @@ public class OrderedMapTest {
 		it.remove();
 		Integer remove2 = (Integer)it.next();
 		it.remove();
-		ArrayList list = new ArrayList(Arrays.asList(new Integer[] {new Integer(1), new Integer(102), new Integer(203)}));
+		ObjectList list = new ObjectList(Arrays.asList(new Integer[] {new Integer(1), new Integer(102), new Integer(203)}));
 		list.remove(remove1);
 		list.remove(remove2);
 		assertTrue("Wrong result", it.next().equals(list.get(0)));

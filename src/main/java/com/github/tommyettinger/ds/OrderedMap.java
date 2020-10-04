@@ -18,7 +18,6 @@ package com.github.tommyettinger.ds;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,7 +25,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * An {@link ObjectMap} that also stores keys in an {@link ArrayList} using the insertion order. Null keys are not allowed. No
+ * An {@link ObjectMap} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
  * allocation is done except when growing the table size.
  * <p>
  * Iteration over the {@link #entrySet()} ()}, {@link #keySet()} ()}, and {@link #values()} is ordered and faster than an unordered map. Keys
@@ -51,25 +50,25 @@ import java.util.Set;
 public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Serializable {
 	private static final long serialVersionUID = 0L;
 
-	protected final ArrayList<K> keys;
+	protected final ObjectList<K> keys;
 
 	public OrderedMap () {
-		keys = new ArrayList<>();
+		keys = new ObjectList<>();
 	}
 
 	public OrderedMap (int initialCapacity) {
 		super(initialCapacity);
-		keys = new ArrayList<>(initialCapacity);
+		keys = new ObjectList<>(initialCapacity);
 	}
 
 	public OrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
-		keys = new ArrayList<>(initialCapacity);
+		keys = new ObjectList<>(initialCapacity);
 	}
 
 	public OrderedMap (OrderedMap<? extends K, ? extends V> map) {
 		super(map);
-		keys = new ArrayList<>(map.keys);
+		keys = new ObjectList<>(map.keys);
 	}
 
 	/**
@@ -101,7 +100,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 
 	public <T extends K> void putAll (OrderedMap<T, ? extends V> map) {
 		ensureCapacity(map.size);
-		ArrayList<T> ks = map.keys;
+		ObjectList<T> ks = map.keys;
 		int kl = ks.size();
 		T k;
 		for (int i = 0; i < kl; i++) {
@@ -172,26 +171,26 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	}
 
 	/**
-	 * Gets the ArrayList of keys in the order this class will iterate through them.
-	 * Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+	 * Gets the ObjectList of keys in the order this class will iterate through them.
+	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
 	 * also change the iteration order here.
 	 * <br>
 	 * This method is provided for backwards-compatibility; {@link #order()} is preferred for new code
 	 * because it allows order-changing methods to be written once for an arbitrary {@link Ordered} type.
-	 * @return the ArrayList of keys, in iteration order (usually insertion-order), that this uses
+	 * @return the ObjectList of keys, in iteration order (usually insertion-order), that this uses
 	 */
-	public ArrayList<K> orderedKeys () {
+	public ObjectList<K> orderedKeys () {
 		return keys;
 	}
 	
 	/**
-	 * Gets the ArrayList of keys in the order this class will iterate through them.
-	 * Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+	 * Gets the ObjectList of keys in the order this class will iterate through them.
+	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
 	 * also change the iteration order here.
-	 * @return the ArrayList of keys, in iteration order (usually insertion-order), that this uses
+	 * @return the ObjectList of keys, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public ArrayList<K> order () {
+	public ObjectList<K> order () {
 		return keys;
 	}
 
@@ -304,7 +303,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		StringBuilder buffer = new StringBuilder(32);
 		if (braces)
 			buffer.append('{');
-		ArrayList<K> keys = this.keys;
+		ObjectList<K> keys = this.keys;
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			K key = keys.get(i);
 			if (i > 0)
@@ -320,7 +319,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	}
 
 	static public class OrderedMapEntries<K, V> extends Entries<K, V> {
-		protected ArrayList<K> keys;
+		protected ObjectList<K> keys;
 
 		public OrderedMapEntries (OrderedMap<K, V> map) {
 			keys = map.keys;
@@ -376,7 +375,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	}
 
 	static public class OrderedMapKeys<K> extends Keys<K> {
-		protected ArrayList<K> keys;
+		protected ObjectList<K> keys;
 
 		public OrderedMapKeys (OrderedMap<K, ?> map) {
 			keys = map.keys;
@@ -433,7 +432,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	}
 
 	static public class OrderedMapValues<V> extends Values<V> {
-		private ArrayList<?> keys;
+		private ObjectList<?> keys;
 
 		public OrderedMapValues (OrderedMap<?, V> map) {
 			keys = map.keys;

@@ -37,6 +37,6 @@ public class Utilities {
 		return tableSize;
 	}
 
-	static final Object dummy = new Object();
+	static final Object neverIdentical = new Object();
 
 }

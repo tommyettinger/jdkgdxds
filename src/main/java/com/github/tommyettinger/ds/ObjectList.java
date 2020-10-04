@@ -214,7 +214,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		return new ObjectList<>(varargs);
 	}
 	/**
-	 * Gets the ArrayList of T items that this data structure holds, in the order it uses for iteration.
+	 * Gets the ObjectList of T items that this data structure holds, in the order it uses for iteration.
 	 * This method actually returns this ObjectList directly, since it extends ArrayList. 
 	 *
 	 * @return this ObjectList
@@ -247,7 +247,13 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 			set(i, set(random.nextInt(i+1), get(i)));
 		}
 	}
-	
+
+	/**
+	 * Returns a {@code T} item from anywhere in this ObjectList, chosen pseudo-randomly using {@code random}.
+	 * If this ObjectList is empty, throws an {@link IllegalStateException}.
+	 * @param random a {@link Random} or a subclass, such as {@link LaserRandom} (recommended)
+	 * @return a pseudo-randomly selected item from this ObjectLists
+	 */
 	public T random(Random random){
 		int n = size();
 		if (n == 0) throw new IllegalStateException("ObjectList is empty.");

@@ -1,11 +1,10 @@
 package com.github.tommyettinger.ds;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
 /**
- * Ensures that implementors allow access to the order of {@code T} items as an ArrayList.
+ * Ensures that implementors allow access to the order of {@code T} items as an ObjectList.
  * This is meant to allow different (typically insertion-ordered) data structures to all have their order
  * manipulated by the same methods. This interface extends {@link Arrangeable}, which itself is compatible
  * both with primitive-backed collections like {@link IntList} and generic ones like the implementations of
@@ -13,12 +12,12 @@ import java.util.Random;
  */
 public interface Ordered<T> extends Arrangeable {
 	/**
-	 * Gets the ArrayList of T items that this data structure holds, in the order it uses for iteration.
-	 * This should usually return a direct reference to an ArrayList used inside this object, so changes
+	 * Gets the ObjectList of T items that this data structure holds, in the order it uses for iteration.
+	 * This should usually return a direct reference to an ObjectList used inside this object, so changes
 	 * to the list will affect this.
-	 * @return the ArrayList of T items that this data structure holds
+	 * @return the ObjectList of T items that this data structure holds
 	 */
-	ArrayList<T> order ();
+	ObjectList<T> order ();
 
 	/**
 	 * Switches the ordering of positions {@code a} and {@code b}, without changing any items beyond that.
@@ -28,7 +27,7 @@ public interface Ordered<T> extends Arrangeable {
 	 */
 	@Override
 	default void swap (int a, int b){
-		ArrayList<T> order = order();
+		ObjectList<T> order = order();
 		order.set(a, order.set(b, order.get(a)));
 	}
 
@@ -38,7 +37,7 @@ public interface Ordered<T> extends Arrangeable {
 	 */
 	@Override
 	default void shuffle (Random random){
-		ArrayList<T> order = order();
+		ObjectList<T> order = order();
 		for (int i = order.size() - 1; i >= 0; i--) {
 			order.set(i, order.set(random.nextInt(i+1), order.get(i)));
 		}
