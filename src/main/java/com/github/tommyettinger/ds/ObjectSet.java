@@ -95,7 +95,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = Integer.numberOfLeadingZeros(mask);
 
 		keyTable = (T[])new Object[tableSize];
 	}
@@ -357,7 +357,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = Integer.numberOfLeadingZeros(mask);
 		T[] oldKeyTable = keyTable;
 
 		keyTable = (T[])(new Object[newSize]);

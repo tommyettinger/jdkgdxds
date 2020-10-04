@@ -101,7 +101,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = Integer.numberOfLeadingZeros(mask);
 
 		keyTable = (K[])new Object[tableSize];
 		valueTable = (V[])new Object[tableSize];
@@ -426,7 +426,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = Integer.numberOfLeadingZeros(mask);
 
 		K[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;
