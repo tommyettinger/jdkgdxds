@@ -36,47 +36,47 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * when all hashCodes collide, just more slowly.
  * @author Nathan Sweet
  * @author Tommy Ettinger */
-public class IntSet {
+public class LongSet {
 	public int size;
 
-	protected int[] keyTable;
+	protected long[] keyTable;
 	protected boolean hasZeroValue;
 
 	protected final float loadFactor;
 	protected int threshold;
 
-	/** Used by {@link #place(int)} to bit shift the upper bits of a {@code long} into a usable range (&gt;= 0 and &lt;=
+	/** Used by {@link #place(long)} to bit shift the upper bits of a {@code long} into a usable range (&gt;= 0 and &lt;=
 	 * {@link #mask}). The shift can be negative, which is convenient to match the number of bits in mask: if mask is a 7-bit
 	 * number, a shift of -7 shifts the upper 7 bits into the lowest 7 positions. This class sets the shift &gt; 32 and &lt; 64,
 	 * which if used with an int will still move the upper bits of an int to the lower bits due to Java's implicit modulus on
 	 * shifts.
 	 * <p>
 	 * {@link #mask} can also be used to mask the low bits of a number, which may be faster for some hashcodes, if
-	 * {@link #place(int)} is overridden. */
+	 * {@link #place(long)} is overridden. */
 	protected int shift;
 
 	/** A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
-	 * minus 1. If {@link #place(int)} is overriden, this can be used instead of {@link #shift} to isolate usable bits of a
+	 * minus 1. If {@link #place(long)} is overriden, this can be used instead of {@link #shift} to isolate usable bits of a
 	 * hash. */
 	protected int mask;
 
-	protected @Nullable IntSetIterator iterator1, iterator2;
+	protected @Nullable LongSetIterator iterator1, iterator2;
 
 	/** Creates a new set with an initial capacity of 51 and a load factor of 0.8. */
-	public IntSet () {
+	public LongSet () {
 		this(51, 0.8f);
 	}
 
 	/** Creates a new set with a load factor of 0.8.
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two. */
-	public IntSet (int initialCapacity) {
+	public LongSet (int initialCapacity) {
 		this(initialCapacity, 0.8f);
 	}
 
 	/** Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
 	 * growing the backing table.
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two. */
-	public IntSet (int initialCapacity, float loadFactor) {
+	public LongSet (int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor >= 1f)
 			throw new IllegalArgumentException("loadFactor must be > 0 and < 1: " + loadFactor);
 		this.loadFactor = loadFactor;
@@ -84,13 +84,13 @@ public class IntSet {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask);
+		shift = Long.numberOfLeadingZeros(mask);
 
-		keyTable = new int[tableSize];
+		keyTable = new long[tableSize];
 	}
 
 	/** Creates a new set identical to the specified set. */
-	public IntSet (IntSet set) {
+	public LongSet (LongSet set) {
 		this((int)(set.keyTable.length * set.loadFactor), set.loadFactor);
 		System.arraycopy(set.keyTable, 0, keyTable, 0, set.keyTable.length);
 		size = set.size;
@@ -100,26 +100,25 @@ public class IntSet {
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 *
-	 * @param item any int; it is usually mixed so similar inputs still have different outputs
+	 * @param item any long; it is usually mixed so similar inputs still have different outputs
 	 */
-	protected int place (int item) {
-		item *= 0x9E377;
-		return (item ^ item >>> shift) & mask;
+	protected int place (long item) {
+		return (int)((item ^ item >>> 32) * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
 	/** Returns the index of the key if already present, else {@code -1 - index} for the next empty index. This can be overridden in this
 	 * pacakge to compare for equality differently than {@link Object#equals(Object)}. */
-	private int locateKey (int key) {
-		int[] keyTable = this.keyTable;
+	private int locateKey (long key) {
+		long[] keyTable = this.keyTable;
 		for (int i = place(key);; i = i + 1 & mask) {
-			int other = keyTable[i];
+			long other = keyTable[i];
 			if (other == 0) return ~i; // Empty space is available.
 			if (other == key) return i; // Same key was found.
 		}
 	}
 
 	/** Returns true if the key was not already in the set. */
-	public boolean add (int key) {
+	public boolean add (long key) {
 		if (key == 0) {
 			if (hasZeroValue) return false;
 			hasZeroValue = true;
@@ -134,39 +133,39 @@ public class IntSet {
 		return true;
 	}
 
-	public void addAll (IntList array) {
+	public void addAll (LongList array) {
 		addAll(array.items, 0, array.size);
 	}
 
-	public void addAll (IntList array, int offset, int length) {
+	public void addAll (LongList array, int offset, int length) {
 		if (offset + length > array.size)
 			throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);
 		addAll(array.items, offset, length);
 	}
 
-	public void addAll (int... array) {
+	public void addAll (long... array) {
 		addAll(array, 0, array.length);
 	}
 
-	public void addAll (int[] array, int offset, int length) {
+	public void addAll (long[] array, int offset, int length) {
 		ensureCapacity(length);
 		for (int i = offset, n = i + length; i < n; i++)
 			add(array[i]);
 	}
 
-	public void addAll (IntSet set) {
+	public void addAll (LongSet set) {
 		ensureCapacity(set.size);
 		if (set.hasZeroValue) add(0);
-		int[] keyTable = set.keyTable;
+		long[] keyTable = set.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			int key = keyTable[i];
+			long key = keyTable[i];
 			if (key != 0) add(key);
 		}
 	}
 
 	/** Skips checks for existing keys, doesn't increment size, doesn't need to handle key 0. */
-	private void addResize (int key) {
-		int[] keyTable = this.keyTable;
+	private void addResize (long key) {
+		long[] keyTable = this.keyTable;
 		for (int i = place(key);; i = (i + 1) & mask) {
 			if (keyTable[i] == 0) {
 				keyTable[i] = key;
@@ -176,7 +175,7 @@ public class IntSet {
 	}
 
 	/** Returns true if the key was removed. */
-	public boolean remove (int key) {
+	public boolean remove (long key) {
 		if (key == 0) {
 			if (!hasZeroValue) return false;
 			hasZeroValue = false;
@@ -186,10 +185,11 @@ public class IntSet {
 
 		int i = locateKey(key);
 		if (i < 0) return false;
-		int[] keyTable = this.keyTable;
-		int mask = this.mask, next = i + 1 & mask;
+		long[] keyTable = this.keyTable;
+		int mask = this.mask;
+		int next = i + 1 & mask;
 		while ((key = keyTable[next]) != 0) {
-			int placement = place(key);
+			long placement = place(key);
 			if ((next - placement & mask) > (i - placement & mask)) {
 				keyTable[i] = key;
 				i = next;
@@ -239,14 +239,14 @@ public class IntSet {
 		hasZeroValue = false;
 	}
 
-	public boolean contains (int key) {
+	public boolean contains (long key) {
 		if (key == 0) return hasZeroValue;
 		return locateKey(key) >= 0;
 	}
 
-	public int first () {
+	public long first () {
 		if (hasZeroValue) return 0;
-		int[] keyTable = this.keyTable;
+		long[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++)
 			if (keyTable[i] != 0) return keyTable[i];
 		throw new IllegalStateException("IntSet is empty.");
@@ -263,36 +263,36 @@ public class IntSet {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask);
+		shift = Long.numberOfLeadingZeros(mask);
 
-		int[] oldKeyTable = keyTable;
+		long[] oldKeyTable = keyTable;
 
-		keyTable = new int[newSize];
+		keyTable = new long[newSize];
 
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
-				int key = oldKeyTable[i];
+				long key = oldKeyTable[i];
 				if (key != 0) addResize(key);
 			}
 		}
 	}
 
 	public int hashCode () {
-		int h = size;
-		int[] keyTable = this.keyTable;
+		long h = size;
+		long[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			int key = keyTable[i];
+			long key = keyTable[i];
 			if (key != 0) h += key;
 		}
-		return h;
+		return (int)(h ^ h >>> 32);
 	}
 
 	public boolean equals (Object obj) {
-		if (!(obj instanceof IntSet)) return false;
-		IntSet other = (IntSet)obj;
+		if (!(obj instanceof LongSet)) return false;
+		LongSet other = (LongSet)obj;
 		if (other.size != size) return false;
 		if (other.hasZeroValue != hasZeroValue) return false;
-		int[] keyTable = this.keyTable;
+		long[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++)
 			if (keyTable[i] != 0 && !other.contains(keyTable[i])) return false;
 		return true;
@@ -300,22 +300,22 @@ public class IntSet {
 
 	public String toString () {
 		if (size == 0) return "[]";
-		java.lang.StringBuilder buffer = new java.lang.StringBuilder(32);
+		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('[');
-		int[] keyTable = this.keyTable;
+		long[] keyTable = this.keyTable;
 		int i = keyTable.length;
 		if (hasZeroValue)
 			buffer.append("0");
 		else {
 			while (i-- > 0) {
-				int key = keyTable[i];
+				long key = keyTable[i];
 				if (key == 0) continue;
 				buffer.append(key);
 				break;
 			}
 		}
 		while (i-- > 0) {
-			int key = keyTable[i];
+			long key = keyTable[i];
 			if (key == 0) continue;
 			buffer.append(", ");
 			buffer.append(key);
@@ -326,11 +326,11 @@ public class IntSet {
 
 	/** Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
-	 * Use the {@link IntSetIterator} constructor for nested or multithreaded iteration. */
-	public IntSetIterator iterator () {
+	 * Use the {@link LongSetIterator} constructor for nested or multithreaded iteration. */
+	public LongSetIterator iterator () {
 		if (iterator1 == null) {
-			iterator1 = new IntSetIterator(this);
-			iterator2 = new IntSetIterator(this);
+			iterator1 = new LongSetIterator(this);
+			iterator2 = new LongSetIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -344,22 +344,22 @@ public class IntSet {
 		return iterator2;
 	}
 
-	static public IntSet with (int... array) {
-		IntSet set = new IntSet();
+	static public LongSet with (long... array) {
+		LongSet set = new LongSet();
 		set.addAll(array);
 		return set;
 	}
 
-	static public class IntSetIterator implements PrimitiveIterator.OfInt {
+	static public class LongSetIterator implements PrimitiveIterator.OfLong {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
 		public boolean hasNext;
 
-		final IntSet set;
+		final LongSet set;
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public IntSetIterator (IntSet set) {
+		public LongSetIterator (LongSet set) {
 			this.set = set;
 			reset();
 		}
@@ -374,7 +374,7 @@ public class IntSet {
 		}
 
 		void findNextIndex () {
-			int[] keyTable = set.keyTable;
+			long[] keyTable = set.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n;) {
 				if (keyTable[nextIndex] != 0) {
 					hasNext = true;
@@ -403,10 +403,12 @@ public class IntSet {
 			} else if (i < 0) {
 				throw new IllegalStateException("next must be called before remove.");
 			} else {
-				int[] keyTable = set.keyTable;
-				int mask = set.mask, next = i + 1 & mask, key;
+				long[] keyTable = set.keyTable;
+				int mask = set.mask;
+				int next = i + 1 & mask;
+				long key;
 				while ((key = keyTable[next]) != 0) {
-					int placement = set.place(key);
+					long placement = set.place(key);
 					if ((next - placement & mask) > (i - placement & mask)) {
 						keyTable[i] = key;
 						i = next;
@@ -421,18 +423,18 @@ public class IntSet {
 		}
 
 		@Override
-		public int nextInt () {
+		public long nextLong () {
 			if (!hasNext) throw new NoSuchElementException();
 			if (!valid) throw new RuntimeException("#iterator() cannot be used nested.");
-			int key = nextIndex == INDEX_ZERO ? 0 : set.keyTable[nextIndex];
+			long key = nextIndex == INDEX_ZERO ? 0 : set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
 			return key;
 		}
 
-		/** Returns a new IntList containing the remaining keys. */
-		public IntList toList () {
-			IntList list = new IntList(true, set.size);
+		/** Returns a new LongList containing the remaining keys. */
+		public LongList toList () {
+			LongList list = new LongList(true, set.size);
 			while (hasNext)
 				list.add(next());
 			return list;
