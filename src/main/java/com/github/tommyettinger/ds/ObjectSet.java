@@ -63,7 +63,8 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * minus 1.
 	 */
 	protected int mask;
-	protected ObjectSetIterator<T> iterator1, iterator2;
+	protected @Nullable ObjectSetIterator<T> iterator1;
+	protected @Nullable ObjectSetIterator<T> iterator2;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
@@ -104,8 +105,11 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * Creates a new set identical to the specified set.
 	 */
 	public ObjectSet (ObjectSet<? extends T> set) {
-		this((int)(set.keyTable.length * set.loadFactor), set.loadFactor);
-		System.arraycopy(set.keyTable, 0, keyTable, 0, set.keyTable.length);
+		loadFactor = set.loadFactor;
+		threshold = set.threshold;
+		mask = set.mask;
+		shift = set.shift;
+		keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
 		size = set.size;
 	}
 
@@ -353,7 +357,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 			resize(tableSize);
 	}
 
-	private void resize (int newSize) {
+	protected void resize (int newSize) {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
@@ -467,7 +471,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 */
 	@Override
 	public Iterator<T> iterator () {
-		if (iterator1 == null) {
+		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectSetIterator<>(this);
 			iterator2 = new ObjectSetIterator<>(this);
 		}

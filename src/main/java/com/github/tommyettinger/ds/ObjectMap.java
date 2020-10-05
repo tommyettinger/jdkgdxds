@@ -67,9 +67,12 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * minus 1.
 	 */
 	protected int mask;
-	protected Entries<K, V> entries1, entries2;
-	protected Values<V> values1, values2;
-	protected Keys<K> keys1, keys2;
+	protected @Nullable Entries<K, V> entries1;
+	protected @Nullable Entries<K, V> entries2;
+	protected @Nullable Values<V> values1;
+	protected @Nullable Values<V> values2;
+	protected @Nullable Keys<K> keys1;
+	protected @Nullable Keys<K> keys2;
 
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
@@ -110,10 +113,13 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	/**
 	 * Creates a new map identical to the specified map.
 	 */
-	public ObjectMap (ObjectMap<? extends K, ? extends V> map) {
-		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
-		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
-		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
+	public ObjectMap (ObjectMap<? extends K, ? extends V> map) { 
+		this.loadFactor = map.loadFactor;
+		this.threshold = map.threshold;
+		this.mask = map.mask;
+		this.shift = map.shift;
+		keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
+		valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
 		size = map.size;
 	}
 
@@ -267,8 +273,9 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 */
 	@Override
 	public void putAll (Map<? extends K, ? extends V> m) {
-		for (K key : m.keySet())
-			put(key, m.get(key));
+		ensureCapacity(m.size());
+		for (Map.Entry<? extends K, ? extends V> kv : m.entrySet())
+			put(kv.getKey(), kv.getValue());
 	}
 
 	/**
@@ -423,7 +430,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			resize(tableSize);
 	}
 
-	final void resize (int newSize) {
+	protected void resize (int newSize) {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
@@ -583,7 +590,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 */
 	@Override
 	public Keys<K> keySet () { 
-		if (keys1 == null) {
+		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
 		}
@@ -607,7 +614,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 */
 	@Override
 	public Values<V> values () {
-		if (values1 == null) {
+		if (values1 == null || values2 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
 		}
@@ -632,7 +639,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 */
 	@Override
 	public Entries<K, V> entrySet () {
-		if (entries1 == null) {
+		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);
 		}

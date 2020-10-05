@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import static com.github.tommyettinger.ds.Utilities.tableSize;
+
 /**
  * An {@link ObjectMap} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
  * allocation is done except when growing the table size.
@@ -118,6 +120,21 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 
 	public @Nullable V removeIndex (int index) {
 		return super.remove(keys.remove(index));
+	}
+
+	/**
+	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
+	 * adding many items to avoid multiple backing array resizes.
+	 *
+	 * @param additionalCapacity
+	 */
+	@Override
+	public void ensureCapacity (int additionalCapacity) {
+		int tableSize = tableSize(size + additionalCapacity, loadFactor);
+		if (keyTable.length < tableSize)
+			resize(tableSize);
+		keys.ensureCapacity(size + additionalCapacity);
+
 	}
 
 	/**

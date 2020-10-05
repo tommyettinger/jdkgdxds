@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import static com.github.tommyettinger.ds.Utilities.tableSize;
+
 /**
  * A {@link ObjectSet} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
  * allocation is done except when growing the table size.
@@ -111,6 +113,20 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		T key = items.remove(index);
 		super.remove(key);
 		return key;
+	}
+
+	/**
+	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
+	 * adding many items to avoid multiple backing array resizes.
+	 *
+	 * @param additionalCapacity
+	 */
+	@Override
+	public void ensureCapacity (int additionalCapacity) {
+		int tableSize = tableSize(size + additionalCapacity, loadFactor);
+		if (keyTable.length < tableSize)
+			resize(tableSize);
+		items.ensureCapacity(size + additionalCapacity);
 	}
 
 	/**
