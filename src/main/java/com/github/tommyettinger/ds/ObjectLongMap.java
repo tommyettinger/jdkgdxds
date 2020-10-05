@@ -199,7 +199,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	/**
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
-	public long get (Object key, long defaultValue) {
+	public long getOrDefault (Object key, long defaultValue) {
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -250,6 +250,25 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 */
 	public boolean isEmpty () {
 		return size == 0;
+	}
+
+	/**
+	 * Gets the default value, a {@code long} which is returned by {@link #get(Object)} if the key is not found.
+	 * If not changed, the default value is 0.
+	 * @return the current default value
+	 */
+	public long getDefaultValue () {
+		return defaultValue;
+	}
+
+	/**
+	 * Sets the default value, a {@code long} which is returned by {@link #get(Object)} if the key is not found.
+	 * If not changed, the default value is 0. Note that {@link #getOrDefault(Object, long)} is also available,
+	 * which allows specifying a "not-found" value per-call.
+	 * @param defaultValue may be any long; should usually be one that doesn't occur as a typical value
+	 */
+	public void setDefaultValue (long defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 
 	/**

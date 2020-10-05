@@ -214,9 +214,10 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	}
 
 	/**
-	 * Returns the value for the specified key, or the default value if the key is not in the map.
+	 * Returns the value for the specified key, or the given default value if the key is not in the map.
 	 */
-	public @Nullable V get (Object key, @Nullable V defaultValue) {
+	@Override
+	public @Nullable V getOrDefault (Object key, @Nullable V defaultValue) {
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -474,7 +475,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
-					if (other.get(key, neverIdentical) != null)
+					if (other.getOrDefault(key, neverIdentical) != null)
 						return false;
 				} else {
 					if (!value.equals(other.get(key)))
@@ -500,7 +501,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
-			if (key != null && valueTable[i] != other.get(key, neverIdentical))
+			if (key != null && valueTable[i] != other.getOrDefault(key, neverIdentical))
 				return false;
 		}
 		return true;
