@@ -157,6 +157,22 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		keys.set(index, after);
 		return true;
 	}
+	/**
+	 * Changes the value at a specified {@code index} in the iteration order to {@code v}, without changing keys at all.
+	 * If {@code index} isn't currently a valid index in the iteration order, this returns null. Otherwise, it returns the
+	 * value that was previously held at {@code index}, which may also be null.
+	 * @param v the new V value to assign
+	 * @param index the index in the iteration order to set {@code v} at
+	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid 
+	 */
+	public @Nullable V setIndex(int index, V v) {
+		if(index < 0 || index >= size)
+			return null;
+		final int pos = locateKey(keys.get(index));
+		final V oldValue = valueTable[pos];
+		valueTable[pos] = v;
+		return oldValue;
+	}
 
 	@Override
 	public void clear (int maximumCapacity) {
