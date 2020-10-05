@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -151,7 +151,7 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" ti
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></td>
+<td class="colFirst"><code>protected <a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html#keys">keys</a></span></code>&nbsp;</td>
 </tr>
 </table>
@@ -199,14 +199,6 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" ti
 <div class="block">Returns an iterator over the elements contained in this collection.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>java.lang.Object[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html#toArray--">toArray</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;T[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html#toArray-T:A-">toArray</a></span>(T[]&nbsp;a)</code>&nbsp;</td>
-</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.github.tommyettinger.ds.ObjectMap.Keys">
@@ -227,7 +219,7 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" ti
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.util.AbstractCollection</h3>
-<code>add, addAll, clear, contains, containsAll, isEmpty, remove, retainAll, toString</code></li>
+<code>add, addAll, clear, contains, containsAll, isEmpty, remove, retainAll, toArray, toArray, toString</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -241,7 +233,7 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" ti
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;java.util.Set</h3>
-<code>add, addAll, clear, contains, containsAll, isEmpty, remove, retainAll, spliterator</code></li>
+<code>add, addAll, clear, contains, containsAll, isEmpty, remove, retainAll, spliterator, toArray, toArray</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.util.Collection">
@@ -277,7 +269,7 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" ti
 <ul class="blockListLast">
 <li class="blockList">
 <h4>keys</h4>
-<pre>protected&nbsp;java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt; keys</pre>
+<pre>protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt; keys</pre>
 </li>
 </ul>
 </li>
@@ -308,7 +300,7 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" ti
 <a name="iterator--">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>iterator</h4>
 <pre>public&nbsp;java.util.Iterator&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;&nbsp;iterator()</pre>
@@ -325,42 +317,6 @@ extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" ti
 <dd><code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html#iterator--">iterator</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>an iterator over the elements contained in this collection</dd>
-</dl>
-</li>
-</ul>
-<a name="toArray--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>toArray</h4>
-<pre>public&nbsp;java.lang.Object[]&nbsp;toArray()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>toArray</code>&nbsp;in interface&nbsp;<code>java.util.Collection&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></dd>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>toArray</code>&nbsp;in interface&nbsp;<code>java.util.Set&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></dd>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code>toArray</code>&nbsp;in class&nbsp;<code>java.util.AbstractCollection&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></dd>
-</dl>
-</li>
-</ul>
-<a name="toArray-java.lang.Object:A-">
-<!--   -->
-</a><a name="toArray-T:A-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>toArray</h4>
-<pre>public&nbsp;&lt;T&gt;&nbsp;T[]&nbsp;toArray(T[]&nbsp;a)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>toArray</code>&nbsp;in interface&nbsp;<code>java.util.Collection&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></dd>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>toArray</code>&nbsp;in interface&nbsp;<code>java.util.Set&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></dd>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code>toArray</code>&nbsp;in class&nbsp;<code>java.util.AbstractCollection&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></dd>
 </dl>
 </li>
 </ul>

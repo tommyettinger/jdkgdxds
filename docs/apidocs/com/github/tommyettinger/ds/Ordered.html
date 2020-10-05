@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":18,"i2":18};
+var methods = {"i0":6,"i1":18,"i2":18,"i3":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -103,13 +103,13 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>, <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a></dd>
+<dd><a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>, <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>, <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">Ordered&lt;T&gt;</span>
 extends <a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a></pre>
-<div class="block">Ensures that implementors allow access to the order of <code>T</code> items as an ArrayList.
+<div class="block">Ensures that implementors allow access to the order of <code>T</code> items as an ObjectList.
  This is meant to allow different (typically insertion-ordered) data structures to all have their order
  manipulated by the same methods. This interface extends <a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" title="interface in com.github.tommyettinger.ds"><code>Arrangeable</code></a>, which itself is compatible
  both with primitive-backed collections like <a href="../../../../com/github/tommyettinger/ds/IntList.html" title="class in com.github.tommyettinger.ds"><code>IntList</code></a> and generic ones like the implementations of
@@ -133,18 +133,22 @@ extends <a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" title
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="type parameter in Ordered">T</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="type parameter in Ordered">T</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/Ordered.html#order--">order</a></span>()</code>
-<div class="block">Gets the ArrayList of T items that this data structure holds, in the order it uses for iteration.</div>
+<div class="block">Gets the ObjectList of T items that this data structure holds, in the order it uses for iteration.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>default void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/Ordered.html#reverse--">reverse</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>default void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/Ordered.html#shuffle-java.util.Random-">shuffle</a></span>(java.util.Random&nbsp;random)</code>
 <div class="block">Pseudo-randomly shuffles the order of this Ordered in-place.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>default void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/Ordered.html#swap-int-int-">swap</a></span>(int&nbsp;a,
     int&nbsp;b)</code>
@@ -172,13 +176,13 @@ extends <a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" title
 <ul class="blockList">
 <li class="blockList">
 <h4>order</h4>
-<pre>java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="type parameter in Ordered">T</a>&gt;&nbsp;order()</pre>
-<div class="block">Gets the ArrayList of T items that this data structure holds, in the order it uses for iteration.
- This should usually return a direct reference to an ArrayList used inside this object, so changes
+<pre><a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="type parameter in Ordered">T</a>&gt;&nbsp;order()</pre>
+<div class="block">Gets the ObjectList of T items that this data structure holds, in the order it uses for iteration.
+ This should usually return a direct reference to an ObjectList used inside this object, so changes
  to the list will affect this.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the ArrayList of T items that this data structure holds</dd>
+<dd>the ObjectList of T items that this data structure holds</dd>
 </dl>
 </li>
 </ul>
@@ -203,7 +207,7 @@ extends <a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" title
 <a name="shuffle-java.util.Random-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>shuffle</h4>
 <pre>default&nbsp;void&nbsp;shuffle(java.util.Random&nbsp;random)</pre>
@@ -213,6 +217,19 @@ extends <a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" title
 <dd><code><a href="../../../../com/github/tommyettinger/ds/Arrangeable.html#shuffle-java.util.Random-">shuffle</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>random</code> - any <code>Random</code> implementation; prefer <a href="../../../../com/github/tommyettinger/ds/LaserRandom.html" title="class in com.github.tommyettinger.ds"><code>LaserRandom</code></a> in this library</dd>
+</dl>
+</li>
+</ul>
+<a name="reverse--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>reverse</h4>
+<pre>default&nbsp;void&nbsp;reverse()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../com/github/tommyettinger/ds/Arrangeable.html#reverse--">reverse</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a></code></dd>
 </dl>
 </li>
 </ul>

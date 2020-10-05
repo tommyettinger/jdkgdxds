@@ -139,6 +139,69 @@
 </li>
 </ul>
 </li>
+<li class="blockList"><a name="com.github.tommyettinger.ds.IntSet">
+<!--   -->
+</a>
+<h3>Class <a href="com/github/tommyettinger/ds/IntSet.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.IntSet</a> extends java.lang.Object implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>0L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>size</h4>
+<pre>int size</pre>
+</li>
+<li class="blockList">
+<h4>keyTable</h4>
+<pre>int[] keyTable</pre>
+</li>
+<li class="blockList">
+<h4>hasZeroValue</h4>
+<pre>boolean hasZeroValue</pre>
+</li>
+<li class="blockList">
+<h4>loadFactor</h4>
+<pre>float loadFactor</pre>
+</li>
+<li class="blockList">
+<h4>threshold</h4>
+<pre>int threshold</pre>
+</li>
+<li class="blockList">
+<h4>shift</h4>
+<pre>int shift</pre>
+<div class="block">Used by <a href="com/github/tommyettinger/ds/IntSet.html#place-int-"><code>IntSet.place(int)</code></a> to bit shift the upper bits of a <code>long</code> into a usable range (&gt;= 0 and &lt;=
+ <a href="com/github/tommyettinger/ds/IntSet.html#mask"><code>IntSet.mask</code></a>). The shift can be negative, which is convenient to match the number of bits in mask: if mask is a 7-bit
+ number, a shift of -7 shifts the upper 7 bits into the lowest 7 positions. This class sets the shift &gt; 32 and &lt; 64,
+ which if used with an int will still move the upper bits of an int to the lower bits due to Java's implicit modulus on
+ shifts.
+ <p>
+ <a href="com/github/tommyettinger/ds/IntSet.html#mask"><code>IntSet.mask</code></a> can also be used to mask the low bits of a number, which may be faster for some hashcodes, if
+ <a href="com/github/tommyettinger/ds/IntSet.html#place-int-"><code>IntSet.place(int)</code></a> is overridden.</div>
+</li>
+<li class="blockList">
+<h4>mask</h4>
+<pre>int mask</pre>
+<div class="block">A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+ minus 1. If <a href="com/github/tommyettinger/ds/IntSet.html#place-int-"><code>IntSet.place(int)</code></a> is overridden, this can be used instead of <a href="com/github/tommyettinger/ds/IntSet.html#shift"><code>IntSet.shift</code></a> to isolate usable bits of a
+ hash.</div>
+</li>
+<li class="blockList">
+<h4>iterator1</h4>
+<pre><a href="com/github/tommyettinger/ds/IntSet.IntSetIterator.html" title="class in com.github.tommyettinger.ds">IntSet.IntSetIterator</a> iterator1</pre>
+</li>
+<li class="blockListLast">
+<h4>iterator2</h4>
+<pre><a href="com/github/tommyettinger/ds/IntSet.IntSetIterator.html" title="class in com.github.tommyettinger.ds">IntSet.IntSetIterator</a> iterator2</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="blockList"><a name="com.github.tommyettinger.ds.LaserRandom">
 <!--   -->
 </a>
@@ -160,6 +223,188 @@
 <h4>stateB</h4>
 <pre>long stateB</pre>
 <div class="block">Must be odd.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.github.tommyettinger.ds.LongList">
+<!--   -->
+</a>
+<h3>Class <a href="com/github/tommyettinger/ds/LongList.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.LongList</a> extends java.lang.Object implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>0L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>items</h4>
+<pre>long[] items</pre>
+</li>
+<li class="blockList">
+<h4>size</h4>
+<pre>int size</pre>
+</li>
+<li class="blockList">
+<h4>ordered</h4>
+<pre>boolean ordered</pre>
+</li>
+<li class="blockList">
+<h4>iterator1</h4>
+<pre><a href="com/github/tommyettinger/ds/LongList.LongListIterator.html" title="class in com.github.tommyettinger.ds">LongList.LongListIterator</a> iterator1</pre>
+</li>
+<li class="blockListLast">
+<h4>iterator2</h4>
+<pre><a href="com/github/tommyettinger/ds/LongList.LongListIterator.html" title="class in com.github.tommyettinger.ds">LongList.LongListIterator</a> iterator2</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.github.tommyettinger.ds.LongSet">
+<!--   -->
+</a>
+<h3>Class <a href="com/github/tommyettinger/ds/LongSet.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.LongSet</a> extends java.lang.Object implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>0L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>size</h4>
+<pre>int size</pre>
+</li>
+<li class="blockList">
+<h4>keyTable</h4>
+<pre>long[] keyTable</pre>
+</li>
+<li class="blockList">
+<h4>hasZeroValue</h4>
+<pre>boolean hasZeroValue</pre>
+</li>
+<li class="blockList">
+<h4>loadFactor</h4>
+<pre>float loadFactor</pre>
+</li>
+<li class="blockList">
+<h4>threshold</h4>
+<pre>int threshold</pre>
+</li>
+<li class="blockList">
+<h4>shift</h4>
+<pre>int shift</pre>
+<div class="block">Used by <a href="com/github/tommyettinger/ds/LongSet.html#place-long-"><code>LongSet.place(long)</code></a> to bit shift the upper bits of a <code>long</code> into a usable range (&gt;= 0 and &lt;=
+ <a href="com/github/tommyettinger/ds/LongSet.html#mask"><code>LongSet.mask</code></a>). The shift can be negative, which is convenient to match the number of bits in mask: if mask is a 7-bit
+ number, a shift of -7 shifts the upper 7 bits into the lowest 7 positions. This class sets the shift &gt; 32 and &lt; 64,
+ which if used with an int will still move the upper bits of an int to the lower bits due to Java's implicit modulus on
+ shifts.
+ <p>
+ <a href="com/github/tommyettinger/ds/LongSet.html#mask"><code>LongSet.mask</code></a> can also be used to mask the low bits of a number, which may be faster for some hashcodes, if
+ <a href="com/github/tommyettinger/ds/LongSet.html#place-long-"><code>LongSet.place(long)</code></a> is overridden.</div>
+</li>
+<li class="blockList">
+<h4>mask</h4>
+<pre>int mask</pre>
+<div class="block">A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+ minus 1. If <a href="com/github/tommyettinger/ds/LongSet.html#place-long-"><code>LongSet.place(long)</code></a> is overridden, this can be used instead of <a href="com/github/tommyettinger/ds/LongSet.html#shift"><code>LongSet.shift</code></a> to isolate usable bits of a
+ hash.</div>
+</li>
+<li class="blockList">
+<h4>iterator1</h4>
+<pre><a href="com/github/tommyettinger/ds/LongSet.LongSetIterator.html" title="class in com.github.tommyettinger.ds">LongSet.LongSetIterator</a> iterator1</pre>
+</li>
+<li class="blockListLast">
+<h4>iterator2</h4>
+<pre><a href="com/github/tommyettinger/ds/LongSet.LongSetIterator.html" title="class in com.github.tommyettinger.ds">LongSet.LongSetIterator</a> iterator2</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.github.tommyettinger.ds.ObjectList">
+<!--   -->
+</a>
+<h3>Class <a href="com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.ObjectList</a> extends java.util.ArrayList&lt;<a href="com/github/tommyettinger/ds/ObjectList.html" title="type parameter in ObjectList">T</a>&gt; implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>0L</dd>
+</dl>
+</li>
+<li class="blockList"><a name="com.github.tommyettinger.ds.ObjectLongMap">
+<!--   -->
+</a>
+<h3>Class <a href="com/github/tommyettinger/ds/ObjectLongMap.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.ObjectLongMap</a> extends java.lang.Object implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>0L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>size</h4>
+<pre>int size</pre>
+</li>
+<li class="blockList">
+<h4>keyTable</h4>
+<pre>java.lang.Object[] keyTable</pre>
+</li>
+<li class="blockList">
+<h4>valueTable</h4>
+<pre>long[] valueTable</pre>
+</li>
+<li class="blockList">
+<h4>loadFactor</h4>
+<pre>float loadFactor</pre>
+</li>
+<li class="blockList">
+<h4>threshold</h4>
+<pre>int threshold</pre>
+</li>
+<li class="blockList">
+<h4>shift</h4>
+<pre>int shift</pre>
+</li>
+<li class="blockList">
+<h4>mask</h4>
+<pre>int mask</pre>
+<div class="block">A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+ minus 1.</div>
+</li>
+<li class="blockList">
+<h4>entries1</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectLongMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectLongMap.Entries</a>&lt;<a href="com/github/tommyettinger/ds/ObjectLongMap.Entries.html" title="type parameter in ObjectLongMap.Entries">K</a>&gt; entries1</pre>
+</li>
+<li class="blockList">
+<h4>entries2</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectLongMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectLongMap.Entries</a>&lt;<a href="com/github/tommyettinger/ds/ObjectLongMap.Entries.html" title="type parameter in ObjectLongMap.Entries">K</a>&gt; entries2</pre>
+</li>
+<li class="blockList">
+<h4>values1</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectLongMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectLongMap.Values</a>&lt;<a href="com/github/tommyettinger/ds/ObjectLongMap.Values.html" title="type parameter in ObjectLongMap.Values">K</a>&gt; values1</pre>
+</li>
+<li class="blockList">
+<h4>values2</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectLongMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectLongMap.Values</a>&lt;<a href="com/github/tommyettinger/ds/ObjectLongMap.Values.html" title="type parameter in ObjectLongMap.Values">K</a>&gt; values2</pre>
+</li>
+<li class="blockList">
+<h4>keys1</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectLongMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectLongMap.Keys</a>&lt;<a href="com/github/tommyettinger/ds/ObjectLongMap.Keys.html" title="type parameter in ObjectLongMap.Keys">K</a>&gt; keys1</pre>
+</li>
+<li class="blockList">
+<h4>keys2</h4>
+<pre><a href="com/github/tommyettinger/ds/ObjectLongMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectLongMap.Keys</a>&lt;<a href="com/github/tommyettinger/ds/ObjectLongMap.Keys.html" title="type parameter in ObjectLongMap.Keys">K</a>&gt; keys2</pre>
+</li>
+<li class="blockListLast">
+<h4>defaultValue</h4>
+<pre>long defaultValue</pre>
 </li>
 </ul>
 </li>
@@ -299,7 +544,7 @@
 <ul class="blockList">
 <li class="blockListLast">
 <h4>keys</h4>
-<pre>java.util.ArrayList&lt;E&gt; keys</pre>
+<pre><a href="com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="com/github/tommyettinger/ds/ObjectList.html" title="type parameter in ObjectList">T</a>&gt; keys</pre>
 </li>
 </ul>
 </li>
@@ -319,7 +564,7 @@
 <ul class="blockList">
 <li class="blockListLast">
 <h4>items</h4>
-<pre>java.util.ArrayList&lt;E&gt; items</pre>
+<pre><a href="com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="com/github/tommyettinger/ds/ObjectList.html" title="type parameter in ObjectList">T</a>&gt; items</pre>
 </li>
 </ul>
 </li>

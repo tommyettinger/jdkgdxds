@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6};
+var methods = {"i0":6,"i1":6,"i2":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -103,7 +103,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><a href="../../../../com/github/tommyettinger/ds/FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a>, <a href="../../../../com/github/tommyettinger/ds/IntList.html" title="class in com.github.tommyettinger.ds">IntList</a>, <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>, <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a></dd>
+<dd><a href="../../../../com/github/tommyettinger/ds/FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a>, <a href="../../../../com/github/tommyettinger/ds/IntList.html" title="class in com.github.tommyettinger.ds">IntList</a>, <a href="../../../../com/github/tommyettinger/ds/LongList.html" title="class in com.github.tommyettinger.ds">LongList</a>, <a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>, <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>, <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="class in com.github.tommyettinger.ds">OrderedSet</a></dd>
 </dl>
 <hr>
 <br>
@@ -130,11 +130,15 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/Arrangeable.html#reverse--">reverse</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/Arrangeable.html#shuffle-java.util.Random-">shuffle</a></span>(java.util.Random&nbsp;random)</code>
 <div class="block">Pseudo-randomly shuffles the order of this Arrangeable in-place.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/Arrangeable.html#swap-int-int-">swap</a></span>(int&nbsp;a,
     int&nbsp;b)</code>
@@ -175,7 +179,7 @@ var activeTableTab = "activeTableTab";
 <a name="shuffle-java.util.Random-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>shuffle</h4>
 <pre>void&nbsp;shuffle(java.util.Random&nbsp;random)</pre>
@@ -184,6 +188,15 @@ var activeTableTab = "activeTableTab";
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>random</code> - any <code>Random</code> implementation; prefer <a href="../../../../com/github/tommyettinger/ds/LaserRandom.html" title="class in com.github.tommyettinger.ds"><code>LaserRandom</code></a> in this library</dd>
 </dl>
+</li>
+</ul>
+<a name="reverse--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>reverse</h4>
+<pre>void&nbsp;reverse()</pre>
 </li>
 </ul>
 </li>

@@ -119,7 +119,7 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">OrderedSet&lt;T&gt;</span>
 extends <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a>&lt;T&gt;
 implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;T&gt;, java.io.Serializable</pre>
-<div class="block">A <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds"><code>ObjectSet</code></a> that also stores keys in an <code>ArrayList</code> using the insertion order. Null keys are not allowed. No
+<div class="block">A <a href="../../../../com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds"><code>ObjectSet</code></a> that also stores keys in an <a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds"><code>ObjectList</code></a> using the insertion order. Null keys are not allowed. No
  allocation is done except when growing the table size.
  <p>
  <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#iterator--"><code>Iteration</code></a> is ordered and faster than an unordered set. Keys can also be accessed and the order changed
@@ -186,7 +186,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></td>
+<td class="colFirst"><code>protected <a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#items">items</a></span></code>&nbsp;</td>
 </tr>
 </table>
@@ -293,15 +293,15 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#order--">order</a></span>()</code>
-<div class="block">Gets the ArrayList of items in the order this class will iterate through them.</div>
+<div class="block">Gets the ObjectList of items in the order this class will iterate through them.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#orderedItems--">orderedItems</a></span>()</code>
-<div class="block">Gets the ArrayList of items in the order this class will iterate through them.</div>
+<div class="block">Gets the ObjectList of items in the order this class will iterate through them.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
@@ -346,7 +346,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;com.github.tommyettinger.ds.<a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a></h3>
-<code><a href="../../../../com/github/tommyettinger/ds/Ordered.html#shuffle-java.util.Random-">shuffle</a>, <a href="../../../../com/github/tommyettinger/ds/Ordered.html#swap-int-int-">swap</a></code></li>
+<code><a href="../../../../com/github/tommyettinger/ds/Ordered.html#reverse--">reverse</a>, <a href="../../../../com/github/tommyettinger/ds/Ordered.html#shuffle-java.util.Random-">shuffle</a>, <a href="../../../../com/github/tommyettinger/ds/Ordered.html#swap-int-int-">swap</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.util.Set">
@@ -389,7 +389,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <ul class="blockListLast">
 <li class="blockList">
 <h4>items</h4>
-<pre>protected final&nbsp;java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt; items</pre>
+<pre>protected final&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt; items</pre>
 </li>
 </ul>
 </li>
@@ -616,16 +616,16 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <ul class="blockList">
 <li class="blockList">
 <h4>orderedItems</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;orderedItems()</pre>
-<div class="block">Gets the ArrayList of items in the order this class will iterate through them.
- Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;orderedItems()</pre>
+<div class="block">Gets the ObjectList of items in the order this class will iterate through them.
+ Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
  also change the iteration order here.
  <br>
  This method is provided for backwards-compatibility; <a href="../../../../com/github/tommyettinger/ds/OrderedSet.html#order--"><code>order()</code></a> is preferred for new code
  because it allows order-changing methods to be written once for an arbitrary <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds"><code>Ordered</code></a> type.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the ArrayList of items, in iteration order (usually insertion-order), that this uses</dd>
+<dd>the ObjectList of items, in iteration order (usually insertion-order), that this uses</dd>
 </dl>
 </li>
 </ul>
@@ -635,15 +635,15 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <ul class="blockList">
 <li class="blockList">
 <h4>order</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;order()</pre>
-<div class="block">Gets the ArrayList of items in the order this class will iterate through them.
- Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;&nbsp;order()</pre>
+<div class="block">Gets the ObjectList of items in the order this class will iterate through them.
+ Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
  also change the iteration order here.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/github/tommyettinger/ds/Ordered.html#order--">order</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedSet.html" title="type parameter in OrderedSet">T</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the ArrayList of items, in iteration order (usually insertion-order), that this uses</dd>
+<dd>the ObjectList of items, in iteration order (usually insertion-order), that this uses</dd>
 </dl>
 </li>
 </ul>

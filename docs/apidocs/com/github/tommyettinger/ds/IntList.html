@@ -116,7 +116,8 @@ extends java.lang.Object
 implements <a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a>, java.io.Serializable</pre>
 <div class="block">A resizable, ordered or unordered int list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Integer.
  If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
- This tries to imitate most of the <code>List</code> interface, though it can't implement it without boxing its items.</div>
+ This tries to imitate most of the <code>List</code> interface, though it can't implement it without boxing its items.
+ Has a Java 8 <code>PrimitiveIterator</code> accessible via <a href="../../../../com/github/tommyettinger/ds/IntList.html#iterator--"><code>iterator()</code></a>.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../serialized-form.html#com.github.tommyettinger.ds.IntList">Serialized Form</a></dd>
@@ -584,7 +585,8 @@ implements <a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" ti
 <ul class="blockList">
 <li class="blockList">
 <h4>iterator1</h4>
-<pre>protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/IntList.IntListIterator.html" title="class in com.github.tommyettinger.ds">IntList.IntListIterator</a> iterator1</pre>
+<pre>@Nullable
+protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/IntList.IntListIterator.html" title="class in com.github.tommyettinger.ds">IntList.IntListIterator</a> iterator1</pre>
 </li>
 </ul>
 <a name="iterator2">
@@ -593,7 +595,8 @@ implements <a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" ti
 <ul class="blockListLast">
 <li class="blockList">
 <h4>iterator2</h4>
-<pre>protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/IntList.IntListIterator.html" title="class in com.github.tommyettinger.ds">IntList.IntListIterator</a> iterator2</pre>
+<pre>@Nullable
+protected&nbsp;<a href="../../../../com/github/tommyettinger/ds/IntList.IntListIterator.html" title="class in com.github.tommyettinger.ds">IntList.IntListIterator</a> iterator2</pre>
 </li>
 </ul>
 </li>
@@ -1232,6 +1235,10 @@ implements <a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" ti
 <li class="blockList">
 <h4>reverse</h4>
 <pre>public&nbsp;void&nbsp;reverse()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../com/github/tommyettinger/ds/Arrangeable.html#reverse--">reverse</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a></code></dd>
+</dl>
 </li>
 </ul>
 <a name="shuffle-java.util.Random-">

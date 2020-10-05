@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,7 +28,9 @@ import java.util.Random;
  * 
  * @author Tommy Ettinger
  */
-public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
+public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializable {
+	private static final long serialVersionUID = 0L;
+
 	/**
 	 * Constructs an empty list with the specified initial capacity.
 	 *

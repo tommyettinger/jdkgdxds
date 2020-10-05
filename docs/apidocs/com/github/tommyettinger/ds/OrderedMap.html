@@ -119,7 +119,7 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">OrderedMap&lt;K,V&gt;</span>
 extends <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;K,V&gt;
 implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;K&gt;, java.io.Serializable</pre>
-<div class="block">An <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap</code></a> that also stores keys in an <code>ArrayList</code> using the insertion order. Null keys are not allowed. No
+<div class="block">An <a href="../../../../com/github/tommyettinger/ds/ObjectMap.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap</code></a> that also stores keys in an <a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds"><code>ObjectList</code></a> using the insertion order. Null keys are not allowed. No
  allocation is done except when growing the table size.
  <p>
  Iteration over the <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#entrySet--"><code>entrySet()</code></a> ()}, <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#keySet--"><code>keySet()</code></a> ()}, and <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#values--"><code>values()</code></a> is ordered and faster than an unordered map. Keys
@@ -194,7 +194,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;</code></td>
+<td class="colFirst"><code>protected <a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#keys">keys</a></span></code>&nbsp;</td>
 </tr>
 </table>
@@ -296,15 +296,15 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 </td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#order--">order</a></span>()</code>
-<div class="block">Gets the ArrayList of keys in the order this class will iterate through them.</div>
+<div class="block">Gets the ObjectList of keys in the order this class will iterate through them.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;</code></td>
+<td class="colFirst"><code><a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#orderedKeys--">orderedKeys</a></span>()</code>
-<div class="block">Gets the ArrayList of keys in the order this class will iterate through them.</div>
+<div class="block">Gets the ObjectList of keys in the order this class will iterate through them.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
@@ -357,7 +357,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;com.github.tommyettinger.ds.<a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a></h3>
-<code><a href="../../../../com/github/tommyettinger/ds/Ordered.html#shuffle-java.util.Random-">shuffle</a>, <a href="../../../../com/github/tommyettinger/ds/Ordered.html#swap-int-int-">swap</a></code></li>
+<code><a href="../../../../com/github/tommyettinger/ds/Ordered.html#reverse--">reverse</a>, <a href="../../../../com/github/tommyettinger/ds/Ordered.html#shuffle-java.util.Random-">shuffle</a>, <a href="../../../../com/github/tommyettinger/ds/Ordered.html#swap-int-int-">swap</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.util.Map">
@@ -393,7 +393,7 @@ implements <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title=
 <ul class="blockListLast">
 <li class="blockList">
 <h4>keys</h4>
-<pre>protected final&nbsp;java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt; keys</pre>
+<pre>protected final&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt; keys</pre>
 </li>
 </ul>
 </li>
@@ -594,16 +594,16 @@ public&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" ti
 <ul class="blockList">
 <li class="blockList">
 <h4>orderedKeys</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;&nbsp;orderedKeys()</pre>
-<div class="block">Gets the ArrayList of keys in the order this class will iterate through them.
- Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;&nbsp;orderedKeys()</pre>
+<div class="block">Gets the ObjectList of keys in the order this class will iterate through them.
+ Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
  also change the iteration order here.
  <br>
  This method is provided for backwards-compatibility; <a href="../../../../com/github/tommyettinger/ds/OrderedMap.html#order--"><code>order()</code></a> is preferred for new code
  because it allows order-changing methods to be written once for an arbitrary <a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds"><code>Ordered</code></a> type.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the ArrayList of keys, in iteration order (usually insertion-order), that this uses</dd>
+<dd>the ObjectList of keys, in iteration order (usually insertion-order), that this uses</dd>
 </dl>
 </li>
 </ul>
@@ -613,15 +613,15 @@ public&nbsp;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" ti
 <ul class="blockList">
 <li class="blockList">
 <h4>order</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;&nbsp;order()</pre>
-<div class="block">Gets the ArrayList of keys in the order this class will iterate through them.
- Returns a direct reference to the same ArrayList this uses, so changes to the returned list will
+<pre>public&nbsp;<a href="../../../../com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;&nbsp;order()</pre>
+<div class="block">Gets the ObjectList of keys in the order this class will iterate through them.
+ Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
  also change the iteration order here.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/github/tommyettinger/ds/Ordered.html#order--">order</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;<a href="../../../../com/github/tommyettinger/ds/OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the ArrayList of keys, in iteration order (usually insertion-order), that this uses</dd>
+<dd>the ObjectList of keys, in iteration order (usually insertion-order), that this uses</dd>
 </dl>
 </li>
 </ul>
