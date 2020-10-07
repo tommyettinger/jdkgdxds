@@ -271,8 +271,8 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 
 	/**
 	 * Returns the number of elements in this set (its cardinality).  If this
-	 * set contains more than <tt>Integer.MAX_VALUE</tt> elements, returns
-	 * <tt>Integer.MAX_VALUE</tt>.
+	 * set contains more than {@code Integer.MAX_VALUE} elements, returns
+	 * {@code Integer.MAX_VALUE}.
 	 *
 	 * @return the number of elements in this set (its cardinality)
 	 */
@@ -350,6 +350,8 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
+	 *
+	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);

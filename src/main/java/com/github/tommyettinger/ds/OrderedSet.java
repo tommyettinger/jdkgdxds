@@ -119,7 +119,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
 	 *
-	 * @param additionalCapacity
+	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	@Override
 	public void ensureCapacity (int additionalCapacity) {

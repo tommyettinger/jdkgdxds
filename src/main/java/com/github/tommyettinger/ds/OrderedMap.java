@@ -126,7 +126,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
 	 *
-	 * @param additionalCapacity
+	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	@Override
 	public void ensureCapacity (int additionalCapacity) {
@@ -232,12 +232,12 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * The set is backed by the map, so changes to the map are
 	 * reflected in the set, and vice-versa.  If the map is modified
 	 * while an iteration over the set is in progress (except through
-	 * the iterator's own <tt>remove</tt> operation), the results of
+	 * the iterator's own {@code remove} operation), the results of
 	 * the iteration are undefined.  The set supports element removal,
 	 * which removes the corresponding mapping from the map, via the
-	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
-	 * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
-	 * operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
+	 * {@code Iterator.remove}, {@code Set.remove},
+	 * {@code removeAll}, {@code retainAll}, and {@code clear}
+	 * operations.  It does not support the {@code add} or {@code addAll}
 	 * operations.
 	 *
 	 * <p>Note that the same Collection instance is returned each time this

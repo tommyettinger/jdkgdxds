@@ -256,12 +256,12 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * Copies all of the mappings from the specified map to this map
 	 * (optional operation).  The effect of this call is equivalent to that
 	 * of calling {@link #put(Object, Object) put(k, v)} on this map once
-	 * for each mapping from key <tt>k</tt> to value <tt>v</tt> in the
+	 * for each mapping from key {@code k} to value {@code v} in the
 	 * specified map.  The behavior of this operation is undefined if the
 	 * specified map is modified while the operation is in progress.
 	 *
 	 * @param m mappings to be stored in this map
-	 * @throws UnsupportedOperationException if the <tt>putAll</tt> operation
+	 * @throws UnsupportedOperationException if the {@code putAll} operation
 	 *                                       is not supported by this map
 	 * @throws ClassCastException            if the class of a key or value in the
 	 *                                       specified map prevents it from being stored in this map
@@ -287,8 +287,8 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 
 	/**
 	 * Returns the number of key-value mappings in this map.  If the
-	 * map contains more than <tt>Integer.MAX_VALUE</tt> elements, returns
-	 * <tt>Integer.MAX_VALUE</tt>.
+	 * map contains more than {@code Integer.MAX_VALUE} elements, returns
+	 * {@code Integer.MAX_VALUE}.
 	 *
 	 * @return the number of key-value mappings in this map
 	 */
@@ -372,15 +372,15 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	}
 
 	/**
-	 * Returns <tt>true</tt> if this map maps one or more keys to the
-	 * specified value.  More formally, returns <tt>true</tt> if and only if
-	 * this map contains at least one mapping to a value <tt>v</tt> such that
-	 * <tt>(value==null ? v==null : value.equals(v))</tt>.  This operation
+	 * Returns {@code true} if this map maps one or more keys to the
+	 * specified value.  More formally, returns {@code true} if and only if
+	 * this map contains at least one mapping to a value {@code v} such that
+	 * {@code (value==null ? v==null : value.equals(v))}.  This operation
 	 * will probably require time linear in the map size for most
-	 * implementations of the <tt>Map</tt> interface.
+	 * implementations of the {@code Map} interface.
 	 *
 	 * @param value value whose presence in this map is to be tested
-	 * @return <tt>true</tt> if this map maps one or more keys to the
+	 * @return {@code true} if this map maps one or more keys to the
 	 * specified value
 	 * @throws ClassCastException   if the value is of an inappropriate type for
 	 *                              this map
@@ -423,6 +423,8 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	/**
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
+	 * 
+	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
@@ -574,12 +576,12 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * The set is backed by the map, so changes to the map are
 	 * reflected in the set, and vice-versa.  If the map is modified
 	 * while an iteration over the set is in progress (except through
-	 * the iterator's own <tt>remove</tt> operation), the results of
+	 * the iterator's own {@code remove} operation), the results of
 	 * the iteration are undefined.  The set supports element removal,
 	 * which removes the corresponding mapping from the map, via the
-	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
-	 * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
-	 * operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
+	 * {@code Iterator.remove}, {@code Set.remove},
+	 * {@code removeAll}, {@code retainAll}, and {@code clear}
+	 * operations.  It does not support the {@code add} or {@code addAll}
 	 * operations.
 	 * 
 	 * <p>Note that the same Collection instance is returned each time this
@@ -679,7 +681,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		/**
 		 * Returns the value corresponding to this entry.  If the mapping
 		 * has been removed from the backing map (by the iterator's
-		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 * {@code remove} operation), the results of this call are undefined.
 		 *
 		 * @return the value corresponding to this entry
 		 * @throws IllegalStateException implementations may, but are not
@@ -695,11 +697,11 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		 * Replaces the value corresponding to this entry with the specified
 		 * value (optional operation).  (Writes through to the map.)  The
 		 * behavior of this call is undefined if the mapping has already been
-		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 * removed from the map (by the iterator's {@code remove} operation).
 		 *
 		 * @param value new value to be stored in this entry
 		 * @return old value corresponding to the entry
-		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 * @throws UnsupportedOperationException if the {@code put} operation
 		 *                                       is not supported by the backing map
 		 * @throws ClassCastException            if the class of the specified value
 		 *                                       prevents it from being stored in the backing map

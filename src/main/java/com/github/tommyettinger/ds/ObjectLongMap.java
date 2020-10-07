@@ -63,9 +63,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * minus 1.
 	 */
 	protected int mask;
-	protected Entries<K> entries1, entries2;
-	protected Values values1, values2;
-	protected Keys<K> keys1, keys2;
+	protected @Nullable Entries<K> entries1;
+	protected @Nullable Entries<K> entries2;
+	protected @Nullable Values<K> values1;
+	protected @Nullable Values<K> values2;
+	protected @Nullable Keys<K> keys1;
+	protected @Nullable Keys<K> keys2;
 	
 	public long defaultValue = 0L;
 
@@ -143,9 +146,27 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	}
 
 	/**
-	 * Returns the old value associated with the specified key, or null.
+	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
 	public long put (K key, long value) {
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			long oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		if (++size >= threshold)
+			resize(keyTable.length << 1);
+		return defaultValue;
+	}
+
+	/**
+	 * Returns the old value associated with the specified key, or the given {@code defaultValue} if there was no prior value.
+	 */
+	public long putOrDefault (K key, long value, long defaultValue) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			long oldValue = valueTable[i];
@@ -236,8 +257,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 
 	/**
 	 * Returns the number of key-value mappings in this map.  If the
-	 * map contains more than <tt>Integer.MAX_VALUE</tt> elements, returns
-	 * <tt>Integer.MAX_VALUE</tt>.
+	 * map contains more than {@code Integer.MAX_VALUE} elements, returns
+	 * {@code Integer.MAX_VALUE}.
 	 *
 	 * @return the number of key-value mappings in this map
 	 */
@@ -465,12 +486,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * The set is backed by the map, so changes to the map are
 	 * reflected in the set, and vice-versa.  If the map is modified
 	 * while an iteration over the set is in progress (except through
-	 * the iterator's own <tt>remove</tt> operation), the results of
+	 * the iterator's own {@code remove} operation), the results of
 	 * the iteration are undefined.  The set supports element removal,
 	 * which removes the corresponding mapping from the map, via the
-	 * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
-	 * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
-	 * operations.  It does not support the <tt>add</tt> or <tt>addAll</tt>
+	 * {@code Iterator.remove}, {@code Set.remove},
+	 * {@code removeAll}, {@code retainAll}, and {@code clear}
+	 * operations.  It does not support the {@code add} or {@code addAll}
 	 * operations.
 	 * 
 	 * <p>Note that the same Collection instance is returned each time this
@@ -480,7 +501,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * @return a set view of the keys contained in this map
 	 */
 	public Keys<K> keySet () { 
-		if (keys1 == null) {
+		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
 		}
@@ -503,7 +524,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * @return a {@link Collection} of long values
 	 */
 	public Values<K> values () {
-		if (values1 == null) {
+		if (values1 == null || values2 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
 		}
@@ -527,7 +548,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * @return a {@link Set} of {@link Entry} key-value pairs
 	 */
 	public Entries<K> entrySet () {
-		if (entries1 == null) {
+		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);
 		}
@@ -544,7 +565,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	}
 
 	static public class Entry<K> {
-		public K key;
+		public @Nullable K key;
 		public long value;
 
 		public String toString () {
@@ -560,13 +581,14 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		 *                               removed from the backing map.
 		 */
 		public K getKey () {
+			assert key != null;
 			return key;
 		}
 
 		/**
 		 * Returns the value corresponding to this entry.  If the mapping
 		 * has been removed from the backing map (by the iterator's
-		 * <tt>remove</tt> operation), the results of this call are undefined.
+		 * {@code remove} operation), the results of this call are undefined.
 		 *
 		 * @return the value corresponding to this entry
 		 */
@@ -578,11 +600,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		 * Replaces the value corresponding to this entry with the specified
 		 * value (optional operation).  (Writes through to the map.)  The
 		 * behavior of this call is undefined if the mapping has already been
-		 * removed from the map (by the iterator's <tt>remove</tt> operation).
+		 * removed from the map (by the iterator's {@code remove} operation).
 		 *
 		 * @param value new value to be stored in this entry
 		 * @return old value corresponding to the entry
-		 * @throws UnsupportedOperationException if the <tt>put</tt> operation
+		 * @throws UnsupportedOperationException if the {@code put} operation
 		 *                                       is not supported by the backing map
 		 * @throws ClassCastException            if the class of the specified value
 		 *                                       prevents it from being stored in the backing map
@@ -604,7 +626,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		public boolean equals (@Nullable Object o) {
 			if (this == o)
 				return true;
-			if (o == null || getClass() != o.getClass())
+			if (o == null || getClass() != o.getClass() || key == null)
 				return false;
 
 			Entry<?> entry = (Entry<?>)o;
@@ -616,6 +638,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 
 		@Override
 		public int hashCode () {
+			assert key != null;
 			long result = key.hashCode() * 31L + value;
 			return (int)(result ^ result >>> 32);
 		}
