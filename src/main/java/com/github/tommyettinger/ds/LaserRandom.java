@@ -8,6 +8,30 @@ import java.util.Random;
  * Like how a laser is made of many beams of photons that don't cross paths, this allows many different
  * random number streams that don't overlap either.
  * <br>
+ * This fills in much of the functionality of MathUtils in libGDX, though with all code as instance methods
+ * instead of static methods, and some things renamed (randomTriangular() became {@link #nextTriangular()},
+ * for instance, and random() became {@link #nextFloat()}). It also supplies some rare and sometimes-useful
+ * code: {@link #skip(long)} allows "fast-forward" and "rewind," you can get and set the exact state with
+ * {@link #getStateA()}, {@link #getStateB()}, {@link #setStateA(long)}, and {@link #setStateB(long)} (which
+ * is useful if you want to save a LaserRandom and reload it later), and there's bounded int and long
+ * generators which can use a negative number as their exclusive outer bound {@link #nextSignedInt(int)} and
+ * {@link #nextSignedLong(long)}, plus overloads that take an inner bound).
+ * <br>
+ * Every method defined in this class advances the state by the same amount unless otherwise documented (only
+ * {@link #nextTriangular()} and {@link #nextTriangular(float)} advance the state twice). The state can
+ * advance 2 to the 64 times before the sequence of random numbers repeats, which would take a few years of
+ * continuous generation. There are also 2 to the 63 possible sequences this can produce; you can tell which
+ * one you're using with {@link #getStream()}. Note, {@link Random} can only advance 2 to the 48 times, which
+ * takes under half a day to make it repeat on recent laptop hardware while also analyzing the numbers for
+ * statistical issues. If statistical quality is a concern, don't use {@link Random}, since the aforementioned
+ * analysis finds statistical failures in about a minute when checking about 16GB of output; this class can
+ * produce 64TB of random output without a tool like PractRand finding any failures (sometimes it can't find
+ * any minor anomaly over several days of testing).
+ * <br>
+ * You can copy this class independently of the library it's part of; it's meant as a general replacement for
+ * Random and also RandomXS128. LaserRandom should be faster than RandomXS128, if earlier benchmarks hold up,
+ * without having the statistical failures that the outdated XorShift128+ algorithm has.
+ * <br>
  * Pew pew!
  */
 public class LaserRandom extends Random implements Serializable {
@@ -114,8 +138,14 @@ public class LaserRandom extends Random implements Serializable {
 	}
 
 	/**
-	 * Generates the next pseudorandom number with a specific maximum size in bits (not a max value).
-	 * If you want to get a random number in a range, use {@link #nextInt(int)} instead.
+	 * Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
+	 * If you want to get a random number in a range, you should usually use {@link #nextInt(int)} instead.
+	 * For some specific cases, this method is more efficient and less biased than {@link #nextInt(int)}.
+	 * For {@code bits} values between 1 and 30, this should be similar in effect to
+	 * {@code nextInt(1 << bits)}; though it won't typically produce the same values, they will have
+	 * the correct range. If {@code bits} is 31, this can return any non-negative {@code int}; note that
+	 * {@code nextInt(1 << 31)} won't behave this way because {@code 1 << 31} is negative. If
+	 * {@code bits} is 32 (or 0), this can return any {@code int}.
 	 * 
 	 * <p>The general contract of {@code next} is that it returns an
 	 * {@code int} value and if the argument {@code bits} is between
@@ -416,7 +446,7 @@ public class LaserRandom extends Random implements Serializable {
 	public double nextDouble () {
 		final long s = (stateA += 0xC6BC279692B5C323L);
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		return ((z ^ z >>> 26 ^ z >>> 6) >>> 11) * 0x1.0p-53;
+		return (z >>> 11 ^ z >>> 37 ^ z >>> 17) * 0x1.0p-53;
 	}
 
 	/**
@@ -539,4 +569,59 @@ public class LaserRandom extends Random implements Serializable {
 				((((-5.447609879822406e+01 * r + 1.615858368580409e+02) * r + -1.556989798598866e+02) * r + 6.680131188771972e+01) * r + -1.328068155288572e+01) * r + 1.0);
 		}
 	}
+
+	/** Returns true if a random value between 0 and 1 is less than the specified value.
+	 * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
+	 * @return a boolean selected with the given {@code chance} of being true  
+	 */
+	public boolean nextBoolean (float chance) {
+		return nextFloat() < chance;
+	}
+	
+	/** Returns -1 or 1, randomly.
+	 * @return -1 or 1, selected with approximately equal likelihood
+	 */
+	public int nextSign () {
+		return 1 | (nextInt() >> 31);
+	}
+
+	/** Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
+	 * more likely. Advances the state twice.
+	 * <p>
+	 * This is an optimized version of {@link #nextTriangular(float, float, float) randomTriangular(-1, 1, 0)} */
+	public float nextTriangular () {
+		return nextFloat() - nextFloat();
+	}
+
+	/** Returns a triangularly distributed random number between {@code -max} (exclusive) and {@code max} (exclusive), where values
+	 * around zero are more likely. Advances the state twice.
+	 * <p>
+	 * This is an optimized version of {@link #nextTriangular(float, float, float) randomTriangular(-max, max, 0)}
+	 * @param max the upper limit */
+	public float nextTriangular (float max) {
+		return (nextFloat() - nextFloat()) * max;
+	}
+
+	/** Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where the
+	 * {@code mode} argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
+	 * <p>
+	 * This method is equivalent of {@link #nextTriangular(float, float, float) randomTriangular(min, max, (min + max) * 0.5f)}
+	 * @param min the lower limit
+	 * @param max the upper limit */
+	public float nextTriangular (float min, float max) {
+		return nextTriangular(min, max, (min + max) * 0.5f);
+	}
+
+	/** Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where values
+	 * around {@code mode} are more likely. Advances the state once.
+	 * @param min the lower limit
+	 * @param max the upper limit
+	 * @param mode the point around which the values are more likely */
+	public float nextTriangular (float min, float max, float mode) {
+		float u = nextFloat();
+		float d = max - min;
+		if (u <= (mode - min) / d) return min + (float)Math.sqrt(u * d * (mode - min));
+		return max - (float)Math.sqrt((1 - u) * d * (max - mode));
+	}
+
 }
