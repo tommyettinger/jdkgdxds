@@ -104,7 +104,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask);
+		shift = Long.numberOfLeadingZeros(mask);
 
 		keyTable = (K[])new Object[tableSize];
 		valueTable = (V[])new Object[tableSize];
@@ -139,8 +139,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
 	 */
 	protected int place (Object item) {
-		final int h = item.hashCode() * 0x9E377;
-		return (h ^ h >>> shift) & mask;
+		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
 	/**
@@ -436,7 +435,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask);
+		shift = Long.numberOfLeadingZeros(mask);
 
 		K[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;

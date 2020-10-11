@@ -96,7 +96,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask);
+		shift = Long.numberOfLeadingZeros(mask);
 
 		keyTable = (T[])new Object[tableSize];
 	}
@@ -127,8 +127,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
 	 */
 	protected int place (Object item) {
-		final int h = item.hashCode() * 0x9E377;
-		return (h ^ h >>> shift) & mask;
+		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
 	/**
@@ -363,7 +362,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask);
+		shift = Long.numberOfLeadingZeros(mask);
 		T[] oldKeyTable = keyTable;
 
 		keyTable = (T[])(new Object[newSize]);

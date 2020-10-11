@@ -87,7 +87,7 @@ public class IntSet implements Serializable {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask);
+		shift = Long.numberOfLeadingZeros(mask);
 
 		keyTable = new int[tableSize];
 	}
@@ -106,8 +106,7 @@ public class IntSet implements Serializable {
 	 * @param item any int; it is usually mixed so similar inputs still have different outputs
 	 */
 	protected int place (int item) {
-		item *= 0x9E377;
-		return (item ^ item >>> shift) & mask;
+		return (int)(item * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
 	/** Returns the index of the key if already present, else {@code -1 - index} for the next empty index. This can be overridden in this
@@ -266,7 +265,7 @@ public class IntSet implements Serializable {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask);
+		shift = Long.numberOfLeadingZeros(mask);
 
 		int[] oldKeyTable = keyTable;
 

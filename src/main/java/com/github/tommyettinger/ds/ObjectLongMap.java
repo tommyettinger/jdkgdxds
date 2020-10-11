@@ -102,7 +102,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask);
+		shift = Long.numberOfLeadingZeros(mask);
 
 		keyTable = (K[])new Object[tableSize];
 		valueTable = new long[tableSize];
@@ -124,8 +124,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
 	 */
 	protected int place (Object item) {
-		final int h = item.hashCode() * 0x9E377;
-		return (h ^ h >>> shift) & mask;
+		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
 	/**
@@ -223,6 +222,23 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	public long getOrDefault (Object key, long defaultValue) {
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
+	}
+
+	/** Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
+	 * put into the map and defaultValue is returned. */
+	public long getAndIncrement (K key, long defaultValue, long increment) {
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			long oldValue = valueTable[i];
+			valueTable[i] += increment;
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = defaultValue + increment;
+		if (++size >= threshold)
+			resize(keyTable.length << 1);
+		return defaultValue;
 	}
 
 	public long remove (Object key) {
@@ -374,7 +390,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask);
+		shift = Long.numberOfLeadingZeros(mask);
 
 		K[] oldKeyTable = keyTable;
 		long[] oldValueTable = valueTable;
