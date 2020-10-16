@@ -16,8 +16,10 @@
 
 package com.github.tommyettinger.ds;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -201,6 +203,22 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	@Override
 	public ObjectList<T> order () {
 		return items;
+	}
+	
+	/**
+	 * Sorts this OrderedSet in-place by the keys' natural ordering; {@code T} must implement {@link Comparable}.
+	 */
+	public void sort(){
+		items.sort(null);
+	}
+
+	/**
+	 * Sorts this OrderedSet in-place by the given Comparator used on the keys. If {@code comp} is null, then this
+	 * will sort by the natural ordering of the keys, which requires {@code T} to {@link Comparable}.
+	 * @param comp a Comparator that can compare two {@code T} keys, or null to use the keys' natural ordering
+	 */
+	public void sort(@Nullable Comparator<T> comp){
+		items.sort(comp);
 	}
 
 	/**

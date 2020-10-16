@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -227,6 +228,34 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		return keys;
 	}
 
+	/**
+	 * Sorts this OrderedMap in-place by the keys' natural ordering; {@code K} must implement {@link Comparable}.
+	 */
+	public void sort(){
+		keys.sort(null);
+	}
+
+	/**
+	 * Sorts this OrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
+	 * will sort by the natural ordering of the keys, which requires {@code K} to {@link Comparable}.
+	 * @param comp a Comparator that can compare two {@code K} keys, or null to use the keys' natural ordering
+	 */
+	public void sort(@Nullable Comparator<K> comp){
+		keys.sort(comp);
+	}
+
+	/**
+	 * Sorts this OrderedMap in-place by the given Comparator used on the values. {@code comp} must not be null,
+	 * and must be able to compare {@code V} values. If any null values are present in this OrderedMap, then comp
+	 * must be able to sort or otherwise handle null values. You can use {@link Comparator#naturalOrder()} to do
+	 * what {@link #sort()} does (just sorting values in this case instead of keys) if the values implement
+	 * {@link Comparable} (requiring all of them to be non-null).
+	 * @param comp a non-null Comparator that can compare {@code V} values; if this contains null values, comp must handle them
+	 */
+	public void sortByValue(Comparator<V> comp){
+		keys.sort((a, b) -> comp.compare(get(a), get(b)));
+	}
+	
 	/**
 	 * Returns a {@link Set} view of the keys contained in this map.
 	 * The set is backed by the map, so changes to the map are
