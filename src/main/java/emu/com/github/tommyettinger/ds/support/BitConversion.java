@@ -1,4 +1,4 @@
-package com.github.tommyettinger.ds;
+package emu.com.github.tommyettinger.ds.support;
 
 public final class BitConversion {
 	public static final Int8Array wba = Int8ArrayNative.create(8);
