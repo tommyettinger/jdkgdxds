@@ -1,5 +1,7 @@
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.LaserRandom;
+
 import java.util.Collections;
 import java.util.Random;
 

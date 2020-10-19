@@ -1,4 +1,4 @@
-package com.github.tommyettinger.ds;
+package com.github.tommyettinger.ds.support;
 
 import java.io.Serializable;
 import java.util.Random;

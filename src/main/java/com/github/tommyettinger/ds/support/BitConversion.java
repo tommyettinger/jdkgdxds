@@ -1,4 +1,4 @@
-package com.github.tommyettinger.ds;
+package com.github.tommyettinger.ds.support;
 
 /**
  * Methods for converting floats to and from ints, as well as doubles to and from longs and ints.

@@ -16,6 +16,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.LaserRandom;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;

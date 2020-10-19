@@ -1,6 +1,6 @@
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.LaserRandom;
+import com.github.tommyettinger.ds.support.LaserRandom;
 
 import java.util.Random;
 import java.util.SplittableRandom;
