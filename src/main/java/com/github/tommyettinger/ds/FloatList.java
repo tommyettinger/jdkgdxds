@@ -16,21 +16,31 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
+
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /** A resizable, ordered or unordered float list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Float.
  * If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
- * 
- * @author Nathan Sweet */
+ * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
+ *
+ * @author Nathan Sweet
+ * @author Tommy Ettinger
+ */
 public class FloatList implements Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public float[] items;
 	public int size;
 	public boolean ordered;
-
+	protected @Nullable FloatListIterator iterator1, iterator2;
+	
 	/** Creates an ordered array with a capacity of 16. */
 	public FloatList () {
 		this(true, 16);
@@ -607,6 +617,73 @@ public class FloatList implements Arrangeable, Serializable {
 			buffer.append(items[i]);
 		}
 		return buffer.toString();
+	}
+	/**
+	 * Returns a Java 8 primitive iterator over the int items in this FloatList. Iterates in order if {@link #ordered}
+	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
+	 * <br>
+	 * This will reuse one of two iterators in this FloatList; this does not allow nested iteration.
+	 * Use {@link FloatListIterator#FloatListIterator(FloatList)} to nest iterators.
+	 * @return a {@link FloatIterator}; use its nextFloat() method instead of next()
+	 */
+	public FloatListIterator iterator(){
+		if (iterator1 == null || iterator2 == null) {
+			iterator1 = new FloatListIterator(this);
+			iterator2 = new FloatListIterator(this);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset();
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset();
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
+	}
+
+	public static class FloatListIterator implements FloatIterator {
+		protected int index = 0;
+		protected FloatList list;
+		protected boolean valid = true;
+
+		public FloatListIterator (FloatList list) {
+			this.list = list;
+		}
+
+		/**
+		 * Returns the next {@code int} element in the iteration.
+		 *
+		 * @return the next {@code int} element in the iteration
+		 * @throws NoSuchElementException if the iteration has no more elements
+		 */
+		@Override
+		public float nextFloat () {
+			if (!valid)
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (index >= list.size)
+				throw new NoSuchElementException();
+			return list.get(index++);
+		}
+
+		/**
+		 * Returns {@code true} if the iteration has more elements.
+		 * (In other words, returns {@code true} if {@link #next} would
+		 * return an element rather than throwing an exception.)
+		 *
+		 * @return {@code true} if the iteration has more elements
+		 */
+		@Override
+		public boolean hasNext () {
+			if (!valid)
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			return index < list.size;
+		}
+
+		public void reset () {
+			index = -1;
+		}
 	}
 
 	/** @see #FloatList(float[]) */

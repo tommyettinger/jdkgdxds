@@ -7,6 +7,7 @@ import java.util.Random;
 /**
  * Indicates that a type can have its contents change position, without specifying the type of contents.
  * This can be used for primitive-backed collections as well as generic ones.
+ * @author Tommy Ettinger
  */
 public interface Arrangeable {
 	/**

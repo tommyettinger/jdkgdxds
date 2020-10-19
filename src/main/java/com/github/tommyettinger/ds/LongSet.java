@@ -36,7 +36,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * This implementation uses linear probing with the backward shift algorithm for removal. Linear probing continues to work even
  * when all hashCodes collide, just more slowly.
  * @author Nathan Sweet
- * @author Tommy Ettinger */
+ * @author Tommy Ettinger
+ */
 public class LongSet implements Serializable {
 	private static final long serialVersionUID = 0L;
 

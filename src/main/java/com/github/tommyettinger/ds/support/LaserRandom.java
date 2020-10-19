@@ -29,10 +29,12 @@ import java.util.Random;
  * any minor anomaly over several days of testing).
  * <br>
  * You can copy this class independently of the library it's part of; it's meant as a general replacement for
- * Random and also RandomXS128. LaserRandom should be faster than RandomXS128, if earlier benchmarks hold up,
- * without having the statistical failures that the outdated XorShift128+ algorithm has.
+ * Random and also RandomXS128. LaserRandom is generally faster than RandomXS128, and can be over 3x faster
+ * when running on OpenJ9 (generating over 3 billion random long values per second). On top of that, this
+ * doesn't have the statistical failures that the outdated XorShift128+ algorithm has.
  * <br>
- * Pew pew!
+ * Pew pew! Lasers!
+ * @author Tommy Ettinger
  */
 public class LaserRandom extends Random implements Serializable {
 	private static final long serialVersionUID = 0L;

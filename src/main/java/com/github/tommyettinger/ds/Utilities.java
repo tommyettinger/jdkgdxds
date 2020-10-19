@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 /**
  * Utility code shared by various data structures in this package.
+ * @author Tommy Ettinger
  */
 public class Utilities {
 	/**

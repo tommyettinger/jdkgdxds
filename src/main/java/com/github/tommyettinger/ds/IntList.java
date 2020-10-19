@@ -28,7 +28,9 @@ import java.util.Random;
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
  * 
- * @author Nathan Sweet */
+ * @author Nathan Sweet
+ * @author Tommy Ettinger
+ */
 public class IntList implements Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public int[] items;
@@ -608,7 +610,7 @@ public class IntList implements Arrangeable, Serializable {
 	 * @return a {@link PrimitiveIterator.OfInt}; use its nextInt() method instead of next()
 	 */
 	public IntListIterator iterator(){
-		if (iterator1 == null) {
+		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new IntListIterator(this);
 			iterator2 = new IntListIterator(this);
 		}

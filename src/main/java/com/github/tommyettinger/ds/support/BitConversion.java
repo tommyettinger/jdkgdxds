@@ -11,6 +11,7 @@ package com.github.tommyettinger.ds.support;
  * arrays to accomplish its conversions; these are widespread even on mobile browsers, and are very
  * convenient for this sort of code (in some ways, they're a better fit for this sort of bit-level
  * operation in JavaScript than anything Java provides).
+ * @author Tommy Ettinger
  */
 public final class BitConversion {
 	/**

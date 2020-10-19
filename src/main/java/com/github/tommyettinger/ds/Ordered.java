@@ -11,6 +11,7 @@ import java.util.Random;
  * manipulated by the same methods. This interface extends {@link Arrangeable}, which itself is compatible
  * both with primitive-backed collections like {@link IntList} and generic ones like the implementations of
  * Ordered. This has default implementations of {@link Arrangeable#swap(int, int)} and {@link Arrangeable#shuffle(Random)}.
+ * @author Tommy Ettinger
  */
 public interface Ordered<T> extends Arrangeable {
 	/**

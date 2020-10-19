@@ -28,7 +28,9 @@ import java.util.Random;
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
  * 
- * @author Nathan Sweet */
+ * @author Nathan Sweet
+ * @author Tommy Ettinger
+ */
 public class LongList implements Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public long[] items;
@@ -606,12 +608,12 @@ public class LongList implements Arrangeable, Serializable {
 	 * Returns a Java 8 primitive iterator over the int items in this LongList. Iterates in order if {@link #ordered}
 	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
 	 * <br>
-	 * This will reuse one of two iterators in this IntList; this does not allow nested iteration.
+	 * This will reuse one of two iterators in this LongList; this does not allow nested iteration.
 	 * Use {@link LongListIterator#LongListIterator(LongList)} to nest iterators.
 	 * @return a {@link PrimitiveIterator.OfLong}; use its nextLong() method instead of next()
 	 */
 	public LongListIterator iterator(){
-		if (iterator1 == null) {
+		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new LongListIterator(this);
 			iterator2 = new LongListIterator(this);
 		}
