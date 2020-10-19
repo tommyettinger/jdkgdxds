@@ -85,7 +85,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	}
 
 	@Override
-	public V put (K key, V value) {
+	public V put (K key, @Nullable V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -384,7 +384,11 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		protected ObjectList<K> keys;
 
 		public OrderedMapEntries (OrderedMap<K, V> map) {
+			super(map);
 			keys = map.keys;
+		}
+		@Override
+		protected void initialize(ObjectMap<K, V> map){
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
 				public Iterator<Map.Entry<K, V>> iterator () {
@@ -429,7 +433,6 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 				}
 			};
 		}
-
 		@Override
 		public Iterator<Map.Entry<K, V>> iterator () {
 			return iter;
@@ -440,7 +443,12 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		protected ObjectList<K> keys;
 
 		public OrderedMapKeys (OrderedMap<K, ?> map) {
+			super(map);
 			keys = map.keys;
+		}
+
+		@Override
+		protected void initialize (ObjectMap<K, ?> map) {
 			iter = new MapIterator<K, Object, K>((OrderedMap)map) {
 				@Override
 				public Iterator<K> iterator () {
@@ -482,9 +490,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 					nextIndex = currentIndex;
 					currentIndex = -1;
 				}
-
 			};
-
 		}
 
 		@Override
@@ -497,7 +503,12 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		private ObjectList<?> keys;
 
 		public OrderedMapValues (OrderedMap<?, V> map) {
+			super(map);
 			keys = map.keys;
+		}
+
+		@Override
+		protected void initialize (ObjectMap<?, V> map) {
 			iter = new MapIterator<Object, V, V>((ObjectMap<Object, V>)map) {
 				@Override
 				public Iterator<V> iterator () {

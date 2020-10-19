@@ -777,7 +777,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	}
 	
 	static public class EntryIterator<K> extends MapIterator<K> implements Iterable<Entry<K>>, Iterator<Entry<K>> {
-		protected Entry<K> entry = new Entry<K>();
+		protected Entry<K> entry = new Entry<>();
 
 		public EntryIterator(ObjectLongMap<K> map) {
 			super(map);
@@ -812,9 +812,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	static public class Entries<K> extends AbstractSet<Entry<K>> {
 		protected EntryIterator<K> iter;
 
-		protected Entries () {
-		}
-
 		public Entries (ObjectLongMap<K> map) {
 			iter = new EntryIterator<>(map);
 		}
@@ -836,7 +833,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	}
 
 	static public class Values<K> {
-		protected ValueIterator iter;
+		protected ValueIterator<K> iter;
 
 		/**
 		 * Returns an iterator over the elements contained in this collection.
@@ -851,21 +848,15 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 			return iter.map.size;
 		}
 
-		protected Values () {
-		}
-
 		public Values (ObjectLongMap<K> map) {
-			iter = new ValueIterator(map);
+			iter = new ValueIterator<>(map);
 		}
 
 	}
 
 	static public class Keys<K> extends AbstractSet<K> {
 		protected KeyIterator<K> iter;
-
-		protected Keys () {
-		}
-
+		
 		public Keys (ObjectLongMap<K> map) {
 			iter = new KeyIterator<>(map);
 		}

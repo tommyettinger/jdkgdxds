@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 
 import static com.github.tommyettinger.ds.Utilities.neverIdentical;
@@ -234,12 +235,13 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			return null;
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
+		K rem;
 		V oldValue = valueTable[i];
 		int mask = this.mask, next = i + 1 & mask;
-		while ((key = keyTable[next]) != null) {
-			int placement = place(key);
+		while ((rem = keyTable[next]) != null) {
+			int placement = place(rem);
 			if ((next - placement & mask) > (i - placement & mask)) {
-				keyTable[i] = (K)key;
+				keyTable[i] = rem;
 				valueTable[i] = valueTable[next];
 				i = next;
 			}
@@ -657,7 +659,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	}
 
 	static public class Entry<K, V> implements Map.Entry<K, V> {
-		public K key;
+		public @Nullable K key;
 		public @Nullable V value;
 
 		public @Nullable String toString () {
@@ -674,6 +676,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		 */
 		@Override
 		public K getKey () {
+			Objects.requireNonNull(key);
 			return key;
 		}
 
@@ -798,13 +801,14 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	}
 
 	static public class Entries<K, V> extends AbstractSet<Map.Entry<K, V>> {
-		protected Entry<K, V> entry = new Entry<K, V>();
+		protected Entry<K, V> entry = new Entry<>();
 		protected MapIterator<K, V, Map.Entry<K, V>> iter;
-
-		protected Entries () {
-		}
-
+		
 		public Entries (ObjectMap<K, V> map) {
+			initialize(map);
+		}
+		
+		protected void initialize(ObjectMap<K, V> map){
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
 				public Iterator<Map.Entry<K, V>> iterator () {
@@ -832,7 +836,6 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 						throw new RuntimeException("#iterator() cannot be used nested.");
 					return hasNext;
 				}
-
 			};
 		}
 
@@ -870,10 +873,11 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			return iter.map.size;
 		}
 
-		protected Values () {
-		}
-
 		public Values (ObjectMap<?, V> map) {
+			initialize(map);
+
+		}
+		protected void initialize(ObjectMap<?, V> map){
 			iter = new MapIterator<Object, V, V>((ObjectMap<Object, V>)map) {
 				@Override
 				public Iterator<V> iterator () {
@@ -906,10 +910,10 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	static public class Keys<K> extends AbstractSet<K> {
 		protected MapIterator<K, Object, K> iter;
 
-		protected Keys () {
-		}
-
 		public Keys (ObjectMap<K, ?> map) {
+			initialize(map);
+		}
+		protected void initialize(ObjectMap<K, ?> map){
 			iter = new MapIterator<K, Object, K>((ObjectMap<K, Object>)map) {
 				@Override
 				public Iterator<K> iterator () {
@@ -936,6 +940,8 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 				}
 			};
 		}
+
+
 
 		/**
 		 * Returns an iterator over the elements contained in this collection.
