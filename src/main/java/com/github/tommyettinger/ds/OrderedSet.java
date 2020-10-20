@@ -229,7 +229,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 */
 	@Override
 	public Iterator<T> iterator () {
-		if (iterator1 == null) {
+		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new OrderedSetIterator<>(this);
 			iterator2 = new OrderedSetIterator<>(this);
 		}

@@ -331,7 +331,7 @@ public class IntSet implements Serializable {
 	 * <p>
 	 * Use the {@link IntSetIterator} constructor for nested or multithreaded iteration. */
 	public IntSetIterator iterator () {
-		if (iterator1 == null) {
+		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new IntSetIterator(this);
 			iterator2 = new IntSetIterator(this);
 		}

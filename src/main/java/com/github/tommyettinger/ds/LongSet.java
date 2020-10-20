@@ -332,7 +332,7 @@ public class LongSet implements Serializable {
 	 * <p>
 	 * Use the {@link LongSetIterator} constructor for nested or multithreaded iteration. */
 	public LongSetIterator iterator () {
-		if (iterator1 == null) {
+		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new LongSetIterator(this);
 			iterator2 = new LongSetIterator(this);
 		}
