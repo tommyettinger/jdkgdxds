@@ -70,10 +70,10 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	protected int mask;
 	protected @Nullable Entries<K, V> entries1;
 	protected @Nullable Entries<K, V> entries2;
-	protected @Nullable Values<V> values1;
-	protected @Nullable Values<V> values2;
-	protected @Nullable Keys<K> keys1;
-	protected @Nullable Keys<K> keys2;
+	protected @Nullable Values<K, V> values1;
+	protected @Nullable Values<K, V> values2;
+	protected @Nullable Keys<K, V> keys1;
+	protected @Nullable Keys<K, V> keys2;
 
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
@@ -592,7 +592,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public Keys<K> keySet () { 
+	public Keys<K, V> keySet () { 
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
@@ -616,7 +616,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public Values<V> values () {
+	public Values<K, V> values () {
 		if (values1 == null || values2 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
@@ -855,30 +855,15 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		}
 	}
 
-	static public class Values<V> extends AbstractCollection<V> {
-		protected MapIterator<Object, V, V> iter;
+	static public class Values<K, V> extends AbstractCollection<V> {
+		protected MapIterator<K, V, V> iter;
 
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
-		@Override
-		public Iterator<V> iterator () {
-			return iter;
-		}
-
-		@Override
-		public int size () {
-			return iter.map.size;
-		}
-
-		public Values (ObjectMap<?, V> map) {
+		public Values (ObjectMap<K, V> map) {
 			initialize(map);
 
 		}
-		protected void initialize(ObjectMap<?, V> map){
-			iter = new MapIterator<Object, V, V>((ObjectMap<Object, V>)map) {
+		protected void initialize(ObjectMap<K, V> map){
+			iter = new MapIterator<K, V, V>(map) {
 				@Override
 				public Iterator<V> iterator () {
 					return this;
@@ -905,16 +890,33 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			};
 		}
 
+		/**
+		 * Returns an iterator over the elements contained in this collection.
+		 *
+		 * @return an iterator over the elements contained in this collection
+		 */
+		@Override
+		public Iterator<V> iterator () {
+			return iter;
+		}
+
+		@Override
+		public int size () {
+			return iter.map.size;
+		}
+
+
+
 	}
 
-	static public class Keys<K> extends AbstractSet<K> {
-		protected MapIterator<K, Object, K> iter;
+	static public class Keys<K, V> extends AbstractSet<K> {
+		protected MapIterator<K, V, K> iter;
 
-		public Keys (ObjectMap<K, ?> map) {
+		public Keys (ObjectMap<K, V> map) {
 			initialize(map);
 		}
-		protected void initialize(ObjectMap<K, ?> map){
-			iter = new MapIterator<K, Object, K>((ObjectMap<K, Object>)map) {
+		protected void initialize(ObjectMap<K, V> map){
+			iter = new MapIterator<K, V, K>(map) {
 				@Override
 				public Iterator<K> iterator () {
 					return this;
@@ -940,9 +942,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 				}
 			};
 		}
-
-
-
+		
 		/**
 		 * Returns an iterator over the elements contained in this collection.
 		 *

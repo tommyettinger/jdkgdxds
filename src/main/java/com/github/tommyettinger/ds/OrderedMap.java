@@ -276,8 +276,8 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public Keys<K> keySet () {
-		if (keys1 == null) {
+	public Keys<K, V> keySet () {
+		if (keys1 == null || keys2 == null) {
 			keys1 = new OrderedMapKeys<>(this);
 			keys2 = new OrderedMapKeys<>(this);
 		}
@@ -301,8 +301,8 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public Values<V> values () {
-		if (values1 == null) {
+	public Values<K, V> values () {
+		if (values1 == null || values2 == null) {
 			values1 = new OrderedMapValues<>(this);
 			values2 = new OrderedMapValues<>(this);
 		}
@@ -328,7 +328,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 */
 	@Override
 	public Entries<K, V> entrySet () {
-		if (entries1 == null) {
+		if (entries1 == null || entries2 == null) {
 			entries1 = new OrderedMapEntries<>(this);
 			entries2 = new OrderedMapEntries<>(this);
 		}
@@ -439,17 +439,17 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		}
 	}
 
-	static public class OrderedMapKeys<K> extends Keys<K> {
-		protected ObjectList<K> keys;
+	static public class OrderedMapKeys<K, V> extends Keys<K, V> {
+		private final ObjectList<K> keys;
 
-		public OrderedMapKeys (OrderedMap<K, ?> map) {
+		public OrderedMapKeys (OrderedMap<K, V> map) {
 			super(map);
 			keys = map.keys;
 		}
 
 		@Override
-		protected void initialize (ObjectMap<K, ?> map) {
-			iter = new MapIterator<K, Object, K>((OrderedMap)map) {
+		protected void initialize (ObjectMap<K, V> map) {
+			iter = new MapIterator<K, V, K>(map) {
 				@Override
 				public Iterator<K> iterator () {
 					return this;
@@ -486,7 +486,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 				public void remove () {
 					if (currentIndex < 0)
 						throw new IllegalStateException("next must be called before remove.");
-					((OrderedMap)map).removeIndex(currentIndex);
+					map.remove(keys.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
 				}
@@ -499,17 +499,17 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		}
 	}
 
-	static public class OrderedMapValues<V> extends Values<V> {
-		private ObjectList<?> keys;
+	static public class OrderedMapValues<K, V> extends Values<K, V> {
+		private final ObjectList<K> keys;
 
-		public OrderedMapValues (OrderedMap<?, V> map) {
+		public OrderedMapValues (OrderedMap<K, V> map) {
 			super(map);
 			keys = map.keys;
 		}
 
 		@Override
-		protected void initialize (ObjectMap<?, V> map) {
-			iter = new MapIterator<Object, V, V>((ObjectMap<Object, V>)map) {
+		protected void initialize (ObjectMap<K, V> map) {
+			iter = new MapIterator<K, V, V>(map) {
 				@Override
 				public Iterator<V> iterator () {
 					return this;
@@ -546,7 +546,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 				public void remove () {
 					if (currentIndex < 0)
 						throw new IllegalStateException("next must be called before remove.");
-					((OrderedMap)map).removeIndex(currentIndex);
+					map.remove(keys.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
 				}
