@@ -266,7 +266,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	}
 
 	static public class OrderedSetIterator<K> extends ObjectSetIterator<K> {
-		private ObjectList<K> items;
+		private final ObjectList<K> items;
 
 		public OrderedSetIterator (OrderedSet<K> set) {
 			super(set);
@@ -296,7 +296,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 			if (nextIndex < 0)
 				throw new IllegalStateException("next must be called before remove.");
 			nextIndex--;
-			((OrderedSet)set).removeIndex(nextIndex);
+			set.remove(items.get(nextIndex));
 		}
 	}
 

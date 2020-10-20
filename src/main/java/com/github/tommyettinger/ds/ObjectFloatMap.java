@@ -16,6 +16,9 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
+
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.AbstractSet;
@@ -23,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Set;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
@@ -45,13 +47,13 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Serializable {
+public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Serializable {
 	private static final long serialVersionUID = 0L;
 
 	public int size;
 
 	protected K[] keyTable;
-	protected long[] valueTable;
+	protected float[] valueTable;
 
 	protected float loadFactor;
 	protected int threshold;
@@ -70,12 +72,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	protected @Nullable Keys<K> keys1;
 	protected @Nullable Keys<K> keys2;
 	
-	public long defaultValue = 0L;
+	public float defaultValue = 0L;
 
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
 	 */
-	public ObjectLongMap () {
+	public ObjectFloatMap () {
 		this(51, 0.8f);
 	}
 
@@ -84,7 +86,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public ObjectLongMap (int initialCapacity) {
+	public ObjectFloatMap (int initialCapacity) {
 		this(initialCapacity, 0.8f);
 	}
 
@@ -94,7 +96,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public ObjectLongMap (int initialCapacity, float loadFactor) {
+	public ObjectFloatMap (int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f)
 			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
 		this.loadFactor = loadFactor;
@@ -105,13 +107,13 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		shift = Long.numberOfLeadingZeros(mask);
 
 		keyTable = (K[])new Object[tableSize];
-		valueTable = new long[tableSize];
+		valueTable = new float[tableSize];
 	}
 
 	/**
 	 * Creates a new map identical to the specified map.
 	 */
-	public ObjectLongMap (ObjectLongMap<? extends K> map) {
+	public ObjectFloatMap (ObjectFloatMap<? extends K> map) {
 		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
@@ -147,10 +149,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
-	public long put (K key, long value) {
+	public float put (K key, float value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
-			long oldValue = valueTable[i];
+			float oldValue = valueTable[i];
 			valueTable[i] = value;
 			return oldValue;
 		}
@@ -165,10 +167,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	/**
 	 * Returns the old value associated with the specified key, or the given {@code defaultValue} if there was no prior value.
 	 */
-	public long putOrDefault (K key, long value, long defaultValue) {
+	public float putOrDefault (K key, float value, float defaultValue) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
-			long oldValue = valueTable[i];
+			float oldValue = valueTable[i];
 			valueTable[i] = value;
 			return oldValue;
 		}
@@ -180,10 +182,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		return defaultValue;
 	}
 
-	public void putAll (ObjectLongMap<? extends K> map) {
+	public void putAll (ObjectFloatMap<? extends K> map) {
 		ensureCapacity(map.size);
 		K[] keyTable = map.keyTable;
-		long[] valueTable = map.valueTable;
+		float[] valueTable = map.valueTable;
 		K key;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
@@ -195,7 +197,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	private void putResize (K key, long value) {
+	private void putResize (K key, float value) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = (i + 1) & mask) {
 			if (keyTable[i] == null) {
@@ -211,7 +213,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * 
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
-	public long get (Object key) {
+	public float get (Object key) {
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -219,17 +221,17 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	/**
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
-	public long getOrDefault (Object key, long defaultValue) {
+	public float getOrDefault (Object key, float defaultValue) {
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
 
 	/** Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
 	 * put into the map and defaultValue is returned. */
-	public long getAndIncrement (K key, long defaultValue, long increment) {
+	public float getAndIncrement (K key, float defaultValue, float increment) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
-			long oldValue = valueTable[i];
+			float oldValue = valueTable[i];
 			valueTable[i] += increment;
 			return oldValue;
 		}
@@ -241,14 +243,14 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		return defaultValue;
 	}
 
-	public long remove (Object key) {
+	public float remove (Object key) {
 		int i = locateKey(key);
 		if (i < 0)
 			return defaultValue;
 		K[] keyTable = this.keyTable;
 		K rem;
-		long[] valueTable = this.valueTable;
-		long oldValue = valueTable[i];
+		float[] valueTable = this.valueTable;
+		float oldValue = valueTable[i];
 		int mask = this.mask, next = i + 1 & mask;
 		while ((rem = keyTable[next]) != null) {
 			int placement = place(rem);
@@ -291,21 +293,21 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	}
 
 	/**
-	 * Gets the default value, a {@code long} which is returned by {@link #get(Object)} if the key is not found.
+	 * Gets the default value, a {@code float} which is returned by {@link #get(Object)} if the key is not found.
 	 * If not changed, the default value is 0.
 	 * @return the current default value
 	 */
-	public long getDefaultValue () {
+	public float getDefaultValue () {
 		return defaultValue;
 	}
 
 	/**
-	 * Sets the default value, a {@code long} which is returned by {@link #get(Object)} if the key is not found.
-	 * If not changed, the default value is 0. Note that {@link #getOrDefault(Object, long)} is also available,
+	 * Sets the default value, a {@code float} which is returned by {@link #get(Object)} if the key is not found.
+	 * If not changed, the default value is 0. Note that {@link #getOrDefault(Object, float)} is also available,
 	 * which allows specifying a "not-found" value per-call.
-	 * @param defaultValue may be any long; should usually be one that doesn't occur as a typical value
+	 * @param defaultValue may be any float; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue (long defaultValue) {
+	public void setDefaultValue (float defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -347,8 +349,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * be an expensive operation.
 	 *
 	 */
-	public boolean containsValue (long value) {
-		long[] valueTable = this.valueTable;
+	public boolean containsValue (float value) {
+		float[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
 			if (keyTable[i] != null && valueTable[i] == value)
@@ -366,8 +368,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * every value, which may be an expensive operation.
 	 * 
 	 */
-	public @Nullable K findKey (long value) {
-		long[] valueTable = this.valueTable;
+	public @Nullable K findKey (float value) {
+		float[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
 			if (keyTable[i] != null && valueTable[i] == value)
@@ -394,10 +396,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		shift = Long.numberOfLeadingZeros(mask);
 
 		K[] oldKeyTable = keyTable;
-		long[] oldValueTable = valueTable;
+		float[] oldValueTable = valueTable;
 
 		keyTable = (K[])new Object[newSize];
-		valueTable = new long[newSize];
+		valueTable = new float[newSize];
 
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
@@ -409,33 +411,33 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	}
 
 	public int hashCode () {
-		long h = size;
+		int h = size;
 		K[] keyTable = this.keyTable;
-		long[] valueTable = this.valueTable;
+		float[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
 			if (key != null) {
-				h += key.hashCode() * 0x9E3779B97F4A7C15L;
-				h += valueTable[i];
+				h += key.hashCode();
+				h ^= BitConversion.floatToIntBits(valueTable[i]);
 			}
 		}
-		return (int)(h ^ h >>> 32);
+		return h;
 	}
 
 	public boolean equals (Object obj) {
 		if (obj == this)
 			return true;
-		if (!(obj instanceof ObjectLongMap))
+		if (!(obj instanceof ObjectFloatMap))
 			return false;
-		ObjectLongMap other = (ObjectLongMap)obj;
+		ObjectFloatMap other = (ObjectFloatMap)obj;
 		if (other.size != size)
 			return false;
 		K[] keyTable = this.keyTable;
-		long[] valueTable = this.valueTable;
+		float[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
 			if (key != null) {
-				long value = valueTable[i];					
+				float value = valueTable[i];					
 				if (value != other.get(key))
 						return false;
 			}
@@ -458,7 +460,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		if (braces)
 			buffer.append('{');
 		K[] keyTable = this.keyTable;
-		long[] valueTable = this.valueTable;
+		float[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			K key = keyTable[i];
@@ -466,7 +468,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 				continue;
 			buffer.append(key == this ? "(this)" : key);
 			buffer.append('=');
-			long value = valueTable[i];
+			float value = valueTable[i];
 			buffer.append(value);
 			break;
 		}
@@ -477,7 +479,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 			buffer.append(separator);
 			buffer.append(key == this ? "(this)" : key);
 			buffer.append('=');
-			long value = valueTable[i];
+			float value = valueTable[i];
 			buffer.append(value);
 		}
 		if (braces)
@@ -487,7 +489,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 
 	/**
 	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
-	 * does not permit nested iteration. Iterate over {@link Entries#Entries(ObjectLongMap)} if you
+	 * does not permit nested iteration. Iterate over {@link Entries#Entries(ObjectFloatMap)} if you
 	 * need nested or multithreaded iteration. You can remove an Entry from this ObjectMap
 	 * using this Iterator.
 	 *
@@ -538,7 +540,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * Returns a Collection of the values in the map. Remove is supported. Note that the same Collection instance is returned each
 	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
 	 *
-	 * @return a {@link Collection} of long values
+	 * @return a {@link Collection} of float values
 	 */
 	public Values<K> values () {
 		if (values1 == null || values2 == null) {
@@ -583,7 +585,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 
 	static public class Entry<K> {
 		public @Nullable K key;
-		public long value;
+		public float value;
 
 		public String toString () {
 			return key + "=" + value;
@@ -609,7 +611,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		 *
 		 * @return the value corresponding to this entry
 		 */
-		public long getValue () {
+		public float getValue () {
 			return value;
 		}
 
@@ -633,8 +635,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		 *                                       required to, throw this exception if the entry has been
 		 *                                       removed from the backing map.
 		 */
-		public long setValue (long value) {
-			long old = this.value;
+		public float setValue (float value) {
+			float old = this.value;
 			this.value = value;
 			return old;
 		}
@@ -656,19 +658,18 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		@Override
 		public int hashCode () {
 			assert key != null;
-			long result = key.hashCode() * 31L + value;
-			return (int)(result ^ result >>> 32);
+			return key.hashCode() * 31 + BitConversion.floatToIntBits(value);
 		}
 	}
 
 	static protected abstract class MapIterator<K> {
 		public boolean hasNext;
 
-		protected final ObjectLongMap<K> map;
+		protected final ObjectFloatMap<K> map;
 		protected int nextIndex, currentIndex;
 		protected boolean valid = true;
 
-		public MapIterator (ObjectLongMap<K> map) {
+		public MapIterator (ObjectFloatMap<K> map) {
 			this.map = map;
 			reset();
 		}
@@ -695,7 +696,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 			if (i < 0)
 				throw new IllegalStateException("next must be called before remove.");
 			K[] keyTable = map.keyTable;
-			long[] valueTable = map.valueTable;
+			float[] valueTable = map.valueTable;
 			int mask = map.mask, next = i + 1 & mask;
 			K key;
 			while ((key = keyTable[next]) != null) {
@@ -718,7 +719,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	
 	static public class KeyIterator<K> extends MapIterator<K> implements Iterable<K>, Iterator<K> {
 
-		public KeyIterator(ObjectLongMap<K> map) {
+		public KeyIterator(ObjectFloatMap<K> map) {
 			super(map);
 		}
 		@Override
@@ -746,24 +747,24 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		}
 	}
 	
-	static public class ValueIterator<K> extends MapIterator<K> implements PrimitiveIterator.OfLong {
-		public ValueIterator(ObjectLongMap<K> map) {
+	static public class ValueIterator<K> extends MapIterator<K> implements FloatIterator {
+		public ValueIterator(ObjectFloatMap<K> map) {
 			super(map);
 		}
 
 		/**
-		 * Returns the next {@code long} element in the iteration.
+		 * Returns the next {@code float} element in the iteration.
 		 *
-		 * @return the next {@code long} element in the iteration
+		 * @return the next {@code float} element in the iteration
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public long nextLong () {
+		public float nextFloat () {
 			if (!hasNext)
 				throw new NoSuchElementException();
 			if (!valid)
 				throw new RuntimeException("#iterator() cannot be used nested.");
-			long value = map.valueTable[nextIndex];
+			float value = map.valueTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
 			return value;
@@ -780,7 +781,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	static public class EntryIterator<K> extends MapIterator<K> implements Iterable<Entry<K>>, Iterator<Entry<K>> {
 		protected Entry<K> entry = new Entry<>();
 
-		public EntryIterator(ObjectLongMap<K> map) {
+		public EntryIterator(ObjectFloatMap<K> map) {
 			super(map);
 		}
 		public Iterator<Entry<K>> iterator () {
@@ -813,7 +814,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	static public class Entries<K> extends AbstractSet<Entry<K>> {
 		protected EntryIterator<K> iter;
 
-		public Entries (ObjectLongMap<K> map) {
+		public Entries (ObjectFloatMap<K> map) {
 			iter = new EntryIterator<>(map);
 		}
 
@@ -841,7 +842,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		 *
 		 * @return an iterator over the elements contained in this collection
 		 */
-		public PrimitiveIterator.OfLong iterator () {
+		public FloatIterator iterator () {
 			return iter;
 		}
 
@@ -849,7 +850,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 			return iter.map.size;
 		}
 
-		public Values (ObjectLongMap<K> map) {
+		public Values (ObjectFloatMap<K> map) {
 			iter = new ValueIterator<>(map);
 		}
 
@@ -858,7 +859,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	static public class Keys<K> extends AbstractSet<K> {
 		protected KeyIterator<K> iter;
 		
-		public Keys (ObjectLongMap<K> map) {
+		public Keys (ObjectFloatMap<K> map) {
 			iter = new KeyIterator<>(map);
 		}
 

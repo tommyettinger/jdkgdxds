@@ -626,7 +626,7 @@ public class FloatList implements Arrangeable, Serializable {
 	 * Use {@link FloatListIterator#FloatListIterator(FloatList)} to nest iterators.
 	 * @return a {@link FloatIterator}; use its nextFloat() method instead of next()
 	 */
-	public FloatListIterator iterator(){
+	public FloatListIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new FloatListIterator(this);
 			iterator2 = new FloatListIterator(this);
