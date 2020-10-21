@@ -24,7 +24,7 @@ import java.util.PrimitiveIterator;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
-/** An unordered set where the items are unboxed ints. No allocation is done except when growing the table size.
+/** An unordered set where the items are unboxed longs. No allocation is done except when growing the table size.
  * <p>
  * This class performs fast contains and remove (typically O(1), worst case O(n) but that is rare in practice). Add may be
  * slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors

@@ -31,8 +31,8 @@ import java.util.Set;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * An unordered map where the keys and values are objects. Null keys are not allowed. No allocation is done except when growing
- * the table size.
+ * An unordered map where the keys are objects and the values are floats. Null keys are not allowed. No allocation is done except
+ * when growing the table size.
  * <p>
  * This class performs fast contains and remove (typically O(1), worst case O(n) but that is rare in practice). Add may be
  * slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors
@@ -41,8 +41,14 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
  * OrderedMap.
  * <p>
- * This implementation uses linear probing with the backward shift algorithm for removal.
- * Linear probing continues to work even when all hashCodes collide, just more slowly.
+ * You can customize most behavior of this map by extending it. {@link #place(Object)} can be overridden to change how hashCodes
+ * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
+ * {@link #locateKey(Object)} can be overridden to change how equality is calculated.
+ * <p>
+ * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
+ * hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
+ * "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
+ * Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
@@ -122,7 +128,14 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
-	 *
+	 * <p>
+	 * The default behavior uses Fibonacci hashing; it simply gets the {@link Object#hashCode()}
+	 * of {@code item}, multiplies it by a specific long constant related to the golden ratio,
+	 * and makes an unsigned right shift by {@link #shift} before casting to int and returning.
+	 * This can be overridden to hash {@code item} differently, though all implementors must
+	 * ensure this returns results in the range of 0 to {@link #mask}, inclusive. If nothing
+	 * else is changed, then unsigned-right-shifting an int or long by {@link #shift} will also
+	 * restrict results to the correct range.
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
 	 */
 	protected int place (Object item) {
@@ -132,7 +145,20 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	/**
 	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
 	 * to compare for equality differently than {@link Object#equals(Object)}.
-	 *
+	 * <p>
+	 * If source is not easily available and you want to override this, the reference source is:
+	 * <pre>
+	 * protected int locateKey (Object key) {
+	 * 		K[] keyTable = this.keyTable;
+	 * 		for (int i = place(key); ; i = i + 1 & mask) {
+	 * 			K other = keyTable[i];
+	 * 			if (other == null)
+	 * 				return ~i; // Always negative; means empty space is available at i.
+	 * 			if (other.equals(key)) // If you want to change how equality is determined, do it here.
+	 * 				return i; // Same key was found.
+	 *      }
+	 * }
+	 * </pre>
 	 * @param key a non-null Object that should probably be a K
 	 */
 	protected int locateKey (Object key) {
@@ -140,8 +166,8 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
 			if (other == null)
-				return ~i; // Empty space is available.
-			if (other.equals(key))
+				return ~i; // Always negative; means empty space is available at i.
+			if (other.equals(key)) // If you want to change how equality is determined, do it here.
 				return i; // Same key was found.
 		}
 	}

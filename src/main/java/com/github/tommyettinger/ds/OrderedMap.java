@@ -42,6 +42,10 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
  * OrderedMap.
  * <p>
+ * You can customize most behavior of this map by extending it. {@link #place(Object)} can be overridden to change how hashCodes
+ * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
+ * {@link #locateKey(Object)} can be overridden to change how equality is calculated.
+ * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
  * hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
  * "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
