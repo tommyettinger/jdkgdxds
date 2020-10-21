@@ -112,6 +112,10 @@ implements java.util.Map&lt;K,&#8203;V&gt;, java.lang.Iterable&lt;java.util.Map.
  Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
  OrderedMap.
  <p>
+ You can customize most behavior of this map by extending it. <a href="#place(java.lang.Object)"><code>place(Object)</code></a> can be overridden to change how hashCodes
+ are calculated (which can be useful for types like <code>StringBuilder</code> that don't implement hashCode()), and
+ <a href="#locateKey(java.lang.Object)"><code>locateKey(Object)</code></a> can be overridden to change how equality is calculated.
+ <p>
  This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
  hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href="https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
  Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.</div>
@@ -151,7 +155,7 @@ implements java.util.Map&lt;K,&#8203;V&gt;, java.lang.Iterable&lt;java.util.Map.
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.Keys.html" title="type parameter in ObjectMap.Keys">K</a>&gt;</span></code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.Keys.html" title="type parameter in ObjectMap.Keys">K</a>,&#8203;<a href="ObjectMap.Keys.html" title="type parameter in ObjectMap.Keys">V</a>&gt;</span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -161,7 +165,7 @@ implements java.util.Map&lt;K,&#8203;V&gt;, java.lang.Iterable&lt;java.util.Map.
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.Values.html" title="type parameter in ObjectMap.Values">V</a>&gt;</span></code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.Values.html" title="type parameter in ObjectMap.Values">K</a>,&#8203;<a href="ObjectMap.Values.html" title="type parameter in ObjectMap.Values">V</a>&gt;</span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -197,12 +201,12 @@ implements java.util.Map&lt;K,&#8203;V&gt;, java.lang.Iterable&lt;java.util.Map.
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;</code></td>
+<td class="colFirst"><code>protected <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keys1">keys1</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;</code></td>
+<td class="colFirst"><code>protected <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keys2">keys2</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -229,7 +233,7 @@ implements java.util.Map&lt;K,&#8203;V&gt;, java.lang.Iterable&lt;java.util.Map.
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>int</code></td>
+<td class="colFirst"><code>protected int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size">size</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -239,12 +243,12 @@ implements java.util.Map&lt;K,&#8203;V&gt;, java.lang.Iterable&lt;java.util.Map.
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected <a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
+<td class="colFirst"><code>protected <a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#values1">values1</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected <a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
+<td class="colFirst"><code>protected <a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#values2">values2</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -431,7 +435,7 @@ boolean&nbsp;identity)</code></th>
 </td>
 </tr>
 <tr class="rowColor" id="i15">
-<td class="colFirst"><code><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;</code></td>
+<td class="colFirst"><code><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keySet()">keySet</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns a <code>Set</code> view of the keys contained in this map.</div>
@@ -520,7 +524,7 @@ boolean&nbsp;braces)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i29">
-<td class="colFirst"><code><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
+<td class="colFirst"><code><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#values()">values</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns a Collection of the values in the map.</div>
@@ -561,7 +565,7 @@ boolean&nbsp;braces)</code></th>
 <li class="blockList">
 <section class="detail">
 <h3><a id="size">size</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">size</span></div>
+<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">size</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -579,7 +583,7 @@ boolean&nbsp;braces)</code></th>
 <li class="blockList">
 <section class="detail">
 <h3><a id="loadFactor">loadFactor</a></h3>
-<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">float</span>&nbsp;<span class="memberName">loadFactor</span></div>
+<div class="memberSignature"><span class="modifiers">protected final</span>&nbsp;<span class="returnType">float</span>&nbsp;<span class="memberName">loadFactor</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -620,28 +624,28 @@ boolean&nbsp;braces)</code></th>
 <section class="detail">
 <h3><a id="values1">values1</a></h3>
 <div class="memberSignature"><span class="annotations">@Nullable
-</span><span class="modifiers">protected</span>&nbsp;<span class="returnType"><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</span>&nbsp;<span class="memberName">values1</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="returnType"><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</span>&nbsp;<span class="memberName">values1</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="values2">values2</a></h3>
 <div class="memberSignature"><span class="annotations">@Nullable
-</span><span class="modifiers">protected</span>&nbsp;<span class="returnType"><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</span>&nbsp;<span class="memberName">values2</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="returnType"><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</span>&nbsp;<span class="memberName">values2</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="keys1">keys1</a></h3>
 <div class="memberSignature"><span class="annotations">@Nullable
-</span><span class="modifiers">protected</span>&nbsp;<span class="returnType"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;</span>&nbsp;<span class="memberName">keys1</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="returnType"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</span>&nbsp;<span class="memberName">keys1</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="keys2">keys2</a></h3>
 <div class="memberSignature"><span class="annotations">@Nullable
-</span><span class="modifiers">protected</span>&nbsp;<span class="returnType"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;</span>&nbsp;<span class="memberName">keys2</span></div>
+</span><span class="modifiers">protected</span>&nbsp;<span class="returnType"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</span>&nbsp;<span class="memberName">keys2</span></div>
 </section>
 </li>
 </ul>
@@ -713,7 +717,15 @@ float&nbsp;loadFactor)</span></div>
 <section class="detail">
 <h3><a id="place(java.lang.Object)">place</a></h3>
 <div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">place</span>&#8203;(<span class="arguments">java.lang.Object&nbsp;item)</span></div>
-<div class="block">Returns an index &gt;= 0 and &lt;= <a href="#mask"><code>mask</code></a> for the specified <code>item</code>.</div>
+<div class="block">Returns an index &gt;= 0 and &lt;= <a href="#mask"><code>mask</code></a> for the specified <code>item</code>.
+ <p>
+ The default behavior uses Fibonacci hashing; it simply gets the <code>Object.hashCode()</code>
+ of <code>item</code>, multiplies it by a specific long constant related to the golden ratio,
+ and makes an unsigned right shift by <a href="#shift"><code>shift</code></a> before casting to int and returning.
+ This can be overridden to hash <code>item</code> differently, though all implementors must
+ ensure this returns results in the range of 0 to <a href="#mask"><code>mask</code></a>, inclusive. If nothing
+ else is changed, then unsigned-right-shifting an int or long by <a href="#shift"><code>shift</code></a> will also
+ restrict results to the correct range.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>item</code> - a non-null Object; its hashCode() method should be used by most implementations.</dd>
@@ -725,7 +737,21 @@ float&nbsp;loadFactor)</span></div>
 <h3><a id="locateKey(java.lang.Object)">locateKey</a></h3>
 <div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">locateKey</span>&#8203;(<span class="arguments">java.lang.Object&nbsp;key)</span></div>
 <div class="block">Returns the index of the key if already present, else <code>~index</code> for the next empty index. This can be overridden
- to compare for equality differently than <code>Object.equals(Object)</code>.</div>
+ to compare for equality differently than <code>Object.equals(Object)</code>.
+ <p>
+ If source is not easily available and you want to override this, the reference source is:
+ <pre>
+ protected int locateKey (Object key) {
+                K[] keyTable = this.keyTable;
+                for (int i = place(key); ; i = i + 1 &amp; mask) {
+                        K other = keyTable[i];
+                        if (other == null)
+                                return ~i; // Always negative; means empty space is available at i.
+                        if (other.equals(key)) // If you want to change how equality is determined, do it here.
+                                return i; // Same key was found.
+      }
+ }
+ </pre></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - a non-null Object that should probably be a K</dd>
@@ -1046,7 +1072,7 @@ boolean&nbsp;braces)</span></div>
 <li class="blockList">
 <section class="detail">
 <h3><a id="keySet()">keySet</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>&gt;</span>&nbsp;<span class="memberName">keySet</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</span>&nbsp;<span class="memberName">keySet</span>()</div>
 <div class="block">Returns a <code>Set</code> view of the keys contained in this map.
  The set is backed by the map, so changes to the map are
  reflected in the set, and vice-versa.  If the map is modified
@@ -1073,7 +1099,7 @@ boolean&nbsp;braces)</span></div>
 <li class="blockList">
 <section class="detail">
 <h3><a id="values()">values</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</span>&nbsp;<span class="memberName">values</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.html" title="type parameter in ObjectMap">K</a>,&#8203;<a href="ObjectMap.html" title="type parameter in ObjectMap">V</a>&gt;</span>&nbsp;<span class="memberName">values</span>()</div>
 <div class="block">Returns a Collection of the values in the map. Remove is supported. Note that the same Collection instance is returned each
  time this method is called. Use the <a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds"><code>ObjectMap.Values</code></a> constructor for nested or multithreaded iteration.</div>
 <dl>

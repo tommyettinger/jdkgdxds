@@ -63,7 +63,7 @@ public class LongFloatMap implements Serializable {
 	protected float[] valueTable;
 	protected boolean hasZeroValue;
 	protected float zeroValue;
-	protected float loadFactor;
+	protected final float loadFactor;
 	protected int threshold;
 
 	protected int shift;

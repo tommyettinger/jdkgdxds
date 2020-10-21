@@ -174,7 +174,7 @@ implements <a href="Arrangeable.html" title="interface in com.github.tommyetting
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>int</code></td>
+<td class="colFirst"><code>protected int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size">size</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -232,6 +232,14 @@ int&nbsp;count)</code></th>
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(long%5B%5D,int,int)">LongList</a></span>&#8203;(long[]&nbsp;array,
+int&nbsp;startIndex,
+int&nbsp;count)</code></th>
+<td class="colLast">
+<div class="block">Creates a new array containing the elements in the specified array.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.LongList)">LongList</a></span>&#8203;(<a href="LongList.html" title="class in com.github.tommyettinger.ds">LongList</a>&nbsp;array)</code></th>
 <td class="colLast">
 <div class="block">Creates a new array containing the elements in the specific array.</div>
@@ -638,7 +646,7 @@ long&nbsp;value)</code></th>
 <li class="blockList">
 <section class="detail">
 <h3><a id="size">size</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">size</span></div>
+<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">size</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -713,6 +721,16 @@ int&nbsp;capacity)</span></div>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">LongList</span>&#8203;(<span class="arguments">long[]&nbsp;array)</span></div>
 <div class="block">Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
  so any subsequent elements added will cause the backing array to be grown.</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="&lt;init&gt;(long[],int,int)">LongList</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">LongList</span>&#8203;(<span class="arguments">long[]&nbsp;array,
+int&nbsp;startIndex,
+int&nbsp;count)</span></div>
+<div class="block">Creates a new array containing the elements in the specified array. The capacity is set to the number of elements, so any
+ subsequent elements added will cause the backing array to be grown.</div>
 </section>
 </li>
 <li class="blockList">
@@ -1164,7 +1182,7 @@ int&nbsp;endIndex)</span></div>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Arrangeable.html#shuffle(java.util.Random)">shuffle</a></code>&nbsp;in interface&nbsp;<code><a href="Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>random</code> - any <code>Random</code> implementation; prefer <a href="LaserRandom.html" title="class in com.github.tommyettinger.ds"><code>LaserRandom</code></a> in this library</dd>
+<dd><code>random</code> - any <code>Random</code> implementation; prefer <a href="support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support"><code>LaserRandom</code></a> in this library</dd>
 </dl>
 </section>
 </li>
@@ -1233,7 +1251,7 @@ int&nbsp;endIndex)</span></div>
 <div class="block">Returns a Java 8 primitive iterator over the int items in this LongList. Iterates in order if <a href="#ordered"><code>ordered</code></a>
  is true, otherwise this is not guaranteed to iterate in the same order as items were added.
  <br>
- This will reuse one of two iterators in this IntList; this does not allow nested iteration.
+ This will reuse one of two iterators in this LongList; this does not allow nested iteration.
  Use <a href="LongList.LongListIterator.html#%3Cinit%3E(com.github.tommyettinger.ds.LongList)"><code>LongListIterator(LongList)</code></a> to nest iterators.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -62,7 +62,7 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -83,14 +83,14 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">com.github.tommyettinger.ds</a></div>
-<h1 title="Class OrderedMap.OrderedMapKeys" class="title">Class OrderedMap.OrderedMapKeys&lt;K&gt;</h1>
+<h1 title="Class OrderedMap.OrderedMapKeys" class="title">Class OrderedMap.OrderedMapKeys&lt;K,&#8203;V&gt;</h1>
 </div>
 <div class="contentContainer">
 <div class="inheritance" title="Inheritance Tree">java.lang.Object
 <div class="inheritance">java.util.AbstractCollection&lt;E&gt;
 <div class="inheritance">java.util.AbstractSet&lt;K&gt;
-<div class="inheritance"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.ObjectMap.Keys</a>&lt;K&gt;
-<div class="inheritance">com.github.tommyettinger.ds.OrderedMap.OrderedMapKeys&lt;K&gt;</div>
+<div class="inheritance"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.ObjectMap.Keys</a>&lt;K,&#8203;V&gt;
+<div class="inheritance">com.github.tommyettinger.ds.OrderedMap.OrderedMapKeys&lt;K,&#8203;V&gt;</div>
 </div>
 </div>
 </div>
@@ -105,8 +105,8 @@ loadScripts(document, 'script');</script>
 <dd><a href="OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">K</a>,&#8203;<a href="OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</dd>
 </dl>
 <hr>
-<pre>public static class <span class="typeNameLabel">OrderedMap.OrderedMapKeys&lt;K&gt;</span>
-extends <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;K&gt;</pre>
+<pre>public static class <span class="typeNameLabel">OrderedMap.OrderedMapKeys&lt;K,&#8203;V&gt;</span>
+extends <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;K,&#8203;V&gt;</pre>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -116,25 +116,6 @@ extends <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.d
 <!--   -->
 </a>
 <h2>Field Summary</h2>
-<div class="memberSummary">
-<table>
-<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
-<thead>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Field</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code>protected <a href="ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keys">keys</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</div>
 <div class="inheritedList">
 <h3>Fields inherited from class&nbsp;com.github.tommyettinger.ds.<a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a></h3>
 <a id="fields.inherited.from.class.com.github.tommyettinger.ds.ObjectMap.Keys">
@@ -159,7 +140,7 @@ extends <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.d
 </thead>
 <tbody>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.OrderedMap)">OrderedMapKeys</a></span>&#8203;(<a href="OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>,&#8203;?&gt;&nbsp;map)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.OrderedMap)">OrderedMapKeys</a></span>&#8203;(<a href="OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>,&#8203;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">V</a>&gt;&nbsp;map)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -186,6 +167,11 @@ extends <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.d
 </thead>
 <tbody>
 <tr class="altColor" id="i0">
+<td class="colFirst"><code>protected void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#initialize(com.github.tommyettinger.ds.ObjectMap)">initialize</a></span>&#8203;(<a href="ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>,&#8203;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">V</a>&gt;&nbsp;map)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i1">
 <td class="colFirst"><code>java.util.Iterator&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#iterator()">iterator</a></span>()</code></th>
 <td class="colLast">
@@ -237,22 +223,6 @@ extends <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.d
 </section>
 <section class="details">
 <ul class="blockList">
-<!-- ============ FIELD DETAIL =========== -->
-<li class="blockList">
-<section class="fieldDetails"><a id="field.detail">
-<!--   -->
-</a>
-<h2>Field Details</h2>
-<ul class="blockList">
-<li class="blockList">
-<section class="detail">
-<h3><a id="keys">keys</a></h3>
-<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType"><a href="ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</span>&nbsp;<span class="memberName">keys</span></div>
-</section>
-</li>
-</ul>
-</section>
-</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li class="blockList">
 <section class="constructorDetails"><a id="constructor.detail">
@@ -263,7 +233,7 @@ extends <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.d
 <li class="blockList">
 <section class="detail">
 <h3><a id="&lt;init&gt;(com.github.tommyettinger.ds.OrderedMap)">OrderedMapKeys</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">OrderedMapKeys</span>&#8203;(<span class="arguments"><a href="OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>,&#8203;?&gt;&nbsp;map)</span></div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">OrderedMapKeys</span>&#8203;(<span class="arguments"><a href="OrderedMap.html" title="class in com.github.tommyettinger.ds">OrderedMap</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>,&#8203;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">V</a>&gt;&nbsp;map)</span></div>
 </section>
 </li>
 </ul>
@@ -278,6 +248,16 @@ extends <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.d
 <ul class="blockList">
 <li class="blockList">
 <section class="detail">
+<h3><a id="initialize(com.github.tommyettinger.ds.ObjectMap)">initialize</a></h3>
+<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">initialize</span>&#8203;(<span class="arguments"><a href="ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>,&#8203;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">V</a>&gt;&nbsp;map)</span></div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="ObjectMap.Keys.html#initialize(com.github.tommyettinger.ds.ObjectMap)">initialize</a></code>&nbsp;in class&nbsp;<code><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>,&#8203;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">V</a>&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="iterator()">iterator</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">java.util.Iterator&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</span>&nbsp;<span class="memberName">iterator</span>()</div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="ObjectMap.Keys.html#iterator()">ObjectMap.Keys</a></code></span></div>
@@ -290,7 +270,7 @@ extends <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.d
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>iterator</code>&nbsp;in interface&nbsp;<code>java.util.Set&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="ObjectMap.Keys.html#iterator()">iterator</a></code>&nbsp;in class&nbsp;<code><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</code></dd>
+<dd><code><a href="ObjectMap.Keys.html#iterator()">iterator</a></code>&nbsp;in class&nbsp;<code><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>,&#8203;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">V</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>an iterator over the elements contained in this collection</dd>
 </dl>
@@ -335,7 +315,7 @@ extends <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.d
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

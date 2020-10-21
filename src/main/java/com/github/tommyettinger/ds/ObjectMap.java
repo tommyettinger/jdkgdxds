@@ -62,7 +62,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	protected K[] keyTable;
 	protected V[] valueTable;
 
-	protected float loadFactor;
+	protected final float loadFactor;
 	protected int threshold;
 
 	protected int shift;
@@ -162,7 +162,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * <pre>
 	 * protected int locateKey (Object key) {
 	 * 		K[] keyTable = this.keyTable;
-	 * 		for (int i = place(key); ; i = i + 1 & mask) {
+	 * 		for (int i = place(key); ; i = i + 1 &amp; mask) {
 	 * 			K other = keyTable[i];
 	 * 			if (other == null)
 	 * 				return ~i; // Always negative; means empty space is available at i.

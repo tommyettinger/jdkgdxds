@@ -61,7 +61,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	protected K[] keyTable;
 	protected float[] valueTable;
 
-	protected float loadFactor;
+	protected final float loadFactor;
 	protected int threshold;
 
 	protected int shift;
@@ -150,7 +150,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	 * <pre>
 	 * protected int locateKey (Object key) {
 	 * 		K[] keyTable = this.keyTable;
-	 * 		for (int i = place(key); ; i = i + 1 & mask) {
+	 * 		for (int i = place(key); ; i = i + 1 &amp; mask) {
 	 * 			K other = keyTable[i];
 	 * 			if (other == null)
 	 * 				return ~i; // Always negative; means empty space is available at i.

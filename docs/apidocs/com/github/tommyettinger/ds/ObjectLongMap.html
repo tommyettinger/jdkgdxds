@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -98,8 +98,8 @@ loadScripts(document, 'script');</script>
 <pre>public class <span class="typeNameLabel">ObjectLongMap&lt;K&gt;</span>
 extends java.lang.Object
 implements java.lang.Iterable&lt;<a href="ObjectLongMap.Entry.html" title="class in com.github.tommyettinger.ds">ObjectLongMap.Entry</a>&lt;K&gt;&gt;, java.io.Serializable</pre>
-<div class="block">An unordered map where the keys and values are objects. Null keys are not allowed. No allocation is done except when growing
- the table size.
+<div class="block">An unordered map where the keys are objects and the values are ints. Null keys are not allowed. No allocation is done except
+ when growing the table size.
  <p>
  This class performs fast contains and remove (typically O(1), worst case O(n) but that is rare in practice). Add may be
  slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors
@@ -108,8 +108,13 @@ implements java.lang.Iterable&lt;<a href="ObjectLongMap.Entry.html" title="class
  Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
  OrderedMap.
  <p>
- This implementation uses linear probing with the backward shift algorithm for removal.
- Linear probing continues to work even when all hashCodes collide, just more slowly.</div>
+ You can customize most behavior of this map by extending it. <a href="#place(java.lang.Object)"><code>place(Object)</code></a> can be overridden to change how hashCodes
+ are calculated (which can be useful for types like <code>StringBuilder</code> that don't implement hashCode()), and
+ <a href="#locateKey(java.lang.Object)"><code>locateKey(Object)</code></a> can be overridden to change how equality is calculated.
+ <p>
+ This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
+ hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href="https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
+ Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../serialized-form.html#com.github.tommyettinger.ds.ObjectLongMap">Serialized Form</a></dd>
@@ -244,7 +249,7 @@ implements java.lang.Iterable&lt;<a href="ObjectLongMap.Entry.html" title="class
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>int</code></td>
+<td class="colFirst"><code>protected int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size">size</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -396,12 +401,21 @@ float&nbsp;loadFactor)</code></th>
 </tr>
 <tr class="rowColor" id="i9">
 <td class="colFirst"><code>long</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAndIncrement(K,long,long)">getAndIncrement</a></span>&#8203;(<a href="ObjectLongMap.html" title="type parameter in ObjectLongMap">K</a>&nbsp;key,
+long&nbsp;defaultValue,
+long&nbsp;increment)</code></th>
+<td class="colLast">
+<div class="block">Returns the key's current value and increments the stored value.</div>
+</td>
+</tr>
+<tr class="altColor" id="i10">
+<td class="colFirst"><code>long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDefaultValue()">getDefaultValue</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Gets the default value, a <code>long</code> which is returned by <a href="#get(java.lang.Object)"><code>get(Object)</code></a> if the key is not found.</div>
 </td>
 </tr>
-<tr class="altColor" id="i10">
+<tr class="rowColor" id="i11">
 <td class="colFirst"><code>long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOrDefault(java.lang.Object,long)">getOrDefault</a></span>&#8203;(java.lang.Object&nbsp;key,
 long&nbsp;defaultValue)</code></th>
@@ -409,19 +423,19 @@ long&nbsp;defaultValue)</code></th>
 <div class="block">Returns the value for the specified key, or the default value if the key is not in the map.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i11">
+<tr class="altColor" id="i12">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hashCode()">hashCode</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i12">
+<tr class="rowColor" id="i13">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isEmpty()">isEmpty</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns true if the map is empty.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i13">
+<tr class="altColor" id="i14">
 <td class="colFirst"><code>java.util.Iterator&lt;<a href="ObjectLongMap.Entry.html" title="class in com.github.tommyettinger.ds">ObjectLongMap.Entry</a>&lt;<a href="ObjectLongMap.html" title="type parameter in ObjectLongMap">K</a>&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#iterator()">iterator</a></span>()</code></th>
 <td class="colLast">
@@ -429,35 +443,35 @@ long&nbsp;defaultValue)</code></th>
  does not permit nested iteration.</div>
 </td>
 </tr>
-<tr class="altColor" id="i14">
+<tr class="rowColor" id="i15">
 <td class="colFirst"><code><a href="ObjectLongMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectLongMap.Keys</a>&lt;<a href="ObjectLongMap.html" title="type parameter in ObjectLongMap">K</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keySet()">keySet</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns a <code>Set</code> view of the keys contained in this map.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i15">
+<tr class="altColor" id="i16">
 <td class="colFirst"><code>protected int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#locateKey(java.lang.Object)">locateKey</a></span>&#8203;(java.lang.Object&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block">Returns the index of the key if already present, else <code>~index</code> for the next empty index.</div>
 </td>
 </tr>
-<tr class="altColor" id="i16">
+<tr class="rowColor" id="i17">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notEmpty()">notEmpty</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns true if the map has one or more items.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i17">
+<tr class="altColor" id="i18">
 <td class="colFirst"><code>protected int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#place(java.lang.Object)">place</a></span>&#8203;(java.lang.Object&nbsp;item)</code></th>
 <td class="colLast">
 <div class="block">Returns an index &gt;= 0 and &lt;= <a href="#mask"><code>mask</code></a> for the specified <code>item</code>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i18">
+<tr class="rowColor" id="i19">
 <td class="colFirst"><code>long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#put(K,long)">put</a></span>&#8203;(<a href="ObjectLongMap.html" title="type parameter in ObjectLongMap">K</a>&nbsp;key,
 long&nbsp;value)</code></th>
@@ -465,12 +479,12 @@ long&nbsp;value)</code></th>
 <div class="block">Returns the old value associated with the specified key, or this map's <a href="#defaultValue"><code>defaultValue</code></a> if there was no prior value.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i19">
+<tr class="altColor" id="i20">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#putAll(com.github.tommyettinger.ds.ObjectLongMap)">putAll</a></span>&#8203;(<a href="ObjectLongMap.html" title="class in com.github.tommyettinger.ds">ObjectLongMap</a>&lt;? extends <a href="ObjectLongMap.html" title="type parameter in ObjectLongMap">K</a>&gt;&nbsp;map)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i20">
+<tr class="rowColor" id="i21">
 <td class="colFirst"><code>long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#putOrDefault(K,long,long)">putOrDefault</a></span>&#8203;(<a href="ObjectLongMap.html" title="type parameter in ObjectLongMap">K</a>&nbsp;key,
 long&nbsp;value,
@@ -479,49 +493,49 @@ long&nbsp;defaultValue)</code></th>
 <div class="block">Returns the old value associated with the specified key, or the given <code>defaultValue</code> if there was no prior value.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i21">
+<tr class="altColor" id="i22">
 <td class="colFirst"><code>long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(java.lang.Object)">remove</a></span>&#8203;(java.lang.Object&nbsp;key)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i22">
+<tr class="rowColor" id="i23">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDefaultValue(long)">setDefaultValue</a></span>&#8203;(long&nbsp;defaultValue)</code></th>
 <td class="colLast">
 <div class="block">Sets the default value, a <code>long</code> which is returned by <a href="#get(java.lang.Object)"><code>get(Object)</code></a> if the key is not found.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i23">
+<tr class="altColor" id="i24">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shrink(int)">shrink</a></span>&#8203;(int&nbsp;maximumCapacity)</code></th>
 <td class="colLast">
 <div class="block">Reduces the size of the backing arrays to be the specified capacity / loadFactor, or less.</div>
 </td>
 </tr>
-<tr class="altColor" id="i24">
+<tr class="rowColor" id="i25">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size()">size</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns the number of key-value mappings in this map.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i25">
+<tr class="altColor" id="i26">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i26">
+<tr class="rowColor" id="i27">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString(java.lang.String)">toString</a></span>&#8203;(java.lang.String&nbsp;separator)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i27">
+<tr class="altColor" id="i28">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString(java.lang.String,boolean)">toString</a></span>&#8203;(java.lang.String&nbsp;separator,
 boolean&nbsp;braces)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i28">
+<tr class="rowColor" id="i29">
 <td class="colFirst"><code><a href="ObjectLongMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectLongMap.Values</a>&lt;<a href="ObjectLongMap.html" title="type parameter in ObjectLongMap">K</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#values()">values</a></span>()</code></th>
 <td class="colLast">
@@ -558,7 +572,7 @@ boolean&nbsp;braces)</code></th>
 <li class="blockList">
 <section class="detail">
 <h3><a id="size">size</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">size</span></div>
+<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">size</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -576,7 +590,7 @@ boolean&nbsp;braces)</code></th>
 <li class="blockList">
 <section class="detail">
 <h3><a id="loadFactor">loadFactor</a></h3>
-<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">float</span>&nbsp;<span class="memberName">loadFactor</span></div>
+<div class="memberSignature"><span class="modifiers">protected final</span>&nbsp;<span class="returnType">float</span>&nbsp;<span class="memberName">loadFactor</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -709,7 +723,15 @@ float&nbsp;loadFactor)</span></div>
 <section class="detail">
 <h3><a id="place(java.lang.Object)">place</a></h3>
 <div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">place</span>&#8203;(<span class="arguments">java.lang.Object&nbsp;item)</span></div>
-<div class="block">Returns an index &gt;= 0 and &lt;= <a href="#mask"><code>mask</code></a> for the specified <code>item</code>.</div>
+<div class="block">Returns an index &gt;= 0 and &lt;= <a href="#mask"><code>mask</code></a> for the specified <code>item</code>.
+ <p>
+ The default behavior uses Fibonacci hashing; it simply gets the <code>Object.hashCode()</code>
+ of <code>item</code>, multiplies it by a specific long constant related to the golden ratio,
+ and makes an unsigned right shift by <a href="#shift"><code>shift</code></a> before casting to int and returning.
+ This can be overridden to hash <code>item</code> differently, though all implementors must
+ ensure this returns results in the range of 0 to <a href="#mask"><code>mask</code></a>, inclusive. If nothing
+ else is changed, then unsigned-right-shifting an int or long by <a href="#shift"><code>shift</code></a> will also
+ restrict results to the correct range.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>item</code> - a non-null Object; its hashCode() method should be used by most implementations.</dd>
@@ -721,7 +743,21 @@ float&nbsp;loadFactor)</span></div>
 <h3><a id="locateKey(java.lang.Object)">locateKey</a></h3>
 <div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">locateKey</span>&#8203;(<span class="arguments">java.lang.Object&nbsp;key)</span></div>
 <div class="block">Returns the index of the key if already present, else <code>~index</code> for the next empty index. This can be overridden
- to compare for equality differently than <code>Object.equals(Object)</code>.</div>
+ to compare for equality differently than <code>Object.equals(Object)</code>.
+ <p>
+ If source is not easily available and you want to override this, the reference source is:
+ <pre>
+ protected int locateKey (Object key) {
+                K[] keyTable = this.keyTable;
+                for (int i = place(key); ; i = i + 1 &amp; mask) {
+                        K other = keyTable[i];
+                        if (other == null)
+                                return ~i; // Always negative; means empty space is available at i.
+                        if (other.equals(key)) // If you want to change how equality is determined, do it here.
+                                return i; // Same key was found.
+      }
+ }
+ </pre></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - a non-null Object that should probably be a K</dd>
@@ -772,6 +808,18 @@ long&nbsp;defaultValue)</span></div>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">long</span>&nbsp;<span class="memberName">getOrDefault</span>&#8203;(<span class="arguments">java.lang.Object&nbsp;key,
 long&nbsp;defaultValue)</span></div>
 <div class="block">Returns the value for the specified key, or the default value if the key is not in the map.</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="getAndIncrement(java.lang.Object,long,long)">
+<!--   -->
+</a><a id="getAndIncrement(K,long,long)">getAndIncrement</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">long</span>&nbsp;<span class="memberName">getAndIncrement</span>&#8203;(<span class="arguments"><a href="ObjectLongMap.html" title="type parameter in ObjectLongMap">K</a>&nbsp;key,
+long&nbsp;defaultValue,
+long&nbsp;increment)</span></div>
+<div class="block">Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
+ put into the map and defaultValue is returned.</div>
 </section>
 </li>
 <li class="blockList">

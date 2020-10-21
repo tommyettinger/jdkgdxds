@@ -59,7 +59,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	protected K[] keyTable;
 	protected int[] valueTable;
 
-	protected float loadFactor;
+	protected final float loadFactor;
 	protected int threshold;
 
 	protected int shift;
@@ -148,7 +148,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 * <pre>
 	 * protected int locateKey (Object key) {
 	 * 		K[] keyTable = this.keyTable;
-	 * 		for (int i = place(key); ; i = i + 1 & mask) {
+	 * 		for (int i = place(key); ; i = i + 1 &amp; mask) {
 	 * 			K other = keyTable[i];
 	 * 			if (other == null)
 	 * 				return ~i; // Always negative; means empty space is available at i.

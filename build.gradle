@@ -39,6 +39,7 @@ if (JavaVersion.current().isJava8Compatible()) {
             // The -quiet is because of some sort of weird JDK JavaCompiler bug:
             // https://discuss.gradle.org/t/passing-arguments-to-compiler-and-javadoc/1661
             options.addStringOption('Xdoclint:all,-missing', '-quiet')
+            options.tags('apiNote:a:"API Note"', 'implSpec:a:"Implementation Requirements"', 'implNote:a:"Implementation Note"')
         }
     }
 }

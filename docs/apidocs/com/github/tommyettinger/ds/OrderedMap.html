@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -114,6 +114,10 @@ implements <a href="Ordered.html" title="interface in com.github.tommyettinger.d
  Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
  OrderedMap.
  <p>
+ You can customize most behavior of this map by extending it. <a href="ObjectMap.html#place(java.lang.Object)"><code>ObjectMap.place(Object)</code></a> can be overridden to change how hashCodes
+ are calculated (which can be useful for types like <code>StringBuilder</code> that don't implement hashCode()), and
+ <a href="ObjectMap.html#locateKey(java.lang.Object)"><code>ObjectMap.locateKey(Object)</code></a> can be overridden to change how equality is calculated.
+ <p>
  This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
  hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href="https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
  Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.</div>
@@ -148,12 +152,12 @@ implements <a href="Ordered.html" title="interface in com.github.tommyettinger.d
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="OrderedMap.OrderedMapKeys.html" title="class in com.github.tommyettinger.ds">OrderedMap.OrderedMapKeys</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>&gt;</span></code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="OrderedMap.OrderedMapKeys.html" title="class in com.github.tommyettinger.ds">OrderedMap.OrderedMapKeys</a>&lt;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">K</a>,&#8203;<a href="OrderedMap.OrderedMapKeys.html" title="type parameter in OrderedMap.OrderedMapKeys">V</a>&gt;</span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="OrderedMap.OrderedMapValues.html" title="class in com.github.tommyettinger.ds">OrderedMap.OrderedMapValues</a>&lt;<a href="OrderedMap.OrderedMapValues.html" title="type parameter in OrderedMap.OrderedMapValues">V</a>&gt;</span></code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="OrderedMap.OrderedMapValues.html" title="class in com.github.tommyettinger.ds">OrderedMap.OrderedMapValues</a>&lt;<a href="OrderedMap.OrderedMapValues.html" title="type parameter in OrderedMap.OrderedMapValues">K</a>,&#8203;<a href="OrderedMap.OrderedMapValues.html" title="type parameter in OrderedMap.OrderedMapValues">V</a>&gt;</span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -163,7 +167,7 @@ implements <a href="Ordered.html" title="interface in com.github.tommyettinger.d
 <h2>Nested classes/interfaces inherited from class&nbsp;com.github.tommyettinger.ds.<a href="ObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectMap</a></h2>
 <a id="nested.classes.inherited.from.class.com.github.tommyettinger.ds.ObjectMap">
 <!--   -->
-</a><code><a href="ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="ObjectMap.Entries.html" title="type parameter in ObjectMap.Entries">K</a>,&#8203;<a href="ObjectMap.Entries.html" title="type parameter in ObjectMap.Entries">V</a>&gt;, <a href="ObjectMap.Entry.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entry</a>&lt;<a href="ObjectMap.Entry.html" title="type parameter in ObjectMap.Entry">K</a>,&#8203;<a href="ObjectMap.Entry.html" title="type parameter in ObjectMap.Entry">V</a>&gt;, <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.Keys.html" title="type parameter in ObjectMap.Keys">K</a>&gt;, <a href="ObjectMap.MapIterator.html" title="class in com.github.tommyettinger.ds">ObjectMap.MapIterator</a>&lt;<a href="ObjectMap.MapIterator.html" title="type parameter in ObjectMap.MapIterator">K</a>,&#8203;<a href="ObjectMap.MapIterator.html" title="type parameter in ObjectMap.MapIterator">V</a>,&#8203;<a href="ObjectMap.MapIterator.html" title="type parameter in ObjectMap.MapIterator">I</a>&gt;, <a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.Values.html" title="type parameter in ObjectMap.Values">V</a>&gt;</code></div>
+</a><code><a href="ObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entries</a>&lt;<a href="ObjectMap.Entries.html" title="type parameter in ObjectMap.Entries">K</a>,&#8203;<a href="ObjectMap.Entries.html" title="type parameter in ObjectMap.Entries">V</a>&gt;, <a href="ObjectMap.Entry.html" title="class in com.github.tommyettinger.ds">ObjectMap.Entry</a>&lt;<a href="ObjectMap.Entry.html" title="type parameter in ObjectMap.Entry">K</a>,&#8203;<a href="ObjectMap.Entry.html" title="type parameter in ObjectMap.Entry">V</a>&gt;, <a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="ObjectMap.Keys.html" title="type parameter in ObjectMap.Keys">K</a>,&#8203;<a href="ObjectMap.Keys.html" title="type parameter in ObjectMap.Keys">V</a>&gt;, <a href="ObjectMap.MapIterator.html" title="class in com.github.tommyettinger.ds">ObjectMap.MapIterator</a>&lt;<a href="ObjectMap.MapIterator.html" title="type parameter in ObjectMap.MapIterator">K</a>,&#8203;<a href="ObjectMap.MapIterator.html" title="type parameter in ObjectMap.MapIterator">V</a>,&#8203;<a href="ObjectMap.MapIterator.html" title="type parameter in ObjectMap.MapIterator">I</a>&gt;, <a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="ObjectMap.Values.html" title="type parameter in ObjectMap.Values">K</a>,&#8203;<a href="ObjectMap.Values.html" title="type parameter in ObjectMap.Values">V</a>&gt;</code></div>
 </section>
 </li>
 <!-- =========== FIELD SUMMARY =========== -->
@@ -312,7 +316,7 @@ float&nbsp;loadFactor)</code></th>
 </td>
 </tr>
 <tr class="rowColor" id="i7">
-<td class="colFirst"><code><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;</code></td>
+<td class="colFirst"><code><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">K</a>,&#8203;<a href="OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keySet()">keySet</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns a <code>Set</code> view of the keys contained in this map.</div>
@@ -364,13 +368,34 @@ float&nbsp;loadFactor)</code></th>
 </td>
 </tr>
 <tr class="rowColor" id="i15">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort()">sort</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Sorts this OrderedMap in-place by the keys' natural ordering; <code>K</code> must implement <code>Comparable</code>.</div>
+</td>
+</tr>
+<tr class="altColor" id="i16">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(java.util.Comparator)">sort</a></span>&#8203;(java.util.Comparator&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;&nbsp;comp)</code></th>
+<td class="colLast">
+<div class="block">Sorts this OrderedMap in-place by the given Comparator used on the keys.</div>
+</td>
+</tr>
+<tr class="rowColor" id="i17">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortByValue(java.util.Comparator)">sortByValue</a></span>&#8203;(java.util.Comparator&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;comp)</code></th>
+<td class="colLast">
+<div class="block">Sorts this OrderedMap in-place by the given Comparator used on the values.</div>
+</td>
+</tr>
+<tr class="altColor" id="i18">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString(java.lang.String,boolean)">toString</a></span>&#8203;(java.lang.String&nbsp;separator,
 boolean&nbsp;braces)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i16">
-<td class="colFirst"><code><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></td>
+<tr class="rowColor" id="i19">
+<td class="colFirst"><code><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">K</a>,&#8203;<a href="OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#values()">values</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns a Collection for the values in the map.</div>
@@ -482,6 +507,7 @@ float&nbsp;loadFactor)</span></div>
 <!--   -->
 </a><a id="put(K,V)">put</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="OrderedMap.html" title="type parameter in OrderedMap">V</a></span>&nbsp;<span class="memberName">put</span>&#8203;(<span class="arguments"><a href="OrderedMap.html" title="type parameter in OrderedMap">K</a>&nbsp;key,
+@Nullable
 <a href="OrderedMap.html" title="type parameter in OrderedMap">V</a>&nbsp;value)</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="ObjectMap.html#put(K,V)">ObjectMap</a></code></span></div>
 <div class="block">Returns the old value associated with the specified key, or null.</div>
@@ -648,8 +674,43 @@ float&nbsp;loadFactor)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="sort()">sort</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">sort</span>()</div>
+<div class="block">Sorts this OrderedMap in-place by the keys' natural ordering; <code>K</code> must implement <code>Comparable</code>.</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="sort(java.util.Comparator)">sort</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">sort</span>&#8203;(<span class="arguments">@Nullable
+java.util.Comparator&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;&nbsp;comp)</span></div>
+<div class="block">Sorts this OrderedMap in-place by the given Comparator used on the keys. If <code>comp</code> is null, then this
+ will sort by the natural ordering of the keys, which requires <code>K</code> to <code>Comparable</code>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>comp</code> - a Comparator that can compare two <code>K</code> keys, or null to use the keys' natural ordering</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="sortByValue(java.util.Comparator)">sortByValue</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">sortByValue</span>&#8203;(<span class="arguments">java.util.Comparator&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;&nbsp;comp)</span></div>
+<div class="block">Sorts this OrderedMap in-place by the given Comparator used on the values. <code>comp</code> must not be null,
+ and must be able to compare <code>V</code> values. If any null values are present in this OrderedMap, then comp
+ must be able to sort or otherwise handle null values. You can use <code>Comparator.naturalOrder()</code> to do
+ what <a href="#sort()"><code>sort()</code></a> does (just sorting values in this case instead of keys) if the values implement
+ <code>Comparable</code> (requiring all of them to be non-null).</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>comp</code> - a non-null Comparator that can compare <code>V</code> values; if this contains null values, comp must handle them</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="keySet()">keySet</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">K</a>&gt;</span>&nbsp;<span class="memberName">keySet</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectMap.Keys</a>&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">K</a>,&#8203;<a href="OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</span>&nbsp;<span class="memberName">keySet</span>()</div>
 <div class="block">Returns a <code>Set</code> view of the keys contained in this map.
  The set is backed by the map, so changes to the map are
  reflected in the set, and vice-versa.  If the map is modified
@@ -678,7 +739,7 @@ float&nbsp;loadFactor)</span></div>
 <li class="blockList">
 <section class="detail">
 <h3><a id="values()">values</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</span>&nbsp;<span class="memberName">values</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectMap.Values</a>&lt;<a href="OrderedMap.html" title="type parameter in OrderedMap">K</a>,&#8203;<a href="OrderedMap.html" title="type parameter in OrderedMap">V</a>&gt;</span>&nbsp;<span class="memberName">values</span>()</div>
 <div class="block">Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
  <p>Note that the same Collection instance is returned each time this method is called. Use the
  <a href="OrderedMap.OrderedMapValues.html#%3Cinit%3E(com.github.tommyettinger.ds.OrderedMap)"><code>OrderedMapValues(OrderedMap)</code></a> constructor for nested or multithreaded iteration.</div>

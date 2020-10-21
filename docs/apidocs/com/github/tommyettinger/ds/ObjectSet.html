@@ -112,6 +112,10 @@ implements java.lang.Iterable&lt;T&gt;, java.util.Set&lt;T&gt;, java.io.Serializ
  Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
  OrderedMap.
  <p>
+ You can customize most behavior of this set by extending it. <a href="#place(java.lang.Object)"><code>place(Object)</code></a> can be overridden to change how hashCodes
+ are calculated (which can be useful for types like <code>StringBuilder</code> that don't implement hashCode()), and
+ <a href="#locateKey(java.lang.Object)"><code>locateKey(Object)</code></a> can be overridden to change how equality is calculated.
+ <p>
  This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
  hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href="https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
  Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.</div>
@@ -199,7 +203,7 @@ implements java.lang.Iterable&lt;T&gt;, java.util.Set&lt;T&gt;, java.io.Serializ
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>int</code></td>
+<td class="colFirst"><code>protected int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size">size</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -502,7 +506,7 @@ int&nbsp;length)</code></th>
 <li class="blockList">
 <section class="detail">
 <h3><a id="size">size</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">size</span></div>
+<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">size</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -514,7 +518,7 @@ int&nbsp;length)</code></th>
 <li class="blockList">
 <section class="detail">
 <h3><a id="loadFactor">loadFactor</a></h3>
-<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">float</span>&nbsp;<span class="memberName">loadFactor</span></div>
+<div class="memberSignature"><span class="modifiers">protected final</span>&nbsp;<span class="returnType">float</span>&nbsp;<span class="memberName">loadFactor</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -620,7 +624,15 @@ float&nbsp;loadFactor)</span></div>
 <section class="detail">
 <h3><a id="place(java.lang.Object)">place</a></h3>
 <div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">place</span>&#8203;(<span class="arguments">java.lang.Object&nbsp;item)</span></div>
-<div class="block">Returns an index &gt;= 0 and &lt;= <a href="#mask"><code>mask</code></a> for the specified <code>item</code>.</div>
+<div class="block">Returns an index &gt;= 0 and &lt;= <a href="#mask"><code>mask</code></a> for the specified <code>item</code>.
+ <p>
+ The default behavior uses Fibonacci hashing; it simply gets the <code>Object.hashCode()</code>
+ of <code>item</code>, multiplies it by a specific long constant related to the golden ratio,
+ and makes an unsigned right shift by <a href="#shift"><code>shift</code></a> before casting to int and returning.
+ This can be overridden to hash <code>item</code> differently, though all implementors must
+ ensure this returns results in the range of 0 to <a href="#mask"><code>mask</code></a>, inclusive. If nothing
+ else is changed, then unsigned-right-shifting an int or long by <a href="#shift"><code>shift</code></a> will also
+ restrict results to the correct range.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>item</code> - a non-null Object; its hashCode() method should be used by most implementations.</dd>
@@ -632,7 +644,21 @@ float&nbsp;loadFactor)</span></div>
 <h3><a id="locateKey(java.lang.Object)">locateKey</a></h3>
 <div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">locateKey</span>&#8203;(<span class="arguments">java.lang.Object&nbsp;key)</span></div>
 <div class="block">Returns the index of the key if already present, else <code>~index</code> for the next empty index. This can be overridden
- to compare for equality differently than <code>Object.equals(Object)</code>.</div>
+ to compare for equality differently than <code>Object.equals(Object)</code>.
+ <p>
+ If source is not easily available and you want to override this, the reference source is:
+ <pre>
+ protected int locateKey (Object key) {
+                T[] keyTable = this.keyTable;
+                for (int i = place(key); ; i = i + 1 &amp; mask) {
+                        T other = keyTable[i];
+                        if (other == null)
+                                return ~i; // Always negative; means empty space is available at i.
+                        if (other.equals(key)) // If you want to change how equality is determined, do it here.
+                                return i; // Same key was found.
+      }
+ }
+ </pre></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - a non-null Object that should probably be a T</dd>

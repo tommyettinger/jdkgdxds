@@ -57,7 +57,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 
 	protected T[] keyTable;
 
-	protected float loadFactor;
+	protected final float loadFactor;
 	protected int threshold;
 
 	protected int shift;
@@ -149,7 +149,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * <pre>
 	 * protected int locateKey (Object key) {
 	 * 		T[] keyTable = this.keyTable;
-	 * 		for (int i = place(key); ; i = i + 1 & mask) {
+	 * 		for (int i = place(key); ; i = i + 1 &amp; mask) {
 	 * 			T other = keyTable[i];
 	 * 			if (other == null)
 	 * 				return ~i; // Always negative; means empty space is available at i.

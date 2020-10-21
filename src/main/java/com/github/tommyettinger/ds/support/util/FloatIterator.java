@@ -55,7 +55,7 @@ public interface FloatIterator extends PrimitiveIterator<Float, FloatConsumer> {
 	 * @implSpec <p>The default implementation behaves as if:
 	 * <pre>{@code
 	 *     while (hasNext())
-	 *         action.accept(nextLong());
+	 *         action.accept(nextFloat());
 	 * }</pre>
 	 */
 	default void forEachRemaining (FloatConsumer action) {
