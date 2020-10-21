@@ -41,7 +41,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
 public class IntSet implements Serializable {
 	private static final long serialVersionUID = 0L;
 
-	public int size;
+	protected int size;
 
 	protected int[] keyTable;
 	protected boolean hasZeroValue;
@@ -351,6 +351,10 @@ public class IntSet implements Serializable {
 		IntSet set = new IntSet();
 		set.addAll(array);
 		return set;
+	}
+
+	public int size () {
+		return size;
 	}
 
 	static public class IntSetIterator implements PrimitiveIterator.OfInt {

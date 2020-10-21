@@ -37,7 +37,7 @@ import java.util.Random;
 public class FloatList implements Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public float[] items;
-	public int size;
+	protected int size;
 	public boolean ordered;
 	protected @Nullable FloatListIterator iterator1, iterator2;
 	
@@ -75,6 +75,12 @@ public class FloatList implements Arrangeable, Serializable {
 		this(true, array, 0, array.length);
 	}
 
+	/** Creates a new array containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * subsequent elements added will cause the backing array to be grown.
+	 */
+	public FloatList (float[] array, int startIndex, int count) {
+		this(true, array, startIndex, count);
+	}
 	/** Creates a new array containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a

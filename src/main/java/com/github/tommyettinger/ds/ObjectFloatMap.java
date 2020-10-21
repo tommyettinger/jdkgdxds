@@ -56,7 +56,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
 public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Serializable {
 	private static final long serialVersionUID = 0L;
 
-	public int size;
+	protected int size;
 
 	protected K[] keyTable;
 	protected float[] valueTable;
@@ -443,7 +443,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
 			if (key != null) {
-				h += key.hashCode();
+				h ^= key.hashCode();
 				h ^= BitConversion.floatToIntBits(valueTable[i]);
 			}
 		}

@@ -84,13 +84,13 @@ public class ObjectMapTest extends junit.framework.TestCase {
 		runBattery(new ObjectMap<String, String>());
 
 		ObjectMap hm2 = new ObjectMap<>();
-		Assert.assertEquals("Created incorrect ObjectMap", 0, hm2.size);
+		Assert.assertEquals("Created incorrect ObjectMap", 0, hm2.size());
 	}
 
 	@Test public void test_ConstructorI () {
 		// Test for method com.github.tommyettinger.merry.ObjectMap(int)
 		ObjectMap hm2 = new ObjectMap(5);
-		Assert.assertEquals("Created incorrect ObjectMap", 0, hm2.size);
+		Assert.assertEquals("Created incorrect ObjectMap", 0, hm2.size());
 		do{
 			try {
 				new ObjectMap(-1);
@@ -109,7 +109,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 	@Test public void test_ConstructorIF () {
 		// Test for method com.github.tommyettinger.merry.ObjectMap(int, float)
 		ObjectMap hm2 = new ObjectMap(5, (float)0.5);
-		Assert.assertEquals("Created incorrect ObjectMap", 0, hm2.size);
+		Assert.assertEquals("Created incorrect ObjectMap", 0, hm2.size());
 		do{
 			try {
 				new ObjectMap(0, 0);
@@ -151,7 +151,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 
 	@Test public void test_clear () {
 		hm.clear();
-		Assert.assertEquals("Clear failed to reset size", 0, hm.size);
+		Assert.assertEquals("Clear failed to reset size", 0, hm.size());
 		for (int i = 0; i < hmSize; i++)
 			Assert.assertNull("Failed to clear all elements", hm.get(objArray2[i]));
 
@@ -161,7 +161,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 			map.put(i, "foobar");
 		}
 		map.clear();
-		Assert.assertEquals("Failed to reset size on large integer map", 0, hm.size);
+		Assert.assertEquals("Failed to reset size on large integer map", 0, hm.size());
 		for (int i = -32767; i < 32768; i++) {
 			Assert.assertNull("Failed to clear integer map values", map.get(i));
 		}
@@ -191,7 +191,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectMap.entrySet(
 		Set<Map.Entry> s = hm.entrySet();
 		Iterator i = s.iterator();
-		Assert.assertTrue("Returned set of incorrect size", hm.size == s.size());
+		Assert.assertTrue("Returned set of incorrect size", hm.size() == s.size());
 		while (i.hasNext()) {
 			ObjectMap.Entry m = (ObjectMap.Entry)i.next();
 			Assert.assertTrue("Returned incorrect entry set", hm.containsKey(m.key) && hm.containsValue(m.value, false));
@@ -278,7 +278,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 	@Test public void test_keySet () {
 		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectMap.keySet()
 		Set s = hm.keySet();
-		Assert.assertTrue("Returned set of incorrect size()", s.size() == hm.size);
+		Assert.assertTrue("Returned set of incorrect size()", s.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)
 //			assertTrue("Returned set does not contain all keys", s
 //					.contains(objArray[i].toString()));
@@ -302,7 +302,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 		list.remove(remove1);
 		list.remove(remove2);
 		Assert.assertTrue("Wrong result", it.next().equals(list.get(0)));
-		Assert.assertEquals("Wrong size", 1, map.size);
+		Assert.assertEquals("Wrong size", 1, map.size());
 		Assert.assertTrue("Wrong contents", map.keySet().iterator().next().equals(list.get(0)));
 
 		ObjectMap map2 = new ObjectMap(101);
@@ -318,7 +318,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 		it2.hasNext();
 		it2.remove();
 		Assert.assertTrue("Wrong result 2", it2.next().equals(next));
-		Assert.assertEquals("Wrong size 2", 1, map2.size);
+		Assert.assertEquals("Wrong size 2", 1, map2.size());
 		Assert.assertTrue("Wrong contents 2", map2.keySet().iterator().next().equals(next));
 	}
 
@@ -422,12 +422,12 @@ public class ObjectMapTest extends junit.framework.TestCase {
 //    } 
 
 	@Test public void test_removeLjava_lang_Object () {
-		int size = hm.size;
+		int size = hm.size();
 		Integer y = new Integer(9);
 		Integer x = ((Integer)hm.remove(y.toString()));
 		Assert.assertTrue("Remove returned incorrect value", x.equals(new Integer(9)));
 		Assert.assertNull("Failed to remove given key", hm.get(new Integer(9)));
-		Assert.assertTrue("Failed to decrement size", hm.size == (size - 1));
+		Assert.assertTrue("Failed to decrement size", hm.size() == (size - 1));
 		Assert.assertNull("Remove of non-existent key returned non-null", hm.remove("LCLCLC"));
 
 //		ObjectMap m = new ObjectMap();
@@ -497,13 +497,13 @@ public class ObjectMapTest extends junit.framework.TestCase {
 
 	@Test public void test_size () {
 		// Test for method int com.github.tommyettinger.merry.ObjectMap.size()
-		Assert.assertTrue("Returned incorrect size", hm.size == (objArray.length + 1));
+		Assert.assertTrue("Returned incorrect size", hm.size() == (objArray.length + 1));
 	}
 
 	@Test public void test_values () {
 		// Test for method java.util.Collection com.github.tommyettinger.merry.ObjectMap.values()
 		Collection c = hm.values();
-		Assert.assertTrue("Returned collection of incorrect size()", c.size() == hm.size);
+		Assert.assertTrue("Returned collection of incorrect size()", c.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)
 //			assertTrue("Returned collection does not contain all keys", c
 //					.contains(objArray[i]));

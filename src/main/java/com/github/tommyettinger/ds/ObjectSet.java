@@ -53,7 +53,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
 public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	private static final long serialVersionUID = 0L;
 
-	public int size;
+	protected int size;
 
 	protected T[] keyTable;
 

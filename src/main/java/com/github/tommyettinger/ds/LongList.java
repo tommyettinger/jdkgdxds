@@ -34,7 +34,7 @@ import java.util.Random;
 public class LongList implements Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public long[] items;
-	public int size;
+	protected int size;
 	public boolean ordered;
 	protected @Nullable LongListIterator iterator1, iterator2;
 
@@ -70,6 +70,13 @@ public class LongList implements Arrangeable, Serializable {
 	 * so any subsequent elements added will cause the backing array to be grown. */
 	public LongList (long[] array) {
 		this(true, array, 0, array.length);
+	}
+
+	/** Creates a new array containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * subsequent elements added will cause the backing array to be grown.
+	 */
+	public LongList (long[] array, int startIndex, int count) {
+		this(true, array, startIndex, count);
 	}
 
 	/** Creates a new array containing the elements in the specified array. The capacity is set to the number of elements, so any

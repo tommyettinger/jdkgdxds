@@ -83,13 +83,13 @@ public class OrderedMapTest {
 		runBattery(new OrderedMap());
 
 		OrderedMap hm2 = new OrderedMap();
-		assertEquals("Created incorrect OrderedMap", 0, hm2.size);
+		assertEquals("Created incorrect OrderedMap", 0, hm2.size());
 	}
 
 	@Test public void test_ConstructorI () {
 		// Test for method com.github.tommyettinger.merry.OrderedMap(int)
 		OrderedMap hm2 = new OrderedMap(5);
-		assertEquals("Created incorrect OrderedMap", 0, hm2.size);
+		assertEquals("Created incorrect OrderedMap", 0, hm2.size());
 		do{
 			try {
 				new OrderedMap(-1);
@@ -108,7 +108,7 @@ public class OrderedMapTest {
 	@Test public void test_ConstructorIF () {
 		// Test for method com.github.tommyettinger.merry.OrderedMap(int, float)
 		OrderedMap hm2 = new OrderedMap(5, (float)0.5);
-		assertEquals("Created incorrect OrderedMap", 0, hm2.size);
+		assertEquals("Created incorrect OrderedMap", 0, hm2.size());
 		do{
 			try {
 				new OrderedMap(0, 0);
@@ -194,7 +194,7 @@ public class OrderedMapTest {
 		// Test for method java.util.Set com.github.tommyettinger.merry.OrderedMap.entrySet()
 		Set s = hm.entrySet();
 		Iterator i = s.iterator();
-		assertTrue("Returned set of incorrect size", hm.size == s.size());
+		assertTrue("Returned set of incorrect size", hm.size() == s.size());
 		while (i.hasNext()) {
 			ObjectMap.Entry m = (ObjectMap.Entry)i.next();
 			assertTrue("Returned incorrect entry set", hm.containsKey(m.key) && hm.containsValue(m.value, false));
@@ -204,7 +204,7 @@ public class OrderedMapTest {
 	@Test public void test_keySet () {
 		// Test for method java.util.Set com.github.tommyettinger.merry.OrderedMap.keySet()
 		Set s = hm.keySet();
-		assertTrue("Returned set of incorrect size()", s.size() == hm.size);
+		assertTrue("Returned set of incorrect size()", s.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)
 //			assertTrue("Returned set does not contain all keys",
 //				s.contains(objArray[i].toString()));
@@ -228,7 +228,7 @@ public class OrderedMapTest {
 		list.remove(remove1);
 		list.remove(remove2);
 		assertTrue("Wrong result", it.next().equals(list.get(0)));
-		assertEquals("Wrong size", 1, map.size);
+		assertEquals("Wrong size", 1, map.size());
 		assertTrue("Wrong contents", map.keySet().iterator().next().equals(list.get(0)));
 
 		OrderedMap map2 = new OrderedMap(101);
@@ -244,14 +244,14 @@ public class OrderedMapTest {
 		it2.hasNext();
 		it2.remove();
 		assertTrue("Wrong result 2", it2.next().equals(next));
-		assertEquals("Wrong size 2", 1, map2.size);
+		assertEquals("Wrong size 2", 1, map2.size());
 		assertTrue("Wrong contents 2", map2.keySet().iterator().next().equals(next));
 	}
 
 	@Test public void test_values () {
 		// Test for method java.util.Collection com.github.tommyettinger.merry.OrderedMap.values()
 		Collection c = hm.values();
-		assertTrue("Returned collection of incorrect size()", c.size() == hm.size);
+		assertTrue("Returned collection of incorrect size()", c.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)
 //			assertTrue("Returned collection does not contain all keys", c
 //					.contains(objArray[i]));
@@ -274,12 +274,12 @@ public class OrderedMapTest {
 	@Test public void test_removeLjava_lang_Object () {
 		// Test for method java.lang.Object
 		// com.github.tommyettinger.merry.OrderedMap.remove(java.lang.Object)
-		int size = hm.size;
+		int size = hm.size();
 		Integer y = new Integer(9);
 		Integer x = ((Integer)hm.remove(y.toString()));
 		assertTrue("Remove returned incorrect value", x.equals(new Integer(9)));
 		Assert.assertNull("Failed to remove given key", hm.get(new Integer(9)));
-		assertTrue("Failed to decrement size", hm.size == (size - 1));
+		assertTrue("Failed to decrement size", hm.size() == (size - 1));
 		Assert.assertNull("Remove of non-existent key returned non-null", hm.remove("LCLCLC"));
 
 //		OrderedMap m = new OrderedMap();
@@ -292,7 +292,7 @@ public class OrderedMapTest {
 	@Test public void test_clear () {
 		// Test for method void com.github.tommyettinger.merry.OrderedMap.clear()
 		hm.clear();
-		assertEquals("Clear failed to reset size", 0, hm.size);
+		assertEquals("Clear failed to reset size", 0, hm.size());
 		for (int i = 0; i < hmSize; i++)
 			Assert.assertNull("Failed to clear all elements", hm.get(objArray2[i]));
 
@@ -326,7 +326,7 @@ public class OrderedMapTest {
 
 	@Test public void test_size () {
 		// Test for method int com.github.tommyettinger.merry.OrderedMap.size()
-		assertTrue("Returned incorrect size", hm.size == (objArray.length + 1));
+		assertTrue("Returned incorrect size", hm.size() == (objArray.length + 1));
 	}
 
 	@Test public void test_ordered_entrySet () {
@@ -340,7 +340,7 @@ public class OrderedMapTest {
 
 		Set s1 = lhm.entrySet();
 		Iterator it1 = s1.iterator();
-		assertTrue("Returned set of incorrect size 1", lhm.size == s1.size());
+		assertTrue("Returned set of incorrect size 1", lhm.size() == s1.size());
 		for (i = 0; it1.hasNext(); i++) {
 			ObjectMap.Entry m = (ObjectMap.Entry)it1.next();
 			Integer jj = (Integer)m.key;
@@ -359,7 +359,7 @@ public class OrderedMapTest {
 
 		Set s1 = lhm.keySet();
 		Iterator it1 = s1.iterator();
-		assertTrue("Returned set of incorrect size", lhm.size == s1.size());
+		assertTrue("Returned set of incorrect size", lhm.size() == s1.size());
 		for (i = 0; it1.hasNext(); i++) {
 			Integer jj = (Integer)it1.next();
 			assertTrue("Returned incorrect entry set", jj.intValue() == i);
@@ -377,7 +377,7 @@ public class OrderedMapTest {
 
 		Collection s1 = lhm.values();
 		Iterator it1 = s1.iterator();
-		assertTrue("Returned set of incorrect size 1", lhm.size == s1.size());
+		assertTrue("Returned set of incorrect size 1", lhm.size() == s1.size());
 		for (i = 0; it1.hasNext(); i++) {
 			Integer jj = (Integer)it1.next();
 			assertTrue("Returned incorrect entry set 1", jj.intValue() == i * 2);

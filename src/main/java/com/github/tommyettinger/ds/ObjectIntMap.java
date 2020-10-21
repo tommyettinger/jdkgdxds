@@ -54,7 +54,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
 public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Serializable {
 	private static final long serialVersionUID = 0L;
 
-	public int size;
+	protected int size;
 
 	protected K[] keyTable;
 	protected int[] valueTable;
@@ -441,7 +441,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
 			if (key != null) {
-				h += key.hashCode();
+				h ^= key.hashCode();
 				h ^= valueTable[i];
 			}
 		}

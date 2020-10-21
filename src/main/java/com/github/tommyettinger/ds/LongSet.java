@@ -41,7 +41,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
 public class LongSet implements Serializable {
 	private static final long serialVersionUID = 0L;
 
-	public int size;
+	protected int size;
 
 	protected long[] keyTable;
 	protected boolean hasZeroValue;

@@ -57,7 +57,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
 public class LongFloatMap implements Serializable {
 	private static final long serialVersionUID = 0L;
 
-	public int size;
+	protected int size;
 
 	protected long[] keyTable;
 	protected float[] valueTable;
@@ -478,7 +478,7 @@ public class LongFloatMap implements Serializable {
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			long key = keyTable[i];
 			if (key != 0) {
-				h += key ^ key >>> 32;
+				h ^= key ^ key >>> 32;
 				h ^= BitConversion.floatToIntBits(valueTable[i]);
 			}
 		}

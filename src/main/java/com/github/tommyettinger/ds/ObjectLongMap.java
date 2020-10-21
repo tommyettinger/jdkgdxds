@@ -54,7 +54,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
 public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Serializable {
 	private static final long serialVersionUID = 0L;
 
-	public int size;
+	protected int size;
 
 	protected K[] keyTable;
 	protected long[] valueTable;
