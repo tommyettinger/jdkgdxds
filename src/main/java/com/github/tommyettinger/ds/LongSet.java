@@ -110,8 +110,8 @@ public class LongSet implements Serializable {
 		return (int)((item ^ item >>> 32) * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
-	/** Returns the index of the key if already present, else {@code -1 - index} for the next empty index. This can be overridden in this
-	 * pacakge to compare for equality differently than {@link Object#equals(Object)}. */
+	/** Returns the index of the key if already present, else {@code -1 - index} for the next empty index. This can be overridden
+	 * to compare for equality differently than {@code ==}. */
 	private int locateKey (long key) {
 		long[] keyTable = this.keyTable;
 		for (int i = place(key);; i = i + 1 & mask) {
@@ -262,6 +262,10 @@ public class LongSet implements Serializable {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
 		if (keyTable.length < tableSize) resize(tableSize);
 	}
+	
+	public int size() {
+		return size;
+	}
 
 	private void resize (int newSize) {
 		int oldCapacity = keyTable.length;
@@ -331,7 +335,7 @@ public class LongSet implements Serializable {
 	/** Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
 	 * Use the {@link LongSetIterator} constructor for nested or multithreaded iteration. */
-	public LongSetIterator iterator () {
+	public PrimitiveIterator.OfLong iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new LongSetIterator(this);
 			iterator2 = new LongSetIterator(this);
