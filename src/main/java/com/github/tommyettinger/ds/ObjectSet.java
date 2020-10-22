@@ -519,14 +519,14 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return set;
 	}
 
-	static public class ObjectSetIterator<K> implements Iterable<K>, Iterator<K> {
+	static public class ObjectSetIterator<T> implements Iterable<T>, Iterator<T> {
 		public boolean hasNext;
 
-		final ObjectSet<K> set;
+		final ObjectSet<T> set;
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public ObjectSetIterator (ObjectSet<K> set) {
+		public ObjectSetIterator (ObjectSet<T> set) {
 			this.set = set;
 			reset();
 		}
@@ -538,7 +538,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		}
 
 		private void findNextIndex () {
-			K[] keyTable = set.keyTable;
+			T[] keyTable = set.keyTable;
 			for (int n = set.keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != null) {
 					hasNext = true;
@@ -553,9 +553,9 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 			int i = currentIndex;
 			if (i < 0)
 				throw new IllegalStateException("next must be called before remove.");
-			K[] keyTable = set.keyTable;
+			T[] keyTable = set.keyTable;
 			int mask = set.mask, next = i + 1 & mask;
-			K key;
+			T key;
 			while ((key = keyTable[next]) != null) {
 				int placement = set.place(key);
 				if ((next - placement & mask) > (i - placement & mask)) {
@@ -579,20 +579,36 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		}
 
 		@Override
-		public K next () {
+		public T next () {
 			if (!hasNext)
 				throw new NoSuchElementException();
 			if (!valid)
 				throw new RuntimeException("#iterator() cannot be used nested.");
-			K key = set.keyTable[nextIndex];
+			T key = set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
 			return key;
 		}
 
 		@Override
-		public ObjectSetIterator<K> iterator () {
+		public ObjectSetIterator<T> iterator () {
 			return this;
+		}
+
+		/**
+		 * Returns a new {@link ObjectList} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 */
+		public ObjectList<T> toList () {
+			ObjectList<T> list = new ObjectList<>(set.size);
+			int currentIdx =  currentIndex, nextIdx = nextIndex;
+			boolean hn = hasNext;
+			while (hasNext)
+				list.add(next());
+			currentIndex = currentIdx;
+			nextIndex = nextIdx;
+			hasNext = hn;
+			return list;
 		}
 	}
 }

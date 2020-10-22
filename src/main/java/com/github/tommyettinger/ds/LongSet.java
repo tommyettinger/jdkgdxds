@@ -440,11 +440,19 @@ public class LongSet implements Serializable {
 			return key;
 		}
 
-		/** Returns a new LongList containing the remaining keys. */
+		/**
+		 * Returns a new {@link LongList} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 */
 		public LongList toList () {
 			LongList list = new LongList(true, set.size);
+			int currentIdx =  currentIndex, nextIdx = nextIndex;
+			boolean hn = hasNext;
 			while (hasNext)
 				list.add(next());
+			currentIndex = currentIdx;
+			nextIndex = nextIdx;
+			hasNext = hn;
 			return list;
 		}
 	}
