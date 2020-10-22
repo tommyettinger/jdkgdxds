@@ -829,10 +829,6 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		protected MapIterator<K, V, Map.Entry<K, V>> iter;
 		
 		public Entries (ObjectMap<K, V> map) {
-			initialize(map);
-		}
-		
-		protected void initialize(ObjectMap<K, V> map){
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
 				public Iterator<Map.Entry<K, V>> iterator () {
@@ -863,6 +859,11 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 			};
 		}
 
+		@Override
+		public boolean contains (Object o) {
+			return iter.map.containsKey(o);
+		}
+
 		/**
 		 * Returns an iterator over the elements contained in this collection.
 		 *
@@ -883,10 +884,6 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		protected MapIterator<K, V, V> iter;
 
 		public Values (ObjectMap<K, V> map) {
-			initialize(map);
-
-		}
-		protected void initialize(ObjectMap<K, V> map){
 			iter = new MapIterator<K, V, V>(map) {
 				@Override
 				public Iterator<V> iterator () {
@@ -912,8 +909,9 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 					return value;
 				}
 			};
-		}
 
+		}
+		
 		/**
 		 * Returns an iterator over the elements contained in this collection.
 		 *
@@ -935,11 +933,8 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 
 	static public class Keys<K, V> extends AbstractSet<K> {
 		protected MapIterator<K, V, K> iter;
-
+		
 		public Keys (ObjectMap<K, V> map) {
-			initialize(map);
-		}
-		protected void initialize(ObjectMap<K, V> map){
 			iter = new MapIterator<K, V, K>(map) {
 				@Override
 				public Iterator<K> iterator () {
@@ -965,6 +960,11 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 					return key;
 				}
 			};
+		}
+
+		@Override
+		public boolean contains (Object o) {
+			return iter.map.containsKey(o);
 		}
 		
 		/**

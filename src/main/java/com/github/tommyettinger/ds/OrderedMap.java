@@ -390,9 +390,6 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		public OrderedMapEntries (OrderedMap<K, V> map) {
 			super(map);
 			keys = map.keys;
-		}
-		@Override
-		protected void initialize(ObjectMap<K, V> map){
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
 				public Iterator<Map.Entry<K, V>> iterator () {
@@ -449,10 +446,6 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		public OrderedMapKeys (OrderedMap<K, V> map) {
 			super(map);
 			keys = map.keys;
-		}
-
-		@Override
-		protected void initialize (ObjectMap<K, V> map) {
 			iter = new MapIterator<K, V, K>(map) {
 				@Override
 				public Iterator<K> iterator () {
@@ -509,10 +502,6 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		public OrderedMapValues (OrderedMap<K, V> map) {
 			super(map);
 			keys = map.keys;
-		}
-
-		@Override
-		protected void initialize (ObjectMap<K, V> map) {
 			iter = new MapIterator<K, V, V>(map) {
 				@Override
 				public Iterator<V> iterator () {
