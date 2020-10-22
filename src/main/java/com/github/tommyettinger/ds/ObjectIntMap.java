@@ -887,11 +887,11 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			iter = new KeyIterator<>(map);
 		}
 
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
+		@Override
+		public boolean contains (Object o) {
+			return iter.map.containsKey(o);
+		}
+
 		@Override
 		public Iterator<K> iterator () {
 			return iter;

@@ -887,12 +887,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		public Keys (ObjectLongMap<K> map) {
 			iter = new KeyIterator<>(map);
 		}
+		
+		@Override
+		public boolean contains (Object o) {
+			return iter.map.containsKey(o);
+		}
 
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
 		@Override
 		public Iterator<K> iterator () {
 			return iter;
