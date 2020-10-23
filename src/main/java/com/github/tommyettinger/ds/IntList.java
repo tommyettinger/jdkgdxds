@@ -31,7 +31,7 @@ import java.util.Random;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class IntList implements Arrangeable, Serializable {
+public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public int[] items;
 	protected int size;
@@ -148,12 +148,40 @@ public class IntList implements Arrangeable, Serializable {
 
 	// Modified from libGDX
 	public boolean addAll (int[] array, int offset, int length) {
+		if(length <= 0 || items.length == 0) return false;
 		int[] items = this.items;
 		int sizeNeeded = size + length;
 		if (sizeNeeded > items.length) items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));
 		System.arraycopy(array, offset, items, size, length);
 		size += length;
 		return true;
+	}
+
+	@Override
+	public boolean addAll (OfInt other) {
+		PrimitiveIterator.OfInt it = other.iterator();
+		boolean changed = false;
+		while (it.hasNext())
+			changed |= add(it.nextInt());
+		return changed;
+	}
+
+	@Override
+	public boolean removeAll (OfInt other) {
+		PrimitiveIterator.OfInt it = other.iterator();
+		boolean changed = false;
+		while (it.hasNext())
+			changed |= remove(it.nextInt());
+		return changed;
+	}
+
+	@Override
+	public boolean containsAll (OfInt other) {
+		PrimitiveIterator.OfInt it = other.iterator();
+		boolean has = true;
+		while (it.hasNext())
+			has &= contains(it.nextInt());
+		return has;
 	}
 
 	//Kotlin-friendly operator
