@@ -157,33 +157,6 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 		return true;
 	}
 
-	@Override
-	public boolean addAll (OfInt other) {
-		PrimitiveIterator.OfInt it = other.iterator();
-		boolean changed = false;
-		while (it.hasNext())
-			changed |= add(it.nextInt());
-		return changed;
-	}
-
-	@Override
-	public boolean removeAll (OfInt other) {
-		PrimitiveIterator.OfInt it = other.iterator();
-		boolean changed = false;
-		while (it.hasNext())
-			changed |= remove(it.nextInt());
-		return changed;
-	}
-
-	@Override
-	public boolean containsAll (OfInt other) {
-		PrimitiveIterator.OfInt it = other.iterator();
-		boolean has = true;
-		while (it.hasNext())
-			has &= contains(it.nextInt());
-		return has;
-	}
-
 	//Kotlin-friendly operator
 	public int get (int index) {
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);

@@ -28,11 +28,29 @@ public interface PrimitiveCollection<T, T_CONS> {
 		
 		boolean contains(int item);
 		
-		boolean addAll(OfInt other);
-		
-		boolean removeAll(OfInt other);
-		
-		boolean containsAll(OfInt other);
+		default boolean addAll (OfInt other) {
+			PrimitiveIterator.OfInt it = other.iterator();
+			boolean changed = false;
+			while (it.hasNext())
+				changed |= add(it.nextInt());
+			return changed;
+		}
+
+		default boolean removeAll (OfInt other) {
+			PrimitiveIterator.OfInt it = other.iterator();
+			boolean changed = false;
+			while (it.hasNext())
+				changed |= remove(it.nextInt());
+			return changed;
+		}
+
+		default boolean containsAll (OfInt other) {
+			PrimitiveIterator.OfInt it = other.iterator();
+			boolean has = true;
+			while (it.hasNext())
+				has &= contains(it.nextInt());
+			return has;
+		}
 		
 		PrimitiveIterator.OfInt iterator();
 		

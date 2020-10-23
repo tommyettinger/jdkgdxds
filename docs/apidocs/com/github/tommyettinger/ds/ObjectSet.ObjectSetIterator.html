@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -83,16 +83,16 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">com.github.tommyettinger.ds</a></div>
-<h1 title="Class ObjectSet.ObjectSetIterator" class="title">Class ObjectSet.ObjectSetIterator&lt;K&gt;</h1>
+<h1 title="Class ObjectSet.ObjectSetIterator" class="title">Class ObjectSet.ObjectSetIterator&lt;T&gt;</h1>
 </div>
 <div class="contentContainer">
 <div class="inheritance" title="Inheritance Tree">java.lang.Object
-<div class="inheritance">com.github.tommyettinger.ds.ObjectSet.ObjectSetIterator&lt;K&gt;</div>
+<div class="inheritance">com.github.tommyettinger.ds.ObjectSet.ObjectSetIterator&lt;T&gt;</div>
 </div>
 <section class="description">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code>java.lang.Iterable&lt;K&gt;</code>, <code>java.util.Iterator&lt;K&gt;</code></dd>
+<dd><code>java.lang.Iterable&lt;T&gt;</code>, <code>java.util.Iterator&lt;T&gt;</code></dd>
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
@@ -103,9 +103,9 @@ loadScripts(document, 'script');</script>
 <dd><a href="ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a>&lt;<a href="ObjectSet.html" title="type parameter in ObjectSet">T</a>&gt;</dd>
 </dl>
 <hr>
-<pre>public static class <span class="typeNameLabel">ObjectSet.ObjectSetIterator&lt;K&gt;</span>
+<pre>public static class <span class="typeNameLabel">ObjectSet.ObjectSetIterator&lt;T&gt;</span>
 extends java.lang.Object
-implements java.lang.Iterable&lt;K&gt;, java.util.Iterator&lt;K&gt;</pre>
+implements java.lang.Iterable&lt;T&gt;, java.util.Iterator&lt;T&gt;</pre>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -153,7 +153,7 @@ implements java.lang.Iterable&lt;K&gt;, java.util.Iterator&lt;K&gt;</pre>
 </thead>
 <tbody>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.ObjectSet)">ObjectSetIterator</a></span>&#8203;(<a href="ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a>&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a>&gt;&nbsp;set)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.ObjectSet)">ObjectSetIterator</a></span>&#8203;(<a href="ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a>&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a>&gt;&nbsp;set)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -185,12 +185,12 @@ implements java.lang.Iterable&lt;K&gt;, java.util.Iterator&lt;K&gt;</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i1">
-<td class="colFirst"><code><a href="ObjectSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">ObjectSet.ObjectSetIterator</a>&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a>&gt;</code></td>
+<td class="colFirst"><code><a href="ObjectSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">ObjectSet.ObjectSetIterator</a>&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#iterator()">iterator</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i2">
-<td class="colFirst"><code><a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a></code></td>
+<td class="colFirst"><code><a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#next()">next</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -203,6 +203,13 @@ implements java.lang.Iterable&lt;K&gt;, java.util.Iterator&lt;K&gt;</pre>
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#reset()">reset</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i5">
+<td class="colFirst"><code><a href="ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toList()">toList</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns a new <a href="ObjectList.html" title="class in com.github.tommyettinger.ds"><code>ObjectList</code></a> containing the remaining items.</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -255,7 +262,7 @@ implements java.lang.Iterable&lt;K&gt;, java.util.Iterator&lt;K&gt;</pre>
 <li class="blockList">
 <section class="detail">
 <h3><a id="&lt;init&gt;(com.github.tommyettinger.ds.ObjectSet)">ObjectSetIterator</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">ObjectSetIterator</span>&#8203;(<span class="arguments"><a href="ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a>&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a>&gt;&nbsp;set)</span></div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">ObjectSetIterator</span>&#8203;(<span class="arguments"><a href="ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a>&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a>&gt;&nbsp;set)</span></div>
 </section>
 </li>
 </ul>
@@ -280,7 +287,7 @@ implements java.lang.Iterable&lt;K&gt;, java.util.Iterator&lt;K&gt;</pre>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">remove</span>()</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>remove</code>&nbsp;in interface&nbsp;<code>java.util.Iterator&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a>&gt;</code></dd>
+<dd><code>remove</code>&nbsp;in interface&nbsp;<code>java.util.Iterator&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
@@ -290,28 +297,36 @@ implements java.lang.Iterable&lt;K&gt;, java.util.Iterator&lt;K&gt;</pre>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">hasNext</span>()</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>hasNext</code>&nbsp;in interface&nbsp;<code>java.util.Iterator&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a>&gt;</code></dd>
+<dd><code>hasNext</code>&nbsp;in interface&nbsp;<code>java.util.Iterator&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="next()">next</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a></span>&nbsp;<span class="memberName">next</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a></span>&nbsp;<span class="memberName">next</span>()</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>next</code>&nbsp;in interface&nbsp;<code>java.util.Iterator&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a>&gt;</code></dd>
+<dd><code>next</code>&nbsp;in interface&nbsp;<code>java.util.Iterator&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="iterator()">iterator</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">ObjectSet.ObjectSetIterator</a>&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a>&gt;</span>&nbsp;<span class="memberName">iterator</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">ObjectSet.ObjectSetIterator</a>&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a>&gt;</span>&nbsp;<span class="memberName">iterator</span>()</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>iterator</code>&nbsp;in interface&nbsp;<code>java.lang.Iterable&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">K</a>&gt;</code></dd>
+<dd><code>iterator</code>&nbsp;in interface&nbsp;<code>java.lang.Iterable&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a>&gt;</code></dd>
 </dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="toList()">toList</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a>&gt;</span>&nbsp;<span class="memberName">toList</span>()</div>
+<div class="block">Returns a new <a href="ObjectList.html" title="class in com.github.tommyettinger.ds"><code>ObjectList</code></a> containing the remaining items.
+ Does not change the position of this iterator.</div>
 </section>
 </li>
 </ul>
