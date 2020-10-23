@@ -38,7 +38,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongSet implements Serializable {
+public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 	private static final long serialVersionUID = 0L;
 
 	protected int size;

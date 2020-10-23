@@ -31,7 +31,7 @@ import java.util.Random;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongList implements Arrangeable, Serializable {
+public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public long[] items;
 	protected int size;

@@ -2,6 +2,7 @@ package com.github.tommyettinger.ds;
 
 import java.util.PrimitiveIterator;
 import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 /**
  * Created by Tommy Ettinger on 10/22/2020.
@@ -20,14 +21,14 @@ public interface PrimitiveCollection<T, T_CONS> {
 	int hashCode();
 	
 	boolean equals(Object other);
-	
+
 	interface OfInt extends PrimitiveCollection<Integer, IntConsumer> {
 		boolean add(int item);
-		
+
 		boolean remove(int item);
-		
+
 		boolean contains(int item);
-		
+
 		default boolean addAll (OfInt other) {
 			PrimitiveIterator.OfInt it = other.iterator();
 			boolean changed = false;
@@ -51,8 +52,41 @@ public interface PrimitiveCollection<T, T_CONS> {
 				has &= contains(it.nextInt());
 			return has;
 		}
-		
+
 		PrimitiveIterator.OfInt iterator();
-		
+	}
+
+	interface OfLong extends PrimitiveCollection<Long, LongConsumer> {
+		boolean add(long item);
+
+		boolean remove(long item);
+
+		boolean contains(long item);
+
+		default boolean addAll (OfLong other) {
+			PrimitiveIterator.OfLong it = other.iterator();
+			boolean changed = false;
+			while (it.hasNext())
+				changed |= add(it.nextLong());
+			return changed;
+		}
+
+		default boolean removeAll (OfLong other) {
+			PrimitiveIterator.OfLong it = other.iterator();
+			boolean changed = false;
+			while (it.hasNext())
+				changed |= remove(it.nextLong());
+			return changed;
+		}
+
+		default boolean containsAll (OfLong other) {
+			PrimitiveIterator.OfLong it = other.iterator();
+			boolean has = true;
+			while (it.hasNext())
+				has &= contains(it.nextLong());
+			return has;
+		}
+
+		PrimitiveIterator.OfLong iterator();
 	}
 }
