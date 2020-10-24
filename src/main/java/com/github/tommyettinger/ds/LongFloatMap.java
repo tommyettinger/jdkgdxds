@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
@@ -606,7 +605,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 	 * Returns a Collection of the values in the map. Remove is supported. Note that the same Collection instance is returned each
 	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
 	 *
-	 * @return a {@link Collection} of float values
+	 * @return a {@link PrimitiveCollection.OfFloat} containing float values
 	 */
 	public Values values () {
 		if (values1 == null || values2 == null) {
