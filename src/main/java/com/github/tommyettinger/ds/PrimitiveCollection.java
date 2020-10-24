@@ -1,5 +1,8 @@
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.function.FloatConsumer;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
+
 import java.util.PrimitiveIterator;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
@@ -88,5 +91,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 
 		PrimitiveIterator.OfLong iterator();
+	}
+	interface OfFloat extends PrimitiveCollection<Float, FloatConsumer> {
+		boolean add(float item);
+
+		boolean remove(float item);
+
+		boolean contains(float item);
+
+		default boolean addAll (OfFloat other) {
+			FloatIterator it = other.iterator();
+			boolean changed = false;
+			while (it.hasNext())
+				changed |= add(it.nextFloat());
+			return changed;
+		}
+
+		default boolean removeAll (OfFloat other) {
+			FloatIterator it = other.iterator();
+			boolean changed = false;
+			while (it.hasNext())
+				changed |= remove(it.nextFloat());
+			return changed;
+		}
+
+		default boolean containsAll (OfFloat other) {
+			FloatIterator it = other.iterator();
+			boolean has = true;
+			while (it.hasNext())
+				has &= contains(it.nextFloat());
+			return has;
+		}
+
+		FloatIterator iterator();
 	}
 }

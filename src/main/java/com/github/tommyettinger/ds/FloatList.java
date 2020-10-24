@@ -34,7 +34,7 @@ import java.util.Random;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class FloatList implements Arrangeable, Serializable {
+public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public float[] items;
 	protected int size;
