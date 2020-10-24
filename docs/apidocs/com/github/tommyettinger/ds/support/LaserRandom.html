@@ -638,7 +638,7 @@ long&nbsp;seedB)</span></div>
  <code>long</code> seed. The general contract of <code>setSeed</code> is
  that it alters the state of this random number generator object
  so as to be in exactly the same state as if it had just been
- created with the argument <code>seed</code> as a seed. 
+ created with the argument <code>seed</code> as a seed.
 
  <p>The implementation of <code>setSeed</code> by class <code>Random</code>
  uses all 64 bits of the given seed. In general, however,
@@ -664,7 +664,7 @@ long&nbsp;seedB)</span></div>
  the correct range. If <code>bits</code> is 31, this can return any non-negative <code>int</code>; note that
  <code>nextInt(1 &lt;&lt; 31)</code> won't behave this way because <code>1 &lt;&lt; 31</code> is negative. If
  <code>bits</code> is 32 (or 0), this can return any <code>int</code>.
- 
+
  <p>The general contract of <code>next</code> is that it returns an
  <code>int</code> value and if the argument <code>bits</code> is between
  <code>1</code> and <code>32</code> (inclusive), then that many low-order
@@ -831,7 +831,7 @@ int&nbsp;outerBound)</span></div>
  is pseudorandomly generated and returned.  All <code>bound</code> possible
  <code>long</code> values are produced with (approximately) equal
  probability.
- 
+
  <p>Note that this advances the state by the same amount as a single call to
  <a href="#nextLong()"><code>nextLong()</code></a>, which allows methods like <a href="#skip(long)"><code>skip(long)</code></a> to function
  correctly, but introduces some bias when <code>bound</code> is very large. This will
@@ -879,7 +879,7 @@ long&nbsp;outerBound)</span></div>
  specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
  (exclusive). If <code>outerBound</code> is less than or equal to <code>innerBound</code>,
  this always returns <code>innerBound</code>.
- 
+
  <br> For any case where outerBound might be valid but less than innerBound, you
  can use <a href="#nextSignedLong(long,long)"><code>nextSignedLong(long, long)</code></a>.</div>
 <dl>
@@ -1000,7 +1000,7 @@ long&nbsp;outerBound)</span></div>
  <code>double</code> value, chosen from (approximately) the usual
  normal distribution with mean <code>0.0</code> and standard deviation
  <code>1.0</code>, is pseudorandomly generated and returned.
- 
+
  <p>This uses an approximation as implemented by <a href="#probit(double)"><code>probit(double)</code></a>,
  which can't produce as extreme results in extremely-rare cases as methods
  like Box-Muller and Marsaglia Polar can. All but one possible result are
@@ -1025,7 +1025,7 @@ long&nbsp;outerBound)</span></div>
  or backward a number of steps specified by advance, where a step is equal to one call to <a href="#nextLong()"><code>nextLong()</code></a>,
  and returns the random number produced at that step. Negative numbers can be used to step backward, or 0 can be
  given to get the most-recently-generated long from <a href="#nextLong()"><code>nextLong()</code></a>.
- 
+
  <p>Note that none of the number-generating methods here advance state differently from <a href="#nextLong()"><code>nextLong()</code></a> except
  for the Stream APIs. This is somewhat unusual; in many generators, calls to <a href="#nextInt(int)"><code>nextInt(int)</code></a> and similar
  bounded-range random generators can advance the state by a variable amount. Using a fixed advance permits this

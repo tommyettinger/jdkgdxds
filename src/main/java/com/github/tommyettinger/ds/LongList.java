@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,11 +23,12 @@ import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
-/** A resizable, ordered or unordered long list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Long.
+/**
+ * A resizable, ordered or unordered long list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Long.
  * If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
- * 
+ *
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
@@ -36,29 +37,38 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	public long[] items;
 	protected int size;
 	public boolean ordered;
-	protected @Nullable LongListIterator iterator1, iterator2;
+	protected @Nullable
+	LongListIterator iterator1, iterator2;
 
-	/** Creates an ordered array with a capacity of 16. */
+	/**
+	 * Creates an ordered array with a capacity of 16.
+	 */
 	public LongList () {
 		this(true, 16);
 	}
 
-	/** Creates an ordered array with the specified capacity. */
+	/**
+	 * Creates an ordered array with the specified capacity.
+	 */
 	public LongList (int capacity) {
 		this(true, capacity);
 	}
 
-	/** @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *           memory copy.
-	 * @param capacity Any elements added beyond this will cause the backing array to be grown. */
+	/**
+	 * @param ordered  If false, methods that remove elements may change the order of other elements in the array, which avoids a
+	 *                 memory copy.
+	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
+	 */
 	public LongList (boolean ordered, int capacity) {
 		this.ordered = ordered;
 		items = new long[capacity];
 	}
 
-	/** Creates a new array containing the elements in the specific array. The new array will be ordered if the specific array is
+	/**
+	 * Creates a new array containing the elements in the specific array. The new array will be ordered if the specific array is
 	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
-	 * grown. */
+	 * grown.
+	 */
 	public LongList (LongList array) {
 		this.ordered = array.ordered;
 		size = array.size;
@@ -66,23 +76,29 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		System.arraycopy(array.items, 0, items, 0, size);
 	}
 
-	/** Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
-	 * so any subsequent elements added will cause the backing array to be grown. */
+	/**
+	 * Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
+	 * so any subsequent elements added will cause the backing array to be grown.
+	 */
 	public LongList (long[] array) {
 		this(true, array, 0, array.length);
 	}
 
-	/** Creates a new array containing the elements in the specified array. The capacity is set to the number of elements, so any
+	/**
+	 * Creates a new array containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 */
 	public LongList (long[] array, int startIndex, int count) {
 		this(true, array, startIndex, count);
 	}
 
-	/** Creates a new array containing the elements in the specified array. The capacity is set to the number of elements, so any
+	/**
+	 * Creates a new array containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
+	 *
 	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *           memory copy. */
+	 *                memory copy.
+	 */
 	public LongList (boolean ordered, long[] array, int startIndex, int count) {
 		this(ordered, count);
 		size = count;
@@ -90,21 +106,21 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	}
 
 	// Newly-added
-	public int size(){
+	public int size () {
 		return size;
 	}
 
 	// Modified from libGDX
 	public boolean add (long value) {
 		long[] items = this.items;
-		if (size == items.length) items = resize(Math.max(8, (int)(size * 1.75f)));
+		if (size == items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
 		items[size++] = value;
 		return true;
 	}
 
 	public void add (long value1, long value2) {
 		long[] items = this.items;
-		if (size + 1 >= items.length) items = resize(Math.max(8, (int)(size * 1.75f)));
+		if (size + 1 >= items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
 		items[size] = value1;
 		items[size + 1] = value2;
 		size += 2;
@@ -112,7 +128,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 
 	public void add (long value1, long value2, long value3) {
 		long[] items = this.items;
-		if (size + 2 >= items.length) items = resize(Math.max(8, (int)(size * 1.75f)));
+		if (size + 2 >= items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
 		items[size] = value1;
 		items[size + 1] = value2;
 		items[size + 2] = value3;
@@ -121,7 +137,9 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 
 	public void add (long value1, long value2, long value3, long value4) {
 		long[] items = this.items;
-		if (size + 3 >= items.length) items = resize(Math.max(8, (int)(size * 1.8f))); // 1.75 isn't enough when size=5.
+		if (size + 3 >= items.length) {
+			items = resize(Math.max(8, (int)(size * 1.8f))); // 1.75 isn't enough when size=5.
+		}
 		items[size] = value1;
 		items[size + 1] = value2;
 		items[size + 2] = value3;
@@ -136,8 +154,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 
 	// Modified from libGDX
 	public boolean addAll (LongList array, int offset, int length) {
-		if (offset + length > array.size)
-			throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);
+		if (offset + length > array.size) { throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size); }
 		return addAll(array.items, offset, length);
 	}
 
@@ -150,7 +167,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	public boolean addAll (long[] array, int offset, int length) {
 		long[] items = this.items;
 		int sizeNeeded = size + length;
-		if (sizeNeeded > items.length) items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));
+		if (sizeNeeded > items.length) { items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f))); }
 		System.arraycopy(array, offset, items, size, length);
 		size += length;
 		return true;
@@ -158,19 +175,19 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 
 	//Kotlin-friendly operator
 	public long get (int index) {
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
 		return items[index];
 	}
 
 	//Kotlin-friendly operator
 	public void set (int index, long value) {
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
 		items[index] = value;
 	}
 
 	// Modified from libGDX
 	public void plus (int index, long value) {
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
 		items[index] += value;
 	}
 
@@ -178,6 +195,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	 * Adds {@code value} to each item in this LongList, stores it in this and returns it.
 	 * The presence of this method allows Kotlin code to use the {@code +} operator (though it
 	 * shouldn't be used more than once in an expression, because this method modifies this LongList).
+	 *
 	 * @param value each item in this will be assigned {@code item + value}
 	 * @return this for chaining and Kotlin compatibility
 	 */
@@ -185,22 +203,21 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	// Kotlin-friendly operator
 	public LongList plus (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++)
-			items[i] += value;
+		for (int i = 0, n = size; i < n; i++) { items[i] += value; }
 		return this;
 	}
 
 	// Modified from libGDX
 	public void times (int index, long value) {
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
 		items[index] *= value;
 	}
-
 
 	/**
 	 * Multiplies each item in this LongList by {@code value}, stores it in this and returns it.
 	 * The presence of this method allows Kotlin code to use the {@code *} operator (though it
 	 * shouldn't be used more than once in an expression, because this method modifies this LongList).
+	 *
 	 * @param value each item in this will be assigned {@code item * value}
 	 * @return this for chaining and Kotlin compatibility
 	 */
@@ -208,14 +225,13 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	// Kotlin-friendly operator
 	public LongList times (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++)
-			items[i] *= value;
+		for (int i = 0, n = size; i < n; i++) { items[i] *= value; }
 		return this;
 	}
 
 	// Newly-added
 	public void minus (int index, long value) {
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
 		items[index] -= value;
 	}
 
@@ -224,6 +240,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	 * This is just a minor convenience in Java, but the presence of this method allows Kotlin code to use
 	 * the {@code -} operator (though it shouldn't be used more than once in an expression, because
 	 * this method modifies this LongList).
+	 *
 	 * @param value each item in this will be assigned {@code item - value}
 	 * @return this for chaining and Kotlin compatibility
 	 */
@@ -231,14 +248,13 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	// Kotlin-friendly operator
 	public LongList minus (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++)
-			items[i] -= value;
+		for (int i = 0, n = size; i < n; i++) { items[i] -= value; }
 		return this;
 	}
 
 	// Newly-added
 	public void div (int index, long value) {
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
 		items[index] /= value;
 	}
 
@@ -246,6 +262,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	 * Divides each item in this LongList by {@code value}, stores it in this and returns it.
 	 * The presence of this method allows Kotlin code to use the {@code /} operator (though it
 	 * shouldn't be used more than once in an expression, because this method modifies this LongList).
+	 *
 	 * @param value each item in this will be assigned {@code item / value}
 	 * @return this for chaining and Kotlin compatibility
 	 */
@@ -253,14 +270,13 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	// Kotlin-friendly operator
 	public LongList div (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++)
-			items[i] /= value;
+		for (int i = 0, n = size; i < n; i++) { items[i] /= value; }
 		return this;
 	}
 
 	// Newly-added
 	public void rem (int index, long value) {
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
 		items[index] %= value;
 	}
 
@@ -268,6 +284,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	 * Gets the remainder of each item in this LongList with {@code value}, stores it in this and returns it.
 	 * The presence of this method allows Kotlin code to use the {@code %} operator (though it
 	 * shouldn't be used more than once in an expression, because this method modifies this LongList).
+	 *
 	 * @param value each item in this will be assigned {@code item % value}
 	 * @return this for chaining and Kotlin compatibility
 	 */
@@ -275,37 +292,35 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	// Kotlin-friendly operator
 	public LongList rem (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++)
-			items[i] %= value;
+		for (int i = 0, n = size; i < n; i++) { items[i] %= value; }
 		return this;
 	}
 
 	public void insert (int index, long value) {
-		if (index > size) throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		if (index > size) { throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size); }
 		long[] items = this.items;
-		if (size == items.length) items = resize(Math.max(8, (int)(size * 1.75f)));
-		if (ordered)
-			System.arraycopy(items, index, items, index + 1, size - index);
-		else
-			items[size] = items[index];
+		if (size == items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
+		if (ordered) { System.arraycopy(items, index, items, index + 1, size - index); } else { items[size] = items[index]; }
 		size++;
 		items[index] = value;
 	}
 
-	/** Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
-	 * indices before the insertion. */
+	/**
+	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
+	 * indices before the insertion.
+	 */
 	public void insertRange (int index, int count) {
-		if (index > size) throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		if (index > size) { throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size); }
 		int sizeNeeded = size + count;
-		if (sizeNeeded > items.length) items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));
+		if (sizeNeeded > items.length) { items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f))); }
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
 	}
 
 	@Override
 	public void swap (int first, int second) {
-		if (first >= size) throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size);
-		if (second >= size) throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size);
+		if (first >= size) { throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size); }
+		if (second >= size) { throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size); }
 		long[] items = this.items;
 		long firstValue = items[first];
 		items[first] = items[second];
@@ -315,44 +330,42 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	public boolean contains (long value) {
 		int i = size - 1;
 		long[] items = this.items;
-		while (i >= 0)
-			if (items[i--] == value) return true;
+		while (i >= 0) { if (items[i--] == value) { return true; } }
 		return false;
 	}
 
 	/**
 	 * Returns true if this LongList contains, at least once, every item in {@code other}; otherwise returns false.
+	 *
 	 * @param other an LongList
 	 * @return true if this contains every item in {@code other}, otherwise false
 	 */
 	// Newly-added
-	public boolean containsAll(LongList other) {
+	public boolean containsAll (LongList other) {
 		long[] others = other.items;
 		int otherSize = other.size;
 		for (int i = 0; i < otherSize; i++) {
-			if (!contains(others[i]))
-				return false;
+			if (!contains(others[i])) { return false; }
 		}
 		return true;
 	}
 
 	public int indexOf (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++)
-			if (items[i] == value) return i;
+		for (int i = 0, n = size; i < n; i++) { if (items[i] == value) { return i; } }
 		return -1;
 	}
 
 	public int lastIndexOf (long value) {
 		long[] items = this.items;
-		for (int i = size - 1; i >= 0; i--)
-			if (items[i] == value) return i;
+		for (int i = size - 1; i >= 0; i--) { if (items[i] == value) { return i; } }
 		return -1;
 	}
 
 	/**
 	 * Removes the first occurrence of {@code value} from this LongList, returning true if anything was removed.
 	 * Otherwise, this returns false.
+	 *
 	 * @param value the value to (attempt to) remove
 	 * @return true if a value was removed, false if the LongList is unchanged
 	 */
@@ -368,43 +381,46 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		return false;
 	}
 
-	/** Removes and returns the item at the specified index.
+	/**
+	 * Removes and returns the item at the specified index.
 	 * Note that this is equivalent to {@link java.util.List#remove(int)}, but can't have that name because
 	 * we also have {@link #remove(long)} that removes a value, rather than an index.
+	 *
 	 * @param index the index of the item to remove and return
-	 * @return the removed item */
+	 * @return the removed item
+	 */
 	public long removeIndex (int index) {
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
 		long[] items = this.items;
 		long value = items[index];
 		size--;
-		if (ordered)
-			System.arraycopy(items, index + 1, items, index, size - index);
-		else
-			items[index] = items[size];
+		if (ordered) { System.arraycopy(items, index + 1, items, index, size - index); } else { items[index] = items[size]; }
 		return value;
 	}
 
-	/** Removes the items between the specified indices, inclusive. */
+	/**
+	 * Removes the items between the specified indices, inclusive.
+	 */
 	public void removeRange (int startIndex, int endIndex) {
 		int n = size;
-		if (endIndex >= n) throw new IndexOutOfBoundsException("end can't be >= size: " + endIndex + " >= " + size);
-		if (startIndex > endIndex) throw new IndexOutOfBoundsException("start can't be > end: " + startIndex + " > " + endIndex);
+		if (endIndex >= n) { throw new IndexOutOfBoundsException("end can't be >= size: " + endIndex + " >= " + size); }
+		if (startIndex > endIndex) { throw new IndexOutOfBoundsException("start can't be > end: " + startIndex + " > " + endIndex); }
 		int count = endIndex - startIndex + 1, lastIndex = n - count;
-		if (ordered)
-			System.arraycopy(items, startIndex + count, items, startIndex, n - (startIndex + count));
-		else {
+		if (ordered) { System.arraycopy(items, startIndex + count, items, startIndex, n - (startIndex + count)); } else {
 			int i = Math.max(lastIndex, endIndex + 1);
 			System.arraycopy(items, i, items, startIndex, n - i);
 		}
 		size = n - count;
 	}
 
-	/** Removes from this array all of elements contained in the specified array.
+	/**
+	 * Removes from this array all of elements contained in the specified array.
 	 * Note that if a value is present more than once in this LongList, only one of those occurrences
 	 * will be removed for each occurrence of that value in {@code array}. If {@code array} has the same
 	 * contents as this LongList or has additional items, then removing all of {@code array} will clear this.
-	 * @return true if this array was modified. */
+	 *
+	 * @return true if this array was modified.
+	 */
 	public boolean removeAll (LongList array) {
 		int size = this.size;
 		int startSize = size;
@@ -424,6 +440,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 
 	/**
 	 * Removes all items from this LongList that are not present somewhere in {@code other}, any number of times.
+	 *
 	 * @param other an LongList that contains the items that this should keep, whenever present
 	 * @return true if this LongList changed as a result of this call, otherwise false
 	 */
@@ -441,29 +458,39 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		return size != (this.size = w);
 	}
 
-	/** Removes and returns the last item. */
+	/**
+	 * Removes and returns the last item.
+	 */
 	public long pop () {
 		return items[--size];
 	}
 
-	/** Returns the last item. */
+	/**
+	 * Returns the last item.
+	 */
 	public long peek () {
 		return items[size - 1];
 	}
 
-	/** Returns the first item. */
+	/**
+	 * Returns the first item.
+	 */
 	// Modified from libGDX
 	public long first () {
-		if (size == 0) throw new IndexOutOfBoundsException("Array is empty.");
+		if (size == 0) { throw new IndexOutOfBoundsException("Array is empty."); }
 		return items[0];
 	}
 
-	/** Returns true if the array has one or more items. */
+	/**
+	 * Returns true if the array has one or more items.
+	 */
 	public boolean notEmpty () {
 		return size > 0;
 	}
 
-	/** Returns true if the array is empty. */
+	/**
+	 * Returns true if the array is empty.
+	 */
 	public boolean isEmpty () {
 		return size == 0;
 	}
@@ -472,29 +499,38 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		size = 0;
 	}
 
-	/** Reduces the size of the backing array to the size of the actual items. This is useful to release memory when many items
+	/**
+	 * Reduces the size of the backing array to the size of the actual items. This is useful to release memory when many items
 	 * have been removed, or if it is known that more items will not be added.
-	 * @return {@link #items} */
+	 *
+	 * @return {@link #items}
+	 */
 	public long[] shrink () {
-		if (items.length != size) resize(size);
+		if (items.length != size) { resize(size); }
 		return items;
 	}
 
-	/** Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
+	/**
+	 * Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
 	 * items to avoid multiple backing array resizes.
-	 * @return {@link #items} */
+	 *
+	 * @return {@link #items}
+	 */
 	public long[] ensureCapacity (int additionalCapacity) {
-		if (additionalCapacity < 0) throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity);
+		if (additionalCapacity < 0) { throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity); }
 		int sizeNeeded = size + additionalCapacity;
-		if (sizeNeeded > items.length) resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));
+		if (sizeNeeded > items.length) { resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f))); }
 		return items;
 	}
 
-	/** Sets the array size, leaving any values beyond the current size undefined.
-	 * @return {@link #items} */
+	/**
+	 * Sets the array size, leaving any values beyond the current size undefined.
+	 *
+	 * @return {@link #items}
+	 */
 	public long[] setSize (int newSize) {
-		if (newSize < 0) throw new IllegalArgumentException("newSize must be >= 0: " + newSize);
-		if (newSize > items.length) resize(Math.max(8, newSize));
+		if (newSize < 0) { throw new IllegalArgumentException("newSize must be >= 0: " + newSize); }
+		if (newSize > items.length) { resize(Math.max(8, newSize)); }
 		size = newSize;
 		return items;
 	}
@@ -527,22 +563,26 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	public void shuffle (Random random) {
 		long[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) {
-			int ii = random.nextInt(i+1);
+			int ii = random.nextInt(i + 1);
 			long temp = items[i];
 			items[i] = items[ii];
 			items[ii] = temp;
 		}
 	}
 
-	/** Reduces the size of the array to the specified size. If the array is already smaller than the specified size, no action is
-	 * taken. */
+	/**
+	 * Reduces the size of the array to the specified size. If the array is already smaller than the specified size, no action is
+	 * taken.
+	 */
 	public void truncate (int newSize) {
-		if (size > newSize) size = newSize;
+		if (size > newSize) { size = newSize; }
 	}
 
-	/** Returns a random item from the array, or zero if the array is empty. */
+	/**
+	 * Returns a random item from the array, or zero if the array is empty.
+	 */
 	public long random (Random random) {
-		if (size == 0) return 0;
+		if (size == 0) { return 0; }
 		return items[random.nextInt(size)];
 	}
 
@@ -560,8 +600,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 			for (int i = 0, n = size; i < n; i++) {
 				h += items[i];
 			}
-		}
-		else {
+		} else {
 			h = 0xC13FA9A902A6328FL;
 			for (int i = 0, n = size; i < n; i++) {
 				h = h * 0x9E3779B97F4A7C15L + items[i];
@@ -570,23 +609,24 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		return (int)(h ^ h >>> 32);
 	}
 
-	/** Returns false if either array is unordered. */
+	/**
+	 * Returns false if either array is unordered.
+	 */
 	public boolean equals (Object object) {
-		if (object == this) return true;
-		if (!ordered) return false;
-		if (!(object instanceof LongList)) return false;
+		if (object == this) { return true; }
+		if (!ordered) { return false; }
+		if (!(object instanceof LongList)) { return false; }
 		LongList array = (LongList)object;
-		if (!array.ordered) return false;
+		if (!array.ordered) { return false; }
 		int n = size;
-		if (n != array.size) return false;
+		if (n != array.size) { return false; }
 		long[] items1 = this.items, items2 = array.items;
-		for (int i = 0; i < n; i++)
-			if (items1[i] != items2[i]) return false;
+		for (int i = 0; i < n; i++) { if (items1[i] != items2[i]) { return false; } }
 		return true;
 	}
 
 	public String toString () {
-		if (size == 0) return "[]";
+		if (size == 0) { return "[]"; }
 		long[] items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('[');
@@ -600,7 +640,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	}
 
 	public String toString (String separator) {
-		if (size == 0) return "";
+		if (size == 0) { return ""; }
 		long[] items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append(items[0]);
@@ -617,9 +657,10 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	 * <br>
 	 * This will reuse one of two iterators in this LongList; this does not allow nested iteration.
 	 * Use {@link LongListIterator#LongListIterator(LongList)} to nest iterators.
+	 *
 	 * @return a {@link PrimitiveIterator.OfLong}; use its nextLong() method instead of next()
 	 */
-	public LongListIterator iterator(){
+	public LongListIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new LongListIterator(this);
 			iterator2 = new LongListIterator(this);
@@ -653,10 +694,8 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		 */
 		@Override
 		public long nextLong () {
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			if (index >= list.size)
-				throw new NoSuchElementException();
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (index >= list.size) { throw new NoSuchElementException(); }
 			return list.get(index++);
 		}
 
@@ -669,8 +708,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		 */
 		@Override
 		public boolean hasNext () {
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			return index < list.size;
 		}
 
@@ -679,7 +717,9 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		}
 	}
 
-	/** @see #LongList(long[]) */
+	/**
+	 * @see #LongList(long[])
+	 */
 	static public LongList with (long... array) {
 		return new LongList(array);
 	}

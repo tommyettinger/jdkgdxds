@@ -22,6 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.ds.support.function.FloatConsumer;
@@ -59,8 +60,7 @@ public interface FloatIterator extends PrimitiveIterator<Float, FloatConsumer> {
 	 * }</pre>
 	 */
 	default void forEachRemaining (FloatConsumer action) {
-		while (hasNext())
-			action.accept(nextFloat());
+		while (hasNext()) { action.accept(nextFloat()); }
 	}
 
 	/**

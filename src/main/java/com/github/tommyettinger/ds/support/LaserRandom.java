@@ -34,6 +34,7 @@ import java.util.Random;
  * doesn't have the statistical failures that the outdated XorShift128+ algorithm has.
  * <br>
  * Pew pew! Lasers!
+ *
  * @author Tommy Ettinger
  */
 public class LaserRandom extends Random implements Serializable {
@@ -56,11 +57,12 @@ public class LaserRandom extends Random implements Serializable {
 	public LaserRandom () {
 		super();
 		stateA = super.nextLong();
-		stateB =  super.nextLong() | 1L;
+		stateB = super.nextLong() | 1L;
 	}
 
 	/**
 	 * Creates a new LaserRandom using a single {@code long} seed; the stream depends on whether the seed is even or odd.
+	 *
 	 * @param seed the initial seed
 	 * @see #setSeed(long)
 	 */
@@ -74,10 +76,11 @@ public class LaserRandom extends Random implements Serializable {
 	 * Creates a new LaserRandom using {@code seedA} exactly to set stateA (as with {@link #setStateA(long)},,
 	 * and using {@code seedB} to set stateB as with {@link #setStateB(long)} (meaning seedB will be used exactly if odd,
 	 * otherwise it will have 1 added to it and then used).
+	 *
 	 * @param seedA any long; will be used exactly to set stateA as with {@link #setStateA(long)}
 	 * @param seedB any odd long will be used exactly to set stateB, otherwise, as with {@link #setStateB(long)}, it will be made odd
 	 */
-	public LaserRandom(final long seedA, final long seedB) {
+	public LaserRandom (final long seedA, final long seedB) {
 		super(seedA);
 		stateA = seedA;
 		stateB = seedB | 1L;
@@ -88,7 +91,7 @@ public class LaserRandom extends Random implements Serializable {
 	 *
 	 * @return the current internal "A" state of this object.
 	 */
-	public long getStateA() {
+	public long getStateA () {
 		return stateA;
 	}
 
@@ -97,7 +100,7 @@ public class LaserRandom extends Random implements Serializable {
 	 *
 	 * @param stateA a 64-bit long
 	 */
-	public void setStateA(long stateA) {
+	public void setStateA (long stateA) {
 		this.stateA = stateA;
 	}
 
@@ -106,7 +109,7 @@ public class LaserRandom extends Random implements Serializable {
 	 *
 	 * @return the current internal "B" state of this object.
 	 */
-	public long getStateB() {
+	public long getStateB () {
 		return stateB;
 	}
 
@@ -116,7 +119,7 @@ public class LaserRandom extends Random implements Serializable {
 	 *
 	 * @param stateB a 64-bit long
 	 */
-	public void setStateB(long stateB) {
+	public void setStateB (long stateB) {
 		this.stateB = stateB | 1L;
 	}
 
@@ -125,7 +128,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * {@code long} seed. The general contract of {@code setSeed} is
 	 * that it alters the state of this random number generator object
 	 * so as to be in exactly the same state as if it had just been
-	 * created with the argument {@code seed} as a seed. 
+	 * created with the argument {@code seed} as a seed.
 	 *
 	 * <p>The implementation of {@code setSeed} by class {@code Random}
 	 * uses all 64 bits of the given seed. In general, however,
@@ -136,7 +139,7 @@ public class LaserRandom extends Random implements Serializable {
 	 */
 	@Override
 	public void setSeed (long seed) {
-		stateB = (stateA = seed) | 1L; 
+		stateB = (stateA = seed) | 1L;
 	}
 
 	/**
@@ -148,7 +151,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * the correct range. If {@code bits} is 31, this can return any non-negative {@code int}; note that
 	 * {@code nextInt(1 << 31)} won't behave this way because {@code 1 << 31} is negative. If
 	 * {@code bits} is 32 (or 0), this can return any {@code int}.
-	 * 
+	 *
 	 * <p>The general contract of {@code next} is that it returns an
 	 * {@code int} value and if the argument {@code bits} is between
 	 * {@code 1} and {@code 32} (inclusive), then that many low-order
@@ -177,10 +180,8 @@ public class LaserRandom extends Random implements Serializable {
 	 * @throws NullPointerException if the byte array is null
 	 */
 	@Override
-	public void nextBytes (byte [] bytes) {
-		for (int i = 0; i < bytes.length; )
-			for (long r = nextLong(), n = Math.min(bytes.length - i, 8); n-- > 0; r >>>= 8)
-				bytes[i++] = (byte) r;
+	public void nextBytes (byte[] bytes) {
+		for (int i = 0; i < bytes.length; ) { for (long r = nextLong(), n = Math.min(bytes.length - i, 8); n-- > 0; r >>>= 8) { bytes[i++] = (byte)r; } }
 	}
 
 	/**
@@ -208,7 +209,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * is pseudorandomly generated and returned.  All {@code bound} possible
 	 * {@code int} values are produced with (approximately) equal
 	 * probability.
-	 * 
+	 *
 	 * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
 	 * @return the next pseudorandom, uniformly distributed {@code int}
 	 * value between zero (inclusive) and {@code bound} (exclusive)
@@ -218,7 +219,7 @@ public class LaserRandom extends Random implements Serializable {
 	public int nextInt (int bound) {
 		final long s = (stateA += 0xC6BC279692B5C323L);
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		return (int) ((bound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL)) >> 32) & ~(bound >> 31);
+		return (int)((bound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL)) >> 32) & ~(bound >> 31);
 	}
 
 	/**
@@ -229,13 +230,14 @@ public class LaserRandom extends Random implements Serializable {
 	 * as the lower bound; a positive outer bound is used as the upper bound. An outer
 	 * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
 	 * for outer bound 0).
+	 *
 	 * @param outerBound the outer exclusive bound; may be any int value, allowing negative
 	 * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
 	 */
 	public int nextSignedInt (int outerBound) {
 		final long s = (stateA += 0xC6BC279692B5C323L);
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		outerBound = (int) ((outerBound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL)) >> 32);
+		outerBound = (int)((outerBound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL)) >> 32);
 		return outerBound + (outerBound >>> 31);
 	}
 
@@ -247,11 +249,12 @@ public class LaserRandom extends Random implements Serializable {
 	 *
 	 * <br> For any case where outerBound might be valid but less than innerBound, you
 	 * can use {@link #nextSignedInt(int, int)}.
+	 *
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
 	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	public int nextInt(int innerBound, int outerBound){
+	public int nextInt (int innerBound, int outerBound) {
 		return innerBound + nextInt(outerBound - innerBound);
 	}
 
@@ -259,12 +262,13 @@ public class LaserRandom extends Random implements Serializable {
 	 * Returns a pseudorandom, uniformly distributed {@code int} value between the
 	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
 	 * (exclusive). This is meant for cases where either bound may be negative,
-	 * especially if the bounds are unknown or may be user-specified. 
+	 * especially if the bounds are unknown or may be user-specified.
+	 *
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
 	 * @param outerBound the exclusive outer bound; may be any int, allowing negative
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	public int nextSignedInt(int innerBound, int outerBound){
+	public int nextSignedInt (int innerBound, int outerBound) {
 		return innerBound + nextSignedInt(outerBound - innerBound);
 	}
 
@@ -287,6 +291,7 @@ public class LaserRandom extends Random implements Serializable {
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
 		return z ^ z >>> 26 ^ z >>> 6;
 	}
+
 	/**
 	 * Returns a pseudorandom, uniformly distributed {@code long} value
 	 * between 0 (inclusive) and the specified value (exclusive), drawn from
@@ -295,21 +300,22 @@ public class LaserRandom extends Random implements Serializable {
 	 * is pseudorandomly generated and returned.  All {@code bound} possible
 	 * {@code long} values are produced with (approximately) equal
 	 * probability.
-	 * 
+	 *
 	 * <p>Note that this advances the state by the same amount as a single call to
 	 * {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
 	 * correctly, but introduces some bias when {@code bound} is very large. This will
 	 * also advance the state if {@code bound} is 0 or negative, so usage with a variable
 	 * bound will advance the state reliably.
+	 *
 	 * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
 	 * @return the next pseudorandom, uniformly distributed {@code long}
 	 * value between zero (inclusive) and {@code bound} (exclusive)
 	 * from this random number generator's sequence
 	 */
-	public long nextLong(long bound) {
+	public long nextLong (long bound) {
 		final long s = (stateA += 0xC6BC279692B5C323L);
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		if (bound <= 0) return 0;
+		if (bound <= 0) { return 0; }
 		long rand = z ^ z >>> 26 ^ z >>> 6;
 		final long randLow = rand & 0xFFFFFFFFL;
 		final long boundLow = bound & 0xFFFFFFFFL;
@@ -319,6 +325,7 @@ public class LaserRandom extends Random implements Serializable {
 		final long b = randLow * boundLow;
 		return (((b >>> 32) + (rand + randLow) * (bound + boundLow) - a - b) >>> 32) + a;
 	}
+
 	/**
 	 * Returns a pseudorandom, uniformly distributed {@code long} value between an
 	 * inner bound of 0 (inclusive) and the specified {@code outerBound} (exclusive).
@@ -331,10 +338,11 @@ public class LaserRandom extends Random implements Serializable {
 	 * <p>Note that this advances the state by the same amount as a single call to
 	 * {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
 	 * correctly, but introduces some bias when {@code bound} is very large.
+	 *
 	 * @param outerBound the outer exclusive bound; may be any long value, allowing negative
 	 * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
 	 */
-	public long nextSignedLong(long outerBound) {
+	public long nextSignedLong (long outerBound) {
 		final long s = (stateA += 0xC6BC279692B5C323L);
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
 		long rand = z ^ z >>> 26 ^ z >>> 6;
@@ -352,14 +360,15 @@ public class LaserRandom extends Random implements Serializable {
 	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
 	 * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
 	 * this always returns {@code innerBound}.
-	 * 
+	 *
 	 * <br> For any case where outerBound might be valid but less than innerBound, you
 	 * can use {@link #nextSignedLong(long, long)}.
+	 *
 	 * @param innerBound the inclusive inner bound; may be any long, allowing negative
 	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	public long nextLong(long innerBound, long outerBound){
+	public long nextLong (long innerBound, long outerBound) {
 		return innerBound + nextLong(outerBound - innerBound);
 	}
 
@@ -367,15 +376,16 @@ public class LaserRandom extends Random implements Serializable {
 	 * Returns a pseudorandom, uniformly distributed {@code long} value between the
 	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
 	 * (exclusive). This is meant for cases where either bound may be negative,
-	 * especially if the bounds are unknown or may be user-specified. 
+	 * especially if the bounds are unknown or may be user-specified.
+	 *
 	 * @param innerBound the inclusive inner bound; may be any long, allowing negative
 	 * @param outerBound the exclusive outer bound; may be any long, allowing negative
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	public long nextSignedLong(long innerBound, long outerBound){
+	public long nextSignedLong (long innerBound, long outerBound) {
 		return innerBound + nextSignedLong(outerBound - innerBound);
 	}
-	
+
 	/**
 	 * Returns the next pseudorandom, uniformly distributed
 	 * {@code boolean} value from this random number generator's
@@ -460,12 +470,13 @@ public class LaserRandom extends Random implements Serializable {
 	 * {@code double} value, chosen from (approximately) the usual
 	 * normal distribution with mean {@code 0.0} and standard deviation
 	 * {@code 1.0}, is pseudorandomly generated and returned.
-	 * 
+	 *
 	 * <p>This uses an approximation as implemented by {@link #probit(double)},
 	 * which can't produce as extreme results in extremely-rare cases as methods
 	 * like Box-Muller and Marsaglia Polar can. All but one possible result are
 	 * between {@code -8.209536145151493} and {@code 8.209536145151493}, and the
 	 * one result outside that is {@code 38.5}.
+	 *
 	 * @return the next pseudorandom, Gaussian ("normally") distributed
 	 * {@code double} value with mean {@code 0.0} and
 	 * standard deviation {@code 1.0} from this random number
@@ -481,7 +492,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * or backward a number of steps specified by advance, where a step is equal to one call to {@link #nextLong()},
 	 * and returns the random number produced at that step. Negative numbers can be used to step backward, or 0 can be
 	 * given to get the most-recently-generated long from {@link #nextLong()}.
-	 * 
+	 *
 	 * <p>Note that none of the number-generating methods here advance state differently from {@link #nextLong()} except
 	 * for the Stream APIs. This is somewhat unusual; in many generators, calls to {@link #nextInt(int)} and similar
 	 * bounded-range random generators can advance the state by a variable amount. Using a fixed advance permits this
@@ -491,16 +502,16 @@ public class LaserRandom extends Random implements Serializable {
 	 * @param advance Number of future generations to skip over; can be negative to backtrack, 0 gets the most-recently-generated number
 	 * @return the random long generated after skipping forward or backwards by {@code advance} numbers
 	 */
-	public long skip(long advance) {
+	public long skip (long advance) {
 		final long s = (stateA += 0xC6BC279692B5C323L * advance);
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L * advance);
 		return z ^ z >>> 26 ^ z >>> 6;
 	}
-	
-	public LaserRandom copy(){
+
+	public LaserRandom copy () {
 		return new LaserRandom(stateA, stateB);
 	}
-	
+
 	/**
 	 * Gets a long that identifies which stream of numbers this generator is producing; this stream identifier is always
 	 * an odd long and won't change by generating numbers. It is determined at construction and will usually (not
@@ -508,10 +519,10 @@ public class LaserRandom extends Random implements Serializable {
 	 * probably-unique sequence of 2 to the 64 longs, where approximately 1/3 of all possible longs will not ever occur
 	 * (while others occur twice or more), but this set of results is different for every stream. There are 2 to the 63
 	 * possible streams, one for every odd long.
+	 *
 	 * @return an odd long that identifies which stream this LaserRandom is generating from
 	 */
-	public long getStream()
-	{
+	public long getStream () {
 		return stateB - (stateA * 0x1743CE5C6E1B848BL) * 0x9E3779B97F4A7C16L;
 	}
 
@@ -544,10 +555,11 @@ public class LaserRandom extends Random implements Serializable {
 	 * Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
 	 * as the input, such as those produced by a van der Corput, Halton, Sobol or R2 sequence). Most methods of generating
 	 * Gaussian values (e.g. Box-Muller and Marsaglia polar) do not have any way to preserve a particular pattern.
+	 *
 	 * @param d should be between 0 and 1, exclusive, but other values are tolerated
 	 * @return a normal-distributed double centered on 0.0; all results will be between -38.5 and 38.5, both inclusive
 	 */
-	public static double probit(final double d) {
+	public static double probit (final double d) {
 		if (d <= 0 || d >= 1) {
 			return Math.copySign(38.5, d - 0.5);
 		}
@@ -572,57 +584,72 @@ public class LaserRandom extends Random implements Serializable {
 		}
 	}
 
-	/** Returns true if a random value between 0 and 1 is less than the specified value.
+	/**
+	 * Returns true if a random value between 0 and 1 is less than the specified value.
+	 *
 	 * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
-	 * @return a boolean selected with the given {@code chance} of being true  
+	 * @return a boolean selected with the given {@code chance} of being true
 	 */
 	public boolean nextBoolean (float chance) {
 		return nextFloat() < chance;
 	}
-	
-	/** Returns -1 or 1, randomly.
+
+	/**
+	 * Returns -1 or 1, randomly.
+	 *
 	 * @return -1 or 1, selected with approximately equal likelihood
 	 */
 	public int nextSign () {
 		return 1 | (nextInt() >> 31);
 	}
 
-	/** Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
+	/**
+	 * Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
 	 * more likely. Advances the state twice.
 	 * <p>
-	 * This is an optimized version of {@link #nextTriangular(float, float, float) randomTriangular(-1, 1, 0)} */
+	 * This is an optimized version of {@link #nextTriangular(float, float, float) randomTriangular(-1, 1, 0)}
+	 */
 	public float nextTriangular () {
 		return nextFloat() - nextFloat();
 	}
 
-	/** Returns a triangularly distributed random number between {@code -max} (exclusive) and {@code max} (exclusive), where values
+	/**
+	 * Returns a triangularly distributed random number between {@code -max} (exclusive) and {@code max} (exclusive), where values
 	 * around zero are more likely. Advances the state twice.
 	 * <p>
 	 * This is an optimized version of {@link #nextTriangular(float, float, float) randomTriangular(-max, max, 0)}
-	 * @param max the upper limit */
+	 *
+	 * @param max the upper limit
+	 */
 	public float nextTriangular (float max) {
 		return (nextFloat() - nextFloat()) * max;
 	}
 
-	/** Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where the
+	/**
+	 * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where the
 	 * {@code mode} argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
 	 * <p>
 	 * This method is equivalent of {@link #nextTriangular(float, float, float) randomTriangular(min, max, (min + max) * 0.5f)}
+	 *
 	 * @param min the lower limit
-	 * @param max the upper limit */
+	 * @param max the upper limit
+	 */
 	public float nextTriangular (float min, float max) {
 		return nextTriangular(min, max, (min + max) * 0.5f);
 	}
 
-	/** Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where values
+	/**
+	 * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where values
 	 * around {@code mode} are more likely. Advances the state once.
-	 * @param min the lower limit
-	 * @param max the upper limit
-	 * @param mode the point around which the values are more likely */
+	 *
+	 * @param min  the lower limit
+	 * @param max  the upper limit
+	 * @param mode the point around which the values are more likely
+	 */
 	public float nextTriangular (float min, float max, float mode) {
 		float u = nextFloat();
 		float d = max - min;
-		if (u <= (mode - min) / d) return min + (float)Math.sqrt(u * d * (mode - min));
+		if (u <= (mode - min) / d) { return min + (float)Math.sqrt(u * d * (mode - min)); }
 		return max - (float)Math.sqrt((1 - u) * d * (max - mode));
 	}
 

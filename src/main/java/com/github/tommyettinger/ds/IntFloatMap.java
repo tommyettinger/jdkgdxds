@@ -72,13 +72,19 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 * minus 1.
 	 */
 	protected int mask;
-	protected @Nullable Entries entries1;
-	protected @Nullable Entries entries2;
-	protected @Nullable Values values1;
-	protected @Nullable Values values2;
-	protected @Nullable Keys keys1;
-	protected @Nullable Keys keys2;
-	
+	protected @Nullable
+	Entries entries1;
+	protected @Nullable
+	Entries entries2;
+	protected @Nullable
+	Values values1;
+	protected @Nullable
+	Values values2;
+	protected @Nullable
+	Keys keys1;
+	protected @Nullable
+	Keys keys2;
+
 	public float defaultValue = 0;
 
 	/**
@@ -104,8 +110,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public IntFloatMap (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f)
-			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
@@ -137,20 +142,27 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 * ensure this returns results in the range of 0 to {@link #mask}, inclusive. If nothing
 	 * else is changed, then unsigned-right-shifting an int or long by {@link #shift} will also
 	 * restrict results to the correct range.
+	 *
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
 	 */
 	protected int place (int item) {
 		return (int)(item * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
-	/** Returns the index of the key if already present, else {@code -1 - index} for the next empty index. This can be overridden
-	 * to compare for equality differently than {@code ==}. */
+	/**
+	 * Returns the index of the key if already present, else {@code -1 - index} for the next empty index. This can be overridden
+	 * to compare for equality differently than {@code ==}.
+	 */
 	private int locateKey (int key) {
 		int[] keyTable = this.keyTable;
-		for (int i = place(key);; i = i + 1 & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
-			if (other == 0) return ~i; // Empty space is available.
-			if (other == key) return i; // Same key was found.
+			if (other == 0) {
+				return ~i; // Empty space is available.
+			}
+			if (other == key) {
+				return i; // Same key was found.
+			}
 		}
 	}
 
@@ -160,10 +172,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	public float put (int key, float value) {
 		if (key == 0) {
 			float oldValue = defaultValue;
-			if(hasZeroValue)
-				oldValue = zeroValue;
-			else
-				size++;
+			if (hasZeroValue) { oldValue = zeroValue; } else { size++; }
 			hasZeroValue = true;
 			zeroValue = value;
 			return oldValue;
@@ -177,8 +186,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold)
-			resize(keyTable.length << 1);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
 		return defaultValue;
 	}
 
@@ -188,10 +196,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	public float putOrDefault (int key, float value, float defaultValue) {
 		if (key == 0) {
 			float oldValue = defaultValue;
-			if(hasZeroValue)
-				oldValue = zeroValue;
-			else
-				size++;
+			if (hasZeroValue) { oldValue = zeroValue; } else { size++; }
 			hasZeroValue = true;
 			zeroValue = value;
 			return oldValue;
@@ -205,15 +210,14 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold)
-			resize(keyTable.length << 1);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
 		return defaultValue;
 	}
 
 	public void putAll (IntFloatMap map) {
 		ensureCapacity(map.size);
-		if(map.hasZeroValue) {
-			if(!hasZeroValue) size++;
+		if (map.hasZeroValue) {
+			if (!hasZeroValue) { size++; }
 			hasZeroValue = true;
 			zeroValue = map.zeroValue;
 		}
@@ -222,8 +226,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		int key;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
-			if (key != 0)
-				put(key, valueTable[i]);
+			if (key != 0) { put(key, valueTable[i]); }
 		}
 	}
 
@@ -243,12 +246,11 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 	/**
 	 * Returns the value for the specified key, or {@link #defaultValue} if the key is not in the map.
-	 * 
+	 *
 	 * @param key any {@code int}
 	 */
 	public float get (int key) {
-		if(key == 0)
-			return (hasZeroValue) ? zeroValue : defaultValue;
+		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -257,17 +259,18 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
 	public float getOrDefault (int key, float defaultValue) {
-		if(key == 0)
-			return (hasZeroValue) ? zeroValue : defaultValue;
+		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
 
-	/** Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
-	 * put into the map and defaultValue is returned. */
+	/**
+	 * Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
+	 * put into the map and defaultValue is returned.
+	 */
 	public float getAndIncrement (int key, float defaultValue, float increment) {
-		if(key == 0){
-			if(hasZeroValue) {
+		if (key == 0) {
+			if (hasZeroValue) {
 				float old = zeroValue;
 				zeroValue += increment;
 				return old;
@@ -286,13 +289,12 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = defaultValue + increment;
-		if (++size >= threshold)
-			resize(keyTable.length << 1);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
 		return defaultValue;
 	}
 
 	public float remove (int key) {
-		if(key == 0) {
+		if (key == 0) {
 			if (hasZeroValue) {
 				hasZeroValue = false;
 				--size;
@@ -301,8 +303,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 			return defaultValue;
 		}
 		int i = locateKey(key);
-		if (i < 0)
-			return defaultValue;
+		if (i < 0) { return defaultValue; }
 		int[] keyTable = this.keyTable;
 		int rem;
 		float[] valueTable = this.valueTable;
@@ -322,7 +323,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		size--;
 		return oldValue;
 	}
-	
+
 	/**
 	 * Returns true if the map has one or more items.
 	 */
@@ -351,6 +352,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	/**
 	 * Gets the default value, a {@code float} which is returned by {@link #get(int)} if the key is not found.
 	 * If not changed, the default value is 0.
+	 *
 	 * @return the current default value
 	 */
 	public float getDefaultValue () {
@@ -361,6 +363,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 * Sets the default value, a {@code float} which is returned by {@link #get(int)} if the key is not found.
 	 * If not changed, the default value is 0. Note that {@link #getOrDefault(int, float)} is also available,
 	 * which allows specifying a "not-found" value per-call.
+	 *
 	 * @param defaultValue may be any float; should usually be one that doesn't occur as a typical value
 	 */
 	public void setDefaultValue (float defaultValue) {
@@ -373,11 +376,9 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 * instead.
 	 */
 	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0)
-			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		if (maximumCapacity < 0) { throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity); }
 		int tableSize = tableSize(maximumCapacity, loadFactor);
-		if (keyTable.length > tableSize)
-			resize(tableSize);
+		if (keyTable.length > tableSize) { resize(tableSize); }
 	}
 
 	/**
@@ -394,8 +395,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	}
 
 	public void clear () {
-		if (size == 0)
-			return;
+		if (size == 0) { return; }
 		size = 0;
 		Arrays.fill(keyTable, 0);
 	}
@@ -403,37 +403,32 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	/**
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
-	 *
 	 */
 	public boolean containsValue (float value) {
-		if(hasZeroValue && zeroValue == value) return true;
+		if (hasZeroValue && zeroValue == value) { return true; }
 		float[] valueTable = this.valueTable;
 		int[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && valueTable[i] == value)
-				return true;
+			if (keyTable[i] != 0 && valueTable[i] == value) { return true; }
 		}
 		return false;
 	}
 
 	public boolean containsKey (int key) {
-		if(key == 0) return hasZeroValue;
+		if (key == 0) { return hasZeroValue; }
 		return locateKey(key) >= 0;
 	}
-	
+
 	/**
 	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation.
-	 * 
 	 */
 	public int findKey (float value, int defaultKey) {
-		if(hasZeroValue && zeroValue == value)
-			return 0;
+		if (hasZeroValue && zeroValue == value) { return 0; }
 		float[] valueTable = this.valueTable;
 		int[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && valueTable[i] == value)
-				return keyTable[i];
+			if (keyTable[i] != 0 && valueTable[i] == value) { return keyTable[i]; }
 		}
 
 		return defaultKey;
@@ -445,8 +440,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize)
-			resize(tableSize);
+		if (keyTable.length < tableSize) { resize(tableSize); }
 	}
 
 	final void resize (int newSize) {
@@ -464,8 +458,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				int key = oldKeyTable[i];
-				if (key != 0)
-					putResize(key, oldValueTable[i]);
+				if (key != 0) { putResize(key, oldValueTable[i]); }
 			}
 		}
 	}
@@ -485,28 +478,23 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	}
 
 	public boolean equals (Object obj) {
-		if (obj == this)
-			return true;
-		if (!(obj instanceof IntFloatMap))
-			return false;
+		if (obj == this) { return true; }
+		if (!(obj instanceof IntFloatMap)) { return false; }
 		IntFloatMap other = (IntFloatMap)obj;
-		if (other.size != size)
-			return false;
-		if(other.hasZeroValue != hasZeroValue || other.zeroValue != zeroValue)
-			return false;
+		if (other.size != size) { return false; }
+		if (other.hasZeroValue != hasZeroValue || other.zeroValue != zeroValue) { return false; }
 		int[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			int key = keyTable[i];
 			if (key != 0) {
-				float value = valueTable[i];					
-				if (value != other.get(key))
-						return false;
+				float value = valueTable[i];
+				if (value != other.get(key)) { return false; }
 			}
 		}
 		return true;
 	}
-	
+
 	public String toString (String separator) {
 		return toString(separator, false);
 	}
@@ -516,22 +504,19 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	}
 
 	protected String toString (String separator, boolean braces) {
-		if (size == 0)
-			return braces ? "{}" : "";
+		if (size == 0) { return braces ? "{}" : ""; }
 		StringBuilder buffer = new StringBuilder(32);
-		if (braces)
-			buffer.append('{');
-		if(hasZeroValue){
+		if (braces) { buffer.append('{'); }
+		if (hasZeroValue) {
 			buffer.append("0=").append(zeroValue);
-			if(size > 1) buffer.append(separator);
+			if (size > 1) { buffer.append(separator); }
 		}
 		int[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			int key = keyTable[i];
-			if (key == 0)
-				continue;
+			if (key == 0) { continue; }
 			buffer.append(key);
 			buffer.append('=');
 			float value = valueTable[i];
@@ -540,16 +525,14 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		}
 		while (i-- > 0) {
 			int key = keyTable[i];
-			if (key == 0)
-				continue;
+			if (key == 0) { continue; }
 			buffer.append(separator);
 			buffer.append(key);
 			buffer.append('=');
 			float value = valueTable[i];
 			buffer.append(value);
 		}
-		if (braces)
-			buffer.append('}');
+		if (braces) { buffer.append('}'); }
 		return buffer.toString();
 	}
 
@@ -577,14 +560,14 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 * {@link PrimitiveIterator.OfInt#remove()} operation.  It does
 	 * not support the {@code add}, {@code addAll}, {@code remove},
 	 * {@code removeAll}, or {@code clear} operations.
-	 * 
+	 *
 	 * <p>Note that the same Collection instance is returned each time this
 	 * method is called. Use the {@link Keys} constructor for nested or
 	 * multithreaded iteration.
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	public Keys keySet () { 
+	public Keys keySet () {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys(this);
 			keys2 = new Keys(this);
@@ -600,9 +583,9 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		keys1.iter.valid = false;
 		return keys2;
 	}
-	
+
 	/**
-	 * Returns a {@link PrimitiveCollection.OfFloat} of the values in the map. 
+	 * Returns a {@link PrimitiveCollection.OfFloat} of the values in the map.
 	 * Note that the same PrimitiveCollection instance is returned each
 	 * time this method is called. Use the {@link Values} constructor for
 	 * nested or multithreaded iteration.
@@ -709,15 +692,12 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 		@Override
 		public boolean equals (@Nullable Object o) {
-			if (this == o)
-				return true;
-			if (o == null || getClass() != o.getClass())
-				return false;
+			if (this == o) { return true; }
+			if (o == null || getClass() != o.getClass()) { return false; }
 
 			Entry entry = (Entry)o;
 
-			if (key != (entry.key))
-				return false;
+			if (key != (entry.key)) { return false; }
 			return value == entry.value;
 		}
 
@@ -744,15 +724,12 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		public void reset () {
 			currentIndex = INDEX_ILLEGAL;
 			nextIndex = INDEX_ZERO;
-			if (map.hasZeroValue)
-				hasNext = true;
-			else
-				findNextIndex();
+			if (map.hasZeroValue) { hasNext = true; } else { findNextIndex(); }
 		}
 
 		void findNextIndex () {
 			int[] keyTable = map.keyTable;
-			for (int n = keyTable.length; ++nextIndex < n;) {
+			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != 0) {
 					hasNext = true;
 					return;
@@ -792,7 +769,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 					next = next + 1 & mask;
 				}
 				keyTable[i] = 0;
-				if (i != currentIndex) --nextIndex;
+				if (i != currentIndex) { --nextIndex; }
 			}
 			currentIndex = INDEX_ILLEGAL;
 			map.size--;
@@ -811,28 +788,29 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		public KeyIterator (IntFloatMap map) {
 			super(map);
 		}
-		
+
 		@Override
 		public int nextInt () {
-			if (!hasNext) throw new NoSuchElementException();
-			if (!valid) throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!hasNext) { throw new NoSuchElementException(); }
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			int key = nextIndex == INDEX_ZERO ? 0 : map.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
 			return key;
 		}
 
-		/** Returns a new IntList containing the remaining keys. */
+		/**
+		 * Returns a new IntList containing the remaining keys.
+		 */
 		public IntList toList () {
 			IntList list = new IntList(true, map.size);
-			while (hasNext)
-				list.add(next());
+			while (hasNext) { list.add(next()); }
 			return list;
 		}
 	}
-	
+
 	static public class ValueIterator extends MapIterator implements FloatIterator {
-		public ValueIterator(IntFloatMap map) {
+		public ValueIterator (IntFloatMap map) {
 			super(map);
 		}
 
@@ -844,10 +822,8 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		 */
 		@Override
 		public float nextFloat () {
-			if (!hasNext)
-				throw new NoSuchElementException();
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!hasNext) { throw new NoSuchElementException(); }
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			float value = nextIndex == INDEX_ZERO ? map.zeroValue : map.valueTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -856,35 +832,34 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 		@Override
 		public boolean hasNext () {
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			return hasNext;
 		}
 	}
-	
+
 	static public class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
 		protected Entry entry = new Entry();
 
-		public EntryIterator(IntFloatMap map) {
+		public EntryIterator (IntFloatMap map) {
 			super(map);
 		}
+
 		public Iterator<Entry> iterator () {
 			return this;
 		}
 
-		/** Note the same entry instance is returned each time this method is called. */
+		/**
+		 * Note the same entry instance is returned each time this method is called.
+		 */
 		@Override
 		public Entry next () {
-			if (!hasNext)
-				throw new NoSuchElementException();
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!hasNext) { throw new NoSuchElementException(); }
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			int[] keyTable = map.keyTable;
-			if(nextIndex == INDEX_ZERO) {
+			if (nextIndex == INDEX_ZERO) {
 				entry.key = 0;
 				entry.value = map.zeroValue;
-			}
-			else {
+			} else {
 				entry.key = keyTable[nextIndex];
 				entry.value = map.valueTable[nextIndex];
 			}
@@ -895,8 +870,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 		@Override
 		public boolean hasNext () {
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			return hasNext;
 		}
 	}
@@ -941,7 +915,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		public boolean contains (float item) {
 			return iter.map.containsValue(item);
 		}
-		
+
 		@Override
 		public void clear () {
 			throw new UnsupportedOperationException("IntFloatMap.Values is read-only");
@@ -968,7 +942,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 	static public class Keys implements PrimitiveCollection.OfInt {
 		protected KeyIterator iter;
-		
+
 		public Keys (IntFloatMap map) {
 			iter = new KeyIterator(map);
 		}

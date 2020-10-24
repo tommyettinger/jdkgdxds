@@ -69,13 +69,19 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 * minus 1.
 	 */
 	protected int mask;
-	protected @Nullable Entries<K> entries1;
-	protected @Nullable Entries<K> entries2;
-	protected @Nullable Values<K> values1;
-	protected @Nullable Values<K> values2;
-	protected @Nullable Keys<K> keys1;
-	protected @Nullable Keys<K> keys2;
-	
+	protected @Nullable
+	Entries<K> entries1;
+	protected @Nullable
+	Entries<K> entries2;
+	protected @Nullable
+	Values<K> values1;
+	protected @Nullable
+	Values<K> values2;
+	protected @Nullable
+	Keys<K> keys1;
+	protected @Nullable
+	Keys<K> keys2;
+
 	public int defaultValue = 0;
 
 	/**
@@ -101,8 +107,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public ObjectIntMap (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f)
-			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
@@ -134,6 +139,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 * ensure this returns results in the range of 0 to {@link #mask}, inclusive. If nothing
 	 * else is changed, then unsigned-right-shifting an int or long by {@link #shift} will also
 	 * restrict results to the correct range.
+	 *
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
 	 */
 	protected int place (Object item) {
@@ -157,16 +163,20 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 *      }
 	 * }
 	 * </pre>
+	 *
 	 * @param key a non-null Object that should probably be a K
 	 */
 	protected int locateKey (Object key) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
-			if (other == null)
+			if (other == null) {
 				return ~i; // Always negative; means empty space is available at i.
+			}
 			if (other.equals(key)) // If you want to change how equality is determined, do it here.
+			{
 				return i; // Same key was found.
+			}
 		}
 	}
 
@@ -183,8 +193,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold)
-			resize(keyTable.length << 1);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
 		return defaultValue;
 	}
 
@@ -201,8 +210,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold)
-			resize(keyTable.length << 1);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
 		return defaultValue;
 	}
 
@@ -213,8 +221,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		K key;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
-			if (key != null)
-				put(key, valueTable[i]);
+			if (key != null) { put(key, valueTable[i]); }
 		}
 	}
 
@@ -234,7 +241,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 
 	/**
 	 * Returns the value for the specified key, or {@link #defaultValue} if the key is not in the map.
-	 * 
+	 *
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
 	public int get (Object key) {
@@ -250,8 +257,10 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		return i < 0 ? defaultValue : valueTable[i];
 	}
 
-	/** Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
-	 * put into the map and defaultValue is returned. */
+	/**
+	 * Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
+	 * put into the map and defaultValue is returned.
+	 */
 	public int getAndIncrement (K key, int defaultValue, int increment) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
@@ -262,15 +271,13 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = defaultValue + increment;
-		if (++size >= threshold)
-			resize(keyTable.length << 1);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
 		return defaultValue;
 	}
 
 	public int remove (Object key) {
 		int i = locateKey(key);
-		if (i < 0)
-			return defaultValue;
+		if (i < 0) { return defaultValue; }
 		K[] keyTable = this.keyTable;
 		K rem;
 		int[] valueTable = this.valueTable;
@@ -290,7 +297,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		size--;
 		return oldValue;
 	}
-	
+
 	/**
 	 * Returns true if the map has one or more items.
 	 */
@@ -319,6 +326,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	/**
 	 * Gets the default value, a {@code int} which is returned by {@link #get(Object)} if the key is not found.
 	 * If not changed, the default value is 0.
+	 *
 	 * @return the current default value
 	 */
 	public int getDefaultValue () {
@@ -329,6 +337,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 * Sets the default value, a {@code int} which is returned by {@link #get(Object)} if the key is not found.
 	 * If not changed, the default value is 0. Note that {@link #getOrDefault(Object, int)} is also available,
 	 * which allows specifying a "not-found" value per-call.
+	 *
 	 * @param defaultValue may be any int; should usually be one that doesn't occur as a typical value
 	 */
 	public void setDefaultValue (int defaultValue) {
@@ -341,11 +350,9 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 * instead.
 	 */
 	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0)
-			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		if (maximumCapacity < 0) { throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity); }
 		int tableSize = tableSize(maximumCapacity, loadFactor);
-		if (keyTable.length > tableSize)
-			resize(tableSize);
+		if (keyTable.length > tableSize) { resize(tableSize); }
 	}
 
 	/**
@@ -362,8 +369,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	}
 
 	public void clear () {
-		if (size == 0)
-			return;
+		if (size == 0) { return; }
 		size = 0;
 		Arrays.fill(keyTable, null);
 	}
@@ -371,14 +377,12 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	/**
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
-	 *
 	 */
 	public boolean containsValue (int value) {
 		int[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != null && valueTable[i] == value)
-				return true;
+			if (keyTable[i] != null && valueTable[i] == value) { return true; }
 		}
 		return false;
 	}
@@ -386,18 +390,17 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	public boolean containsKey (Object key) {
 		return locateKey(key) >= 0;
 	}
-	
+
 	/**
 	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation.
-	 * 
 	 */
-	public @Nullable K findKey (int value) {
+	public @Nullable
+	K findKey (int value) {
 		int[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != null && valueTable[i] == value)
-				return keyTable[i];
+			if (keyTable[i] != null && valueTable[i] == value) { return keyTable[i]; }
 		}
 
 		return null;
@@ -409,8 +412,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize)
-			resize(tableSize);
+		if (keyTable.length < tableSize) { resize(tableSize); }
 	}
 
 	final void resize (int newSize) {
@@ -428,8 +430,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				K key = oldKeyTable[i];
-				if (key != null)
-					putResize(key, oldValueTable[i]);
+				if (key != null) { putResize(key, oldValueTable[i]); }
 			}
 		}
 	}
@@ -449,26 +450,22 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	}
 
 	public boolean equals (Object obj) {
-		if (obj == this)
-			return true;
-		if (!(obj instanceof ObjectIntMap))
-			return false;
+		if (obj == this) { return true; }
+		if (!(obj instanceof ObjectIntMap)) { return false; }
 		ObjectIntMap other = (ObjectIntMap)obj;
-		if (other.size != size)
-			return false;
+		if (other.size != size) { return false; }
 		K[] keyTable = this.keyTable;
 		int[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
 			if (key != null) {
-				int value = valueTable[i];					
-				if (value != other.get(key))
-						return false;
+				int value = valueTable[i];
+				if (value != other.get(key)) { return false; }
 			}
 		}
 		return true;
 	}
-	
+
 	public String toString (String separator) {
 		return toString(separator, false);
 	}
@@ -478,18 +475,15 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	}
 
 	protected String toString (String separator, boolean braces) {
-		if (size == 0)
-			return braces ? "{}" : "";
+		if (size == 0) { return braces ? "{}" : ""; }
 		StringBuilder buffer = new StringBuilder(32);
-		if (braces)
-			buffer.append('{');
+		if (braces) { buffer.append('{'); }
 		K[] keyTable = this.keyTable;
 		int[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			K key = keyTable[i];
-			if (key == null)
-				continue;
+			if (key == null) { continue; }
 			buffer.append(key == this ? "(this)" : key);
 			buffer.append('=');
 			int value = valueTable[i];
@@ -498,16 +492,14 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		}
 		while (i-- > 0) {
 			K key = keyTable[i];
-			if (key == null)
-				continue;
+			if (key == null) { continue; }
 			buffer.append(separator);
 			buffer.append(key == this ? "(this)" : key);
 			buffer.append('=');
 			int value = valueTable[i];
 			buffer.append(value);
 		}
-		if (braces)
-			buffer.append('}');
+		if (braces) { buffer.append('}'); }
 		return buffer.toString();
 	}
 
@@ -536,14 +528,14 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 * {@code removeAll}, {@code retainAll}, and {@code clear}
 	 * operations.  It does not support the {@code add} or {@code addAll}
 	 * operations.
-	 * 
+	 *
 	 * <p>Note that the same Collection instance is returned each time this
 	 * method is called. Use the {@link Keys} constructor for nested or
 	 * multithreaded iteration.
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	public Keys<K> keySet () { 
+	public Keys<K> keySet () {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
@@ -559,7 +551,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		keys1.iter.valid = false;
 		return keys2;
 	}
-	
+
 	/**
 	 * Returns a Collection of the values in the map. Remove is supported. Note that the same Collection instance is returned each
 	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
@@ -608,7 +600,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	}
 
 	static public class Entry<K> {
-		public @Nullable K key;
+		public @Nullable
+		K key;
 		public int value;
 
 		public String toString () {
@@ -667,15 +660,12 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 
 		@Override
 		public boolean equals (@Nullable Object o) {
-			if (this == o)
-				return true;
-			if (o == null || getClass() != o.getClass() || key == null)
-				return false;
+			if (this == o) { return true; }
+			if (o == null || getClass() != o.getClass() || key == null) { return false; }
 
 			Entry<?> entry = (Entry<?>)o;
 
-			if (!key.equals(entry.key))
-				return false;
+			if (!key.equals(entry.key)) { return false; }
 			return value == entry.value;
 		}
 
@@ -714,11 +704,10 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			}
 			hasNext = false;
 		}
-		
+
 		public void remove () {
 			int i = currentIndex;
-			if (i < 0)
-				throw new IllegalStateException("next must be called before remove.");
+			if (i < 0) { throw new IllegalStateException("next must be called before remove."); }
 			K[] keyTable = map.keyTable;
 			int[] valueTable = map.valueTable;
 			int mask = map.mask, next = i + 1 & mask;
@@ -735,17 +724,17 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			keyTable[i] = null;
 
 			map.size--;
-			if (i != currentIndex)
-				--nextIndex;
+			if (i != currentIndex) { --nextIndex; }
 			currentIndex = -1;
 		}
 	}
-	
+
 	static public class KeyIterator<K> extends MapIterator<K> implements Iterable<K>, Iterator<K> {
 
-		public KeyIterator(ObjectIntMap<K> map) {
+		public KeyIterator (ObjectIntMap<K> map) {
 			super(map);
 		}
+
 		@Override
 		public Iterator<K> iterator () {
 			return this;
@@ -753,26 +742,23 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 
 		@Override
 		public boolean hasNext () {
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			return hasNext;
 		}
 
 		@Override
 		public K next () {
-			if (!hasNext)
-				throw new NoSuchElementException();
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!hasNext) { throw new NoSuchElementException(); }
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			K key = map.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
 			return key;
 		}
 	}
-	
+
 	static public class ValueIterator<K> extends MapIterator<K> implements PrimitiveIterator.OfInt {
-		public ValueIterator(ObjectIntMap<K> map) {
+		public ValueIterator (ObjectIntMap<K> map) {
 			super(map);
 		}
 
@@ -784,10 +770,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		 */
 		@Override
 		public int nextInt () {
-			if (!hasNext)
-				throw new NoSuchElementException();
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!hasNext) { throw new NoSuchElementException(); }
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			int value = map.valueTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -796,29 +780,29 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 
 		@Override
 		public boolean hasNext () {
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			return hasNext;
 		}
 	}
-	
+
 	static public class EntryIterator<K> extends MapIterator<K> implements Iterable<Entry<K>>, Iterator<Entry<K>> {
 		protected Entry<K> entry = new Entry<>();
 
-		public EntryIterator(ObjectIntMap<K> map) {
+		public EntryIterator (ObjectIntMap<K> map) {
 			super(map);
 		}
+
 		public Iterator<Entry<K>> iterator () {
 			return this;
 		}
 
-		/** Note the same entry instance is returned each time this method is called. */
+		/**
+		 * Note the same entry instance is returned each time this method is called.
+		 */
 		@Override
 		public Entry<K> next () {
-			if (!hasNext)
-				throw new NoSuchElementException();
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!hasNext) { throw new NoSuchElementException(); }
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			K[] keyTable = map.keyTable;
 			entry.key = keyTable[nextIndex];
 			entry.value = map.valueTable[nextIndex];
@@ -829,8 +813,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 
 		@Override
 		public boolean hasNext () {
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			return hasNext;
 		}
 	}
@@ -897,7 +880,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 
 	static public class Keys<K> extends AbstractSet<K> {
 		protected KeyIterator<K> iter;
-		
+
 		public Keys (ObjectIntMap<K> map) {
 			iter = new KeyIterator<>(map);
 		}

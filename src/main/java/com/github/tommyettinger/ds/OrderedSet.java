@@ -95,8 +95,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	public boolean add (T key, int index) {
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
-			if (oldIndex != index)
-				items.add(index, items.remove(oldIndex));
+			if (oldIndex != index) { items.add(index, items.remove(oldIndex)); }
 			return false;
 		}
 		items.add(index, key);
@@ -106,8 +105,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	public void addAll (OrderedSet<T> set) {
 		ensureCapacity(set.size);
 		ObjectList<T> si = set.items;
-		for (int i = 0, n = si.size(); i < n; i++)
-			add(si.get(i));
+		for (int i = 0, n = si.size(); i < n; i++) { add(si.get(i)); }
 	}
 
 	@Override
@@ -130,8 +128,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	@Override
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize)
-			resize(tableSize);
+		if (keyTable.length < tableSize) { resize(tableSize); }
 		items.ensureCapacity(size + additionalCapacity);
 	}
 
@@ -146,10 +143,8 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
 	public boolean alter (T before, T after) {
-		if (contains(after))
-			return false;
-		if (!super.remove(before))
-			return false;
+		if (contains(after)) { return false; }
+		if (!super.remove(before)) { return false; }
 		super.add(after);
 		items.set(items.indexOf(before), after);
 		return true;
@@ -165,8 +160,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
 	public boolean alterIndex (int index, T after) {
-		if (index < 0 || index >= size || contains(after))
-			return false;
+		if (index < 0 || index >= size || contains(after)) { return false; }
 		super.remove(items.get(index));
 		super.add(after);
 		items.set(index, after);
@@ -184,7 +178,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		items.clear();
 		super.clear();
 	}
-	
+
 	/**
 	 * Gets the ObjectList of items in the order this class will iterate through them.
 	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
@@ -192,6 +186,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * <br>
 	 * This method is provided for backwards-compatibility; {@link #order()} is preferred for new code
 	 * because it allows order-changing methods to be written once for an arbitrary {@link Ordered} type.
+	 *
 	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
 	 */
 	public ObjectList<T> orderedItems () {
@@ -202,26 +197,28 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * Gets the ObjectList of items in the order this class will iterate through them.
 	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
 	 * also change the iteration order here.
+	 *
 	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
 	public ObjectList<T> order () {
 		return items;
 	}
-	
+
 	/**
 	 * Sorts this OrderedSet in-place by the keys' natural ordering; {@code T} must implement {@link Comparable}.
 	 */
-	public void sort(){
+	public void sort () {
 		items.sort(null);
 	}
 
 	/**
 	 * Sorts this OrderedSet in-place by the given Comparator used on the keys. If {@code comp} is null, then this
 	 * will sort by the natural ordering of the keys, which requires {@code T} to {@link Comparable}.
+	 *
 	 * @param comp a Comparator that can compare two {@code T} keys, or null to use the keys' natural ordering
 	 */
-	public void sort(@Nullable Comparator<T> comp){
+	public void sort (@Nullable Comparator<T> comp) {
 		items.sort(comp);
 	}
 
@@ -229,6 +226,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * Iterates through items in the same order as {@link #order()}.
 	 * Reuses one of two iterators, and does not permit nested iteration;
 	 * use {@link OrderedSetIterator#OrderedSetIterator(OrderedSet)} to nest iterators.
+	 *
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
@@ -251,8 +249,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 
 	@Override
 	public String toString (String separator) {
-		if (size == 0)
-			return "{}";
+		if (size == 0) { return "{}"; }
 		ObjectList<T> items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('{');
@@ -285,10 +282,8 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 
 		@Override
 		public K next () {
-			if (!hasNext)
-				throw new NoSuchElementException();
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!hasNext) { throw new NoSuchElementException(); }
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			K key = items.get(nextIndex);
 			nextIndex++;
 			hasNext = nextIndex < set.size;
@@ -297,8 +292,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 
 		@Override
 		public void remove () {
-			if (nextIndex < 0)
-				throw new IllegalStateException("next must be called before remove.");
+			if (nextIndex < 0) { throw new IllegalStateException("next must be called before remove."); }
 			nextIndex--;
 			set.remove(items.get(nextIndex));
 		}

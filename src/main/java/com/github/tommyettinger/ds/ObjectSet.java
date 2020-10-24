@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import javax.annotation.Nullable;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -67,8 +66,10 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * minus 1.
 	 */
 	protected int mask;
-	protected @Nullable ObjectSetIterator<T> iterator1;
-	protected @Nullable ObjectSetIterator<T> iterator2;
+	protected @Nullable
+	ObjectSetIterator<T> iterator1;
+	protected @Nullable
+	ObjectSetIterator<T> iterator2;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
@@ -93,8 +94,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public ObjectSet (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f)
-			throw new IllegalArgumentException("loadFactor must be > 0 and < 1: " + loadFactor);
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and < 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
@@ -135,6 +135,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * ensure this returns results in the range of 0 to {@link #mask}, inclusive. If nothing
 	 * else is changed, then unsigned-right-shifting an int or long by {@link #shift} will also
 	 * restrict results to the correct range.
+	 *
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
 	 */
 	protected int place (Object item) {
@@ -158,16 +159,20 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 *      }
 	 * }
 	 * </pre>
+	 *
 	 * @param key a non-null Object that should probably be a T
 	 */
 	protected int locateKey (Object key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
-			if (other == null)
+			if (other == null) {
 				return ~i; // Always negative; means empty space is available at i.
+			}
 			if (other.equals(key)) // If you want to change how equality is determined, do it here.
+			{
 				return i; // Same key was found.
+			}
 		}
 	}
 
@@ -178,20 +183,19 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	@Override
 	public boolean add (T key) {
 		int i = locateKey(key);
-		if (i >= 0)
+		if (i >= 0) {
 			return false; // Existing key was found.
+		}
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
-		if (++size >= threshold)
-			resize(keyTable.length << 1);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
 		return true;
 	}
 
 	@Override
 	public boolean containsAll (Collection<?> c) {
 		for (Object o : c) {
-			if (!contains(o))
-				return false;
+			if (!contains(o)) { return false; }
 		}
 		return true;
 	}
@@ -201,8 +205,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		final int length = coll.size();
 		ensureCapacity(length);
 		int oldSize = size;
-		for (T t : coll)
-			add(t);
+		for (T t : coll) { add(t); }
 		return oldSize != size;
 
 	}
@@ -211,8 +214,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	public boolean retainAll (Collection<?> c) {
 		boolean modified = false;
 		for (Object o : this) {
-			if (!c.contains(o))
-				modified |= remove(o);
+			if (!c.contains(o)) { modified |= remove(o); }
 
 		}
 		return modified;
@@ -234,8 +236,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	public boolean addAll (T[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size;
-		for (int i = offset, n = i + length; i < n; i++)
-			add(array[i]);
+		for (int i = offset, n = i + length; i < n; i++) { add(array[i]); }
 		return oldSize != size;
 	}
 
@@ -244,8 +245,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		T[] keyTable = set.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null)
-				add(key);
+			if (key != null) { add(key); }
 		}
 	}
 
@@ -268,8 +268,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	@Override
 	public boolean remove (Object key) {
 		int i = locateKey(key);
-		if (i < 0)
-			return false;
+		if (i < 0) { return false; }
 		T[] keyTable = this.keyTable;
 		int mask = this.mask, next = i + 1 & mask;
 		while ((key = keyTable[next]) != null) {
@@ -318,11 +317,9 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * instead.
 	 */
 	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0)
-			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		if (maximumCapacity < 0) { throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity); }
 		int tableSize = tableSize(maximumCapacity, loadFactor);
-		if (keyTable.length > tableSize)
-			resize(tableSize);
+		if (keyTable.length > tableSize) { resize(tableSize); }
 	}
 
 	/**
@@ -346,8 +343,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 */
 	@Override
 	public void clear () {
-		if (size == 0)
-			return;
+		if (size == 0) { return; }
 		size = 0;
 		Arrays.fill(keyTable, null);
 	}
@@ -357,16 +353,15 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return locateKey(key) >= 0;
 	}
 
-	public @Nullable T get (T key) {
+	public @Nullable
+	T get (T key) {
 		int i = locateKey(key);
 		return i < 0 ? null : keyTable[i];
 	}
 
 	public T first () {
 		T[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++)
-			if (keyTable[i] != null)
-				return keyTable[i];
+		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != null) { return keyTable[i]; } }
 		throw new IllegalStateException("ObjectSet is empty.");
 	}
 
@@ -378,8 +373,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize)
-			resize(tableSize);
+		if (keyTable.length < tableSize) { resize(tableSize); }
 	}
 
 	protected void resize (int newSize) {
@@ -394,14 +388,13 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				T key = oldKeyTable[i];
-				if (key != null)
-					addResize(key);
+				if (key != null) { addResize(key); }
 			}
 		}
 	}
 
 	@Override
-	public Object[] toArray() {
+	public Object[] toArray () {
 		return toArray(new Object[size()]);
 	}
 
@@ -414,14 +407,14 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * <br>
 	 * Implementation is mostly copied from GWT, but uses Arrays.copyOf() instead of their internal APIs.
 	 *
-	 * @param a the array into which the elements of this set are to be
-	 *        stored, if it is big enough; otherwise, a new array of the same
-	 *        runtime type is allocated for this purpose.
+	 * @param a   the array into which the elements of this set are to be
+	 *            stored, if it is big enough; otherwise, a new array of the same
+	 *            runtime type is allocated for this purpose.
 	 * @param <E> must be the same as {@code T} or a superclass/interface of it; not checked
 	 * @return an array containing all the elements in this set
 	 */
 	@Override
-	public <E> E[] toArray(E[] a) {
+	public <E> E[] toArray (E[] a) {
 		int size = size();
 		if (a.length < size) {
 			a = Arrays.copyOf(a, size);
@@ -442,22 +435,17 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null)
-				h += key.hashCode();
+			if (key != null) { h += key.hashCode(); }
 		}
 		return h;
 	}
 
 	public boolean equals (Object obj) {
-		if (!(obj instanceof ObjectSet))
-			return false;
+		if (!(obj instanceof ObjectSet)) { return false; }
 		ObjectSet other = (ObjectSet)obj;
-		if (other.size != size)
-			return false;
+		if (other.size != size) { return false; }
 		T[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++)
-			if (keyTable[i] != null && !other.contains(keyTable[i]))
-				return false;
+		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != null && !other.contains(keyTable[i])) { return false; } }
 		return true;
 	}
 
@@ -466,22 +454,19 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	public String toString (String separator) {
-		if (size == 0)
-			return "";
+		if (size == 0) { return ""; }
 		StringBuilder buffer = new StringBuilder(32);
 		T[] keyTable = this.keyTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null)
-				continue;
+			if (key == null) { continue; }
 			buffer.append(key == this ? "(this)" : key);
 			break;
 		}
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null)
-				continue;
+			if (key == null) { continue; }
 			buffer.append(separator);
 			buffer.append(key == this ? "(this)" : key);
 		}
@@ -551,8 +536,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		@Override
 		public void remove () {
 			int i = currentIndex;
-			if (i < 0)
-				throw new IllegalStateException("next must be called before remove.");
+			if (i < 0) { throw new IllegalStateException("next must be called before remove."); }
 			T[] keyTable = set.keyTable;
 			int mask = set.mask, next = i + 1 & mask;
 			T key;
@@ -566,24 +550,20 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 			}
 			keyTable[i] = null;
 			set.size--;
-			if (i != currentIndex)
-				--nextIndex;
+			if (i != currentIndex) { --nextIndex; }
 			currentIndex = -1;
 		}
 
 		@Override
 		public boolean hasNext () {
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			return hasNext;
 		}
 
 		@Override
 		public T next () {
-			if (!hasNext)
-				throw new NoSuchElementException();
-			if (!valid)
-				throw new RuntimeException("#iterator() cannot be used nested.");
+			if (!hasNext) { throw new NoSuchElementException(); }
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			T key = set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -601,10 +581,9 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		 */
 		public ObjectList<T> toList () {
 			ObjectList<T> list = new ObjectList<>(set.size);
-			int currentIdx =  currentIndex, nextIdx = nextIndex;
+			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext)
-				list.add(next());
+			while (hasNext) { list.add(next()); }
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;

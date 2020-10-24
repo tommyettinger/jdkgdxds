@@ -9,6 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Documented
 @Nonnull
-@TypeQualifierDefault({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
+@TypeQualifierDefault({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NotNullDefault {}
+public @interface NotNullDefault {
+}
