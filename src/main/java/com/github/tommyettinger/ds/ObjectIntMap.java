@@ -858,14 +858,29 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		}
 	}
 
-	static public class Values<K> {
+	static public class Values<K> implements PrimitiveCollection.OfInt {
 		protected ValueIterator<K> iter;
 
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
+		@Override
+		public boolean add (int item) {
+			throw new UnsupportedOperationException("ObjectIntMap.Values is read-only");
+		}
+
+		@Override
+		public boolean remove (int item) {
+			throw new UnsupportedOperationException("ObjectIntMap.Values is read-only");
+		}
+
+		@Override
+		public boolean contains (int item) {
+			return iter.map.containsValue(item);
+		}
+
+		@Override
+		public void clear () {
+			throw new UnsupportedOperationException("ObjectIntMap.Values is read-only");
+		}
+
 		public PrimitiveIterator.OfInt iterator () {
 			return iter;
 		}

@@ -859,14 +859,29 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		}
 	}
 
-	static public class Values<K> {
+	static public class Values<K> implements PrimitiveCollection.OfLong {
 		protected ValueIterator<K> iter;
 
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
+		@Override
+		public boolean add (long item) {
+			throw new UnsupportedOperationException("ObjectLongMap.Values is read-only");
+		}
+
+		@Override
+		public boolean remove (long item) {
+			throw new UnsupportedOperationException("ObjectLongMap.Values is read-only");
+		}
+
+		@Override
+		public boolean contains (long item) {
+			return iter.map.containsValue(item);
+		}
+
+		@Override
+		public void clear () {
+			throw new UnsupportedOperationException("ObjectLongMap.Values is read-only");
+		}
+
 		public PrimitiveIterator.OfLong iterator () {
 			return iter;
 		}

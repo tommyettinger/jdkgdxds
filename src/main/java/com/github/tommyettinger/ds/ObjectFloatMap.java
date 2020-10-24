@@ -860,14 +860,29 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		}
 	}
 
-	static public class Values<K> {
+	static public class Values<K> implements PrimitiveCollection.OfFloat {
 		protected ValueIterator<K> iter;
 
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
+		@Override
+		public boolean add (float item) {
+			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
+		}
+
+		@Override
+		public boolean remove (float item) {
+			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
+		}
+
+		@Override
+		public boolean contains (float item) {
+			return iter.map.containsValue(item);
+		}
+
+		@Override
+		public void clear () {
+			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
+		}
+		
 		public FloatIterator iterator () {
 			return iter;
 		}

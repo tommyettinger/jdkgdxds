@@ -32,8 +32,8 @@ import java.util.Set;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * An unordered map where the keys are objects and the values are floats. Null keys are not allowed. No allocation is done except
- * when growing the table size.
+ * An unordered map where the keys are unboxed longs and the values are unboxed floats. Null keys are not allowed. No allocation is
+ * done except when growing the table size.
  * <p>
  * This class performs fast contains and remove (typically O(1), worst case O(n) but that is rare in practice). Add may be
  * slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors
@@ -54,7 +54,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongFloatMap implements Serializable {
+public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable {
 	private static final long serialVersionUID = 0L;
 
 	protected int size;
@@ -923,8 +923,28 @@ public class LongFloatMap implements Serializable {
 		}
 	}
 
-	static public class Values {
+	static public class Values implements PrimitiveCollection.OfFloat {
 		protected ValueIterator iter;
+
+		@Override
+		public boolean add (float item) {
+			throw new UnsupportedOperationException("LongFloatMap.Values is read-only");
+		}
+
+		@Override
+		public boolean remove (float item) {
+			throw new UnsupportedOperationException("LongFloatMap.Values is read-only");
+		}
+
+		@Override
+		public boolean contains (float item) {
+			return iter.map.containsValue(item);
+		}
+		
+		@Override
+		public void clear () {
+			throw new UnsupportedOperationException("LongFloatMap.Values is read-only");
+		}
 
 		/**
 		 * Returns an iterator over the elements contained in this collection.
@@ -945,22 +965,36 @@ public class LongFloatMap implements Serializable {
 
 	}
 
-	//TODO: implement the rest of the keySet methods, since we don't have AbstractSet here.
-	static public class Keys extends LongSet {
+	static public class Keys implements PrimitiveCollection.OfLong {
 		protected KeyIterator iter;
 		
 		public Keys (LongFloatMap map) {
 			iter = new KeyIterator(map);
 		}
 
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
+		@Override
+		public boolean add (long item) {
+			throw new UnsupportedOperationException("LongFloatMap.Keys is read-only");
+		}
+
+		@Override
+		public boolean remove (long item) {
+			throw new UnsupportedOperationException("LongFloatMap.Keys is read-only");
+		}
+
+		@Override
+		public boolean contains (long item) {
+			return iter.map.containsKey(item);
+		}
+
 		@Override
 		public PrimitiveIterator.OfLong iterator () {
 			return iter;
+		}
+
+		@Override
+		public void clear () {
+			throw new UnsupportedOperationException("LongFloatMap.Keys is read-only");
 		}
 
 		@Override
