@@ -720,7 +720,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	/**
 	 * @see #LongList(long[])
 	 */
-	static public LongList with (long... array) {
+	public static LongList with (long... array) {
 		return new LongList(array);
 	}
 }

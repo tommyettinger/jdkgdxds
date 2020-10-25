@@ -383,7 +383,7 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 		return iterator2;
 	}
 
-	static public IntSet with (int... array) {
+	public static IntSet with (int... array) {
 		IntSet set = new IntSet();
 		set.addAll(array);
 		return set;
@@ -393,7 +393,7 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 		return size;
 	}
 
-	static public class IntSetIterator implements PrimitiveIterator.OfInt {
+	public static class IntSetIterator implements PrimitiveIterator.OfInt {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
 		public boolean hasNext;

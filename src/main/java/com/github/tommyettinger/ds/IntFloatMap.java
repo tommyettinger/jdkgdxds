@@ -627,7 +627,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		return entries2;
 	}
 
-	static public class Entry {
+	public static class Entry {
 		public int key;
 		public float value;
 
@@ -771,7 +771,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 	}
 
-	static public class KeyIterator extends MapIterator implements PrimitiveIterator.OfInt {
+	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfInt {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
 		public boolean hasNext;
@@ -803,7 +803,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		}
 	}
 
-	static public class ValueIterator extends MapIterator implements FloatIterator {
+	public static class ValueIterator extends MapIterator implements FloatIterator {
 		public ValueIterator (IntFloatMap map) {
 			super(map);
 		}
@@ -831,7 +831,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		}
 	}
 
-	static public class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
+	public static class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
 		protected Entry entry = new Entry();
 
 		public EntryIterator (IntFloatMap map) {
@@ -869,7 +869,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		}
 	}
 
-	static public class Entries extends AbstractSet<Entry> {
+	public static class Entries extends AbstractSet<Entry> {
 		protected EntryIterator iter;
 
 		public Entries (IntFloatMap map) {
@@ -892,7 +892,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		}
 	}
 
-	static public class Values implements PrimitiveCollection.OfFloat {
+	public static class Values implements PrimitiveCollection.OfFloat {
 		protected ValueIterator iter;
 
 		@Override
@@ -934,7 +934,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 	}
 
-	static public class Keys implements PrimitiveCollection.OfInt {
+	public static class Keys implements PrimitiveCollection.OfInt {
 		protected KeyIterator iter;
 
 		public Keys (IntFloatMap map) {

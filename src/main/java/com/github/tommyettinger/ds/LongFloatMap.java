@@ -625,7 +625,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 		return entries2;
 	}
 
-	static public class Entry {
+	public static class Entry {
 		public long key;
 		public float value;
 
@@ -769,7 +769,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 
 	}
 
-	static public class KeyIterator extends MapIterator implements PrimitiveIterator.OfLong {
+	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfLong {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
 		public boolean hasNext;
@@ -801,7 +801,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 		}
 	}
 
-	static public class ValueIterator extends MapIterator implements FloatIterator {
+	public static class ValueIterator extends MapIterator implements FloatIterator {
 		public ValueIterator (LongFloatMap map) {
 			super(map);
 		}
@@ -829,7 +829,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 		}
 	}
 
-	static public class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
+	public static class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
 		protected Entry entry = new Entry();
 
 		public EntryIterator (LongFloatMap map) {
@@ -867,7 +867,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 		}
 	}
 
-	static public class Entries extends AbstractSet<Entry> {
+	public static class Entries extends AbstractSet<Entry> {
 		protected EntryIterator iter;
 
 		public Entries (LongFloatMap map) {
@@ -890,7 +890,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 		}
 	}
 
-	static public class Values implements PrimitiveCollection.OfFloat {
+	public static class Values implements PrimitiveCollection.OfFloat {
 		protected ValueIterator iter;
 
 		@Override
@@ -932,7 +932,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 
 	}
 
-	static public class Keys implements PrimitiveCollection.OfLong {
+	public static class Keys implements PrimitiveCollection.OfLong {
 		protected KeyIterator iter;
 
 		public Keys (LongFloatMap map) {

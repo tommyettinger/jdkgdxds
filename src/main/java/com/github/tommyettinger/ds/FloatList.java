@@ -735,7 +735,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	/**
 	 * @see #FloatList(float[])
 	 */
-	static public FloatList with (float... array) {
+	public static FloatList with (float... array) {
 		return new FloatList(array);
 	}
 }

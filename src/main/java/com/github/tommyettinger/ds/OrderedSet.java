@@ -266,7 +266,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		return toString(", ");
 	}
 
-	static public class OrderedSetIterator<K> extends ObjectSetIterator<K> {
+	public static class OrderedSetIterator<K> extends ObjectSetIterator<K> {
 		private final ObjectList<K> items;
 
 		public OrderedSetIterator (OrderedSet<K> set) {
@@ -299,7 +299,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	}
 
 	@SafeVarargs
-	static public <T> OrderedSet<T> with (T... array) {
+	public static <T> OrderedSet<T> with (T... array) {
 		OrderedSet<T> set = new OrderedSet<T>();
 		set.addAll(array);
 		return set;

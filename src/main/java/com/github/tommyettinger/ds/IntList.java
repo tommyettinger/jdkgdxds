@@ -715,7 +715,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	/**
 	 * @see #IntList(int[])
 	 */
-	static public IntList with (int... array) {
+	public static IntList with (int... array) {
 		return new IntList(array);
 	}
 }

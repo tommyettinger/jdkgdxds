@@ -381,7 +381,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		return buffer.toString();
 	}
 
-	static public class OrderedMapEntries<K, V> extends Entries<K, V> {
+	public static class OrderedMapEntries<K, V> extends Entries<K, V> {
 		protected ObjectList<K> keys;
 
 		public OrderedMapEntries (OrderedMap<K, V> map) {
@@ -434,7 +434,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		}
 	}
 
-	static public class OrderedMapKeys<K, V> extends Keys<K, V> {
+	public static class OrderedMapKeys<K, V> extends Keys<K, V> {
 		private final ObjectList<K> keys;
 
 		public OrderedMapKeys (OrderedMap<K, V> map) {
@@ -486,7 +486,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		}
 	}
 
-	static public class OrderedMapValues<K, V> extends Values<K, V> {
+	public static class OrderedMapValues<K, V> extends Values<K, V> {
 		private final ObjectList<K> keys;
 
 		public OrderedMapValues (OrderedMap<K, V> map) {

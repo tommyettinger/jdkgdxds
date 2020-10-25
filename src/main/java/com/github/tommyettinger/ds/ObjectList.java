@@ -230,7 +230,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 	}
 
 	@SafeVarargs
-	static public <T> ObjectList<T> with (T... varargs) {
+	public static <T> ObjectList<T> with (T... varargs) {
 		return new ObjectList<>(varargs);
 	}
 

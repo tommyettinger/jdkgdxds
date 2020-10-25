@@ -591,7 +591,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		return entries2;
 	}
 
-	static public class Entry<K> {
+	public static class Entry<K> {
 		@Nullable public K key;
 		public int value;
 
@@ -718,7 +718,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		}
 	}
 
-	static public class KeyIterator<K> extends MapIterator<K> implements Iterable<K>, Iterator<K> {
+	public static class KeyIterator<K> extends MapIterator<K> implements Iterable<K>, Iterator<K> {
 
 		public KeyIterator (ObjectIntMap<K> map) {
 			super(map);
@@ -743,7 +743,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		}
 	}
 
-	static public class ValueIterator<K> extends MapIterator<K> implements PrimitiveIterator.OfInt {
+	public static class ValueIterator<K> extends MapIterator<K> implements PrimitiveIterator.OfInt {
 		public ValueIterator (ObjectIntMap<K> map) {
 			super(map);
 		}
@@ -769,7 +769,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		}
 	}
 
-	static public class EntryIterator<K> extends MapIterator<K> implements Iterable<Entry<K>>, Iterator<Entry<K>> {
+	public static class EntryIterator<K> extends MapIterator<K> implements Iterable<Entry<K>>, Iterator<Entry<K>> {
 		protected Entry<K> entry = new Entry<>();
 
 		public EntryIterator (ObjectIntMap<K> map) {
@@ -800,7 +800,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		}
 	}
 
-	static public class Entries<K> extends AbstractSet<Entry<K>> {
+	public static class Entries<K> extends AbstractSet<Entry<K>> {
 		protected EntryIterator<K> iter;
 
 		public Entries (ObjectIntMap<K> map) {
@@ -821,7 +821,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		}
 	}
 
-	static public class Values<K> implements PrimitiveCollection.OfInt {
+	public static class Values<K> implements PrimitiveCollection.OfInt {
 		protected ValueIterator<K> iter;
 
 		@Override public boolean add (int item) {
@@ -854,7 +854,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 
 	}
 
-	static public class Keys<K> extends AbstractSet<K> {
+	public static class Keys<K> extends AbstractSet<K> {
 		protected KeyIterator<K> iter;
 
 		public Keys (ObjectIntMap<K> map) {

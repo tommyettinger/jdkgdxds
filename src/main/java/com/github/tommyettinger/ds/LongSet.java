@@ -388,13 +388,13 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		return iterator2;
 	}
 
-	static public LongSet with (long... array) {
+	public static LongSet with (long... array) {
 		LongSet set = new LongSet();
 		set.addAll(array);
 		return set;
 	}
 
-	static public class LongSetIterator implements PrimitiveIterator.OfLong {
+	public static class LongSetIterator implements PrimitiveIterator.OfLong {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
 		public boolean hasNext;

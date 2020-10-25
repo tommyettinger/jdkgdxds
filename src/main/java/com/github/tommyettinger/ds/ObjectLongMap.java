@@ -593,7 +593,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		return entries2;
 	}
 
-	static public class Entry<K> {
+	public static class Entry<K> {
 		@Nullable public K key;
 		public long value;
 
@@ -723,7 +723,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		}
 	}
 
-	static public class KeyIterator<K> extends MapIterator<K> implements Iterable<K>, Iterator<K> {
+	public static class KeyIterator<K> extends MapIterator<K> implements Iterable<K>, Iterator<K> {
 
 		public KeyIterator (ObjectLongMap<K> map) {
 			super(map);
@@ -751,7 +751,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		}
 	}
 
-	static public class ValueIterator<K> extends MapIterator<K> implements PrimitiveIterator.OfLong {
+	public static class ValueIterator<K> extends MapIterator<K> implements PrimitiveIterator.OfLong {
 		public ValueIterator (ObjectLongMap<K> map) {
 			super(map);
 		}
@@ -779,7 +779,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		}
 	}
 
-	static public class EntryIterator<K> extends MapIterator<K> implements Iterable<Entry<K>>, Iterator<Entry<K>> {
+	public static class EntryIterator<K> extends MapIterator<K> implements Iterable<Entry<K>>, Iterator<Entry<K>> {
 		protected Entry<K> entry = new Entry<>();
 
 		public EntryIterator (ObjectLongMap<K> map) {
@@ -812,7 +812,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		}
 	}
 
-	static public class Entries<K> extends AbstractSet<Entry<K>> {
+	public static class Entries<K> extends AbstractSet<Entry<K>> {
 		protected EntryIterator<K> iter;
 
 		public Entries (ObjectLongMap<K> map) {
@@ -835,7 +835,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		}
 	}
 
-	static public class Values<K> implements PrimitiveCollection.OfLong {
+	public static class Values<K> implements PrimitiveCollection.OfLong {
 		protected ValueIterator<K> iter;
 
 		@Override
@@ -872,7 +872,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 
 	}
 
-	static public class Keys<K> extends AbstractSet<K> {
+	public static class Keys<K> extends AbstractSet<K> {
 		protected KeyIterator<K> iter;
 
 		public Keys (ObjectLongMap<K> map) {

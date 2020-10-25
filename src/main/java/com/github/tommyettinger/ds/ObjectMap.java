@@ -655,7 +655,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		return entries2;
 	}
 
-	static public class Entry<K, V> implements Map.Entry<K, V> {
+	public static class Entry<K, V> implements Map.Entry<K, V> {
 		@Nullable public K key;
 		@Nullable public V value;
 
@@ -795,7 +795,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		}
 	}
 
-	static public class Entries<K, V> extends AbstractSet<Map.Entry<K, V>> {
+	public static class Entries<K, V> extends AbstractSet<Map.Entry<K, V>> {
 		protected Entry<K, V> entry = new Entry<>();
 		protected MapIterator<K, V, Map.Entry<K, V>> iter;
 
@@ -848,7 +848,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		}
 	}
 
-	static public class Values<K, V> extends AbstractCollection<V> {
+	public static class Values<K, V> extends AbstractCollection<V> {
 		protected MapIterator<K, V, V> iter;
 
 		public Values (ObjectMap<K, V> map) {
@@ -894,7 +894,7 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 
 	}
 
-	static public class Keys<K, V> extends AbstractSet<K> {
+	public static class Keys<K, V> extends AbstractSet<K> {
 		protected MapIterator<K, V, K> iter;
 
 		public Keys (ObjectMap<K, V> map) {

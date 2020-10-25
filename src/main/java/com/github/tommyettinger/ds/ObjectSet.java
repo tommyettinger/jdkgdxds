@@ -496,13 +496,13 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	@SafeVarargs
-	static public <T> ObjectSet<T> with (T... array) {
+	public static <T> ObjectSet<T> with (T... array) {
 		ObjectSet<T> set = new ObjectSet<T>();
 		set.addAll(array);
 		return set;
 	}
 
-	static public class ObjectSetIterator<T> implements Iterable<T>, Iterator<T> {
+	public static class ObjectSetIterator<T> implements Iterable<T>, Iterator<T> {
 		public boolean hasNext;
 
 		final ObjectSet<T> set;
