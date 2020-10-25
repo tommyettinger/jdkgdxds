@@ -71,17 +71,17 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	 * minus 1.
 	 */
 	protected int mask;
-	protected @Nullable
+	@Nullable protected
 	Entries<K> entries1;
-	protected @Nullable
+	@Nullable protected
 	Entries<K> entries2;
-	protected @Nullable
+	@Nullable protected
 	Values<K> values1;
-	protected @Nullable
+	@Nullable protected
 	Values<K> values2;
-	protected @Nullable
+	@Nullable protected
 	Keys<K> keys1;
-	protected @Nullable
+	@Nullable protected
 	Keys<K> keys2;
 
 	public float defaultValue = 0;
@@ -397,7 +397,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation.
 	 */
-	public @Nullable
+	@Nullable public
 	K findKey (float value) {
 		float[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
@@ -602,7 +602,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	}
 
 	static public class Entry<K> {
-		public @Nullable
+		@Nullable public
 		K key;
 		public float value;
 
@@ -846,23 +846,19 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	static public class Values<K> implements PrimitiveCollection.OfFloat {
 		protected ValueIterator<K> iter;
 
-		@Override
-		public boolean add (float item) {
+		@Override public boolean add (float item) {
 			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
 		}
 
-		@Override
-		public boolean remove (float item) {
+		@Override public boolean remove (float item) {
 			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
 		}
 
-		@Override
-		public boolean contains (float item) {
+		@Override public boolean contains (float item) {
 			return iter.map.containsValue(item);
 		}
 
-		@Override
-		public void clear () {
+		@Override public void clear () {
 			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
 		}
 

@@ -70,8 +70,8 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 	 */
 	protected int mask;
 
-	protected @Nullable
-	LongSetIterator iterator1, iterator2;
+	@Nullable protected LongSetIterator iterator1;
+	@Nullable protected LongSetIterator iterator2;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.

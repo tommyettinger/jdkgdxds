@@ -121,8 +121,8 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 		return super.remove(key);
 	}
 
-	public @Nullable
-	V removeIndex (int index) {
+	@Nullable
+	public V removeIndex (int index) {
 		return super.remove(keys.remove(index));
 	}
 
@@ -184,8 +184,8 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	 * @param index the index in the iteration order to set {@code v} at
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
-	public @Nullable
-	V setIndex (int index, V v) {
+	@Nullable
+	public V setIndex (int index, V v) {
 		if (index < 0 || index >= size) { return null; }
 		final int pos = locateKey(keys.get(index));
 		final V oldValue = valueTable[pos];
@@ -512,8 +512,8 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 				}
 
 				@Override
-				public @Nullable
-				V next () {
+				@Nullable
+				public V next () {
 					if (!hasNext) { throw new NoSuchElementException(); }
 					if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 					V value = map.get(keys.get(nextIndex));

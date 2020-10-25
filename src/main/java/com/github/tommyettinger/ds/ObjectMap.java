@@ -72,18 +72,12 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * minus 1.
 	 */
 	protected int mask;
-	protected @Nullable
-	Entries<K, V> entries1;
-	protected @Nullable
-	Entries<K, V> entries2;
-	protected @Nullable
-	Values<K, V> values1;
-	protected @Nullable
-	Values<K, V> values2;
-	protected @Nullable
-	Keys<K, V> keys1;
-	protected @Nullable
-	Keys<K, V> keys2;
+	@Nullable protected Entries<K, V> entries1;
+	@Nullable protected Entries<K, V> entries2;
+	@Nullable protected Values<K, V> values1;
+	@Nullable protected Values<K, V> values2;
+	@Nullable protected Keys<K, V> keys1;
+	@Nullable protected Keys<K, V> keys2;
 
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
@@ -198,8 +192,8 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * Returns the old value associated with the specified key, or null.
 	 */
 	@Override
-	public @Nullable
-	V put (K key, @Nullable V value) {
+	@Nullable
+	public V put (K key, @Nullable V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -247,8 +241,8 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
 	@Override
-	public @Nullable
-	V get (Object key) {
+	@Nullable
+	public V get (Object key) {
 		int i = locateKey(key);
 		return i < 0 ? null : valueTable[i];
 	}
@@ -257,15 +251,15 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * Returns the value for the specified key, or the given default value if the key is not in the map.
 	 */
 	@Override
-	public @Nullable
-	V getOrDefault (Object key, @Nullable V defaultValue) {
+	@Nullable
+	public V getOrDefault (Object key, @Nullable V defaultValue) {
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
 
 	@Override
-	public @Nullable
-	V remove (Object key) {
+	@Nullable
+	public V remove (Object key) {
 		int i = locateKey(key);
 		if (i < 0) { return null; }
 		K[] keyTable = this.keyTable;
@@ -427,8 +421,8 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
 	 *                 {@link #equals(Object)}.
 	 */
-	public @Nullable
-	K findKey (@Nullable Object value, boolean identity) {
+	@Nullable
+	public K findKey (@Nullable Object value, boolean identity) {
 		V[] valueTable = this.valueTable;
 		if (value == null) {
 			K[] keyTable = this.keyTable;
@@ -662,13 +656,11 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 	}
 
 	static public class Entry<K, V> implements Map.Entry<K, V> {
-		public @Nullable
-		K key;
-		public @Nullable
-		V value;
+		@Nullable public K key;
+		@Nullable public V value;
 
-		public @Nullable
-		String toString () {
+		@Nullable
+		public String toString () {
 			return key + "=" + value;
 		}
 
@@ -697,8 +689,8 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		 *                               removed from the backing map.
 		 */
 		@Override
-		public @Nullable
-		V getValue () {
+		@Nullable
+		public V getValue () {
 			return value;
 		}
 
@@ -723,8 +715,8 @@ public class ObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Se
 		 *                                       removed from the backing map.
 		 */
 		@Override
-		public @Nullable
-		V setValue (V value) {
+		@Nullable
+		public V setValue (V value) {
 			V old = this.value;
 			this.value = value;
 			return old;

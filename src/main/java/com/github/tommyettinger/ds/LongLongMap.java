@@ -69,18 +69,12 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	 * minus 1.
 	 */
 	protected int mask;
-	protected @Nullable
-	Entries entries1;
-	protected @Nullable
-	Entries entries2;
-	protected @Nullable
-	Values values1;
-	protected @Nullable
-	Values values2;
-	protected @Nullable
-	Keys keys1;
-	protected @Nullable
-	Keys keys2;
+	@Nullable protected Entries entries1;
+	@Nullable protected Entries entries2;
+	@Nullable protected Values values1;
+	@Nullable protected Values values2;
+	@Nullable protected Keys keys1;
+	@Nullable protected Keys keys2;
 
 	public long defaultValue = 0;
 

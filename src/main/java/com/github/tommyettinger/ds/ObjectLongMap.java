@@ -69,18 +69,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * minus 1.
 	 */
 	protected int mask;
-	protected @Nullable
-	Entries<K> entries1;
-	protected @Nullable
-	Entries<K> entries2;
-	protected @Nullable
-	Values<K> values1;
-	protected @Nullable
-	Values<K> values2;
-	protected @Nullable
-	Keys<K> keys1;
-	protected @Nullable
-	Keys<K> keys2;
+	@Nullable protected Entries<K> entries1;
+	@Nullable protected Entries<K> entries2;
+	@Nullable protected Values<K> values1;
+	@Nullable protected Values<K> values2;
+	@Nullable protected Keys<K> keys1;
+	@Nullable protected Keys<K> keys2;
 
 	public long defaultValue = 0L;
 
@@ -395,8 +389,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation.
 	 */
-	public @Nullable
-	K findKey (long value) {
+	@Nullable
+	public K findKey (long value) {
 		long[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
@@ -600,8 +594,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	}
 
 	static public class Entry<K> {
-		public @Nullable
-		K key;
+		@Nullable public K key;
 		public long value;
 
 		public String toString () {

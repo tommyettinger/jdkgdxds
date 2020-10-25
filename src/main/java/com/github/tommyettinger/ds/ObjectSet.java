@@ -66,10 +66,8 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * minus 1.
 	 */
 	protected int mask;
-	protected @Nullable
-	ObjectSetIterator<T> iterator1;
-	protected @Nullable
-	ObjectSetIterator<T> iterator2;
+	@Nullable protected ObjectSetIterator<T> iterator1;
+	@Nullable protected ObjectSetIterator<T> iterator2;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
@@ -353,8 +351,8 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return locateKey(key) >= 0;
 	}
 
-	public @Nullable
-	T get (T key) {
+	@Nullable
+	public T get (T key) {
 		int i = locateKey(key);
 		return i < 0 ? null : keyTable[i];
 	}
