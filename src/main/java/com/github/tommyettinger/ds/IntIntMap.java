@@ -28,7 +28,7 @@ import java.util.Set;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * An unordered map where the keys are unboxed longs and the values are also unboxed longs. Null keys are not allowed. No allocation is
+ * An unordered map where the keys are unboxed ints and the values are also unboxed ints. Null keys are not allowed. No allocation is
  * done except when growing the table size.
  * <p>
  * This class performs fast contains and remove (typically O(1), worst case O(n) but that is rare in practice). Add may be
@@ -38,9 +38,9 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
  * OrderedMap.
  * <p>
- * You can customize most behavior of this map by extending it. {@link #place(long)} can be overridden to change how hashCodes
+ * You can customize most behavior of this map by extending it. {@link #place(int)} can be overridden to change how hashCodes
  * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
- * {@link #locateKey(long)} can be overridden to change how equality is calculated.
+ * {@link #locateKey(int)} can be overridden to change how equality is calculated.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
  * hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
@@ -50,15 +50,15 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
+public class IntIntMap implements Iterable<IntIntMap.Entry>, Serializable {
 	private static final long serialVersionUID = 0L;
 
 	protected int size;
 
-	protected long[] keyTable;
-	protected long[] valueTable;
+	protected int[] keyTable;
+	protected int[] valueTable;
 	protected boolean hasZeroValue;
-	protected long zeroValue;
+	protected int zeroValue;
 	protected final float loadFactor;
 	protected int threshold;
 
@@ -76,12 +76,12 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	@Nullable protected Keys keys1;
 	@Nullable protected Keys keys2;
 
-	public long defaultValue = 0;
+	public int defaultValue = 0;
 
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
 	 */
-	public LongLongMap () {
+	public IntIntMap () {
 		this(51, 0.8f);
 	}
 
@@ -90,7 +90,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public LongLongMap (int initialCapacity) {
+	public IntIntMap (int initialCapacity) {
 		this(initialCapacity, 0.8f);
 	}
 
@@ -100,7 +100,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public LongLongMap (int initialCapacity, float loadFactor) {
+	public IntIntMap (int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 
@@ -109,14 +109,14 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		mask = tableSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-		keyTable = new long[tableSize];
-		valueTable = new long[tableSize];
+		keyTable = new int[tableSize];
+		valueTable = new int[tableSize];
 	}
 
 	/**
 	 * Creates a new map identical to the specified map.
 	 */
-	public LongLongMap (LongLongMap map) {
+	public IntIntMap (IntIntMap map) {
 		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
@@ -136,18 +136,18 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	 *
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
 	 */
-	protected int place (long item) {
-		return (int)((item ^ item >>> 32) * 0x9E3779B97F4A7C15L >>> shift);
+	protected int place (int item) {
+		return (int)(item * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
 	/**
 	 * Returns the index of the key if already present, else {@code -1 - index} for the next empty index. This can be overridden
 	 * to compare for equality differently than {@code ==}.
 	 */
-	private int locateKey (long key) {
-		long[] keyTable = this.keyTable;
+	private int locateKey (int key) {
+		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
-			long other = keyTable[i];
+			int other = keyTable[i];
 			if (other == 0) {
 				return ~i; // Empty space is available.
 			}
@@ -160,9 +160,9 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
-	public long put (long key, long value) {
+	public int put (int key, int value) {
 		if (key == 0) {
-			long oldValue = defaultValue;
+			int oldValue = defaultValue;
 			if (hasZeroValue) { oldValue = zeroValue; } else { size++; }
 			hasZeroValue = true;
 			zeroValue = value;
@@ -170,7 +170,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		}
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
-			long oldValue = valueTable[i];
+			int oldValue = valueTable[i];
 			valueTable[i] = value;
 			return oldValue;
 		}
@@ -184,9 +184,9 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	/**
 	 * Returns the old value associated with the specified key, or the given {@code defaultValue} if there was no prior value.
 	 */
-	public long putOrDefault (long key, long value, long defaultValue) {
+	public int putOrDefault (int key, int value, int defaultValue) {
 		if (key == 0) {
-			long oldValue = defaultValue;
+			int oldValue = defaultValue;
 			if (hasZeroValue) { oldValue = zeroValue; } else { size++; }
 			hasZeroValue = true;
 			zeroValue = value;
@@ -194,7 +194,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		}
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
-			long oldValue = valueTable[i];
+			int oldValue = valueTable[i];
 			valueTable[i] = value;
 			return oldValue;
 		}
@@ -205,16 +205,16 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		return defaultValue;
 	}
 
-	public void putAll (LongLongMap map) {
+	public void putAll (IntIntMap map) {
 		ensureCapacity(map.size);
 		if (map.hasZeroValue) {
 			if (!hasZeroValue) { size++; }
 			hasZeroValue = true;
 			zeroValue = map.zeroValue;
 		}
-		long[] keyTable = map.keyTable;
-		long[] valueTable = map.valueTable;
-		long key;
+		int[] keyTable = map.keyTable;
+		int[] valueTable = map.valueTable;
+		int key;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
 			if (key != 0) { put(key, valueTable[i]); }
@@ -224,8 +224,8 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	private void putResize (long key, long value) {
-		long[] keyTable = this.keyTable;
+	private void putResize (int key, int value) {
+		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = (i + 1) & mask) {
 			if (keyTable[i] == 0) {
 				keyTable[i] = key;
@@ -238,9 +238,9 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	/**
 	 * Returns the value for the specified key, or {@link #defaultValue} if the key is not in the map.
 	 *
-	 * @param key any {@code long}
+	 * @param key any {@code int}
 	 */
-	public long get (long key) {
+	public int get (int key) {
 		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
@@ -249,7 +249,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	/**
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
-	public long getOrDefault (long key, long defaultValue) {
+	public int getOrDefault (int key, int defaultValue) {
 		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
@@ -259,10 +259,10 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	 * Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
 	 * put into the map and defaultValue is returned.
 	 */
-	public long getAndIncrement (long key, long defaultValue, long increment) {
+	public int getAndIncrement (int key, int defaultValue, int increment) {
 		if (key == 0) {
 			if (hasZeroValue) {
-				long old = zeroValue;
+				int old = zeroValue;
 				zeroValue += increment;
 				return old;
 			}
@@ -273,7 +273,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		}
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
-			long oldValue = valueTable[i];
+			int oldValue = valueTable[i];
 			valueTable[i] += increment;
 			return oldValue;
 		}
@@ -284,7 +284,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		return defaultValue;
 	}
 
-	public long remove (long key) {
+	public int remove (int key) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				hasZeroValue = false;
@@ -295,10 +295,10 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		}
 		int i = locateKey(key);
 		if (i < 0) { return defaultValue; }
-		long[] keyTable = this.keyTable;
-		long rem;
-		long[] valueTable = this.valueTable;
-		long oldValue = valueTable[i];
+		int[] keyTable = this.keyTable;
+		int rem;
+		int[] valueTable = this.valueTable;
+		int oldValue = valueTable[i];
 		int mask = this.mask, next = i + 1 & mask;
 		while ((rem = keyTable[next]) != 0) {
 			int placement = place(rem);
@@ -341,23 +341,23 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	}
 
 	/**
-	 * Gets the default value, a {@code long} which is returned by {@link #get(long)} if the key is not found.
+	 * Gets the default value, a {@code int} which is returned by {@link #get(int)} if the key is not found.
 	 * If not changed, the default value is 0.
 	 *
 	 * @return the current default value
 	 */
-	public long getDefaultValue () {
+	public int getDefaultValue () {
 		return defaultValue;
 	}
 
 	/**
-	 * Sets the default value, a {@code long} which is returned by {@link #get(long)} if the key is not found.
-	 * If not changed, the default value is 0. Note that {@link #getOrDefault(long, long)} is also available,
+	 * Sets the default value, a {@code int} which is returned by {@link #get(int)} if the key is not found.
+	 * If not changed, the default value is 0. Note that {@link #getOrDefault(int, int)} is also available,
 	 * which allows specifying a "not-found" value per-call.
 	 *
-	 * @param defaultValue may be any long; should usually be one that doesn't occur as a typical value
+	 * @param defaultValue may be any int; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue (long defaultValue) {
+	public void setDefaultValue (int defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -395,17 +395,17 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
 	 */
-	public boolean containsValue (long value) {
+	public boolean containsValue (int value) {
 		if (hasZeroValue && zeroValue == value) { return true; }
-		long[] valueTable = this.valueTable;
-		long[] keyTable = this.keyTable;
+		int[] valueTable = this.valueTable;
+		int[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
 			if (keyTable[i] != 0 && valueTable[i] == value) { return true; }
 		}
 		return false;
 	}
 
-	public boolean containsKey (long key) {
+	public boolean containsKey (int key) {
 		if (key == 0) { return hasZeroValue; }
 		return locateKey(key) >= 0;
 	}
@@ -414,10 +414,10 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation.
 	 */
-	public long findKey (long value, long defaultKey) {
+	public int findKey (int value, int defaultKey) {
 		if (hasZeroValue && zeroValue == value) { return 0; }
-		long[] valueTable = this.valueTable;
-		long[] keyTable = this.keyTable;
+		int[] valueTable = this.valueTable;
+		int[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
 			if (keyTable[i] != 0 && valueTable[i] == value) { return keyTable[i]; }
 		}
@@ -440,47 +440,46 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-		long[] oldKeyTable = keyTable;
-		long[] oldValueTable = valueTable;
+		int[] oldKeyTable = keyTable;
+		int[] oldValueTable = valueTable;
 
-		keyTable = new long[newSize];
-		valueTable = new long[newSize];
+		keyTable = new int[newSize];
+		valueTable = new int[newSize];
 
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
-				long key = oldKeyTable[i];
+				int key = oldKeyTable[i];
 				if (key != 0) { putResize(key, oldValueTable[i]); }
 			}
 		}
 	}
 
 	public int hashCode () {
-		long h = (hasZeroValue ? zeroValue + size : size);
-		long[] keyTable = this.keyTable;
-		long[] valueTable = this.valueTable;
+		int h = (hasZeroValue ? zeroValue ^ size : size);
+		int[] keyTable = this.keyTable;
+		int[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			long key = keyTable[i];
+			int key = keyTable[i];
 			if (key != 0) {
-				h += key ^ key >>> 32;
-				key = valueTable[i];
-				h += key ^ key >>> 32;
+				h ^= key;
+				h ^= valueTable[i];
 			}
 		}
-		return (int)(h ^ h >>> 32);
+		return h;
 	}
 
 	public boolean equals (Object obj) {
 		if (obj == this) { return true; }
-		if (!(obj instanceof LongLongMap)) { return false; }
-		LongLongMap other = (LongLongMap)obj;
+		if (!(obj instanceof IntIntMap)) { return false; }
+		IntIntMap other = (IntIntMap)obj;
 		if (other.size != size) { return false; }
 		if (other.hasZeroValue != hasZeroValue || other.zeroValue != zeroValue) { return false; }
-		long[] keyTable = this.keyTable;
-		long[] valueTable = this.valueTable;
+		int[] keyTable = this.keyTable;
+		int[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			long key = keyTable[i];
+			int key = keyTable[i];
 			if (key != 0) {
-				long value = valueTable[i];
+				int value = valueTable[i];
 				if (value != other.get(key)) { return false; }
 			}
 		}
@@ -503,25 +502,25 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 			buffer.append("0=").append(zeroValue);
 			if (size > 1) { buffer.append(separator); }
 		}
-		long[] keyTable = this.keyTable;
-		long[] valueTable = this.valueTable;
+		int[] keyTable = this.keyTable;
+		int[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
-			long key = keyTable[i];
+			int key = keyTable[i];
 			if (key == 0) { continue; }
 			buffer.append(key);
 			buffer.append('=');
-			long value = valueTable[i];
+			int value = valueTable[i];
 			buffer.append(value);
 			break;
 		}
 		while (i-- > 0) {
-			long key = keyTable[i];
+			int key = keyTable[i];
 			if (key == 0) { continue; }
 			buffer.append(separator);
 			buffer.append(key);
 			buffer.append('=');
-			long value = valueTable[i];
+			int value = valueTable[i];
 			buffer.append(value);
 		}
 		if (braces) { buffer.append('}'); }
@@ -530,7 +529,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 
 	/**
 	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
-	 * does not permit nested iteration. Iterate over {@link Entries#Entries(LongLongMap)} if you
+	 * does not permit nested iteration. Iterate over {@link Entries#Entries(IntIntMap)} if you
 	 * need nested or multithreaded iteration. You can remove an Entry from this ObjectMap
 	 * using this Iterator.
 	 *
@@ -541,7 +540,8 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	}
 
 	/**
-	 * Returns a {@link Set} view of the keys contained in this map.
+	 * Returns a {@link PrimitiveCollection.OfInt} that acts as a Set
+	 * view of the keys contained in this map.
 	 * The set is backed by the map, so changes to the map are
 	 * reflected in the set, and vice-versa.  If the map is modified
 	 * while an iteration over the set is in progress (except through
@@ -576,10 +576,12 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	}
 
 	/**
-	 * Returns a Collection of the values in the map. Remove is supported. Note that the same Collection instance is returned each
-	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
+	 * Returns a {@link PrimitiveCollection.OfInt} of the values in the map.
+	 * Note that the same PrimitiveCollection instance is returned each
+	 * time this method is called. Use the {@link Values} constructor for
+	 * nested or multithreaded iteration.
 	 *
-	 * @return a {@link PrimitiveCollection.OfLong} containing {@code long} values
+	 * @return a {@link PrimitiveCollection.OfInt} containing int values
 	 */
 	public Values values () {
 		if (values1 == null || values2 == null) {
@@ -623,8 +625,8 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	}
 
 	public static class Entry {
-		public long key;
-		public long value;
+		public int key;
+		public int value;
 
 		public String toString () {
 			return key + "=" + value;
@@ -638,7 +640,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		 *                               required to, throw this exception if the entry has been
 		 *                               removed from the backing map.
 		 */
-		public long getKey () {
+		public int getKey () {
 			return key;
 		}
 
@@ -649,7 +651,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		 *
 		 * @return the value corresponding to this entry
 		 */
-		public long getValue () {
+		public int getValue () {
 			return value;
 		}
 
@@ -673,8 +675,8 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		 *                                       required to, throw this exception if the entry has been
 		 *                                       removed from the backing map.
 		 */
-		public long setValue (long value) {
-			long old = this.value;
+		public int setValue (int value) {
+			int old = this.value;
 			this.value = value;
 			return old;
 		}
@@ -692,7 +694,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 
 		@Override
 		public int hashCode () {
-			return (int)((key ^ key >>> 32) * 0x9E3779B97F4A7C15L + (value ^ value << 32) >>> 32);
+			return key * 31 + value;
 		}
 	}
 
@@ -701,11 +703,11 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 
 		public boolean hasNext;
 
-		protected final LongLongMap map;
+		protected final IntIntMap map;
 		protected int nextIndex, currentIndex;
 		protected boolean valid = true;
 
-		public MapIterator (LongLongMap map) {
+		public MapIterator (IntIntMap map) {
 			this.map = map;
 			reset();
 		}
@@ -717,7 +719,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		}
 
 		void findNextIndex () {
-			long[] keyTable = map.keyTable;
+			int[] keyTable = map.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != 0) {
 					hasNext = true;
@@ -745,12 +747,12 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 			} else if (i < 0) {
 				throw new IllegalStateException("next must be called before remove.");
 			} else {
-				long[] keyTable = map.keyTable;
+				int[] keyTable = map.keyTable;
 				int mask = map.mask;
 				int next = i + 1 & mask;
-				long key;
+				int key;
 				while ((key = keyTable[next]) != 0) {
-					long placement = map.place(key);
+					int placement = map.place(key);
 					if ((next - placement & mask) > (i - placement & mask)) {
 						keyTable[i] = key;
 						i = next;
@@ -766,7 +768,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 
 	}
 
-	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfLong {
+	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfInt {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
 		public boolean hasNext;
@@ -774,46 +776,46 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public KeyIterator (LongLongMap map) {
+		public KeyIterator (IntIntMap map) {
 			super(map);
 		}
 
 		@Override
-		public long nextLong () {
+		public int nextInt () {
 			if (!hasNext) { throw new NoSuchElementException(); }
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			long key = nextIndex == INDEX_ZERO ? 0 : map.keyTable[nextIndex];
+			int key = nextIndex == INDEX_ZERO ? 0 : map.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
 			return key;
 		}
 
 		/**
-		 * Returns a new LongList containing the remaining keys.
+		 * Returns a new IntList containing the remaining keys.
 		 */
-		public LongList toList () {
-			LongList list = new LongList(true, map.size);
+		public IntList toList () {
+			IntList list = new IntList(true, map.size);
 			while (hasNext) { list.add(next()); }
 			return list;
 		}
 	}
 
-	public static class ValueIterator extends MapIterator implements PrimitiveIterator.OfLong {
-		public ValueIterator (LongLongMap map) {
+	public static class ValueIterator extends MapIterator implements PrimitiveIterator.OfInt {
+		public ValueIterator (IntIntMap map) {
 			super(map);
 		}
 
 		/**
-		 * Returns the next {@code long} element in the iteration.
+		 * Returns the next {@code int} element in the iteration.
 		 *
-		 * @return the next {@code long} element in the iteration
+		 * @return the next {@code int} element in the iteration
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public long nextLong () {
+		public int nextInt () {
 			if (!hasNext) { throw new NoSuchElementException(); }
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			long value = nextIndex == INDEX_ZERO ? map.zeroValue : map.valueTable[nextIndex];
+			int value = nextIndex == INDEX_ZERO ? map.zeroValue : map.valueTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
 			return value;
@@ -829,7 +831,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	public static class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
 		protected Entry entry = new Entry();
 
-		public EntryIterator (LongLongMap map) {
+		public EntryIterator (IntIntMap map) {
 			super(map);
 		}
 
@@ -844,7 +846,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		public Entry next () {
 			if (!hasNext) { throw new NoSuchElementException(); }
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			long[] keyTable = map.keyTable;
+			int[] keyTable = map.keyTable;
 			if (nextIndex == INDEX_ZERO) {
 				entry.key = 0;
 				entry.value = map.zeroValue;
@@ -867,7 +869,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	public static class Entries extends AbstractSet<Entry> {
 		protected EntryIterator iter;
 
-		public Entries (LongLongMap map) {
+		public Entries (IntIntMap map) {
 			iter = new EntryIterator(map);
 		}
 
@@ -887,27 +889,27 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		}
 	}
 
-	public static class Values implements PrimitiveCollection.OfLong {
+	public static class Values implements PrimitiveCollection.OfInt {
 		protected ValueIterator iter;
 
 		@Override
-		public boolean add (long item) {
-			throw new UnsupportedOperationException("LongLongMap.Values is read-only");
+		public boolean add (int item) {
+			throw new UnsupportedOperationException("IntIntMap.Values is read-only");
 		}
 
 		@Override
-		public boolean remove (long item) {
-			throw new UnsupportedOperationException("LongLongMap.Values is read-only");
+		public boolean remove (int item) {
+			throw new UnsupportedOperationException("IntIntMap.Values is read-only");
 		}
 
 		@Override
-		public boolean contains (long item) {
+		public boolean contains (int item) {
 			return iter.map.containsValue(item);
 		}
 
 		@Override
 		public void clear () {
-			throw new UnsupportedOperationException("LongLongMap.Values is read-only");
+			throw new UnsupportedOperationException("IntIntMap.Values is read-only");
 		}
 
 		/**
@@ -915,7 +917,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		 *
 		 * @return an iterator over the elements contained in this collection
 		 */
-		public PrimitiveIterator.OfLong iterator () {
+		public PrimitiveIterator.OfInt iterator () {
 			return iter;
 		}
 
@@ -923,42 +925,42 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 			return iter.map.size;
 		}
 
-		public Values (LongLongMap map) {
+		public Values (IntIntMap map) {
 			iter = new ValueIterator(map);
 		}
 
 	}
 
-	public static class Keys implements PrimitiveCollection.OfLong {
+	public static class Keys implements PrimitiveCollection.OfInt {
 		protected KeyIterator iter;
 
-		public Keys (LongLongMap map) {
+		public Keys (IntIntMap map) {
 			iter = new KeyIterator(map);
 		}
 
 		@Override
-		public boolean add (long item) {
-			throw new UnsupportedOperationException("LongLongMap.Keys is read-only");
+		public boolean add (int item) {
+			throw new UnsupportedOperationException("IntIntMap.Keys is read-only");
 		}
 
 		@Override
-		public boolean remove (long item) {
-			throw new UnsupportedOperationException("LongLongMap.Keys is read-only");
+		public boolean remove (int item) {
+			throw new UnsupportedOperationException("IntIntMap.Keys is read-only");
 		}
 
 		@Override
-		public boolean contains (long item) {
+		public boolean contains (int item) {
 			return iter.map.containsKey(item);
 		}
 
 		@Override
-		public PrimitiveIterator.OfLong iterator () {
+		public PrimitiveIterator.OfInt iterator () {
 			return iter;
 		}
 
 		@Override
 		public void clear () {
-			throw new UnsupportedOperationException("LongLongMap.Keys is read-only");
+			throw new UnsupportedOperationException("IntIntMap.Keys is read-only");
 		}
 
 		@Override
