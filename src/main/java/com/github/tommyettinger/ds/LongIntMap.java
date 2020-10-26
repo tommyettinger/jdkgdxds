@@ -455,17 +455,17 @@ public class LongIntMap implements Iterable<LongIntMap.Entry>, Serializable {
 	}
 
 	public int hashCode () {
-		int h = (hasZeroValue ? zeroValue ^ size : size);
+		long h = (hasZeroValue ? zeroValue * 0x9E3779B97F4A7C15L + size : size);
 		long[] keyTable = this.keyTable;
 		int[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			long key = keyTable[i];
 			if (key != 0) {
-				h ^= key ^ key >>> 32;
-				h ^= valueTable[i];
+				h += key;
+				h += valueTable[i] * 0x9E3779B97F4A7C15L;
 			}
 		}
-		return h;
+		return (int)(h ^ h >>> 32);
 	}
 
 	public boolean equals (Object obj) {

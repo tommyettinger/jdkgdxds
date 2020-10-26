@@ -430,20 +430,20 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	}
 
 	public int hashCode () {
-		int h = (hasZeroValue && zeroValue != null ? zeroValue.hashCode() ^ size : size);
+		long h = (hasZeroValue && zeroValue != null ? zeroValue.hashCode() * 0x9E3779B97F4A7C15L + size : size);
 		long[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		V v;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			long key = keyTable[i];
 			if (key != 0) {
-				h ^= key ^ key >>> 32;
+				h += key ^ key >>> 32;
 				v = valueTable[i];
 				if(v != null) 
-					h ^= v.hashCode();
+					h += v.hashCode() * 0x9E3779B97F4A7C15L;
 			}
 		}
-		return h;
+		return (int)(h ^ h >>> 32);
 	}
 
 	public boolean equals (Object obj) {
