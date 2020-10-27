@@ -508,7 +508,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 	/**
 	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
 	 * does not permit nested iteration. Iterate over {@link Entries#Entries(IntObjectMap)} if you
-	 * need nested or multithreaded iteration. You can remove an Entry from this ObjectMap
+	 * need nested or multithreaded iteration. You can remove an Entry from this IntObjectMap
 	 * using this Iterator.
 	 *
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.

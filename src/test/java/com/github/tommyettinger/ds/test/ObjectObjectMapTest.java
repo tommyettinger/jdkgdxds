@@ -18,7 +18,7 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectMap;
+import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.OrderedMap;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,9 +30,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class ObjectMapTest extends junit.framework.TestCase {
+public class ObjectObjectMapTest extends junit.framework.TestCase {
 
-	ObjectMap hm;
+	ObjectObjectMap hm;
 
 	final static int hmSize = 1000;
 
@@ -80,69 +80,69 @@ public class ObjectMapTest extends junit.framework.TestCase {
 
 	@Test
 	public void test_Constructor () {
-		// Test for method com.github.tommyettinger.merry.ObjectMap()
-		runBattery(new ObjectMap<String, String>());
+		// Test for method com.github.tommyettinger.merry.ObjectObjectMap()
+		runBattery(new ObjectObjectMap<String, String>());
 
-		ObjectMap hm2 = new ObjectMap<>();
-		Assert.assertEquals("Created incorrect ObjectMap", 0, hm2.size());
+		ObjectObjectMap hm2 = new ObjectObjectMap<>();
+		Assert.assertEquals("Created incorrect ObjectObjectMap", 0, hm2.size());
 	}
 
 	@Test public void test_ConstructorI () {
-		// Test for method com.github.tommyettinger.merry.ObjectMap(int)
-		ObjectMap hm2 = new ObjectMap(5);
-		Assert.assertEquals("Created incorrect ObjectMap", 0, hm2.size());
+		// Test for method com.github.tommyettinger.merry.ObjectObjectMap(int)
+		ObjectObjectMap hm2 = new ObjectObjectMap(5);
+		Assert.assertEquals("Created incorrect ObjectObjectMap", 0, hm2.size());
 		do{
 			try {
-				new ObjectMap(-1);
+				new ObjectObjectMap(-1);
 			} catch (IllegalArgumentException e) {
 				break;
 			}
 			Assert.fail("Failed to throw IllegalArgumentException for initial capacity < 0");
 		}while (false);
 
-		ObjectMap empty = new ObjectMap(0);
+		ObjectObjectMap empty = new ObjectObjectMap(0);
 		Assert.assertNull("Empty hashmap access", empty.get("nothing"));
 		empty.put("something", "here");
 		Assert.assertTrue("cannot get element", empty.get("something") == "here");
 	}
 
 	@Test public void test_ConstructorIF () {
-		// Test for method com.github.tommyettinger.merry.ObjectMap(int, float)
-		ObjectMap hm2 = new ObjectMap(5, (float)0.5);
-		Assert.assertEquals("Created incorrect ObjectMap", 0, hm2.size());
+		// Test for method com.github.tommyettinger.merry.ObjectObjectMap(int, float)
+		ObjectObjectMap hm2 = new ObjectObjectMap(5, (float)0.5);
+		Assert.assertEquals("Created incorrect ObjectObjectMap", 0, hm2.size());
 		do{
 			try {
-				new ObjectMap(0, 0);
+				new ObjectObjectMap(0, 0);
 			} catch (IllegalArgumentException e) {
 				break;
 			}
 			Assert.fail("Failed to throw IllegalArgumentException for initial load factor <= 0");
 		}while (false);
 
-		ObjectMap empty = new ObjectMap(0, 0.75f);
+		ObjectObjectMap empty = new ObjectObjectMap(0, 0.75f);
 		Assert.assertNull("Empty hashtable access", empty.get("nothing"));
 		empty.put("something", "here");
 		Assert.assertTrue("cannot get element", empty.get("something") == "here");
 	}
 
 	@Test public void test_ConstructorLjava_util_Map () {
-		ObjectMap myMap = new OrderedMap();
+		ObjectObjectMap myMap = new OrderedMap();
 		for (int counter = 0; counter < hmSize; counter++)
 			myMap.put(objArray2[counter], objArray[counter]);
-		ObjectMap hm2 = new ObjectMap(myMap);
+		ObjectObjectMap hm2 = new ObjectObjectMap(myMap);
 		for (int counter = 0; counter < hmSize; counter++)
-			Assert.assertTrue("Failed to construct correct ObjectMap",
+			Assert.assertTrue("Failed to construct correct ObjectObjectMap",
 					hm.get(objArray2[counter]) == hm2.get(objArray2[counter]));
 
 //        try {
-//            ObjectMap mockMap = new MockMapNull();
-//            hm = new ObjectMap(mockMap);
+//            ObjectObjectMap mockMap = new MockMapNull();
+//            hm = new ObjectObjectMap(mockMap);
 //            fail("Should throw NullPointerException");
 //        } catch (NullPointerException e) {
 //            //empty
 //        }
 
-		ObjectMap map = new ObjectMap();
+		ObjectObjectMap map = new ObjectObjectMap();
 		map.put("a", "a");
 		SubMap map2 = new SubMap(map);
 		Assert.assertTrue(map2.containsKey("a"));
@@ -156,7 +156,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 			Assert.assertNull("Failed to clear all elements", hm.get(objArray2[i]));
 
 		// Check clear on a large loaded map of Integer keys
-		ObjectMap<Integer, String> map = new ObjectMap<Integer, String>();
+		ObjectObjectMap<Integer, String> map = new ObjectObjectMap<Integer, String>();
 		for (int i = -32767; i < 32768; i++) {
 			map.put(i, "foobar");
 		}
@@ -169,11 +169,11 @@ public class ObjectMapTest extends junit.framework.TestCase {
 
 	@Test public void test_containsKeyLjava_lang_Object () {
 		// Test for method boolean
-		// com.github.tommyettinger.merry.ObjectMap.containsKey(java.lang.Object)
+		// com.github.tommyettinger.merry.ObjectObjectMap.containsKey(java.lang.Object)
 		Assert.assertTrue("Returned false for valid key", hm.containsKey(new Integer(876).toString()));
 		Assert.assertTrue("Returned true for invalid key", !hm.containsKey("KKDKDKD"));
 
-//		ObjectMap m = new ObjectMap();
+//		ObjectObjectMap m = new ObjectObjectMap();
 //		m.put(null, "test");
 //		assertTrue("Failed with null key", m.containsKey(null));
 //		assertTrue("Failed with missing key matching null hash", !m
@@ -182,34 +182,34 @@ public class ObjectMapTest extends junit.framework.TestCase {
 
 	@Test public void test_containsValueLjava_lang_Object () {
 		// Test for method boolean
-		// com.github.tommyettinger.merry.ObjectMap.containsValue(java.lang.Object)
+		// com.github.tommyettinger.merry.ObjectObjectMap.containsValue(java.lang.Object)
 		Assert.assertTrue("Returned false for valid value", hm.containsValue(new Integer(875), false));
 		Assert.assertTrue("Returned true for invalid value", !hm.containsValue(new Integer(-9), false));
 	}
 
 	@Test public void test_entrySet () {
-		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectMap.entrySet(
+		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectObjectMap.entrySet(
 		Set<Map.Entry> s = hm.entrySet();
 		Iterator i = s.iterator();
 		Assert.assertTrue("Returned set of incorrect size", hm.size() == s.size());
 		while (i.hasNext()) {
-			ObjectMap.Entry m = (ObjectMap.Entry)i.next();
+			ObjectObjectMap.Entry m = (ObjectObjectMap.Entry)i.next();
 			Assert.assertTrue("Returned incorrect entry set", hm.containsKey(m.key) && hm.containsValue(m.value, false));
 		}
 
-		Iterator<Map.Entry> iter = new ObjectMap.Entries<>(hm).iterator();
+		Iterator<Map.Entry> iter = new ObjectObjectMap.Entries<>(hm).iterator();
 		s.remove(iter.next());
 		Assert.assertEquals(1001, s.size());
 	}
 
 	@Test public void test_getLjava_lang_Object () {
 		// Test for method java.lang.Object
-		// com.github.tommyettinger.merry.ObjectMap.get(java.lang.Object)
+		// com.github.tommyettinger.merry.ObjectObjectMap.get(java.lang.Object)
 		Assert.assertNull("Get returned non-null for non existent key", hm.get("T"));
 		hm.put("T", "HELLO");
 		Assert.assertEquals("Get returned incorrect value for existing key", "HELLO", hm.get("T"));
 
-//		ObjectMap m = new ObjectMap();
+//		ObjectObjectMap m = new ObjectObjectMap();
 //		m.put(null, "test");
 //		assertEquals("Failed with null key", "test", m.get(null));
 //		assertNull("Failed with missing key matching null hash", m
@@ -217,7 +217,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 
 		// Regression for HARMONY-206
 		ReusableKey k = new ReusableKey();
-		ObjectMap map = new ObjectMap();
+		ObjectObjectMap map = new ObjectObjectMap();
 		k.setKey(1);
 		map.put(k, "value1");
 
@@ -260,7 +260,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 //        assertTrue("Failed to find proxy object as value", hm.containsValue(proxyValue));
 //        
 //        // Proxy key and value
-//        ObjectMap map = new ObjectMap();
+//        ObjectObjectMap map = new ObjectObjectMap();
 //        map.put(proxyKey, proxyValue);
 //        assertTrue("Failed to find proxy key", map.containsKey(proxyKey));
 //        assertEquals(1, map.size());
@@ -270,25 +270,25 @@ public class ObjectMapTest extends junit.framework.TestCase {
 //	}
 
 	@Test public void test_isEmpty () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectMap.isEmpty()
-		Assert.assertTrue("Returned false for new map", new ObjectMap().isEmpty());
+		// Test for method boolean com.github.tommyettinger.merry.ObjectObjectMap.isEmpty()
+		Assert.assertTrue("Returned false for new map", new ObjectObjectMap().isEmpty());
 		Assert.assertTrue("Returned true for non-empty", !hm.isEmpty());
 	}
 
 	@Test public void test_keySet () {
-		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectMap.keySet()
+		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectObjectMap.keySet()
 		Set s = hm.keySet();
 		Assert.assertTrue("Returned set of incorrect size()", s.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)
 //			assertTrue("Returned set does not contain all keys", s
 //					.contains(objArray[i].toString()));
 
-//		ObjectMap m = new ObjectMap();
+//		ObjectObjectMap m = new ObjectObjectMap();
 //		m.put(null, "test");
 //		assertTrue("Failed with null key", m.keySet().contains(null));
 //		assertNull("Failed with null key", m.keySet().iterator().next());
 
-		ObjectMap map = new ObjectMap(101);
+		ObjectObjectMap map = new ObjectObjectMap(101);
 		map.put(new Integer(1), "1");
 		map.put(new Integer(102), "102");
 		map.put(new Integer(203), "203");
@@ -305,7 +305,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 		Assert.assertEquals("Wrong size", 1, map.size());
 		Assert.assertTrue("Wrong contents", map.keySet().iterator().next().equals(list.get(0)));
 
-		ObjectMap map2 = new ObjectMap(101);
+		ObjectObjectMap map2 = new ObjectObjectMap(101);
 		map2.put(new Integer(1), "1");
 		map2.put(new Integer(4), "4");
 		Iterator it2 = map2.keySet().iterator();
@@ -326,7 +326,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 		hm.put("KEY", "VALUE");
 		Assert.assertEquals("Failed to install key/value pair", "VALUE", hm.get("KEY"));
 
-//        ObjectMap<Object,Object> m = new ObjectMap<Object,Object>();
+//        ObjectObjectMap<Object,Object> m = new ObjectObjectMap<Object,Object>();
 //        m.put(new Short((short) 0), "short");
 //        m.put(null, "test");
 //        m.put(new Integer(0), "int");
@@ -336,7 +336,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 //                .get(new Integer(0)));
 
 		// Check my actual key instance is returned
-		ObjectMap<Integer, String> map = new ObjectMap<Integer, String>();
+		ObjectObjectMap<Integer, String> map = new ObjectObjectMap<Integer, String>();
 		for (int i = -32767; i < 32768; i++) {
 			map.put(i, "foobar");
 		}
@@ -368,7 +368,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 		Assert.assertTrue("Did not find new key instance in hashmap", found);
 
 		// Ensure keys with identical hashcode are stored separately
-		ObjectMap<Object, Object> objmap = new ObjectMap<Object, Object>();
+		ObjectObjectMap<Object, Object> objmap = new ObjectObjectMap<Object, Object>();
 		for (int i = 0; i < 32768; i++) {
 			objmap.put(i, "foobar");
 		}
@@ -391,21 +391,21 @@ public class ObjectMapTest extends junit.framework.TestCase {
 	}
 
 	@Test public void test_putAllLjava_util_Map () {
-		// Test for method void com.github.tommyettinger.merry.ObjectMap.putAll(java.util.Map)
-		ObjectMap hm2 = new ObjectMap();
+		// Test for method void com.github.tommyettinger.merry.ObjectObjectMap.putAll(java.util.Map)
+		ObjectObjectMap hm2 = new ObjectObjectMap();
 		hm2.putAll(hm);
 		for (int i = 0; i < 1000; i++)
 			Assert.assertTrue("Failed to clear all elements", hm2.get(new Integer(i).toString()).equals((new Integer(i))));
 
-//        ObjectMap mockMap = new MockMap();
-//        hm2 = new ObjectMap();
+//        ObjectObjectMap mockMap = new MockMap();
+//        hm2 = new ObjectObjectMap();
 //        hm2.putAll(mockMap);
 //        assertEquals("Size should be 0", 0, hm2.size);
 	}
 
 //    @Test
 //    public void test_putAllLjava_util_Map_Null() {
-//        ObjectMap hashMap = new ObjectMap();
+//        ObjectObjectMap hashMap = new ObjectObjectMap();
 //        try {
 //            hashMap.putAll(new MockMapNull());
 //            Assert.fail("Should throw NullPointerException");
@@ -414,7 +414,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 //        }
 //
 ////        try {
-////            hashMap = new ObjectMap(new MockMapNull());
+////            hashMap = new ObjectObjectMap(new MockMapNull());
 ////            fail("Should throw NullPointerException");
 ////        } catch (NullPointerException e) {
 ////            // expected.
@@ -430,13 +430,13 @@ public class ObjectMapTest extends junit.framework.TestCase {
 		Assert.assertTrue("Failed to decrement size", hm.size() == (size - 1));
 		Assert.assertNull("Remove of non-existent key returned non-null", hm.remove("LCLCLC"));
 
-//		ObjectMap m = new ObjectMap();
+//		ObjectObjectMap m = new ObjectObjectMap();
 //		m.put(null, "test");
 //		assertNull("Failed with same hash as null",
 //				m.remove(new Integer(0)));
 //		assertEquals("Failed with null key", "test", m.remove(null));
 
-		ObjectMap<Integer, Object> map = new ObjectMap<Integer, Object>();
+		ObjectObjectMap<Integer, Object> map = new ObjectObjectMap<Integer, Object>();
 		for (int i = 0; i < 32768; i++) {
 			map.put(i, "const");
 		}
@@ -451,7 +451,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 		}
 
 		// Ensure keys with identical hashcode are removed properly
-		map = new ObjectMap<Integer, Object>();
+		map = new ObjectObjectMap<Integer, Object>();
 		for (int i = -32767; i < 32768; i++) {
 			map.put(i, "foobar");
 		}
@@ -468,7 +468,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 	 */
 	@Test public void test_rehash () {
 		// This map should rehash on adding the ninth element.
-		ObjectMap<MyKey, Integer> hm = new ObjectMap<MyKey, Integer>(10, 0.5f);
+		ObjectObjectMap<MyKey, Integer> hm = new ObjectObjectMap<MyKey, Integer>(10, 0.5f);
 
 		// Ordered set of keys.
 		MyKey[] keyOrder = new MyKey[9];
@@ -496,36 +496,36 @@ public class ObjectMapTest extends junit.framework.TestCase {
 	}
 
 	@Test public void test_size () {
-		// Test for method int com.github.tommyettinger.merry.ObjectMap.size()
+		// Test for method int com.github.tommyettinger.merry.ObjectObjectMap.size()
 		Assert.assertTrue("Returned incorrect size", hm.size() == (objArray.length + 1));
 	}
 
 	@Test public void test_values () {
-		// Test for method java.util.Collection com.github.tommyettinger.merry.ObjectMap.values()
+		// Test for method java.util.Collection com.github.tommyettinger.merry.ObjectObjectMap.values()
 		Collection c = hm.values();
 		Assert.assertTrue("Returned collection of incorrect size()", c.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)
 //			assertTrue("Returned collection does not contain all keys", c
 //					.contains(objArray[i]));
 
-		ObjectMap myObjectMap = new ObjectMap();
+		ObjectObjectMap myObjectObjectMap = new ObjectObjectMap();
 		for (int i = 0; i < 100; i++)
-			myObjectMap.put(objArray2[i], objArray[i]);
-		Iterator values = myObjectMap.values().iterator();
+			myObjectObjectMap.put(objArray2[i], objArray[i]);
+		Iterator values = myObjectObjectMap.values().iterator();
 //		new Support_UnmodifiableCollectionTest(
-//				"Test Returned Collection From ObjectMap.values()", values)
+//				"Test Returned Collection From ObjectObjectMap.values()", values)
 //				.runTest();
 		values.hasNext();
 		Object removed = values.next();
 		values.remove();
 		Assert.assertTrue("Removing from the values collection should remove from the original map",
-				!myObjectMap.containsValue(removed, false));
+				!myObjectObjectMap.containsValue(removed, false));
 
 	}
 
 	@Test public void test_toString () {
 
-		ObjectMap m = new ObjectMap();
+		ObjectObjectMap m = new ObjectObjectMap();
 		m.put(m, m);
 		String result = m.toString();
 		Assert.assertTrue("should contain self ref", result.indexOf("(this") > -1);
@@ -555,7 +555,7 @@ public class ObjectMapTest extends junit.framework.TestCase {
 //    
 //	public void test_Map_Entry_hashCode() {
 //        //Related to HARMONY-403
-//	    ObjectMap<Integer, Integer> map = new ObjectMap<Integer, Integer>(10);
+//	    ObjectObjectMap<Integer, Integer> map = new ObjectObjectMap<Integer, Integer>(10);
 //	    Integer key = new Integer(1);
 //	    Integer val = new Integer(2);
 //	    map.put(key, val);
@@ -572,13 +572,13 @@ public class ObjectMapTest extends junit.framework.TestCase {
 	 * Regression test for HY-4750
 	 */
 	@Test public void test_EntrySet () {
-//        ObjectMap map = new ObjectMap();
+//        ObjectObjectMap map = new ObjectObjectMap();
 //        map.put(new Integer(1), "ONE");
 
-//        ObjectMap.Entries entrySet = map.entries();
+//        ObjectObjectMap.Entries entrySet = map.entries();
 //        Iterator e = entrySet.iterator();
 //        Object real = e.next();
-//        ObjectMap.Entry copyEntry = new MockEntry();
+//        ObjectObjectMap.Entry copyEntry = new MockEntry();
 //        assertEquals(real, copyEntry);
 		//assertTrue(entrySet.contains(copyEntry));
 
@@ -593,15 +593,15 @@ public class ObjectMapTest extends junit.framework.TestCase {
 	@Override
 	@Before
 	public void setUp () {
-		hm = new ObjectMap();
+		hm = new ObjectObjectMap();
 		for (int i = 0; i < objArray.length; i++)
 			hm.put(objArray2[i], objArray[i]);
 		hm.put("test", null);
 //		hm.put(null, "test");
 	}
 
-	class SubMap<K, V> extends ObjectMap<K, V> {
-		public SubMap (ObjectMap<? extends K, ? extends V> m) {
+	class SubMap<K, V> extends ObjectObjectMap<K, V> {
+		public SubMap (ObjectObjectMap<? extends K, ? extends V> m) {
 			super(m);
 		}
 

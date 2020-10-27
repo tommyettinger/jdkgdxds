@@ -28,7 +28,7 @@ import java.util.Set;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * An {@link ObjectMap} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
+ * An {@link ObjectObjectMap} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
  * allocation is done except when growing the table size.
  * <p>
  * Iteration over the {@link #entrySet()} ()}, {@link #keySet()} ()}, and {@link #values()} is ordered and faster than an unordered map. Keys
@@ -54,7 +54,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Serializable {
+public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K>, Serializable {
 	private static final long serialVersionUID = 0L;
 
 	protected final ObjectList<K> keys;
@@ -350,7 +350,7 @@ public class OrderedMap<K, V> extends ObjectMap<K, V> implements Ordered<K>, Ser
 	}
 
 	/**
-	 * Reuses the iterator of the reused {@link com.github.tommyettinger.ds.ObjectMap.Entries}
+	 * Reuses the iterator of the reused {@link ObjectObjectMap.Entries}
 	 * produced by {@link #entrySet()}; does not permit nested iteration. Iterate over
 	 * {@link OrderedMapEntries#OrderedMapEntries(OrderedMap)} if you need nested or
 	 * multithreaded iteration. You can remove an Entry from this OrderedMap

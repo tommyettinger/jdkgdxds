@@ -18,14 +18,17 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectMap;
 import com.github.tommyettinger.ds.OrderedMap;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -196,8 +199,8 @@ public class OrderedMapTest {
 		Iterator i = s.iterator();
 		assertTrue("Returned set of incorrect size", hm.size() == s.size());
 		while (i.hasNext()) {
-			ObjectMap.Entry m = (ObjectMap.Entry)i.next();
-			assertTrue("Returned incorrect entry set", hm.containsKey(m.key) && hm.containsValue(m.value, false));
+			Map.Entry m = (Map.Entry)i.next();
+			assertTrue("Returned incorrect entry set", hm.containsKey(m.getKey()) && hm.containsValue(m.getValue(), false));
 		}
 	}
 
@@ -342,8 +345,8 @@ public class OrderedMapTest {
 		Iterator it1 = s1.iterator();
 		assertTrue("Returned set of incorrect size 1", lhm.size() == s1.size());
 		for (i = 0; it1.hasNext(); i++) {
-			ObjectMap.Entry m = (ObjectMap.Entry)it1.next();
-			Integer jj = (Integer)m.key;
+			Map.Entry m = (Map.Entry)it1.next();
+			Integer jj = (Integer)m.getKey();
 			assertTrue("Returned incorrect entry set 1", jj.intValue() == i);
 		}
 	}

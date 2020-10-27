@@ -508,7 +508,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	/**
 	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
 	 * does not permit nested iteration. Iterate over {@link Entries#Entries(LongObjectMap)} if you
-	 * need nested or multithreaded iteration. You can remove an Entry from this ObjectMap
+	 * need nested or multithreaded iteration. You can remove an Entry from this LongObjectMap
 	 * using this Iterator.
 	 *
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.

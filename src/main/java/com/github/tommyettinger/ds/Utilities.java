@@ -23,7 +23,7 @@ package com.github.tommyettinger.ds;
  */
 public class Utilities {
 	/**
-	 * Used to establish the size of a hash table for {@link ObjectSet}, {@link ObjectMap}, and related code.
+	 * Used to establish the size of a hash table for {@link ObjectSet}, {@link ObjectObjectMap}, and related code.
 	 * The table size will always be a power of two, and should be the next power of two that is at least equal
 	 * to {@code capacity / loadFactor}.
 	 *
