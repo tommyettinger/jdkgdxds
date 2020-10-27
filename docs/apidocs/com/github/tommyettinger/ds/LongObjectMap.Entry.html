@@ -83,19 +83,19 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">com.github.tommyettinger.ds</a></div>
-<h1 title="Class LongObjectMap.Entry" class="title">Class LongObjectMap.Entry</h1>
+<h1 title="Class LongObjectMap.Entry" class="title">Class LongObjectMap.Entry&lt;V&gt;</h1>
 </div>
 <div class="contentContainer">
 <div class="inheritance" title="Inheritance Tree">java.lang.Object
-<div class="inheritance">com.github.tommyettinger.ds.LongObjectMap.Entry</div>
+<div class="inheritance">com.github.tommyettinger.ds.LongObjectMap.Entry&lt;V&gt;</div>
 </div>
 <section class="description">
 <dl>
 <dt>Enclosing class:</dt>
-<dd><a href="LongObjectMap.html" title="class in com.github.tommyettinger.ds">LongObjectMap</a></dd>
+<dd><a href="LongObjectMap.html" title="class in com.github.tommyettinger.ds">LongObjectMap</a>&lt;<a href="LongObjectMap.html" title="type parameter in LongObjectMap">V</a>&gt;</dd>
 </dl>
 <hr>
-<pre>public static class <span class="typeNameLabel">LongObjectMap.Entry</span>
+<pre>public static class <span class="typeNameLabel">LongObjectMap.Entry&lt;V&gt;</span>
 extends java.lang.Object</pre>
 </section>
 <section class="summary">
@@ -123,7 +123,7 @@ extends java.lang.Object</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>float</code></td>
+<td class="colFirst"><code><a href="LongObjectMap.Entry.html" title="type parameter in LongObjectMap.Entry">V</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#value">value</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -188,7 +188,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr class="altColor" id="i2">
-<td class="colFirst"><code>float</code></td>
+<td class="colFirst"><code><a href="LongObjectMap.Entry.html" title="type parameter in LongObjectMap.Entry">V</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getValue()">getValue</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns the value corresponding to this entry.</div>
@@ -200,8 +200,8 @@ extends java.lang.Object</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i4">
-<td class="colFirst"><code>float</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setValue(float)">setValue</a></span>&#8203;(float&nbsp;value)</code></th>
+<td class="colFirst"><code><a href="LongObjectMap.Entry.html" title="type parameter in LongObjectMap.Entry">V</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setValue(V)">setValue</a></span>&#8203;(<a href="LongObjectMap.Entry.html" title="type parameter in LongObjectMap.Entry">V</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Replaces the value corresponding to this entry with the specified
  value (optional operation).</div>
@@ -243,7 +243,8 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <section class="detail">
 <h3><a id="value">value</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">float</span>&nbsp;<span class="memberName">value</span></div>
+<div class="memberSignature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="LongObjectMap.Entry.html" title="type parameter in LongObjectMap.Entry">V</a></span>&nbsp;<span class="memberName">value</span></div>
 </section>
 </li>
 </ul>
@@ -300,7 +301,8 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <section class="detail">
 <h3><a id="getValue()">getValue</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">float</span>&nbsp;<span class="memberName">getValue</span>()</div>
+<div class="memberSignature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="LongObjectMap.Entry.html" title="type parameter in LongObjectMap.Entry">V</a></span>&nbsp;<span class="memberName">getValue</span>()</div>
 <div class="block">Returns the value corresponding to this entry.  If the mapping
  has been removed from the backing map (by the iterator's
  <code>remove</code> operation), the results of this call are undefined.</div>
@@ -312,8 +314,12 @@ extends java.lang.Object</pre>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="setValue(float)">setValue</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">float</span>&nbsp;<span class="memberName">setValue</span>&#8203;(<span class="arguments">float&nbsp;value)</span></div>
+<h3><a id="setValue(java.lang.Object)">
+<!--   -->
+</a><a id="setValue(V)">setValue</a></h3>
+<div class="memberSignature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="LongObjectMap.Entry.html" title="type parameter in LongObjectMap.Entry">V</a></span>&nbsp;<span class="memberName">setValue</span>&#8203;(<span class="arguments">@Nullable
+<a href="LongObjectMap.Entry.html" title="type parameter in LongObjectMap.Entry">V</a>&nbsp;value)</span></div>
 <div class="block">Replaces the value corresponding to this entry with the specified
  value (optional operation).  (Writes through to the map.)  The
  behavior of this call is undefined if the mapping has already been

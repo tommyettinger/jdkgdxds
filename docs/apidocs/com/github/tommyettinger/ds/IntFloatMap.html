@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -105,12 +105,12 @@ implements java.lang.Iterable&lt;<a href="IntFloatMap.Entry.html" title="class i
  slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors
  greater than 0.91 greatly increase the chances to resize to the next higher POT size.
  <p>
- Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
- OrderedMap.
+ Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with ObjectOrderedSet and
+ ObjectObjectOrderedMap.
  <p>
  You can customize most behavior of this map by extending it. <a href="#place(int)"><code>place(int)</code></a> can be overridden to change how hashCodes
  are calculated (which can be useful for types like <code>StringBuilder</code> that don't implement hashCode()), and
- <code>locateKey(int)</code> can be overridden to change how equality is calculated.
+ <a href="#locateKey(int)"><code>locateKey(int)</code></a> can be overridden to change how equality is calculated.
  <p>
  This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
  hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href="https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
@@ -463,20 +463,27 @@ float&nbsp;defaultValue)</code></th>
 </td>
 </tr>
 <tr class="altColor" id="i16">
+<td class="colFirst"><code>protected int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#locateKey(int)">locateKey</a></span>&#8203;(int&nbsp;key)</code></th>
+<td class="colLast">
+<div class="block">Returns the index of the key if already present, else <code>-1 - index</code> for the next empty index.</div>
+</td>
+</tr>
+<tr class="rowColor" id="i17">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notEmpty()">notEmpty</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns true if the map has one or more items.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i17">
+<tr class="altColor" id="i18">
 <td class="colFirst"><code>protected int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#place(int)">place</a></span>&#8203;(int&nbsp;item)</code></th>
 <td class="colLast">
 <div class="block">Returns an index &gt;= 0 and &lt;= <a href="#mask"><code>mask</code></a> for the specified <code>item</code>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i18">
+<tr class="rowColor" id="i19">
 <td class="colFirst"><code>float</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#put(int,float)">put</a></span>&#8203;(int&nbsp;key,
 float&nbsp;value)</code></th>
@@ -484,12 +491,12 @@ float&nbsp;value)</code></th>
 <div class="block">Returns the old value associated with the specified key, or this map's <a href="#defaultValue"><code>defaultValue</code></a> if there was no prior value.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i19">
+<tr class="altColor" id="i20">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#putAll(com.github.tommyettinger.ds.IntFloatMap)">putAll</a></span>&#8203;(<a href="IntFloatMap.html" title="class in com.github.tommyettinger.ds">IntFloatMap</a>&nbsp;map)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i20">
+<tr class="rowColor" id="i21">
 <td class="colFirst"><code>float</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#putOrDefault(int,float,float)">putOrDefault</a></span>&#8203;(int&nbsp;key,
 float&nbsp;value,
@@ -498,49 +505,54 @@ float&nbsp;defaultValue)</code></th>
 <div class="block">Returns the old value associated with the specified key, or the given <code>defaultValue</code> if there was no prior value.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i21">
+<tr class="altColor" id="i22">
 <td class="colFirst"><code>float</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(int)">remove</a></span>&#8203;(int&nbsp;key)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i22">
+<tr class="rowColor" id="i23">
+<td class="colFirst"><code>protected void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resize(int)">resize</a></span>&#8203;(int&nbsp;newSize)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i24">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDefaultValue(float)">setDefaultValue</a></span>&#8203;(float&nbsp;defaultValue)</code></th>
 <td class="colLast">
 <div class="block">Sets the default value, a <code>float</code> which is returned by <a href="#get(int)"><code>get(int)</code></a> if the key is not found.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i23">
+<tr class="rowColor" id="i25">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shrink(int)">shrink</a></span>&#8203;(int&nbsp;maximumCapacity)</code></th>
 <td class="colLast">
 <div class="block">Reduces the size of the backing arrays to be the specified capacity / loadFactor, or less.</div>
 </td>
 </tr>
-<tr class="altColor" id="i24">
+<tr class="altColor" id="i26">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size()">size</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns the number of key-value mappings in this map.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i25">
+<tr class="rowColor" id="i27">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i26">
+<tr class="altColor" id="i28">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString(java.lang.String)">toString</a></span>&#8203;(java.lang.String&nbsp;separator)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i27">
+<tr class="rowColor" id="i29">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString(java.lang.String,boolean)">toString</a></span>&#8203;(java.lang.String&nbsp;separator,
 boolean&nbsp;braces)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i28">
+<tr class="altColor" id="i30">
 <td class="colFirst"><code><a href="IntFloatMap.Values.html" title="class in com.github.tommyettinger.ds">IntFloatMap.Values</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#values()">values</a></span>()</code></th>
 <td class="colLast">
@@ -757,6 +769,14 @@ float&nbsp;loadFactor)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="locateKey(int)">locateKey</a></h3>
+<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">locateKey</span>&#8203;(<span class="arguments">int&nbsp;key)</span></div>
+<div class="block">Returns the index of the key if already present, else <code>-1 - index</code> for the next empty index. This can be overridden
+ to compare for equality differently than <code>==</code>.</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="put(int,float)">put</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">float</span>&nbsp;<span class="memberName">put</span>&#8203;(<span class="arguments">int&nbsp;key,
 float&nbsp;value)</span></div>
@@ -920,6 +940,12 @@ int&nbsp;defaultKey)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="resize(int)">resize</a></h3>
+<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resize</span>&#8203;(<span class="arguments">int&nbsp;newSize)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="hashCode()">hashCode</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">hashCode</span>()</div>
 <dl>
@@ -967,7 +993,7 @@ boolean&nbsp;braces)</span></div>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">java.util.Iterator&lt;<a href="IntFloatMap.Entry.html" title="class in com.github.tommyettinger.ds">IntFloatMap.Entry</a>&gt;</span>&nbsp;<span class="memberName">iterator</span>()</div>
 <div class="block">Reuses the iterator of the reused <a href="IntFloatMap.Entries.html" title="class in com.github.tommyettinger.ds"><code>IntFloatMap.Entries</code></a> produced by <a href="#entrySet()"><code>entrySet()</code></a>;
  does not permit nested iteration. Iterate over <a href="IntFloatMap.Entries.html#%3Cinit%3E(com.github.tommyettinger.ds.IntFloatMap)"><code>Entries(IntFloatMap)</code></a> if you
- need nested or multithreaded iteration. You can remove an Entry from this ObjectMap
+ need nested or multithreaded iteration. You can remove an Entry from this IntFloatMap
  using this Iterator.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>

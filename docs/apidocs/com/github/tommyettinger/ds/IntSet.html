@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":9};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -94,6 +94,10 @@ loadScripts(document, 'script');</script>
 <dt>All Implemented Interfaces:</dt>
 <dd><code><a href="PrimitiveCollection.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection</a>&lt;java.lang.Integer,&#8203;java.util.function.IntConsumer&gt;</code>, <code><a href="PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfInt</a></code>, <code>java.io.Serializable</code></dd>
 </dl>
+<dl>
+<dt>Direct Known Subclasses:</dt>
+<dd><code><a href="IntOrderedSet.html" title="class in com.github.tommyettinger.ds">IntOrderedSet</a></code></dd>
+</dl>
 <hr>
 <pre>public class <span class="typeNameLabel">IntSet</span>
 extends java.lang.Object
@@ -104,8 +108,8 @@ implements <a href="PrimitiveCollection.OfInt.html" title="interface in com.gith
  slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors
  greater than 0.91 greatly increase the chances to resize to the next higher POT size.
  <p>
- Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
- OrderedMap.
+ Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with ObjectOrderedSet and
+ ObjectObjectOrderedMap.
  <p>
  This implementation uses linear probing with the backward shift algorithm for removal. Linear probing continues to work even
  when all hashCodes collide, just more slowly.</div>
@@ -367,51 +371,63 @@ int&nbsp;length)</code></th>
 </td>
 </tr>
 <tr class="altColor" id="i14">
-<td class="colFirst"><code><a href="IntSet.IntSetIterator.html" title="class in com.github.tommyettinger.ds">IntSet.IntSetIterator</a></code></td>
+<td class="colFirst"><code>java.util.PrimitiveIterator.OfInt</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#iterator()">iterator</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns an iterator for the keys in the set.</div>
 </td>
 </tr>
 <tr class="rowColor" id="i15">
+<td class="colFirst"><code>protected int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#locateKey(int)">locateKey</a></span>&#8203;(int&nbsp;key)</code></th>
+<td class="colLast">
+<div class="block">Returns the index of the key if already present, else <code>-1 - index</code> for the next empty index.</div>
+</td>
+</tr>
+<tr class="altColor" id="i16">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notEmpty()">notEmpty</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns true if the set has one or more items.</div>
 </td>
 </tr>
-<tr class="altColor" id="i16">
+<tr class="rowColor" id="i17">
 <td class="colFirst"><code>protected int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#place(int)">place</a></span>&#8203;(int&nbsp;item)</code></th>
 <td class="colLast">
 <div class="block">Returns an index &gt;= 0 and &lt;= <a href="#mask"><code>mask</code></a> for the specified <code>item</code>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i17">
+<tr class="altColor" id="i18">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(int)">remove</a></span>&#8203;(int&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block">Returns true if the key was removed.</div>
 </td>
 </tr>
-<tr class="altColor" id="i18">
+<tr class="rowColor" id="i19">
+<td class="colFirst"><code>protected void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resize(int)">resize</a></span>&#8203;(int&nbsp;newSize)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i20">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shrink(int)">shrink</a></span>&#8203;(int&nbsp;maximumCapacity)</code></th>
 <td class="colLast">
 <div class="block">Reduces the size of the backing arrays to be the specified capacity / loadFactor, or less.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i19">
+<tr class="rowColor" id="i21">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size()">size</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i20">
+<tr class="altColor" id="i22">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i21">
+<tr class="rowColor" id="i23">
 <td class="colFirst"><code>static <a href="IntSet.html" title="class in com.github.tommyettinger.ds">IntSet</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#with(int...)">with</a></span>&#8203;(int...&nbsp;array)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -581,6 +597,14 @@ float&nbsp;loadFactor)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="locateKey(int)">locateKey</a></h3>
+<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">locateKey</span>&#8203;(<span class="arguments">int&nbsp;key)</span></div>
+<div class="block">Returns the index of the key if already present, else <code>-1 - index</code> for the next empty index. This can be overridden in this
+ pacakge to compare for equality differently than <code>Object.equals(Object)</code>.</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="add(int)">add</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">add</span>&#8203;(<span class="arguments">int&nbsp;key)</span></div>
 <div class="block">Returns true if the key was not already in the set.</div>
@@ -705,6 +729,12 @@ int&nbsp;length)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="resize(int)">resize</a></h3>
+<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resize</span>&#8203;(<span class="arguments">int&nbsp;newSize)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="hashCode()">hashCode</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">hashCode</span>()</div>
 <dl>
@@ -740,7 +770,7 @@ int&nbsp;length)</span></div>
 <li class="blockList">
 <section class="detail">
 <h3><a id="iterator()">iterator</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="IntSet.IntSetIterator.html" title="class in com.github.tommyettinger.ds">IntSet.IntSetIterator</a></span>&nbsp;<span class="memberName">iterator</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">java.util.PrimitiveIterator.OfInt</span>&nbsp;<span class="memberName">iterator</span>()</div>
 <div class="block">Returns an iterator for the keys in the set. Remove is supported.
  <p>
  Use the <a href="IntSet.IntSetIterator.html" title="class in com.github.tommyettinger.ds"><code>IntSet.IntSetIterator</code></a> constructor for nested or multithreaded iteration.</div>
