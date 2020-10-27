@@ -31,8 +31,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors
  * greater than 0.91 greatly increase the chances to resize to the next higher POT size.
  * <p>
- * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
- * OrderedMap.
+ * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with ObjectOrderedSet and
+ * ObjectObjectOrderedMap.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal. Linear probing continues to work even
  * when all hashCodes collide, just more slowly.
@@ -130,7 +130,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 	 * Returns the index of the key if already present, else {@code -1 - index} for the next empty index. This can be overridden
 	 * to compare for equality differently than {@code ==}.
 	 */
-	private int locateKey (long key) {
+	protected int locateKey (long key) {
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			long other = keyTable[i];
@@ -304,7 +304,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		return size;
 	}
 
-	private void resize (int newSize) {
+	protected void resize (int newSize) {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;

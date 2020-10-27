@@ -38,8 +38,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors
  * greater than 0.91 greatly increase the chances to resize to the next higher POT size.
  * <p>
- * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
- * OrderedMap.
+ * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with ObjectOrderedSet and
+ * ObjectObjectOrderedMap.
  * <p>
  * You can customize most behavior of this map by extending it. {@link #place(Object)} can be overridden to change how hashCodes
  * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
@@ -417,7 +417,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		if (keyTable.length < tableSize) { resize(tableSize); }
 	}
 
-	final void resize (int newSize) {
+	protected void resize (int newSize) {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;

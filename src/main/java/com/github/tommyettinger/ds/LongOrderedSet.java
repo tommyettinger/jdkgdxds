@@ -16,33 +16,31 @@
 
 package com.github.tommyettinger.ds;
 
-import javax.annotation.Nullable;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.PrimitiveIterator;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * A {@link ObjectSet} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
+ * A {@link LongSet} that also stores keys in a {@link LongList} using the insertion order. No
  * allocation is done except when growing the table size.
  * <p>
  * {@link #iterator() Iteration} is ordered and faster than an unordered set. Keys can also be accessed and the order changed
- * using {@link #orderedItems()}. There is some additional overhead for put and remove.
+ * using {@link #order()}. There is some additional overhead for put and remove.
  * <p>
  * This class performs fast contains (typically O(1), worst case O(n) but that is rare in practice). Remove is somewhat slower due
- * to {@link #orderedItems()}. Add may be slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce
+ * to {@link #order()}. Add may be slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce
  * collisions and the need to resize. Load factors greater than 0.91 greatly increase the chances to resize to the next higher POT
  * size.
  * <p>
- * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
- * OrderedMap.
+ * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with ObjectOrderedSet and
+ * ObjectObjectOrderedMap.
  * <p>
- * You can customize most behavior of this set by extending it. {@link #place(Object)} can be overridden to change how hashCodes
+ * You can customize most behavior of this set by extending it. {@link #place(long)} can be overridden to change how hashCodes
  * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
- * {@link #locateKey(Object)} can be overridden to change how equality is calculated.
+ * {@link #locateKey(long)} can be overridden to change how equality is calculated.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
  * hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
@@ -52,39 +50,39 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializable {
+public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializable {
 	private static final long serialVersionUID = 0L;
-	protected final ObjectList<T> items;
+	protected final LongList items;
 
-	public OrderedSet () {
-		items = new ObjectList<>();
+	public LongOrderedSet () {
+		items = new LongList();
 	}
 
-	public OrderedSet (int initialCapacity, float loadFactor) {
+	public LongOrderedSet (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
-		items = new ObjectList<>(initialCapacity);
+		items = new LongList(initialCapacity);
 	}
 
-	public OrderedSet (int initialCapacity) {
+	public LongOrderedSet (int initialCapacity) {
 		super(initialCapacity);
-		items = new ObjectList<>(initialCapacity);
+		items = new LongList(initialCapacity);
 	}
 
-	public OrderedSet (OrderedSet<? extends T> set) {
+	public LongOrderedSet (LongOrderedSet set) {
 		super(set);
-		items = new ObjectList<>(set.items);
+		items = new LongList(set.items);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public OrderedSet (Collection<? extends T> coll) {
+	public LongOrderedSet (PrimitiveCollection.OfLong coll) {
 		this(coll.size());
 		addAll(coll);
 	}
 
 	@Override
-	public boolean add (T key) {
+	public boolean add (long key) {
 		return super.add(key) && items.add(key);
 	}
 
@@ -92,29 +90,29 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * Sets the key at the specfied index. Returns true if the key was not already in the set. If this set already contains the
 	 * key, the existing key's index is changed if needed and false is returned.
 	 */
-	public boolean add (T key, int index) {
+	public boolean add (long key, int index) {
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
-			if (oldIndex != index) { items.add(index, items.remove(oldIndex)); }
+			if (oldIndex != index) { items.add(index, items.removeIndex(oldIndex)); }
 			return false;
 		}
 		items.add(index, key);
 		return true;
 	}
 
-	public void addAll (OrderedSet<T> set) {
-		ensureCapacity(set.size);
-		ObjectList<T> si = set.items;
-		for (int i = 0, n = si.size(); i < n; i++) { add(si.get(i)); }
+	public void addAll (Ordered.OfLong other) {
+		LongList oo = other.order();
+		ensureCapacity(oo.size());
+		for (int i = 0, n = oo.size(); i < n; i++) { add(oo.get(i)); }
 	}
 
 	@Override
-	public boolean remove (Object key) {
+	public boolean remove (long key) {
 		return super.remove(key) && items.remove(key);
 	}
 
-	public T removeIndex (int index) {
-		T key = items.remove(index);
+	public long removeIndex (int index) {
+		long key = items.removeIndex(index);
 		super.remove(key);
 		return key;
 	}
@@ -134,15 +132,15 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 
 	/**
 	 * Changes the item {@code before} to {@code after} without changing its position in the order. Returns true if {@code after}
-	 * has been added to the OrderedSet and {@code before} has been removed; returns false if {@code after} is already present or
-	 * {@code before} is not present. If you are iterating over an OrderedSet and have an index, you should prefer
-	 * {@link #alterIndex(int, Object)}, which doesn't need to search for an index like this does and so can be faster.
+	 * has been added to the ObjectOrderedSet and {@code before} has been removed; returns false if {@code after} is already present or
+	 * {@code before} is not present. If you are iterating over an ObjectOrderedSet and have an index, you should prefer
+	 * {@link #alterIndex(int, long)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before an item that must be present for this to succeed
 	 * @param after  an item that must not be in this set for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (T before, T after) {
+	public boolean alter (long before, long after) {
 		if (contains(after)) { return false; }
 		if (!super.remove(before)) { return false; }
 		super.add(after);
@@ -153,13 +151,13 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	/**
 	 * Changes the item at the given {@code index} in the order to {@code after}, without changing the ordering of other items. If
 	 * {@code after} is already present, this returns false; it will also return false if {@code index} is invalid for the size of
-	 * this set. Otherwise, it returns true. Unlike {@link #alter(Object, Object)}, this operates in constant time.
+	 * this set. Otherwise, it returns true. Unlike {@link #alter(long, long)}, this operates in constant time.
 	 *
 	 * @param index the index in the order of the item to change; must be non-negative and less than {@link #size}
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
-	public boolean alterIndex (int index, T after) {
+	public boolean alterIndex (int index, long after) {
 		if (index < 0 || index >= size || contains(after)) { return false; }
 		super.remove(items.get(index));
 		super.add(after);
@@ -178,21 +176,7 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		items.clear();
 		super.clear();
 	}
-
-	/**
-	 * Gets the ObjectList of items in the order this class will iterate through them.
-	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
-	 * also change the iteration order here.
-	 * <br>
-	 * This method is provided for backwards-compatibility; {@link #order()} is preferred for new code
-	 * because it allows order-changing methods to be written once for an arbitrary {@link Ordered} type.
-	 *
-	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
-	 */
-	public ObjectList<T> orderedItems () {
-		return items;
-	}
-
+	
 	/**
 	 * Gets the ObjectList of items in the order this class will iterate through them.
 	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
@@ -201,39 +185,29 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public ObjectList<T> order () {
+	public LongList order () {
 		return items;
 	}
 
 	/**
-	 * Sorts this OrderedSet in-place by the keys' natural ordering; {@code T} must implement {@link Comparable}.
+	 * Sorts this ObjectOrderedSet in-place by the keys' natural ordering; {@code T} must implement {@link Comparable}.
 	 */
 	public void sort () {
-		items.sort(null);
+		items.sort();
 	}
-
-	/**
-	 * Sorts this OrderedSet in-place by the given Comparator used on the keys. If {@code comp} is null, then this
-	 * will sort by the natural ordering of the keys, which requires {@code T} to {@link Comparable}.
-	 *
-	 * @param comp a Comparator that can compare two {@code T} keys, or null to use the keys' natural ordering
-	 */
-	public void sort (@Nullable Comparator<T> comp) {
-		items.sort(comp);
-	}
-
+	
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
 	 * Reuses one of two iterators, and does not permit nested iteration;
-	 * use {@link OrderedSetIterator#OrderedSetIterator(OrderedSet)} to nest iterators.
+	 * use {@link OrderedSetIterator#OrderedSetIterator(LongOrderedSet)} to nest iterators.
 	 *
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public Iterator<T> iterator () {
+	public PrimitiveIterator.OfLong iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new OrderedSetIterator<>(this);
-			iterator2 = new OrderedSetIterator<>(this);
+			iterator1 = new OrderedSetIterator(this);
+			iterator2 = new OrderedSetIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -247,10 +221,9 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		return iterator2;
 	}
 
-	@Override
 	public String toString (String separator) {
 		if (size == 0) { return "{}"; }
-		ObjectList<T> items = this.items;
+		LongList items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('{');
 		buffer.append(items.get(0));
@@ -266,10 +239,10 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		return toString(", ");
 	}
 
-	public static class OrderedSetIterator<K> extends ObjectSetIterator<K> {
-		private final ObjectList<K> items;
+	public static class OrderedSetIterator<K> extends LongSet.LongSetIterator {
+		private final LongList items;
 
-		public OrderedSetIterator (OrderedSet<K> set) {
+		public OrderedSetIterator (LongOrderedSet set) {
 			super(set);
 			items = set.items;
 		}
@@ -281,10 +254,10 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		}
 
 		@Override
-		public K next () {
+		public long nextLong () {
 			if (!hasNext) { throw new NoSuchElementException(); }
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			K key = items.get(nextIndex);
+			long key = items.get(nextIndex);
 			nextIndex++;
 			hasNext = nextIndex < set.size;
 			return key;
@@ -298,9 +271,8 @@ public class OrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Serializa
 		}
 	}
 
-	@SafeVarargs
-	public static <T> OrderedSet<T> with (T... array) {
-		OrderedSet<T> set = new OrderedSet<T>();
+	public static LongOrderedSet with (long... array) {
+		LongOrderedSet set = new LongOrderedSet();
 		set.addAll(array);
 		return set;
 	}

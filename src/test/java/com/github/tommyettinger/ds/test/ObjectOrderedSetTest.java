@@ -16,7 +16,7 @@
 
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.OrderedSet;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,9 +24,9 @@ import org.junit.Test;
 
 import java.util.Iterator;
 
-public class OrderedSetTest {
+public class ObjectOrderedSetTest {
 
-	OrderedSet hs;
+	ObjectOrderedSet hs;
 
 	static Object[] objArray;
 
@@ -37,17 +37,17 @@ public class OrderedSetTest {
 	}
 
 	@Test public void test_Constructor () {
-		// Test for method com.github.tommyettinger.merry.OrderedSet()
-		OrderedSet hs2 = new OrderedSet();
-		Assert.assertEquals("Created incorrect OrderedSet", 0, hs2.size());
+		// Test for method com.github.tommyettinger.merry.ObjectOrderedSet()
+		ObjectOrderedSet hs2 = new ObjectOrderedSet();
+		Assert.assertEquals("Created incorrect ObjectOrderedSet", 0, hs2.size());
 	}
 
 	@Test public void test_ConstructorI () {
-		// Test for method com.github.tommyettinger.merry.OrderedSet(int)
-		OrderedSet hs2 = new OrderedSet(5);
-		Assert.assertEquals("Created incorrect OrderedSet", 0, hs2.size());
+		// Test for method com.github.tommyettinger.merry.ObjectOrderedSet(int)
+		ObjectOrderedSet hs2 = new ObjectOrderedSet(5);
+		Assert.assertEquals("Created incorrect ObjectOrderedSet", 0, hs2.size());
 		try {
-			new OrderedSet(-1);
+			new ObjectOrderedSet(-1);
 		} catch (IllegalArgumentException e) {
 			return;
 		}
@@ -55,11 +55,11 @@ public class OrderedSetTest {
 	}
 
 	@Test public void test_ConstructorIF () {
-		// Test for method com.github.tommyettinger.merry.OrderedSet(int, float)
-		OrderedSet hs2 = new OrderedSet(5, (float)0.5);
-		Assert.assertEquals("Created incorrect OrderedSet", 0, hs2.size());
+		// Test for method com.github.tommyettinger.merry.ObjectOrderedSet(int, float)
+		ObjectOrderedSet hs2 = new ObjectOrderedSet(5, (float)0.5);
+		Assert.assertEquals("Created incorrect ObjectOrderedSet", 0, hs2.size());
 		try {
-			new OrderedSet(0, 0);
+			new ObjectOrderedSet(0, 0);
 		} catch (IllegalArgumentException e) {
 			return;
 		}
@@ -67,15 +67,15 @@ public class OrderedSetTest {
 	}
 
 	@Test public void test_ConstructorLjava_util_Collection () {
-		// Test for method com.github.tommyettinger.merry.OrderedSet(java.util.Collection)
-		OrderedSet hs2 = OrderedSet.with(objArray);
+		// Test for method com.github.tommyettinger.merry.ObjectOrderedSet(java.util.Collection)
+		ObjectOrderedSet hs2 = ObjectOrderedSet.with(objArray);
 		for (int counter = 0; counter < objArray.length; counter++)
-			Assert.assertTrue("OrderedSet does not contain correct elements", hs.contains(objArray[counter]));
-		Assert.assertTrue("OrderedSet created from collection incorrect size", hs2.size() == objArray.length);
+			Assert.assertTrue("ObjectOrderedSet does not contain correct elements", hs.contains(objArray[counter]));
+		Assert.assertTrue("ObjectOrderedSet created from collection incorrect size", hs2.size() == objArray.length);
 	}
 
 	@Test public void test_addLjava_lang_Object () {
-		// Test for method boolean com.github.tommyettinger.merry.OrderedSet.add(java.lang.Object)
+		// Test for method boolean com.github.tommyettinger.merry.ObjectOrderedSet.add(java.lang.Object)
 		int size = hs.size();
 		hs.add(new Integer(8));
 		Assert.assertTrue("Added element already contained by set", hs.size() == size);
@@ -85,8 +85,8 @@ public class OrderedSetTest {
 	}
 
 	@Test public void test_clear () {
-		// Test for method void com.github.tommyettinger.merry.OrderedSet.clear()
-		OrderedSet orgSet = new OrderedSet(hs);
+		// Test for method void com.github.tommyettinger.merry.ObjectOrderedSet.clear()
+		ObjectOrderedSet orgSet = new ObjectOrderedSet(hs);
 		hs.clear();
 		Iterator i = orgSet.iterator();
 		Assert.assertEquals("Returned non-zero size after clear", 0, hs.size());
@@ -96,19 +96,19 @@ public class OrderedSetTest {
 
 	@Test public void test_containsLjava_lang_Object () {
 		// Test for method boolean
-		// com.github.tommyettinger.merry.OrderedSet.contains(java.lang.Object)
+		// com.github.tommyettinger.merry.ObjectOrderedSet.contains(java.lang.Object)
 		Assert.assertTrue("Returned false for valid object", hs.contains(objArray[90]));
 		Assert.assertTrue("Returned true for invalid Object", !hs.contains(new Object()));
 	}
 
 	@Test public void test_isEmpty () {
-		// Test for method boolean com.github.tommyettinger.merry.OrderedSet.isEmpty()
-		Assert.assertTrue("Empty set returned false", new OrderedSet().isEmpty());
+		// Test for method boolean com.github.tommyettinger.merry.ObjectOrderedSet.isEmpty()
+		Assert.assertTrue("Empty set returned false", new ObjectOrderedSet().isEmpty());
 		Assert.assertTrue("Non-empty set returned true", !hs.isEmpty());
 	}
 
 	@Test public void test_iterator () {
-		// Test for method java.util.Iterator com.github.tommyettinger.merry.OrderedSet.iterator()
+		// Test for method java.util.Iterator com.github.tommyettinger.merry.ObjectOrderedSet.iterator()
 		Iterator i = hs.iterator();
 		int x = 0;
 		int j;
@@ -125,7 +125,7 @@ public class OrderedSetTest {
 
 	@Test public void test_removeLjava_lang_Object () {
 		// Test for method boolean
-		// com.github.tommyettinger.merry.OrderedSet.remove(java.lang.Object)
+		// com.github.tommyettinger.merry.ObjectOrderedSet.remove(java.lang.Object)
 		int size = hs.size();
 		hs.remove(new Integer(98));
 		Assert.assertTrue("Failed to remove element", !hs.contains(new Integer(98)));
@@ -133,7 +133,7 @@ public class OrderedSetTest {
 	}
 
 	@Test public void test_size () {
-		// Test for method int com.github.tommyettinger.merry.OrderedSet.size
+		// Test for method int com.github.tommyettinger.merry.ObjectOrderedSet.size
 		Assert.assertTrue("Returned incorrect size", hs.size() == (objArray.length));
 		hs.clear();
 		Assert.assertEquals("Cleared set returned non-zero size", 0, hs.size());
@@ -144,7 +144,7 @@ public class OrderedSetTest {
 	 * is called before a test is executed.
 	 */
 	@Before public void setUp () {
-		hs = new OrderedSet();
+		hs = new ObjectOrderedSet();
 		for (int i = 0; i < objArray.length; i++)
 			hs.add(objArray[i]);
 	}

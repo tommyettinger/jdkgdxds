@@ -19,13 +19,13 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectMap;
-import com.github.tommyettinger.ds.OrderedMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -126,7 +126,7 @@ public class ObjectObjectMapTest extends junit.framework.TestCase {
 	}
 
 	@Test public void test_ConstructorLjava_util_Map () {
-		ObjectObjectMap myMap = new OrderedMap();
+		HashMap myMap = new HashMap();
 		for (int counter = 0; counter < hmSize; counter++)
 			myMap.put(objArray2[counter], objArray[counter]);
 		ObjectObjectMap hm2 = new ObjectObjectMap(myMap);

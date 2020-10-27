@@ -39,8 +39,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * collisions and the need to resize. Load factors greater than 0.91 greatly increase the chances to resize to the next higher POT
  * size.
  * <p>
- * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with OrderedSet and
- * OrderedMap.
+ * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with ObjectOrderedSet and
+ * ObjectObjectOrderedMap.
  * <p>
  * You can customize most behavior of this map by extending it. {@link #place(Object)} can be overridden to change how hashCodes
  * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
@@ -54,26 +54,26 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K>, Serializable {
+public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K>, Serializable {
 	private static final long serialVersionUID = 0L;
 
 	protected final ObjectList<K> keys;
 
-	public OrderedMap () {
+	public ObjectObjectOrderedMap () {
 		keys = new ObjectList<>();
 	}
 
-	public OrderedMap (int initialCapacity) {
+	public ObjectObjectOrderedMap (int initialCapacity) {
 		super(initialCapacity);
 		keys = new ObjectList<>(initialCapacity);
 	}
 
-	public OrderedMap (int initialCapacity, float loadFactor) {
+	public ObjectObjectOrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		keys = new ObjectList<>(initialCapacity);
 	}
 
-	public OrderedMap (OrderedMap<? extends K, ? extends V> map) {
+	public ObjectObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> map) {
 		super(map);
 		keys = new ObjectList<>(map.keys);
 	}
@@ -81,7 +81,7 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 	/**
 	 * Creates a new map identical to the specified map.
 	 */
-	public OrderedMap (Map<? extends K, ? extends V> map) {
+	public ObjectObjectOrderedMap (Map<? extends K, ? extends V> map) {
 		this(map.size());
 		for (K k : map.keySet()) {
 			put(k, map.get(k));
@@ -104,7 +104,7 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 		return null;
 	}
 
-	public <T extends K> void putAll (OrderedMap<T, ? extends V> map) {
+	public <T extends K> void putAll (ObjectObjectOrderedMap<T, ? extends V> map) {
 		ensureCapacity(map.size);
 		ObjectList<T> ks = map.keys;
 		int kl = ks.size();
@@ -142,8 +142,8 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 
 	/**
 	 * Changes the key {@code before} to {@code after} without changing its position in the order or its value. Returns true if
-	 * {@code after} has been added to the OrderedMap and {@code before} has been removed; returns false if {@code after} is
-	 * already present or {@code before} is not present. If you are iterating over an OrderedMap and have an index, you should
+	 * {@code after} has been added to the ObjectObjectOrderedMap and {@code before} has been removed; returns false if {@code after} is
+	 * already present or {@code before} is not present. If you are iterating over an ObjectObjectOrderedMap and have an index, you should
 	 * prefer {@link #alterIndex(int, Object)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before a key that must be present for this to succeed
@@ -232,14 +232,14 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 	}
 
 	/**
-	 * Sorts this OrderedMap in-place by the keys' natural ordering; {@code K} must implement {@link Comparable}.
+	 * Sorts this ObjectObjectOrderedMap in-place by the keys' natural ordering; {@code K} must implement {@link Comparable}.
 	 */
 	public void sort () {
 		keys.sort(null);
 	}
 
 	/**
-	 * Sorts this OrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
+	 * Sorts this ObjectObjectOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
 	 * will sort by the natural ordering of the keys, which requires {@code K} to {@link Comparable}.
 	 *
 	 * @param comp a Comparator that can compare two {@code K} keys, or null to use the keys' natural ordering
@@ -249,8 +249,8 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 	}
 
 	/**
-	 * Sorts this OrderedMap in-place by the given Comparator used on the values. {@code comp} must not be null,
-	 * and must be able to compare {@code V} values. If any null values are present in this OrderedMap, then comp
+	 * Sorts this ObjectObjectOrderedMap in-place by the given Comparator used on the values. {@code comp} must not be null,
+	 * and must be able to compare {@code V} values. If any null values are present in this ObjectObjectOrderedMap, then comp
 	 * must be able to sort or otherwise handle null values. You can use {@link Comparator#naturalOrder()} to do
 	 * what {@link #sort()} does (just sorting values in this case instead of keys) if the values implement
 	 * {@link Comparable} (requiring all of them to be non-null).
@@ -275,7 +275,7 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 	 * operations.
 	 *
 	 * <p>Note that the same Collection instance is returned each time this
-	 * method is called. Use the {@link OrderedMapKeys#OrderedMapKeys(OrderedMap)}
+	 * method is called. Use the {@link OrderedMapKeys#OrderedMapKeys(ObjectObjectOrderedMap)}
 	 * constructor for nested or multithreaded iteration.
 	 *
 	 * @return a set view of the keys contained in this map
@@ -301,7 +301,7 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 	/**
 	 * Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
 	 * <p>Note that the same Collection instance is returned each time this method is called. Use the
-	 * {@link OrderedMapValues#OrderedMapValues(OrderedMap)} constructor for nested or multithreaded iteration.
+	 * {@link OrderedMapValues#OrderedMapValues(ObjectObjectOrderedMap)} constructor for nested or multithreaded iteration.
 	 *
 	 * @return a {@link Collection} of V values
 	 */
@@ -327,7 +327,7 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 	 * Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
 	 *
 	 * <p>Note that the same iterator instance is returned each time this method is called.
-	 * Use the {@link OrderedMapEntries#OrderedMapEntries(OrderedMap)} constructor for nested or multithreaded iteration.
+	 * Use the {@link OrderedMapEntries#OrderedMapEntries(ObjectObjectOrderedMap)} constructor for nested or multithreaded iteration.
 	 *
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
@@ -352,8 +352,8 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 	/**
 	 * Reuses the iterator of the reused {@link ObjectObjectMap.Entries}
 	 * produced by {@link #entrySet()}; does not permit nested iteration. Iterate over
-	 * {@link OrderedMapEntries#OrderedMapEntries(OrderedMap)} if you need nested or
-	 * multithreaded iteration. You can remove an Entry from this OrderedMap
+	 * {@link OrderedMapEntries#OrderedMapEntries(ObjectObjectOrderedMap)} if you need nested or
+	 * multithreaded iteration. You can remove an Entry from this ObjectObjectOrderedMap
 	 * using this Iterator.
 	 *
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
@@ -384,7 +384,7 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 	public static class OrderedMapEntries<K, V> extends Entries<K, V> {
 		protected ObjectList<K> keys;
 
-		public OrderedMapEntries (OrderedMap<K, V> map) {
+		public OrderedMapEntries (ObjectObjectOrderedMap<K, V> map) {
 			super(map);
 			keys = map.keys;
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
@@ -437,7 +437,7 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 	public static class OrderedMapKeys<K, V> extends Keys<K, V> {
 		private final ObjectList<K> keys;
 
-		public OrderedMapKeys (OrderedMap<K, V> map) {
+		public OrderedMapKeys (ObjectObjectOrderedMap<K, V> map) {
 			super(map);
 			keys = map.keys;
 			iter = new MapIterator<K, V, K>(map) {
@@ -489,7 +489,7 @@ public class OrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K
 	public static class OrderedMapValues<K, V> extends Values<K, V> {
 		private final ObjectList<K> keys;
 
-		public OrderedMapValues (OrderedMap<K, V> map) {
+		public OrderedMapValues (ObjectObjectOrderedMap<K, V> map) {
 			super(map);
 			keys = map.keys;
 			iter = new MapIterator<K, V, V>(map) {

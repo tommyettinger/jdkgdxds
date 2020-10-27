@@ -91,6 +91,10 @@ public interface Ordered<T> extends Arrangeable {
 			}
 		}
 
+		@Override
+		default void reverse () {
+			order().reverse();
+		}
 	}
 	/**
 	 * A primitive specialization of {@link Ordered} for collections of long values instead of objects.
@@ -128,6 +132,12 @@ public interface Ordered<T> extends Arrangeable {
 				order.swap(i, random.nextInt(i + 1));
 			}
 		}
+		
+		@Override
+		default void reverse () {
+			order().reverse();
+		}
+
 	}
 	/**
 	 * A primitive specialization of {@link Ordered} for collections of float values instead of objects.
@@ -164,6 +174,11 @@ public interface Ordered<T> extends Arrangeable {
 			for (int i = order.size() - 1; i >= 0; i--) {
 				order.swap(i, random.nextInt(i + 1));
 			}
+		}
+		
+		@Override
+		default void reverse () {
+			order().reverse();
 		}
 	}
 }
