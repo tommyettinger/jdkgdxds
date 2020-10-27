@@ -299,7 +299,7 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 		if (keyTable.length < tableSize) { resize(tableSize); }
 	}
 
-	private void resize (int newSize) {
+	protected void resize (int newSize) {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
@@ -366,7 +366,7 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 	 * <p>
 	 * Use the {@link IntSetIterator} constructor for nested or multithreaded iteration.
 	 */
-	public IntSetIterator iterator () {
+	public PrimitiveIterator.OfInt iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new IntSetIterator(this);
 			iterator2 = new IntSetIterator(this);

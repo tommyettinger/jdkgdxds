@@ -24,7 +24,7 @@ import java.util.PrimitiveIterator;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * A {@link LongSet} that also stores keys in a {@link LongList} using the insertion order. No
+ * A {@link IntSet} that also stores keys in a {@link IntList} using the insertion order. No
  * allocation is done except when growing the table size.
  * <p>
  * {@link #iterator() Iteration} is ordered and faster than an unordered set. Keys can also be accessed and the order changed
@@ -38,9 +38,9 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with ObjectOrderedSet and
  * ObjectObjectOrderedMap.
  * <p>
- * You can customize most behavior of this set by extending it. {@link #place(long)} can be overridden to change how hashCodes
+ * You can customize most behavior of this set by extending it. {@link #place(int)} can be overridden to change how hashCodes
  * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
- * {@link #locateKey(long)} can be overridden to change how equality is calculated.
+ * {@link #locateKey(int)} can be overridden to change how equality is calculated.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
  * hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
@@ -50,39 +50,39 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializable {
+public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable {
 	private static final long serialVersionUID = 0L;
-	protected final LongList items;
+	protected final IntList items;
 
-	public LongOrderedSet () {
-		items = new LongList();
+	public IntOrderedSet () {
+		items = new IntList();
 	}
 
-	public LongOrderedSet (int initialCapacity, float loadFactor) {
+	public IntOrderedSet (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
-		items = new LongList(initialCapacity);
+		items = new IntList(initialCapacity);
 	}
 
-	public LongOrderedSet (int initialCapacity) {
+	public IntOrderedSet (int initialCapacity) {
 		super(initialCapacity);
-		items = new LongList(initialCapacity);
+		items = new IntList(initialCapacity);
 	}
 
-	public LongOrderedSet (LongOrderedSet set) {
+	public IntOrderedSet (IntOrderedSet set) {
 		super(set);
-		items = new LongList(set.items);
+		items = new IntList(set.items);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public LongOrderedSet (PrimitiveCollection.OfLong coll) {
+	public IntOrderedSet (OfInt coll) {
 		this(coll.size());
 		addAll(coll);
 	}
 
 	@Override
-	public boolean add (long key) {
+	public boolean add (int key) {
 		return super.add(key) && items.add(key);
 	}
 
@@ -90,7 +90,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 	 * Sets the key at the specfied index. Returns true if the key was not already in the set. If this set already contains the
 	 * key, the existing key's index is changed if needed and false is returned.
 	 */
-	public boolean add (long key, int index) {
+	public boolean add (int key, int index) {
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
 			if (oldIndex != index) { items.add(index, items.removeIndex(oldIndex)); }
@@ -100,19 +100,19 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 		return true;
 	}
 
-	public void addAll (Ordered.OfLong other) {
-		LongList oo = other.order();
+	public void addAll (Ordered.OfInt other) {
+		IntList oo = other.order();
 		ensureCapacity(oo.size());
 		for (int i = 0, n = oo.size(); i < n; i++) { add(oo.get(i)); }
 	}
 
 	@Override
-	public boolean remove (long key) {
+	public boolean remove (int key) {
 		return super.remove(key) && items.remove(key);
 	}
 
-	public long removeIndex (int index) {
-		long key = items.removeIndex(index);
+	public int removeIndex (int index) {
+		int key = items.removeIndex(index);
 		super.remove(key);
 		return key;
 	}
@@ -134,13 +134,13 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 	 * Changes the item {@code before} to {@code after} without changing its position in the order. Returns true if {@code after}
 	 * has been added to the ObjectOrderedSet and {@code before} has been removed; returns false if {@code after} is already present or
 	 * {@code before} is not present. If you are iterating over an ObjectOrderedSet and have an index, you should prefer
-	 * {@link #alterIndex(int, long)}, which doesn't need to search for an index like this does and so can be faster.
+	 * {@link #alterIndex(int, int)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before an item that must be present for this to succeed
 	 * @param after  an item that must not be in this set for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (long before, long after) {
+	public boolean alter (int before, int after) {
 		if (contains(after)) { return false; }
 		if (!super.remove(before)) { return false; }
 		super.add(after);
@@ -151,13 +151,13 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 	/**
 	 * Changes the item at the given {@code index} in the order to {@code after}, without changing the ordering of other items. If
 	 * {@code after} is already present, this returns false; it will also return false if {@code index} is invalid for the size of
-	 * this set. Otherwise, it returns true. Unlike {@link #alter(long, long)}, this operates in constant time.
+	 * this set. Otherwise, it returns true. Unlike {@link #alter(int, int)}, this operates in constant time.
 	 *
 	 * @param index the index in the order of the item to change; must be non-negative and less than {@link #size}
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
-	public boolean alterIndex (int index, long after) {
+	public boolean alterIndex (int index, int after) {
 		if (index < 0 || index >= size || contains(after)) { return false; }
 		super.remove(items.get(index));
 		super.add(after);
@@ -185,7 +185,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public LongList order () {
+	public IntList order () {
 		return items;
 	}
 
@@ -199,12 +199,12 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
 	 * Reuses one of two iterators, and does not permit nested iteration;
-	 * use {@link OrderedSetIterator#OrderedSetIterator(LongOrderedSet)} to nest iterators.
+	 * use {@link OrderedSetIterator#OrderedSetIterator(IntOrderedSet)} to nest iterators.
 	 *
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public PrimitiveIterator.OfLong iterator () {
+	public PrimitiveIterator.OfInt iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new OrderedSetIterator(this);
 			iterator2 = new OrderedSetIterator(this);
@@ -223,7 +223,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 
 	public String toString (String separator) {
 		if (size == 0) { return "{}"; }
-		LongList items = this.items;
+		IntList items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('{');
 		buffer.append(items.get(0));
@@ -239,10 +239,10 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 		return toString(", ");
 	}
 
-	public static class OrderedSetIterator extends LongSet.LongSetIterator {
-		private final LongList items;
+	public static class OrderedSetIterator extends IntSetIterator {
+		private final IntList items;
 
-		public OrderedSetIterator (LongOrderedSet set) {
+		public OrderedSetIterator (IntOrderedSet set) {
 			super(set);
 			items = set.items;
 		}
@@ -254,10 +254,10 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 		}
 
 		@Override
-		public long nextLong () {
+		public int nextInt () {
 			if (!hasNext) { throw new NoSuchElementException(); }
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			long key = items.get(nextIndex);
+			int key = items.get(nextIndex);
 			nextIndex++;
 			hasNext = nextIndex < set.size;
 			return key;
@@ -271,8 +271,8 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 		}
 	}
 
-	public static LongOrderedSet with (long... array) {
-		LongOrderedSet set = new LongOrderedSet();
+	public static IntOrderedSet with (int... array) {
+		IntOrderedSet set = new IntOrderedSet();
 		set.addAll(array);
 		return set;
 	}
