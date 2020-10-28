@@ -12,11 +12,11 @@ public class CaseInsensitiveMapTest {
 	public void testMultipleOperations() {
 		CaseInsensitiveMap<String> map = new CaseInsensitiveMap<>(8);
 		map.put("@", "");
-		map.put("ATTACK!", "ATTACK!");
-		map.put("attack!", "attack!");
-		map.put("Attack!", "Attack!");
+		map.put("ATTACK!", "0");
+		map.put("attack!", "1");
+		map.put("Attack!", "2");
 		Assert.assertEquals(map.size(), 2);
-		Assert.assertEquals(map.get("attack!"), "Attack!");
+		Assert.assertEquals(map.get("attack!"), "2");
 		map.remove("AtTaCk!");
 		Assert.assertEquals(map.size(), 1);
 	}
