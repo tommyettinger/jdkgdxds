@@ -895,5 +895,4 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		// Merge sorted halves
 		inPlaceMerge(from, mid, to, c);
 	}
-
 }
