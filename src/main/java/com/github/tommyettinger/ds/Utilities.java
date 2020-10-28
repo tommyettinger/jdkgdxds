@@ -40,4 +40,25 @@ public class Utilities {
 
 	static final Object neverIdentical = new Object();
 
+	/**
+	 * A simple equality comparison for {@link CharSequence} values such as {@link String}s or {@link StringBuilder}s
+	 * that ignores case by upper-casing any cased letters. This works for all alphabets in Unicode except Georgian.
+	 * @param a a non-null CharSequence, such as a String or StringBuilder
+	 * @param b a non-null CharSequence, such as a String or StringBuilder
+	 * @return whether the contents of {@code a} and {@code b} are equal ignoring case
+	 */
+	public static boolean equalsIgnoreCase(CharSequence a, CharSequence b) {
+		if(a == b) return true;
+		final int al = a.length();
+		if(al != b.length()) return false;
+		for (int i = 0; i < al; i++) {
+			char ac = a.charAt(i), bc = b.charAt(i);
+			if(ac != bc && Character.toUpperCase(ac) != Character.toUpperCase(bc)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 }
