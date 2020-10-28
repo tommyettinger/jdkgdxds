@@ -172,7 +172,7 @@ public class ObjectObjectOrderedMapTest {
 		ObjectObjectOrderedMap hm2 = new ObjectObjectOrderedMap();
 		hm2.putAll(hm);
 		for (int i = 0; i < 1000; i++)
-			assertTrue("Failed to put all elements", hm2.get(new Integer(i).toString()).equals((new Integer(i))));
+			assertTrue("Failed to put all elements", hm2.get(new Integer(i).toString()).equals(new Integer(i)));
 	}
 
 //    @Test
@@ -279,10 +279,10 @@ public class ObjectObjectOrderedMapTest {
 		// com.github.tommyettinger.merry.ObjectObjectOrderedMap.remove(java.lang.Object)
 		int size = hm.size();
 		Integer y = new Integer(9);
-		Integer x = ((Integer)hm.remove(y.toString()));
+		Integer x = (Integer)hm.remove(y.toString());
 		assertTrue("Remove returned incorrect value", x.equals(new Integer(9)));
 		Assert.assertNull("Failed to remove given key", hm.get(new Integer(9)));
-		assertTrue("Failed to decrement size", hm.size() == (size - 1));
+		assertTrue("Failed to decrement size", hm.size() == size - 1);
 		Assert.assertNull("Remove of non-existent key returned non-null", hm.remove("LCLCLC"));
 
 //		ObjectObjectOrderedMap m = new ObjectObjectOrderedMap();
@@ -329,7 +329,7 @@ public class ObjectObjectOrderedMapTest {
 
 	@Test public void test_size () {
 		// Test for method int com.github.tommyettinger.merry.ObjectObjectOrderedMap.size()
-		assertTrue("Returned incorrect size", hm.size() == (objArray.length + 1));
+		assertTrue("Returned incorrect size", hm.size() == objArray.length + 1);
 	}
 
 	@Test public void test_ordered_entrySet () {

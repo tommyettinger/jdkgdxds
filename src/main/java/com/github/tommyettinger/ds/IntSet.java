@@ -196,7 +196,7 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 	 */
 	private void addResize (int key) {
 		int[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = (i + 1) & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
 				keyTable[i] = key;
 				return;

@@ -196,7 +196,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 	 */
 	private void addResize (long key) {
 		long[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = (i + 1) & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
 				keyTable[i] = key;
 				return;

@@ -224,7 +224,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 */
 	private void putResize (K key, int value) {
 		K[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = (i + 1) & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
 				valueTable[i] = value;

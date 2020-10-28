@@ -223,7 +223,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 */
 	private void putResize (K key, @Nullable V value) {
 		K[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = (i + 1) & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
 				valueTable[i] = value;

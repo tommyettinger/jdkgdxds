@@ -252,7 +252,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 */
 	private void addResize (T key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = (i + 1) & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
 				return;
@@ -381,7 +381,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		shift = Long.numberOfLeadingZeros(mask);
 		T[] oldKeyTable = keyTable;
 
-		keyTable = (T[])(new Object[newSize]);
+		keyTable = (T[])new Object[newSize];
 
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {

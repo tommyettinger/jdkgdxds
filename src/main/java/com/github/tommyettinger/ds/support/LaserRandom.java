@@ -166,9 +166,9 @@ public class LaserRandom extends Random implements Serializable {
 	 */
 	@Override
 	public int next (int bits) {
-		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		return (int)(z ^ z >>> 26 ^ z >>> 6) >>> (32 - bits);
+		return (int)(z ^ z >>> 26 ^ z >>> 6) >>> 32 - bits;
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class LaserRandom extends Random implements Serializable {
 	 */
 	@Override
 	public int nextInt () {
-		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
 		return (int)(z ^ z >>> 26 ^ z >>> 6);
 	}
@@ -217,9 +217,9 @@ public class LaserRandom extends Random implements Serializable {
 	 */
 	@Override
 	public int nextInt (int bound) {
-		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		return (int)((bound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL)) >> 32) & ~(bound >> 31);
+		return (int)(bound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL) >> 32) & ~(bound >> 31);
 	}
 
 	/**
@@ -235,9 +235,9 @@ public class LaserRandom extends Random implements Serializable {
 	 * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
 	 */
 	public int nextSignedInt (int outerBound) {
-		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		outerBound = (int)((outerBound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL)) >> 32);
+		outerBound = (int)(outerBound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL) >> 32);
 		return outerBound + (outerBound >>> 31);
 	}
 
@@ -287,7 +287,7 @@ public class LaserRandom extends Random implements Serializable {
 	 */
 	@Override
 	public long nextLong () {
-		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
 		return z ^ z >>> 26 ^ z >>> 6;
 	}
@@ -313,7 +313,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * from this random number generator's sequence
 	 */
 	public long nextLong (long bound) {
-		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
 		if (bound <= 0) { return 0; }
 		long rand = z ^ z >>> 26 ^ z >>> 6;
@@ -323,7 +323,7 @@ public class LaserRandom extends Random implements Serializable {
 		bound >>>= 32;
 		final long a = rand * bound;
 		final long b = randLow * boundLow;
-		return (((b >>> 32) + (rand + randLow) * (bound + boundLow) - a - b) >>> 32) + a;
+		return ((b >>> 32) + (rand + randLow) * (bound + boundLow) - a - b >>> 32) + a;
 	}
 
 	/**
@@ -343,7 +343,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
 	 */
 	public long nextSignedLong (long outerBound) {
-		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
 		long rand = z ^ z >>> 26 ^ z >>> 6;
 		final long randLow = rand & 0xFFFFFFFFL;
@@ -352,7 +352,7 @@ public class LaserRandom extends Random implements Serializable {
 		outerBound >>= 32;
 		long a = rand * outerBound;
 		final long b = randLow * boundLow;
-		return a + (((b >>> 32) + (rand + randLow) * (outerBound + boundLow) - a - b) >> 32);
+		return a + ((b >>> 32) + (rand + randLow) * (outerBound + boundLow) - a - b >> 32);
 	}
 
 	/**
@@ -400,7 +400,7 @@ public class LaserRandom extends Random implements Serializable {
 	 */
 	@Override
 	public boolean nextBoolean () {
-		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long s = stateA += 0xC6BC279692B5C323L;
 		return (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L) < 0L;
 	}
 
@@ -429,7 +429,7 @@ public class LaserRandom extends Random implements Serializable {
 	 */
 	@Override
 	public float nextFloat () {
-		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
 		return ((z ^ z >>> 6) >>> 40) * 0x1p-24f;
 	}
@@ -456,7 +456,7 @@ public class LaserRandom extends Random implements Serializable {
 	 */
 	@Override
 	public double nextDouble () {
-		final long s = (stateA += 0xC6BC279692B5C323L);
+		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
 		return (z >>> 11 ^ z >>> 37 ^ z >>> 17) * 0x1.0p-53;
 	}
@@ -503,7 +503,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * @return the random long generated after skipping forward or backwards by {@code advance} numbers
 	 */
 	public long skip (long advance) {
-		final long s = (stateA += 0xC6BC279692B5C323L * advance);
+		final long s = stateA += 0xC6BC279692B5C323L * advance;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L * advance);
 		return z ^ z >>> 26 ^ z >>> 6;
 	}
@@ -523,7 +523,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * @return an odd long that identifies which stream this LaserRandom is generating from
 	 */
 	public long getStream () {
-		return stateB - (stateA * 0x1743CE5C6E1B848BL) * 0x9E3779B97F4A7C16L;
+		return stateB - stateA * 0x1743CE5C6E1B848BL * 0x9E3779B97F4A7C16L;
 	}
 
 	/**
@@ -600,7 +600,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * @return -1 or 1, selected with approximately equal likelihood
 	 */
 	public int nextSign () {
-		return 1 | (nextInt() >> 31);
+		return 1 | nextInt() >> 31;
 	}
 
 	/**

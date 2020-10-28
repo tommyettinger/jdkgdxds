@@ -348,7 +348,7 @@ public class ObjectObjectMapTest extends junit.framework.TestCase {
 		boolean found = false;
 		for (Iterator<Integer> itr = map.keySet().iterator(); itr.hasNext(); ) {
 			Integer key = itr.next();
-			if (found = myKey == (key)) {
+			if (found = myKey == key) {
 				break;
 			}
 		}
@@ -361,7 +361,7 @@ public class ObjectObjectMapTest extends junit.framework.TestCase {
 		Assert.assertEquals("myValue", map.get(myKey));
 		for (Iterator<Integer> itr = map.keySet().iterator(); itr.hasNext(); ) {
 			Integer key = itr.next();
-			if (found = myKey == (key)) {
+			if (found = myKey == key) {
 				break;
 			}
 		}
@@ -395,7 +395,7 @@ public class ObjectObjectMapTest extends junit.framework.TestCase {
 		ObjectObjectMap hm2 = new ObjectObjectMap();
 		hm2.putAll(hm);
 		for (int i = 0; i < 1000; i++)
-			Assert.assertTrue("Failed to clear all elements", hm2.get(new Integer(i).toString()).equals((new Integer(i))));
+			Assert.assertTrue("Failed to clear all elements", hm2.get(new Integer(i).toString()).equals(new Integer(i)));
 
 //        ObjectObjectMap mockMap = new MockMap();
 //        hm2 = new ObjectObjectMap();
@@ -424,10 +424,10 @@ public class ObjectObjectMapTest extends junit.framework.TestCase {
 	@Test public void test_removeLjava_lang_Object () {
 		int size = hm.size();
 		Integer y = new Integer(9);
-		Integer x = ((Integer)hm.remove(y.toString()));
+		Integer x = (Integer)hm.remove(y.toString());
 		Assert.assertTrue("Remove returned incorrect value", x.equals(new Integer(9)));
 		Assert.assertNull("Failed to remove given key", hm.get(new Integer(9)));
-		Assert.assertTrue("Failed to decrement size", hm.size() == (size - 1));
+		Assert.assertTrue("Failed to decrement size", hm.size() == size - 1);
 		Assert.assertNull("Remove of non-existent key returned non-null", hm.remove("LCLCLC"));
 
 //		ObjectObjectMap m = new ObjectObjectMap();
@@ -497,7 +497,7 @@ public class ObjectObjectMapTest extends junit.framework.TestCase {
 
 	@Test public void test_size () {
 		// Test for method int com.github.tommyettinger.merry.ObjectObjectMap.size()
-		Assert.assertTrue("Returned incorrect size", hm.size() == (objArray.length + 1));
+		Assert.assertTrue("Returned incorrect size", hm.size() == objArray.length + 1);
 	}
 
 	@Test public void test_values () {

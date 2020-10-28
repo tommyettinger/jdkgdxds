@@ -140,7 +140,7 @@ public class ObjectSetTest {
 
 	@Test public void test_size () {
 		// Test for method int com.github.tommyettinger.merry.ObjectSet.size
-		Assert.assertTrue("Returned incorrect size", hs.size() == (objArray.length));
+		Assert.assertTrue("Returned incorrect size", hs.size() == objArray.length);
 		hs.clear();
 		Assert.assertEquals("Cleared set returned non-zero size", 0, hs.size());
 	}

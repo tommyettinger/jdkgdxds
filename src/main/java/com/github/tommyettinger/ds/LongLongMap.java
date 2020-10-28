@@ -226,7 +226,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	 */
 	private void putResize (long key, long value) {
 		long[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = (i + 1) & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
 				keyTable[i] = key;
 				valueTable[i] = value;
@@ -241,7 +241,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	 * @param key any {@code long}
 	 */
 	public long get (long key) {
-		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
+		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -250,7 +250,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
 	public long getOrDefault (long key, long defaultValue) {
-		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
+		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -455,7 +455,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	}
 
 	public int hashCode () {
-		long h = (hasZeroValue ? zeroValue + size : size);
+		long h = hasZeroValue ? zeroValue + size : size;
 		long[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -686,7 +686,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 
 			Entry entry = (Entry)o;
 
-			if (key != (entry.key)) { return false; }
+			if (key != entry.key) { return false; }
 			return value == entry.value;
 		}
 

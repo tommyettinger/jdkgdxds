@@ -112,7 +112,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 		shift = Long.numberOfLeadingZeros(mask);
 
 		keyTable = new int[tableSize];
-		valueTable = (V[])(new Object[tableSize]);
+		valueTable = (V[])new Object[tableSize];
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 	 */
 	private void putResize (int key, @Nullable V value) {
 		int[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = (i + 1) & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
 				keyTable[i] = key;
 				valueTable[i] = value;
@@ -243,7 +243,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 	 * @param key any {@code int}
 	 */
 	@Nullable public V get (int key) {
-		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
+		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -252,7 +252,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
 	@Nullable public V getOrDefault (int key, @Nullable V defaultValue) {
-		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
+		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -430,7 +430,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 	}
 
 	public int hashCode () {
-		int h = (hasZeroValue && zeroValue != null ? zeroValue.hashCode() ^ size : size);
+		int h = hasZeroValue && zeroValue != null ? zeroValue.hashCode() ^ size : size;
 		int[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		V v;
@@ -663,12 +663,12 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 
 			Entry entry = (Entry)o;
 
-			if (key != (entry.key)) { return false; }
+			if (key != entry.key) { return false; }
 			return Objects.equals(value, entry.value);
 		}
 
 		@Override public int hashCode () {
-			return (value == null ? key : key ^ value.hashCode());
+			return value == null ? key : key ^ value.hashCode();
 		}
 	}
 

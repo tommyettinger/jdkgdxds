@@ -229,7 +229,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 */
 	private void putResize (int key, float value) {
 		int[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = (i + 1) & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
 				keyTable[i] = key;
 				valueTable[i] = value;
@@ -244,7 +244,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 * @param key any {@code int}
 	 */
 	public float get (int key) {
-		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
+		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -253,7 +253,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
 	public float getOrDefault (int key, float defaultValue) {
-		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
+		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -458,7 +458,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	}
 
 	public int hashCode () {
-		int h = (hasZeroValue ? BitConversion.floatToIntBits(zeroValue) ^ size : size);
+		int h = hasZeroValue ? BitConversion.floatToIntBits(zeroValue) ^ size : size;
 		int[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -691,7 +691,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 			Entry entry = (Entry)o;
 
-			if (key != (entry.key)) { return false; }
+			if (key != entry.key) { return false; }
 			return value == entry.value;
 		}
 

@@ -57,7 +57,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 		for (int i = 0; i < len; i++) {
 			t = (0x3C79AC492BA7B653L + Character.toUpperCase(item.charAt(i))) * m;
 			r = (m += 0x95B534A1ACCD52DAL) >>> 58;
-			h ^= (t << r | t >>> -r);
+			h ^= t << r | t >>> -r;
 		}
 		// Pelican unary hash, with a different last step that adapts to different shift values.
 		h = (h ^ (h << 41 | h >>> 23) ^ (h << 17 | h >>> 47) ^ 0xD1B54A32D192ED03L) * 0xAEF17502108EF2D9L;
@@ -75,7 +75,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 			if (other == null) {
 				return ~i;
 			}
-			if (other instanceof CharSequence && Utilities.equalsIgnoreCase(sk, ((CharSequence)other)))
+			if (other instanceof CharSequence && Utilities.equalsIgnoreCase(sk, (CharSequence)other))
 			{
 				return i;
 			}

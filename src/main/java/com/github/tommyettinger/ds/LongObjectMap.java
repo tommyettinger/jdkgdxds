@@ -112,7 +112,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 		shift = Long.numberOfLeadingZeros(mask);
 
 		keyTable = new long[tableSize];
-		valueTable = (V[])(new Object[tableSize]);
+		valueTable = (V[])new Object[tableSize];
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	 */
 	private void putResize (long key, @Nullable V value) {
 		long[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = (i + 1) & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
 				keyTable[i] = key;
 				valueTable[i] = value;
@@ -243,7 +243,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	 * @param key any {@code long}
 	 */
 	@Nullable public V get (long key) {
-		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
+		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -252,7 +252,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
 	@Nullable public V getOrDefault (long key, @Nullable V defaultValue) {
-		if (key == 0) { return (hasZeroValue) ? zeroValue : defaultValue; }
+		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
@@ -430,7 +430,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	}
 
 	public int hashCode () {
-		long h = (hasZeroValue && zeroValue != null ? zeroValue.hashCode() * 0x9E3779B97F4A7C15L + size : size);
+		long h = hasZeroValue && zeroValue != null ? zeroValue.hashCode() * 0x9E3779B97F4A7C15L + size : size;
 		long[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		V v;
@@ -663,7 +663,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 
 			Entry entry = (Entry)o;
 
-			if (key != (entry.key)) { return false; }
+			if (key != entry.key) { return false; }
 			return Objects.equals(value, entry.value);
 		}
 
