@@ -31,8 +31,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors
  * greater than 0.91 greatly increase the chances to resize to the next higher POT size.
  * <p>
- * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with ObjectOrderedSet and
- * ObjectObjectOrderedMap.
+ * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with {@link Ordered} types like
+ * ObjectOrderedSet and ObjectObjectOrderedMap.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal. Linear probing continues to work even
  * when all hashCodes collide, just more slowly.

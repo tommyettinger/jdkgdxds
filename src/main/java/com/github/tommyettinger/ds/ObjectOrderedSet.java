@@ -30,15 +30,15 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * allocation is done except when growing the table size.
  * <p>
  * {@link #iterator() Iteration} is ordered and faster than an unordered set. Keys can also be accessed and the order changed
- * using {@link #orderedItems()}. There is some additional overhead for put and remove.
+ * using {@link #order()}. There is some additional overhead for put and remove.
  * <p>
  * This class performs fast contains (typically O(1), worst case O(n) but that is rare in practice). Remove is somewhat slower due
- * to {@link #orderedItems()}. Add may be slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce
+ * to {@link #order()}. Add may be slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce
  * collisions and the need to resize. Load factors greater than 0.91 greatly increase the chances to resize to the next higher POT
  * size.
  * <p>
- * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with ObjectOrderedSet and
- * ObjectObjectOrderedMap.
+ * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with {@link Ordered} types like
+ * ObjectOrderedSet and ObjectObjectOrderedMap.
  * <p>
  * You can customize most behavior of this set by extending it. {@link #place(Object)} can be overridden to change how hashCodes
  * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
@@ -177,20 +177,6 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 	public void clear () {
 		items.clear();
 		super.clear();
-	}
-
-	/**
-	 * Gets the ObjectList of items in the order this class will iterate through them.
-	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
-	 * also change the iteration order here.
-	 * <br>
-	 * This method is provided for backwards-compatibility; {@link #order()} is preferred for new code
-	 * because it allows order-changing methods to be written once for an arbitrary {@link Ordered} type.
-	 *
-	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
-	 */
-	public ObjectList<T> orderedItems () {
-		return items;
 	}
 
 	/**

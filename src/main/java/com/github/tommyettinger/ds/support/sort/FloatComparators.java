@@ -16,8 +16,6 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
-import com.github.tommyettinger.ds.support.BitConversion;
-
 import java.util.Comparator;
 
 /**
@@ -126,57 +124,4 @@ public final class FloatComparators {
 			}
 		};
 	}
-
-	/**
-	 * A type-specific comparator mimicking the natural order, using a different implementation that avoids
-	 * {@link Float#compare(float, float)}. This treats NaN differently from Float.compare, considering
-	 * NaN as unequal to itself (since {@code ==} does that) and to any other float. This implementation is
-	 * branch-less.
-	 */
-	protected static class NaturalAlternateComparator implements FloatComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public final int compare (final float a, final float b) {
-			return BitConversion.floatToIntBits(0f + a - b);
-		}
-
-		@Override
-		public FloatComparator reversed () {
-			return OPPOSITE_ALTERNATE_COMPARATOR;
-		}
-
-		private Object readResolve () {
-			return NATURAL_ALTERNATE_COMPARATOR;
-		}
-	}
-
-	public static final FloatComparator NATURAL_ALTERNATE_COMPARATOR = new NaturalAlternateComparator();
-
-	/**
-	 * A type-specific comparator mimicking the opposite of the natural order, using a different implementation
-	 * that avoids {@link Float#compare(float, float)}. This treats NaN differently from Float.compare, considering
-	 * NaN as unequal to itself (since {@code ==} does that) and to any other float. This implementation is
-	 * branch-less.
-	 */
-	protected static class OppositeAlternateComparator implements FloatComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public final int compare (final float a, final float b) {
-			return BitConversion.floatToIntBits(0f + b - a);
-		}
-
-		@Override
-		public FloatComparator reversed () {
-			return NATURAL_ALTERNATE_COMPARATOR;
-		}
-
-		private Object readResolve () {
-			return OPPOSITE_ALTERNATE_COMPARATOR;
-		}
-	}
-
-	public static final FloatComparator OPPOSITE_ALTERNATE_COMPARATOR = new OppositeAlternateComparator();
-
 }
