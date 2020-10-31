@@ -941,5 +941,17 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		public int size () {
 			return iter.map.size;
 		}
+		@Override
+		public int hashCode () {
+			int h = 0;
+			iter.reset();
+			while (iter.hasNext()) {
+				K obj = iter.next();
+				if (obj != null)
+					h += obj.hashCode();
+			}
+			return h;
+		}
+
 	}
 }

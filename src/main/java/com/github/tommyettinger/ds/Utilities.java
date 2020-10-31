@@ -60,5 +60,27 @@ public class Utilities {
 		return true;
 	}
 
-
+	/**
+	 * Gets a 64-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
+	 * Uses Frost hash, but doesn't fully finish the hashing because some usage will need some variable amount of the
+	 * high bits (which should be somewhat higher-quality). This gets the hash as if all cased letters have been
+	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
+	 * Unicode except Georgian. Typically place() methods in Sets and Maps here that want case-insensitive hashing
+	 * would use this with {@code (int)(longHashCodeIgnoreCase(text) >>> shift)}.
+	 * @param item a non-null CharSequence; often be a String, but this has no trouble with a StringBuilder
+	 * @return a long hashCode that has higher-quality upper bits (shift right if you need fewer than 64 bits)
+	 */
+	public static long longHashCodeIgnoreCase(CharSequence item) {
+		final int len = item.length();
+		if(len == 0) return 0;
+		long h = len ^ 0xC6BC279692B5C323L, m = 0xDB4F0B9175AE2165L, t, r;
+		for (int i = 0; i < len; i++) {
+			t = (0x3C79AC492BA7B653L + Character.toUpperCase(item.charAt(i))) * m;
+			r = (m += 0x95B534A1ACCD52DAL) >>> 58;
+			h ^= t << r | t >>> -r;
+		}
+		// Pelican unary hash, with a different last step that can adapt to different shift values.
+		h = (h ^ (h << 41 | h >>> 23) ^ (h << 17 | h >>> 47) ^ 0xD1B54A32D192ED03L) * 0xAEF17502108EF2D9L;
+		return (h ^ h >>> 43 ^ h >>> 31 ^ h >>> 23) * 0xDB4F0B9175AE2165L;
+	}
 }
