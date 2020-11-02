@@ -41,10 +41,6 @@ public final class FloatComparators {
 		public FloatComparator reversed () {
 			return OPPOSITE_COMPARATOR;
 		}
-
-		private Object readResolve () {
-			return NATURAL_COMPARATOR;
-		}
 	}
 
 	public static final FloatComparator NATURAL_COMPARATOR = new NaturalImplicitComparator();
@@ -57,16 +53,12 @@ public final class FloatComparators {
 
 		@Override
 		public final int compare (final float a, final float b) {
-			return -Float.compare(a, b);
+			return Float.compare(b, a);
 		}
 
 		@Override
 		public FloatComparator reversed () {
 			return NATURAL_COMPARATOR;
-		}
-
-		private Object readResolve () {
-			return OPPOSITE_COMPARATOR;
 		}
 	}
 
@@ -123,5 +115,50 @@ public final class FloatComparators {
 				return c.compare(x, y);
 			}
 		};
+	}
+	
+	protected static class EpsilonComparator implements FloatComparator, java.io.Serializable {
+		private static final long serialVersionUID = 1L;
+		public final float epsilon;
+		protected final FloatComparator reverse;
+		
+		public EpsilonComparator() {
+			this(0.0001f);
+		}
+		
+		public EpsilonComparator(float epsilon) {
+			this.epsilon = epsilon;
+			reverse = oppositeComparator(this);
+		}
+		@Override
+		public int compare (float k1, float k2) {
+			final float diff = k1 - k2;
+			if(diff <= epsilon && diff >= -epsilon)
+				return 0;
+			// not-NaN checks
+			final boolean n1 = k1 == k1, n2 = k2 == k2;
+			if(k1 > k2 && n2) return 1;
+			if(k2 > k1 && n1) return -1;
+			return 0;
+		}
+
+		@Override
+		public FloatComparator reversed () {
+			return reverse;
+		}
+	}
+
+	/**
+	 * A FloatComparator with a tolerance for equality of 0.0001.
+	 */
+	public static final FloatComparator EPSILON_COMPARATOR = new EpsilonComparator();
+
+	/**
+	 * Builds a new FloatComparator with a tolerance for equality of {@code epsilon}.
+	 * @param epsilon how much tolerance is acceptable when comparing two floats as equal
+	 * @return the new FloatComparator
+	 */
+	public static FloatComparator epsilonComparator(float epsilon) {
+		return new EpsilonComparator(epsilon);
 	}
 }
