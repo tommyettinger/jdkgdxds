@@ -61,26 +61,69 @@ public class Utilities {
 	}
 
 	/**
+	 * Big constant 0, used by {@link #longHashCodeIgnoreCase(CharSequence)}.
+	 */
+	protected static final long b0 = 0xA0761D6478BD642FL;
+	/**
+	 * Big constant 1, used by {@link #longHashCodeIgnoreCase(CharSequence)}.
+	 */
+	protected static final long b1 = 0xE7037ED1A0B428DBL;
+	/**
+	 * Big constant 2, used by {@link #longHashCodeIgnoreCase(CharSequence)}.
+	 */
+	protected static final long b2 = 0x8EBC6AF09C88C6E3L;
+	/**
+	 * Big constant 3, used by {@link #longHashCodeIgnoreCase(CharSequence)}.
+	 */
+	protected static final long b3 = 0x589965CC75374CC3L;
+	/**
+	 * Big constant 4, used by {@link #longHashCodeIgnoreCase(CharSequence)}.
+	 */
+	protected static final long b4 = 0x1D8E4E27C47D124FL;
+	
+	/**
+	 * Part of the hashing function used by {@link #longHashCodeIgnoreCase(CharSequence)}.
+	 * <br>
+	 * Takes two arguments that are technically longs, and should be very different, and uses them to get a result
+	 * that is technically a long and mixes the bits of the inputs. The arguments and result are only technically
+	 * longs because their lower 32 bits matter much more than their upper 32, and giving just any long won't work.
+	 * <br>
+	 * This is very similar to wyhash's mum function, but doesn't use 128-bit math because it expects that its
+	 * arguments are only relevant in their lower 32 bits (allowing their product to fit in 64 bits).
+	 * @param a a long that should probably only hold an int's worth of data
+	 * @param b a long that should probably only hold an int's worth of data
+	 * @return a sort-of randomized output dependent on both inputs
+	 */
+	protected static long mum(final long a, final long b) {
+		final long n = a * b;
+		return n - (n >>> 32);
+	}
+	/**
 	 * Gets a 64-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
-	 * Uses Frost hash, but doesn't fully finish the hashing because some usage will need some variable amount of the
-	 * high bits (which should be somewhat higher-quality). This gets the hash as if all cased letters have been
+	 * Uses Water hash, which is a variant on <a href="https://github.com/vnmakarov/mum-hash">mum-hash</a> and
+	 * <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a>. This gets the hash as if all cased letters have been
 	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
 	 * Unicode except Georgian. Typically place() methods in Sets and Maps here that want case-insensitive hashing
 	 * would use this with {@code (int)(longHashCodeIgnoreCase(text) >>> shift)}.
 	 * @param item a non-null CharSequence; often be a String, but this has no trouble with a StringBuilder
-	 * @return a long hashCode that has higher-quality upper bits (shift right if you need fewer than 64 bits)
+	 * @return a long hashCode; quality should be similarly good across any bits
 	 */
-	public static long longHashCodeIgnoreCase(CharSequence item) {
+	public static long longHashCodeIgnoreCase(final CharSequence item) {
+		long seed = 9069147967908697017L;
 		final int len = item.length();
-		if(len == 0) return 0;
-		long h = len ^ 0xC6BC279692B5C323L, m = 0xDB4F0B9175AE2165L, t, r;
-		for (int i = 0; i < len; i++) {
-			t = (0x3C79AC492BA7B653L + Character.toUpperCase(item.charAt(i))) * m;
-			r = (m += 0x95B534A1ACCD52DAL) >>> 58;
-			h ^= t << r | t >>> -r;
+		for (int i = 3; i < len; i+=4) {
+			seed = mum(
+				mum(Character.toUpperCase(item.charAt(i-3)) ^ b1, Character.toUpperCase(item.charAt(i-2)) ^ b2) + seed,
+				mum(Character.toUpperCase(item.charAt(i-1)) ^ b3, Character.toUpperCase(item.charAt(i  )) ^ b4));
 		}
-		// Pelican unary hash, with a different last step that can adapt to different shift values.
-		h = (h ^ (h << 41 | h >>> 23) ^ (h << 17 | h >>> 47) ^ 0xD1B54A32D192ED03L) * 0xAEF17502108EF2D9L;
-		return (h ^ h >>> 43 ^ h >>> 31 ^ h >>> 23) * 0xDB4F0B9175AE2165L;
+		switch (len & 3) {
+			case 0: seed = mum(b1 ^ seed, b4 + seed); break;
+			case 1: seed = mum(seed ^ b3, b4 ^ Character.toUpperCase(item.charAt(len-1))); break;
+			case 2: seed = mum(seed ^ Character.toUpperCase(item.charAt(len-2)), b3 ^ Character.toUpperCase(item.charAt(len-1))); break;
+			case 3: seed = mum(seed ^ Character.toUpperCase(item.charAt(len-3)) ^ (long) Character.toUpperCase(item.charAt(len - 2)) << 16, b1 ^ Character.toUpperCase(item.charAt(len-1))); break;
+		}
+		seed = (seed ^ seed << 16) * (len ^ b0);
+		return seed - (seed >>> 31) + (seed << 33);
 	}
+
 }

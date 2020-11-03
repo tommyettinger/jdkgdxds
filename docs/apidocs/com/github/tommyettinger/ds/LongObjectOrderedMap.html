@@ -100,7 +100,7 @@ loadScripts(document, 'script');</script>
 <pre>public class <span class="typeNameLabel">LongObjectOrderedMap&lt;V&gt;</span>
 extends <a href="LongObjectMap.html" title="class in com.github.tommyettinger.ds">LongObjectMap</a>&lt;V&gt;
 implements <a href="Ordered.OfLong.html" title="interface in com.github.tommyettinger.ds">Ordered.OfLong</a>, java.io.Serializable</pre>
-<div class="block">An <a href="LongObjectMap.html" title="class in com.github.tommyettinger.ds"><code>LongObjectMap</code></a> that also stores keys in an <a href="ObjectList.html" title="class in com.github.tommyettinger.ds"><code>ObjectList</code></a> using the insertion order. Null keys are not allowed. No
+<div class="block">A <a href="LongObjectMap.html" title="class in com.github.tommyettinger.ds"><code>LongObjectMap</code></a> that also stores keys in an <a href="LongList.html" title="class in com.github.tommyettinger.ds"><code>LongList</code></a> using the insertion order. Null keys are not allowed. No
  allocation is done except when growing the table size.
  <p>
  Iteration over the <a href="#entrySet()"><code>entrySet()</code></a> ()}, <a href="#keySet()"><code>keySet()</code></a> ()}, and <a href="#values()"><code>values()</code></a> is ordered and faster than an unordered map. Keys
@@ -112,7 +112,7 @@ implements <a href="Ordered.OfLong.html" title="interface in com.github.tommyett
  size.
  <p>
  Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with <a href="Ordered.html" title="interface in com.github.tommyettinger.ds"><code>Ordered</code></a> types like
- ObjectOrderedSet and ObjectObjectOrderedMap.
+ ObjectOrderedSet and LongObjectOrderedMap.
  <p>
  You can customize most behavior of this map by extending it. <a href="LongObjectMap.html#place(long)"><code>LongObjectMap.place(long)</code></a> can be overridden to change how hashCodes
  are calculated (which can be useful for types like <code>StringBuilder</code> that don't implement hashCode()), and
@@ -326,7 +326,7 @@ long&nbsp;after)</code></th>
 <td class="colFirst"><code><a href="LongList.html" title="class in com.github.tommyettinger.ds">LongList</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#order()">order</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the ObjectList of keys in the order this class will iterate through them.</div>
+<div class="block">Gets the LongList of keys in the order this class will iterate through them.</div>
 </td>
 </tr>
 <tr class="rowColor" id="i9">
@@ -364,21 +364,21 @@ long&nbsp;after)</code></th>
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort()">sort</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Sorts this ObjectObjectOrderedMap in-place by the keys' natural ordering; <code>K</code> must implement <code>Comparable</code>.</div>
+<div class="block">Sorts this LongObjectOrderedMap in-place by the keys' natural ordering.</div>
 </td>
 </tr>
 <tr class="rowColor" id="i15">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(com.github.tommyettinger.ds.support.sort.LongComparator)">sort</a></span>&#8203;(<a href="support/sort/LongComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">LongComparator</a>&nbsp;comp)</code></th>
 <td class="colLast">
-<div class="block">Sorts this ObjectObjectOrderedMap in-place by the given Comparator used on the keys.</div>
+<div class="block">Sorts this LongObjectOrderedMap in-place by the given Comparator used on the keys.</div>
 </td>
 </tr>
 <tr class="altColor" id="i16">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortByValue(java.util.Comparator)">sortByValue</a></span>&#8203;(java.util.Comparator&lt;<a href="LongObjectOrderedMap.html" title="type parameter in LongObjectOrderedMap">V</a>&gt;&nbsp;comp)</code></th>
 <td class="colLast">
-<div class="block">Sorts this ObjectObjectOrderedMap in-place by the given Comparator used on the values.</div>
+<div class="block">Sorts this LongObjectOrderedMap in-place by the given Comparator used on the values.</div>
 </td>
 </tr>
 <tr class="rowColor" id="i17">
@@ -549,8 +549,8 @@ float&nbsp;loadFactor)</span></div>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">alter</span>&#8203;(<span class="arguments">long&nbsp;before,
 long&nbsp;after)</span></div>
 <div class="block">Changes the key <code>before</code> to <code>after</code> without changing its position in the order or its value. Returns true if
- <code>after</code> has been added to the ObjectObjectOrderedMap and <code>before</code> has been removed; returns false if <code>after</code> is
- already present or <code>before</code> is not present. If you are iterating over an ObjectObjectOrderedMap and have an index, you should
+ <code>after</code> has been added to the LongObjectOrderedMap and <code>before</code> has been removed; returns false if <code>after</code> is
+ already present or <code>before</code> is not present. If you are iterating over an LongObjectOrderedMap and have an index, you should
  prefer <a href="#alterIndex(int,long)"><code>alterIndex(int, long)</code></a>, which doesn't need to search for an index like this does and so can be faster.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -624,14 +624,14 @@ long&nbsp;after)</span></div>
 <section class="detail">
 <h3><a id="order()">order</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="LongList.html" title="class in com.github.tommyettinger.ds">LongList</a></span>&nbsp;<span class="memberName">order</span>()</div>
-<div class="block">Gets the ObjectList of keys in the order this class will iterate through them.
- Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
+<div class="block">Gets the LongList of keys in the order this class will iterate through them.
+ Returns a direct reference to the same LongList this uses, so changes to the returned list will
  also change the iteration order here.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Ordered.OfLong.html#order()">order</a></code>&nbsp;in interface&nbsp;<code><a href="Ordered.OfLong.html" title="interface in com.github.tommyettinger.ds">Ordered.OfLong</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the ObjectList of keys, in iteration order (usually insertion-order), that this uses</dd>
+<dd>the LongList of keys, in iteration order (usually insertion-order), that this uses</dd>
 </dl>
 </section>
 </li>
@@ -639,7 +639,7 @@ long&nbsp;after)</span></div>
 <section class="detail">
 <h3><a id="sort()">sort</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">sort</span>()</div>
-<div class="block">Sorts this ObjectObjectOrderedMap in-place by the keys' natural ordering; <code>K</code> must implement <code>Comparable</code>.</div>
+<div class="block">Sorts this LongObjectOrderedMap in-place by the keys' natural ordering.</div>
 </section>
 </li>
 <li class="blockList">
@@ -647,8 +647,8 @@ long&nbsp;after)</span></div>
 <h3><a id="sort(com.github.tommyettinger.ds.support.sort.LongComparator)">sort</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">sort</span>&#8203;(<span class="arguments">@Nullable
 <a href="support/sort/LongComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">LongComparator</a>&nbsp;comp)</span></div>
-<div class="block">Sorts this ObjectObjectOrderedMap in-place by the given Comparator used on the keys. If <code>comp</code> is null, then this
- will sort by the natural ordering of the keys, which requires <code>K</code> to <code>Comparable</code>.</div>
+<div class="block">Sorts this LongObjectOrderedMap in-place by the given Comparator used on the keys. If <code>comp</code> is null, then this
+ will sort by the natural ordering of the keys.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>comp</code> - a Comparator that can compare two <code>K</code> keys, or null to use the keys' natural ordering</dd>
@@ -659,8 +659,8 @@ long&nbsp;after)</span></div>
 <section class="detail">
 <h3><a id="sortByValue(java.util.Comparator)">sortByValue</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">sortByValue</span>&#8203;(<span class="arguments">java.util.Comparator&lt;<a href="LongObjectOrderedMap.html" title="type parameter in LongObjectOrderedMap">V</a>&gt;&nbsp;comp)</span></div>
-<div class="block">Sorts this ObjectObjectOrderedMap in-place by the given Comparator used on the values. <code>comp</code> must not be null,
- and must be able to compare <code>V</code> values. If any null values are present in this ObjectObjectOrderedMap, then comp
+<div class="block">Sorts this LongObjectOrderedMap in-place by the given Comparator used on the values. <code>comp</code> must not be null,
+ and must be able to compare <code>V</code> values. If any null values are present in this LongObjectOrderedMap, then comp
  must be able to sort or otherwise handle null values. You can use <code>Comparator.naturalOrder()</code> to do
  what <a href="#sort()"><code>sort()</code></a> does (just sorting values in this case instead of keys) if the values implement
  <code>Comparable</code> (requiring all of them to be non-null).</div>
@@ -735,7 +735,7 @@ long&nbsp;after)</span></div>
 <div class="block">Reuses the iterator of the reused <a href="LongObjectMap.Entries.html" title="class in com.github.tommyettinger.ds"><code>LongObjectMap.Entries</code></a>
  produced by <a href="#entrySet()"><code>entrySet()</code></a>; does not permit nested iteration. Iterate over
  <a href="LongObjectOrderedMap.OrderedMapEntries.html#%3Cinit%3E(com.github.tommyettinger.ds.LongObjectOrderedMap)"><code>OrderedMapEntries(LongObjectOrderedMap)</code></a> if you need nested or
- multithreaded iteration. You can remove an Entry from this ObjectObjectOrderedMap
+ multithreaded iteration. You can remove an Entry from this LongObjectOrderedMap
  using this Iterator.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>

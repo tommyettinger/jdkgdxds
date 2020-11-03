@@ -48,9 +48,10 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 	 * Gets a case-insensitive hash code for the String or other CharSequence {@code item} and shifts it so it is between 0 and
 	 * {@link #mask} inclusive. This gets the hash as if all cased letters have been converted to upper case by
 	 * {@link Character#toUpperCase(char)}; this should be correct for all alphabets in Unicode except Georgian.
-	 * @implNote Uses Frost hash, which passes SMHasher's test battery and is fairly fast, at least in C. Frost uses 64-bit math,
+	 * @implNote Uses Water hash, which passes SMHasher's test battery and is very fast in Java. Water uses 64-bit math,
 	 * which behaves reliably but somewhat slowly on GWT, but uses it on usually-small char values. This can't use the
-	 * built-in pre-calculated hashCode of a String because it's case-sensitive.
+	 * built-in pre-calculated hashCode of a String because it's case-sensitive. You can use the same hashing function as this
+	 * with {@link Utilities#longHashCodeIgnoreCase(CharSequence)}.
 	 * @param item any non-null CharSequence, such as a String or StringBuilder; will be treated as if it is all upper-case
 	 * @return a position in the key table where {@code item} would be placed; between 0 and {@link #mask} inclusive
 	 */
