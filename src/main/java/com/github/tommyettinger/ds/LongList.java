@@ -830,8 +830,9 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 
 	/**
 	 * Sorts all elements according to the order induced by the specified
-	 * comparator using mergesort.
-	 *
+	 * comparator using mergesort. If {@code c} is null, this instead delegates to {@link #sort()},
+	 * which uses {@link Arrays#sort(float[])}, and does not always run in-place.
+	 * 	 
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
 	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
@@ -839,8 +840,13 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	 *
 	 * @param c       the comparator to determine the order of the LongList
 	 */
-	public void sort (final LongComparator c) {
-		sort(0, size, c);
+	public void sort (@Nullable final LongComparator c) {
+		if(c == null) {
+			sort();
+		}
+		else {
+			sort(0, size, c);
+		}
 	}
 	/**
 	 * Sorts the specified range of elements according to the order induced by the specified

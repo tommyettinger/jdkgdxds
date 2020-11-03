@@ -257,7 +257,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 		return i < 0 ? defaultValue : valueTable[i];
 	}
 	
-	public @Nullable V remove (long key) {
+	@Nullable public V remove (long key) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				hasZeroValue = false;
@@ -885,7 +885,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 		 *
 		 * @return an iterator over the elements contained in this collection
 		 */
-		public ValueIterator<V> iterator () {
+		public Iterator<V> iterator () {
 			return iter;
 		}
 
