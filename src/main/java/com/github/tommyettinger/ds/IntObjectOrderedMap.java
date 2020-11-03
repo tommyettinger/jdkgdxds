@@ -16,7 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.sort.LongComparator;
+import com.github.tommyettinger.ds.support.sort.IntComparator;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -31,7 +31,7 @@ import java.util.Set;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * A {@link LongObjectMap} that also stores keys in an {@link LongList} using the insertion order. Null keys are not allowed. No
+ * An {@link IntObjectMap} that also stores keys in an {@link IntList} using the insertion order. Null keys are not allowed. No
  * allocation is done except when growing the table size.
  * <p>
  * Iteration over the {@link #entrySet()} ()}, {@link #keySet()} ()}, and {@link #values()} is ordered and faster than an unordered map. Keys
@@ -43,11 +43,11 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * size.
  * <p>
  * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with {@link Ordered} types like
- * ObjectOrderedSet and LongObjectOrderedMap.
+ * ObjectOrderedSet and IntObjectOrderedMap.
  * <p>
- * You can customize most behavior of this map by extending it. {@link #place(long)} can be overridden to change how hashCodes
+ * You can customize most behavior of this map by extending it. {@link #place(int)} can be overridden to change how hashCodes
  * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
- * {@link #locateKey(long)} can be overridden to change how equality is calculated.
+ * {@link #locateKey(int)} can be overridden to change how equality is calculated.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
  * hashing, instead of the more common power-of-two masto better distribute poor hashCodes (see <a href=
@@ -57,44 +57,44 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered.OfLong, Serializable {
+public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.OfInt, Serializable {
 	private static final long serialVersionUID = 0L;
 
-	protected final LongList keys;
+	protected final IntList keys;
 
-	public LongObjectOrderedMap () {
-		keys = new LongList();
+	public IntObjectOrderedMap () {
+		keys = new IntList();
 	}
 
-	public LongObjectOrderedMap (int initialCapacity) {
+	public IntObjectOrderedMap (int initialCapacity) {
 		super(initialCapacity);
-		keys = new LongList(initialCapacity);
+		keys = new IntList(initialCapacity);
 	}
 
-	public LongObjectOrderedMap (int initialCapacity, float loadFactor) {
+	public IntObjectOrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
-		keys = new LongList(initialCapacity);
+		keys = new IntList(initialCapacity);
 	}
 
-	public LongObjectOrderedMap (LongObjectOrderedMap<? extends V> map) {
+	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> map) {
 		super(map);
-		keys = new LongList(map.keys);
+		keys = new IntList(map.keys);
 	}
 
 	/**
 	 * Creates a new map identical to the specified map.
 	 */
-	public LongObjectOrderedMap (LongObjectMap<? extends V> map) {
+	public IntObjectOrderedMap (IntObjectMap<? extends V> map) {
 		this(map.size());
-		PrimitiveIterator.OfLong it = map.keySet().iterator();
+		PrimitiveIterator.OfInt it = map.keySet().iterator();
 		while (it.hasNext()){
-			long k = it.nextLong();
+			int k = it.nextInt();
 			put(k, map.get(k));
 		}
 	}
 
 	@Override
-	public V put (long key, @Nullable V value) {
+	public V put (int key, @Nullable V value) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) {
@@ -121,11 +121,11 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 		return defaultValue; 
 	}
 
-	public void putAll (LongObjectOrderedMap<? extends V> map) {
+	public void putAll (IntObjectOrderedMap<? extends V> map) {
 		ensureCapacity(map.size);
-		LongList ks = map.keys;
+		IntList ks = map.keys;
 		int kl = ks.size();
-		long k;
+		int k;
 		for (int i = 0; i < kl; i++) {
 			k = ks.get(i);
 			put(k, map.get(k));
@@ -133,7 +133,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	}
 
 	@Override
-	@Nullable public V remove (long key) {
+	@Nullable public V remove (int key) {
 		if (!keys.remove(key)) { return null; }
 		return super.remove(key);
 	}
@@ -159,15 +159,15 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 
 	/**
 	 * Changes the key {@code before} to {@code after} without changing its position in the order or its value. Returns true if
-	 * {@code after} has been added to the LongObjectOrderedMap and {@code before} has been removed; returns false if {@code after} is
-	 * already present or {@code before} is not present. If you are iterating over an LongObjectOrderedMap and have an index, you should
-	 * prefer {@link #alterIndex(int, long)}, which doesn't need to search for an index like this does and so can be faster.
+	 * {@code after} has been added to the IntObjectOrderedMap and {@code before} has been removed; returns false if {@code after} is
+	 * already present or {@code before} is not present. If you are iterating over an IntObjectOrderedMap and have an index, you should
+	 * prefer {@link #alterIndex(int, int)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before a key that must be present for this to succeed
 	 * @param after  a key that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (long before, long after) {
+	public boolean alter (int before, int after) {
 		if (containsKey(after)) { return false; }
 		int index = keys.indexOf(before);
 		if (index == -1) { return false; }
@@ -179,13 +179,13 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	/**
 	 * Changes the key at the given {@code index} in the order to {@code after}, without changing the ordering of other entries or
 	 * any values. If {@code after} is already present, this returns false; it will also return false if {@code index} is invalid
-	 * for the size of this map. Otherwise, it returns true. Unlike {@link #alter(long, long)}, this operates in constant time.
+	 * for the size of this map. Otherwise, it returns true. Unlike {@link #alter(int, int)}, this operates in constant time.
 	 *
 	 * @param index the index in the order of the key to change; must be non-negative and less than {@link #size}
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterIndex (int index, long after) {
+	public boolean alterIndex (int index, int after) {
 		if (index < 0 || index >= size || containsKey(after)) { return false; }
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);
@@ -223,37 +223,37 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	}
 
 	/**
-	 * Gets the LongList of keys in the order this class will iterate through them.
-	 * Returns a direct reference to the same LongList this uses, so changes to the returned list will
+	 * Gets the IntList of keys in the order this class will iterate through them.
+	 * Returns a direct reference to the same IntList this uses, so changes to the returned list will
 	 * also change the iteration order here.
 	 *
-	 * @return the LongList of keys, in iteration order (usually insertion-order), that this uses
+	 * @return the IntList of keys, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public LongList order () {
+	public IntList order () {
 		return keys;
 	}
 
 	/**
-	 * Sorts this LongObjectOrderedMap in-place by the keys' natural ordering.
+	 * Sorts this IntObjectOrderedMap in-place by the keys' natural ordering.
 	 */
 	public void sort () {
 		keys.sort();
 	}
 
 	/**
-	 * Sorts this LongObjectOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
+	 * Sorts this IntObjectOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
 	 * will sort by the natural ordering of the keys.
 	 *
 	 * @param comp a Comparator that can compare two {@code K} keys, or null to use the keys' natural ordering
 	 */
-	public void sort (@Nullable LongComparator comp) {
+	public void sort (@Nullable IntComparator comp) {
 		keys.sort(comp);
 	}
 
 	/**
-	 * Sorts this LongObjectOrderedMap in-place by the given Comparator used on the values. {@code comp} must not be null,
-	 * and must be able to compare {@code V} values. If any null values are present in this LongObjectOrderedMap, then comp
+	 * Sorts this IntObjectOrderedMap in-place by the given Comparator used on the values. {@code comp} must not be null,
+	 * and must be able to compare {@code V} values. If any null values are present in this IntObjectOrderedMap, then comp
 	 * must be able to sort or otherwise handle null values. You can use {@link Comparator#naturalOrder()} to do
 	 * what {@link #sort()} does (just sorting values in this case instead of keys) if the values implement
 	 * {@link Comparable} (requiring all of them to be non-null).
@@ -278,7 +278,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * operations.
 	 *
 	 * <p>Note that the same Collection instance is returned each time this
-	 * method is called. Use the {@link OrderedMapKeys#OrderedMapKeys(LongObjectOrderedMap)}
+	 * method is called. Use the {@link OrderedMapKeys#OrderedMapKeys(IntObjectOrderedMap)}
 	 * constructor for nested or multithreaded iteration.
 	 *
 	 * @return a set view of the keys contained in this map
@@ -304,7 +304,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	/**
 	 * Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
 	 * <p>Note that the same Collection instance is returned each time this method is called. Use the
-	 * {@link OrderedMapValues#OrderedMapValues(LongObjectOrderedMap)} constructor for nested or multithreaded iteration.
+	 * {@link OrderedMapValues#OrderedMapValues(IntObjectOrderedMap)} constructor for nested or multithreaded iteration.
 	 *
 	 * @return a {@link Collection} of V values
 	 */
@@ -330,7 +330,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
 	 *
 	 * <p>Note that the same iterator instance is returned each time this method is called.
-	 * Use the {@link OrderedMapEntries#OrderedMapEntries(LongObjectOrderedMap)} constructor for nested or multithreaded iteration.
+	 * Use the {@link OrderedMapEntries#OrderedMapEntries(IntObjectOrderedMap)} constructor for nested or multithreaded iteration.
 	 *
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
@@ -355,8 +355,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	/**
 	 * Reuses the iterator of the reused {@link Entries}
 	 * produced by {@link #entrySet()}; does not permit nested iteration. Iterate over
-	 * {@link OrderedMapEntries#OrderedMapEntries(LongObjectOrderedMap)} if you need nested or
-	 * multithreaded iteration. You can remove an Entry from this LongObjectOrderedMap
+	 * {@link OrderedMapEntries#OrderedMapEntries(IntObjectOrderedMap)} if you need nested or
+	 * multithreaded iteration. You can remove an Entry from this IntObjectOrderedMap
 	 * using this Iterator.
 	 *
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
@@ -371,9 +371,9 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 		if (size == 0) { return braces ? "{}" : ""; }
 		StringBuilder buffer = new StringBuilder(32);
 		if (braces) { buffer.append('{'); }
-		LongList keys = this.keys;
+		IntList keys = this.keys;
 		for (int i = 0, n = keys.size(); i < n; i++) {
-			long key = keys.get(i);
+			int key = keys.get(i);
 			if (i > 0) { buffer.append(separator); }
 			buffer.append(key);
 			buffer.append('=');
@@ -385,9 +385,9 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	}
 
 	public static class OrderedMapEntries<V> extends Entries<V> {
-		protected LongList keys;
+		protected IntList keys;
 
-		public OrderedMapEntries (LongObjectOrderedMap<V> map) {
+		public OrderedMapEntries (IntObjectOrderedMap<V> map) {
 			super(map);
 			keys = map.keys;
 			iter = new EntryIterator<V>(map) {
@@ -438,9 +438,9 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	}
 
 	public static class OrderedMapKeys<V> extends Keys<V> {
-		private final LongList keys;
+		private final IntList keys;
 
-		public OrderedMapKeys (LongObjectOrderedMap<V> map) {
+		public OrderedMapKeys (IntObjectOrderedMap<V> map) {
 			super(map);
 			keys = map.keys;
 			iter = new KeyIterator<V>(map) {
@@ -458,10 +458,10 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 				}
 
 				@Override
-				public long nextLong () {
+				public int nextInt () {
 					if (!hasNext) { throw new NoSuchElementException(); }
 					if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-					long key = keys.get(nextIndex);
+					int key = keys.get(nextIndex);
 					currentIndex = nextIndex;
 					nextIndex++;
 					hasNext = nextIndex < map.size;
@@ -479,15 +479,15 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 		}
 
 		@Override
-		public PrimitiveIterator.OfLong iterator () {
+		public PrimitiveIterator.OfInt iterator () {
 			return iter;
 		}
 	}
 
 	public static class OrderedMapValues<V> extends Values<V> {
-		private final LongList keys;
+		private final IntList keys;
 
-		public OrderedMapValues (LongObjectOrderedMap<V> map) {
+		public OrderedMapValues (IntObjectOrderedMap<V> map) {
 			super(map);
 			keys = map.keys;
 			iter = new ValueIterator<V>(map) {
