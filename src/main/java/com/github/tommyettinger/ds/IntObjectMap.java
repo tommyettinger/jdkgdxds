@@ -885,7 +885,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 		 *
 		 * @return an iterator over the elements contained in this collection
 		 */
-		public ValueIterator<V> iterator () {
+		public Iterator<V> iterator () {
 			return iter;
 		}
 

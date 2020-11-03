@@ -825,7 +825,8 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 
 	/**
 	 * Sorts all elements according to the order induced by the specified
-	 * comparator using mergesort.
+	 * comparator using mergesort. If {@code c} is null, this instead delegates to {@link #sort()},
+	 * which uses {@link Arrays#sort(float[])}, and does not always run in-place.
 	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
@@ -834,8 +835,13 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	 *
 	 * @param c       the comparator to determine the order of the IntList
 	 */
-	public void sort (final IntComparator c) {
-		sort(0, size, c);
+	public void sort (@Nullable final IntComparator c) {
+		if(c == null) {
+			sort();
+		}
+		else {
+			sort(0, size, c);
+		}
 	}
 	/**
 	 * Sorts the specified range of elements according to the order induced by the specified

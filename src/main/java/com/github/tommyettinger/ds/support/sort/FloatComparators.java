@@ -149,12 +149,13 @@ public final class FloatComparators {
 	}
 
 	/**
-	 * A FloatComparator with a tolerance for equality of 0.0001.
+	 * A FloatComparator using ascending order with a tolerance for equality of 0.0001.
 	 */
 	public static final FloatComparator EPSILON_COMPARATOR = new EpsilonComparator();
 
 	/**
-	 * Builds a new FloatComparator with a tolerance for equality of {@code epsilon}.
+	 * Builds a new FloatComparator, using ascending order with a tolerance for equality of {@code epsilon}.
+	 * You can call its {@link FloatComparator#reversed()} method to access a descending-order comparator.
 	 * @param epsilon how much tolerance is acceptable when comparing two floats as equal
 	 * @return the new FloatComparator
 	 */

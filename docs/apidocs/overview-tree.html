@@ -67,6 +67,7 @@ loadScripts(document, 'script');</script>
 <li><a href="com/github/tommyettinger/ds/annotations/package-tree.html">com.github.tommyettinger.ds.annotations</a>, </li>
 <li><a href="com/github/tommyettinger/ds/support/package-tree.html">com.github.tommyettinger.ds.support</a>, </li>
 <li><a href="com/github/tommyettinger/ds/support/function/package-tree.html">com.github.tommyettinger.ds.support.function</a>, </li>
+<li><a href="com/github/tommyettinger/ds/support/sort/package-tree.html">com.github.tommyettinger.ds.support.sort</a>, </li>
 <li><a href="com/github/tommyettinger/ds/support/util/package-tree.html">com.github.tommyettinger.ds.support.util</a></li>
 </ul>
 </div>
@@ -89,6 +90,8 @@ loadScripts(document, 'script');</script>
 </li>
 <li class="circle">java.util.AbstractSet&lt;E&gt; (implements java.util.Set&lt;E&gt;)
 <ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/CaseInsensitiveMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">CaseInsensitiveMap.Entries</span></a>&lt;V&gt;</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/CaseInsensitiveMap.Keys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">CaseInsensitiveMap.Keys</span></a>&lt;V&gt;</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">IntFloatMap.Entries</span></a></li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntIntMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">IntIntMap.Entries</span></a></li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntLongMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">IntLongMap.Entries</span></a></li>
@@ -96,13 +99,41 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongFloatMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongFloatMap.Entries</span></a></li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongIntMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongIntMap.Entries</span></a></li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongLongMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongLongMap.Entries</span></a></li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectMap.Entries</span></a>&lt;V&gt;</li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatMap.Entries</span></a>&lt;K&gt;</li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.Keys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatMap.Keys</span></a>&lt;K&gt;</li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntMap.Entries</span></a>&lt;K&gt;</li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.Keys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntMap.Keys</span></a>&lt;K&gt;</li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongMap.Entries</span></a>&lt;K&gt;</li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.Keys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongMap.Keys</span></a>&lt;K&gt;</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectMap.Entries</span></a>&lt;V&gt;
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectOrderedMap.OrderedMapEntries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectOrderedMap.OrderedMapEntries</span></a>&lt;V&gt;</li>
+</ul>
+</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatMap.Entries</span></a>&lt;K&gt;
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.OrderedMapEntries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatOrderedMap.OrderedMapEntries</span></a>&lt;K&gt;</li>
+</ul>
+</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.Keys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatMap.Keys</span></a>&lt;K&gt;
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.OrderedMapKeys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatOrderedMap.OrderedMapKeys</span></a>&lt;K&gt;</li>
+</ul>
+</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntMap.Entries</span></a>&lt;K&gt;
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.OrderedMapEntries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntOrderedMap.OrderedMapEntries</span></a>&lt;K&gt;</li>
+</ul>
+</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.Keys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntMap.Keys</span></a>&lt;K&gt;
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.OrderedMapKeys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntOrderedMap.OrderedMapKeys</span></a>&lt;K&gt;</li>
+</ul>
+</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongMap.Entries</span></a>&lt;K&gt;
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.OrderedMapEntries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongOrderedMap.OrderedMapEntries</span></a>&lt;K&gt;</li>
+</ul>
+</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.Keys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongMap.Keys</span></a>&lt;K&gt;
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.OrderedMapKeys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongOrderedMap.OrderedMapKeys</span></a>&lt;K&gt;</li>
+</ul>
+</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectMap.Entries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectObjectMap.Entries</span></a>&lt;K,&#8203;V&gt;
 <ul>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.OrderedMapEntries.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectObjectOrderedMap.OrderedMapEntries</span></a>&lt;K,&#8203;V&gt;</li>
@@ -116,7 +147,11 @@ loadScripts(document, 'script');</script>
 </ul>
 </li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntObjectMap.Values.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">IntObjectMap.Values</span></a>&lt;V&gt;</li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.Values.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectMap.Values</span></a>&lt;V&gt;</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.Values.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectMap.Values</span></a>&lt;V&gt;
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectOrderedMap.OrderedMapValues.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectOrderedMap.OrderedMapValues</span></a>&lt;V&gt;</li>
+</ul>
+</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectMap.Values.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectObjectMap.Values</span></a>&lt;K,&#8203;V&gt;
 <ul>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.OrderedMapValues.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectObjectOrderedMap.OrderedMapValues</span></a>&lt;K,&#8203;V&gt;</li>
@@ -125,8 +160,17 @@ loadScripts(document, 'script');</script>
 </ul>
 </li>
 <li class="circle">com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/BitConversion.html" title="class in com.github.tommyettinger.ds.support"><span class="typeNameLink">BitConversion</span></a></li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/FloatComparators.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">FloatComparators</span></a></li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/FloatComparators.EpsilonComparator.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">FloatComparators.EpsilonComparator</span></a> (implements com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a>, java.io.Serializable)</li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/FloatComparators.NaturalImplicitComparator.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">FloatComparators.NaturalImplicitComparator</span></a> (implements com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a>, java.io.Serializable)</li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/FloatComparators.OppositeComparator.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">FloatComparators.OppositeComparator</span></a> (implements com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a>, java.io.Serializable)</li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/FloatComparators.OppositeImplicitComparator.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">FloatComparators.OppositeImplicitComparator</span></a> (implements com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a>, java.io.Serializable)</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/FloatList.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">FloatList</span></a> (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a>, com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a>, java.io.Serializable)</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/FloatList.FloatListIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">FloatList.FloatListIterator</span></a> (implements com.github.tommyettinger.ds.support.util.<a href="com/github/tommyettinger/ds/support/util/FloatIterator.html" title="interface in com.github.tommyettinger.ds.support.util">FloatIterator</a>)</li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/IntComparators.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">IntComparators</span></a></li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/IntComparators.NaturalImplicitComparator.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">IntComparators.NaturalImplicitComparator</span></a> (implements com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/IntComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">IntComparator</a>, java.io.Serializable)</li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/IntComparators.OppositeComparator.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">IntComparators.OppositeComparator</span></a> (implements com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/IntComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">IntComparator</a>, java.io.Serializable)</li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/IntComparators.OppositeImplicitComparator.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">IntComparators.OppositeImplicitComparator</span></a> (implements com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/IntComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">IntComparator</a>, java.io.Serializable)</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">IntFloatMap</span></a> (implements java.lang.Iterable&lt;T&gt;, java.io.Serializable)</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.Entry.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">IntFloatMap.Entry</span></a></li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.Keys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">IntFloatMap.Keys</span></a> (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfInt</a>)</li>
@@ -182,6 +226,10 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntOrderedSet.OrderedSetIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">IntOrderedSet.OrderedSetIterator</span></a></li>
 </ul>
 </li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/LongComparators.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">LongComparators</span></a></li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/LongComparators.NaturalImplicitComparator.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">LongComparators.NaturalImplicitComparator</span></a> (implements com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/LongComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">LongComparator</a>, java.io.Serializable)</li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/LongComparators.OppositeComparator.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">LongComparators.OppositeComparator</span></a> (implements com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/LongComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">LongComparator</a>, java.io.Serializable)</li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/LongComparators.OppositeImplicitComparator.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">LongComparators.OppositeImplicitComparator</span></a> (implements com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/LongComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">LongComparator</a>, java.io.Serializable)</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongFloatMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongFloatMap</span></a> (implements java.lang.Iterable&lt;T&gt;, java.io.Serializable)</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongFloatMap.Entry.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongFloatMap.Entry</span></a></li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongFloatMap.Keys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongFloatMap.Keys</span></a> (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfLong.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfLong</a>)</li>
@@ -217,9 +265,17 @@ loadScripts(document, 'script');</script>
 </ul>
 </li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongLongMap.Values.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongLongMap.Values</span></a> (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfLong.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfLong</a>)</li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectMap</span></a>&lt;V&gt; (implements java.lang.Iterable&lt;T&gt;, java.io.Serializable)</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectMap</span></a>&lt;V&gt; (implements java.lang.Iterable&lt;T&gt;, java.io.Serializable)
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectOrderedMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectOrderedMap</span></a>&lt;V&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/Ordered.OfLong.html" title="interface in com.github.tommyettinger.ds">Ordered.OfLong</a>, java.io.Serializable)</li>
+</ul>
+</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.Entry.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectMap.Entry</span></a>&lt;V&gt;</li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.Keys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectMap.Keys</span></a>&lt;V&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfLong.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfLong</a>)</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.Keys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectMap.Keys</span></a>&lt;V&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfLong.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfLong</a>)
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectOrderedMap.OrderedMapKeys.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectOrderedMap.OrderedMapKeys</span></a>&lt;V&gt;</li>
+</ul>
+</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.MapIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectMap.MapIterator</span></a>&lt;V&gt;
 <ul>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.EntryIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongObjectMap.EntryIterator</span></a>&lt;V&gt; (implements java.lang.Iterable&lt;T&gt;, java.util.Iterator&lt;E&gt;)</li>
@@ -237,7 +293,11 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongOrderedSet.OrderedSetIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">LongOrderedSet.OrderedSetIterator</span></a></li>
 </ul>
 </li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatMap</span></a>&lt;K&gt; (implements java.lang.Iterable&lt;T&gt;, java.io.Serializable)</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatMap</span></a>&lt;K&gt; (implements java.lang.Iterable&lt;T&gt;, java.io.Serializable)
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatOrderedMap</span></a>&lt;K&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;T&gt;, java.io.Serializable)</li>
+</ul>
+</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.Entry.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatMap.Entry</span></a>&lt;K&gt;</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.MapIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatMap.MapIterator</span></a>&lt;K&gt;
 <ul>
@@ -246,8 +306,16 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.ValueIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatMap.ValueIterator</span></a>&lt;K&gt; (implements com.github.tommyettinger.ds.support.util.<a href="com/github/tommyettinger/ds/support/util/FloatIterator.html" title="interface in com.github.tommyettinger.ds.support.util">FloatIterator</a>)</li>
 </ul>
 </li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.Values.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatMap.Values</span></a>&lt;K&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a>)</li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntMap</span></a>&lt;K&gt; (implements java.lang.Iterable&lt;T&gt;, java.io.Serializable)</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.Values.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatMap.Values</span></a>&lt;K&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a>)
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.OrderedMapValues.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectFloatOrderedMap.OrderedMapValues</span></a>&lt;K&gt;</li>
+</ul>
+</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntMap</span></a>&lt;K&gt; (implements java.lang.Iterable&lt;T&gt;, java.io.Serializable)
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntOrderedMap</span></a>&lt;K&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;T&gt;, java.io.Serializable)</li>
+</ul>
+</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.Entry.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntMap.Entry</span></a>&lt;K&gt;</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.MapIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntMap.MapIterator</span></a>&lt;K&gt;
 <ul>
@@ -256,8 +324,16 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.ValueIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntMap.ValueIterator</span></a>&lt;K&gt; (implements java.util.PrimitiveIterator.OfInt)</li>
 </ul>
 </li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.Values.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntMap.Values</span></a>&lt;K&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfInt</a>)</li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongMap</span></a>&lt;K&gt; (implements java.lang.Iterable&lt;T&gt;, java.io.Serializable)</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.Values.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntMap.Values</span></a>&lt;K&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfInt</a>)
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.OrderedMapValues.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectIntOrderedMap.OrderedMapValues</span></a>&lt;K&gt;</li>
+</ul>
+</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongMap</span></a>&lt;K&gt; (implements java.lang.Iterable&lt;T&gt;, java.io.Serializable)
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongOrderedMap</span></a>&lt;K&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;T&gt;, java.io.Serializable)</li>
+</ul>
+</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.Entry.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongMap.Entry</span></a>&lt;K&gt;</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.MapIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongMap.MapIterator</span></a>&lt;K&gt;
 <ul>
@@ -266,14 +342,22 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.ValueIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongMap.ValueIterator</span></a>&lt;K&gt; (implements java.util.PrimitiveIterator.OfLong)</li>
 </ul>
 </li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.Values.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongMap.Values</span></a>&lt;K&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfLong.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfLong</a>)</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.Values.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongMap.Values</span></a>&lt;K&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfLong.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfLong</a>)
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.OrderedMapValues.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectLongOrderedMap.OrderedMapValues</span></a>&lt;K&gt;</li>
+</ul>
+</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectObjectMap</span></a>&lt;K,&#8203;V&gt; (implements java.lang.Iterable&lt;T&gt;, java.util.Map&lt;K,&#8203;V&gt;, java.io.Serializable)
 <ul>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/CaseInsensitiveMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">CaseInsensitiveMap</span></a>&lt;V&gt; (implements java.io.Serializable)</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectObjectOrderedMap</span></a>&lt;K,&#8203;V&gt; (implements com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;T&gt;, java.io.Serializable)</li>
 </ul>
 </li>
-<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectMap.Entry.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectObjectMap.Entry</span></a>&lt;K,&#8203;V&gt; (implements java.util.Map.Entry&lt;K,&#8203;V&gt;)</li>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectMap.Entry.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectObjectMap.Entry</span></a>&lt;K,&#8203;V&gt; (implements java.util.Map.Entry&lt;K,&#8203;V&gt;)
+<ul>
+<li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/CaseInsensitiveMap.Entry.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">CaseInsensitiveMap.Entry</span></a>&lt;V&gt;</li>
+</ul>
+</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectMap.MapIterator.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectObjectMap.MapIterator</span></a>&lt;K,&#8203;V,&#8203;I&gt; (implements java.lang.Iterable&lt;T&gt;, java.util.Iterator&lt;E&gt;)</li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">ObjectSet</span></a>&lt;T&gt; (implements java.lang.Iterable&lt;T&gt;, java.io.Serializable, java.util.Set&lt;E&gt;)
 <ul>
@@ -290,6 +374,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support"><span class="typeNameLink">LaserRandom</span></a> (implements java.io.Serializable)</li>
 </ul>
 </li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/Sorts.html" title="class in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">Sorts</span></a></li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/Utilities.html" title="class in com.github.tommyettinger.ds"><span class="typeNameLink">Utilities</span></a></li>
 </ul>
 </li>
@@ -304,6 +389,13 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds"><span class="typeNameLink">Ordered.OfFloat</span></a></li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/Ordered.OfInt.html" title="interface in com.github.tommyettinger.ds"><span class="typeNameLink">Ordered.OfInt</span></a></li>
 <li class="circle">com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/Ordered.OfLong.html" title="interface in com.github.tommyettinger.ds"><span class="typeNameLink">Ordered.OfLong</span></a></li>
+</ul>
+</li>
+<li class="circle">java.util.Comparator&lt;T&gt;
+<ul>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">FloatComparator</span></a></li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/IntComparator.html" title="interface in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">IntComparator</span></a></li>
+<li class="circle">com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/LongComparator.html" title="interface in com.github.tommyettinger.ds.support.sort"><span class="typeNameLink">LongComparator</span></a></li>
 </ul>
 </li>
 <li class="circle">com.github.tommyettinger.ds.support.function.<a href="com/github/tommyettinger/ds/support/function/FloatConsumer.html" title="interface in com.github.tommyettinger.ds.support.function"><span class="typeNameLink">FloatConsumer</span></a></li>

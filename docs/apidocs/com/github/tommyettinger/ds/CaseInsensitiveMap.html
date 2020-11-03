@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -87,25 +87,26 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="contentContainer">
 <div class="inheritance" title="Inheritance Tree">java.lang.Object
-<div class="inheritance"><a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.ObjectObjectMap</a>&lt;java.lang.String,&#8203;V&gt;
+<div class="inheritance"><a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">com.github.tommyettinger.ds.ObjectObjectMap</a>&lt;java.lang.CharSequence,&#8203;V&gt;
 <div class="inheritance">com.github.tommyettinger.ds.CaseInsensitiveMap&lt;V&gt;</div>
 </div>
 </div>
 <section class="description">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code>java.io.Serializable</code>, <code>java.lang.Iterable&lt;java.util.Map.Entry&lt;java.lang.String,&#8203;V&gt;&gt;</code>, <code>java.util.Map&lt;java.lang.String,&#8203;V&gt;</code></dd>
+<dd><code>java.io.Serializable</code>, <code>java.lang.Iterable&lt;java.util.Map.Entry&lt;java.lang.CharSequence,&#8203;V&gt;&gt;</code>, <code>java.util.Map&lt;java.lang.CharSequence,&#8203;V&gt;</code></dd>
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">CaseInsensitiveMap&lt;V&gt;</span>
-extends <a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;java.lang.String,&#8203;V&gt;
+extends <a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;java.lang.CharSequence,&#8203;V&gt;
 implements java.io.Serializable</pre>
-<div class="block">A custom variant on ObjectObjectMap that always uses String keys and compares them as case-insensitive.
- This uses a fairly complex, somewhat-optimized hashing function because it needs to hash Strings rather
- often, and to do so ignoring case means <code>String.hashCode()</code> won't work. User code similar to this
- can often get away with a simple polynomial hash (the typical Java kind, used by String and Arrays), or
- if more speed is needed, one with <a href="https://richardstartin.github.io/posts/collecting-rocks-and-benchmarks">Some
- of these optimizations by Richard Startin</a>.</div>
+<div class="block">A custom variant on ObjectObjectMap that always uses CharSequence keys and compares them as case-insensitive.
+ This uses a fairly complex, somewhat-optimized hashing function because it needs to hash CharSequences rather
+ often, and to do so ignoring case means <code>String.hashCode()</code> won't work, plus not all CharSequences
+ implement hashCode() themselves (such as <code>StringBuilder</code>). User code similar to this can often get away
+ with a simple polynomial hash (the typical Java kind, used by String and Arrays), or if more speed is needed,
+ one with <a href="https://richardstartin.github.io/posts/collecting-rocks-and-benchmarks">some of these
+ optimizations by Richard Startin</a>.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../serialized-form.html#com.github.tommyettinger.ds.CaseInsensitiveMap">Serialized Form</a></dd>
@@ -119,11 +120,40 @@ implements java.io.Serializable</pre>
 <!--   -->
 </a>
 <h2>Nested Class Summary</h2>
+<div class="memberSummary">
+<table>
+<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<thead>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Class</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="CaseInsensitiveMap.Entries.html" title="class in com.github.tommyettinger.ds">CaseInsensitiveMap.Entries</a>&lt;<a href="CaseInsensitiveMap.Entries.html" title="type parameter in CaseInsensitiveMap.Entries">V</a>&gt;</span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="CaseInsensitiveMap.Entry.html" title="class in com.github.tommyettinger.ds">CaseInsensitiveMap.Entry</a>&lt;<a href="CaseInsensitiveMap.Entry.html" title="type parameter in CaseInsensitiveMap.Entry">V</a>&gt;</span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="CaseInsensitiveMap.Keys.html" title="class in com.github.tommyettinger.ds">CaseInsensitiveMap.Keys</a>&lt;<a href="CaseInsensitiveMap.Keys.html" title="type parameter in CaseInsensitiveMap.Keys">V</a>&gt;</span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="inheritedList">
 <h2>Nested classes/interfaces inherited from class&nbsp;com.github.tommyettinger.ds.<a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a></h2>
 <a id="nested.classes.inherited.from.class.com.github.tommyettinger.ds.ObjectObjectMap">
 <!--   -->
-</a><code><a href="ObjectObjectMap.Entries.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap.Entries</a>&lt;<a href="ObjectObjectMap.Entries.html" title="type parameter in ObjectObjectMap.Entries">K</a>,&#8203;<a href="ObjectObjectMap.Entries.html" title="type parameter in ObjectObjectMap.Entries">V</a>&gt;, <a href="ObjectObjectMap.Entry.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap.Entry</a>&lt;<a href="ObjectObjectMap.Entry.html" title="type parameter in ObjectObjectMap.Entry">K</a>,&#8203;<a href="ObjectObjectMap.Entry.html" title="type parameter in ObjectObjectMap.Entry">V</a>&gt;, <a href="ObjectObjectMap.Keys.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap.Keys</a>&lt;<a href="ObjectObjectMap.Keys.html" title="type parameter in ObjectObjectMap.Keys">K</a>,&#8203;<a href="ObjectObjectMap.Keys.html" title="type parameter in ObjectObjectMap.Keys">V</a>&gt;, <a href="ObjectObjectMap.MapIterator.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap.MapIterator</a>&lt;<a href="ObjectObjectMap.MapIterator.html" title="type parameter in ObjectObjectMap.MapIterator">K</a>,&#8203;<a href="ObjectObjectMap.MapIterator.html" title="type parameter in ObjectObjectMap.MapIterator">V</a>,&#8203;<a href="ObjectObjectMap.MapIterator.html" title="type parameter in ObjectObjectMap.MapIterator">I</a>&gt;, <a href="ObjectObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap.Values</a>&lt;<a href="ObjectObjectMap.Values.html" title="type parameter in ObjectObjectMap.Values">K</a>,&#8203;<a href="ObjectObjectMap.Values.html" title="type parameter in ObjectObjectMap.Values">V</a>&gt;</code></div>
+</a><code><a href="ObjectObjectMap.MapIterator.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap.MapIterator</a>&lt;<a href="ObjectObjectMap.MapIterator.html" title="type parameter in ObjectObjectMap.MapIterator">K</a>,&#8203;<a href="ObjectObjectMap.MapIterator.html" title="type parameter in ObjectObjectMap.MapIterator">V</a>,&#8203;<a href="ObjectObjectMap.MapIterator.html" title="type parameter in ObjectObjectMap.MapIterator">I</a>&gt;, <a href="ObjectObjectMap.Values.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap.Values</a>&lt;<a href="ObjectObjectMap.Values.html" title="type parameter in ObjectObjectMap.Values">K</a>,&#8203;<a href="ObjectObjectMap.Values.html" title="type parameter in ObjectObjectMap.Values">V</a>&gt;</code></div>
 </section>
 </li>
 <!-- =========== FIELD SUMMARY =========== -->
@@ -169,11 +199,11 @@ float&nbsp;loadFactor)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.ObjectObjectMap)">CaseInsensitiveMap</a></span>&#8203;(<a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;? extends java.lang.String,&#8203;? extends <a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;&nbsp;map)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.github.tommyettinger.ds.ObjectObjectMap)">CaseInsensitiveMap</a></span>&#8203;(<a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;? extends java.lang.CharSequence,&#8203;? extends <a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;&nbsp;map)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.util.Map)">CaseInsensitiveMap</a></span>&#8203;(java.util.Map&lt;? extends java.lang.String,&#8203;? extends <a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;&nbsp;map)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.util.Map)">CaseInsensitiveMap</a></span>&#8203;(java.util.Map&lt;? extends java.lang.CharSequence,&#8203;? extends <a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;&nbsp;map)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -200,23 +230,31 @@ float&nbsp;loadFactor)</code></th>
 </thead>
 <tbody>
 <tr class="altColor" id="i0">
+<td class="colFirst"><code>int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hashCode()">hashCode</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i1">
 <td class="colFirst"><code>protected int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#locateKey(java.lang.Object)">locateKey</a></span>&#8203;(java.lang.Object&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block">Returns the index of the key if already present, else <code>~index</code> for the next empty index.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr class="altColor" id="i2">
+<td class="colFirst"><code>protected int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#place(java.lang.CharSequence)">place</a></span>&#8203;(java.lang.CharSequence&nbsp;item)</code></th>
+<td class="colLast">
+<div class="block">Gets a case-insensitive hash code for the String or other CharSequence <code>item</code> and shifts it so it is between 0 and
+ <a href="ObjectObjectMap.html#mask"><code>ObjectObjectMap.mask</code></a> inclusive.</div>
+</td>
+</tr>
+<tr class="rowColor" id="i3">
 <td class="colFirst"><code>protected int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#place(java.lang.Object)">place</a></span>&#8203;(java.lang.Object&nbsp;item)</code></th>
 <td class="colLast">
 <div class="block">Returns an index &gt;= 0 and &lt;= <a href="ObjectObjectMap.html#mask"><code>ObjectObjectMap.mask</code></a> for the specified <code>item</code>.</div>
 </td>
-</tr>
-<tr class="altColor" id="i2">
-<td class="colFirst"><code>protected int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#place(java.lang.String)">place</a></span>&#8203;(java.lang.String&nbsp;item)</code></th>
-<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -226,7 +264,7 @@ float&nbsp;loadFactor)</code></th>
 <h3>Methods inherited from class&nbsp;com.github.tommyettinger.ds.<a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a></h3>
 <a id="methods.inherited.from.class.com.github.tommyettinger.ds.ObjectObjectMap">
 <!--   -->
-</a><code><a href="ObjectObjectMap.html#clear()">clear</a>, <a href="ObjectObjectMap.html#clear(int)">clear</a>, <a href="ObjectObjectMap.html#containsKey(java.lang.Object)">containsKey</a>, <a href="ObjectObjectMap.html#containsValue(java.lang.Object)">containsValue</a>, <a href="ObjectObjectMap.html#containsValue(java.lang.Object,boolean)">containsValue</a>, <a href="ObjectObjectMap.html#ensureCapacity(int)">ensureCapacity</a>, <a href="ObjectObjectMap.html#entrySet()">entrySet</a>, <a href="ObjectObjectMap.html#equals(java.lang.Object)">equals</a>, <a href="ObjectObjectMap.html#equalsIdentity(java.lang.Object)">equalsIdentity</a>, <a href="ObjectObjectMap.html#findKey(java.lang.Object,boolean)">findKey</a>, <a href="ObjectObjectMap.html#get(java.lang.Object)">get</a>, <a href="ObjectObjectMap.html#getOrDefault(java.lang.Object,V)">getOrDefault</a>, <a href="ObjectObjectMap.html#hashCode()">hashCode</a>, <a href="ObjectObjectMap.html#isEmpty()">isEmpty</a>, <a href="ObjectObjectMap.html#iterator()">iterator</a>, <a href="ObjectObjectMap.html#keySet()">keySet</a>, <a href="ObjectObjectMap.html#notEmpty()">notEmpty</a>, <a href="ObjectObjectMap.html#put(K,V)">put</a>, <a href="ObjectObjectMap.html#putAll(com.github.tommyettinger.ds.ObjectObjectMap)">putAll</a>, <a href="ObjectObjectMap.html#putAll(java.util.Map)">putAll</a>, <a href="ObjectObjectMap.html#remove(java.lang.Object)">remove</a>, <a href="ObjectObjectMap.html#resize(int)">resize</a>, <a href="ObjectObjectMap.html#shrink(int)">shrink</a>, <a href="ObjectObjectMap.html#size()">size</a>, <a href="ObjectObjectMap.html#toString()">toString</a>, <a href="ObjectObjectMap.html#toString(java.lang.String)">toString</a>, <a href="ObjectObjectMap.html#toString(java.lang.String,boolean)">toString</a>, <a href="ObjectObjectMap.html#values()">values</a></code></div>
+</a><code><a href="ObjectObjectMap.html#clear()">clear</a>, <a href="ObjectObjectMap.html#clear(int)">clear</a>, <a href="ObjectObjectMap.html#containsKey(java.lang.Object)">containsKey</a>, <a href="ObjectObjectMap.html#containsValue(java.lang.Object)">containsValue</a>, <a href="ObjectObjectMap.html#containsValue(java.lang.Object,boolean)">containsValue</a>, <a href="ObjectObjectMap.html#ensureCapacity(int)">ensureCapacity</a>, <a href="ObjectObjectMap.html#entrySet()">entrySet</a>, <a href="ObjectObjectMap.html#equals(java.lang.Object)">equals</a>, <a href="ObjectObjectMap.html#equalsIdentity(java.lang.Object)">equalsIdentity</a>, <a href="ObjectObjectMap.html#findKey(java.lang.Object,boolean)">findKey</a>, <a href="ObjectObjectMap.html#get(java.lang.Object)">get</a>, <a href="ObjectObjectMap.html#getOrDefault(java.lang.Object,V)">getOrDefault</a>, <a href="ObjectObjectMap.html#isEmpty()">isEmpty</a>, <a href="ObjectObjectMap.html#iterator()">iterator</a>, <a href="ObjectObjectMap.html#keySet()">keySet</a>, <a href="ObjectObjectMap.html#notEmpty()">notEmpty</a>, <a href="ObjectObjectMap.html#put(K,V)">put</a>, <a href="ObjectObjectMap.html#putAll(com.github.tommyettinger.ds.ObjectObjectMap)">putAll</a>, <a href="ObjectObjectMap.html#putAll(java.util.Map)">putAll</a>, <a href="ObjectObjectMap.html#remove(java.lang.Object)">remove</a>, <a href="ObjectObjectMap.html#resize(int)">resize</a>, <a href="ObjectObjectMap.html#shrink(int)">shrink</a>, <a href="ObjectObjectMap.html#size()">size</a>, <a href="ObjectObjectMap.html#toString()">toString</a>, <a href="ObjectObjectMap.html#toString(java.lang.String)">toString</a>, <a href="ObjectObjectMap.html#toString(java.lang.String,boolean)">toString</a>, <a href="ObjectObjectMap.html#values()">values</a></code></div>
 <div class="inheritedList">
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
 <a id="methods.inherited.from.class.java.lang.Object">
@@ -277,13 +315,13 @@ float&nbsp;loadFactor)</span></div>
 <li class="blockList">
 <section class="detail">
 <h3><a id="&lt;init&gt;(com.github.tommyettinger.ds.ObjectObjectMap)">CaseInsensitiveMap</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">CaseInsensitiveMap</span>&#8203;(<span class="arguments"><a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;? extends java.lang.String,&#8203;? extends <a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;&nbsp;map)</span></div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">CaseInsensitiveMap</span>&#8203;(<span class="arguments"><a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;? extends java.lang.CharSequence,&#8203;? extends <a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;&nbsp;map)</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="&lt;init&gt;(java.util.Map)">CaseInsensitiveMap</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">CaseInsensitiveMap</span>&#8203;(<span class="arguments">java.util.Map&lt;? extends java.lang.String,&#8203;? extends <a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;&nbsp;map)</span></div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">CaseInsensitiveMap</span>&#8203;(<span class="arguments">java.util.Map&lt;? extends java.lang.CharSequence,&#8203;? extends <a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;&nbsp;map)</span></div>
 </section>
 </li>
 </ul>
@@ -312,7 +350,7 @@ float&nbsp;loadFactor)</span></div>
  restrict results to the correct range.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="ObjectObjectMap.html#place(java.lang.Object)">place</a></code>&nbsp;in class&nbsp;<code><a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;java.lang.String,&#8203;<a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;</code></dd>
+<dd><code><a href="ObjectObjectMap.html#place(java.lang.Object)">place</a></code>&nbsp;in class&nbsp;<code><a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;java.lang.CharSequence,&#8203;<a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>item</code> - a non-null Object; its hashCode() method should be used by most implementations.</dd>
 </dl>
@@ -320,8 +358,33 @@ float&nbsp;loadFactor)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="place(java.lang.String)">place</a></h3>
-<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">place</span>&#8203;(<span class="arguments">java.lang.String&nbsp;item)</span></div>
+<h3><a id="place(java.lang.CharSequence)">place</a></h3>
+<div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">place</span>&#8203;(<span class="arguments">java.lang.CharSequence&nbsp;item)</span></div>
+<div class="block">Gets a case-insensitive hash code for the String or other CharSequence <code>item</code> and shifts it so it is between 0 and
+ <a href="ObjectObjectMap.html#mask"><code>ObjectObjectMap.mask</code></a> inclusive. This gets the hash as if all cased letters have been converted to upper case by
+ <code>Character.toUpperCase(char)</code>; this should be correct for all alphabets in Unicode except Georgian.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>item</code> - any non-null CharSequence, such as a String or StringBuilder; will be treated as if it is all upper-case</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a position in the key table where <code>item</code> would be placed; between 0 and <a href="ObjectObjectMap.html#mask"><code>ObjectObjectMap.mask</code></a> inclusive</dd>
+<dt><span class="simpleTagLabel">"Implementation Note"</span></dt>
+<dd>Uses Frost hash, which passes SMHasher's test battery and is fairly fast, at least in C. Frost uses 64-bit math,
+ which behaves reliably but somewhat slowly on GWT, but uses it on usually-small char values. This can't use the
+ built-in pre-calculated hashCode of a String because it's case-sensitive.</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="hashCode()">hashCode</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">hashCode</span>()</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>hashCode</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;java.lang.CharSequence,&#8203;<a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;</code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="ObjectObjectMap.html#hashCode()">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;java.lang.CharSequence,&#8203;<a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;</code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -347,7 +410,7 @@ float&nbsp;loadFactor)</span></div>
  </pre></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="ObjectObjectMap.html#locateKey(java.lang.Object)">locateKey</a></code>&nbsp;in class&nbsp;<code><a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;java.lang.String,&#8203;<a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;</code></dd>
+<dd><code><a href="ObjectObjectMap.html#locateKey(java.lang.Object)">locateKey</a></code>&nbsp;in class&nbsp;<code><a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;java.lang.CharSequence,&#8203;<a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - a non-null Object that should probably be a K</dd>
 </dl>
