@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
+import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;
@@ -240,10 +241,10 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 	}
 
 	/**
-	 * Sorts this LongFloatOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
+	 * Sorts this LongFloatOrderedMap in-place by the given LongComparator used on the keys. If {@code comp} is null, then this
 	 * will sort by the natural ordering of the keys.
 	 *
-	 * @param comp a Comparator that can compare two {@code K} keys, or null to use the keys' natural ordering
+	 * @param comp a LongComparator, such as one from {@link LongComparators}, or null to use the keys' natural ordering
 	 */
 	public void sort (@Nullable LongComparator comp) {
 		keys.sort(comp);
