@@ -375,36 +375,72 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		size = 0;
 		Arrays.fill(keyTable, null);
 	}
-
+	
+	public boolean containsKey (Object key) {
+		return locateKey(key) >= 0;
+	}
+	
 	/**
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
+	 * @param value the float value to check for; will be compared with {@link Utilities#isEqual(float, float)}
+	 * @return true if this map contains the given value, false otherwise   
 	 */
 	public boolean containsValue (float value) {
 		float[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != null && valueTable[i] == value) { return true; }
+			if (keyTable[i] != null && Utilities.isEqual(valueTable[i], value)) { return true; }
 		}
 		return false;
 	}
 
-	public boolean containsKey (Object key) {
-		return locateKey(key) >= 0;
+	/**
+	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
+	 * be an expensive operation.
+	 * @param value the float value to check for; will be compared with {@link Utilities#isEqual(float, float, float)}
+	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal    
+	 * @return true if this map contains the given value, false otherwise   
+	 */
+	public boolean containsValue (float value, float tolerance) {
+		float[] valueTable = this.valueTable;
+		K[] keyTable = this.keyTable;
+		for (int i = valueTable.length - 1; i >= 0; i--) {
+			if (keyTable[i] != null && Utilities.isEqual(valueTable[i], value, tolerance)) { return true; }
+		}
+		return false;
 	}
 
 	/**
 	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
-	 * every value, which may be an expensive operation.
+	 * every value, which may be an expensive operation. Uses {@link Utilities#isEqual(float, float)} to compare values.
+	 * @param value the value to look for
+	 * @return the key associated with the given value, if it was found, or null otherwise   
 	 */
-	@Nullable public
-	K findKey (float value) {
+	@Nullable
+	public K findKey (float value) {
 		float[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != null && valueTable[i] == value) { return keyTable[i]; }
+			if (keyTable[i] != null && Utilities.isEqual(valueTable[i], value)) { return keyTable[i]; }
 		}
+		return null;
+	}
 
+	/**
+	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
+	 * every value, which may be an expensive operation. Uses {@link Utilities#isEqual(float, float, float)} to compare values.
+	 * @param value the value to look for
+	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal    
+	 * @return the key associated with the given value, if it was found, or null otherwise   
+	 */
+	@Nullable
+	public K findKey (float value, float tolerance) {
+		float[] valueTable = this.valueTable;
+		K[] keyTable = this.keyTable;
+		for (int i = valueTable.length - 1; i >= 0; i--) {
+			if (keyTable[i] != null && Utilities.isEqual(valueTable[i], value, tolerance)) { return keyTable[i]; }
+		}
 		return null;
 	}
 

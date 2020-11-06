@@ -117,27 +117,27 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>protected static class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="FloatComparators.EpsilonComparator.html" title="class in com.github.tommyettinger.ds.support.sort">FloatComparators.EpsilonComparator</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="FloatComparators.NaturalImplicitComparator.html" title="class in com.github.tommyettinger.ds.support.sort">FloatComparators.NaturalImplicitComparator</a></span></code></th>
 <td class="colLast">
 <div class="block">A type-specific comparator mimicking the natural order.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="FloatComparators.OppositeComparator.html" title="class in com.github.tommyettinger.ds.support.sort">FloatComparators.OppositeComparator</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="FloatComparators.OppositeImplicitComparator.html" title="class in com.github.tommyettinger.ds.support.sort">FloatComparators.OppositeImplicitComparator</a></span></code></th>
 <td class="colLast">
 <div class="block">A type-specific comparator mimicking the opposite of the natural order.</div>
 </td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected static class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="FloatComparators.TolerantComparator.html" title="class in com.github.tommyettinger.ds.support.sort">FloatComparators.TolerantComparator</a></span></code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -163,20 +163,20 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#EPSILON_COMPARATOR">EPSILON_COMPARATOR</a></span></code></th>
-<td class="colLast">
-<div class="block">A FloatComparator using ascending order with a tolerance for equality of 0.0001.</div>
-</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#NATURAL_COMPARATOR">NATURAL_COMPARATOR</a></span></code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#NATURAL_COMPARATOR">NATURAL_COMPARATOR</a></span></code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#OPPOSITE_COMPARATOR">OPPOSITE_COMPARATOR</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#OPPOSITE_COMPARATOR">OPPOSITE_COMPARATOR</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#TOLERANT_COMPARATOR">TOLERANT_COMPARATOR</a></span></code></th>
+<td class="colLast">
+<div class="block">A FloatComparator using ascending order with a tolerance for equality of 0.000001.</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -211,16 +211,16 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>static <a href="FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#epsilonComparator(float)">epsilonComparator</a></span>&#8203;(float&nbsp;epsilon)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#oppositeComparator(com.github.tommyettinger.ds.support.sort.FloatComparator)">oppositeComparator</a></span>&#8203;(<a href="FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a>&nbsp;c)</code></th>
 <td class="colLast">
-<div class="block">Builds a new FloatComparator, using ascending order with a tolerance for equality of <code>epsilon</code>.</div>
+<div class="block">Returns a comparator representing the opposite order of the given comparator.</div>
 </td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>static <a href="FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#oppositeComparator(com.github.tommyettinger.ds.support.sort.FloatComparator)">oppositeComparator</a></span>&#8203;(<a href="FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a>&nbsp;c)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tolerantComparator(float)">tolerantComparator</a></span>&#8203;(float&nbsp;tolerance)</code></th>
 <td class="colLast">
-<div class="block">Returns a comparator representing the opposite order of the given comparator.</div>
+<div class="block">Builds a new FloatComparator, using ascending order with a tolerance for equality of <code>tolerance</code>.</div>
 </td>
 </tr>
 </tbody>
@@ -259,9 +259,9 @@ extends java.lang.Object</pre>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="EPSILON_COMPARATOR">EPSILON_COMPARATOR</a></h3>
-<div class="memberSignature"><span class="modifiers">public static final</span>&nbsp;<span class="returnType"><a href="FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a></span>&nbsp;<span class="memberName">EPSILON_COMPARATOR</span></div>
-<div class="block">A FloatComparator using ascending order with a tolerance for equality of 0.0001.</div>
+<h3><a id="TOLERANT_COMPARATOR">TOLERANT_COMPARATOR</a></h3>
+<div class="memberSignature"><span class="modifiers">public static final</span>&nbsp;<span class="returnType"><a href="FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a></span>&nbsp;<span class="memberName">TOLERANT_COMPARATOR</span></div>
+<div class="block">A FloatComparator using ascending order with a tolerance for equality of 0.000001.</div>
 </section>
 </li>
 </ul>
@@ -303,13 +303,13 @@ extends java.lang.Object</pre>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="epsilonComparator(float)">epsilonComparator</a></h3>
-<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType"><a href="FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a></span>&nbsp;<span class="memberName">epsilonComparator</span>&#8203;(<span class="arguments">float&nbsp;epsilon)</span></div>
-<div class="block">Builds a new FloatComparator, using ascending order with a tolerance for equality of <code>epsilon</code>.
+<h3><a id="tolerantComparator(float)">tolerantComparator</a></h3>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType"><a href="FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a></span>&nbsp;<span class="memberName">tolerantComparator</span>&#8203;(<span class="arguments">float&nbsp;tolerance)</span></div>
+<div class="block">Builds a new FloatComparator, using ascending order with a tolerance for equality of <code>tolerance</code>.
  You can call its <a href="FloatComparator.html#reversed()"><code>FloatComparator.reversed()</code></a> method to access a descending-order comparator.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>epsilon</code> - how much tolerance is acceptable when comparing two floats as equal</dd>
+<dd><code>tolerance</code> - how much tolerance is acceptable when comparing two floats as equal</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new FloatComparator</dd>
 </dl>

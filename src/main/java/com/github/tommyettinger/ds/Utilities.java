@@ -41,6 +41,33 @@ public class Utilities {
 	static final Object neverIdentical = new Object();
 
 	/**
+	 * A float that is meant to be used as the smallest reasonable tolerance for methods like {@link #isEqual(float, float, float)}.
+	 */
+	public static final float FLOAT_ROUNDING_ERROR = 0.000001f;
+	/**
+	 * Equivalent to libGDX's isEqual() method in MathUtils; this compares two floats for equality and allows just enough
+	 * tolerance to ignore a rounding error. An example is {@code 0.3f - 0.2f == 0.1f} vs. {@code isEqual(0.3f - 0.2f, 0.1f)};
+	 * the first is incorrectly false, while the second is correctly true.
+	 * @param a the first float to compare
+	 * @param b the second float to compare
+	 * @return true if a and b are equal or extremely close to equal, or false otherwise.
+	 */
+	public static boolean isEqual (float a, float b) {
+		return Math.abs(a - b) <= 0.000001f;
+	}
+	/**
+	 * Equivalent to libGDX's isEqual() method in MathUtils; this compares two floats for equality and allows the given
+	 * tolerance during comparison. An example is {@code 0.3f - 0.2f == 0.1f} vs. {@code isEqual(0.3f - 0.2f, 0.1f, 0.000001f)};
+	 * the first is incorrectly false, while the second is correctly true.
+	 * @param a the first float to compare
+	 * @param b the second float to compare
+	 * @param tolerance the maximum difference between a and b permitted for this to return true, inclusive   
+	 * @return true if a and b have a difference less than or equal to tolerance, or false otherwise.
+	 */
+	public static boolean isEqual (float a, float b, float tolerance) {
+		return Math.abs(a - b) <= tolerance;
+	}
+	/**
 	 * A simple equality comparison for {@link CharSequence} values such as {@link String}s or {@link StringBuilder}s
 	 * that ignores case by upper-casing any cased letters. This works for all alphabets in Unicode except Georgian.
 	 * @param a a non-null CharSequence, such as a String or StringBuilder

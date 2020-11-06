@@ -371,7 +371,7 @@ long&nbsp;after)</code></th>
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(com.github.tommyettinger.ds.support.sort.LongComparator)">sort</a></span>&#8203;(<a href="support/sort/LongComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">LongComparator</a>&nbsp;comp)</code></th>
 <td class="colLast">
-<div class="block">Sorts this LongObjectOrderedMap in-place by the given Comparator used on the keys.</div>
+<div class="block">Sorts this LongObjectOrderedMap in-place by the given LongComparator used on the keys.</div>
 </td>
 </tr>
 <tr class="altColor" id="i16">
@@ -647,11 +647,11 @@ long&nbsp;after)</span></div>
 <h3><a id="sort(com.github.tommyettinger.ds.support.sort.LongComparator)">sort</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">sort</span>&#8203;(<span class="arguments">@Nullable
 <a href="support/sort/LongComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">LongComparator</a>&nbsp;comp)</span></div>
-<div class="block">Sorts this LongObjectOrderedMap in-place by the given Comparator used on the keys. If <code>comp</code> is null, then this
+<div class="block">Sorts this LongObjectOrderedMap in-place by the given LongComparator used on the keys. If <code>comp</code> is null, then this
  will sort by the natural ordering of the keys.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>comp</code> - a Comparator that can compare two <code>K</code> keys, or null to use the keys' natural ordering</dd>
+<dd><code>comp</code> - a LongComparator, such as one from <a href="support/sort/LongComparators.html" title="class in com.github.tommyettinger.ds.support.sort"><code>LongComparators</code></a>, or null to use the keys' natural ordering</dd>
 </dl>
 </section>
 </li>

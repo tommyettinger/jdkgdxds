@@ -626,9 +626,9 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	}
 
 	/**
-	 * Returns false if either array is unordered.
+	 * Returns false if either array is unordered. Otherwise, compares float items with the given tolerance for error.
 	 */
-	public boolean equals (Object object, float epsilon) {
+	public boolean equals (Object object, float tolerance) {
 		if (object == this) { return true; }
 		if (!(object instanceof FloatList)) { return false; }
 		FloatList array = (FloatList)object;
@@ -637,7 +637,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 		if (!ordered) { return false; }
 		if (!array.ordered) { return false; }
 		float[] items1 = this.items, items2 = array.items;
-		for (int i = 0; i < n; i++) { if (Math.abs(items1[i] - items2[i]) > epsilon) { return false; } }
+		for (int i = 0; i < n; i++) { if (Math.abs(items1[i] - items2[i]) > tolerance) { return false; } }
 		return true;
 	}
 

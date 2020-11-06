@@ -394,37 +394,76 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 		Arrays.fill(keyTable, 0);
 	}
 
-	/**
-	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
-	 * be an expensive operation.
-	 */
-	public boolean containsValue (float value) {
-		if (hasZeroValue && zeroValue == value) { return true; }
-		float[] valueTable = this.valueTable;
-		long[] keyTable = this.keyTable;
-		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && valueTable[i] == value) { return true; }
-		}
-		return false;
-	}
-
 	public boolean containsKey (long key) {
 		if (key == 0) { return hasZeroValue; }
 		return locateKey(key) >= 0;
 	}
 
 	/**
-	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
-	 * every value, which may be an expensive operation.
+	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
+	 * be an expensive operation.
+	 * @param value the float value to check for; will be compared with {@link Utilities#isEqual(float, float)}
+	 * @return true if this map contains the given value, false otherwise   
 	 */
-	public long findKey (float value, long defaultKey) {
-		if (hasZeroValue && zeroValue == value) { return 0; }
+	public boolean containsValue (float value) {
+		if (hasZeroValue && Utilities.isEqual(zeroValue, value)) { return true; }
 		float[] valueTable = this.valueTable;
 		long[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && valueTable[i] == value) { return keyTable[i]; }
+			if (keyTable[i] != 0 && Utilities.isEqual(valueTable[i], value)) { return true; }
 		}
+		return false;
+	}
 
+	/**
+	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
+	 * be an expensive operation.
+	 * @param value the float value to check for; will be compared with {@link Utilities#isEqual(float, float, float)}
+	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal    
+	 * @return true if this map contains the given value, false otherwise   
+	 */
+	public boolean containsValue (float value, float tolerance) {
+		if (hasZeroValue && Utilities.isEqual(zeroValue, value, tolerance)) { return true; }
+		float[] valueTable = this.valueTable;
+		long[] keyTable = this.keyTable;
+		for (int i = valueTable.length - 1; i >= 0; i--) {
+			if (keyTable[i] != 0 && Utilities.isEqual(valueTable[i], value, tolerance)) { return true; }
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the key for the specified value, or defaultKey if it is not in the map. Note this traverses the entire map and compares
+	 * every value, which may be an expensive operation. Uses {@link Utilities#isEqual(float, float)} to compare values.
+	 * @param value the value to look for
+	 * @param defaultKey if the given value is not found, this will be returned   
+	 * @return the key associated with the given value, if it was found, or defaultKey otherwise   
+	 */
+	public long findKey (float value, long defaultKey) {
+		if (hasZeroValue && Utilities.isEqual(zeroValue, value)) { return 0; }
+		float[] valueTable = this.valueTable;
+		long[] keyTable = this.keyTable;
+		for (int i = valueTable.length - 1; i >= 0; i--) {
+			if (keyTable[i] != 0 && Utilities.isEqual(valueTable[i], value)) { return keyTable[i]; }
+		}
+		return defaultKey;
+	}
+
+	/**
+	 * Returns the key for the specified value, or defaultKey if it is not in the map. Note this traverses the entire map and compares
+	 * every value, which may be an expensive operation. Uses {@link Utilities#isEqual(float, float, float)} to compare values.
+	 * @param value the value to look for
+	 * @param defaultKey if the given value is not found, this will be returned
+	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal    
+	 * @return the key associated with the given value, if it was found, or defaultKey otherwise   
+	 */
+	public long findKey (float value, long defaultKey, float tolerance) {
+		if (hasZeroValue && Utilities.isEqual(zeroValue, value, tolerance)) { return 0; }
+		float[] valueTable = this.valueTable;
+		long[] keyTable = this.keyTable;
+		for (int i = valueTable.length - 1; i >= 0; i--) {
+			if (keyTable[i] != 0 && Utilities.isEqual(valueTable[i], value, tolerance)) { return keyTable[i]; }
+		}
 		return defaultKey;
 	}
 

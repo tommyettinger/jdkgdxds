@@ -117,23 +117,23 @@ public final class FloatComparators {
 		};
 	}
 	
-	protected static class EpsilonComparator implements FloatComparator, java.io.Serializable {
+	protected static class TolerantComparator implements FloatComparator, java.io.Serializable {
 		private static final long serialVersionUID = 1L;
-		public final float epsilon;
+		public final float tolerance;
 		protected final FloatComparator reverse;
 		
-		public EpsilonComparator() {
-			this(0.0001f);
+		public TolerantComparator () {
+			this(0.000001f);
 		}
 		
-		public EpsilonComparator(float epsilon) {
-			this.epsilon = epsilon;
+		public TolerantComparator (float tolerance) {
+			this.tolerance = tolerance;
 			reverse = oppositeComparator(this);
 		}
 		@Override
 		public int compare (float k1, float k2) {
 			final float diff = k1 - k2;
-			if(diff <= epsilon && diff >= -epsilon)
+			if(diff <= tolerance && diff >= -tolerance)
 				return 0;
 			// not-NaN checks
 			final boolean n1 = k1 == k1, n2 = k2 == k2;
@@ -149,17 +149,17 @@ public final class FloatComparators {
 	}
 
 	/**
-	 * A FloatComparator using ascending order with a tolerance for equality of 0.0001.
+	 * A FloatComparator using ascending order with a tolerance for equality of 0.000001.
 	 */
-	public static final FloatComparator EPSILON_COMPARATOR = new EpsilonComparator();
+	public static final FloatComparator TOLERANT_COMPARATOR = new TolerantComparator();
 
 	/**
-	 * Builds a new FloatComparator, using ascending order with a tolerance for equality of {@code epsilon}.
+	 * Builds a new FloatComparator, using ascending order with a tolerance for equality of {@code tolerance}.
 	 * You can call its {@link FloatComparator#reversed()} method to access a descending-order comparator.
-	 * @param epsilon how much tolerance is acceptable when comparing two floats as equal
+	 * @param tolerance how much tolerance is acceptable when comparing two floats as equal
 	 * @return the new FloatComparator
 	 */
-	public static FloatComparator epsilonComparator(float epsilon) {
-		return new EpsilonComparator(epsilon);
+	public static FloatComparator tolerantComparator (float tolerance) {
+		return new TolerantComparator(tolerance);
 	}
 }
