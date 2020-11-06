@@ -29,7 +29,7 @@ import java.util.PrimitiveIterator;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * A {@link LongLongMap} that also stores keys in an {@link LongList} using the insertion order. No
+ * A {@link LongLongMap} that also stores keys in a {@link LongList} using the insertion order. No
  * allocation is done except when growing the table size.
  * <p>
  * Iteration over the {@link #entrySet()} ()}, {@link #keySet()} ()}, and {@link #values()} is ordered and faster than an unordered map. Keys
