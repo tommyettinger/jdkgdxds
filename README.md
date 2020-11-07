@@ -1,2 +1,60 @@
 # jdkgdxds
 Making libGDX's data structures implement JDK interfaces
+
+## What is this?
+
+Some background, first... libGDX has its own data structures, and they're mostly nice to work with. They have fast iteration by
+reusing iterators, they are designed to use low memory (both in the way the hashed maps and sets are designed and by allowing
+primitive data types for many data structures), and they have some nice features that aren't present in all standard libraries,
+like optional insertion-ordering. The problem with libGDX's data structures is that they are extremely limited in what interfaces
+they implement, typically implementing no more than `java.io.Serializable` and `java.lang.Iterable`. They also are limited to Java
+6 or 7 features, despite Java 8 features being available on Android and GWT for some time now, and even reaching iOS soon, if not
+already. So what is this? It is a redo of libGDX's data structures so that they implement common JDK interfaces like
+`java.util.Map`, `java.util.List`, and `java.util.Set`, plus their parts that can't implement generic interfaces use JDK 8's
+`java.util.PrimitiveIterator` in some way. It also sharply increases the number of primitive-backed maps; they don't implement
+`java.util.Map`, but often implement other interfaces here. As an example, `com.github.tommyettinger.ds.IntLongOrderedMap`
+implements `com.github.tommyettinger.ds.Ordered.OfInt`, which specifies that the order of items (keys here) is represented by a
+`com.github.tommyettinger.ds.IntList` containing those keys.
+
+## OK, how do I use it?
+
+You use jdkgdxds much like the standard JDK collections, just extended for primitive types. The Object-based classes are generic,
+centered around `com.github.tommyettinger.ds.ObjectList`, `com.github.tommyettinger.ds.ObjectSet`, and
+`com.github.tommyettinger.ds.ObjectObjectMap`; `ObjectOrderedSet` and `ObjectObjectOrderedMap` are also here and extend the other
+Set and Map. These are effectively replacements for `com.badlogic.gdx.utils.Array`, `com.badlogic.gdx.utils.ObjectSet`,
+`com.badlogic.gdx.utils.ObjectMap`, `com.badlogic.gdx.utils.OrderedSet`, and `com.badlogic.gdx.utils.OrderedMap`. As nice as it
+would be to just call these by the same names (except Array, that one's just confusing), we have other kinds of Object-keyed Maps,
+and other kinds of insertion-ordered Maps, so `ObjectMap` is now `ObjectObjectMap` because it has Object keys and Object values,
+while `OrderedMap` is now `ObjectObjectOrderedMap`, because of the same reason. Primitive-backed collections are limited to `int`
+and `long` keys, and `int`, `long`, or `float` values; this may be extended in the future. So, there's `IntSet` and `LongSet`,
+with ordered variants `IntOrderedSet` and `LongOrderedSet`, while their map counterparts are more numerous.
+
+There's `IntFloatMap`, `IntFloatOrderedMap`, `IntIntMap`, `IntIntOrderedMap`, `IntLongMap`, `IntLongOrderedMap`,
+`IntObjectMap`, `IntObjectOrderedMap`, `LongFloatMap`, `LongFloatOrderedMap`, `LongIntMap`, `LongIntOrderedMap`,
+`LongLongMap`, `LongLongOrderedMap`, `LongObjectMap`, and `LongObjectOrderedMap`, so I hope that's enough. Then again, there's
+still `ObjectFloatMap`, `ObjectFloatOrderedMap`, `ObjectIntMap`, `ObjectIntOrderedMap`, `ObjectLongMap`, and
+`ObjectLongOrderedMap` for the primitive-valued maps with Object keys. There's a lonely `CaseInsensitiveMap` that requires
+`CharSequence` keys (such as String or StringBuilder), but treats them as case-insensitive, and allows a generic Object type for
+its values.
+
+The library includes expanded interfaces for these to implement, like the aforementioned `Ordered` interface,
+`PrimitiveCollection` to complement Java 8's `PrimitiveIterator`, some `float`-based versions of primitive specializations where
+the JDK only offers `int`, `long`, and `double`, and primitive `Comparator`s (which are Java 8 `FunctionalInterface`s). Lastly,
+because there are some randomized methods here and `java.util.SplittableRandom` isn't available everywhere, an alternative
+high-quality and very-fast random number generator is here, `com.github.tommyettinger.ds.support.LaserRandom`, which extends
+`java.util.Random` for maximum compatibility.
+
+## How do I get it?
+
+JitPack for now, Maven Central soon. [JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/da3a8b13bd).
+To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
+`buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
+`implementation 'com.github.tommyettinger:jdkgdxds:da3a8b13bd'` or `api 'com.github.tommyettinger:jdkgdxds:da3a8b13bd'`, depending
+on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
+project). If you have an HTML module, add `implementation 'com.github.tommyettinger:jdkgdxds:da3a8b13bd:sources'` to its
+dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
+```xml
+<inherits name="jdkgdxds" />
+```
+in with the other `inherits` lines. `da3a8b13bd` is a temporary commit version until a finished release is published, and can be
+replaced with other commits shown on JitPack.
