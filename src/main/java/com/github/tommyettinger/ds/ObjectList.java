@@ -24,16 +24,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
-import java.util.function.IntFunction;
 
 /**
  * A resizable, ordered list of {@code T} items, typically objects (they can also be arrays).
  * This is a thin wrapper around {@link ArrayList} to implement {@link Ordered} and do some of
  * what libGDX's Array class does. Because this is a generic class and arrays do not interact
  * well with generics, ObjectList does not permit access to a {@code T[]} of items like Array
- * does; you can use {@link #toArray(Object[])} or {@link #toArray(IntFunction)} to make a new
- * array of T from the contents of an ArrayList. The second of these toArray methods is newer;
- * You can use it with code like 
+ * does; you can use {@link #toArray(Object[])} or (if you can use Java 11)
+ * {@code toArray(IntFunction)} to make a new array of T from the contents of an ArrayList.
+ * The second of these toArray methods is newer; You can use it with code like 
  * {@code ObjectList<String> myList = new ObjectList<>(); String[] s = myList.toArray(String::new);}.
  *
  * @author Tommy Ettinger
