@@ -2,6 +2,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.LaserRandom;
 
+import java.util.Collection;
 import java.util.Random;
 
 /**
@@ -26,5 +27,15 @@ public interface Arrangeable {
 	 */
 	void shuffle (Random random);
 
+	/**
+	 * Reverses this Arrangeable in-place.
+	 */
 	void reverse ();
+
+	/**
+	 * Returns the number of elements in this Arrangeable. 
+	 * Often this is shared with {@link Collection#size()}, but isn't always.
+	 * @return the number of elements in this Arrangeable 
+	 */
+	int size();
 }
