@@ -1,5 +1,7 @@
 package com.github.tommyettinger.ds.support;
 
+import com.github.tommyettinger.ds.Ordered;
+
 import java.io.Serializable;
 import java.util.Random;
 
@@ -434,6 +436,14 @@ public class LaserRandom extends Random implements Serializable {
 		return ((z ^ z >>> 6) >>> 40) * 0x1p-24f;
 	}
 
+	public float nextFloat(float outerBound) {
+		return nextFloat() * outerBound;
+	}
+
+	public float nextFloat(float innerBound, float outerBound) {
+		return innerBound + nextFloat() * (outerBound - innerBound);
+	}
+
 	/**
 	 * Returns the next pseudorandom, uniformly distributed
 	 * {@code double} value between {@code 0.0} (inclusive) and {@code 1.0}
@@ -459,6 +469,14 @@ public class LaserRandom extends Random implements Serializable {
 		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
 		return (z >>> 11 ^ z >>> 37 ^ z >>> 17) * 0x1.0p-53;
+	}
+
+	public double nextDouble(double outerBound) {
+		return nextDouble() * outerBound;
+	}
+
+	public double nextDouble(double innerBound, double outerBound) {
+		return innerBound + nextDouble() * (outerBound - innerBound);
 	}
 
 	/**
@@ -653,4 +671,7 @@ public class LaserRandom extends Random implements Serializable {
 		return max - (float)Math.sqrt((1 - u) * d * (max - mode));
 	}
 
+	public <T> T randomElement(T[] array) {
+		return array[nextInt(array.length)];
+	}
 }
