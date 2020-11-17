@@ -729,8 +729,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 			Entry<?, ?> entry = (Entry<?, ?>)o;
 
-			if (key != null ? !key.equals(entry.key) : entry.key != null) { return false; }
-			return value != null ? value.equals(entry.value) : entry.value == null;
+			if (!Objects.equals(key, entry.key)) { return false; }
+			return Objects.equals(value, entry.value);
 		}
 
 		@Override

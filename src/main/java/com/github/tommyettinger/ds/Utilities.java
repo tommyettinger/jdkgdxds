@@ -53,7 +53,7 @@ public class Utilities {
 	 * @return true if a and b are equal or extremely close to equal, or false otherwise.
 	 */
 	public static boolean isEqual (float a, float b) {
-		return Math.abs(a - b) <= 0.000001f;
+		return Math.abs(a - b) <= FLOAT_ROUNDING_ERROR;
 	}
 	/**
 	 * Equivalent to libGDX's isEqual() method in MathUtils; this compares two floats for equality and allows the given

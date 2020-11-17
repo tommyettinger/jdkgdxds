@@ -2,37 +2,40 @@ package com.github.tommyettinger.ds;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Objects;
 
 /**
- * A custom variant on ObjectObjectMap that always uses CharSequence keys and compares them as case-insensitive.
+ * A custom variant on ObjectObjectOrderedMap that always uses CharSequence keys and compares them as case-insensitive.
  * This uses a fairly complex, quite-optimized hashing function because it needs to hash CharSequences rather
  * often, and to do so ignoring case means {@link String#hashCode()} won't work, plus not all CharSequences
  * implement hashCode() themselves (such as {@link StringBuilder}). User code similar to this can often get away
  * with a simple polynomial hash (the typical Java kind, used by String and Arrays), or if more speed is needed,
  * one with <a href="https://richardstartin.github.io/posts/collecting-rocks-and-benchmarks">some of these
- * optimizations by Richard Startin</a>.
+ * optimizations by Richard Startin</a>. This is very similar to {@link CaseInsensitiveMap}, except that this class
+ * maintains insertion order and can be sorted with {@link #sort()}, {@link #sortByValue(Comparator)}, etc.
  */
-public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> implements Serializable {
+public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSequence, V> implements Serializable {
 	private static final long serialVersionUID = 0L;
 
-	public CaseInsensitiveMap () {
+	public CaseInsensitiveOrderedMap() {
 		super();
 	}
 
-	public CaseInsensitiveMap (int initialCapacity) {
+	public CaseInsensitiveOrderedMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
-	public CaseInsensitiveMap (int initialCapacity, float loadFactor) {
+	public CaseInsensitiveOrderedMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
-	public CaseInsensitiveMap (ObjectObjectMap<? extends CharSequence, ? extends V> map) {
+	public CaseInsensitiveOrderedMap(ObjectObjectOrderedMap<? extends CharSequence, ? extends V> map) {
 		super(map);
 	}
 
-	public CaseInsensitiveMap (Map<? extends CharSequence, ? extends V> map) {
+	public CaseInsensitiveOrderedMap(Map<? extends CharSequence, ? extends V> map) {
 		super(map);
 	}
 
@@ -93,8 +96,8 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 
 	public ObjectObjectMap.Keys<CharSequence, V> keySet () {
 		if (keys1 == null || keys2 == null) {
-			keys1 = new Keys<>(this);
-			keys2 = new Keys<>(this);
+			keys1 = new CaseInsensitiveMap.Keys<>(this);
+			keys2 = new CaseInsensitiveMap.Keys<>(this);
 		}
 		if (!keys1.iter.valid) {
 			keys1.iter.reset();
@@ -115,7 +118,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 			if (this == o) { return true; }
 			if (o == null || getClass() != o.getClass()) { return false; }
 
-			Entry<?> entry = (Entry<?>)o;
+			ObjectObjectMap.Entry<CharSequence, ?> entry = (ObjectObjectMap.Entry<CharSequence, ?>)o;
 
 			if (key != null ? (entry.key == null || !Utilities.equalsIgnoreCase(key, entry.key)) : entry.key != null) { return false; }
 			return Objects.equals(value, entry.value);
@@ -129,29 +132,9 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 			return result;
 		}
 	}
-	public static class Keys<V> extends ObjectObjectMap.Keys<CharSequence, V> {
-		public Keys (ObjectObjectMap<CharSequence, V> map) {
+	public static class Keys<V> extends OrderedMapKeys<CharSequence, V> {
+		public Keys (ObjectObjectOrderedMap<CharSequence, V> map) {
 			super(map);
-		}
-
-		@Override
-		public boolean contains (Object o) {
-			return iter.map.containsKey(o);
-		}
-
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
-		@Override
-		public Iterator<CharSequence> iterator () {
-			return iter;
-		}
-
-		@Override
-		public int size () {
-			return iter.map.size;
 		}
 
 		@Override
