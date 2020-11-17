@@ -125,7 +125,6 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	}
 
 	public float removeAtIndex (int index) {
-		if(!super.containsKey(index)) return defaultValue;
 		return super.remove(keys.remove(index));
 	}
 

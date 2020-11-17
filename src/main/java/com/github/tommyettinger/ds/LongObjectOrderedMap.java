@@ -141,7 +141,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 
 	@Nullable
 	public V removeAtIndex (int index) {
-		if(!super.containsKey(index)) return defaultValue;
 		return super.remove(keys.removeAtIndex(index));
 	}
 

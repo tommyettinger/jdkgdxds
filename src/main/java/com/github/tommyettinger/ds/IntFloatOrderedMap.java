@@ -140,7 +140,6 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt, Se
 	}
 	
 	public float removeAtIndex (int index) {
-		if(!super.containsKey(index)) return defaultValue;
 		return super.remove(keys.removeAtIndex(index));
 	}
 

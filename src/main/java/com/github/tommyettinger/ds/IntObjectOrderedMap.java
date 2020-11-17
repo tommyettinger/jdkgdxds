@@ -140,7 +140,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 
 	@Nullable
 	public V removeAtIndex (int index) {
-		if(!super.containsKey(index)) return defaultValue;
 		return super.remove(keys.removeAtIndex(index));
 	}
 

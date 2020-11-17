@@ -123,7 +123,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 
 	@Nullable
 	public V removeAtIndex (int index) {
-		if(!super.containsKey(index)) return null;
 		return super.remove(keys.remove(index));
 	}
 

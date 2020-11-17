@@ -139,7 +139,6 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong, Ser
 	}
 	
 	public int removeAtIndex (int index) {
-		if(!super.containsKey(index)) return defaultValue;
 		return super.remove(keys.removeAtIndex(index));
 	}
 

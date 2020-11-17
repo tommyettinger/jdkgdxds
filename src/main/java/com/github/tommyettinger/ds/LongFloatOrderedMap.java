@@ -140,7 +140,6 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 	}
 	
 	public float removeAtIndex (int index) {
-		if(!super.containsKey(index)) return defaultValue;
 		return super.remove(keys.removeAtIndex(index));
 	}
 

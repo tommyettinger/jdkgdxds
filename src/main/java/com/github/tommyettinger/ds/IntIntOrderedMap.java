@@ -137,7 +137,6 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt, Serial
 	}
 	
 	public int removeAtIndex (int index) {
-		if(!super.containsKey(index)) return defaultValue;
 		return super.remove(keys.removeAtIndex(index));
 	}
 

@@ -125,7 +125,6 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	}
 
 	public long removeAtIndex (int index) {
-		if(!super.containsKey(index)) return defaultValue;
 		return super.remove(keys.remove(index));
 	}
 
