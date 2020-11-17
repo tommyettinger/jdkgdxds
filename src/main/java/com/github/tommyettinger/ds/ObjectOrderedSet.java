@@ -113,7 +113,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 		return super.remove(key) && items.remove(key);
 	}
 
-	public T removeIndex (int index) {
+	public T removeAtIndex (int index) {
 		T key = items.remove(index);
 		super.remove(key);
 		return key;
@@ -165,6 +165,16 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 		super.add(after);
 		items.set(index, after);
 		return true;
+	}
+
+	/**
+	 * Gets the T item at the given {@code index} in the insertion order. The index should be between 0 (inclusive) and
+	 * {@link #size()} (exclusive).
+	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
+	 * @return the item at the given index
+	 */
+	public T getAtIndex(int index) {
+		return items.get(index);
 	}
 
 	@Override

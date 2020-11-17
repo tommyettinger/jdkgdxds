@@ -93,7 +93,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable
 	public boolean add (int key, int index) {
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
-			if (oldIndex != index) { items.add(index, items.removeIndex(oldIndex)); }
+			if (oldIndex != index) { items.add(index, items.removeAtIndex(oldIndex)); }
 			return false;
 		}
 		items.add(index, key);
@@ -111,8 +111,8 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable
 		return super.remove(key) && items.remove(key);
 	}
 
-	public int removeIndex (int index) {
-		int key = items.removeIndex(index);
+	public int removeAtIndex (int index) {
+		int key = items.removeAtIndex(index);
 		super.remove(key);
 		return key;
 	}
@@ -163,6 +163,15 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable
 		super.add(after);
 		items.set(index, after);
 		return true;
+	}
+	/**
+	 * Gets the int item at the given {@code index} in the insertion order. The index should be between 0
+	 * (inclusive) and {@link #size()} (exclusive).
+	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
+	 * @return the item at the given index
+	 */
+	public int getAtIndex(int index) {
+		return items.get(index);
 	}
 
 	@Override

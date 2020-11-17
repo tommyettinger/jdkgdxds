@@ -376,7 +376,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		long[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
 			if (items[i] == value) {
-				removeIndex(i);
+				removeAtIndex(i);
 				return true;
 			}
 		}
@@ -391,7 +391,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	 * @param index the index of the item to remove and return
 	 * @return the removed item
 	 */
-	public long removeIndex (int index) {
+	public long removeAtIndex (int index) {
 		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
 		long[] items = this.items;
 		long value = items[index];
@@ -431,7 +431,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 			long item = array.get(i);
 			for (int ii = 0; ii < size; ii++) {
 				if (item == items[ii]) {
-					removeIndex(ii);
+					removeAtIndex(ii);
 					size--;
 					break;
 				}

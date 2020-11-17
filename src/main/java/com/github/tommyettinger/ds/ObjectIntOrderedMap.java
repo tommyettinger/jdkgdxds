@@ -124,8 +124,8 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 		return super.remove(key);
 	}
 
-	@Nullable
-	public int removeIndex (int index) {
+	public int removeAtIndex (int index) {
+		if(!super.containsKey(index)) return defaultValue;
 		return super.remove(keys.remove(index));
 	}
 
@@ -187,13 +187,32 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param index the index in the iteration order to set {@code v} at
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
-	@Nullable
 	public int setIndex (int index, int v) {
 		if (index < 0 || index >= size) { return defaultValue; }
 		final int pos = locateKey(keys.get(index));
 		final int oldValue = valueTable[pos];
 		valueTable[pos] = v;
 		return oldValue;
+	}
+
+	/**
+	 * Gets the int value at the given {@code index} in the insertion order. The index should be between 0
+	 * (inclusive) and {@link #size()} (exclusive).
+	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
+	 * @return the value at the given index
+	 */
+	public int getAtIndex(int index) {
+		return get(keys.get(index));
+	}
+
+	/**
+	 * Gets the K key at the given {@code index} in the insertion order. The index should be between 0
+	 * (inclusive) and {@link #size()} (exclusive).
+	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
+	 * @return the key at the given index
+	 */
+	public K keyAtIndex(int index) {
+		return keys.get(index);
 	}
 
 	@Override

@@ -378,7 +378,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 		float[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
 			if (items[i] == value) {
-				removeIndex(i);
+				removeAtIndex(i);
 				return true;
 			}
 		}
@@ -393,7 +393,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	 * @param index the index of the item to remove and return
 	 * @return the removed item
 	 */
-	public float removeIndex (int index) {
+	public float removeAtIndex (int index) {
 		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
 		float[] items = this.items;
 		float value = items[index];
@@ -433,7 +433,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 			float item = array.get(i);
 			for (int ii = 0; ii < size; ii++) {
 				if (item == items[ii]) {
-					removeIndex(ii);
+					removeAtIndex(ii);
 					size--;
 					break;
 				}

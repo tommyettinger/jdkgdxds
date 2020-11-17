@@ -122,7 +122,8 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	}
 
 	@Nullable
-	public V removeIndex (int index) {
+	public V removeAtIndex (int index) {
+		if(!super.containsKey(index)) return null;
 		return super.remove(keys.remove(index));
 	}
 
@@ -191,6 +192,27 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		final V oldValue = valueTable[pos];
 		valueTable[pos] = v;
 		return oldValue;
+	}
+
+	/**
+	 * Gets the V value at the given {@code index} in the insertion order. The index should be between 0
+	 * (inclusive) and {@link #size()} (exclusive).
+	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
+	 * @return the value at the given index
+	 */
+	@Nullable
+	public V getAtIndex(int index) {
+		return get(keys.get(index));
+	}
+
+	/**
+	 * Gets the K key at the given {@code index} in the insertion order. The index should be between 0
+	 * (inclusive) and {@link #size()} (exclusive).
+	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
+	 * @return the key at the given index
+	 */
+	public K keyAtIndex(int index) {
+		return keys.get(index);
 	}
 
 	@Override

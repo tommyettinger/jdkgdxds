@@ -136,8 +136,9 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt, Serial
 		return super.remove(key);
 	}
 	
-	public int removeIndex (int index) {
-		return super.remove(keys.removeIndex(index));
+	public int removeAtIndex (int index) {
+		if(!super.containsKey(index)) return defaultValue;
+		return super.remove(keys.removeAtIndex(index));
 	}
 
 	/**
@@ -204,6 +205,26 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt, Serial
 		final int oldValue = valueTable[pos];
 		valueTable[pos] = v;
 		return oldValue;
+	}
+
+	/**
+	 * Gets the int value at the given {@code index} in the insertion order. The index should be between 0
+	 * (inclusive) and {@link #size()} (exclusive).
+	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
+	 * @return the value at the given index
+	 */
+	public int getAtIndex(int index) {
+		return get(keys.get(index));
+	}
+
+	/**
+	 * Gets the int key at the given {@code index} in the insertion order. The index should be between 0
+	 * (inclusive) and {@link #size()} (exclusive).
+	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
+	 * @return the key at the given index
+	 */
+	public int keyAtIndex(int index) {
+		return keys.get(index);
 	}
 
 	@Override
