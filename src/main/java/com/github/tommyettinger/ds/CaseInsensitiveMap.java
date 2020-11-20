@@ -40,19 +40,20 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 	protected int place (Object item) {
 		return super.place(item);
 	}
-	
+
 	/**
 	 * Gets a case-insensitive hash code for the String or other CharSequence {@code item} and shifts it so it is between 0 and
 	 * {@link #mask} inclusive. This gets the hash as if all cased letters have been converted to upper case by
 	 * {@link Character#toUpperCase(char)}; this should be correct for all alphabets in Unicode except Georgian.
+	 *
+	 * @param item any non-null CharSequence, such as a String or StringBuilder; will be treated as if it is all upper-case
+	 * @return a position in the key table where {@code item} would be placed; between 0 and {@link #mask} inclusive
 	 * @implNote Uses Water hash, which passes SMHasher's test battery and is very fast in Java. Water uses 64-bit math,
 	 * which behaves reliably but somewhat slowly on GWT, but uses it on usually-small char values. This can't use the
 	 * built-in pre-calculated hashCode of a String because it's case-sensitive. You can use the same hashing function as this
 	 * with {@link Utilities#longHashCodeIgnoreCase(CharSequence)}.
-	 * @param item any non-null CharSequence, such as a String or StringBuilder; will be treated as if it is all upper-case
-	 * @return a position in the key table where {@code item} would be placed; between 0 and {@link #mask} inclusive
 	 */
-	protected int place(CharSequence item) {
+	protected int place (CharSequence item) {
 		return (int)Utilities.longHashCodeIgnoreCase(item) & mask;
 	}
 
@@ -76,7 +77,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 	@Override
 	protected int locateKey (Object key) {
 		Object[] keyTable = this.keyTable;
-		if(!(key instanceof CharSequence))
+		if (!(key instanceof CharSequence))
 			return super.locateKey(key);
 		CharSequence sk = (CharSequence)key;
 		for (int i = place(sk); ; i = i + 1 & mask) {
@@ -84,8 +85,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 			if (other == null) {
 				return ~i;
 			}
-			if (other instanceof CharSequence && Utilities.equalsIgnoreCase(sk, (CharSequence)other))
-			{
+			if (other instanceof CharSequence && Utilities.equalsIgnoreCase(sk, (CharSequence)other)) {
 				return i;
 			}
 		}
@@ -108,7 +108,6 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 		return keys2;
 	}
 
-
 	public static class Entry<V> extends ObjectObjectMap.Entry<CharSequence, V> {
 		@Override
 		public boolean equals (@Nullable Object o) {
@@ -129,6 +128,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 			return result;
 		}
 	}
+
 	public static class Keys<V> extends ObjectObjectMap.Keys<CharSequence, V> {
 		public Keys (ObjectObjectMap<CharSequence, V> map) {
 			super(map);

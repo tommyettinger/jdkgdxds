@@ -72,12 +72,18 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable protected Entries entries1;
-	@Nullable protected Entries entries2;
-	@Nullable protected Values values1;
-	@Nullable protected Values values2;
-	@Nullable protected Keys keys1;
-	@Nullable protected Keys keys2;
+	@Nullable
+	protected Entries entries1;
+	@Nullable
+	protected Entries entries2;
+	@Nullable
+	protected Values values1;
+	@Nullable
+	protected Values values2;
+	@Nullable
+	protected Keys keys1;
+	@Nullable
+	protected Keys keys2;
 
 	public float defaultValue = 0;
 
@@ -402,8 +408,9 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 	/**
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
+	 *
 	 * @param value the float value to check for; will be compared with {@link Utilities#isEqual(float, float)}
-	 * @return true if this map contains the given value, false otherwise   
+	 * @return true if this map contains the given value, false otherwise
 	 */
 	public boolean containsValue (float value) {
 		if (hasZeroValue && Utilities.isEqual(zeroValue, value)) { return true; }
@@ -418,9 +425,10 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 	/**
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
-	 * @param value the float value to check for; will be compared with {@link Utilities#isEqual(float, float, float)}
-	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal    
-	 * @return true if this map contains the given value, false otherwise   
+	 *
+	 * @param value     the float value to check for; will be compared with {@link Utilities#isEqual(float, float, float)}
+	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal
+	 * @return true if this map contains the given value, false otherwise
 	 */
 	public boolean containsValue (float value, float tolerance) {
 		if (hasZeroValue && Utilities.isEqual(zeroValue, value, tolerance)) { return true; }
@@ -435,9 +443,10 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 	/**
 	 * Returns the key for the specified value, or defaultKey if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation. Uses {@link Utilities#isEqual(float, float)} to compare values.
-	 * @param value the value to look for
-	 * @param defaultKey if the given value is not found, this will be returned   
-	 * @return the key associated with the given value, if it was found, or defaultKey otherwise   
+	 *
+	 * @param value      the value to look for
+	 * @param defaultKey if the given value is not found, this will be returned
+	 * @return the key associated with the given value, if it was found, or defaultKey otherwise
 	 */
 	public long findKey (float value, long defaultKey) {
 		if (hasZeroValue && Utilities.isEqual(zeroValue, value)) { return 0; }
@@ -452,10 +461,11 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 	/**
 	 * Returns the key for the specified value, or defaultKey if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation. Uses {@link Utilities#isEqual(float, float, float)} to compare values.
-	 * @param value the value to look for
+	 *
+	 * @param value      the value to look for
 	 * @param defaultKey if the given value is not found, this will be returned
-	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal    
-	 * @return the key associated with the given value, if it was found, or defaultKey otherwise   
+	 * @param tolerance  how much the given value is permitted to differ from a value in this while being considered equal
+	 * @return the key associated with the given value, if it was found, or defaultKey otherwise
 	 */
 	public long findKey (float value, long defaultKey, float tolerance) {
 		if (hasZeroValue && Utilities.isEqual(zeroValue, value, tolerance)) { return 0; }

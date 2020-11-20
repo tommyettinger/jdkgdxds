@@ -436,11 +436,11 @@ public class LaserRandom extends Random implements Serializable {
 		return ((z ^ z >>> 6) >>> 40) * 0x1p-24f;
 	}
 
-	public float nextFloat(float outerBound) {
+	public float nextFloat (float outerBound) {
 		return nextFloat() * outerBound;
 	}
 
-	public float nextFloat(float innerBound, float outerBound) {
+	public float nextFloat (float innerBound, float outerBound) {
 		return innerBound + nextFloat() * (outerBound - innerBound);
 	}
 
@@ -471,11 +471,11 @@ public class LaserRandom extends Random implements Serializable {
 		return (z >>> 11 ^ z >>> 37 ^ z >>> 17) * 0x1.0p-53;
 	}
 
-	public double nextDouble(double outerBound) {
+	public double nextDouble (double outerBound) {
 		return nextDouble() * outerBound;
 	}
 
-	public double nextDouble(double innerBound, double outerBound) {
+	public double nextDouble (double innerBound, double outerBound) {
 		return innerBound + nextDouble() * (outerBound - innerBound);
 	}
 
@@ -671,15 +671,16 @@ public class LaserRandom extends Random implements Serializable {
 		return max - (float)Math.sqrt((1 - u) * d * (max - mode));
 	}
 
-	public <T> T randomElement(T[] array) {
+	public <T> T randomElement (T[] array) {
 		return array[nextInt(array.length)];
 	}
 
 	/**
 	 * Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param items an int array; must be non-null
 	 */
-	public void shuffle(int[] items) {
+	public void shuffle (int[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			int temp = items[i];
@@ -690,9 +691,10 @@ public class LaserRandom extends Random implements Serializable {
 
 	/**
 	 * Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param items a long array; must be non-null
 	 */
-	public void shuffle(long[] items) {
+	public void shuffle (long[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			long temp = items[i];
@@ -703,9 +705,10 @@ public class LaserRandom extends Random implements Serializable {
 
 	/**
 	 * Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param items a float array; must be non-null
 	 */
-	public void shuffle(float[] items) {
+	public void shuffle (float[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			float temp = items[i];
@@ -716,9 +719,10 @@ public class LaserRandom extends Random implements Serializable {
 
 	/**
 	 * Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param items a char array; must be non-null
 	 */
-	public void shuffle(char[] items) {
+	public void shuffle (char[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			char temp = items[i];
@@ -729,9 +733,10 @@ public class LaserRandom extends Random implements Serializable {
 
 	/**
 	 * Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param items a double array; must be non-null
 	 */
-	public void shuffle(double[] items) {
+	public void shuffle (double[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			double temp = items[i];
@@ -742,9 +747,10 @@ public class LaserRandom extends Random implements Serializable {
 
 	/**
 	 * Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param items a short array; must be non-null
 	 */
-	public void shuffle(short[] items) {
+	public void shuffle (short[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			short temp = items[i];
@@ -755,9 +761,10 @@ public class LaserRandom extends Random implements Serializable {
 
 	/**
 	 * Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param items a boolean array; must be non-null
 	 */
-	public void shuffle(boolean[] items) {
+	public void shuffle (boolean[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			boolean temp = items[i];
@@ -768,9 +775,10 @@ public class LaserRandom extends Random implements Serializable {
 
 	/**
 	 * Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param items an array of some reference type; must be non-null but may contain null items
 	 */
-	public <T> void shuffle(T[] items) {
+	public <T> void shuffle (T[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			T temp = items[i];

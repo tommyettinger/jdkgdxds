@@ -69,12 +69,18 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable protected Entries<K> entries1;
-	@Nullable protected Entries<K> entries2;
-	@Nullable protected Values<K> values1;
-	@Nullable protected Values<K> values2;
-	@Nullable protected Keys<K> keys1;
-	@Nullable protected Keys<K> keys2;
+	@Nullable
+	protected Entries<K> entries1;
+	@Nullable
+	protected Entries<K> entries2;
+	@Nullable
+	protected Values<K> values1;
+	@Nullable
+	protected Values<K> values2;
+	@Nullable
+	protected Keys<K> keys1;
+	@Nullable
+	protected Keys<K> keys2;
 
 	public int defaultValue = 0;
 
@@ -389,7 +395,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation.
 	 */
-	@Nullable public K findKey (int value) {
+	@Nullable
+	public K findKey (int value) {
 		int[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
@@ -504,7 +511,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 *
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
-	@Override public Iterator<Entry<K>> iterator () {
+	@Override
+	public Iterator<Entry<K>> iterator () {
 		return entrySet().iterator();
 	}
 
@@ -592,7 +600,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	}
 
 	public static class Entry<K> {
-		@Nullable public K key;
+		@Nullable
+		public K key;
 		public int value;
 
 		public String toString () {
@@ -649,7 +658,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			return old;
 		}
 
-		@Override public boolean equals (@Nullable Object o) {
+		@Override
+		public boolean equals (@Nullable Object o) {
 			if (this == o) { return true; }
 			if (o == null || getClass() != o.getClass() || key == null) { return false; }
 
@@ -659,7 +669,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			return value == entry.value;
 		}
 
-		@Override public int hashCode () {
+		@Override
+		public int hashCode () {
 			assert key != null;
 			return key.hashCode() * 31 + value;
 		}
@@ -724,16 +735,19 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			super(map);
 		}
 
-		@Override public Iterator<K> iterator () {
+		@Override
+		public Iterator<K> iterator () {
 			return this;
 		}
 
-		@Override public boolean hasNext () {
+		@Override
+		public boolean hasNext () {
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			return hasNext;
 		}
 
-		@Override public K next () {
+		@Override
+		public K next () {
 			if (!hasNext) { throw new NoSuchElementException(); }
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			K key = map.keyTable[nextIndex];
@@ -754,7 +768,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		 * @return the next {@code int} element in the iteration
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
-		@Override public int nextInt () {
+		@Override
+		public int nextInt () {
 			if (!hasNext) { throw new NoSuchElementException(); }
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			int value = map.valueTable[nextIndex];
@@ -763,7 +778,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			return value;
 		}
 
-		@Override public boolean hasNext () {
+		@Override
+		public boolean hasNext () {
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			return hasNext;
 		}
@@ -783,7 +799,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		/**
 		 * Note the same entry instance is returned each time this method is called.
 		 */
-		@Override public Entry<K> next () {
+		@Override
+		public Entry<K> next () {
 			if (!hasNext) { throw new NoSuchElementException(); }
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			K[] keyTable = map.keyTable;
@@ -794,7 +811,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			return entry;
 		}
 
-		@Override public boolean hasNext () {
+		@Override
+		public boolean hasNext () {
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			return hasNext;
 		}
@@ -812,11 +830,13 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		 *
 		 * @return an iterator over the elements contained in this collection
 		 */
-		@Override public Iterator<Entry<K>> iterator () {
+		@Override
+		public Iterator<Entry<K>> iterator () {
 			return iter;
 		}
 
-		@Override public int size () {
+		@Override
+		public int size () {
 			return iter.map.size;
 		}
 	}
@@ -824,19 +844,23 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	public static class Values<K> implements PrimitiveCollection.OfInt {
 		protected ValueIterator<K> iter;
 
-		@Override public boolean add (int item) {
+		@Override
+		public boolean add (int item) {
 			throw new UnsupportedOperationException("ObjectIntMap.Values is read-only");
 		}
 
-		@Override public boolean remove (int item) {
+		@Override
+		public boolean remove (int item) {
 			throw new UnsupportedOperationException("ObjectIntMap.Values is read-only");
 		}
 
-		@Override public boolean contains (int item) {
+		@Override
+		public boolean contains (int item) {
 			return iter.map.containsValue(item);
 		}
 
-		@Override public void clear () {
+		@Override
+		public void clear () {
 			throw new UnsupportedOperationException("ObjectIntMap.Values is read-only");
 		}
 
@@ -861,15 +885,18 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			iter = new KeyIterator<>(map);
 		}
 
-		@Override public boolean contains (Object o) {
+		@Override
+		public boolean contains (Object o) {
 			return iter.map.containsKey(o);
 		}
 
-		@Override public Iterator<K> iterator () {
+		@Override
+		public Iterator<K> iterator () {
 			return iter;
 		}
 
-		@Override public int size () {
+		@Override
+		public int size () {
 			return iter.map.size;
 		}
 	}

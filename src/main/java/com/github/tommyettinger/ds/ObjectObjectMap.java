@@ -72,12 +72,18 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable protected Entries<K, V> entries1;
-	@Nullable protected Entries<K, V> entries2;
-	@Nullable protected Values<K, V> values1;
-	@Nullable protected Values<K, V> values2;
-	@Nullable protected Keys<K, V> keys1;
-	@Nullable protected Keys<K, V> keys2;
+	@Nullable
+	protected Entries<K, V> entries1;
+	@Nullable
+	protected Entries<K, V> entries2;
+	@Nullable
+	protected Values<K, V> values1;
+	@Nullable
+	protected Values<K, V> values2;
+	@Nullable
+	protected Keys<K, V> keys1;
+	@Nullable
+	protected Keys<K, V> keys2;
 
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
@@ -656,8 +662,10 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	public static class Entry<K, V> implements Map.Entry<K, V> {
-		@Nullable public K key;
-		@Nullable public V value;
+		@Nullable
+		public K key;
+		@Nullable
+		public V value;
 
 		@Nullable
 		public String toString () {
@@ -941,6 +949,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		public int size () {
 			return iter.map.size;
 		}
+
 		@Override
 		public int hashCode () {
 			int h = 0;

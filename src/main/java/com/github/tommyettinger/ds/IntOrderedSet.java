@@ -164,13 +164,15 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable
 		items.set(index, after);
 		return true;
 	}
+
 	/**
 	 * Gets the int item at the given {@code index} in the insertion order. The index should be between 0
 	 * (inclusive) and {@link #size()} (exclusive).
+	 *
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the item at the given index
 	 */
-	public int getAtIndex(int index) {
+	public int getAtIndex (int index) {
 		return items.get(index);
 	}
 
@@ -185,7 +187,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable
 		items.clear();
 		super.clear();
 	}
-	
+
 	/**
 	 * Gets the ObjectList of items in the order this class will iterate through them.
 	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
@@ -204,7 +206,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable
 	public void sort () {
 		items.sort();
 	}
-	
+
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
 	 * Reuses one of two iterators, and does not permit nested iteration;

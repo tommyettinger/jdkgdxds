@@ -55,14 +55,17 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable protected ObjectSetIterator<T, K> iterator1;
-	@Nullable protected ObjectSetIterator<T, K> iterator2;
-	@Nullable protected Function<T, K> extractor;
+	@Nullable
+	protected ObjectSetIterator<T, K> iterator1;
+	@Nullable
+	protected ObjectSetIterator<T, K> iterator2;
+	@Nullable
+	protected Function<T, K> extractor;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
 	 */
-	public HolderSet() {
+	public HolderSet () {
 
 		loadFactor = 0.8f;
 
@@ -78,7 +81,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
 	 */
-	public HolderSet(Function<T, K> extractor) {
+	public HolderSet (Function<T, K> extractor) {
 		this(extractor, 51, 0.8f);
 	}
 
@@ -87,7 +90,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public HolderSet(Function<T, K> extractor, int initialCapacity) {
+	public HolderSet (Function<T, K> extractor, int initialCapacity) {
 		this(extractor, initialCapacity, 0.8f);
 	}
 
@@ -97,8 +100,10 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public HolderSet(Function<T, K> extractor, int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and < 1: " + loadFactor); }
+	public HolderSet (Function<T, K> extractor, int initialCapacity, float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and < 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
@@ -113,7 +118,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Creates a new set identical to the specified set.
 	 */
-	public HolderSet(HolderSet<T, K> set) {
+	public HolderSet (HolderSet<T, K> set) {
 		loadFactor = set.loadFactor;
 		threshold = set.threshold;
 		mask = set.mask;
@@ -126,21 +131,42 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public HolderSet(Function<T, K> extractor, Collection<? extends T> coll) {
+	public HolderSet (Function<T, K> extractor, Collection<? extends T> coll) {
 		this(extractor, coll.size());
 		addAll(coll);
 	}
 
 	/**
-	 * Sets the function this will use to extract keys from items.
-	 * @param extractor a Function that takes a T and gets a unique K from it; often a method reference
+	 * Gets the function this uses to extract keys from items.
+	 * This may be null if {@link #HolderSet()} was used to construct this object (or technically if
+	 * {@link #HolderSet(HolderSet)} was used to copy a HolderSet with an invalid extractor); in that
+	 * case, this cannot have items added, removed, or inserted until a valid extractor is set with
+	 * {@link #setExtractor(Function)}.
+	 *
+	 * @return the extractor function this uses to get keys from items
 	 */
-	public void setExtractor(Function<T, K> extractor) {
-		this.extractor = extractor;
+	@Nullable
+	public Function<T, K> getExtractor () {
+		return extractor;
 	}
 
 	/**
-	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
+	 * Sets the function this will use to extract keys from items; this will only have an effect if
+	 * the extractor function is currently null/invalid. This is typically needed if {@link #HolderSet()}
+	 * was used to construct the HolderSet, but can also be required if {@link #HolderSet(HolderSet)} was
+	 * used to copy another HolderSet with an invalid extractor. All other cases should require the
+	 * extractor function to be specified at construction-time.
+	 *
+	 * @param extractor a Function that takes a T and gets a unique K from it; often a method reference
+	 */
+	public void setExtractor (Function<T, K> extractor) {
+		if (this.extractor == null)
+			this.extractor = extractor;
+	}
+
+	/**
+	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}, which here
+	 * should be a K.
 	 * <p>
 	 * The default behavior uses Fibonacci hashing; it simply gets the {@link Object#hashCode()}
 	 * of {@code item}, multiplies it by a specific long constant related to the golden ratio,
@@ -158,20 +184,24 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 
 	/**
 	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
-	 * to compare for equality differently than {@link Object#equals(Object)}.
+	 * to compare for equality differently than {@link Object#equals(Object)}. This expects key to be a K
+	 * object, not a T item, and will extract keys from existing items to compare against.
 	 * <p>
 	 * If source is not easily available and you want to override this, the reference source is:
 	 * <pre>
-	 * protected int locateKey (Object key) {
-	 * 		T[] keyTable = this.keyTable;
-	 * 		for (int i = place(key); ; i = i + 1 &amp; mask) {
-	 * 			T other = keyTable[i];
-	 * 			if (other == null)
-	 * 				return ~i; // Always negative; means empty space is available at i.
-	 * 			if (other.equals(key)) // If you want to change how equality is determined, do it here.
-	 * 				return i; // Same key was found.
-	 *      }
-	 * }
+	 *     protected int locateKey (Object key) {
+	 *         T[] keyTable = this.keyTable;
+	 *         for (int i = place(key); ; i = i + 1 & mask) {
+	 *             T other = keyTable[i];
+	 *             if (other == null) {
+	 *                 return ~i; // Always negative; means empty space is available at i.
+	 *             }
+	 *             if (key.equals(extractor.apply(other))) // If you want to change how equality is determined, do it here.
+	 *             {
+	 *                 return i; // Same key was found.
+	 *             }
+	 *         }
+	 *     }
 	 * </pre>
 	 *
 	 * @param key a non-null Object that should probably be a K
@@ -191,8 +221,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	/**
-	 * Returns true if the key was not already in the set. If this set already contains the key, the call leaves the set unchanged
-	 * and returns false.
+	 * Returns true if the item was not already in the set. If this set already contains the item,
+	 * the call leaves the set unchanged and returns false.
+	 * Note that this does not take a K key, but a T item
 	 */
 	@Override
 	public boolean add (T key) {
@@ -202,14 +233,18 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 		}
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
-		if (++size >= threshold) { resize(keyTable.length << 1); }
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return true;
 	}
 
 	@Override
 	public boolean containsAll (Collection<?> c) {
 		for (Object o : c) {
-			if (!contains(o)) { return false; }
+			if (!contains(o)) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -219,20 +254,34 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 		final int length = coll.size();
 		ensureCapacity(length);
 		int oldSize = size;
-		for (T t : coll) { add(t); }
+		for (T t : coll) {
+			add(t);
+		}
 		return oldSize != size;
 
 	}
 
+	/**
+	 * Makes this Set retain a Collection of K key types (not T items).
+	 * @param c a Collection that should hold K keys to retain in this
+	 * @return true if this Set was modified
+	 */
 	@Override
 	public boolean retainAll (Collection<?> c) {
 		boolean modified = false;
 		for (Object o : this) {
-			if (!c.contains(o)) { modified |= remove(o); }
+			if (!c.contains(o)) {
+				modified |= remove(o);
+			}
 
 		}
 		return modified;
 	}
+	/**
+	 * Removes from this Set a Collection of K key types (not T items).
+	 * @param c a Collection that should hold K keys to remove from this
+	 * @return true if this Set was modified
+	 */
 
 	@Override
 	public boolean removeAll (Collection<?> c) {
@@ -250,7 +299,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	public boolean addAll (T[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size;
-		for (int i = offset, n = i + length; i < n; i++) { add(array[i]); }
+		for (int i = offset, n = i + length; i < n; i++) {
+			add(array[i]);
+		}
 		return oldSize != size;
 	}
 
@@ -259,7 +310,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 		T[] keyTable = set.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null) { add(key); }
+			if (key != null) {
+				add(key);
+			}
 		}
 	}
 
@@ -283,7 +336,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	@Override
 	public boolean remove (Object key) {
 		int i = locateKey(key);
-		if (i < 0) { return false; }
+		if (i < 0) {
+			return false;
+		}
 		T[] keyTable = this.keyTable;
 		int mask = this.mask, next = i + 1 & mask;
 		while ((key = keyTable[next]) != null) {
@@ -332,9 +387,13 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 * instead.
 	 */
 	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) { throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity); }
+		if (maximumCapacity < 0) {
+			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		}
 		int tableSize = tableSize(maximumCapacity, loadFactor);
-		if (keyTable.length > tableSize) { resize(tableSize); }
+		if (keyTable.length > tableSize) {
+			resize(tableSize);
+		}
 	}
 
 	/**
@@ -358,21 +417,30 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 */
 	@Override
 	public void clear () {
-		if (size == 0) { return; }
+		if (size == 0) {
+			return;
+		}
 		size = 0;
 		Arrays.fill(keyTable, null);
 	}
 
 	/**
 	 * Checks for the presence of a K key, not a T value.
-	 * @param key
-	 * @return
+	 *
+	 * @param key may be any non-null Object, but should be a K key
+	 * @return true if this contains the given key
 	 */
 	@Override
 	public boolean contains (Object key) {
 		return locateKey(key) >= 0;
 	}
 
+	/**
+	 * Given a K key that could have been extracted or extractable from a T item in this,
+	 * this returns the T item that holds that key, or null if no item holds key.
+	 * @param key a K key that could have been extracted from a T item in this
+	 * @return the T item that holds the given key, or null if none was found
+	 */
 	@Nullable
 	public T get (K key) {
 		int i = locateKey(key);
@@ -381,7 +449,11 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 
 	public T first () {
 		T[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != null) { return keyTable[i]; } }
+		for (int i = 0, n = keyTable.length; i < n; i++) {
+			if (keyTable[i] != null) {
+				return keyTable[i];
+			}
+		}
 		throw new IllegalStateException("ObjectSet is empty.");
 	}
 
@@ -393,7 +465,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) { resize(tableSize); }
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 	}
 
 	protected void resize (int newSize) {
@@ -408,7 +482,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				T key = oldKeyTable[i];
-				if (key != null) { addResize(key); }
+				if (key != null) {
+					addResize(key);
+				}
 			}
 		}
 	}
@@ -455,17 +531,27 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 		T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null) { h += key.hashCode(); }
+			if (key != null) {
+				h += key.hashCode();
+			}
 		}
 		return h;
 	}
 
 	public boolean equals (Object obj) {
-		if (!(obj instanceof HolderSet)) { return false; }
+		if (!(obj instanceof HolderSet)) {
+			return false;
+		}
 		HolderSet other = (HolderSet)obj;
-		if (other.size != size) { return false; }
+		if (other.size != size) {
+			return false;
+		}
 		T[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != null && !other.contains(keyTable[i])) { return false; } }
+		for (int i = 0, n = keyTable.length; i < n; i++) {
+			if (keyTable[i] != null && !other.contains(keyTable[i])) {
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -474,19 +560,25 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	public String toString (String separator) {
-		if (size == 0) { return ""; }
+		if (size == 0) {
+			return "";
+		}
 		StringBuilder buffer = new StringBuilder(32);
 		T[] keyTable = this.keyTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null) { continue; }
+			if (key == null) {
+				continue;
+			}
 			buffer.append(key == this ? "(this)" : key);
 			break;
 		}
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null) { continue; }
+			if (key == null) {
+				continue;
+			}
 			buffer.append(separator);
 			buffer.append(key == this ? "(this)" : key);
 		}
@@ -556,7 +648,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 		@Override
 		public void remove () {
 			int i = currentIndex;
-			if (i < 0) { throw new IllegalStateException("next must be called before remove."); }
+			if (i < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
 			T[] keyTable = set.keyTable;
 			int mask = set.mask, next = i + 1 & mask;
 			T key;
@@ -570,20 +664,28 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 			}
 			keyTable[i] = null;
 			set.size--;
-			if (i != currentIndex) { --nextIndex; }
+			if (i != currentIndex) {
+				--nextIndex;
+			}
 			currentIndex = -1;
 		}
 
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 
 		@Override
 		public T next () {
-			if (!hasNext) { throw new NoSuchElementException(); }
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			T key = set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -603,7 +705,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 			ObjectList<T> list = new ObjectList<>(set.size);
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) { list.add(next()); }
+			while (hasNext) {
+				list.add(next());
+			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;

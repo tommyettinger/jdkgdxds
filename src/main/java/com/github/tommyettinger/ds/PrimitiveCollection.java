@@ -35,21 +35,27 @@ public interface PrimitiveCollection<T, T_CONS> {
 		default boolean addAll (OfInt other) {
 			PrimitiveIterator.OfInt it = other.iterator();
 			boolean changed = false;
-			while (it.hasNext()) { changed |= add(it.nextInt()); }
+			while (it.hasNext()) {
+				changed |= add(it.nextInt());
+			}
 			return changed;
 		}
 
 		default boolean removeAll (OfInt other) {
 			PrimitiveIterator.OfInt it = other.iterator();
 			boolean changed = false;
-			while (it.hasNext()) { changed |= remove(it.nextInt()); }
+			while (it.hasNext()) {
+				changed |= remove(it.nextInt());
+			}
 			return changed;
 		}
 
 		default boolean containsAll (OfInt other) {
 			PrimitiveIterator.OfInt it = other.iterator();
 			boolean has = true;
-			while (it.hasNext()) { has &= contains(it.nextInt()); }
+			while (it.hasNext()) {
+				has &= contains(it.nextInt());
+			}
 			return has;
 		}
 
@@ -66,21 +72,27 @@ public interface PrimitiveCollection<T, T_CONS> {
 		default boolean addAll (OfLong other) {
 			PrimitiveIterator.OfLong it = other.iterator();
 			boolean changed = false;
-			while (it.hasNext()) { changed |= add(it.nextLong()); }
+			while (it.hasNext()) {
+				changed |= add(it.nextLong());
+			}
 			return changed;
 		}
 
 		default boolean removeAll (OfLong other) {
 			PrimitiveIterator.OfLong it = other.iterator();
 			boolean changed = false;
-			while (it.hasNext()) { changed |= remove(it.nextLong()); }
+			while (it.hasNext()) {
+				changed |= remove(it.nextLong());
+			}
 			return changed;
 		}
 
 		default boolean containsAll (OfLong other) {
 			PrimitiveIterator.OfLong it = other.iterator();
 			boolean has = true;
-			while (it.hasNext()) { has &= contains(it.nextLong()); }
+			while (it.hasNext()) {
+				has &= contains(it.nextLong());
+			}
 			return has;
 		}
 
@@ -97,21 +109,27 @@ public interface PrimitiveCollection<T, T_CONS> {
 		default boolean addAll (OfFloat other) {
 			FloatIterator it = other.iterator();
 			boolean changed = false;
-			while (it.hasNext()) { changed |= add(it.nextFloat()); }
+			while (it.hasNext()) {
+				changed |= add(it.nextFloat());
+			}
 			return changed;
 		}
 
 		default boolean removeAll (OfFloat other) {
 			FloatIterator it = other.iterator();
 			boolean changed = false;
-			while (it.hasNext()) { changed |= remove(it.nextFloat()); }
+			while (it.hasNext()) {
+				changed |= remove(it.nextFloat());
+			}
 			return changed;
 		}
 
 		default boolean containsAll (OfFloat other) {
 			FloatIterator it = other.iterator();
 			boolean has = true;
-			while (it.hasNext()) { has &= contains(it.nextFloat()); }
+			while (it.hasNext()) {
+				has &= contains(it.nextFloat());
+			}
 			return has;
 		}
 

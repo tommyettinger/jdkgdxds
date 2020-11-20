@@ -33,9 +33,10 @@ public interface Arrangeable {
 	void reverse ();
 
 	/**
-	 * Returns the number of elements in this Arrangeable. 
+	 * Returns the number of elements in this Arrangeable.
 	 * Often this is shared with {@link Collection#size()}, but isn't always.
-	 * @return the number of elements in this Arrangeable 
+	 *
+	 * @return the number of elements in this Arrangeable
 	 */
-	int size();
+	int size ();
 }

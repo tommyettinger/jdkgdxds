@@ -19,23 +19,23 @@ import java.util.Objects;
 public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSequence, V> implements Serializable {
 	private static final long serialVersionUID = 0L;
 
-	public CaseInsensitiveOrderedMap() {
+	public CaseInsensitiveOrderedMap () {
 		super();
 	}
 
-	public CaseInsensitiveOrderedMap(int initialCapacity) {
+	public CaseInsensitiveOrderedMap (int initialCapacity) {
 		super(initialCapacity);
 	}
 
-	public CaseInsensitiveOrderedMap(int initialCapacity, float loadFactor) {
+	public CaseInsensitiveOrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
-	public CaseInsensitiveOrderedMap(ObjectObjectOrderedMap<? extends CharSequence, ? extends V> map) {
+	public CaseInsensitiveOrderedMap (ObjectObjectOrderedMap<? extends CharSequence, ? extends V> map) {
 		super(map);
 	}
 
-	public CaseInsensitiveOrderedMap(Map<? extends CharSequence, ? extends V> map) {
+	public CaseInsensitiveOrderedMap (Map<? extends CharSequence, ? extends V> map) {
 		super(map);
 	}
 
@@ -43,19 +43,20 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	protected int place (Object item) {
 		return super.place(item);
 	}
-	
+
 	/**
 	 * Gets a case-insensitive hash code for the String or other CharSequence {@code item} and shifts it so it is between 0 and
 	 * {@link #mask} inclusive. This gets the hash as if all cased letters have been converted to upper case by
 	 * {@link Character#toUpperCase(char)}; this should be correct for all alphabets in Unicode except Georgian.
+	 *
+	 * @param item any non-null CharSequence, such as a String or StringBuilder; will be treated as if it is all upper-case
+	 * @return a position in the key table where {@code item} would be placed; between 0 and {@link #mask} inclusive
 	 * @implNote Uses Water hash, which passes SMHasher's test battery and is very fast in Java. Water uses 64-bit math,
 	 * which behaves reliably but somewhat slowly on GWT, but uses it on usually-small char values. This can't use the
 	 * built-in pre-calculated hashCode of a String because it's case-sensitive. You can use the same hashing function as this
 	 * with {@link Utilities#longHashCodeIgnoreCase(CharSequence)}.
-	 * @param item any non-null CharSequence, such as a String or StringBuilder; will be treated as if it is all upper-case
-	 * @return a position in the key table where {@code item} would be placed; between 0 and {@link #mask} inclusive
 	 */
-	protected int place(CharSequence item) {
+	protected int place (CharSequence item) {
 		return (int)Utilities.longHashCodeIgnoreCase(item) & mask;
 	}
 
@@ -79,7 +80,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	@Override
 	protected int locateKey (Object key) {
 		Object[] keyTable = this.keyTable;
-		if(!(key instanceof CharSequence))
+		if (!(key instanceof CharSequence))
 			return super.locateKey(key);
 		CharSequence sk = (CharSequence)key;
 		for (int i = place(sk); ; i = i + 1 & mask) {
@@ -87,8 +88,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 			if (other == null) {
 				return ~i;
 			}
-			if (other instanceof CharSequence && Utilities.equalsIgnoreCase(sk, (CharSequence)other))
-			{
+			if (other instanceof CharSequence && Utilities.equalsIgnoreCase(sk, (CharSequence)other)) {
 				return i;
 			}
 		}
@@ -111,7 +111,6 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 		return keys2;
 	}
 
-
 	public static class Entry<V> extends ObjectObjectMap.Entry<CharSequence, V> {
 		@Override
 		public boolean equals (@Nullable Object o) {
@@ -132,6 +131,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 			return result;
 		}
 	}
+
 	public static class Keys<V> extends OrderedMapKeys<CharSequence, V> {
 		public Keys (ObjectObjectOrderedMap<CharSequence, V> map) {
 			super(map);

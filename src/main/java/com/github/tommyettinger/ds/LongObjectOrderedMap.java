@@ -88,7 +88,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	public LongObjectOrderedMap (LongObjectMap<? extends V> map) {
 		this(map.size());
 		PrimitiveIterator.OfLong it = map.keySet().iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			long k = it.nextLong();
 			put(k, map.get(k));
 		}
@@ -119,7 +119,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 		valueTable[i] = value;
 		keys.add(key);
 		if (++size >= threshold) { resize(keyTable.length << 1); }
-		return defaultValue; 
+		return defaultValue;
 	}
 
 	public void putAll (LongObjectOrderedMap<? extends V> map) {
@@ -134,7 +134,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	}
 
 	@Override
-	@Nullable public V remove (long key) {
+	@Nullable
+	public V remove (long key) {
 		if (!keys.remove(key)) { return null; }
 		return super.remove(key);
 	}
@@ -214,21 +215,23 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	/**
 	 * Gets the V value at the given {@code index} in the insertion order. The index should be between 0
 	 * (inclusive) and {@link #size()} (exclusive).
+	 *
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
 	@Nullable
-	public V getAtIndex(int index) {
+	public V getAtIndex (int index) {
 		return get(keys.get(index));
 	}
 
 	/**
 	 * Gets the long key at the given {@code index} in the insertion order. The index should be between 0
 	 * (inclusive) and {@link #size()} (exclusive).
+	 *
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public long keyAtIndex(int index) {
+	public long keyAtIndex (int index) {
 		return keys.get(index);
 	}
 

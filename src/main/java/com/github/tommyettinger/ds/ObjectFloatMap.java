@@ -71,18 +71,18 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable protected
-	Entries<K> entries1;
-	@Nullable protected
-	Entries<K> entries2;
-	@Nullable protected
-	Values<K> values1;
-	@Nullable protected
-	Values<K> values2;
-	@Nullable protected
-	Keys<K> keys1;
-	@Nullable protected
-	Keys<K> keys2;
+	@Nullable
+	protected Entries<K> entries1;
+	@Nullable
+	protected Entries<K> entries2;
+	@Nullable
+	protected Values<K> values1;
+	@Nullable
+	protected Values<K> values2;
+	@Nullable
+	protected Keys<K> keys1;
+	@Nullable
+	protected Keys<K> keys2;
 
 	public float defaultValue = 0;
 
@@ -375,16 +375,17 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		size = 0;
 		Arrays.fill(keyTable, null);
 	}
-	
+
 	public boolean containsKey (Object key) {
 		return locateKey(key) >= 0;
 	}
-	
+
 	/**
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
+	 *
 	 * @param value the float value to check for; will be compared with {@link Utilities#isEqual(float, float)}
-	 * @return true if this map contains the given value, false otherwise   
+	 * @return true if this map contains the given value, false otherwise
 	 */
 	public boolean containsValue (float value) {
 		float[] valueTable = this.valueTable;
@@ -398,9 +399,10 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	/**
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
-	 * @param value the float value to check for; will be compared with {@link Utilities#isEqual(float, float, float)}
-	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal    
-	 * @return true if this map contains the given value, false otherwise   
+	 *
+	 * @param value     the float value to check for; will be compared with {@link Utilities#isEqual(float, float, float)}
+	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal
+	 * @return true if this map contains the given value, false otherwise
 	 */
 	public boolean containsValue (float value, float tolerance) {
 		float[] valueTable = this.valueTable;
@@ -414,8 +416,9 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	/**
 	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation. Uses {@link Utilities#isEqual(float, float)} to compare values.
+	 *
 	 * @param value the value to look for
-	 * @return the key associated with the given value, if it was found, or null otherwise   
+	 * @return the key associated with the given value, if it was found, or null otherwise
 	 */
 	@Nullable
 	public K findKey (float value) {
@@ -430,9 +433,10 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	/**
 	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation. Uses {@link Utilities#isEqual(float, float, float)} to compare values.
-	 * @param value the value to look for
-	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal    
-	 * @return the key associated with the given value, if it was found, or null otherwise   
+	 *
+	 * @param value     the value to look for
+	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal
+	 * @return the key associated with the given value, if it was found, or null otherwise
 	 */
 	@Nullable
 	public K findKey (float value, float tolerance) {
@@ -638,8 +642,8 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	}
 
 	public static class Entry<K> {
-		@Nullable public
-		K key;
+		@Nullable
+		public K key;
 		public float value;
 
 		public String toString () {
@@ -882,19 +886,23 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	public static class Values<K> implements PrimitiveCollection.OfFloat {
 		protected ValueIterator<K> iter;
 
-		@Override public boolean add (float item) {
+		@Override
+		public boolean add (float item) {
 			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
 		}
 
-		@Override public boolean remove (float item) {
+		@Override
+		public boolean remove (float item) {
 			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
 		}
 
-		@Override public boolean contains (float item) {
+		@Override
+		public boolean contains (float item) {
 			return iter.map.containsValue(item);
 		}
 
-		@Override public void clear () {
+		@Override
+		public void clear () {
 			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
 		}
 

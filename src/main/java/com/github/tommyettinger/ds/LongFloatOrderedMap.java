@@ -88,7 +88,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 	public LongFloatOrderedMap (LongFloatMap map) {
 		this(map.size());
 		PrimitiveIterator.OfLong it = map.keySet().iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			long k = it.nextLong();
 			put(k, map.get(k));
 		}
@@ -119,7 +119,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 		valueTable[i] = value;
 		keys.add(key);
 		if (++size >= threshold) { resize(keyTable.length << 1); }
-		return defaultValue; 
+		return defaultValue;
 	}
 
 	public void putAll (LongFloatOrderedMap map) {
@@ -138,7 +138,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 		if (!keys.remove(key)) { return defaultValue; }
 		return super.remove(key);
 	}
-	
+
 	public float removeAtIndex (int index) {
 		return super.remove(keys.removeAtIndex(index));
 	}
@@ -212,20 +212,22 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 	/**
 	 * Gets the float value at the given {@code index} in the insertion order. The index should be between 0
 	 * (inclusive) and {@link #size()} (exclusive).
+	 *
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
-	public float getAtIndex(int index) {
+	public float getAtIndex (int index) {
 		return get(keys.get(index));
 	}
 
 	/**
 	 * Gets the long key at the given {@code index} in the insertion order. The index should be between 0
 	 * (inclusive) and {@link #size()} (exclusive).
+	 *
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public long keyAtIndex(int index) {
+	public long keyAtIndex (int index) {
 		return keys.get(index);
 	}
 
@@ -522,7 +524,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 					hasNext = map.size > 0;
 				}
 
-				@Override 
+				@Override
 				public float nextFloat () {
 					if (!hasNext) { throw new NoSuchElementException(); }
 					if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }

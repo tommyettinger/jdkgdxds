@@ -170,10 +170,11 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 	/**
 	 * Gets the T item at the given {@code index} in the insertion order. The index should be between 0 (inclusive) and
 	 * {@link #size()} (exclusive).
+	 *
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the item at the given index
 	 */
-	public T getAtIndex(int index) {
+	public T getAtIndex (int index) {
 		return items.get(index);
 	}
 

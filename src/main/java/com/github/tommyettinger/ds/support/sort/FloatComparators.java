@@ -116,29 +116,32 @@ public final class FloatComparators {
 			}
 		};
 	}
-	
+
 	protected static class TolerantComparator implements FloatComparator, java.io.Serializable {
 		private static final long serialVersionUID = 1L;
 		public final float tolerance;
 		protected final FloatComparator reverse;
-		
+
 		public TolerantComparator () {
 			this(0.000001f);
 		}
-		
+
 		public TolerantComparator (float tolerance) {
 			this.tolerance = tolerance;
 			reverse = oppositeComparator(this);
 		}
+
 		@Override
 		public int compare (float k1, float k2) {
 			final float diff = k1 - k2;
-			if(diff <= tolerance && diff >= -tolerance)
+			if (diff <= tolerance && diff >= -tolerance)
 				return 0;
 			// not-NaN checks
 			final boolean n1 = k1 == k1, n2 = k2 == k2;
-			if(k1 > k2 && n2) return 1;
-			if(k2 > k1 && n1) return -1;
+			if (k1 > k2 && n2)
+				return 1;
+			if (k2 > k1 && n1)
+				return -1;
 			return 0;
 		}
 
@@ -156,6 +159,7 @@ public final class FloatComparators {
 	/**
 	 * Builds a new FloatComparator, using ascending order with a tolerance for equality of {@code tolerance}.
 	 * You can call its {@link FloatComparator#reversed()} method to access a descending-order comparator.
+	 *
 	 * @param tolerance how much tolerance is acceptable when comparing two floats as equal
 	 * @return the new FloatComparator
 	 */

@@ -32,7 +32,7 @@ import java.util.Random;
  * well with generics, ObjectList does not permit access to a {@code T[]} of items like Array
  * does; you can use {@link #toArray(Object[])} or (if you can use Java 11)
  * {@code toArray(IntFunction)} to make a new array of T from the contents of an ArrayList.
- * The second of these toArray methods is newer; You can use it with code like 
+ * The second of these toArray methods is newer; You can use it with code like
  * {@code ObjectList<String> myList = new ObjectList<>(); String[] s = myList.toArray(String::new);}.
  *
  * @author Tommy Ettinger
@@ -40,6 +40,7 @@ import java.util.Random;
 public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializable {
 	private static final long serialVersionUID = 0L;
 	public boolean ordered = true;
+
 	/**
 	 * Constructs an empty list with the specified initial capacity.
 	 *
@@ -50,13 +51,14 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 	public ObjectList (int initialCapacity) {
 		super(initialCapacity);
 	}
+
 	/**
 	 * Constructs an empty list with the specified initial capacity.
 	 * You can specify whether this ObjectList will maintain order;
 	 * the default is true, but if you set it to false then deletion
 	 * becomes faster at the expense of unpredictable iteration order.
 	 *
-	 * @param ordered true if this should maintain the order items are added in; false if this can rearrange them for speed
+	 * @param ordered         true if this should maintain the order items are added in; false if this can rearrange them for speed
 	 * @param initialCapacity the initial capacity of the list
 	 * @throws IllegalArgumentException if the specified initial capacity
 	 *                                  is negative
@@ -94,7 +96,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 	 * becomes faster at the expense of unpredictable iteration order.
 	 *
 	 * @param ordered true if this should maintain the order items are added in; false if this can rearrange them for speed
-	 * @param c the collection whose elements are to be placed into this list
+	 * @param c       the collection whose elements are to be placed into this list
 	 * @throws NullPointerException if the specified collection is null
 	 */
 	public ObjectList (boolean ordered, Collection<? extends T> c) {
@@ -116,15 +118,15 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 
 	@Override
 	public void add (int index, @Nullable T element) {
-		if(ordered) 
+		if (ordered)
 			super.add(index, element);
-		else 
+		else
 			super.add(element);
 	}
 
 	@Override
 	public T remove (int index) {
-		if(ordered) 
+		if (ordered)
 			return super.remove(index);
 		T value = super.get(index);
 		int size = size();
@@ -132,10 +134,13 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 		super.remove(size - 1);
 		return value;
 	}
-	/** Removes the items between the specified indices, inclusive. */
+
+	/**
+	 * Removes the items between the specified indices, inclusive.
+	 */
 	@Override
 	public void removeRange (int start, int end) {
-			super.removeRange(start, end);
+		super.removeRange(start, end);
 	}
 
 	/**
@@ -247,10 +252,12 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 	 */
 	public boolean equalsIdentity (Object object) {
 		if (object == this) { return true; }
-		if(!ordered) return false;
+		if (!ordered)
+			return false;
 		if (!(object instanceof ObjectList)) { return false; }
 		ObjectList list = (ObjectList)object;
-		if(!list.ordered) return false;
+		if (!list.ordered)
+			return false;
 		int n = size();
 		if (n != list.size()) { return false; }
 		for (int i = 0; i < n; i++) { if (get(i) != list.get(i)) { return false; } }
@@ -259,10 +266,13 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 
 	@Override
 	public boolean equals (Object o) {
-		if(o == this) return true;
-		if(!ordered) return false;
+		if (o == this)
+			return true;
+		if (!ordered)
+			return false;
 		if (!(o instanceof ObjectList)) { return false; }
-		if(!((ObjectList)o).ordered) return false;
+		if (!((ObjectList)o).ordered)
+			return false;
 		return super.equals(o);
 	}
 

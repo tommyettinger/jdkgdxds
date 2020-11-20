@@ -197,20 +197,22 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	/**
 	 * Gets the int value at the given {@code index} in the insertion order. The index should be between 0
 	 * (inclusive) and {@link #size()} (exclusive).
+	 *
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
-	public int getAtIndex(int index) {
+	public int getAtIndex (int index) {
 		return get(keys.get(index));
 	}
 
 	/**
 	 * Gets the K key at the given {@code index} in the insertion order. The index should be between 0
 	 * (inclusive) and {@link #size()} (exclusive).
+	 *
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public K keyAtIndex(int index) {
+	public K keyAtIndex (int index) {
 		return keys.get(index);
 	}
 
@@ -426,7 +428,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 				@Override
 				public void remove () {
 					if (currentIndex < 0) { throw new IllegalStateException("next must be called before remove."); }
-					if(entry.key != null) {
+					if (entry.key != null) {
 						map.remove(entry.key);
 					}
 					nextIndex--;

@@ -39,8 +39,10 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	public int[] items;
 	protected int size;
 	public boolean ordered;
-	@Nullable protected IntListIterator iterator1;
-	@Nullable protected IntListIterator iterator2;
+	@Nullable
+	protected IntListIterator iterator1;
+	@Nullable
+	protected IntListIterator iterator2;
 
 	/**
 	 * Creates an ordered array with a capacity of 16.
@@ -833,16 +835,16 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
 	 * used as a generic sorting algorithm.
 	 *
-	 * @param c       the comparator to determine the order of the IntList
+	 * @param c the comparator to determine the order of the IntList
 	 */
 	public void sort (@Nullable final IntComparator c) {
-		if(c == null) {
+		if (c == null) {
 			sort();
-		}
-		else {
+		} else {
 			sort(0, size, c);
 		}
 	}
+
 	/**
 	 * Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort.
@@ -852,15 +854,15 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
 	 * used as a generic sorting algorithm.
 	 *
-	 * @param from    the index of the first element (inclusive) to be sorted.
-	 * @param to      the index of the last element (exclusive) to be sorted.
-	 * @param c       the comparator to determine the order of the IntList
+	 * @param from the index of the first element (inclusive) to be sorted.
+	 * @param to   the index of the last element (exclusive) to be sorted.
+	 * @param c    the comparator to determine the order of the IntList
 	 */
 	public void sort (final int from, final int to, final IntComparator c) {
-		if(to <= 0) {
+		if (to <= 0) {
 			return;
 		}
-		if(from < 0 || from >= size || to > size) {
+		if (from < 0 || from >= size || to > size) {
 			throw new UnsupportedOperationException("The given from/to range in IntList.sort() is invalid.");
 		}
 		/*

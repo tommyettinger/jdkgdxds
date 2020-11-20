@@ -70,8 +70,10 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 	 */
 	protected int mask;
 
-	@Nullable protected IntSetIterator iterator1;
-	@Nullable protected IntSetIterator iterator2;
+	@Nullable
+	protected IntSetIterator iterator1;
+	@Nullable
+	protected IntSetIterator iterator2;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.

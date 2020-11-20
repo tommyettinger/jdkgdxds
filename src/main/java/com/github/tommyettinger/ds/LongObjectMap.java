@@ -60,7 +60,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	protected long[] keyTable;
 	protected V[] valueTable;
 	protected boolean hasZeroValue;
-	@Nullable protected V zeroValue;
+	@Nullable
+	protected V zeroValue;
 	protected final float loadFactor;
 	protected int threshold;
 
@@ -71,14 +72,21 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable protected Entries<V> entries1;
-	@Nullable protected Entries<V> entries2;
-	@Nullable protected Values<V> values1;
-	@Nullable protected Values<V> values2;
-	@Nullable protected Keys<V> keys1;
-	@Nullable protected Keys<V> keys2;
+	@Nullable
+	protected Entries<V> entries1;
+	@Nullable
+	protected Entries<V> entries2;
+	@Nullable
+	protected Values<V> values1;
+	@Nullable
+	protected Values<V> values2;
+	@Nullable
+	protected Keys<V> keys1;
+	@Nullable
+	protected Keys<V> keys2;
 
-	@Nullable public V defaultValue = null;
+	@Nullable
+	public V defaultValue = null;
 
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
@@ -162,7 +170,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
-	@Nullable public V put (long key, @Nullable V value) {
+	@Nullable
+	public V put (long key, @Nullable V value) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) { oldValue = zeroValue; } else { size++; }
@@ -186,7 +195,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	/**
 	 * Returns the old value associated with the specified key, or the given {@code defaultValue} if there was no prior value.
 	 */
-	@Nullable public V putOrDefault (long key, @Nullable V value, @Nullable V defaultValue) {
+	@Nullable
+	public V putOrDefault (long key, @Nullable V value, @Nullable V defaultValue) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) { oldValue = zeroValue; } else { size++; }
@@ -242,7 +252,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	 *
 	 * @param key any {@code long}
 	 */
-	@Nullable public V get (long key) {
+	@Nullable
+	public V get (long key) {
 		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
@@ -251,13 +262,15 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	/**
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
-	@Nullable public V getOrDefault (long key, @Nullable V defaultValue) {
+	@Nullable
+	public V getOrDefault (long key, @Nullable V defaultValue) {
 		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
 		int i = locateKey(key);
 		return i < 0 ? defaultValue : valueTable[i];
 	}
-	
-	@Nullable public V remove (long key) {
+
+	@Nullable
+	public V remove (long key) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				hasZeroValue = false;
@@ -319,7 +332,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	 *
 	 * @return the current default value
 	 */
-	@Nullable public V getDefaultValue () {
+	@Nullable
+	public V getDefaultValue () {
 		return defaultValue;
 	}
 
@@ -369,7 +383,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	 * be an expensive operation.
 	 */
 	public boolean containsValue (@Nullable Object value) {
-		if (hasZeroValue) { 
+		if (hasZeroValue) {
 			return Objects.equals(zeroValue, value);
 		}
 		V[] valueTable = this.valueTable;
@@ -419,7 +433,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 		V[] oldValueTable = valueTable;
 
 		keyTable = new long[newSize];
-		valueTable = (V[]) new Object[newSize];
+		valueTable = (V[])new Object[newSize];
 
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
@@ -439,7 +453,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 			if (key != 0) {
 				h += key ^ key >>> 32;
 				v = valueTable[i];
-				if(v != null) 
+				if (v != null)
 					h += v.hashCode() * 0x9E3779B97F4A7C15L;
 			}
 		}
@@ -602,7 +616,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 
 	public static class Entry<V> {
 		public long key;
-		@Nullable public V value;
+		@Nullable
+		public V value;
 
 		public String toString () {
 			return key + "=" + value;
@@ -627,7 +642,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 		 *
 		 * @return the value corresponding to this entry
 		 */
-		@Nullable public V getValue () {
+		@Nullable
+		public V getValue () {
 			return value;
 		}
 
@@ -651,13 +667,15 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 		 *                                       required to, throw this exception if the entry has been
 		 *                                       removed from the backing map.
 		 */
-		@Nullable public V setValue (@Nullable V value) {
+		@Nullable
+		public V setValue (@Nullable V value) {
 			V old = this.value;
 			this.value = value;
 			return old;
 		}
 
-		@Override public boolean equals (@Nullable Object o) {
+		@Override
+		public boolean equals (@Nullable Object o) {
 			if (this == o) { return true; }
 			if (o == null || getClass() != o.getClass()) { return false; }
 
@@ -667,7 +685,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 			return Objects.equals(value, entry.value);
 		}
 
-		@Override public int hashCode () {
+		@Override
+		public int hashCode () {
 			return (int)(key ^ key >>> 32) ^ (value == null ? 0 : value.hashCode());
 		}
 	}
@@ -754,7 +773,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 			super(map);
 		}
 
-		@Override public long nextLong () {
+		@Override
+		public long nextLong () {
 			if (!hasNext) { throw new NoSuchElementException(); }
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			long key = nextIndex == INDEX_ZERO ? 0 : map.keyTable[nextIndex];
@@ -816,7 +836,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 		/**
 		 * Note the same entry instance is returned each time this method is called.
 		 */
-		@Override 
+		@Override
 		public Entry<V> next () {
 			if (!hasNext) { throw new NoSuchElementException(); }
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
@@ -852,11 +872,13 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 		 *
 		 * @return an iterator over the elements contained in this collection
 		 */
-		@Override public Iterator<Entry<V>> iterator () {
+		@Override
+		public Iterator<Entry<V>> iterator () {
 			return iter;
 		}
 
-		@Override public int size () {
+		@Override
+		public int size () {
 			return iter.map.size;
 		}
 	}
@@ -864,19 +886,23 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	public static class Values<V> extends AbstractCollection<V> {
 		protected ValueIterator<V> iter;
 
-		@Override public boolean add (@Nullable V item) {
+		@Override
+		public boolean add (@Nullable V item) {
 			throw new UnsupportedOperationException("LongObjectMap.Values is read-only");
 		}
 
-		@Override public boolean remove (@Nullable Object item) {
+		@Override
+		public boolean remove (@Nullable Object item) {
 			throw new UnsupportedOperationException("LongObjectMap.Values is read-only");
 		}
 
-		@Override public boolean contains (@Nullable Object item) {
+		@Override
+		public boolean contains (@Nullable Object item) {
 			return iter.map.containsValue(item);
 		}
 
-		@Override public void clear () {
+		@Override
+		public void clear () {
 			throw new UnsupportedOperationException("LongObjectMap.Values is read-only");
 		}
 
@@ -906,27 +932,33 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 			iter = new KeyIterator<>(map);
 		}
 
-		@Override public boolean add (long item) {
+		@Override
+		public boolean add (long item) {
 			throw new UnsupportedOperationException("LongObjectMap.Keys is read-only");
 		}
 
-		@Override public boolean remove (long item) {
+		@Override
+		public boolean remove (long item) {
 			throw new UnsupportedOperationException("LongObjectMap.Keys is read-only");
 		}
 
-		@Override public boolean contains (long item) {
+		@Override
+		public boolean contains (long item) {
 			return iter.map.containsKey(item);
 		}
 
-		@Override public PrimitiveIterator.OfLong iterator () {
+		@Override
+		public PrimitiveIterator.OfLong iterator () {
 			return iter;
 		}
 
-		@Override public void clear () {
+		@Override
+		public void clear () {
 			throw new UnsupportedOperationException("LongObjectMap.Keys is read-only");
 		}
 
-		@Override public int size () {
+		@Override
+		public int size () {
 			return iter.map.size;
 		}
 	}

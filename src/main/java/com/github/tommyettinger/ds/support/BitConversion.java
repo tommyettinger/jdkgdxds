@@ -145,7 +145,7 @@ public final class BitConversion {
 	 * ABGR packed float colors. This method runs at the expected speed on desktop and mobile, but GWT should run it
 	 * much more quickly than a direct translation of the Java would provide.
 	 *
-	 *  @param bits an integer
+	 * @param bits an integer
 	 * @return the {@code float} floating-point value with the given bits using their byte order reversed from normal.
 	 */
 	public static float reversedIntBitsToFloat (final int bits) {

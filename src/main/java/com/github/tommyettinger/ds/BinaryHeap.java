@@ -117,6 +117,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> {
 	/**
 	 * Removes the given node and returns it. If the node is not present in this BinaryHeap or is invalid, this will
 	 * probably throw an Exception.
+	 *
 	 * @param node a {@link Node} that should be present in this already
 	 * @return {@code node} after its removal
 	 */

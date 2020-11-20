@@ -87,7 +87,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	public IntObjectOrderedMap (IntObjectMap<? extends V> map) {
 		this(map.size());
 		PrimitiveIterator.OfInt it = map.keySet().iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			int k = it.nextInt();
 			put(k, map.get(k));
 		}
@@ -118,7 +118,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 		valueTable[i] = value;
 		keys.add(key);
 		if (++size >= threshold) { resize(keyTable.length << 1); }
-		return defaultValue; 
+		return defaultValue;
 	}
 
 	public void putAll (IntObjectOrderedMap<? extends V> map) {
@@ -133,7 +133,8 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	}
 
 	@Override
-	@Nullable public V remove (int key) {
+	@Nullable
+	public V remove (int key) {
 		if (!keys.remove(key)) { return null; }
 		return super.remove(key);
 	}
@@ -213,21 +214,23 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	/**
 	 * Gets the V value at the given {@code index} in the insertion order. The index should be between 0
 	 * (inclusive) and {@link #size()} (exclusive).
+	 *
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
 	@Nullable
-	public V getAtIndex(int index) {
+	public V getAtIndex (int index) {
 		return get(keys.get(index));
 	}
 
 	/**
 	 * Gets the int key at the given {@code index} in the insertion order. The index should be between 0
 	 * (inclusive) and {@link #size()} (exclusive).
+	 *
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public int keyAtIndex(int index) {
+	public int keyAtIndex (int index) {
 		return keys.get(index);
 	}
 

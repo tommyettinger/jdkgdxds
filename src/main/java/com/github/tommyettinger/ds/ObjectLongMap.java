@@ -69,12 +69,18 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable protected Entries<K> entries1;
-	@Nullable protected Entries<K> entries2;
-	@Nullable protected Values<K> values1;
-	@Nullable protected Values<K> values2;
-	@Nullable protected Keys<K> keys1;
-	@Nullable protected Keys<K> keys2;
+	@Nullable
+	protected Entries<K> entries1;
+	@Nullable
+	protected Entries<K> entries2;
+	@Nullable
+	protected Values<K> values1;
+	@Nullable
+	protected Values<K> values2;
+	@Nullable
+	protected Keys<K> keys1;
+	@Nullable
+	protected Keys<K> keys2;
 
 	public long defaultValue = 0L;
 
@@ -594,7 +600,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	}
 
 	public static class Entry<K> {
-		@Nullable public K key;
+		@Nullable
+		public K key;
 		public long value;
 
 		public String toString () {
