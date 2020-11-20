@@ -1,0 +1,112 @@
+package com.github.tommyettinger.ds.test;
+
+import com.github.tommyettinger.ds.CaseInsensitiveMap;
+import com.github.tommyettinger.ds.HolderSet;
+import org.junit.Assert;
+import org.junit.Test;
+
+import javax.annotation.Nonnull;
+import java.util.Objects;
+
+/**
+ * Created by Tommy Ettinger on 10/26/2020.
+ */
+@SuppressWarnings("SuspiciousMethodCalls")
+public class HolderSetTest {
+	public static class Person {
+		@Nonnull private String name;
+		private int x, y;
+
+		@Nonnull
+		public String getName () {
+			return name;
+		}
+
+		public void setName (@Nonnull String name) {
+			this.name = name;
+		}
+
+		public int getX () {
+			return x;
+		}
+
+		public void setX (int x) {
+			this.x = x;
+		}
+
+		public int getY () {
+			return y;
+		}
+
+		public void setY (int y) {
+			this.y = y;
+		}
+
+		public Person () {
+			this("Nihilus", 0, 0);
+		}
+
+		public Person (@Nonnull String name) {
+			this(name, 0, 0);
+		}
+
+		public Person (@Nonnull String name, int x, int y) {
+			this.name = name;
+			this.x = x;
+			this.y = y;
+		}
+
+		@Override
+		public boolean equals (Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+
+			Person person = (Person)o;
+
+			if (x != person.x)
+				return false;
+			if (y != person.y)
+				return false;
+			return name.equals(person.name);
+		}
+
+		@Override
+		public int hashCode () {
+			int result = name.hashCode();
+			result = 421 * result + x;
+			result = 421 * result + y;
+			return result;
+		}
+	}
+	@Test
+	public void testMultipleOperations() {
+		HolderSet<Person, String> people = new HolderSet<>(Person::getName, 8);
+		people.add(new Person("Alice"));
+		Assert.assertEquals(people.size(), 1);
+		Assert.assertTrue(people.contains("Alice"));
+		Assert.assertFalse(people.contains("Bob"));
+		Assert.assertFalse(people.contains("Carol"));
+		Assert.assertEquals(people.get("Alice").x, 0);
+		Assert.assertEquals(people.get("Alice").y, 0);
+		people.add(new Person("Bob", 1, 0));
+		Assert.assertEquals(people.size(), 2);
+		Assert.assertTrue(people.contains("Alice"));
+		Assert.assertTrue(people.contains("Bob"));
+		Assert.assertFalse(people.contains("Carol"));
+		Assert.assertEquals(people.get("Bob").x, 1);
+		Assert.assertEquals(people.get("Bob").y, 0);
+		people.add(new Person("Carol", -1 , -1));
+		Assert.assertEquals(people.size(), 3);
+		Assert.assertTrue(people.contains("Alice"));
+		Assert.assertTrue(people.contains("Bob"));
+		Assert.assertTrue(people.contains("Carol"));
+		Assert.assertEquals(people.get("Carol").x, -1);
+		Assert.assertEquals(people.get("Carol").y, -1);
+		people.remove("Alice");
+		Assert.assertFalse(people.contains("Alice"));
+		Assert.assertEquals(people.size(), 2);
+
+	}
+}
