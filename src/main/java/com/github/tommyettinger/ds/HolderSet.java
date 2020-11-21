@@ -442,7 +442,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 * @return the T item that holds the given key, or null if none was found
 	 */
 	@Nullable
-	public T get (K key) {
+	public T get (Object key) {
 		int i = locateKey(key);
 		return i < 0 ? null : keyTable[i];
 	}
