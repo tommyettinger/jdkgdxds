@@ -27,11 +27,14 @@ import java.util.function.Function;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * A {@link ObjectSet} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
- * allocation is done except when growing the table size.
+ * A {@link HolderSet} that also stores items in an {@link ObjectList} using the insertion order. This acts like
+ * HolderSet instead of like {@link ObjectSet}, with the constructors typically taking an extractor function,
+ * {@link #contains(Object)} and {@link #remove(Object)} accepting a K key instead of a T item, and
+ * {@link #get(Object)} used to get a T item from a K key. Neither null items nor null keys are allowed.
+ * No allocation is done except when growing the table size.
  * <p>
- * {@link #iterator() Iteration} is ordered and faster than an unordered set. Keys can also be accessed and the order changed
- * using {@link #order()}. There is some additional overhead for put and remove.
+ * {@link #iterator() Iteration} is ordered over items and faster than an unordered set. Items can also be accessed
+ * and the order changed using {@link #order()}. There is some additional overhead for put and remove.
  * <p>
  * This class performs fast contains (typically O(1), worst case O(n) but that is rare in practice). Remove is somewhat slower due
  * to {@link #order()}. Add may be slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce
@@ -39,11 +42,11 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * size.
  * <p>
  * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with {@link Ordered} types like
- * ObjectOrderedSet and ObjectObjectOrderedMap.
+ * HolderOrderedSet and ObjectObjectOrderedMap.
  * <p>
  * You can customize most behavior of this set by extending it. {@link #place(Object)} can be overridden to change how hashCodes
- * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
- * {@link #locateKey(Object)} can be overridden to change how equality is calculated.
+ * are calculated on K keys (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
+ * {@link #locateKey(Object)} can be overridden to change how equality is calculated for K keys.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
  * hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
@@ -125,7 +128,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		return items.remove(super.get(key)) && super.remove(key);
 	}
 
-	public T removeAtIndex (int index) {
+	public T removeAt (int index) {
 		T key = items.remove(index);
 		super.remove(extractor.apply(key));
 		return key;
@@ -148,7 +151,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * Changes the item {@code before} to {@code after} without changing its position in the order. Returns true if {@code after}
 	 * has been added to the ObjectOrderedSet and {@code before} has been removed; returns false if {@code after} is already present or
 	 * {@code before} is not present. If you are iterating over an ObjectOrderedSet and have an index, you should prefer
-	 * {@link #alterIndex(int, Object)}, which doesn't need to search for an index like this does and so can be faster.
+	 * {@link #alterAt(int, Object)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before an item that must be present for this to succeed
 	 * @param after  an item that must not be in this set for this to succeed
@@ -171,7 +174,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
-	public boolean alterIndex (int index, T after) {
+	public boolean alterAt (int index, T after) {
 		if (index < 0 || index >= size || contains(after)) { return false; }
 		super.remove(items.get(index));
 		super.add(after);
@@ -186,7 +189,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the item at the given index
 	 */
-	public T getAtIndex (int index) {
+	public T getAt (int index) {
 		return items.get(index);
 	}
 

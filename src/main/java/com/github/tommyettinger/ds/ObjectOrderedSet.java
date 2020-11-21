@@ -113,7 +113,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 		return super.remove(key) && items.remove(key);
 	}
 
-	public T removeAtIndex (int index) {
+	public T removeAt (int index) {
 		T key = items.remove(index);
 		super.remove(key);
 		return key;
@@ -136,7 +136,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 	 * Changes the item {@code before} to {@code after} without changing its position in the order. Returns true if {@code after}
 	 * has been added to the ObjectOrderedSet and {@code before} has been removed; returns false if {@code after} is already present or
 	 * {@code before} is not present. If you are iterating over an ObjectOrderedSet and have an index, you should prefer
-	 * {@link #alterIndex(int, Object)}, which doesn't need to search for an index like this does and so can be faster.
+	 * {@link #alterAt(int, Object)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before an item that must be present for this to succeed
 	 * @param after  an item that must not be in this set for this to succeed
@@ -159,7 +159,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
-	public boolean alterIndex (int index, T after) {
+	public boolean alterAt (int index, T after) {
 		if (index < 0 || index >= size || contains(after)) { return false; }
 		super.remove(items.get(index));
 		super.add(after);
@@ -174,7 +174,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the item at the given index
 	 */
-	public T getAtIndex (int index) {
+	public T getAt (int index) {
 		return items.get(index);
 	}
 

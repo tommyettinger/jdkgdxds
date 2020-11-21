@@ -93,7 +93,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 	public boolean add (long key, int index) {
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
-			if (oldIndex != index) { items.add(index, items.removeAtIndex(oldIndex)); }
+			if (oldIndex != index) { items.add(index, items.removeAt(oldIndex)); }
 			return false;
 		}
 		items.add(index, key);
@@ -111,8 +111,8 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 		return super.remove(key) && items.remove(key);
 	}
 
-	public long removeAtIndex (int index) {
-		long key = items.removeAtIndex(index);
+	public long removeAt (int index) {
+		long key = items.removeAt(index);
 		super.remove(key);
 		return key;
 	}
@@ -134,7 +134,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 	 * Changes the item {@code before} to {@code after} without changing its position in the order. Returns true if {@code after}
 	 * has been added to the ObjectOrderedSet and {@code before} has been removed; returns false if {@code after} is already present or
 	 * {@code before} is not present. If you are iterating over an ObjectOrderedSet and have an index, you should prefer
-	 * {@link #alterIndex(int, long)}, which doesn't need to search for an index like this does and so can be faster.
+	 * {@link #alterAt(int, long)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before an item that must be present for this to succeed
 	 * @param after  an item that must not be in this set for this to succeed
@@ -157,7 +157,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
-	public boolean alterIndex (int index, long after) {
+	public boolean alterAt (int index, long after) {
 		if (index < 0 || index >= size || contains(after)) { return false; }
 		super.remove(items.get(index));
 		super.add(after);
@@ -172,7 +172,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the item at the given index
 	 */
-	public long getAtIndex (int index) {
+	public long getAt (int index) {
 		return items.get(index);
 	}
 

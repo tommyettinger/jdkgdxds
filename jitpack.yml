@@ -1,0 +1,6 @@
+jdk:
+  - openjdk15
+install:
+  - echo "Installing with Gradle"
+  - chmod 755 gradlew
+  - ./gradlew clean install

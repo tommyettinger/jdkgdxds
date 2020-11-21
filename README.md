@@ -46,15 +46,28 @@ high-quality and very-fast random number generator is here, `com.github.tommyett
 
 ## How do I get it?
 
-JitPack for now, Maven Central soon. [JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/da3a8b13bd).
+You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
+
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.0.2'` (you can use `implementation` instead
+of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
+cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
+`implementation 'com.github.tommyettinger:jdkgdxds:0.0.2:sources'` to its dependencies, and in its
+`GdxDefinition.gwt.xml` (in the HTML module), add
+```xml
+<inherits name="jdkgdxds" />
+```
+in with the other `inherits` lines.
+
+You can build specific, typically brand-new commits on JitPack.
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/b9bb2986b6).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:da3a8b13bd'` or `api 'com.github.tommyettinger:jdkgdxds:da3a8b13bd'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:b9bb2986b6'` or `api 'com.github.tommyettinger:jdkgdxds:b9bb2986b6'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
-project). If you have an HTML module, add `implementation 'com.github.tommyettinger:jdkgdxds:da3a8b13bd:sources'` to its
+project). If you have an HTML module, add `implementation 'com.github.tommyettinger:jdkgdxds:b9bb2986b6:sources'` to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. `da3a8b13bd` is a temporary commit version until a finished release is published, and can be
+in with the other `inherits` lines. `b9bb2986b6` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.

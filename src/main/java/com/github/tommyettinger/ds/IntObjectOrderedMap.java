@@ -140,8 +140,8 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	}
 
 	@Nullable
-	public V removeAtIndex (int index) {
-		return super.remove(keys.removeAtIndex(index));
+	public V removeAt (int index) {
+		return super.remove(keys.removeAt(index));
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * Changes the key {@code before} to {@code after} without changing its position in the order or its value. Returns true if
 	 * {@code after} has been added to the IntObjectOrderedMap and {@code before} has been removed; returns false if {@code after} is
 	 * already present or {@code before} is not present. If you are iterating over an IntObjectOrderedMap and have an index, you should
-	 * prefer {@link #alterIndex(int, int)}, which doesn't need to search for an index like this does and so can be faster.
+	 * prefer {@link #alterAt(int, int)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before a key that must be present for this to succeed
 	 * @param after  a key that must not be in this map for this to succeed
@@ -186,7 +186,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterIndex (int index, int after) {
+	public boolean alterAt (int index, int after) {
 		if (index < 0 || index >= size || containsKey(after)) { return false; }
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);
@@ -219,7 +219,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return the value at the given index
 	 */
 	@Nullable
-	public V getAtIndex (int index) {
+	public V getAt (int index) {
 		return get(keys.get(index));
 	}
 
@@ -230,7 +230,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public int keyAtIndex (int index) {
+	public int keyAt (int index) {
 		return keys.get(index);
 	}
 

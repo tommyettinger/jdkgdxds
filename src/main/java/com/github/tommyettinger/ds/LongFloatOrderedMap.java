@@ -139,8 +139,8 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 		return super.remove(key);
 	}
 
-	public float removeAtIndex (int index) {
-		return super.remove(keys.removeAtIndex(index));
+	public float removeAt (int index) {
+		return super.remove(keys.removeAt(index));
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 	 * Changes the key {@code before} to {@code after} without changing its position in the order or its value. Returns true if
 	 * {@code after} has been added to the LongFloatOrderedMap and {@code before} has been removed; returns false if {@code after} is
 	 * already present or {@code before} is not present. If you are iterating over an LongFloatOrderedMap and have an index, you should
-	 * prefer {@link #alterIndex(int, long)}, which doesn't need to search for an index like this does and so can be faster.
+	 * prefer {@link #alterAt(int, long)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before a key that must be present for this to succeed
 	 * @param after  a key that must not be in this map for this to succeed
@@ -185,7 +185,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterIndex (int index, long after) {
+	public boolean alterAt (int index, long after) {
 		if (index < 0 || index >= size || containsKey(after)) { return false; }
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);
@@ -216,7 +216,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
-	public float getAtIndex (int index) {
+	public float getAt (int index) {
 		return get(keys.get(index));
 	}
 
@@ -227,7 +227,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong,
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public long keyAtIndex (int index) {
+	public long keyAt (int index) {
 		return keys.get(index);
 	}
 

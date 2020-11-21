@@ -191,7 +191,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 * <pre>
 	 *     protected int locateKey (Object key) {
 	 *         T[] keyTable = this.keyTable;
-	 *         for (int i = place(key); ; i = i + 1 & mask) {
+	 *         for (int i = place(key); ; i = i + 1 &amp; mask) {
 	 *             T other = keyTable[i];
 	 *             if (other == null) {
 	 *                 return ~i; // Always negative; means empty space is available at i.

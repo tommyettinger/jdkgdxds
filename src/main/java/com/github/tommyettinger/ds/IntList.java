@@ -379,7 +379,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
 			if (items[i] == value) {
-				removeAtIndex(i);
+				removeAt(i);
 				return true;
 			}
 		}
@@ -394,7 +394,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	 * @param index the index of the item to remove and return
 	 * @return the removed item
 	 */
-	public int removeAtIndex (int index) {
+	public int removeAt (int index) {
 		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
 		int[] items = this.items;
 		int value = items[index];
@@ -434,7 +434,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 			int item = array.get(i);
 			for (int ii = 0; ii < size; ii++) {
 				if (item == items[ii]) {
-					removeAtIndex(ii);
+					removeAt(ii);
 					size--;
 					break;
 				}
