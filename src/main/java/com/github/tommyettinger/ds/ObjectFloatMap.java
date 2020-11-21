@@ -942,4 +942,28 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 			return iter.map.size;
 		}
 	}
+
+	public float putIfAbsent(K key, float value) {
+		float v = get(key);
+		if (!containsKey(key)) {
+			v = put(key, value);
+		}
+		return v;
+	}
+	public boolean replace(K key, float oldValue, float newValue) {
+		float curValue = get(key);
+		if (curValue != oldValue || !containsKey(key)) {
+			return false;
+		}
+		put(key, newValue);
+		return true;
+	}
+
+	public float replace(K key, float value) {
+		float curValue = get(key);
+		if (containsKey(key)) {
+			curValue = put(key, value);
+		}
+		return curValue;
+	}
 }

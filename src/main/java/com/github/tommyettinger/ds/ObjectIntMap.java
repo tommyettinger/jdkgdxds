@@ -900,4 +900,28 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			return iter.map.size;
 		}
 	}
+
+	public long putIfAbsent(K key, int value) {
+		int v = get(key);
+		if (!containsKey(key)) {
+			v = put(key, value);
+		}
+		return v;
+	}
+	public boolean replace(K key, int oldValue, int newValue) {
+		int curValue = get(key);
+		if (curValue != oldValue || !containsKey(key)) {
+			return false;
+		}
+		put(key, newValue);
+		return true;
+	}
+
+	public int replace(K key, int value) {
+		int curValue = get(key);
+		if (containsKey(key)) {
+			curValue = put(key, value);
+		}
+		return curValue;
+	}
 }

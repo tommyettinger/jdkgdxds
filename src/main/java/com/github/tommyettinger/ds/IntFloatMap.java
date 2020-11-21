@@ -1020,4 +1020,28 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 			return iter.map.size;
 		}
 	}
+
+	public float putIfAbsent(int key, float value) {
+		float v = get(key);
+		if (!containsKey(key)) {
+			v = put(key, value);
+		}
+		return v;
+	}
+	public boolean replace(int key, float oldValue, float newValue) {
+		float curValue = get(key);
+		if (curValue != oldValue || !containsKey(key)) {
+			return false;
+		}
+		put(key, newValue);
+		return true;
+	}
+
+	public float replace(int key, float value) {
+		float curValue = get(key);
+		if (containsKey(key)) {
+			curValue = put(key, value);
+		}
+		return curValue;
+	}
 }

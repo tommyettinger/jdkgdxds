@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.Set;
 
@@ -900,5 +901,29 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		public int size () {
 			return iter.map.size;
 		}
+	}
+
+	public long putIfAbsent(K key, long value) {
+		long v = get(key);
+		if (!containsKey(key)) {
+			v = put(key, value);
+		}
+		return v;
+	}
+	public boolean replace(K key, long oldValue, long newValue) {
+		long curValue = get(key);
+		if (curValue != oldValue || !containsKey(key)) {
+			return false;
+		}
+		put(key, newValue);
+		return true;
+	}
+
+	public long replace(K key, long value) {
+		long curValue = get(key);
+		if (containsKey(key)) {
+			curValue = put(key, value);
+		}
+		return curValue;
 	}
 }

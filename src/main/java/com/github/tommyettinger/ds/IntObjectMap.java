@@ -962,4 +962,29 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 			return iter.map.size;
 		}
 	}
+
+	public V putIfAbsent(int key, V value) {
+		V v = get(key);
+		if (!containsKey(key)) {
+			v = put(key, value);
+		}
+		return v;
+	}
+	public boolean replace(int key, V oldValue, V newValue) {
+		V curValue = get(key);
+		if (!Objects.equals(curValue, oldValue) || !containsKey(key)) {
+			return false;
+		}
+		put(key, newValue);
+		return true;
+	}
+
+	@Nullable
+	public V replace(int key, V value) {
+		V curValue = get(key);
+		if (containsKey(key)) {
+			curValue = put(key, value);
+		}
+		return curValue;
+	}
 }
