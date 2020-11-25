@@ -107,6 +107,32 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 		return defaultValue;
 	}
 
+	/**
+	 * Puts the given key and value into this map at the given index in its order.
+	 * If the key is already present at a different index, it is moved to the given index and its
+	 * value is set to the given value.
+	 * @param key a K key; must not be null
+	 * @param value an int value
+	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
+	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
+	 */
+	public int put (K key, int value, int index) {
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			int oldValue = valueTable[i];
+			valueTable[i] = value;
+			int oldIndex = keys.indexOf(key);
+			if (oldIndex != index) { keys.insert(index, keys.removeAt(oldIndex)); }
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		keys.insert(index, key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
+	}
+
 	public <T extends K> void putAll (ObjectIntOrderedMap<T> map) {
 		ensureCapacity(map.size);
 		ObjectList<T> ks = map.keys;

@@ -118,6 +118,32 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 		}
 	}
 
+	/**
+	 * Puts the given key and value into this map at the given index in its order.
+	 * If the key is already present at a different index, it is moved to the given index and its
+	 * value is set to the given value.
+	 * @param key a K key; must not be null
+	 * @param value a long value
+	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
+	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
+	 */
+	public long put (K key, long value, int index) {
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			long oldValue = valueTable[i];
+			valueTable[i] = value;
+			int oldIndex = keys.indexOf(key);
+			if (oldIndex != index) { keys.insert(index, keys.removeAt(oldIndex)); }
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		keys.insert(index, key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
+	}
+
 	@Override
 	public long remove (Object key) {
 		if (!keys.remove(key)) { return defaultValue; }

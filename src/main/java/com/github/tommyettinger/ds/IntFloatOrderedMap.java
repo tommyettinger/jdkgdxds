@@ -122,6 +122,46 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt, Se
 		return defaultValue;
 	}
 
+	/**
+	 * Puts the given key and value into this map at the given index in its order.
+	 * If the key is already present at a different index, it is moved to the given index and its
+	 * value is set to the given value.
+	 * @param key an int key
+	 * @param value a float value
+	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
+	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
+	 */
+	public float put (int key, float value, int index) {
+		if (key == 0) {
+			float oldValue = defaultValue;
+			if (hasZeroValue) {
+				oldValue = zeroValue;
+				int oldIndex = keys.indexOf(key);
+				if (oldIndex != index) { keys.insert(index, keys.removeAt(oldIndex)); }
+			} else {
+				keys.insert(index, 0);
+				size++;
+			}
+			hasZeroValue = true;
+			zeroValue = value;
+			return oldValue;
+		}
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			float oldValue = valueTable[i];
+			valueTable[i] = value;
+			int oldIndex = keys.indexOf(key);
+			if (oldIndex != index) { keys.insert(index, keys.removeAt(oldIndex)); }
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		keys.insert(index, key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
+	}
+
 	public void putAll (IntFloatOrderedMap map) {
 		ensureCapacity(map.size);
 		IntList ks = map.keys;
