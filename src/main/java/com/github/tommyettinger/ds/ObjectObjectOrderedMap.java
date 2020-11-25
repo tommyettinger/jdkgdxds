@@ -89,6 +89,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	}
 
 	@Override
+	@Nullable
 	public V put (K key, @Nullable V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
@@ -100,6 +101,33 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return null;
+	}
+
+	/**
+	 * Puts the given key and value into this map at the given index in its order.
+	 * If the key is already present at a different index, it is moved to the given index and its
+	 * value is set to the given value.
+	 * @param key a K key; must not be null
+	 * @param value a V value; permitted to be null
+	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
+	 * @return the previous value associated with key, if there was one, or null otherwise
+	 */
+	@Nullable
+	public V put (K key, @Nullable V value, int index) {
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			V oldValue = valueTable[i];
+			valueTable[i] = value;
+			int oldIndex = keys.indexOf(key);
+			if (oldIndex != index) { keys.add(index, keys.remove(oldIndex)); }
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		keys.add(index, key);
 		if (++size >= threshold) { resize(keyTable.length << 1); }
 		return null;
 	}

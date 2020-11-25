@@ -1,14 +1,12 @@
 package com.github.tommyettinger.ds.support;
 
-import com.github.tommyettinger.ds.Ordered;
-
 import java.io.Serializable;
 import java.util.Random;
 
 /**
  * A faster and much-higher-quality substitute for {@link Random}.
- * Like how a laser is made of many beams of photons that don't cross paths, this allows many different
- * random number streams that don't overlap either.
+ * This allows many different random number streams that don't overlap, and offers a much more substantial
+ * API for commonly-used functions.
  * <br>
  * This fills in much of the functionality of MathUtils in libGDX, though with all code as instance methods
  * instead of static methods, and some things renamed (randomTriangular() became {@link #nextTriangular()},
@@ -25,15 +23,34 @@ import java.util.Random;
  * continuous generation. There are also 2 to the 63 possible sequences this can produce; you can tell which
  * one you're using with {@link #getStream()}. Note, {@link Random} can only advance 2 to the 48 times, which
  * takes under half a day to make it repeat on recent laptop hardware while also analyzing the numbers for
- * statistical issues. If statistical quality is a concern, don't use {@link Random}, since the aforementioned
+ * statistical issues. This generator is more comparable to SplittableRandom, introduced in JDK 8 but not
+ * available in Android (even with desugaring) or GWT currently. SplittableRandom also can produce 2 to the
+ * 64 numbers before repeating the sequence, but it will always produce each possible long value exactly once
+ * over the course of that sequence. Each of LaserRandom's streams produces a different sequence of numbers
+ * with a different set of numbers it omits and a different set of numbers it produces more than once; each
+ * of SplittableRandom's streams simply rearranges the order of all possible longs. Though it might seem like
+ * an issue that a LaserRandom stream has gaps in its possible output, if you appended all 2 to the 63
+ * possible LaserRandom streams in full, the gargantuan result would include all longs equally often. So, if
+ * the stream is selected effectively at random, then the subset of that stream that actually gets used
+ * should be fair (and it's very unlikely that any usage will need a full stream of over 18 quintillion
+ * pseudo-random longs).
+ * <br>
+ * If statistical quality is a concern, don't use {@link Random}, since the aforementioned
  * analysis finds statistical failures in about a minute when checking about 16GB of output; this class can
  * produce 64TB of random output without a tool like PractRand finding any failures (sometimes it can't find
- * any minor anomaly over several days of testing).
+ * any minor anomaly over several days of testing). RandomXS128 has some flaws, though they are not nearly as
+ * severe as Random's; mostly they are limited to a particular kind of failure affecting the least
+ * significant bits. RandomXS128's flaws would be permissible if it was faster than any competitors, but it
+ * isn't, and there have been two improved relatives of its algorithm published since it was created. Both of
+ * these improvements, xoroshiro128** and xoshiro256**, are slower when implemented in Java than LaserRandom
+ * (also when all are implemented in C and compiled with GCC or Clang, typically). There are also some
+ * concerns about specific failure cases when the output of xoroshiro128** or xoshiro256** is multiplied by
+ * any of quadrillions of constants and tested after that multiplication (see M.E. O'Neill's dissection of
+ * xoshiro256** <a href="https://www.pcg-random.org/posts/a-quick-look-at-xoshiro256.html">here</a>).
  * <br>
  * You can copy this class independently of the library it's part of; it's meant as a general replacement for
  * Random and also RandomXS128. LaserRandom is generally faster than RandomXS128, and can be over 3x faster
- * when running on OpenJ9 (generating over 3 billion random long values per second). On top of that, this
- * doesn't have the statistical failures that the outdated XorShift128+ algorithm has.
+ * when running on OpenJ9 (generating over 3 billion random long values per second).
  * <br>
  * Pew pew! Lasers!
  *
