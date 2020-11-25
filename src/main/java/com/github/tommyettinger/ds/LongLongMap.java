@@ -752,13 +752,15 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 				throw new IllegalStateException("next must be called before remove.");
 			} else {
 				long[] keyTable = map.keyTable;
+				long[] valueTable = map.valueTable;
 				int mask = map.mask;
 				int next = i + 1 & mask;
 				long key;
 				while ((key = keyTable[next]) != 0) {
-					long placement = map.place(key);
+					int placement = map.place(key);
 					if ((next - placement & mask) > (i - placement & mask)) {
 						keyTable[i] = key;
+						valueTable[i] = valueTable[next];
 						i = next;
 					}
 					next = next + 1 & mask;

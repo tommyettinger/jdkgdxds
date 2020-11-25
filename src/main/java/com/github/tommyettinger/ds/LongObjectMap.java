@@ -296,6 +296,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 			next = next + 1 & mask;
 		}
 		keyTable[i] = 0;
+		valueTable[i] = null;
 
 		size--;
 		return oldValue;
@@ -741,24 +742,25 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 				throw new IllegalStateException("next must be called before remove.");
 			} else {
 				long[] keyTable = map.keyTable;
-				int mask = map.mask;
-				int next = i + 1 & mask;
+				V[] valueTable = map.valueTable;
+				int mask = map.mask, next = i + 1 & mask;
 				long key;
 				while ((key = keyTable[next]) != 0) {
-					long placement = map.place(key);
+					int placement = map.place(key);
 					if ((next - placement & mask) > (i - placement & mask)) {
 						keyTable[i] = key;
+						valueTable[i] = valueTable[next];
 						i = next;
 					}
 					next = next + 1 & mask;
 				}
 				keyTable[i] = 0;
-				if (i != currentIndex) { --nextIndex; }
+				valueTable[i] = null;
+				if (i != currentIndex) --nextIndex;
 			}
 			currentIndex = INDEX_ILLEGAL;
 			map.size--;
 		}
-
 	}
 
 	public static class KeyIterator<V> extends MapIterator<V> implements PrimitiveIterator.OfLong {

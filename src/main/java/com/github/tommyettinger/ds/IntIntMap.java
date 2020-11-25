@@ -754,6 +754,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry>, Serializable {
 				throw new IllegalStateException("next must be called before remove.");
 			} else {
 				int[] keyTable = map.keyTable;
+				int[] valueTable = map.valueTable;
 				int mask = map.mask;
 				int next = i + 1 & mask;
 				int key;
@@ -761,6 +762,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry>, Serializable {
 					int placement = map.place(key);
 					if ((next - placement & mask) > (i - placement & mask)) {
 						keyTable[i] = key;
+						valueTable[i] = valueTable[next];
 						i = next;
 					}
 					next = next + 1 & mask;

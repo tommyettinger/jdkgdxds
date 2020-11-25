@@ -800,6 +800,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 				throw new IllegalStateException("next must be called before remove.");
 			} else {
 				int[] keyTable = map.keyTable;
+				float[] valueTable = map.valueTable;
 				int mask = map.mask;
 				int next = i + 1 & mask;
 				int key;
@@ -807,6 +808,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 					int placement = map.place(key);
 					if ((next - placement & mask) > (i - placement & mask)) {
 						keyTable[i] = key;
+						valueTable[i] = valueTable[next];
 						i = next;
 					}
 					next = next + 1 & mask;

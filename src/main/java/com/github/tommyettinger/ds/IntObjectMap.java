@@ -296,6 +296,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 			next = next + 1 & mask;
 		}
 		keyTable[i] = 0;
+		valueTable[i] = null;
 
 		size--;
 		return oldValue;

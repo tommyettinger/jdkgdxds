@@ -223,7 +223,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		int mask = this.mask;
 		int next = i + 1 & mask;
 		while ((key = keyTable[next]) != 0) {
-			long placement = place(key);
+			int placement = place(key);
 			if ((next - placement & mask) > (i - placement & mask)) {
 				keyTable[i] = key;
 				i = next;
@@ -451,7 +451,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 				int next = i + 1 & mask;
 				long key;
 				while ((key = keyTable[next]) != 0) {
-					long placement = set.place(key);
+					int placement = set.place(key);
 					if ((next - placement & mask) > (i - placement & mask)) {
 						keyTable[i] = key;
 						i = next;
