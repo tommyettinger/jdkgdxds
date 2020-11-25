@@ -122,6 +122,47 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 		return defaultValue;
 	}
 
+	/**
+	 * Puts the given key and value into this map at the given index in its order.
+	 * If the key is already present at a different index, it is moved to the given index and its
+	 * value is set to the given value.
+	 * @param key a long key
+	 * @param value a V value; permitted to be null
+	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
+	 * @return the previous value associated with key, if there was one, or null otherwise
+	 */
+	@Nullable
+	public V put (long key, @Nullable V value, int index) {
+		if (key == 0) {
+			V oldValue = defaultValue;
+			if (hasZeroValue) {
+				oldValue = zeroValue;
+				int oldIndex = keys.indexOf(key);
+				if (oldIndex != index) { keys.insert(index, keys.removeAt(oldIndex)); }
+			} else {
+				keys.insert(index, 0);
+				size++;
+			}
+			hasZeroValue = true;
+			zeroValue = value;
+			return oldValue;
+		}
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			V oldValue = valueTable[i];
+			valueTable[i] = value;
+			int oldIndex = keys.indexOf(key);
+			if (oldIndex != index) { keys.insert(index, keys.removeAt(oldIndex)); }
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		keys.insert(index, key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return null;
+	}
+
 	public void putAll (LongObjectOrderedMap<? extends V> map) {
 		ensureCapacity(map.size);
 		LongList ks = map.keys;

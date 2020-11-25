@@ -121,13 +121,13 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			V oldValue = valueTable[i];
 			valueTable[i] = value;
 			int oldIndex = keys.indexOf(key);
-			if (oldIndex != index) { keys.add(index, keys.remove(oldIndex)); }
+			if (oldIndex != index) { keys.insert(index, keys.removeAt(oldIndex)); }
 			return oldValue;
 		}
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		keys.add(index, key);
+		keys.insert(index, key);
 		if (++size >= threshold) { resize(keyTable.length << 1); }
 		return null;
 	}

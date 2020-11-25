@@ -124,8 +124,35 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 			super.add(element);
 	}
 
+	/**
+	 * This is an alias for {@link #add(int, Object)} to improve compatibility with primitive lists.
+	 * @param index index at which the specified element is to be inserted
+	 * @param element element to be inserted
+	 */
+	public void insert (int index, @Nullable T element) {
+		if (ordered)
+			super.add(index, element);
+		else
+			super.add(element);
+	}
+
 	@Override
 	public T remove (int index) {
+		if (ordered)
+			return super.remove(index);
+		T value = super.get(index);
+		int size = size();
+		super.set(index, get(size - 1));
+		super.remove(size - 1);
+		return value;
+	}
+
+	/**
+	 * This is an alias for {@link #remove(int)} to make the API the same for primitive lists.
+	 * @param index must be non-negative and less than {@link #size()}
+	 * @return the previously-held item at the given index
+	 */
+	public T removeAt (int index) {
 		if (ordered)
 			return super.remove(index);
 		T value = super.get(index);
