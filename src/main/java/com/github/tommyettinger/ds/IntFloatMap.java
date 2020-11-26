@@ -130,6 +130,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
+		defaultValue = map.defaultValue;
 	}
 
 	/**

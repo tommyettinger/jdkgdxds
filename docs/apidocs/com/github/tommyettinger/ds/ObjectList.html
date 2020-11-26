@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":9};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -310,46 +310,61 @@ int&nbsp;count)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i12">
+<td class="col-first"><code>void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#insert(int,T)">insert</a></span>&#8203;(int&nbsp;index,
+<a href="ObjectList.html" title="type parameter in ObjectList">T</a>&nbsp;element)</code></th>
+<td class="col-last">
+<div class="block">This is an alias for <a href="#add(int,T)"><code>add(int, Object)</code></a> to improve compatibility with primitive lists.</div>
+</td>
+</tr>
+<tr class="row-color" id="i13">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#notEmpty()">notEmpty</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns true if the array has one or more items.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code><a href="ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="ObjectList.html" title="type parameter in ObjectList">T</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#order()">order</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Gets the ObjectList of T items that this data structure holds, in the order it uses for iteration.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="row-color" id="i15">
 <td class="col-first"><code><a href="ObjectList.html" title="type parameter in ObjectList">T</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#peek()">peek</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns the last item.</div>
 </td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="alt-color" id="i16">
 <td class="col-first"><code><a href="ObjectList.html" title="type parameter in ObjectList">T</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#pop()">pop</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Removes and returns the last item.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="row-color" id="i17">
 <td class="col-first"><code><a href="ObjectList.html" title="type parameter in ObjectList">T</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#random(java.util.Random)">random</a></span>&#8203;(java.util.Random&nbsp;random)</code></th>
 <td class="col-last">
 <div class="block">Returns a <code>T</code> item from anywhere in this ObjectList, chosen pseudo-randomly using <code>random</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="alt-color" id="i18">
 <td class="col-first"><code><a href="ObjectList.html" title="type parameter in ObjectList">T</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#remove(int)">remove</a></span>&#8203;(int&nbsp;index)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="row-color" id="i19">
+<td class="col-first"><code><a href="ObjectList.html" title="type parameter in ObjectList">T</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#removeAt(int)">removeAt</a></span>&#8203;(int&nbsp;index)</code></th>
+<td class="col-last">
+<div class="block">This is an alias for <a href="#remove(int)"><code>remove(int)</code></a> to make the API the same for primitive lists.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#removeRange(int,int)">removeRange</a></span>&#8203;(int&nbsp;start,
 int&nbsp;end)</code></th>
@@ -357,21 +372,21 @@ int&nbsp;end)</code></th>
 <div class="block">Removes the items between the specified indices, inclusive.</div>
 </td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#reverse()">reverse</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Reverses this Arrangeable in-place.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i20">
+<tr class="alt-color" id="i22">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(java.util.Random)">shuffle</a></span>&#8203;(java.util.Random&nbsp;random)</code></th>
 <td class="col-last">
 <div class="block">Pseudo-randomly shuffles the order of this Ordered in-place.</div>
 </td>
 </tr>
-<tr class="row-color" id="i21">
+<tr class="row-color" id="i23">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#swap(int,int)">swap</a></span>&#8203;(int&nbsp;a,
 int&nbsp;b)</code></th>
@@ -379,17 +394,17 @@ int&nbsp;b)</code></th>
 <div class="block">Switches the ordering of positions <code>a</code> and <code>b</code>, without changing any items beyond that.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i22">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i23">
+<tr class="row-color" id="i25">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toString(java.lang.String)">toString</a></span>&#8203;(java.lang.String&nbsp;separator)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i24">
+<tr class="alt-color" id="i26">
 <td class="col-first"><code>static &lt;T&gt;&nbsp;<a href="ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;T&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#with(T...)">with</a></span>&#8203;(T...&nbsp;varargs)</code></th>
 <td class="col-last">&nbsp;</td>
@@ -553,6 +568,20 @@ int&nbsp;count)</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="insert(int,T)">
+<h3 id="insert(int,java.lang.Object)">insert</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">insert</span>&#8203;(<span class="parameters">int&nbsp;index,
+@Nullable
+<a href="ObjectList.html" title="type parameter in ObjectList">T</a>&nbsp;element)</span></div>
+<div class="block">This is an alias for <a href="#add(int,T)"><code>add(int, Object)</code></a> to improve compatibility with primitive lists.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - index at which the specified element is to be inserted</dd>
+<dd><code>element</code> - element to be inserted</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="remove(int)">
 <h3>remove</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ObjectList.html" title="type parameter in ObjectList">T</a></span>&nbsp;<span class="member-name">remove</span>&#8203;(<span class="parameters">int&nbsp;index)</span></div>
@@ -561,6 +590,19 @@ int&nbsp;count)</span></div>
 <dd><code>remove</code>&nbsp;in interface&nbsp;<code>java.util.List&lt;<a href="ObjectList.html" title="type parameter in ObjectList">T</a>&gt;</code></dd>
 <dt>Overrides:</dt>
 <dd><code>remove</code>&nbsp;in class&nbsp;<code>java.util.ArrayList&lt;<a href="ObjectList.html" title="type parameter in ObjectList">T</a>&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="removeAt(int)">
+<h3>removeAt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ObjectList.html" title="type parameter in ObjectList">T</a></span>&nbsp;<span class="member-name">removeAt</span>&#8203;(<span class="parameters">int&nbsp;index)</span></div>
+<div class="block">This is an alias for <a href="#remove(int)"><code>remove(int)</code></a> to make the API the same for primitive lists.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - must be non-negative and less than <code>ArrayList.size()</code></dd>
+<dt>Returns:</dt>
+<dd>the previously-held item at the given index</dd>
 </dl>
 </section>
 </li>
