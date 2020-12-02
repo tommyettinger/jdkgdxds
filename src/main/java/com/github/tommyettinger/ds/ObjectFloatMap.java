@@ -486,7 +486,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 			K key = keyTable[i];
 			if (key != null) {
 				h ^= key.hashCode();
-				h ^= BitConversion.floatToIntBits(valueTable[i]);
+				h ^= BitConversion.floatToRawIntBits(valueTable[i]);
 			}
 		}
 		return h;
@@ -715,7 +715,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		@Override
 		public int hashCode () {
 			assert key != null;
-			return key.hashCode() * 31 + BitConversion.floatToIntBits(value);
+			return key.hashCode() * 31 + BitConversion.floatToRawIntBits(value);
 		}
 	}
 

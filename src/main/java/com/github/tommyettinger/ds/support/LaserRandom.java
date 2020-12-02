@@ -136,12 +136,24 @@ public class LaserRandom extends Random implements Serializable {
 	 * Set the "B" part of the internal state with a long; the least significant bit is ignored (will always be odd).
 	 * That is, if stateB is odd, this uses it verbatim; if stateB is even, it adds 1 to it to make it odd.
 	 *
-	 * @param stateB a 64-bit long
+	 * @param stateB a 64-bit long; the lowest bit will be ignored and the result always used as an odd number
 	 */
 	public void setStateB (long stateB) {
 		this.stateB = stateB | 1L;
 	}
 
+	/**
+	 * Sets both parts of the internal state with one call; {@code stateA} is used verbatim, but {@code stateB} has
+	 * its least significant bit ignored and always overwritten with a '1' bit (meaning stateB will always be odd).
+	 * You can use any long for stateA without it being changed, and can use any odd long for stateB without it
+	 * being changed; as such, keeping {@code stateB} an odd number should be optimal.
+	 * @param stateA a 64-bit long
+	 * @param stateB a 64-bit long; the lowest bit will be ignored and the result always used as an odd number
+	 */
+	public void setState (long stateA, long stateB) {
+		this.stateA = stateA;
+		this.stateB = stateB | 1L;
+	}
 	/**
 	 * Sets the seed of this random number generator using a single
 	 * {@code long} seed. The general contract of {@code setSeed} is
@@ -257,7 +269,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * the bound is unknown or may be user-specified. A negative outer bound is used
 	 * as the lower bound; a positive outer bound is used as the upper bound. An outer
 	 * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
-	 * for outer bound 0).
+	 * for outer bound 0). This method is slightly slower than {@link #nextInt(int)}.
 	 *
 	 * @param outerBound the outer exclusive bound; may be any int value, allowing negative
 	 * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
@@ -290,7 +302,8 @@ public class LaserRandom extends Random implements Serializable {
 	 * Returns a pseudorandom, uniformly distributed {@code int} value between the
 	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
 	 * (exclusive). This is meant for cases where either bound may be negative,
-	 * especially if the bounds are unknown or may be user-specified.
+	 * especially if the bounds are unknown or may be user-specified. It is slightly
+	 * slower than {@link #nextInt(int, int)}.
 	 *
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
 	 * @param outerBound the exclusive outer bound; may be any int, allowing negative
@@ -305,7 +318,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * value from this random number generator's sequence. The general
 	 * contract of {@code nextLong} is that one {@code long} value is
 	 * pseudorandomly generated and returned.
-	 * <p>
+	 * <br>
 	 * An individual {@code LaserRNG} can't return all 18-quintillion possible {@code long} values,
 	 * but the full set of 9-quintillion possible random number streams that this class can produce will,
 	 * as a whole, produce all {@code long} values with equal likelihood.
@@ -329,11 +342,16 @@ public class LaserRandom extends Random implements Serializable {
 	 * {@code long} values are produced with (approximately) equal
 	 * probability.
 	 *
-	 * <p>Note that this advances the state by the same amount as a single call to
+	 * <br> Note that this advances the state by the same amount as a single call to
 	 * {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
 	 * correctly, but introduces some bias when {@code bound} is very large. This will
 	 * also advance the state if {@code bound} is 0 or negative, so usage with a variable
 	 * bound will advance the state reliably.
+	 *
+	 * <br> This method has some bias, particularly on larger bounds. Actually measuring
+	 * bias with bounds in the trillions or greater is challenging but not impossible, so
+	 * don't use this for a real-money gambling purpose. The bias isn't especially
+	 * significant, though.
 	 *
 	 * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
 	 * @return the next pseudorandom, uniformly distributed {@code long}
@@ -365,7 +383,9 @@ public class LaserRandom extends Random implements Serializable {
 	 *
 	 * <p>Note that this advances the state by the same amount as a single call to
 	 * {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
-	 * correctly, but introduces some bias when {@code bound} is very large.
+	 * correctly, but introduces some bias when {@code bound} is very large. This
+	 * method should be about as fast as {@link #nextLong(long)} , unlike the speed
+	 * difference between {@link #nextInt(int)} and {@link #nextSignedInt(int)}.
 	 *
 	 * @param outerBound the outer exclusive bound; may be any long value, allowing negative
 	 * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
@@ -527,7 +547,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * generator's sequence
 	 */
 	@Override
-	public synchronized double nextGaussian () {
+	public double nextGaussian () {
 		return probit(nextDouble());
 	}
 

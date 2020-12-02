@@ -508,14 +508,14 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	}
 
 	public int hashCode () {
-		int h = hasZeroValue ? BitConversion.floatToIntBits(zeroValue) ^ size : size;
+		int h = hasZeroValue ? BitConversion.floatToRawIntBits(zeroValue) ^ size : size;
 		int[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			int key = keyTable[i];
 			if (key != 0) {
 				h ^= key;
-				h ^= BitConversion.floatToIntBits(valueTable[i]);
+				h ^= BitConversion.floatToRawIntBits(valueTable[i]);
 			}
 		}
 		return h;
@@ -747,7 +747,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 		@Override
 		public int hashCode () {
-			return key * 31 + BitConversion.floatToIntBits(value);
+			return key * 31 + BitConversion.floatToRawIntBits(value);
 		}
 	}
 

@@ -319,7 +319,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		int h = 1;
 		Node[] nodes = this.nodes;
 		for (int i = 0, n = size; i < n; i++) {
-			h += BitConversion.floatToIntBits(nodes[i].value);
+			h += BitConversion.floatToRawIntBits(nodes[i].value);
 			h ^= h >>> 15;
 		}
 		return h;

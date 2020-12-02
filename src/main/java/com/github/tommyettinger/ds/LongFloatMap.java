@@ -508,14 +508,14 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 	}
 
 	public int hashCode () {
-		long h = hasZeroValue ? BitConversion.floatToIntBits(zeroValue) * 0x9E3779B97F4A7C15L + size : size;
+		long h = hasZeroValue ? BitConversion.floatToRawIntBits(zeroValue) * 0x9E3779B97F4A7C15L + size : size;
 		long[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			long key = keyTable[i];
 			if (key != 0) {
 				h += key;
-				h += BitConversion.floatToIntBits(valueTable[i]) * 0x9E3779B97F4A7C15L;
+				h += BitConversion.floatToRawIntBits(valueTable[i]) * 0x9E3779B97F4A7C15L;
 			}
 		}
 		return (int)(h ^ h >>> 32);
@@ -745,7 +745,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 
 		@Override
 		public int hashCode () {
-			return (int)(key ^ key >>> 32) + BitConversion.floatToIntBits(value);
+			return (int)(key ^ key >>> 32) + BitConversion.floatToRawIntBits(value);
 		}
 	}
 

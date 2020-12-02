@@ -25,7 +25,7 @@ Set and Map. These are effectively replacements for `com.badlogic.gdx.utils.Arra
 `com.badlogic.gdx.utils.ObjectMap`, `com.badlogic.gdx.utils.OrderedSet`, and `com.badlogic.gdx.utils.OrderedMap`. As nice as it
 would be to just call these by the same names (except Array, that one's just confusing), we have other kinds of Object-keyed Maps,
 and other kinds of insertion-ordered Maps, so `ObjectMap` is now `ObjectObjectMap` because it has Object keys and Object values,
-while `OrderedMap` is now `ObjectObjectOrderedMap`, because of the same reason. Primitive-backed collections are limited to `int`
+while `OrderedMap` is now `ObjectObjectOrderedMap`, because of the same reason. Primitive-backed collections support `int`
 and `long` keys, and `int`, `long`, or `float` values; this may be extended in the future. So, there's `IntSet` and `LongSet`,
 with ordered variants `IntOrderedSet` and `LongOrderedSet`, while their map counterparts are more numerous.
 
@@ -33,9 +33,16 @@ There's `IntFloatMap`, `IntFloatOrderedMap`, `IntIntMap`, `IntIntOrderedMap`, `I
 `IntObjectMap`, `IntObjectOrderedMap`, `LongFloatMap`, `LongFloatOrderedMap`, `LongIntMap`, `LongIntOrderedMap`,
 `LongLongMap`, `LongLongOrderedMap`, `LongObjectMap`, and `LongObjectOrderedMap`, so I hope that's enough. Then again, there's
 still `ObjectFloatMap`, `ObjectFloatOrderedMap`, `ObjectIntMap`, `ObjectIntOrderedMap`, `ObjectLongMap`, and
-`ObjectLongOrderedMap` for the primitive-valued maps with Object keys. There's a lonely `CaseInsensitiveMap` that requires
-`CharSequence` keys (such as String or StringBuilder), but treats them as case-insensitive, and allows a generic Object type for
-its values.
+`ObjectLongOrderedMap` for the primitive-valued maps with Object keys. There's a `CaseInsensitiveMap` (and a
+`CaseInsensitiveOrderedMap`) that requires `CharSequence` keys (such as String or StringBuilder), but treats them as
+case-insensitive, and allows a generic Object type for its values. There's the unusual `HolderSet` and `HolderOrderedSet`, which
+take an "extractor" function when constructed and use it to hash items by an extracted value; this lets you, for example, make a
+HolderSet of "Employee" objects and look up a full Employee given only their UUID. In that case, an Employee's value could change,
+and the result of hashCode() on an Employee would change, but as long as the UUID of the Employee stays the same, the same
+Employee will be found by methods like `get()` and `contains()`. `NumberedSet` wraps an `ObjectIntOrderedMap` and makes it so that
+Object keys can be looked up by index (using the standard ordered set methods like `getAt()`), but also so that their `indexOf()`
+method runs in constant time instead of linear time. This is at the expense of slower removal from the middle of the NumberedSet;
+that class doesn't implement insertion in the middle of the NumberedSet either.
 
 The library includes expanded interfaces for these to implement, like the aforementioned `Ordered` interface,
 `PrimitiveCollection` to complement Java 8's `PrimitiveIterator`, some `float`-based versions of primitive specializations where
@@ -48,10 +55,10 @@ high-quality and very-fast random number generator is here, `com.github.tommyett
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.0.2'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.0.3'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.0.2:sources'` to its dependencies, and in its
+`implementation 'com.github.tommyettinger:jdkgdxds:0.0.3:sources'` to its dependencies, and in its
 `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />
@@ -59,15 +66,15 @@ cases; if it can't be found, you may need the repository `mavenCentral()` . If y
 in with the other `inherits` lines.
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/b9bb2986b6).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/b33a7e69ab).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:b9bb2986b6'` or `api 'com.github.tommyettinger:jdkgdxds:b9bb2986b6'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:b33a7e69ab'` or `api 'com.github.tommyettinger:jdkgdxds:b33a7e69ab'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
-project). If you have an HTML module, add `implementation 'com.github.tommyettinger:jdkgdxds:b9bb2986b6:sources'` to its
+project). If you have an HTML module, add `implementation 'com.github.tommyettinger:jdkgdxds:b33a7e69ab:sources'` to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. `b9bb2986b6` is an example of a recent commit, and can be
+in with the other `inherits` lines. `b33a7e69ab` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
