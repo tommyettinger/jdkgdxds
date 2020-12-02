@@ -19,10 +19,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 def projectName = 'jdkgdxds'
-version '0.0.3'
+version '0.0.4-SNAPSHOT'
 group 'com.github.tommyettinger'
 
-//api "com.github.tommyettinger:jdkgdxds:0.0.1"
+//api "com.github.tommyettinger:jdkgdxds:0.0.3"
 
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
