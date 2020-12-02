@@ -381,13 +381,14 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 
 	/**
 	 * Pseudo-randomly shuffles the order of this Ordered in-place.
-	 *
-	 * @param random any {@link Random} implementation; prefer {@link LaserRandom} in this library
+	 * You can technically use {@link Random} or any of its subclasses for {@code rng},
+	 * but java.util.Random is a really bad choice; {@link LaserRandom} is generally better.
+	 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 	 */
 	@Override
-	public void shuffle (Random random) {
+	public void shuffle (Random rng) {
 		for (int i = size() - 1; i >= 0; i--) {
-			set(i, set(random.nextInt(i + 1), get(i)));
+			set(i, set(rng.nextInt(i + 1), get(i)));
 		}
 	}
 

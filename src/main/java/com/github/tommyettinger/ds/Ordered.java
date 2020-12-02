@@ -38,20 +38,40 @@ public interface Ordered<T> extends Arrangeable {
 
 	/**
 	 * Pseudo-randomly shuffles the order of this Ordered in-place.
-	 *
-	 * @param random any {@link Random} implementation; prefer {@link LaserRandom} in this library
+	 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
+	 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
+	 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
+	 * items (though it would take millions of years to do so, and would require changing the stream every few
+	 * years), while {@link Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
+	 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
+	 * somewhat slower and is not ideal in terms of statistical bias.
+	 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 	 */
 	@Override
-	default void shuffle (Random random) {
+	default void shuffle (Random rng) {
 		ObjectList<T> order = order();
 		for (int i = order.size() - 1; i >= 0; i--) {
-			order.set(i, order.set(random.nextInt(i + 1), order.get(i)));
+			order.set(i, order.set(rng.nextInt(i + 1), order.get(i)));
 		}
 	}
 
+	/**
+	 * Reverses the order of this Ordered in-place.
+	 */
 	@Override
 	default void reverse () {
 		Collections.reverse(order());
+	}
+
+	/**
+	 * Gets a random T value from this Ordered, where T is typically the key type for Maps and the
+	 * item type for Lists and Sets. The random number generator {@code rng} should probably be a
+	 * {@link LaserRandom}, because it implements a fast {@link LaserRandom#nextInt(int)} method.
+	 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
+	 * @return a random T key or item from this Ordered
+	 */
+	default T random(Random rng) {
+		return order().random(rng);
 	}
 
 	/**
@@ -80,21 +100,43 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
-		 *
-		 * @param random any {@link Random} implementation; prefer {@link LaserRandom} in this library
+		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
+		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
+		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
+		 * items (though it would take millions of years to do so, and would require changing the stream every few
+		 * years), while {@link Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
+		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
+		 * somewhat slower and is not ideal in terms of statistical bias.
+		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 		 */
 		@Override
-		default void shuffle (Random random) {
+		default void shuffle (Random rng) {
 			IntList order = order();
 			for (int i = order.size() - 1; i >= 0; i--) {
-				order.swap(i, random.nextInt(i + 1));
+				order.swap(i, rng.nextInt(i + 1));
 			}
 		}
 
+		/**
+		 * Reverses the order of this Ordered in-place.
+		 */
 		@Override
 		default void reverse () {
 			order().reverse();
 		}
+
+
+		/**
+		 * Gets a random int value from this Ordered. The random number generator {@code rng} should
+		 * probably be a {@link LaserRandom}, because it implements a fast
+		 * {@link LaserRandom#nextInt(int)} method.
+		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
+		 * @return a random int key or item from this Ordered.OfInt
+		 */
+		default int random(Random rng) {
+			return order().random(rng);
+		}
+
 	}
 
 	/**
@@ -123,22 +165,41 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
-		 *
-		 * @param random any {@link Random} implementation; prefer {@link LaserRandom} in this library
+		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
+		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
+		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
+		 * items (though it would take millions of years to do so, and would require changing the stream every few
+		 * years), while {@link Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
+		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
+		 * somewhat slower and is not ideal in terms of statistical bias.
+		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 		 */
 		@Override
-		default void shuffle (Random random) {
+		default void shuffle (Random rng) {
 			LongList order = order();
 			for (int i = order.size() - 1; i >= 0; i--) {
-				order.swap(i, random.nextInt(i + 1));
+				order.swap(i, rng.nextInt(i + 1));
 			}
 		}
 
+		/**
+		 * Reverses the order of this Ordered in-place.
+		 */
 		@Override
 		default void reverse () {
 			order().reverse();
 		}
 
+		/**
+		 * Gets a random long value from this Ordered. The random number generator {@code rng} should
+		 * probably be a {@link LaserRandom}, because it implements a fast
+		 * {@link LaserRandom#nextInt(int)} method.
+		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
+		 * @return a random long key or item from this Ordered.OfLong
+		 */
+		default long random(Random rng) {
+			return order().random(rng);
+		}
 	}
 
 	/**
@@ -167,20 +228,40 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
-		 *
-		 * @param random any {@link Random} implementation; prefer {@link LaserRandom} in this library
+		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
+		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
+		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
+		 * items (though it would take millions of years to do so, and would require changing the stream every few
+		 * years), while {@link Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
+		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
+		 * somewhat slower and is not ideal in terms of statistical bias.
+		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 		 */
 		@Override
-		default void shuffle (Random random) {
+		default void shuffle (Random rng) {
 			FloatList order = order();
 			for (int i = order.size() - 1; i >= 0; i--) {
-				order.swap(i, random.nextInt(i + 1));
+				order.swap(i, rng.nextInt(i + 1));
 			}
 		}
 
+		/**
+		 * Reverses the order of this Ordered in-place.
+		 */
 		@Override
 		default void reverse () {
 			order().reverse();
+		}
+
+		/**
+		 * Gets a random float value from this Ordered. The random number generator {@code rng} should
+		 * probably be a {@link LaserRandom}, because it implements a fast
+		 * {@link LaserRandom#nextInt(int)} method.
+		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
+		 * @return a random float key or item from this Ordered.OfFloat
+		 */
+		default float random(Random rng) {
+			return order().random(rng);
 		}
 	}
 }

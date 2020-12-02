@@ -24,7 +24,8 @@ import java.util.Arrays;
  * A binary heap that stores nodes which each have a float value and are sorted either lowest first or highest first.
  * This can expand if its capacity is exceeded. It defaults to acting as a min-heap, sorting lowest-first.
  * The {@link Node} class can be extended to store additional information.
- *
+ * <br>
+ * This isn't a direct copy from libGDX, but it's very close.
  * @author Nathan Sweet
  */
 @SuppressWarnings("unchecked")
@@ -129,6 +130,10 @@ public class BinaryHeap<T extends BinaryHeap.Node> {
 			if (moved.value < node.value ^ isMaxHeap) { up(node.index); } else { down(node.index); }
 		} else { nodes[0] = null; }
 		return node;
+	}
+
+	public int size () {
+		return size;
 	}
 
 	/**

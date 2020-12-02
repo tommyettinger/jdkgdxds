@@ -228,6 +228,15 @@ public class LaserRandom extends Random implements Serializable {
 	 * is pseudorandomly generated and returned.  All {@code bound} possible
 	 * {@code int} values are produced with (approximately) equal
 	 * probability.
+	 * <br>
+	 * It should be mentioned that the technique this uses has some bias, depending
+	 * on {@code bound}, but it typically isn't measurable without specifically looking
+	 * for it. Using the method this does allows this method to always advance the state
+	 * by one step, instead of a varying and unpredictable amount with the more typical
+	 * ways of rejection-sampling random numbers and only using numbers that can produce
+	 * an int within the bound without bias.
+	 * See <a href="https://www.pcg-random.org/posts/bounded-rands.html">M.E. O'Neill's
+	 * blog about random numbers</a> for discussion of alternative, unbiased methods.
 	 *
 	 * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
 	 * @return the next pseudorandom, uniformly distributed {@code int}
