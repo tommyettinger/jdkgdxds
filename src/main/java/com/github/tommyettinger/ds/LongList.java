@@ -717,7 +717,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		}
 
 		public void reset () {
-			index = -1;
+			index = 0;
 		}
 	}
 

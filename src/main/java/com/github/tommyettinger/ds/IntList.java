@@ -712,7 +712,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 		}
 
 		public void reset () {
-			index = -1;
+			index = 0;
 		}
 	}
 

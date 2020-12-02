@@ -731,7 +731,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 		}
 
 		public void reset () {
-			index = -1;
+			index = 0;
 		}
 	}
 
