@@ -1,15 +1,16 @@
 package com.github.tommyettinger.ds.annotations;
 
-import javax.annotation.Nonnull;
-import javax.annotation.meta.TypeQualifierDefault;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
+import org.checkerframework.framework.qual.TypeUseLocation;
+
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Documented
-@Nonnull
-@TypeQualifierDefault({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
+@NonNull
+@DefaultQualifier(value = NonNull.class, locations = {TypeUseLocation.ALL})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NotNullDefault {
 }

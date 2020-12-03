@@ -1,11 +1,10 @@
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.CaseInsensitiveMap;
 import com.github.tommyettinger.ds.HolderSet;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -14,15 +13,16 @@ import java.util.Objects;
 @SuppressWarnings("SuspiciousMethodCalls")
 public class HolderSetTest {
 	public static class Person {
-		@Nonnull private String name;
+		@NonNull
+		private String name;
 		private int x, y;
 
-		@Nonnull
+		@NonNull
 		public String getName () {
 			return name;
 		}
 
-		public void setName (@Nonnull String name) {
+		public void setName (@NonNull String name) {
 			this.name = name;
 		}
 
@@ -46,11 +46,11 @@ public class HolderSetTest {
 			this("Nihilus", 0, 0);
 		}
 
-		public Person (@Nonnull String name) {
+		public Person (@NonNull String name) {
 			this(name, 0, 0);
 		}
 
-		public Person (@Nonnull String name, int x, int y) {
+		public Person (@NonNull String name, int x, int y) {
 			this.name = name;
 			this.x = x;
 			this.y = y;

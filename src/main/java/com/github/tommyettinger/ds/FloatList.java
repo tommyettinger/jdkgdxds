@@ -20,7 +20,7 @@ import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;

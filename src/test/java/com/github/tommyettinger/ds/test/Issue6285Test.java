@@ -1,12 +1,9 @@
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.HolderSet;
 import com.github.tommyettinger.ds.IntIntMap;
 import com.github.tommyettinger.ds.IntObjectMap;
 import org.junit.Assert;
 import org.junit.Test;
-
-import javax.annotation.Nonnull;
 
 /**
  * Tests for <a href="https://github.com/libgdx/libgdx/issues/6285">libGDX issue #6285</a>.

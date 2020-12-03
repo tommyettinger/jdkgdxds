@@ -19,7 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Arrays;
