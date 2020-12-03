@@ -16,7 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
@@ -98,7 +98,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			return oldValue;
 		}
 		i = ~i; // Empty space was found.
-		keyTable[i] = key; /////// This should totally be caught as a nullity issue! It isn't!
+		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
 		if (++size >= threshold) { resize(keyTable.length << 1); }
