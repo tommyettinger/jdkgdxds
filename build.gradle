@@ -26,8 +26,6 @@ group 'com.github.tommyettinger'
 
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
-compileJava.exclude("emu")
-
 // Disable JDK 8's doclint
 // http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
 if (JavaVersion.current().isJava8Compatible()) {
@@ -35,12 +33,13 @@ if (JavaVersion.current().isJava8Compatible()) {
         tasks.withType(Javadoc) {
             // The -quiet is because of some sort of weird JDK JavaCompiler bug:
             // https://discuss.gradle.org/t/passing-arguments-to-compiler-and-javadoc/1661
-            options.addStringOption('Xdoclint:all,-missing', '-quiet')
+            options.addStringOption('Xdoclint:none,-missing', '-quiet')
             options.tags('apiNote:a:"API Note"', 'implSpec:a:"Implementation Requirements"', 'implNote:a:"Implementation Note"')
         }
     }
 }
 
+compileJava.exclude("emu")
 javadoc.exclude("emu")
 javadoc.options.source("15")
 javadoc.destinationDir = file("docs/apidocs")

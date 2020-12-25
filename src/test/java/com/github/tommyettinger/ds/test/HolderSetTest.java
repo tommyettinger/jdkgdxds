@@ -1,12 +1,10 @@
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.CaseInsensitiveMap;
 import com.github.tommyettinger.ds.HolderSet;
 import org.junit.Assert;
 import org.junit.Test;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 /**
  * Created by Tommy Ettinger on 10/26/2020.

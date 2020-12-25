@@ -63,4 +63,12 @@ public final class BitConversion {
 		return wfa.get(0);
 	}
 
+	public static int lowestOneBit(int num) {
+		return num & -num;
+	}
+
+	public static long lowestOneBit(long num) {
+		return num & ~(num - 1L);
+	}
+
 }
