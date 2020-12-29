@@ -110,11 +110,13 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	}
 
 	// Newly-added
+	@Override
 	public int size () {
 		return size;
 	}
 
 	// Modified from libGDX
+	@Override
 	public boolean add (long value) {
 		long[] items = this.items;
 		if (size == items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
@@ -331,6 +333,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		items[second] = firstValue;
 	}
 
+	@Override
 	public boolean contains (long value) {
 		int i = size - 1;
 		long[] items = this.items;
@@ -374,6 +377,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	 * @return true if a value was removed, false if the LongList is unchanged
 	 */
 	// Modified from libGDX
+	@Override
 	public boolean remove (long value) {
 		long[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
@@ -495,10 +499,12 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	/**
 	 * Returns true if the array is empty.
 	 */
+	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
 
+	@Override
 	public void clear () {
 		size = 0;
 	}
@@ -596,6 +602,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		return array;
 	}
 
+	@Override
 	public int hashCode () {
 		long[] items = this.items;
 		long h;
@@ -616,6 +623,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	/**
 	 * Returns false if either array is unordered.
 	 */
+	@Override
 	public boolean equals (Object object) {
 		if (object == this) { return true; }
 		if (!ordered) { return false; }
@@ -629,6 +637,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		return true;
 	}
 
+	@Override
 	public String toString () {
 		if (size == 0) { return "[]"; }
 		long[] items = this.items;
@@ -664,6 +673,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	 *
 	 * @return a {@link PrimitiveIterator.OfLong}; use its nextLong() method instead of next()
 	 */
+	@Override
 	public LongListIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new LongListIterator(this);

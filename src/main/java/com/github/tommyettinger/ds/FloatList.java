@@ -112,11 +112,13 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	}
 
 	// Newly-added
+	@Override
 	public int size () {
 		return size;
 	}
 
 	// Modified from libGDX
+	@Override
 	public boolean add (float value) {
 		float[] items = this.items;
 		if (size == items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
@@ -333,6 +335,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 		items[second] = firstValue;
 	}
 
+	@Override
 	public boolean contains (float value) {
 		int i = size - 1;
 		float[] items = this.items;
@@ -376,6 +379,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	 * @return true if a value was removed, false if the FloatList is unchanged
 	 */
 	// Modified from libGDX
+	@Override
 	public boolean remove (float value) {
 		float[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
@@ -497,10 +501,12 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	/**
 	 * Returns true if the array is empty.
 	 */
+	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
 
+	@Override
 	public void clear () {
 		size = 0;
 	}
@@ -598,6 +604,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 		return array;
 	}
 
+	@Override
 	public int hashCode () {
 		float[] items = this.items;
 		int h = 1;
@@ -614,6 +621,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	/**
 	 * Returns false if either array is unordered.
 	 */
+	@Override
 	public boolean equals (Object object) {
 		if (object == this) { return true; }
 		if (!ordered) { return false; }
@@ -643,6 +651,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 		return true;
 	}
 
+	@Override
 	public String toString () {
 		if (size == 0) { return "[]"; }
 		float[] items = this.items;
@@ -678,6 +687,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	 *
 	 * @return a {@link FloatIterator}; use its nextFloat() method instead of next()
 	 */
+	@Override
 	public FloatListIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new FloatListIterator(this);

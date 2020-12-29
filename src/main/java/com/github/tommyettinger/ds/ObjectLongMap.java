@@ -437,6 +437,20 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		}
 	}
 
+	public float getLoadFactor(){
+		return loadFactor;
+	}
+
+	public void setLoadFactor(float loadFactor){
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		this.loadFactor = loadFactor;
+		int tableSize = tableSize(size, loadFactor);
+		if(tableSize - 1 != mask) {
+			resize(tableSize);
+		}
+	}
+
+	@Override
 	public int hashCode () {
 		long h = size;
 		K[] keyTable = this.keyTable;
@@ -451,6 +465,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		return (int)(h ^ h >>> 32);
 	}
 
+	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) { return true; }
 		if (!(obj instanceof ObjectLongMap)) { return false; }
@@ -472,6 +487,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		return toString(separator, false);
 	}
 
+	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
@@ -606,6 +622,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		public K key;
 		public long value;
 
+		@Override
 		public String toString () {
 			return key + "=" + value;
 		}
@@ -795,6 +812,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 			super(map);
 		}
 
+		@Override
 		public Iterator<Entry<K>> iterator () {
 			return this;
 		}
@@ -867,10 +885,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 			throw new UnsupportedOperationException("ObjectLongMap.Values is read-only");
 		}
 
+		@Override
 		public PrimitiveIterator.OfLong iterator () {
 			return iter;
 		}
 
+		@Override
 		public int size () {
 			return iter.map.size;
 		}

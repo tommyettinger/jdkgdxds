@@ -436,6 +436,20 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		}
 	}
 
+	public float getLoadFactor(){
+		return loadFactor;
+	}
+
+	public void setLoadFactor(float loadFactor){
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		this.loadFactor = loadFactor;
+		int tableSize = tableSize(size, loadFactor);
+		if(tableSize - 1 != mask) {
+			resize(tableSize);
+		}
+	}
+
+	@Override
 	public int hashCode () {
 		int h = size;
 		K[] keyTable = this.keyTable;
@@ -450,6 +464,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		return h;
 	}
 
+	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) { return true; }
 		if (!(obj instanceof ObjectIntMap)) { return false; }
@@ -471,6 +486,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		return toString(separator, false);
 	}
 
+	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
@@ -605,6 +621,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		public K key;
 		public int value;
 
+		@Override
 		public String toString () {
 			return key + "=" + value;
 		}
@@ -793,6 +810,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			super(map);
 		}
 
+		@Override
 		public Iterator<Entry<K>> iterator () {
 			return this;
 		}
@@ -865,10 +883,12 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			throw new UnsupportedOperationException("ObjectIntMap.Values is read-only");
 		}
 
+		@Override
 		public PrimitiveIterator.OfInt iterator () {
 			return iter;
 		}
 
+		@Override
 		public int size () {
 			return iter.map.size;
 		}

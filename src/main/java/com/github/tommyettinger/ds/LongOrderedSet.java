@@ -246,6 +246,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 		return buffer.toString();
 	}
 
+	@Override
 	public String toString () {
 		return toString(", ");
 	}

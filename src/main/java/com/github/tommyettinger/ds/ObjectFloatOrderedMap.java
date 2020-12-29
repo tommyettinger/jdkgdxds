@@ -422,6 +422,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 			super(map);
 			keys = map.keys;
 			iter = new EntryIterator<K>(map) {
+				@Override
 				public Iterator<Entry<K>> iterator () {
 					return this;
 				}

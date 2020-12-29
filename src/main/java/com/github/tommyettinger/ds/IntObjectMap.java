@@ -444,6 +444,20 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 		}
 	}
 
+	public float getLoadFactor(){
+		return loadFactor;
+	}
+
+	public void setLoadFactor(float loadFactor){
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		this.loadFactor = loadFactor;
+		int tableSize = tableSize(size, loadFactor);
+		if(tableSize - 1 != mask) {
+			resize(tableSize);
+		}
+	}
+
+	@Override
 	public int hashCode () {
 		int h = hasZeroValue && zeroValue != null ? zeroValue.hashCode() ^ size : size;
 		int[] keyTable = this.keyTable;
@@ -461,6 +475,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 		return h;
 	}
 
+	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) { return true; }
 		if (!(obj instanceof IntObjectMap)) { return false; }
@@ -483,6 +498,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 		return toString(separator, false);
 	}
 
+	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
@@ -528,6 +544,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 	 *
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
+	@Override
 	public Iterator<Entry<V>> iterator () {
 		return entrySet().iterator();
 	}
@@ -620,6 +637,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 		@Nullable
 		public V value;
 
+		@Override
 		public String toString () {
 			return key + "=" + value;
 		}
@@ -830,6 +848,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 			super(map);
 		}
 
+		@Override
 		public Iterator<Entry<V>> iterator () {
 			return this;
 		}
@@ -912,10 +931,12 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 		 *
 		 * @return an iterator over the elements contained in this collection
 		 */
+		@Override
 		public Iterator<V> iterator () {
 			return iter;
 		}
 
+		@Override
 		public int size () {
 			return iter.map.size;
 		}

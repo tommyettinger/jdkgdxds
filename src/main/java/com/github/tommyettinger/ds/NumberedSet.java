@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import static com.github.tommyettinger.ds.Utilities.tableSize;
+
 /**
  * An Ordered Set of {@code T} items where the {@link #indexOf(Object)} operation runs in constant time, but
  * any removal from the middle of the order runs in linear time. If you primarily append to a Set with
@@ -225,6 +227,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 		map.shrink(maximumCapacity);
 	}
 
+	@Override
 	public boolean contains (Object key) {
 		return map.containsKey(key);
 	}
@@ -265,6 +268,14 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 		NumberedSet<?> that = (NumberedSet<?>)o;
 
 		return map.equals(that.map);
+	}
+
+	public float getLoadFactor(){
+		return map.getLoadFactor();
+	}
+
+	public void setLoadFactor(float loadFactor){
+		map.setLoadFactor(loadFactor);
 	}
 
 	@Override

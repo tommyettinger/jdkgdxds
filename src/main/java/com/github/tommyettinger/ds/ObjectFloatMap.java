@@ -478,6 +478,20 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		}
 	}
 
+	public float getLoadFactor(){
+		return loadFactor;
+	}
+
+	public void setLoadFactor(float loadFactor){
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		this.loadFactor = loadFactor;
+		int tableSize = tableSize(size, loadFactor);
+		if(tableSize - 1 != mask) {
+			resize(tableSize);
+		}
+	}
+
+	@Override
 	public int hashCode () {
 		int h = size;
 		K[] keyTable = this.keyTable;
@@ -492,6 +506,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		return h;
 	}
 
+	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) { return true; }
 		if (!(obj instanceof ObjectFloatMap)) { return false; }
@@ -513,6 +528,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		return toString(separator, false);
 	}
 
+	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
@@ -647,6 +663,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		public K key;
 		public float value;
 
+		@Override
 		public String toString () {
 			return key + "=" + value;
 		}
@@ -835,6 +852,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 			super(map);
 		}
 
+		@Override
 		public Iterator<Entry<K>> iterator () {
 			return this;
 		}
@@ -907,10 +925,12 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
 		}
 
+		@Override
 		public FloatIterator iterator () {
 			return iter;
 		}
 
+		@Override
 		public int size () {
 			return iter.map.size;
 		}

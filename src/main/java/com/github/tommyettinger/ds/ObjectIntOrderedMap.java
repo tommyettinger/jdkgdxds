@@ -422,6 +422,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 			super(map);
 			keys = map.keys;
 			iter = new EntryIterator<K>(map) {
+				@Override
 				public Iterator<Entry<K>> iterator () {
 					return this;
 				}

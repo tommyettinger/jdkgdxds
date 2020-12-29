@@ -246,6 +246,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable
 		return buffer.toString();
 	}
 
+	@Override
 	public String toString () {
 		return toString(", ");
 	}

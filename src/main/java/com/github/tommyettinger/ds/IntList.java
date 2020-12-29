@@ -110,11 +110,13 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	}
 
 	// Newly-added
+	@Override
 	public int size () {
 		return size;
 	}
 
 	// Modified from libGDX
+	@Override
 	public boolean add (int value) {
 		int[] items = this.items;
 		if (size == items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
@@ -332,6 +334,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 		items[second] = firstValue;
 	}
 
+	@Override
 	public boolean contains (int value) {
 		int i = size - 1;
 		int[] items = this.items;
@@ -375,6 +378,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	 * @return true if a value was removed, false if the IntList is unchanged
 	 */
 	// Modified from libGDX
+	@Override
 	public boolean remove (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
@@ -496,10 +500,12 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	/**
 	 * Returns true if the array is empty.
 	 */
+	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
 
+	@Override
 	public void clear () {
 		size = 0;
 	}
@@ -598,6 +604,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 		return array;
 	}
 
+	@Override
 	public int hashCode () {
 		int[] items = this.items;
 		int h = 1;
@@ -611,6 +618,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 		return h;
 	}
 
+	@Override
 	public boolean equals (Object object) {
 		if (object == this) { return true; }
 		if (!ordered) { return false; }
@@ -624,6 +632,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 		return true;
 	}
 
+	@Override
 	public String toString () {
 		if (size == 0) { return "[]"; }
 		int[] items = this.items;
@@ -659,6 +668,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	 *
 	 * @return a {@link PrimitiveIterator.OfInt}; use its nextInt() method instead of next()
 	 */
+	@Override
 	public IntListIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new IntListIterator(this);

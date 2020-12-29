@@ -472,6 +472,20 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		}
 	}
 
+	public float getLoadFactor(){
+		return loadFactor;
+	}
+
+	public void setLoadFactor(float loadFactor){
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		this.loadFactor = loadFactor;
+		int tableSize = tableSize(size, loadFactor);
+		if(tableSize - 1 != mask) {
+			resize(tableSize);
+		}
+	}
+
+	@Override
 	public int hashCode () {
 		int h = size;
 		K[] keyTable = this.keyTable;
@@ -487,6 +501,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		return h;
 	}
 
+	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) { return true; }
 		if (!(obj instanceof ObjectObjectMap)) { return false; }
@@ -529,6 +544,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		return toString(separator, false);
 	}
 
+	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
@@ -667,6 +683,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		@Nullable
 		public V value;
 
+		@Override
 		@Nullable
 		public String toString () {
 			return key + "=" + value;

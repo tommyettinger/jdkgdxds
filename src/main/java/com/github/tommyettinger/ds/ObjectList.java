@@ -321,6 +321,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 		return h;
 	}
 
+	@Override
 	public String toString () {
 		int n = size();
 		if (n == 0) { return "[]"; }
@@ -693,6 +694,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 	 * @param random a {@link Random} or a subclass, such as {@link LaserRandom} (recommended)
 	 * @return a pseudo-randomly selected item from this ObjectLists
 	 */
+	@Override
 	public T random (Random random) {
 		int n = size();
 		if (n == 0) { throw new IllegalStateException("ObjectList is empty."); }

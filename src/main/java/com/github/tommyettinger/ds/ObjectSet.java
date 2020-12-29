@@ -430,6 +430,20 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return a;
 	}
 
+	public float getLoadFactor(){
+		return loadFactor;
+	}
+
+	public void setLoadFactor(float loadFactor){
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		this.loadFactor = loadFactor;
+		int tableSize = tableSize(size, loadFactor);
+		if(tableSize - 1 != mask) {
+			resize(tableSize);
+		}
+	}
+
+	@Override
 	public int hashCode () {
 		int h = size;
 		T[] keyTable = this.keyTable;
@@ -440,6 +454,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return h;
 	}
 
+	@Override
 	public boolean equals (Object obj) {
 		if (!(obj instanceof ObjectSet)) { return false; }
 		ObjectSet other = (ObjectSet)obj;
@@ -449,6 +464,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return true;
 	}
 
+	@Override
 	public String toString () {
 		return '{' + toString(", ") + '}';
 	}

@@ -148,6 +148,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 	/**
 	 * Returns true if the key was not already in the set.
 	 */
+	@Override
 	public boolean add (long key) {
 		if (key == 0) {
 			if (hasZeroValue) { return false; }
@@ -209,6 +210,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 	/**
 	 * Returns true if the key was removed.
 	 */
+	@Override
 	public boolean remove (long key) {
 		if (key == 0) {
 			if (!hasZeroValue) { return false; }
@@ -245,6 +247,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 	/**
 	 * Returns true if the set is empty.
 	 */
+	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
@@ -274,6 +277,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		resize(tableSize);
 	}
 
+	@Override
 	public void clear () {
 		if (size == 0) { return; }
 		size = 0;
@@ -281,6 +285,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		hasZeroValue = false;
 	}
 
+	@Override
 	public boolean contains (long key) {
 		if (key == 0) { return hasZeroValue; }
 		return locateKey(key) >= 0;
@@ -302,6 +307,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		if (keyTable.length < tableSize) { resize(tableSize); }
 	}
 
+	@Override
 	public int size () {
 		return size;
 	}
@@ -324,6 +330,20 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		}
 	}
 
+	public float getLoadFactor(){
+		return loadFactor;
+	}
+
+	public void setLoadFactor(float loadFactor){
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		this.loadFactor = loadFactor;
+		int tableSize = tableSize(size, loadFactor);
+		if(tableSize - 1 != mask) {
+			resize(tableSize);
+		}
+	}
+
+	@Override
 	public int hashCode () {
 		long h = size;
 		long[] keyTable = this.keyTable;
@@ -334,6 +354,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		return (int)(h ^ h >>> 32);
 	}
 
+	@Override
 	public boolean equals (Object obj) {
 		if (!(obj instanceof LongSet)) { return false; }
 		LongSet other = (LongSet)obj;
@@ -344,6 +365,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		return true;
 	}
 
+	@Override
 	public String toString () {
 		if (size == 0) { return "[]"; }
 		StringBuilder buffer = new StringBuilder(32);
@@ -373,6 +395,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 	 * <p>
 	 * Use the {@link LongSetIterator} constructor for nested or multithreaded iteration.
 	 */
+	@Override
 	public PrimitiveIterator.OfLong iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new LongSetIterator(this);
@@ -439,6 +462,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 			return hasNext;
 		}
 
+		@Override
 		public void remove () {
 			int i = currentIndex;
 			if (i == INDEX_ZERO && set.hasZeroValue) {

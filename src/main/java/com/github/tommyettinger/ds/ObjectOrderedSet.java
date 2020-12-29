@@ -259,6 +259,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 		return buffer.toString();
 	}
 
+	@Override
 	public String toString () {
 		return toString(", ");
 	}

@@ -461,6 +461,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 		}
 	}
 
+	@Override
 	public int hashCode () {
 		long h = hasZeroValue ? zeroValue + size : size;
 		int[] keyTable = this.keyTable;
@@ -475,6 +476,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 		return (int)(h ^ h >>> 32);
 	}
 
+	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) { return true; }
 		if (!(obj instanceof IntLongMap)) { return false; }
@@ -497,6 +499,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 		return toString(separator, false);
 	}
 
+	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
@@ -542,6 +545,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 	 *
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
+	@Override
 	public Iterator<Entry> iterator () {
 		return entrySet().iterator();
 	}
@@ -635,6 +639,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 		public int key;
 		public long value;
 
+		@Override
 		public String toString () {
 			return key + "=" + value;
 		}
@@ -844,6 +849,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 			super(map);
 		}
 
+		@Override
 		public Iterator<Entry> iterator () {
 			return this;
 		}
@@ -926,10 +932,12 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 		 *
 		 * @return an iterator over the elements contained in this collection
 		 */
+		@Override
 		public PrimitiveIterator.OfLong iterator () {
 			return iter;
 		}
 
+		@Override
 		public int size () {
 			return iter.map.size;
 		}

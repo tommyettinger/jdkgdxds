@@ -422,6 +422,7 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 			super(map);
 			keys = map.keys;
 			iter = new EntryIterator<K>(map) {
+				@Override
 				public Iterator<Entry<K>> iterator () {
 					return this;
 				}

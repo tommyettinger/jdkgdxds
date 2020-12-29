@@ -507,6 +507,20 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 		}
 	}
 
+	public float getLoadFactor(){
+		return loadFactor;
+	}
+
+	public void setLoadFactor(float loadFactor){
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		this.loadFactor = loadFactor;
+		int tableSize = tableSize(size, loadFactor);
+		if(tableSize - 1 != mask) {
+			resize(tableSize);
+		}
+	}
+
+	@Override
 	public int hashCode () {
 		long h = hasZeroValue ? BitConversion.floatToRawIntBits(zeroValue) * 0x9E3779B97F4A7C15L + size : size;
 		long[] keyTable = this.keyTable;
@@ -521,6 +535,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 		return (int)(h ^ h >>> 32);
 	}
 
+	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) { return true; }
 		if (!(obj instanceof LongFloatMap)) { return false; }
@@ -543,6 +558,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 		return toString(separator, false);
 	}
 
+	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
@@ -588,6 +604,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 	 *
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
+	@Override
 	public Iterator<Entry> iterator () {
 		return entrySet().iterator();
 	}
@@ -679,6 +696,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 		public long key;
 		public float value;
 
+		@Override
 		public String toString () {
 			return key + "=" + value;
 		}
@@ -888,6 +906,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 			super(map);
 		}
 
+		@Override
 		public Iterator<Entry> iterator () {
 			return this;
 		}
@@ -970,10 +989,12 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 		 *
 		 * @return an iterator over the elements contained in this collection
 		 */
+		@Override
 		public FloatIterator iterator () {
 			return iter;
 		}
 
+		@Override
 		public int size () {
 			return iter.map.size;
 		}

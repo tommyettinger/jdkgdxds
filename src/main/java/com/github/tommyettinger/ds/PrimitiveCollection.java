@@ -21,8 +21,10 @@ public interface PrimitiveCollection<T, T_CONS> {
 
 	void clear ();
 
+	@Override
 	int hashCode ();
 
+	@Override
 	boolean equals (Object other);
 
 	interface OfInt extends PrimitiveCollection<Integer, IntConsumer> {
@@ -59,6 +61,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return has;
 		}
 
+		@Override
 		PrimitiveIterator.OfInt iterator ();
 	}
 
@@ -96,6 +99,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return has;
 		}
 
+		@Override
 		PrimitiveIterator.OfLong iterator ();
 	}
 
@@ -133,6 +137,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return has;
 		}
 
+		@Override
 		FloatIterator iterator ();
 	}
 }

@@ -65,6 +65,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	/**
 	 * Adds the node to the heap using its current value. The node should not already be in the heap.
 	 */
+	@Override
 	public boolean add (T node) {
 		// Expand if necessary.
 		if (size == nodes.length) {
@@ -158,6 +159,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	 * Returns the first item in the heap. This is the item with the lowest value (or highest value if this heap is configured as
 	 * a max heap).
 	 */
+	@Override
 	public T peek () {
 		if (size == 0) { throw new IllegalStateException("The heap is empty."); }
 		return (T)nodes[0];
@@ -211,6 +213,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	/**
 	 * Returns true if the heap is empty.
 	 */
+	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
@@ -218,6 +221,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	/**
 	 * Removes all nodes from this BinaryHeap.
 	 */
+	@Override
 	public void clear () {
 		Arrays.fill(nodes, 0, size, null);
 		size = 0;
@@ -306,6 +310,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		node.index = index;
 	}
 
+	@Override
 	public boolean equals (Object obj) {
 		if (!(obj instanceof BinaryHeap)) { return false; }
 		BinaryHeap other = (BinaryHeap)obj;
@@ -315,6 +320,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		return true;
 	}
 
+	@Override
 	public int hashCode () {
 		int h = 1;
 		Node[] nodes = this.nodes;
@@ -325,6 +331,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		return h;
 	}
 
+	@Override
 	public String toString () {
 		if (size == 0) { return "[]"; }
 		Node[] nodes = this.nodes;
@@ -425,6 +432,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 			return value;
 		}
 
+		@Override
 		public String toString () {
 			return Float.toString(value);
 		}

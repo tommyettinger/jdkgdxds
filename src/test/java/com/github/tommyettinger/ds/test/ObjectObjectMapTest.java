@@ -387,6 +387,7 @@ public class ObjectObjectMapTest extends junit.framework.TestCase {
 			super();
 		}
 
+		@Override
 		public int hashCode () {
 			return 0;
 		}
@@ -540,10 +541,12 @@ public class ObjectObjectMapTest extends junit.framework.TestCase {
 			this.key = key;
 		}
 
+		@Override
 		public int hashCode () {
 			return key;
 		}
 
+		@Override
 		public boolean equals (Object o) {
 			if (o == this) {
 				return true;
