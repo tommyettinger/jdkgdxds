@@ -23,6 +23,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 /**
@@ -40,6 +43,10 @@ import java.util.Random;
 public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializable {
 	private static final long serialVersionUID = 0L;
 	public boolean ordered = true;
+	@Nullable
+	protected ObjectListIterator<T> iterator1;
+	@Nullable
+	protected ObjectListIterator<T> iterator2;
 
 	/**
 	 * Constructs an empty list with the specified initial capacity.
@@ -350,6 +357,293 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 		}
 		return builder;
 	}
+
+	/**
+	 * Returns a list iterator over the elements in this list (in proper
+	 * sequence), starting at the specified position in the list.
+	 * The specified index indicates the first element that would be
+	 * returned by an initial call to {@link ListIterator#next next}.
+	 * An initial call to {@link ListIterator#previous previous} would
+	 * return the element with the specified index minus one.
+	 * <br>
+	 * The returned iterator is reused by this ObjectList, so it is likely unsuitable for nested iteration.
+	 * Use {@link ObjectListIterator#ObjectListIterator(ObjectList, int)} to create a ListIterator if you need nested iteration.
+	 *
+	 * @param index
+	 * @throws IndexOutOfBoundsException {@inheritDoc}
+	 */
+	@Override
+	public ListIterator<T> listIterator (int index) {
+		if (iterator1 == null || iterator2 == null) {
+			iterator1 = new ObjectListIterator<>(this, index);
+			iterator2 = new ObjectListIterator<>(this, index);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset(index);
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset(index);
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
+	}
+
+	/**
+	 * Returns a list iterator over the elements in this list (in proper
+	 * sequence).
+	 * <br>
+	 * The returned iterator is reused by this ObjectList, so it is likely unsuitable for nested iteration.
+	 * Use {@link ObjectListIterator#ObjectListIterator(ObjectList)} to create a ListIterator if you need nested iteration.
+	 * @see #listIterator(int)
+	 */
+	@Override
+	public ListIterator<T> listIterator () {
+		if (iterator1 == null || iterator2 == null) {
+			iterator1 = new ObjectListIterator<>(this);
+			iterator2 = new ObjectListIterator<>(this);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset();
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset();
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
+	}
+
+	/**
+	 * Returns an iterator over the elements in this list in proper sequence.
+	 * <br>
+	 * The returned iterator is reused by this ObjectList, so it is likely unsuitable for nested iteration.
+	 * Use {@link ObjectListIterator#ObjectListIterator(ObjectList)} to create an Iterator if you need nested iteration.
+	 *
+	 * @return an iterator over the elements in this list in proper sequence
+	 */
+	@Override
+	public Iterator<T> iterator () {
+		if (iterator1 == null || iterator2 == null) {
+			iterator1 = new ObjectListIterator<>(this);
+			iterator2 = new ObjectListIterator<>(this);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset();
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset();
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
+	}
+
+	public static class ObjectListIterator<T> implements Iterable<T>, ListIterator<T> {
+		protected int index = 0;
+		protected ObjectList<T> list;
+		protected boolean valid = true;
+
+		public ObjectListIterator (ObjectList<T> list) {
+			this.list = list;
+		}
+
+		public ObjectListIterator (ObjectList<T> list, int index) {
+			if(index < 0 || index >= list.size())
+				throw new IndexOutOfBoundsException("ObjectListIterator does not satisfy index >= 0 && index < list.size()");
+			this.list = list;
+			this.index = index;
+		}
+
+		/**
+		 * Returns the next {@code int} element in the iteration.
+		 *
+		 * @return the next {@code int} element in the iteration
+		 * @throws NoSuchElementException if the iteration has no more elements
+		 */
+		@Override
+		public T next () {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (index >= list.size()) { throw new NoSuchElementException(); }
+			return list.get(index++);
+		}
+
+		/**
+		 * Returns {@code true} if the iteration has more elements.
+		 * (In other words, returns {@code true} if {@link #next} would
+		 * return an element rather than throwing an exception.)
+		 *
+		 * @return {@code true} if the iteration has more elements
+		 */
+		@Override
+		public boolean hasNext () {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			return index < list.size();
+		}
+
+		/**
+		 * Returns {@code true} if this list iterator has more elements when
+		 * traversing the list in the reverse direction.  (In other words,
+		 * returns {@code true} if {@link #previous} would return an element
+		 * rather than throwing an exception.)
+		 *
+		 * @return {@code true} if the list iterator has more elements when
+		 * traversing the list in the reverse direction
+		 */
+		@Override
+		public boolean hasPrevious () {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			return index > 0 && list.notEmpty();
+		}
+
+		/**
+		 * Returns the previous element in the list and moves the cursor
+		 * position backwards.  This method may be called repeatedly to
+		 * iterate through the list backwards, or intermixed with calls to
+		 * {@link #next} to go back and forth.  (Note that alternating calls
+		 * to {@code next} and {@code previous} will return the same
+		 * element repeatedly.)
+		 *
+		 * @return the previous element in the list
+		 * @throws NoSuchElementException if the iteration has no previous
+		 *                                element
+		 */
+		@Override
+		public T previous () {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (index <= 0 || list.isEmpty()) { throw new NoSuchElementException(); }
+			return list.get(--index);
+		}
+
+		/**
+		 * Returns the index of the element that would be returned by a
+		 * subsequent call to {@link #next}. (Returns list size if the list
+		 * iterator is at the end of the list.)
+		 *
+		 * @return the index of the element that would be returned by a
+		 * subsequent call to {@code next}, or list size if the list
+		 * iterator is at the end of the list
+		 */
+		@Override
+		public int nextIndex () {
+			return index;
+		}
+
+		/**
+		 * Returns the index of the element that would be returned by a
+		 * subsequent call to {@link #previous}. (Returns -1 if the list
+		 * iterator is at the beginning of the list.)
+		 *
+		 * @return the index of the element that would be returned by a
+		 * subsequent call to {@code previous}, or -1 if the list
+		 * iterator is at the beginning of the list
+		 */
+		@Override
+		public int previousIndex () {
+			return index - 1;
+		}
+
+		/**
+		 * Removes from the list the last element that was returned by {@link
+		 * #next} or {@link #previous} (optional operation).  This call can
+		 * only be made once per call to {@code next} or {@code previous}.
+		 * It can be made only if {@link #add} has not been
+		 * called after the last call to {@code next} or {@code previous}.
+		 *
+		 * @throws UnsupportedOperationException if the {@code remove}
+		 *                                       operation is not supported by this list iterator
+		 * @throws IllegalStateException         if neither {@code next} nor
+		 *                                       {@code previous} have been called, or {@code remove} or
+		 *                                       {@code add} have been called after the last call to
+		 *                                       {@code next} or {@code previous}
+		 */
+		@Override
+		public void remove () {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (index >= list.size()) { throw new NoSuchElementException(); }
+			list.remove(index);
+		}
+
+		/**
+		 * Replaces the last element returned by {@link #next} or
+		 * {@link #previous} with the specified element (optional operation).
+		 * This call can be made only if neither {@link #remove} nor {@link
+		 * #add} have been called after the last call to {@code next} or
+		 * {@code previous}.
+		 *
+		 * @param t the element with which to replace the last element returned by
+		 *          {@code next} or {@code previous}
+		 * @throws UnsupportedOperationException if the {@code set} operation
+		 *                                       is not supported by this list iterator
+		 * @throws ClassCastException            if the class of the specified element
+		 *                                       prevents it from being added to this list
+		 * @throws IllegalArgumentException      if some aspect of the specified
+		 *                                       element prevents it from being added to this list
+		 * @throws IllegalStateException         if neither {@code next} nor
+		 *                                       {@code previous} have been called, or {@code remove} or
+		 *                                       {@code add} have been called after the last call to
+		 *                                       {@code next} or {@code previous}
+		 */
+		@Override
+		public void set (T t) {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (index >= list.size()) { throw new NoSuchElementException(); }
+			list.set(index, t);
+		}
+
+		/**
+		 * Inserts the specified element into the list (optional operation).
+		 * The element is inserted immediately before the element that
+		 * would be returned by {@link #next}, if any, and after the element
+		 * that would be returned by {@link #previous}, if any.  (If the
+		 * list contains no elements, the new element becomes the sole element
+		 * on the list.)  The new element is inserted before the implicit
+		 * cursor: a subsequent call to {@code next} would be unaffected, and a
+		 * subsequent call to {@code previous} would return the new element.
+		 * (This call increases by one the value that would be returned by a
+		 * call to {@code nextIndex} or {@code previousIndex}.)
+		 *
+		 * @param t the element to insert
+		 * @throws UnsupportedOperationException if the {@code add} method is
+		 *                                       not supported by this list iterator
+		 * @throws ClassCastException            if the class of the specified element
+		 *                                       prevents it from being added to this list
+		 * @throws IllegalArgumentException      if some aspect of this element
+		 *                                       prevents it from being added to this list
+		 */
+		@Override
+		public void add (T t) {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (index >= list.size()) { throw new NoSuchElementException(); }
+			list.insert(index++, t);
+
+		}
+
+		public void reset () {
+			index = 0;
+		}
+
+
+		public void reset (int index) {
+			if(index < 0 || index >= list.size())
+				throw new IndexOutOfBoundsException("ObjectListIterator does not satisfy index >= 0 && index < list.size()");
+			this.index = index;
+		}
+
+		/**
+		 * Returns an iterator over elements of type {@code T}.
+		 *
+		 * @return a ListIterator; really this same ObjectListIterator.
+		 */
+		@Override
+		public ObjectListIterator<T> iterator () {
+			return this;
+		}
+	}
+
 
 	@SafeVarargs
 	public static <T> ObjectList<T> with (T... varargs) {
