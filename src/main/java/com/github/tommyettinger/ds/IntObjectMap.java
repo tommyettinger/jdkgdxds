@@ -62,7 +62,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 	protected boolean hasZeroValue;
 	@Nullable
 	protected V zeroValue;
-	protected final float loadFactor;
+	protected float loadFactor;
 	protected int threshold;
 
 	protected int shift;

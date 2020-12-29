@@ -62,7 +62,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	protected K[] keyTable;
 	protected V[] valueTable;
 
-	protected final float loadFactor;
+	protected float loadFactor;
 	protected int threshold;
 
 	protected int shift;

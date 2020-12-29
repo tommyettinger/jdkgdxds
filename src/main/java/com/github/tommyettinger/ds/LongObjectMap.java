@@ -62,7 +62,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	protected boolean hasZeroValue;
 	@Nullable
 	protected V zeroValue;
-	protected final float loadFactor;
+	protected float loadFactor;
 	protected int threshold;
 
 	protected int shift;

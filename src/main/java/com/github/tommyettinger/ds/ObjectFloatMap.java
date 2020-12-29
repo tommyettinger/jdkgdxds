@@ -61,7 +61,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	protected K[] keyTable;
 	protected float[] valueTable;
 
-	protected final float loadFactor;
+	protected float loadFactor;
 	protected int threshold;
 
 	protected int shift;

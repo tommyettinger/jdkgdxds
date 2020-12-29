@@ -56,7 +56,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 
 	protected T[] keyTable;
 
-	protected final float loadFactor;
+	protected float loadFactor;
 	protected int threshold;
 
 	protected int shift;
@@ -94,7 +94,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public ObjectSet (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and < 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);

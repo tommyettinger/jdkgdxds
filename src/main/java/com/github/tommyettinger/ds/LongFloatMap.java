@@ -62,7 +62,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 	protected float[] valueTable;
 	protected boolean hasZeroValue;
 	protected float zeroValue;
-	protected final float loadFactor;
+	protected float loadFactor;
 	protected int threshold;
 
 	protected int shift;

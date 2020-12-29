@@ -59,7 +59,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	protected K[] keyTable;
 	protected int[] valueTable;
 
-	protected final float loadFactor;
+	protected float loadFactor;
 	protected int threshold;
 
 	protected int shift;

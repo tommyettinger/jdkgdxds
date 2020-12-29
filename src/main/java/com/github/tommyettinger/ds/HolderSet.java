@@ -45,7 +45,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 
 	protected T[] keyTable;
 
-	protected final float loadFactor;
+	protected float loadFactor;
 	protected int threshold;
 
 	protected int shift;
@@ -102,7 +102,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 */
 	public HolderSet (Function<T, K> extractor, int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) {
-			throw new IllegalArgumentException("loadFactor must be > 0 and < 1: " + loadFactor);
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
 		}
 		this.loadFactor = loadFactor;
 

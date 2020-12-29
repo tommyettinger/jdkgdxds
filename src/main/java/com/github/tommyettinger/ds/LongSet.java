@@ -48,7 +48,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 	protected long[] keyTable;
 	protected boolean hasZeroValue;
 
-	protected final float loadFactor;
+	protected float loadFactor;
 	protected int threshold;
 
 	/**
@@ -98,7 +98,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public LongSet (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor >= 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and < 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);

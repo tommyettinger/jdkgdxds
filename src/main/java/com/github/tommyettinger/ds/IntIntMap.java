@@ -59,7 +59,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry>, Serializable {
 	protected int[] valueTable;
 	protected boolean hasZeroValue;
 	protected int zeroValue;
-	protected final float loadFactor;
+	protected float loadFactor;
 	protected int threshold;
 
 	protected int shift;

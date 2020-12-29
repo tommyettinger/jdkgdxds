@@ -59,7 +59,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry>, Serializable {
 	protected int[] valueTable;
 	protected boolean hasZeroValue;
 	protected int zeroValue;
-	protected final float loadFactor;
+	protected float loadFactor;
 	protected int threshold;
 
 	protected int shift;
