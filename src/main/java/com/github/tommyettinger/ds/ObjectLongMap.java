@@ -270,8 +270,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		ensureCapacity(length);
 		K key;
 		for (int k = keyOffset, v = valueOffset, i = 0, n = length; i < n; i++, k++, v++) {
-			key = keyTable[k];
-			if (key != null) { put(key, valueTable[v]); }
+			key = keys[k];
+			if (key != null) { put(key, values[v]); }
 		}
 	}
 
