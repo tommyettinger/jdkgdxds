@@ -83,6 +83,14 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 		addAll(coll);
 	}
 
+	/**
+	 * Creates a new set that contains all distinct elements in {@code items}.
+	 */
+	public ObjectOrderedSet (T[] items) {
+		this(items.length);
+		addAll(items);
+	}
+
 	@Override
 	public boolean add (T key) {
 		return super.add(key) && items.add(key);

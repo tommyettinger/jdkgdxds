@@ -48,8 +48,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 	 * @param ordered any {@link Ordered} with the same type as this NumberSet
 	 */
 	public NumberedSet (Ordered<? extends T> ordered) {
-		map = new ObjectIntOrderedMap<>(ordered.size());
-		map.setDefaultValue(-1);
+		this(ordered.size());
 		addAll(ordered.order());
 	}
 
@@ -60,6 +59,15 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 	public NumberedSet (Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code items}.
+	 * @param items all distinct elements in this array will become items in this NumberedSet
+	 */
+	public NumberedSet(T[] items) {
+		this(items.length);
+		addAll(items);
 	}
 
 	@Override

@@ -81,6 +81,14 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 		addAll(coll);
 	}
 
+	/**
+	 * Creates a new set that contains all distinct elements in {@code items}.
+	 */
+	public LongOrderedSet (long[] items) {
+		this(items.length);
+		addAll(items);
+	}
+
 	@Override
 	public boolean add (long key) {
 		return super.add(key) && items.add(key);

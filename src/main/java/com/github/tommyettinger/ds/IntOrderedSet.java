@@ -81,6 +81,14 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable
 		addAll(coll);
 	}
 
+	/**
+	 * Creates a new set that contains all distinct elements in {@code items}.
+	 */
+	public IntOrderedSet (int[] items) {
+		this(items.length);
+		addAll(items);
+	}
+
 	@Override
 	public boolean add (int key) {
 		return super.add(key) && items.add(key);

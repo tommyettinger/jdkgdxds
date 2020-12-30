@@ -86,11 +86,24 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new set that contains all distinct elements in {@code coll}.
+	 * Creates a new set that contains all distinct elements in {@code coll}, using {@code extractor} to get the keys that determine distinctness.
+	 * @param extractor a function that will be used to extract K keys from the T items in coll
+	 * @param coll a Collection of T items; depending on extractor, some different T items may not be added because their K key is equal
 	 */
 	public HolderOrderedSet (Function<T, K> extractor, Collection<? extends T> coll) {
 		this(extractor, coll.size());
 		addAll(coll);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code items}, using {@code extractor} to get the keys that determine distinctness.
+	 *
+	 * @param extractor a function that will be used to extract K keys from the T items in coll
+	 * @param items     an array of T items; depending on extractor, some different T items may not be added because their K key is equal
+	 */
+	public HolderOrderedSet (Function<T, K> extractor, T[] items) {
+		this(extractor, items.length);
+		addAll(items);
 	}
 
 	@Override
