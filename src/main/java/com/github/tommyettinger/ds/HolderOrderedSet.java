@@ -112,10 +112,12 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		return true;
 	}
 
-	public void addAll (HolderOrderedSet<T, K> set) {
+	public boolean addAll (HolderOrderedSet<T, K> set) {
 		ensureCapacity(set.size);
 		ObjectList<T> si = set.items;
+		int oldSize = size;
 		for (int i = 0, n = si.size(); i < n; i++) { add(si.get(i)); }
+		return size != oldSize;
 	}
 
 	/**

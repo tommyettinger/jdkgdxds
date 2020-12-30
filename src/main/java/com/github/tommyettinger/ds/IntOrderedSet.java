@@ -100,10 +100,12 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable
 		return true;
 	}
 
-	public void addAll (Ordered.OfInt other) {
+	public boolean addAll (Ordered.OfInt other) {
 		IntList oo = other.order();
 		ensureCapacity(oo.size());
+		int oldSize = size;
 		for (int i = 0, n = oo.size(); i < n; i++) { add(oo.get(i)); }
+		return oldSize != size;
 	}
 
 	@Override

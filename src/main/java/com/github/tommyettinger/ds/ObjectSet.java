@@ -240,13 +240,15 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return oldSize != size;
 	}
 
-	public void addAll (ObjectSet<T> set) {
+	public boolean addAll (ObjectSet<T> set) {
 		ensureCapacity(set.size);
 		T[] keyTable = set.keyTable;
+		int oldSize = size;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
 			if (key != null) { add(key); }
 		}
+		return size != oldSize;
 	}
 
 	/**

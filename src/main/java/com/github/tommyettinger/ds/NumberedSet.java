@@ -122,6 +122,17 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 		return modified;
 	}
 
+	public boolean addAll (T[] array) {
+		return addAll(array, 0, array.length);
+	}
+
+	public boolean addAll (T[] array, int offset, int length) {
+		ensureCapacity(length);
+		int oldSize = size();
+		for (int i = offset, n = i + length; i < n; i++) { add(array[i]); }
+		return oldSize != size();
+	}
+
 	@Override
 	public boolean retainAll (Collection<?> c) {
 		boolean modified = false;

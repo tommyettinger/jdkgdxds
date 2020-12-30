@@ -102,10 +102,12 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 		return true;
 	}
 
-	public void addAll (ObjectOrderedSet<T> set) {
+	public boolean addAll (ObjectOrderedSet<T> set) {
 		ensureCapacity(set.size);
 		ObjectList<T> si = set.items;
+		int oldSize = size;
 		for (int i = 0, n = si.size(); i < n; i++) { add(si.get(i)); }
+		return size != oldSize;
 	}
 
 	@Override

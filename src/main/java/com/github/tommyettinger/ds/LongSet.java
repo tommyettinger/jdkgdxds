@@ -166,32 +166,36 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		return true;
 	}
 
-	public void addAll (LongList array) {
-		addAll(array.items, 0, array.size);
+	public boolean addAll (LongList array) {
+		return addAll(array.items, 0, array.size);
 	}
 
-	public void addAll (LongList array, int offset, int length) {
+	public boolean addAll (LongList array, int offset, int length) {
 		if (offset + length > array.size) { throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size); }
-		addAll(array.items, offset, length);
+		return addAll(array.items, offset, length);
 	}
 
-	public void addAll (long... array) {
-		addAll(array, 0, array.length);
+	public boolean addAll (long... array) {
+		return addAll(array, 0, array.length);
 	}
 
-	public void addAll (long[] array, int offset, int length) {
+	public boolean addAll (long[] array, int offset, int length) {
 		ensureCapacity(length);
+		int oldSize = size;
 		for (int i = offset, n = i + length; i < n; i++) { add(array[i]); }
+		return size != oldSize;
 	}
 
-	public void addAll (LongSet set) {
+	public boolean addAll (LongSet set) {
 		ensureCapacity(set.size);
+		int oldSize = size;
 		if (set.hasZeroValue) { add(0); }
 		long[] keyTable = set.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			long key = keyTable[i];
 			if (key != 0) { add(key); }
 		}
+		return size != oldSize;
 	}
 
 	/**

@@ -305,15 +305,17 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 		return oldSize != size;
 	}
 
-	public void addAll (HolderSet<T, K> set) {
+	public boolean addAll (HolderSet<T, K> set) {
 		ensureCapacity(set.size);
 		T[] keyTable = set.keyTable;
+		int oldSize = size;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
 			if (key != null) {
 				add(key);
 			}
 		}
+		return oldSize != size;
 	}
 
 	/**

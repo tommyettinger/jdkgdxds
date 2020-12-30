@@ -100,10 +100,12 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 		return true;
 	}
 
-	public void addAll (Ordered.OfLong other) {
+	public boolean addAll (Ordered.OfLong other) {
 		LongList oo = other.order();
 		ensureCapacity(oo.size());
+		int oldSize = size;
 		for (int i = 0, n = oo.size(); i < n; i++) { add(oo.get(i)); }
+		return size != oldSize;
 	}
 
 	@Override
