@@ -133,6 +133,17 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	}
 
 	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 * @param keys an array of keys
+	 * @param values an array of values
+	 */
+	public ObjectFloatMap(K[] keys, float[] values){
+		this(Math.min(keys.length, values.length));
+		putAll(keys, values);
+	}
+
+	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * The default behavior uses Fibonacci hashing; it simply gets the {@link Object#hashCode()}
@@ -225,6 +236,43 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
 			if (key != null) { put(key, valueTable[i]); }
+		}
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
+	 * @param keys an array of keys
+	 * @param values an array of values
+	 */
+	public void putAll (K[] keys, float[] values) {
+		putAll(keys, 0, values, 0, Math.min(keys.length, values.length));
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
+	 * @param keys an array of keys
+	 * @param values an array of values
+	 * @param length how many items from keys and values to insert, at-most
+	 */
+	public void putAll (K[] keys, float[] values, int length) {
+		putAll(keys, 0, values, 0, length);
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
+	 * @param keys an array of keys
+	 * @param keyOffset the first index in keys to insert
+	 * @param values an array of values
+	 * @param valueOffset the first index in values to insert
+	 * @param length how many items from keys and values to insert, at-most
+	 */
+	public void putAll (K[] keys, int keyOffset, float[] values, int valueOffset, int length) {
+		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
+		ensureCapacity(length);
+		K key;
+		for (int k = keyOffset, v = valueOffset, i = 0, n = length; i < n; i++, k++, v++) {
+			key = keyTable[k];
+			if (key != null) { put(key, valueTable[v]); }
 		}
 	}
 
