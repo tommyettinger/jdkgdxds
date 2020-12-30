@@ -39,6 +39,10 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 		super(map);
 	}
 
+	public CaseInsensitiveOrderedMap (CharSequence[] keys, V[] values) {
+		super(keys, values);
+	}
+
 	@Override
 	protected int place (Object item) {
 		return super.place(item);

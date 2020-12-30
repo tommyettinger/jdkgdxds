@@ -94,6 +94,18 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 		}
 	}
 
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 */
+	public LongObjectOrderedMap (long[] keys, V[] values) {
+		this(Math.min(keys.length, values.length));
+		putAll(keys, values);
+	}
+
 	@Override
 	public V put (long key, @Nullable V value) {
 		if (key == 0) {

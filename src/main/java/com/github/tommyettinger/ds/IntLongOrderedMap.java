@@ -93,6 +93,18 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt, Seri
 		}
 	}
 
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 */
+	public IntLongOrderedMap (int[] keys, long[] values) {
+		this(Math.min(keys.length, values.length));
+		putAll(keys, values);
+	}
+
 	@Override
 	public long put (int key, long value) {
 		if (key == 0) {
