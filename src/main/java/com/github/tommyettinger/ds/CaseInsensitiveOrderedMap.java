@@ -2,6 +2,7 @@ package com.github.tommyettinger.ds;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
@@ -40,6 +41,10 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	}
 
 	public CaseInsensitiveOrderedMap (CharSequence[] keys, V[] values) {
+		super(keys, values);
+	}
+
+	public CaseInsensitiveOrderedMap (Collection<? extends CharSequence> keys, Collection<? extends V> values) {
 		super(keys, values);
 	}
 

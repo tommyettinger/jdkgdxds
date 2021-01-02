@@ -40,6 +40,10 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 		super(keys, values);
 	}
 
+	public CaseInsensitiveMap (Collection<? extends CharSequence> keys, Collection<? extends V> values) {
+		super(keys, values);
+	}
+
 	@Override
 	protected int place (Object item) {
 		return super.place(item);
