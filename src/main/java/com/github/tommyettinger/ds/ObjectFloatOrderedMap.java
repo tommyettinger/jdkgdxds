@@ -22,6 +22,7 @@ import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
@@ -100,6 +101,17 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 */
 	public ObjectFloatOrderedMap (K[] keys, float[] values) {
 		this(Math.min(keys.length, values.length));
+		putAll(keys, values);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * @param keys a Collection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public ObjectFloatOrderedMap(Collection<? extends K> keys, PrimitiveCollection.OfFloat values){
+		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
 

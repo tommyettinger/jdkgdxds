@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.support.sort.IntComparators;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
@@ -100,6 +101,17 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 */
 	public ObjectIntOrderedMap (K[] keys, int[] values) {
 		this(Math.min(keys.length, values.length));
+		putAll(keys, values);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * @param keys a Collection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public ObjectIntOrderedMap(Collection<? extends K> keys, PrimitiveCollection.OfInt values){
+		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
 

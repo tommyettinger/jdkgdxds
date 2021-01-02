@@ -100,6 +100,17 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		putAll(keys, values);
 	}
 
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * @param keys a Collection of keys
+	 * @param values a Collection of values
+	 */
+	public ObjectObjectOrderedMap(Collection<? extends K> keys, Collection<? extends V> values){
+		this(Math.min(keys.size(), values.size()));
+		putAll(keys, values);
+	}
+
 	@Override
 	@Nullable
 	public V put (K key, @Nullable V value) {

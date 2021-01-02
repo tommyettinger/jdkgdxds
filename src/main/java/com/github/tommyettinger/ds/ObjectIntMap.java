@@ -142,6 +142,36 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	}
 
 	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * @param keys a Collection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public ObjectIntMap(Collection<? extends K> keys, PrimitiveCollection.OfInt values){
+		this(Math.min(keys.size(), values.size()));
+		putAll(keys, values);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().
+	 * @param keys a Collection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public void putAll (Collection<? extends K> keys, PrimitiveCollection.OfInt values) {
+		int length = Math.min(keys.size(), values.size());
+		ensureCapacity(length);
+		K key;
+		Iterator<? extends K> ki = keys.iterator();
+		PrimitiveIterator.OfInt vi = values.iterator();
+		while (ki.hasNext() && vi.hasNext()) {
+			key = ki.next();
+			if(key != null) {
+				put(key, vi.next());
+			}
+		}
+	}
+
+	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * The default behavior uses Fibonacci hashing; it simply gets the {@link Object#hashCode()}
