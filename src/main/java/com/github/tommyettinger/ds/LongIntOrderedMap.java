@@ -105,6 +105,17 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong, Ser
 		putAll(keys, values);
 	}
 
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * @param keys a PrimitiveCollection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public LongIntOrderedMap(PrimitiveCollection.OfLong keys, PrimitiveCollection.OfInt values){
+		this(Math.min(keys.size(), values.size()));
+		putAll(keys, values);
+	}
+
 	@Override
 	public int put (long key, int value) {
 		if (key == 0) {
