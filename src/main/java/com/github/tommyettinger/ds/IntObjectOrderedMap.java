@@ -105,6 +105,17 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 		}
 	}
 
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * @param keys a PrimitiveCollection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public IntObjectOrderedMap(PrimitiveCollection.OfInt keys, Collection<? extends V> values){
+		this(Math.min(keys.size(), values.size()));
+		putAll(keys, values);
+	}
+
 	@Override
 	public V put (int key, @Nullable V value) {
 		if (key == 0) {

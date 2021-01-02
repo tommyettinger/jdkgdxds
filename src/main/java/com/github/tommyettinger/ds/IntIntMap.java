@@ -142,6 +142,32 @@ public class IntIntMap implements Iterable<IntIntMap.Entry>, Serializable {
 	}
 
 	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * @param keys a PrimitiveCollection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public IntIntMap(PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values){
+		this(Math.min(keys.size(), values.size()));
+		putAll(keys, values);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().
+	 * @param keys a PrimitiveCollection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public void putAll (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values) {
+		int length = Math.min(keys.size(), values.size());
+		ensureCapacity(length);
+		PrimitiveIterator.OfInt ki = keys.iterator();
+		PrimitiveIterator.OfInt vi = values.iterator();
+		while (ki.hasNext() && vi.hasNext()) {
+			put(ki.next(), vi.next());
+		}
+	}
+
+	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * The default behavior uses Fibonacci hashing; it simply gets the {@link Object#hashCode()}

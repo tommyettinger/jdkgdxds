@@ -145,6 +145,32 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	}
 
 	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * @param keys a PrimitiveCollection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public IntFloatMap(PrimitiveCollection.OfInt keys, PrimitiveCollection.OfFloat values){
+		this(Math.min(keys.size(), values.size()));
+		putAll(keys, values);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().
+	 * @param keys a PrimitiveCollection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public void putAll (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfFloat values) {
+		int length = Math.min(keys.size(), values.size());
+		ensureCapacity(length);
+		PrimitiveIterator.OfInt ki = keys.iterator();
+		FloatIterator vi = values.iterator();
+		while (ki.hasNext() && vi.hasNext()) {
+			put(ki.next(), vi.next());
+		}
+	}
+
+	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * The default behavior uses Fibonacci hashing; it simply gets the {@link Object#hashCode()}

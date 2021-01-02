@@ -106,6 +106,17 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt, Se
 		putAll(keys, values);
 	}
 
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * @param keys a PrimitiveCollection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public IntFloatOrderedMap(PrimitiveCollection.OfInt keys, PrimitiveCollection.OfFloat values){
+		this(Math.min(keys.size(), values.size()));
+		putAll(keys, values);
+	}
+
 	@Override
 	public float put (int key, float value) {
 		if (key == 0) {
