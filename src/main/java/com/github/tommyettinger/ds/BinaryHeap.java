@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.support.BitConversion;
 import javax.annotation.Nullable;
 import java.util.AbstractQueue;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -31,6 +32,7 @@ import java.util.NoSuchElementException;
  * <br>
  * This isn't a direct copy from libGDX, but it's very close. It implements {@link java.util.Queue} and {@link java.util.Collection}.
  * @author Nathan Sweet
+ * @author Tommy Ettinger
  */
 @SuppressWarnings("unchecked")
 public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
@@ -63,6 +65,77 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	}
 
 	/**
+	 * Constructs a BinaryHeap with the contents from the given Collection of nodes, sorting lowest-first (a min-heap).
+	 * If a duplicate node is present in {@code coll}, all repeats are ignored.
+	 *
+	 * @param coll a Collection of T (which must extend {@link Node}) or objects that subclass T
+	 */
+	public BinaryHeap (Collection<? extends T> coll) {
+		this(false, coll);
+	}
+
+	/**
+	 * Constructs a BinaryHeap with the specified sorting order and the contents from the given Collection of nodes.
+	 * If a duplicate node is present in {@code coll}, all repeats are ignored.
+	 *
+	 * @param isMaxHeap if true, this will sort highest-first; if false, it will sort lowest-first
+	 * @param coll a Collection of T (which must extend {@link Node}) or objects that subclass T
+	 */
+	public BinaryHeap (boolean isMaxHeap, Collection<? extends T> coll) {
+		this.isMaxHeap = isMaxHeap;
+		nodes = new Node[coll.size()];
+		addAll(coll);
+	}
+
+	/**
+	 * Constructs a BinaryHeap with the contents from the given array of nodes, sorting lowest-first (a min-heap).
+	 * If a duplicate node is present in {@code arr}, all repeats are ignored.
+	 *
+	 * @param arr an array of T (which must extend {@link Node}) or objects that subclass T
+	 */
+	public BinaryHeap (T[] arr) {
+		this(false, arr);
+	}
+
+	/**
+	 * Constructs a BinaryHeap with the specified sorting order and the contents from the given array of nodes.
+	 * If a duplicate node is present in {@code arr}, all repeats are ignored.
+	 *
+	 * @param isMaxHeap if true, this will sort highest-first; if false, it will sort lowest-first
+	 * @param arr an array of T (which must extend {@link Node}) or objects that subclass T
+	 */
+	public BinaryHeap (boolean isMaxHeap, T[] arr) {
+		this.isMaxHeap = isMaxHeap;
+		nodes = new Node[arr.length];
+		addAll(arr);
+	}
+
+	@Override
+	public boolean addAll (Collection<? extends T> c) {
+		if (c == this) {
+			throw new IllegalArgumentException("A BinaryHeap cannot be added to itself.");
+		}
+		boolean modified = false;
+		for (T t : c) {
+			modified |= offer(t);
+		}
+		return modified;
+	}
+
+
+	public boolean addAll (T[] c) {
+		return addAll(c, 0, c.length);
+	}
+
+	public boolean addAll (T[] c, int offset, int length) {
+		boolean modified = false;
+		for (int i = offset, n = offset + length; i < n; i++) {
+			modified |= offer(c[i]);
+		}
+		return modified;
+	}
+
+	/**
 	 * Adds the node to the heap using its current value. The node should not already be in the heap.
 	 */
 	@Override
@@ -83,19 +156,16 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	/**
 	 * Inserts the specified element into this queue if it is possible to do
 	 * so immediately without violating capacity restrictions.
-	 * When using a capacity-restricted queue, this method is generally
-	 * preferable to {@link #add}, which can fail to insert an element only
-	 * by throwing an exception.
+	 * You can also use {@link #add(Node)}, but if you try to add a duplicate element
+	 * with that, an {@link IllegalStateException} is thrown. Here, if you try to add
+	 * a duplicate element, no Exception is thrown and this returns {@code false}.
 	 *
-	 * @param node the element to add
+	 * @param node the element to add; must not be null
 	 * @return {@code true} if the element was added to this queue, else
-	 * {@code false}
+	 * {@code false} (typically when node is already present in this BinaryHeap)
 	 * @throws ClassCastException       if the class of the specified element
 	 *                                  prevents it from being added to this queue
-	 * @throws NullPointerException     if the specified element is null and
-	 *                                  this queue does not permit null elements
-	 * @throws IllegalArgumentException if some property of this element
-	 *                                  prevents it from being added to this queue
+	 * @throws NullPointerException     if the specified element is null
 	 */
 	@Override
 	public boolean offer (T node) {
@@ -276,7 +346,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 			float rightValue;
 			if (rightIndex >= size) {
 				rightNode = null;
-				rightValue = isMaxHeap ? -Float.MAX_VALUE : Float.MAX_VALUE;
+				rightValue = isMaxHeap ? Float.NEGATIVE_INFINITY : Float.POSITIVE_INFINITY;
 			} else {
 				rightNode = nodes[rightIndex];
 				rightValue = rightNode.value;
