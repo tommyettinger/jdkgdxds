@@ -70,10 +70,8 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 	 */
 	protected int mask;
 
-	@Nullable
-	protected IntSetIterator iterator1;
-	@Nullable
-	protected IntSetIterator iterator2;
+	@Nullable protected transient IntSetIterator iterator1;
+	@Nullable protected transient IntSetIterator iterator2;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
@@ -328,15 +326,15 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 		}
 	}
 
-	public float getLoadFactor(){
+	public float getLoadFactor () {
 		return loadFactor;
 	}
 
-	public void setLoadFactor(float loadFactor){
+	public void setLoadFactor (float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
-		if(tableSize - 1 != mask) {
+		if (tableSize - 1 != mask) {
 			resize(tableSize);
 		}
 	}

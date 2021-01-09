@@ -103,10 +103,11 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 * @param keys a Collection of keys
+	 *
+	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public ObjectObjectOrderedMap(Collection<? extends K> keys, Collection<? extends V> values){
+	public ObjectObjectOrderedMap (Collection<? extends K> keys, Collection<? extends V> values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
@@ -132,7 +133,8 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * Puts the given key and value into this map at the given index in its order.
 	 * If the key is already present at a different index, it is moved to the given index and its
 	 * value is set to the given value.
-	 * @param key a K key; must not be null
+	 *
+	 * @param key   a K key; must not be null
 	 * @param value a V value; permitted to be null
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or null otherwise

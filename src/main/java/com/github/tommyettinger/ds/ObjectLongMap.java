@@ -69,18 +69,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable
-	protected Entries<K> entries1;
-	@Nullable
-	protected Entries<K> entries2;
-	@Nullable
-	protected Values<K> values1;
-	@Nullable
-	protected Values<K> values2;
-	@Nullable
-	protected Keys<K> keys1;
-	@Nullable
-	protected Keys<K> keys2;
+	@Nullable protected transient Entries<K> entries1;
+	@Nullable protected transient Entries<K> entries2;
+	@Nullable protected transient Values<K> values1;
+	@Nullable protected transient Values<K> values2;
+	@Nullable protected transient Keys<K> keys1;
+	@Nullable protected transient Keys<K> keys2;
 
 	public long defaultValue = 0L;
 
@@ -133,10 +127,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public ObjectLongMap(K[] keys, long[] values){
+	public ObjectLongMap (K[] keys, long[] values) {
 		this(Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
@@ -144,17 +139,19 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 * @param keys a Collection of keys
+	 *
+	 * @param keys   a Collection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public ObjectLongMap(Collection<? extends K> keys, PrimitiveCollection.OfLong values){
+	public ObjectLongMap (Collection<? extends K> keys, PrimitiveCollection.OfLong values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
 
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys a Collection of keys
+	 *
+	 * @param keys   a Collection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
 	public void putAll (Collection<? extends K> keys, PrimitiveCollection.OfLong values) {
@@ -165,7 +162,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		PrimitiveIterator.OfLong vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
 			key = ki.next();
-			if(key != null) {
+			if (key != null) {
 				put(key, vi.next());
 			}
 		}
@@ -269,7 +266,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
 	public void putAll (K[] keys, long[] values) {
@@ -278,7 +276,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
@@ -288,11 +287,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
-	 * @param keyOffset the first index in keys to insert
-	 * @param values an array of values
+	 *
+	 * @param keys        an array of keys
+	 * @param keyOffset   the first index in keys to insert
+	 * @param values      an array of values
 	 * @param valueOffset the first index in values to insert
-	 * @param length how many items from keys and values to insert, at-most
+	 * @param length      how many items from keys and values to insert, at-most
 	 */
 	public void putAll (K[] keys, int keyOffset, long[] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
@@ -303,7 +303,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 			if (key != null) { put(key, values[v]); }
 		}
 	}
-
 
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
@@ -515,15 +514,15 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		}
 	}
 
-	public float getLoadFactor(){
+	public float getLoadFactor () {
 		return loadFactor;
 	}
 
-	public void setLoadFactor(float loadFactor){
+	public void setLoadFactor (float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
-		if(tableSize - 1 != mask) {
+		if (tableSize - 1 != mask) {
 			resize(tableSize);
 		}
 	}
@@ -696,8 +695,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	}
 
 	public static class Entry<K> {
-		@Nullable
-		public K key;
+		@Nullable public K key;
 		public long value;
 
 		@Override
@@ -1002,14 +1000,15 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		}
 	}
 
-	public long putIfAbsent(K key, long value) {
+	public long putIfAbsent (K key, long value) {
 		long v = get(key);
 		if (!containsKey(key)) {
 			v = put(key, value);
 		}
 		return v;
 	}
-	public boolean replace(K key, long oldValue, long newValue) {
+
+	public boolean replace (K key, long oldValue, long newValue) {
 		long curValue = get(key);
 		if (curValue != oldValue || !containsKey(key)) {
 			return false;
@@ -1018,7 +1017,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 		return true;
 	}
 
-	public long replace(K key, long value) {
+	public long replace (K key, long value) {
 		long curValue = get(key);
 		if (containsKey(key)) {
 			curValue = put(key, value);

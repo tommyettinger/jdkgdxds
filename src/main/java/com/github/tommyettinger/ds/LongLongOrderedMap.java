@@ -102,13 +102,15 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong, S
 		this(Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
+
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 * @param keys a PrimitiveCollection of keys
+	 *
+	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public LongLongOrderedMap(PrimitiveCollection.OfLong keys, PrimitiveCollection.OfLong values){
+	public LongLongOrderedMap (PrimitiveCollection.OfLong keys, PrimitiveCollection.OfLong values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
@@ -145,7 +147,8 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong, S
 	 * Puts the given key and value into this map at the given index in its order.
 	 * If the key is already present at a different index, it is moved to the given index and its
 	 * value is set to the given value.
-	 * @param key a long key
+	 *
+	 * @param key   a long key
 	 * @param value a long value
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise

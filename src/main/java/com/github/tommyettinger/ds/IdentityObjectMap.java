@@ -120,6 +120,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	public boolean equals (Object obj) {
 		return super.equalsIdentity(obj);
 	}
+
 	@Override
 	public int hashCode () {
 		int h = size;

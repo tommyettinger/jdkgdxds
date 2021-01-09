@@ -41,10 +41,8 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	public float[] items;
 	protected int size;
 	public boolean ordered;
-	@Nullable
-	protected FloatListIterator iterator1;
-	@Nullable
-	protected FloatListIterator iterator2;
+	@Nullable protected transient FloatListIterator iterator1;
+	@Nullable protected transient FloatListIterator iterator2;
 
 	/**
 	 * Creates an ordered array with a capacity of 16.

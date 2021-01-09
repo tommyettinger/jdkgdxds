@@ -69,18 +69,12 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable
-	protected Entries entries1;
-	@Nullable
-	protected Entries entries2;
-	@Nullable
-	protected Values values1;
-	@Nullable
-	protected Values values2;
-	@Nullable
-	protected Keys keys1;
-	@Nullable
-	protected Keys keys2;
+	@Nullable protected transient Entries entries1;
+	@Nullable protected transient Entries entries2;
+	@Nullable protected transient Values values1;
+	@Nullable protected transient Values values2;
+	@Nullable protected transient Keys keys1;
+	@Nullable protected transient Keys keys2;
 
 	public long defaultValue = 0;
 
@@ -133,10 +127,11 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public IntLongMap(int[] keys, long[] values){
+	public IntLongMap (int[] keys, long[] values) {
 		this(Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
@@ -144,17 +139,19 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 * @param keys a PrimitiveCollection of keys
+	 *
+	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public IntLongMap(PrimitiveCollection.OfInt keys, PrimitiveCollection.OfLong values){
+	public IntLongMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfLong values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
 
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys a PrimitiveCollection of keys
+	 *
+	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
 	public void putAll (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfLong values) {
@@ -267,7 +264,8 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
 	public void putAll (int[] keys, long[] values) {
@@ -276,7 +274,8 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
@@ -286,11 +285,12 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
-	 * @param keyOffset the first index in keys to insert
-	 * @param values an array of values
+	 *
+	 * @param keys        an array of keys
+	 * @param keyOffset   the first index in keys to insert
+	 * @param values      an array of values
 	 * @param valueOffset the first index in values to insert
-	 * @param length how many items from keys and values to insert, at-most
+	 * @param length      how many items from keys and values to insert, at-most
 	 */
 	public void putAll (int[] keys, int keyOffset, long[] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
@@ -1058,14 +1058,15 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 		}
 	}
 
-	public long putIfAbsent(int key, long value) {
+	public long putIfAbsent (int key, long value) {
 		long v = get(key);
 		if (!containsKey(key)) {
 			v = put(key, value);
 		}
 		return v;
 	}
-	public boolean replace(int key, long oldValue, long newValue) {
+
+	public boolean replace (int key, long oldValue, long newValue) {
 		long curValue = get(key);
 		if (curValue != oldValue || !containsKey(key)) {
 			return false;
@@ -1074,7 +1075,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 		return true;
 	}
 
-	public long replace(int key, long value) {
+	public long replace (int key, long value) {
 		long curValue = get(key);
 		if (containsKey(key)) {
 			curValue = put(key, value);

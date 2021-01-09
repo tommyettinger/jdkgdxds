@@ -106,10 +106,11 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt, Serial
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 * @param keys a PrimitiveCollection of keys
+	 *
+	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public IntIntOrderedMap(PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values){
+	public IntIntOrderedMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
@@ -146,7 +147,8 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt, Serial
 	 * Puts the given key and value into this map at the given index in its order.
 	 * If the key is already present at a different index, it is moved to the given index and its
 	 * value is set to the given value.
-	 * @param key an int key
+	 *
+	 * @param key   an int key
 	 * @param value an int value
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise

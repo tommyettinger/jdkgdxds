@@ -16,6 +16,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * the item in the map. That bookkeeping will fail if you use the {@link Iterator#remove()} method on this
  * class' iterator; you can correct the indices with {@link #renumber()}, or {@link #renumber(int)} if you know
  * the first incorrect index.
+ *
  * @param <T> the type of items; should implement {@link Object#equals(Object)} and {@link Object#hashCode()}
  */
 public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
@@ -45,6 +46,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 	/**
 	 * Can be used to make a NumberedSet from any {@link Ordered} map or set with Object keys or items, using
 	 * the keys for a map and the items for a set.
+	 *
 	 * @param ordered any {@link Ordered} with the same type as this NumberSet
 	 */
 	public NumberedSet (Ordered<? extends T> ordered) {
@@ -54,6 +56,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
+	 *
 	 * @param coll all distinct items in this Collection will become items in this NumberedSet
 	 */
 	public NumberedSet (Collection<? extends T> coll) {
@@ -63,9 +66,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code items}.
+	 *
 	 * @param items all distinct elements in this array will become items in this NumberedSet
 	 */
-	public NumberedSet(T[] items) {
+	public NumberedSet (T[] items) {
 		this(items.length);
 		addAll(items);
 	}
@@ -81,7 +85,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 	 * NumberedSet, since the iterator's remove() method doesn't update the numbering on its own.
 	 * Use this method if you don't know the first incorrect index, or {@link #renumber(int)} if you do.
 	 */
-	public void renumber(){
+	public void renumber () {
 		final int s = size();
 		for (int i = 0; i < s; i++) {
 			map.valueTable[map.locateKey(map.keys.get(i))] = i;
@@ -93,9 +97,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 	 * This should be called if you have removed any items using {@link Iterator#remove()} from this
 	 * NumberedSet, since the iterator's remove() method doesn't update the numbering on its own.
 	 * Use {@link #renumber()} if you don't know the first incorrect index, or this method if you do.
+	 *
 	 * @param start the first index to reassign.
 	 */
-	public void renumber(final int start){
+	public void renumber (final int start) {
 		final int s = size();
 		for (int i = start; i < s; i++) {
 			map.valueTable[map.locateKey(map.keys.get(i))] = i;
@@ -106,7 +111,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 	public boolean remove (Object key) {
 		int prev = size();
 		map.remove(key);
-		if(size() != prev){
+		if (size() != prev) {
 			renumber();
 			return true;
 		}
@@ -151,7 +156,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 				modified = true;
 			}
 		}
-		if(modified){
+		if (modified) {
 			renumber();
 			return true;
 		}
@@ -168,7 +173,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 				modified = true;
 			}
 		}
-		if(modified){
+		if (modified) {
 			renumber();
 			return true;
 		}
@@ -289,11 +294,11 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 		return map.equals(that.map);
 	}
 
-	public float getLoadFactor(){
+	public float getLoadFactor () {
 		return map.getLoadFactor();
 	}
 
-	public void setLoadFactor(float loadFactor){
+	public void setLoadFactor (float loadFactor) {
 		map.setLoadFactor(loadFactor);
 	}
 

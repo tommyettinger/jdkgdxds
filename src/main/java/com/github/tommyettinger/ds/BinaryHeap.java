@@ -31,6 +31,7 @@ import java.util.NoSuchElementException;
  * The {@link Node} class can be extended to store additional information.
  * <br>
  * This isn't a direct copy from libGDX, but it's very close. It implements {@link java.util.Queue} and {@link java.util.Collection}.
+ *
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
@@ -41,10 +42,8 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	private Node[] nodes;
 	private final boolean isMaxHeap;
 
-	@Nullable
-	private HeapIterator<T> iterator1 = null;
-	@Nullable
-	private HeapIterator<T> iterator2 = null;
+	@Nullable protected transient HeapIterator<T> iterator1 = null;
+	@Nullable protected transient HeapIterator<T> iterator2 = null;
 
 	/**
 	 * Constructs a BinaryHeap with 16 starting capacity, sorting lowest-first (a min-heap).
@@ -79,7 +78,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	 * If a duplicate node is present in {@code coll}, all repeats are ignored.
 	 *
 	 * @param isMaxHeap if true, this will sort highest-first; if false, it will sort lowest-first
-	 * @param coll a Collection of T (which must extend {@link Node}) or objects that subclass T
+	 * @param coll      a Collection of T (which must extend {@link Node}) or objects that subclass T
 	 */
 	public BinaryHeap (boolean isMaxHeap, Collection<? extends T> coll) {
 		this.isMaxHeap = isMaxHeap;
@@ -102,7 +101,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	 * If a duplicate node is present in {@code arr}, all repeats are ignored.
 	 *
 	 * @param isMaxHeap if true, this will sort highest-first; if false, it will sort lowest-first
-	 * @param arr an array of T (which must extend {@link Node}) or objects that subclass T
+	 * @param arr       an array of T (which must extend {@link Node}) or objects that subclass T
 	 */
 	public BinaryHeap (boolean isMaxHeap, T[] arr) {
 		this.isMaxHeap = isMaxHeap;
@@ -121,7 +120,6 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		}
 		return modified;
 	}
-
 
 	public boolean addAll (T[] c) {
 		return addAll(c, 0, c.length);
@@ -163,9 +161,9 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	 * @param node the element to add; must not be null
 	 * @return {@code true} if the element was added to this queue, else
 	 * {@code false} (typically when node is already present in this BinaryHeap)
-	 * @throws ClassCastException       if the class of the specified element
-	 *                                  prevents it from being added to this queue
-	 * @throws NullPointerException     if the specified element is null
+	 * @throws ClassCastException   if the class of the specified element
+	 *                              prevents it from being added to this queue
+	 * @throws NullPointerException if the specified element is null
 	 */
 	@Override
 	public boolean offer (T node) {
@@ -193,7 +191,8 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	 */
 	@Override
 	public T poll () {
-		if(size == 0) return null;
+		if (size == 0)
+			return null;
 		Node removed = nodes[0];
 		if (--size > 0) {
 			nodes[0] = nodes[size];
@@ -241,7 +240,8 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	 */
 	@Nullable
 	public T pop () {
-		if(size == 0) return null;
+		if (size == 0)
+			return null;
 		Node removed = nodes[0];
 		if (--size > 0) {
 			nodes[0] = nodes[size];
@@ -313,7 +313,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		while (index > 0) {
 			int parentIndex = (index - 1) >> 1;
 			Node parent = nodes[parentIndex];
-			if(node == parent)
+			if (node == parent)
 				throw new IllegalStateException("Duplicate nodes are not allowed in a BinaryHeap.");
 			if (value < parent.value ^ isMaxHeap) {
 				nodes[index] = parent;
@@ -416,7 +416,6 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		return buffer.toString();
 	}
 
-
 	/**
 	 * Returns an iterator over the elements contained in this collection.
 	 *
@@ -445,7 +444,8 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		private final BinaryHeap<T> heap;
 		private int index;
 		private boolean valid = true;
-		public HeapIterator(BinaryHeap<T> binaryHeap){
+
+		public HeapIterator (BinaryHeap<T> binaryHeap) {
 			heap = binaryHeap;
 			index = 0;
 		}
@@ -474,7 +474,8 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 			if (index >= heap.size) { throw new NoSuchElementException(); }
 			return (T)heap.nodes[index++];
 		}
-		public void reset(){
+
+		public void reset () {
 			index = 0;
 		}
 	}

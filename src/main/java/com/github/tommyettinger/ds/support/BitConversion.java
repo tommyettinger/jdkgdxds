@@ -163,6 +163,7 @@ public final class BitConversion {
 	public static float intBitsToFloat (final int bits) {
 		return Float.intBitsToFloat(bits);
 	}
+
 	/**
 	 * Returns an int value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
 	 * the specified int value. Returns zero if the specified value has no one-bits in its two's complement binary
@@ -172,14 +173,15 @@ public final class BitConversion {
 	 * but does not always calculate Long.lowestOneBit() correctly. This overload is here so you can use lowestOneBit on
 	 * an int value and get an int value back (which could be assigned to a long without losing data), or use it on a
 	 * long value and get the correct long result on both GWT and other platforms.
+	 *
 	 * @param num the value whose lowest one bit is to be computed
 	 * @return an int value with a single one-bit, in the position of the lowest-order one-bit in the specified value,
-	 *         or zero if the specified value is itself equal to zero.
+	 * or zero if the specified value is itself equal to zero.
 	 */
-	public static int lowestOneBit(int num)
-	{
+	public static int lowestOneBit (int num) {
 		return num & -num;
 	}
+
 	/**
 	 * Returns an long value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
 	 * the specified long value. Returns zero if the specified value has no one-bits in its two's complement binary
@@ -189,12 +191,12 @@ public final class BitConversion {
 	 * {@link Long#lowestOneBit(long)} does not provide correct results for certain inputs on GWT. For example, when given
 	 * -17592186044416L, Long.lowestOneBit() returns 0 on GWT, possibly because it converts to an int at some point. On
 	 * other platforms, like desktop JDKs, {@code Long.lowestOneBit(-17592186044416L)} returns 17592186044416L.
+	 *
 	 * @param num the value whose lowest one bit is to be computed
 	 * @return a long value with a single one-bit, in the position of the lowest-order one-bit in the specified value,
-	 *         or zero if the specified value is itself equal to zero.
+	 * or zero if the specified value is itself equal to zero.
 	 */
-	public static long lowestOneBit(long num)
-	{
+	public static long lowestOneBit (long num) {
 		return num & -num;
 	}
 

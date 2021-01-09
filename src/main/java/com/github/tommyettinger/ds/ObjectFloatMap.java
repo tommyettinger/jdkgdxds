@@ -71,18 +71,12 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable
-	protected Entries<K> entries1;
-	@Nullable
-	protected Entries<K> entries2;
-	@Nullable
-	protected Values<K> values1;
-	@Nullable
-	protected Values<K> values2;
-	@Nullable
-	protected Keys<K> keys1;
-	@Nullable
-	protected Keys<K> keys2;
+	@Nullable protected transient Entries<K> entries1;
+	@Nullable protected transient Entries<K> entries2;
+	@Nullable protected transient Values<K> values1;
+	@Nullable protected transient Values<K> values2;
+	@Nullable protected transient Keys<K> keys1;
+	@Nullable protected transient Keys<K> keys2;
 
 	public float defaultValue = 0;
 
@@ -135,10 +129,11 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public ObjectFloatMap(K[] keys, float[] values){
+	public ObjectFloatMap (K[] keys, float[] values) {
 		this(Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
@@ -146,17 +141,19 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 * @param keys a Collection of keys
+	 *
+	 * @param keys   a Collection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public ObjectFloatMap(Collection<? extends K> keys, PrimitiveCollection.OfFloat values){
+	public ObjectFloatMap (Collection<? extends K> keys, PrimitiveCollection.OfFloat values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
 
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys a Collection of keys
+	 *
+	 * @param keys   a Collection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
 	public void putAll (Collection<? extends K> keys, PrimitiveCollection.OfFloat values) {
@@ -167,7 +164,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		FloatIterator vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
 			key = ki.next();
-			if(key != null) {
+			if (key != null) {
 				put(key, vi.next());
 			}
 		}
@@ -271,7 +268,8 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
 	public void putAll (K[] keys, float[] values) {
@@ -280,7 +278,8 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
@@ -290,11 +289,12 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
-	 * @param keyOffset the first index in keys to insert
-	 * @param values an array of values
+	 *
+	 * @param keys        an array of keys
+	 * @param keyOffset   the first index in keys to insert
+	 * @param values      an array of values
 	 * @param valueOffset the first index in values to insert
-	 * @param length how many items from keys and values to insert, at-most
+	 * @param length      how many items from keys and values to insert, at-most
 	 */
 	public void putAll (K[] keys, int keyOffset, float[] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
@@ -556,15 +556,15 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		}
 	}
 
-	public float getLoadFactor(){
+	public float getLoadFactor () {
 		return loadFactor;
 	}
 
-	public void setLoadFactor(float loadFactor){
+	public void setLoadFactor (float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
-		if(tableSize - 1 != mask) {
+		if (tableSize - 1 != mask) {
 			resize(tableSize);
 		}
 	}
@@ -737,8 +737,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	}
 
 	public static class Entry<K> {
-		@Nullable
-		public K key;
+		@Nullable public K key;
 		public float value;
 
 		@Override
@@ -1042,14 +1041,15 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		}
 	}
 
-	public float putIfAbsent(K key, float value) {
+	public float putIfAbsent (K key, float value) {
 		float v = get(key);
 		if (!containsKey(key)) {
 			v = put(key, value);
 		}
 		return v;
 	}
-	public boolean replace(K key, float oldValue, float newValue) {
+
+	public boolean replace (K key, float oldValue, float newValue) {
 		float curValue = get(key);
 		if (curValue != oldValue || !containsKey(key)) {
 			return false;
@@ -1058,7 +1058,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 		return true;
 	}
 
-	public float replace(K key, float value) {
+	public float replace (K key, float value) {
 		float curValue = get(key);
 		if (containsKey(key)) {
 			curValue = put(key, value);

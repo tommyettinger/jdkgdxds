@@ -45,6 +45,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * years), while {@link Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
 	 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
 	 * somewhat slower and is not ideal in terms of statistical bias.
+	 *
 	 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 	 */
 	@Override
@@ -67,10 +68,11 @@ public interface Ordered<T> extends Arrangeable {
 	 * Gets a random T value from this Ordered, where T is typically the key type for Maps and the
 	 * item type for Lists and Sets. The random number generator {@code rng} should probably be a
 	 * {@link LaserRandom}, because it implements a fast {@link LaserRandom#nextInt(int)} method.
+	 *
 	 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 	 * @return a random T key or item from this Ordered
 	 */
-	default T random(Random rng) {
+	default T random (Random rng) {
 		return order().random(rng);
 	}
 
@@ -107,6 +109,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * years), while {@link Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
 		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
 		 * somewhat slower and is not ideal in terms of statistical bias.
+		 *
 		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 		 */
 		@Override
@@ -125,15 +128,15 @@ public interface Ordered<T> extends Arrangeable {
 			order().reverse();
 		}
 
-
 		/**
 		 * Gets a random int value from this Ordered. The random number generator {@code rng} should
 		 * probably be a {@link LaserRandom}, because it implements a fast
 		 * {@link LaserRandom#nextInt(int)} method.
+		 *
 		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 		 * @return a random int key or item from this Ordered.OfInt
 		 */
-		default int random(Random rng) {
+		default int random (Random rng) {
 			return order().random(rng);
 		}
 
@@ -172,6 +175,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * years), while {@link Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
 		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
 		 * somewhat slower and is not ideal in terms of statistical bias.
+		 *
 		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 		 */
 		@Override
@@ -194,10 +198,11 @@ public interface Ordered<T> extends Arrangeable {
 		 * Gets a random long value from this Ordered. The random number generator {@code rng} should
 		 * probably be a {@link LaserRandom}, because it implements a fast
 		 * {@link LaserRandom#nextInt(int)} method.
+		 *
 		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 		 * @return a random long key or item from this Ordered.OfLong
 		 */
-		default long random(Random rng) {
+		default long random (Random rng) {
 			return order().random(rng);
 		}
 	}
@@ -235,6 +240,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * years), while {@link Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
 		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
 		 * somewhat slower and is not ideal in terms of statistical bias.
+		 *
 		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 		 */
 		@Override
@@ -257,10 +263,11 @@ public interface Ordered<T> extends Arrangeable {
 		 * Gets a random float value from this Ordered. The random number generator {@code rng} should
 		 * probably be a {@link LaserRandom}, because it implements a fast
 		 * {@link LaserRandom#nextInt(int)} method.
+		 *
 		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 		 * @return a random float key or item from this Ordered.OfFloat
 		 */
-		default float random(Random rng) {
+		default float random (Random rng) {
 			return order().random(rng);
 		}
 	}

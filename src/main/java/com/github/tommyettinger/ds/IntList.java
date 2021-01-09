@@ -39,10 +39,8 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	public int[] items;
 	protected int size;
 	public boolean ordered;
-	@Nullable
-	protected IntListIterator iterator1;
-	@Nullable
-	protected IntListIterator iterator2;
+	@Nullable protected transient IntListIterator iterator1;
+	@Nullable protected transient IntListIterator iterator2;
 
 	/**
 	 * Creates an ordered array with a capacity of 16.

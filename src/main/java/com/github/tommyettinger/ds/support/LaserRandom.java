@@ -147,6 +147,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * its least significant bit ignored and always overwritten with a '1' bit (meaning stateB will always be odd).
 	 * You can use any long for stateA without it being changed, and can use any odd long for stateB without it
 	 * being changed; as such, keeping {@code stateB} an odd number should be optimal.
+	 *
 	 * @param stateA a 64-bit long
 	 * @param stateB a 64-bit long; the lowest bit will be ignored and the result always used as an odd number
 	 */
@@ -154,6 +155,7 @@ public class LaserRandom extends Random implements Serializable {
 		this.stateA = stateA;
 		this.stateB = stateB | 1L;
 	}
+
 	/**
 	 * Sets the seed of this random number generator using a single
 	 * {@code long} seed. The general contract of {@code setSeed} is

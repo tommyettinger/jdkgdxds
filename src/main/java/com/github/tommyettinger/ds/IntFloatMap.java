@@ -72,18 +72,12 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable
-	protected Entries entries1;
-	@Nullable
-	protected Entries entries2;
-	@Nullable
-	protected Values values1;
-	@Nullable
-	protected Values values2;
-	@Nullable
-	protected Keys keys1;
-	@Nullable
-	protected Keys keys2;
+	@Nullable protected transient Entries entries1;
+	@Nullable protected transient Entries entries2;
+	@Nullable protected transient Values values1;
+	@Nullable protected transient Values values2;
+	@Nullable protected transient Keys keys1;
+	@Nullable protected transient Keys keys2;
 
 	public float defaultValue = 0;
 
@@ -136,10 +130,11 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public IntFloatMap(int[] keys, float[] values){
+	public IntFloatMap (int[] keys, float[] values) {
 		this(Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
@@ -147,17 +142,19 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 * @param keys a PrimitiveCollection of keys
+	 *
+	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public IntFloatMap(PrimitiveCollection.OfInt keys, PrimitiveCollection.OfFloat values){
+	public IntFloatMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfFloat values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
 
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys a PrimitiveCollection of keys
+	 *
+	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
 	public void putAll (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfFloat values) {
@@ -270,7 +267,8 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
 	public void putAll (int[] keys, float[] values) {
@@ -279,7 +277,8 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
@@ -289,11 +288,12 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
-	 * @param keyOffset the first index in keys to insert
-	 * @param values an array of values
+	 *
+	 * @param keys        an array of keys
+	 * @param keyOffset   the first index in keys to insert
+	 * @param values      an array of values
 	 * @param valueOffset the first index in values to insert
-	 * @param length how many items from keys and values to insert, at-most
+	 * @param length      how many items from keys and values to insert, at-most
 	 */
 	public void putAll (int[] keys, int keyOffset, float[] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
@@ -579,15 +579,15 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		}
 	}
 
-	public float getLoadFactor(){
+	public float getLoadFactor () {
 		return loadFactor;
 	}
 
-	public void setLoadFactor(float loadFactor){
+	public void setLoadFactor (float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
-		if(tableSize - 1 != mask) {
+		if (tableSize - 1 != mask) {
 			resize(tableSize);
 		}
 	}
@@ -1117,14 +1117,15 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		}
 	}
 
-	public float putIfAbsent(int key, float value) {
+	public float putIfAbsent (int key, float value) {
 		float v = get(key);
 		if (!containsKey(key)) {
 			v = put(key, value);
 		}
 		return v;
 	}
-	public boolean replace(int key, float oldValue, float newValue) {
+
+	public boolean replace (int key, float oldValue, float newValue) {
 		float curValue = get(key);
 		if (curValue != oldValue || !containsKey(key)) {
 			return false;
@@ -1133,7 +1134,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		return true;
 	}
 
-	public float replace(int key, float value) {
+	public float replace (int key, float value) {
 		float curValue = get(key);
 		if (containsKey(key)) {
 			curValue = put(key, value);

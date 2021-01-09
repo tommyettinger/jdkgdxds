@@ -55,12 +55,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable
-	protected ObjectSetIterator<T, K> iterator1;
-	@Nullable
-	protected ObjectSetIterator<T, K> iterator2;
-	@Nullable
-	protected Function<T, K> extractor;
+	@Nullable protected transient ObjectSetIterator<T, K> iterator1;
+	@Nullable protected transient ObjectSetIterator<T, K> iterator2;
+	@Nullable protected transient Function<T, K> extractor;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
@@ -130,8 +127,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}, using {@code extractor} to get the keys that determine distinctness.
+	 *
 	 * @param extractor a function that will be used to extract K keys from the T items in coll
-	 * @param coll a Collection of T items; depending on extractor, some different T items may not be added because their K key is equal
+	 * @param coll      a Collection of T items; depending on extractor, some different T items may not be added because their K key is equal
 	 */
 	public HolderSet (Function<T, K> extractor, Collection<? extends T> coll) {
 		this(extractor, coll.size());
@@ -140,8 +138,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code items}, using {@code extractor} to get the keys that determine distinctness.
+	 *
 	 * @param extractor a function that will be used to extract K keys from the T items in coll
-	 * @param items an array of T items; depending on extractor, some different T items may not be added because their K key is equal
+	 * @param items     an array of T items; depending on extractor, some different T items may not be added because their K key is equal
 	 */
 	public HolderSet (Function<T, K> extractor, T[] items) {
 		this(extractor, items.length);
@@ -275,6 +274,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 
 	/**
 	 * Makes this Set retain a Collection of K key types (not T items).
+	 *
 	 * @param c a Collection that should hold K keys to retain in this
 	 * @return true if this Set was modified
 	 */
@@ -289,8 +289,10 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 		}
 		return modified;
 	}
+
 	/**
 	 * Removes from this Set a Collection of K key types (not T items).
+	 *
 	 * @param c a Collection that should hold K keys to remove from this
 	 * @return true if this Set was modified
 	 */
@@ -452,6 +454,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Given a K key that could have been extracted or extractable from a T item in this,
 	 * this returns the T item that holds that key, or null if no item holds key.
+	 *
 	 * @param key a K key that could have been extracted from a T item in this
 	 * @return the T item that holds the given key, or null if none was found
 	 */
@@ -540,15 +543,15 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 		return a;
 	}
 
-	public float getLoadFactor(){
+	public float getLoadFactor () {
 		return loadFactor;
 	}
 
-	public void setLoadFactor(float loadFactor){
+	public void setLoadFactor (float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
-		if(tableSize - 1 != mask) {
+		if (tableSize - 1 != mask) {
 			resize(tableSize);
 		}
 	}

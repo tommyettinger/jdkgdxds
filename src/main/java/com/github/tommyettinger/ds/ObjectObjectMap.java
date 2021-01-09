@@ -72,18 +72,12 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable
-	protected Entries<K, V> entries1;
-	@Nullable
-	protected Entries<K, V> entries2;
-	@Nullable
-	protected Values<K, V> values1;
-	@Nullable
-	protected Values<K, V> values2;
-	@Nullable
-	protected Keys<K, V> keys1;
-	@Nullable
-	protected Keys<K, V> keys2;
+	@Nullable protected transient Entries<K, V> entries1;
+	@Nullable protected transient Entries<K, V> entries2;
+	@Nullable protected transient Values<K, V> values1;
+	@Nullable protected transient Values<K, V> values2;
+	@Nullable protected transient Keys<K, V> keys1;
+	@Nullable protected transient Keys<K, V> keys2;
 
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
@@ -146,10 +140,11 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public ObjectObjectMap(K[] keys, V[] values){
+	public ObjectObjectMap (K[] keys, V[] values) {
 		this(Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
@@ -157,17 +152,19 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 * @param keys a Collection of keys
+	 *
+	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public ObjectObjectMap(Collection<? extends K> keys, Collection<? extends V> values){
+	public ObjectObjectMap (Collection<? extends K> keys, Collection<? extends V> values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
 
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys a Collection of keys
+	 *
+	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
 	public void putAll (Collection<? extends K> keys, Collection<? extends V> values) {
@@ -178,7 +175,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		Iterator<? extends V> vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
 			key = ki.next();
-			if(key != null) {
+			if (key != null) {
 				put(key, vi.next());
 			}
 		}
@@ -267,7 +264,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
 	public void putAll (K[] keys, V[] values) {
@@ -276,7 +274,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
+	 *
+	 * @param keys   an array of keys
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
@@ -286,11 +285,12 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * @param keys an array of keys
-	 * @param keyOffset the first index in keys to insert
-	 * @param values an array of values
+	 *
+	 * @param keys        an array of keys
+	 * @param keyOffset   the first index in keys to insert
+	 * @param values      an array of values
 	 * @param valueOffset the first index in values to insert
-	 * @param length how many items from keys and values to insert, at-most
+	 * @param length      how many items from keys and values to insert, at-most
 	 */
 	public void putAll (K[] keys, int keyOffset, V[] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
@@ -550,15 +550,15 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		}
 	}
 
-	public float getLoadFactor(){
+	public float getLoadFactor () {
 		return loadFactor;
 	}
 
-	public void setLoadFactor(float loadFactor){
+	public void setLoadFactor (float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
-		if(tableSize - 1 != mask) {
+		if (tableSize - 1 != mask) {
 			resize(tableSize);
 		}
 	}
@@ -756,10 +756,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	public static class Entry<K, V> implements Map.Entry<K, V> {
-		@Nullable
-		public K key;
-		@Nullable
-		public V value;
+		@Nullable public K key;
+		@Nullable public V value;
 
 		@Override
 		@Nullable

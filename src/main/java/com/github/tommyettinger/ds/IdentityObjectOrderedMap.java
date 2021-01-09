@@ -3,7 +3,7 @@ package com.github.tommyettinger.ds;
 import java.util.Collection;
 import java.util.Map;
 
-public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>{
+public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V> {
 	public IdentityObjectOrderedMap () {
 		super();
 	}
@@ -31,6 +31,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	public IdentityObjectOrderedMap (Collection<? extends K> keys, Collection<? extends V> values) {
 		super(keys, values);
 	}
+
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <p>
@@ -74,6 +75,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	public boolean equals (Object obj) {
 		return super.equalsIdentity(obj);
 	}
+
 	@Override
 	public int hashCode () {
 		int h = size;

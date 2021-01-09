@@ -43,10 +43,8 @@ import java.util.Random;
 public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializable {
 	private static final long serialVersionUID = 0L;
 	public boolean ordered = true;
-	@Nullable
-	protected ObjectListIterator<T> iterator1;
-	@Nullable
-	protected ObjectListIterator<T> iterator2;
+	@Nullable protected transient ObjectListIterator<T> iterator1;
+	@Nullable protected transient ObjectListIterator<T> iterator2;
 
 	/**
 	 * Constructs an empty list with the specified initial capacity.
@@ -133,7 +131,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 
 	/**
 	 * This is an alias for {@link #add(int, Object)} to improve compatibility with primitive lists.
-	 * @param index index at which the specified element is to be inserted
+	 *
+	 * @param index   index at which the specified element is to be inserted
 	 * @param element element to be inserted
 	 */
 	public void insert (int index, @Nullable T element) {
@@ -156,6 +155,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 
 	/**
 	 * This is an alias for {@link #remove(int)} to make the API the same for primitive lists.
+	 *
 	 * @param index must be non-negative and less than {@link #size()}
 	 * @return the previously-held item at the given index
 	 */
@@ -397,6 +397,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 	 * <br>
 	 * The returned iterator is reused by this ObjectList, so it is likely unsuitable for nested iteration.
 	 * Use {@link ObjectListIterator#ObjectListIterator(ObjectList)} to create a ListIterator if you need nested iteration.
+	 *
 	 * @see #listIterator(int)
 	 */
 	@Override
@@ -453,7 +454,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 		}
 
 		public ObjectListIterator (ObjectList<T> list, int index) {
-			if(index < 0 || index >= list.size())
+			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("ObjectListIterator does not satisfy index >= 0 && index < list.size()");
 			this.list = list;
 			this.index = index;
@@ -627,9 +628,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 			index = 0;
 		}
 
-
 		public void reset (int index) {
-			if(index < 0 || index >= list.size())
+			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("ObjectListIterator does not satisfy index >= 0 && index < list.size()");
 			this.index = index;
 		}
@@ -644,7 +644,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 			return this;
 		}
 	}
-
 
 	@SafeVarargs
 	public static <T> ObjectList<T> with (T... varargs) {
@@ -678,6 +677,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 	 * Pseudo-randomly shuffles the order of this Ordered in-place.
 	 * You can technically use {@link Random} or any of its subclasses for {@code rng},
 	 * but java.util.Random is a really bad choice; {@link LaserRandom} is generally better.
+	 *
 	 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
 	 */
 	@Override

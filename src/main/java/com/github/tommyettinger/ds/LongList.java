@@ -39,10 +39,8 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	public long[] items;
 	protected int size;
 	public boolean ordered;
-	@Nullable
-	protected LongListIterator iterator1;
-	@Nullable
-	protected LongListIterator iterator2;
+	@Nullable protected transient LongListIterator iterator1;
+	@Nullable protected transient LongListIterator iterator2;
 
 	/**
 	 * Creates an ordered array with a capacity of 16.
