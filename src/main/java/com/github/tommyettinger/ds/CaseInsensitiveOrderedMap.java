@@ -19,31 +19,65 @@ import java.util.Objects;
  */
 public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSequence, V> implements Serializable {
 	private static final long serialVersionUID = 0L;
-
+	/**
+	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
+	 */
 	public CaseInsensitiveOrderedMap () {
 		super();
 	}
-
+	/**
+	 * Creates a new map with a load factor of 0.8.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
 	public CaseInsensitiveOrderedMap (int initialCapacity) {
 		super(initialCapacity);
 	}
 
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
+	 */
 	public CaseInsensitiveOrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
+	/**
+	 * Creates a new map identical to the specified map.
+	 * @param map an ObjectObjectOrderedMap to copy, or a subclass such as this one
+	 */
 	public CaseInsensitiveOrderedMap (ObjectObjectOrderedMap<? extends CharSequence, ? extends V> map) {
 		super(map);
 	}
 
+	/**
+	 * Creates a new map identical to the specified map.
+	 * @param map a Map to copy; ObjectObjectOrderedMap and subclasses of it will be faster
+	 */
 	public CaseInsensitiveOrderedMap (Map<? extends CharSequence, ? extends V> map) {
 		super(map);
 	}
 
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 */
 	public CaseInsensitiveOrderedMap (CharSequence[] keys, V[] values) {
 		super(keys, values);
 	}
-
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 *
+	 * @param keys   a Collection of keys
+	 * @param values a Collection of values
+	 */
 	public CaseInsensitiveOrderedMap (Collection<? extends CharSequence> keys, Collection<? extends V> values) {
 		super(keys, values);
 	}

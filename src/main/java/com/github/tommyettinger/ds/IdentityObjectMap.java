@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * A variant on {@link ObjectObjectMap} that compares keys by identity (using {@code ==}) instead of equality (using {@code equals()}).
- * It also hashes with {@link System#identityHashCode(Object)} instead of calling the {@code hashCode()} of an item.
+ * It also hashes with {@link System#identityHashCode(Object)} instead of calling the {@code hashCode()} of a key.
  * Note that the {@link #entrySet()}, {@link #keySet()} and individual Entry items this produces are those of an {@link ObjectObjectMap},
  * and so do not compare by identity.
  */
@@ -31,7 +31,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 * growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
 	 */
 	public IdentityObjectMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
@@ -40,7 +40,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map
+	 * @param map an ObjectObjectMap to copy, or a subclass such as this one
 	 */
 	public IdentityObjectMap (ObjectObjectMap<? extends K, ? extends V> map) {
 		super(map);
@@ -49,7 +49,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map
+	 * @param map a Map to copy
 	 */
 	public IdentityObjectMap (Map<? extends K, ? extends V> map) {
 		super(map);

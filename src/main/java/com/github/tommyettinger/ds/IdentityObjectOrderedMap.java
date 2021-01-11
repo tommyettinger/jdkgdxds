@@ -2,32 +2,75 @@ package com.github.tommyettinger.ds;
 
 import java.util.Collection;
 import java.util.Map;
-
+/**
+ * A variant on {@link ObjectObjectOrderedMap} that compares keys by identity (using {@code ==}) instead of equality
+ * (using {@code equals()}). It also hashes with {@link System#identityHashCode(Object)} instead of calling the
+ * {@code hashCode()} of a key. Note that the {@link #entrySet()}, {@link #keySet()} and individual Entry items this
+ * produces are those of an {@link ObjectObjectOrderedMap}, and so do not compare by identity.
+ */
 public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V> {
+	/**
+	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
+	 */
 	public IdentityObjectOrderedMap () {
 		super();
 	}
 
+	/**
+	 * Creates a new map with a load factor of 0.8.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
 	public IdentityObjectOrderedMap (int initialCapacity) {
 		super(initialCapacity);
 	}
 
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
+	 */
 	public IdentityObjectOrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
-
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map an ObjectObjectOrderedMap to copy, or a subclass such as this one
+	 */
 	public IdentityObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> map) {
 		super(map);
 	}
 
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map a Map to copy
+	 */
 	public IdentityObjectOrderedMap (Map<? extends K, ? extends V> map) {
 		super(map);
 	}
 
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 */
 	public IdentityObjectOrderedMap (K[] keys, V[] values) {
 		super(keys, values);
 	}
 
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 *
+	 * @param keys   a Collection of keys
+	 * @param values a Collection of values
+	 */
 	public IdentityObjectOrderedMap (Collection<? extends K> keys, Collection<? extends V> values) {
 		super(keys, values);
 	}

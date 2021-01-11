@@ -60,7 +60,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	@Nullable protected transient Function<T, K> extractor;
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
+	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8. This does not set the
+	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(Function)} is called with
+	 * a valid Function that gets K keys from T items.
 	 */
 	public HolderSet () {
 
@@ -77,6 +79,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
+	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 */
 	public HolderSet (Function<T, K> extractor) {
 		this(extractor, 51, 0.8f);
@@ -85,6 +88,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	/**
 	 * Creates a new set with a load factor of 0.8.
 	 *
+	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public HolderSet (Function<T, K> extractor, int initialCapacity) {
@@ -95,7 +99,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
 	 * growing the backing table.
 	 *
+	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
 	 */
 	public HolderSet (Function<T, K> extractor, int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) {
@@ -114,6 +120,8 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 
 	/**
 	 * Creates a new set identical to the specified set.
+	 * This doesn't copy the extractor; instead it references the same Function from the argument.
+	 * This can have issues if the extractor causes side effects or is stateful.
 	 */
 	public HolderSet (HolderSet<T, K> set) {
 		loadFactor = set.loadFactor;

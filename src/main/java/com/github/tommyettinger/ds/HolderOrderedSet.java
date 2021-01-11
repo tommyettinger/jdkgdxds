@@ -60,26 +60,54 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	private static final long serialVersionUID = 0L;
 	protected final ObjectList<T> items;
 
+	/**
+	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8. This does not set the
+	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(Function)} is called with
+	 * a valid Function that gets K keys from T items.
+	 */
 	public HolderOrderedSet () {
 		super();
 		items = new ObjectList<>();
 	}
 
+	/**
+	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
+	 * @param extractor a function that will be used to extract K keys from the T items put into this
+	 */
 	public HolderOrderedSet (Function<T, K> extractor) {
 		super(extractor);
 		items = new ObjectList<>();
 	}
 
-	public HolderOrderedSet (Function<T, K> extractor, int initialCapacity, float loadFactor) {
-		super(extractor, initialCapacity, loadFactor);
-		items = new ObjectList<>(initialCapacity);
-	}
-
+	/**
+	 * Creates a new set with a load factor of 0.8.
+	 *
+	 * @param extractor a function that will be used to extract K keys from the T items put into this
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
 	public HolderOrderedSet (Function<T, K> extractor, int initialCapacity) {
 		super(extractor, initialCapacity);
 		items = new ObjectList<>(initialCapacity);
 	}
 
+	/**
+	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param extractor a function that will be used to extract K keys from the T items put into this
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
+	 */
+	public HolderOrderedSet (Function<T, K> extractor, int initialCapacity, float loadFactor) {
+		super(extractor, initialCapacity, loadFactor);
+		items = new ObjectList<>(initialCapacity);
+	}
+
+	/**
+	 * Creates a new set identical to the specified set.
+	 * This doesn't copy the extractor; instead it references the same Function from the argument.
+	 * This can have issues if the extractor causes side effects or is stateful.
+	 */
 	public HolderOrderedSet (HolderOrderedSet<T, K> set) {
 		super(set);
 		items = new ObjectList<>(set.items);

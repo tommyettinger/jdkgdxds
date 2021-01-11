@@ -100,6 +100,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
 	 */
 	public ObjectObjectMap (int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
@@ -116,6 +117,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	/**
 	 * Creates a new map identical to the specified map.
+	 * @param map an ObjectObjectMap to copy
 	 */
 	public ObjectObjectMap (ObjectObjectMap<? extends K, ? extends V> map) {
 		this.loadFactor = map.loadFactor;
@@ -129,6 +131,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	/**
 	 * Creates a new map identical to the specified map.
+	 * @param map a Map to copy; ObjectObjectMap or its subclasses will be faster
 	 */
 	public ObjectObjectMap (Map<? extends K, ? extends V> map) {
 		this(map.size());
