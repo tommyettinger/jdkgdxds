@@ -109,6 +109,11 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
+	public FloatList(PrimitiveCollection.OfFloat coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+
 	// Newly-added
 	@Override
 	public int size () {

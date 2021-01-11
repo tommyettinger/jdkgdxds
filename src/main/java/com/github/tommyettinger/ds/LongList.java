@@ -107,6 +107,11 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
+	public LongList(PrimitiveCollection.OfLong coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+
 	// Newly-added
 	@Override
 	public int size () {

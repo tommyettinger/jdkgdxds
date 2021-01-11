@@ -107,6 +107,11 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
+	public IntList(PrimitiveCollection.OfInt coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+
 	// Newly-added
 	@Override
 	public int size () {
