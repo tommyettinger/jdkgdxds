@@ -62,20 +62,40 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt, Seri
 
 	protected final IntList keys;
 
+	/**
+	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
+	 */
 	public IntLongOrderedMap () {
+		super();
 		keys = new IntList();
 	}
 
+	/**
+	 * Creates a new map with the given starting capacity and a load factor of 0.8.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
 	public IntLongOrderedMap (int initialCapacity) {
 		super(initialCapacity);
 		keys = new IntList(initialCapacity);
 	}
 
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
+	 */
 	public IntLongOrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		keys = new IntList(initialCapacity);
 	}
 
+	/**
+	 * Creates a new map identical to the specified map.
+	 * @param map the map to copy
+	 */
 	public IntLongOrderedMap (IntLongOrderedMap map) {
 		super(map);
 		keys = new IntList(map.keys);
@@ -83,6 +103,7 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt, Seri
 
 	/**
 	 * Creates a new map identical to the specified map.
+	 * @param map the map to copy
 	 */
 	public IntLongOrderedMap (IntLongMap map) {
 		this(map.size());

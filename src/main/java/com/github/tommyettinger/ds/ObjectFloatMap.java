@@ -88,7 +88,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	}
 
 	/**
-	 * Creates a new map with a load factor of 0.8.
+	 * Creates a new map with the given starting capacity and a load factor of 0.8.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
@@ -118,6 +118,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 
 	/**
 	 * Creates a new map identical to the specified map.
+	 * @param map the map to copy
 	 */
 	public ObjectFloatMap (ObjectFloatMap<? extends K> map) {
 		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);

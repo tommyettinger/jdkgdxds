@@ -89,7 +89,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 	}
 
 	/**
-	 * Creates a new map with a load factor of 0.8.
+	 * Creates a new map with the given starting capacity and a load factor of 0.8.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
@@ -119,6 +119,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 
 	/**
 	 * Creates a new map identical to the specified map.
+	 * @param map the map to copy
 	 */
 	public IntObjectMap (IntObjectMap<? extends V> map) {
 		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);

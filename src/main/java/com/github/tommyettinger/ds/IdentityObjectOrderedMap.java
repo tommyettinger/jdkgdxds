@@ -17,7 +17,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	}
 
 	/**
-	 * Creates a new map with a load factor of 0.8.
+	 * Creates a new map with the given starting capacity and a load factor of 0.8.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
@@ -43,10 +43,17 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	public IdentityObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> map) {
 		super(map);
 	}
-
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
+	 * @param map an ObjectObjectMap to copy, or a subclass
+	 */
+	public IdentityObjectOrderedMap (ObjectObjectMap<? extends K, ? extends V> map) {
+		super(map);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
 	 * @param map a Map to copy
 	 */
 	public IdentityObjectOrderedMap (Map<? extends K, ? extends V> map) {

@@ -60,20 +60,40 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt, Serial
 
 	protected final IntList keys;
 
+	/**
+	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
+	 */
 	public IntIntOrderedMap () {
+		super();
 		keys = new IntList();
 	}
 
+	/**
+	 * Creates a new map with the given starting capacity and a load factor of 0.8.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
 	public IntIntOrderedMap (int initialCapacity) {
 		super(initialCapacity);
 		keys = new IntList(initialCapacity);
 	}
 
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
+	 */
 	public IntIntOrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		keys = new IntList(initialCapacity);
 	}
 
+	/**
+	 * Creates a new map identical to the specified map.
+	 * @param map the map to copy
+	 */
 	public IntIntOrderedMap (IntIntOrderedMap map) {
 		super(map);
 		keys = new IntList(map.keys);
@@ -81,6 +101,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt, Serial
 
 	/**
 	 * Creates a new map identical to the specified map.
+	 * @param map the map to copy
 	 */
 	public IntIntOrderedMap (IntIntMap map) {
 		this(map.size());

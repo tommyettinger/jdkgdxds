@@ -63,20 +63,40 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 
 	protected final ObjectList<K> keys;
 
+	/**
+	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
+	 */
 	public ObjectFloatOrderedMap () {
+		super();
 		keys = new ObjectList<>();
 	}
 
+	/**
+	 * Creates a new map with the given starting capacity and a load factor of 0.8.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
 	public ObjectFloatOrderedMap (int initialCapacity) {
 		super(initialCapacity);
 		keys = new ObjectList<>(initialCapacity);
 	}
 
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
+	 */
 	public ObjectFloatOrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		keys = new ObjectList<>(initialCapacity);
 	}
 
+	/**
+	 * Creates a new map identical to the specified map.
+	 * @param map the map to copy
+	 */
 	public ObjectFloatOrderedMap (ObjectFloatOrderedMap<? extends K> map) {
 		super(map);
 		keys = new ObjectList<>(map.keys);
@@ -84,6 +104,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 
 	/**
 	 * Creates a new map identical to the specified map.
+	 * @param map the map to copy
 	 */
 	public ObjectFloatOrderedMap (ObjectFloatMap<? extends K> map) {
 		this(map.size());

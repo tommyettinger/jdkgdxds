@@ -69,7 +69,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	}
 
 	/**
-	 * Creates a new array containing the elements in the specific array. The new array will be ordered if the specific array is
+	 * Creates a new list containing the elements in the specific array. The new array will be ordered if the specific array is
 	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
 	 * grown.
 	 */
@@ -89,7 +89,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	}
 
 	/**
-	 * Creates a new array containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 */
 	public FloatList (float[] array, int startIndex, int count) {
@@ -97,7 +97,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	}
 
 	/**
-	 * Creates a new array containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
 	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
@@ -109,6 +109,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
+	/**
+	 * Creates a new list containing the items in the specified PrimitiveCollection, such as an {@link ObjectFloatMap.Values}.
+	 * @param coll a primitive collection that will have its contents added to this
+	 */
 	public FloatList(PrimitiveCollection.OfFloat coll) {
 		this(coll.size());
 		addAll(coll);

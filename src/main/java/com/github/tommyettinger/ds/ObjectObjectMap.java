@@ -87,7 +87,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	/**
-	 * Creates a new map with a load factor of 0.8.
+	 * Creates a new map with the given starting capacity and a load factor of 0.8.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
