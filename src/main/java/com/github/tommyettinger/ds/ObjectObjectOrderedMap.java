@@ -82,7 +82,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public ObjectObjectOrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);

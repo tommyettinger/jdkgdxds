@@ -96,7 +96,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 *
 	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public HolderOrderedSet (Function<T, K> extractor, int initialCapacity, float loadFactor) {
 		super(extractor, initialCapacity, loadFactor);

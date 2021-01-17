@@ -13,7 +13,13 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * implement hashCode() themselves (such as {@link StringBuilder}). User code similar to this can often get away
  * with a simple polynomial hash (the typical Java kind, used by String and Arrays), or if more speed is needed,
  * one with <a href="https://richardstartin.github.io/posts/collecting-rocks-and-benchmarks">some of these
- * optimizations by Richard Startin</a>.
+ * optimizations by Richard Startin</a>. If you don't want to write or benchmark a hash function (which is quite
+ * understandable), {@link Utilities#longHashCodeIgnoreCase(CharSequence)} can get a case-insensitive hash of any
+ * CharSequence, as a long. It does this without allocating new Strings all over, where many case-insensitive
+ * algorithms do allocate quite a lot, but it does this by handling case incorrectly for the Georgian alphabet.
+ * If I see Georgian text in-the-wild, I may reconsider, but I don't think that particular alphabet is in
+ * widespread use. There's also {@link Utilities#equalsIgnoreCase(CharSequence, CharSequence)} for equality
+ * comparisons that are similarly case-insensitive, except for Georgian.
  */
 public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> implements Serializable {
 	private static final long serialVersionUID = 0L;
@@ -38,7 +44,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 	 * growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 < loadFactor <= 1
+	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public CaseInsensitiveMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
