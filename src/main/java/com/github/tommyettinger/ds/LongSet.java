@@ -118,9 +118,33 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		hasZeroValue = set.hasZeroValue;
 	}
 
+	/**
+	 * Creates a new set using all distinct items in the given PrimitiveCollection, such as a
+	 * {@link LongList} or {@link LongObjectMap.Keys}.
+	 * @param coll a PrimitiveCollection that will be used in full, except for duplicate items
+	 */
 	public LongSet(PrimitiveCollection.OfLong coll) {
 		this(coll.size());
 		addAll(coll);
+	}
+
+	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 * @param array an array to draw items from
+	 * @param offset the first index in array to draw an item from
+	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 */
+	public LongSet(long[] array, int offset, int length) {
+		this(length);
+		addAll(array, offset, length);
+	}
+
+	/**
+	 * Creates a new set containing all of the items in the given array.
+	 * @param array an array that will be used in full, except for duplicate items
+	 */
+	public LongSet(long[] array) {
+		this(array, 0, array.length);
 	}
 
 	/**

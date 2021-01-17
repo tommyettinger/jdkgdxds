@@ -117,10 +117,33 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 		size = set.size;
 		hasZeroValue = set.hasZeroValue;
 	}
-
+	/**
+	 * Creates a new set using all distinct items in the given PrimitiveCollection, such as a
+	 * {@link IntList} or {@link IntObjectMap.Keys}.
+	 * @param coll a PrimitiveCollection that will be used in full, except for duplicate items
+	 */
 	public IntSet(PrimitiveCollection.OfInt coll) {
 		this(coll.size());
 		addAll(coll);
+	}
+
+	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 * @param array an array to draw items from
+	 * @param offset the first index in array to draw an item from
+	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 */
+	public IntSet(int[] array, int offset, int length) {
+		this(length);
+		addAll(array, offset, length);
+	}
+
+	/**
+	 * Creates a new set containing all of the items in the given array.
+	 * @param array an array that will be used in full, except for duplicate items
+	 */
+	public IntSet(int[] array) {
+		this(array, 0, array.length);
 	}
 
 	/**

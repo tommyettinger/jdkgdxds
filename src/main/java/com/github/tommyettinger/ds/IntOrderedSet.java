@@ -82,7 +82,19 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable
 	}
 
 	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 * @param array an array to draw items from
+	 * @param offset the first index in array to draw an item from
+	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 */
+	public IntOrderedSet(int[] array, int offset, int length) {
+		this(length);
+		addAll(array, offset, length);
+	}
+
+	/**
 	 * Creates a new set that contains all distinct elements in {@code items}.
+	 * @param items an array that will be used in full, except for duplicate items
 	 */
 	public IntOrderedSet (int[] items) {
 		this(items.length);

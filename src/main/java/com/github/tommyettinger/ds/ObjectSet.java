@@ -125,6 +125,26 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 	}
 
 	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 * @param array an array to draw items from
+	 * @param offset the first index in array to draw an item from
+	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 */
+	public ObjectSet(T[] array, int offset, int length) {
+		this(length);
+		addAll(array, offset, length);
+	}
+
+	/**
+	 * Creates a new set containing all of the items in the given array.
+	 * @param array an array that will be used in full, except for duplicate items
+	 */
+	public ObjectSet(T[] array) {
+		this(array, 0, array.length);
+	}
+
+
+	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * The default behavior uses Fibonacci hashing; it simply gets the {@link Object#hashCode()}
