@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.github.tommyettinger.ds.Utilities.neverIdentical;
+
 /**
  * A custom variant on ObjectObjectOrderedMap that always uses CharSequence keys and compares them as case-insensitive.
  * This uses a fairly complex, quite-optimized hashing function because it needs to hash CharSequences rather
@@ -104,23 +106,6 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	}
 
 	@Override
-	public int hashCode () {
-		int h = size;
-		CharSequence[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {
-			CharSequence key = keyTable[i];
-			if (key != null) {
-				h ^= Utilities.longHashCodeIgnoreCase(key);
-				V value = valueTable[i];
-				if (value != null) { h ^= value.hashCode(); }
-			}
-		}
-		return h;
-
-	}
-
-	@Override
 	protected int locateKey (Object key) {
 		Object[] keyTable = this.keyTable;
 		if (!(key instanceof CharSequence))
@@ -135,6 +120,44 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 				return i;
 			}
 		}
+	}
+
+	@Override
+	public int hashCode () {
+		int h = size;
+		CharSequence[] keyTable = this.keyTable;
+		V[] valueTable = this.valueTable;
+		for (int i = 0, n = keyTable.length; i < n; i++) {
+			CharSequence key = keyTable[i];
+			if (key != null) {
+				h ^= Utilities.longHashCodeIgnoreCase(key);
+				V value = valueTable[i];
+				if (value != null) { h ^= value.hashCode(); }
+			}
+		}
+		return h;
+	}
+
+	@Override
+	public boolean equals (Object obj) {
+		if (obj == this) { return true; }
+		if (!(obj instanceof CaseInsensitiveOrderedMap)) { return false; }
+		CaseInsensitiveOrderedMap other = (CaseInsensitiveOrderedMap)obj;
+		if (other.size != size) { return false; }
+		CharSequence[] keyTable = this.keyTable;
+		V[] valueTable = this.valueTable;
+		for (int i = 0, n = keyTable.length; i < n; i++) {
+			CharSequence key = keyTable[i];
+			if (key != null) {
+				V value = valueTable[i];
+				if (value == null) {
+					if (other.getOrDefault(key, neverIdentical) != null) { return false; }
+				} else {
+					if (!value.equals(other.get(key))) { return false; }
+				}
+			}
+		}
+		return true;
 	}
 
 	@Override
