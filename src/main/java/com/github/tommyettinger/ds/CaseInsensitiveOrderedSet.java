@@ -2,8 +2,10 @@ package com.github.tommyettinger.ds;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Comparator;
+
 /**
- * A custom variant on ObjectSet that always uses CharSequence keys and compares them as case-insensitive.
+ * A custom variant on ObjectOrderedSet that always uses CharSequence keys and compares them as case-insensitive.
  * This uses a fairly complex, quite-optimized hashing function because it needs to hash CharSequences rather
  * often, and to do so ignoring case means {@link String#hashCode()} won't work, plus not all CharSequences
  * implement hashCode() themselves (such as {@link StringBuilder}). User code similar to this can often get away
@@ -15,15 +17,17 @@ import java.util.Collection;
  * algorithms do allocate quite a lot, but it does this by handling case incorrectly for the Georgian alphabet.
  * If I see Georgian text in-the-wild, I may reconsider, but I don't think that particular alphabet is in
  * widespread use. There's also {@link Utilities#equalsIgnoreCase(CharSequence, CharSequence)} for equality
- * comparisons that are similarly case-insensitive, except for Georgian.
+ * comparisons that are similarly case-insensitive, except for Georgian. This is very similar to
+ * {@link CaseInsensitiveSet}, except that this class maintains insertion order and can be sorted with
+ * {@link #sort()}, {@link #sort(Comparator)}, etc.
  */
-public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Serializable {
+public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> implements Serializable {
 	private static final long serialVersionUID = 0L;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
 	 */
-	public CaseInsensitiveSet () {
+	public CaseInsensitiveOrderedSet () {
 		super();
 	}
 
@@ -32,7 +36,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public CaseInsensitiveSet (int initialCapacity) {
+	public CaseInsensitiveOrderedSet (int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -43,7 +47,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public CaseInsensitiveSet (int initialCapacity, float loadFactor) {
+	public CaseInsensitiveOrderedSet (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -52,7 +56,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 	 *
 	 * @param set
 	 */
-	public CaseInsensitiveSet (ObjectSet<? extends CharSequence> set) {
+	public CaseInsensitiveOrderedSet (ObjectSet<? extends CharSequence> set) {
 		super(set);
 	}
 
@@ -61,7 +65,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 	 *
 	 * @param coll
 	 */
-	public CaseInsensitiveSet (Collection<? extends CharSequence> coll) {
+	public CaseInsensitiveOrderedSet (Collection<? extends CharSequence> coll) {
 		super(coll);
 	}
 
@@ -72,7 +76,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public CaseInsensitiveSet (CharSequence[] array, int offset, int length) {
+	public CaseInsensitiveOrderedSet (CharSequence[] array, int offset, int length) {
 		super(array, offset, length);
 	}
 
@@ -81,7 +85,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public CaseInsensitiveSet (CharSequence[] array) {
+	public CaseInsensitiveOrderedSet (CharSequence[] array) {
 		super(array);
 	}
 
@@ -163,16 +167,16 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 
 	@Override
 	public boolean equals (Object obj) {
-		if (!(obj instanceof CaseInsensitiveSet)) { return false; }
-		CaseInsensitiveSet other = (CaseInsensitiveSet)obj;
+		if (!(obj instanceof CaseInsensitiveOrderedSet)) { return false; }
+		CaseInsensitiveOrderedSet other = (CaseInsensitiveOrderedSet)obj;
 		if (other.size != size) { return false; }
 		CharSequence[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != null && !other.contains(keyTable[i])) { return false; } }
 		return true;
 	}
 
-	public static CaseInsensitiveSet with (CharSequence... array) {
-		return new CaseInsensitiveSet(array);
+	public static CaseInsensitiveOrderedSet with (CharSequence... array) {
+		return new CaseInsensitiveOrderedSet(array);
 	}
 
 }
