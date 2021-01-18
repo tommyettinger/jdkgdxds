@@ -95,7 +95,13 @@ implements java.io.Serializable</pre>
  implement hashCode() themselves (such as <code>StringBuilder</code>). User code similar to this can often get away
  with a simple polynomial hash (the typical Java kind, used by String and Arrays), or if more speed is needed,
  one with <a href="https://richardstartin.github.io/posts/collecting-rocks-and-benchmarks">some of these
- optimizations by Richard Startin</a>.</div>
+ optimizations by Richard Startin</a>. If you don't want to write or benchmark a hash function (which is quite
+ understandable), <a href="Utilities.html#longHashCodeIgnoreCase(java.lang.CharSequence)"><code>Utilities.longHashCodeIgnoreCase(CharSequence)</code></a> can get a case-insensitive hash of any
+ CharSequence, as a long. It does this without allocating new Strings all over, where many case-insensitive
+ algorithms do allocate quite a lot, but it does this by handling case incorrectly for the Georgian alphabet.
+ If I see Georgian text in-the-wild, I may reconsider, but I don't think that particular alphabet is in
+ widespread use. There's also <a href="Utilities.html#equalsIgnoreCase(java.lang.CharSequence,java.lang.CharSequence)"><code>Utilities.equalsIgnoreCase(CharSequence, CharSequence)</code></a> for equality
+ comparisons that are similarly case-insensitive, except for Georgian.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../serialized-form.html#com.github.tommyettinger.ds.CaseInsensitiveMap">Serialized Form</a></dd>

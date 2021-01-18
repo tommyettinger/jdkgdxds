@@ -117,7 +117,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 	 * 	       return super.locateKey(key);
 	 *     CharSequence sk = (CharSequence)key;
 	 * 	   CharSequence[] keyTable = this.keyTable;
-	 * 	   for (int i = place(sk); ; i = i + 1 & mask) {
+	 * 	   for (int i = place(sk); ; i = i + 1 &amp; mask) {
 	 * 	       CharSequence other = keyTable[i];
 	 *         if (other == null) {
 	 *             return ~i; // Always negative; means empty space is available at i.
