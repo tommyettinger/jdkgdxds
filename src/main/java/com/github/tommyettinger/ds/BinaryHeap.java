@@ -40,7 +40,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	public int size;
 
 	private Node[] nodes;
-	private final boolean isMaxHeap;
+	private boolean isMaxHeap;
 
 	@Nullable protected transient HeapIterator<T> iterator1 = null;
 	@Nullable protected transient HeapIterator<T> iterator2 = null;
@@ -107,6 +107,16 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		this.isMaxHeap = isMaxHeap;
 		nodes = new Node[arr.length];
 		addAll(arr);
+	}
+
+	/**
+	 * Returns true if this is a max-heap (that is, it sorts highest-first), or false if this is a min-heap
+	 * (it sorts lowest-first). If not specified, this is usually false; it can be set only in the constructor,
+	 * such as {@link #BinaryHeap(int, boolean)} or {@link #BinaryHeap(boolean, Collection)}.
+	 * @return true if this sorts highest-first; false if it sorts lowest-first
+	 */
+	public boolean isMaxHeap () {
+		return isMaxHeap;
 	}
 
 	@Override
@@ -182,17 +192,42 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		}
 		return true;
 	}
-
 	/**
-	 * Retrieves and removes the head of this queue, or returns {@code null} if this queue is empty.
+	 * Retrieves and removes the head of this queue, or returns {@code null} if this BinaryHeap is empty.
 	 * The head is the item with the lowest value (or highest value if this heap is configured as a max heap).
 	 *
-	 * @return the head of this queue, or {@code null} if this queue is empty
+	 * @return the head of this BinaryHeap, or {@code null} if this queue is empty
+	 * @throws ClassCastException   if the class of the specified element
+	 *                              prevents it from being added to this queue
 	 */
+	@Nullable
 	@Override
 	public T poll () {
 		if (size == 0)
 			return null;
+		Node removed = nodes[0];
+		if (--size > 0) {
+			nodes[0] = nodes[size];
+			nodes[size] = null;
+			down(0);
+		} else { nodes[0] = null; }
+		return (T)removed;
+	}
+
+	/**
+	 * Retrieves and removes the head of this queue.  This method differs
+	 * from {@link #poll()} only in that it throws an exception if this
+	 * queue is empty, and won't return null.
+	 *
+	 * @return the head of this queue
+	 * @throws NoSuchElementException if this queue is empty
+	 * @throws ClassCastException     if the class of the specified element
+	 *                                prevents it from being added to this queue
+	 */
+	@Override
+	public T remove () {
+		if (size == 0)
+			throw new NoSuchElementException("A BinaryHeap cannot be empty when remove() is called.");
 		Node removed = nodes[0];
 		if (--size > 0) {
 			nodes[0] = nodes[size];
@@ -211,11 +246,26 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	}
 
 	/**
+	 * Returns true if the heap contains the specified node. Exactly the same as {@link #contains(Object, boolean)}
+	 * with {@code identity} set to false.
+	 *
+	 * @param node should be a {@code T}, which must extend {@link Node}; can be some other type, which gives false
+	 * @implSpec This implementation iterates over the elements in the collection,
+	 * checking each element in turn for equality with the specified element via {@link Object#equals(Object)}.
+	 */
+	@Override
+	public boolean contains (Object node) {
+		for (Node other : nodes) { if (other.equals(node)) { return true; } }
+		return false;
+	}
+
+	/**
 	 * Returns true if the heap contains the specified node.
 	 *
+	 * @param node should be a {@code T}, which must extend {@link Node}; can be some other type, which gives false
 	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
 	 */
-	public boolean contains (T node, boolean identity) {
+	public boolean contains (Object node, boolean identity) {
 		if (identity) {
 			for (Node n : nodes) { if (n == node) { return true; } }
 		} else {
@@ -226,17 +276,40 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 
 	/**
 	 * Returns the first item in the heap. This is the item with the lowest value (or highest value if this heap is configured as
-	 * a max heap).
+	 * a max heap). If the heap is empty, throws an {@link NoSuchElementException}.
+	 * @return the first item in the heap
+	 * @throws NoSuchElementException if the heap is empty.
+	 * @throws ClassCastException    if the class of the specified element
+	 *                               prevents it from being added to this queue
 	 */
 	@Override
-	public T peek () {
-		if (size == 0) { throw new IllegalStateException("The heap is empty."); }
+	public T element () {
+		if (size == 0) { throw new NoSuchElementException("The heap is empty."); }
 		return (T)nodes[0];
 	}
 
 	/**
-	 * Removes the first item in the heap and returns it. This is the item with the lowest value (or highest value if this heap is
-	 * configured as a max heap). If the BinaryHeap is empty, this always returns null.
+	 * Returns the first item in the heap. This is the item with the lowest value (or highest value if this heap is configured as
+	 * a max heap). If the heap is empty, returns null.
+	 * @return the first item in the heap, or null if the heap is empty
+	 * @throws ClassCastException    if the class of the specified element
+	 *                               prevents it from being added to this queue
+	 */
+	@Nullable
+	@Override
+	public T peek () {
+		if (size == 0) { return null; }
+		return (T)nodes[0];
+	}
+
+	/**
+	 * Retrieves and removes the head of this queue, or returns {@code null} if this BinaryHeap is empty.
+	 * The head is the item with the lowest value (or highest value if this heap is configured as a max heap).
+	 * <br>
+	 * This method is identical to {@link #poll()} in this class, but because poll() is defined as part of the
+	 * Queue interface, whereas this method was defined ad-hoc by libGDX, poll() should be preferred in new code.
+	 *
+	 * @return the head of this BinaryHeap, or {@code null} if this queue is empty
 	 */
 	@Nullable
 	public T pop () {
@@ -422,7 +495,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	 * @return an iterator over the elements contained in this collection
 	 */
 	@Override
-	public Iterator<T> iterator () {
+	public HeapIterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new HeapIterator<>(this);
 			iterator2 = new HeapIterator<>(this);
@@ -488,7 +561,13 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	 * @author Nathan Sweet
 	 */
 	public static class Node {
+		/**
+		 * The value that is used to compare this Node with others.
+		 */
 		public float value;
+		/**
+		 * Used internally by BinaryHeap; generally not modified by external code, but may need to be read.
+		 */
 		public int index;
 
 		/**
