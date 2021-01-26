@@ -2,6 +2,8 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.ds.CaseInsensitiveMap;
 import com.github.tommyettinger.ds.CaseInsensitiveOrderedMap;
+import com.github.tommyettinger.ds.CaseInsensitiveOrderedSet;
+import com.github.tommyettinger.ds.CaseInsensitiveSet;
 import com.sun.org.apache.bcel.internal.generic.PUSH;
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,7 +13,7 @@ import java.util.Map;
 /**
  * Created by Tommy Ettinger on 10/26/2020.
  */
-public class CaseInsensitiveMapTest {
+public class CaseInsensitiveTest {
 	@Test
 	public void testMultipleOperations() {
 		CaseInsensitiveMap<String> map = new CaseInsensitiveMap<>(8);
@@ -39,7 +41,7 @@ public class CaseInsensitiveMapTest {
 	 * This checks one case that was known to have a mismatch.
 	 */
 	@Test
-	public void testMissing() {
+	public void testMissingInMap () {
 		CaseInsensitiveMap<String> map = new CaseInsensitiveMap<>(
 			new String[]{"foo", "bar", "baz"},
 			new String[]{"foo", "bar", "baz"}
@@ -54,7 +56,7 @@ public class CaseInsensitiveMapTest {
 	 * This checks one case that was known to have a mismatch.
 	 */
 	@Test
-	public void testOrdered() {
+	public void testOrderedMap () {
 		CaseInsensitiveOrderedMap<String> map = new CaseInsensitiveOrderedMap<>(
 			new String[]{"foo", "bar", "baz"},
 			new String[]{"foo", "bar", "baz"}
@@ -62,5 +64,18 @@ public class CaseInsensitiveMapTest {
 		for(Map.Entry<CharSequence, String> ent : map){
 			Assert.assertEquals(ent.getKey(), ent.getValue());
 		}
+	}
+
+	@Test
+	public void testSet() {
+		CaseInsensitiveSet set = CaseInsensitiveSet.with("FOO", "foo", "BAR", "BAZ", "bar", "baz");
+		Assert.assertEquals(set.size(), 3);
+	}
+
+	@Test
+	public void testOrderedSet() {
+		CaseInsensitiveOrderedSet set = CaseInsensitiveOrderedSet.with("FOO", "foo", "BAR", "BAZ", "bar", "baz");
+		Assert.assertEquals(set.size(), 3);
+		Assert.assertEquals(set.first(), "FOO");
 	}
 }

@@ -138,15 +138,14 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 		if (!(key instanceof CharSequence))
 			return super.locateKey(key);
 		CharSequence sk = (CharSequence)key;
-		CharSequence[] keyTable = this.keyTable;
+		Object[] keyTable = this.keyTable;
 		for (int i = place(sk); ; i = i + 1 & mask) {
-			CharSequence other = keyTable[i];
+			Object other = keyTable[i];
 			if (other == null) {
-				return ~i; // Always negative; means empty space is available at i.
+				return ~i;
 			}
-			if (Utilities.equalsIgnoreCase(other, sk)) // If you want to change how equality is determined, do it here.
-			{
-				return i; // Same key was found.
+			if (other instanceof CharSequence && Utilities.equalsIgnoreCase(sk, (CharSequence)other)) {
+				return i;
 			}
 		}
 	}

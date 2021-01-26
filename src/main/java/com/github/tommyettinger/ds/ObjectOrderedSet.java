@@ -201,6 +201,12 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 	}
 
 	@Override
+	public T first () {
+		if(size == 0) throw new IllegalStateException("ObjectOrderedSet is empty.");
+		return items.first();
+	}
+
+	@Override
 	public void clear (int maximumCapacity) {
 		items.clear();
 		super.clear(maximumCapacity);
