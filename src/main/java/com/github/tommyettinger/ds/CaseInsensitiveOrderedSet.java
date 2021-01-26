@@ -91,6 +91,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> im
 
 	@Override
 	protected int place (Object item) {
+		if(item instanceof CharSequence) return (int)Utilities.longHashCodeIgnoreCase((CharSequence)item) & mask;
 		return super.place(item);
 	}
 
