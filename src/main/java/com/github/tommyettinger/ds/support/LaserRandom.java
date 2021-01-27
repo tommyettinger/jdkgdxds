@@ -25,28 +25,30 @@ import java.util.Random;
  * takes under half a day to make it repeat on recent laptop hardware while also analyzing the numbers for
  * statistical issues. This generator is more comparable to SplittableRandom, introduced in JDK 8 but not
  * available in Android (even with desugaring) or GWT currently. SplittableRandom also can produce 2 to the
- * 64 numbers before repeating the sequence, but it will always produce each possible long value exactly once
- * over the course of that sequence. Each of LaserRandom's streams produces a different sequence of numbers
- * with a different set of numbers it omits and a different set of numbers it produces more than once; each
- * of SplittableRandom's streams simply rearranges the order of all possible longs. Though it might seem like
- * an issue that a LaserRandom stream has gaps in its possible output, if you appended all 2 to the 63
- * possible LaserRandom streams in full, the gargantuan result would include all longs equally often. So, if
- * the stream is selected effectively at random, then the subset of that stream that actually gets used
- * should be fair (and it's very unlikely that any usage will need a full stream of over 18 quintillion
- * pseudo-random longs).
+ * 64 numbers before repeating the sequence, and also has 2 to the 63 streams, but it will always produce
+ * each possible long value exactly once over the course of that sequence. Each of LaserRandom's streams
+ * produces a different sequence of numbers with a different set of numbers it omits and a different set of
+ * numbers it produces more than once; each of SplittableRandom's streams simply rearranges the order of all
+ * possible longs. Though it might seem like an issue that a LaserRandom stream has gaps in its possible
+ * output, if you appended all 2 to the 63 possible LaserRandom streams in full, the gargantuan result would
+ * include all longs equally often. So, if the stream is selected effectively at random, then the subset of
+ * that stream that actually gets used should be fair (and it's very unlikely that any usage will need a full
+ * stream of over 18 quintillion pseudo-random longs).
  * <br>
  * If statistical quality is a concern, don't use {@link Random}, since the aforementioned
  * analysis finds statistical failures in about a minute when checking about 16GB of output; this class can
  * produce 64TB of random output without a tool like PractRand finding any failures (sometimes it can't find
  * any minor anomaly over several days of testing). RandomXS128 has some flaws, though they are not nearly as
  * severe as Random's; mostly they are limited to a particular kind of failure affecting the least
- * significant bits. RandomXS128's flaws would be permissible if it was faster than any competitors, but it
- * isn't, and there have been two improved relatives of its algorithm published since it was created. Both of
- * these improvements, xoroshiro128** and xoshiro256**, are slower when implemented in Java than LaserRandom
- * (also when all are implemented in C and compiled with GCC or Clang, typically). There are also some
- * concerns about specific failure cases when the output of xoroshiro128** or xoshiro256** is multiplied by
- * any of quadrillions of constants and tested after that multiplication (see M.E. O'Neill's dissection of
- * xoshiro256** <a href="https://www.pcg-random.org/posts/a-quick-look-at-xoshiro256.html">here</a>).
+ * significant bits (the technical name for the test it fails is a "binary matrix rank" test, which a wide
+ * variety of related generators can fail if they don't adequately randomize their outputs). RandomXS128's
+ * flaws would be permissible if it was faster than any competitors, but it isn't, and there have been two
+ * improved relatives of its algorithm published since it was created. Both of these improvements,
+ * xoroshiro128** and xoshiro256**, are slower when implemented in Java than LaserRandom (also when all are
+ * implemented in C and compiled with GCC or Clang, typically). There are also some concerns about specific
+ * failure cases when the output of xoroshiro128** or xoshiro256** is multiplied by any of quadrillions of
+ * constants and tested after that multiplication (see M.E. O'Neill's dissection of xoshiro256**
+ * <a href="https://www.pcg-random.org/posts/a-quick-look-at-xoshiro256.html">here</a>).
  * <br>
  * You can copy this class independently of the library it's part of; it's meant as a general replacement for
  * Random and also RandomXS128. LaserRandom is generally faster than RandomXS128, and can be over 3x faster
@@ -163,10 +165,11 @@ public class LaserRandom extends Random implements Serializable {
 	 * so as to be in exactly the same state as if it had just been
 	 * created with the argument {@code seed} as a seed.
 	 *
-	 * <p>The implementation of {@code setSeed} by class {@code Random}
-	 * uses all 64 bits of the given seed. In general, however,
-	 * an overriding method may use all 64 bits of the {@code long}
-	 * argument as a seed value.
+	 * <p>The implementation of {@code setSeed} by class
+	 * {@code LaserRandom} uses all 64 bits of the given seed for
+	 * {@link #setStateA(long)}, and all but the least-significant bit
+	 * of the seed for {@link #setStateB(long)} (the omitted bit is
+	 * always set to 1 in stateB, meaning stateB is always odd).
 	 *
 	 * @param seed the initial seed
 	 */
@@ -193,7 +196,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * likely to be {@code 0} or {@code 1}.
 	 * <p>
 	 *
-	 * @param bits random bits
+	 * @param bits the amount of random bits to request, from 1 to 32
 	 * @return the next pseudorandom value from this random number
 	 * generator's sequence
 	 */
@@ -273,6 +276,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
 	 * for outer bound 0). This method is slightly slower than {@link #nextInt(int)}.
 	 *
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param outerBound the outer exclusive bound; may be any int value, allowing negative
 	 * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
 	 */
@@ -292,6 +296,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * <br> For any case where outerBound might be valid but less than innerBound, you
 	 * can use {@link #nextSignedInt(int, int)}.
 	 *
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
 	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
@@ -307,6 +312,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * especially if the bounds are unknown or may be user-specified. It is slightly
 	 * slower than {@link #nextInt(int, int)}.
 	 *
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
 	 * @param outerBound the exclusive outer bound; may be any int, allowing negative
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
@@ -342,7 +348,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * {@code nextLong} is that one {@code long} value in the specified range
 	 * is pseudorandomly generated and returned.  All {@code bound} possible
 	 * {@code long} values are produced with (approximately) equal
-	 * probability.
+	 * probability, though there is a small amount of bias depending on the bound.
 	 *
 	 * <br> Note that this advances the state by the same amount as a single call to
 	 * {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
@@ -355,6 +361,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * don't use this for a real-money gambling purpose. The bias isn't especially
 	 * significant, though.
 	 *
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
 	 * @return the next pseudorandom, uniformly distributed {@code long}
 	 * value between zero (inclusive) and {@code bound} (exclusive)
@@ -389,6 +396,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * method should be about as fast as {@link #nextLong(long)} , unlike the speed
 	 * difference between {@link #nextInt(int)} and {@link #nextSignedInt(int)}.
 	 *
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param outerBound the outer exclusive bound; may be any long value, allowing negative
 	 * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
 	 */
@@ -414,6 +422,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * <br> For any case where outerBound might be valid but less than innerBound, you
 	 * can use {@link #nextSignedLong(long, long)}.
 	 *
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any long, allowing negative
 	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
@@ -428,6 +437,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * (exclusive). This is meant for cases where either bound may be negative,
 	 * especially if the bounds are unknown or may be user-specified.
 	 *
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any long, allowing negative
 	 * @param outerBound the exclusive outer bound; may be any long, allowing negative
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
@@ -484,10 +494,25 @@ public class LaserRandom extends Random implements Serializable {
 		return ((z ^ z >>> 6) >>> 40) * 0x1p-24f;
 	}
 
+	/**
+	 * Gets a pseudo-random float between 0 (inclusive) and {@code outerBound} (exclusive).
+	 * The outerBound may be positive or negative.
+	 * Exactly the same as {@code nextFloat() * outerBound}.
+	 * @param outerBound the exclusive outer bound
+	 * @return a float between 0 (inclusive) and {@code outerBound} (exclusive)
+	 */
 	public float nextFloat (float outerBound) {
 		return nextFloat() * outerBound;
 	}
 
+	/**
+	 * Gets a pseudo-random float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
+	 * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+	 * inclusive and which is exclusive.
+	 * @param innerBound the inclusive inner bound; may be negative
+	 * @param outerBound the exclusive outer bound; may be negative
+	 * @return a float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
+	 */
 	public float nextFloat (float innerBound, float outerBound) {
 		return innerBound + nextFloat() * (outerBound - innerBound);
 	}
@@ -519,10 +544,25 @@ public class LaserRandom extends Random implements Serializable {
 		return (z >>> 11 ^ z >>> 37 ^ z >>> 17) * 0x1.0p-53;
 	}
 
+	/**
+	 * Gets a pseudo-random double between 0 (inclusive) and {@code outerBound} (exclusive).
+	 * The outerBound may be positive or negative.
+	 * Exactly the same as {@code nextDouble() * outerBound}.
+	 * @param outerBound the exclusive outer bound
+	 * @return a double between 0 (inclusive) and {@code outerBound} (exclusive)
+	 */
 	public double nextDouble (double outerBound) {
 		return nextDouble() * outerBound;
 	}
 
+	/**
+	 * Gets a pseudo-random double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
+	 * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+	 * inclusive and which is exclusive.
+	 * @param innerBound the inclusive inner bound; may be negative
+	 * @param outerBound the exclusive outer bound; may be negative
+	 * @return a double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
+	 */
 	public double nextDouble (double innerBound, double outerBound) {
 		return innerBound + nextDouble() * (outerBound - innerBound);
 	}
@@ -541,7 +581,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * which can't produce as extreme results in extremely-rare cases as methods
 	 * like Box-Muller and Marsaglia Polar can. All but one possible result are
 	 * between {@code -8.209536145151493} and {@code 8.209536145151493}, and the
-	 * one result outside that is {@code 38.5}.
+	 * one result outside that is {@code -38.5}.
 	 *
 	 * @return the next pseudorandom, Gaussian ("normally") distributed
 	 * {@code double} value with mean {@code 0.0} and
@@ -574,6 +614,13 @@ public class LaserRandom extends Random implements Serializable {
 		return z ^ z >>> 26 ^ z >>> 6;
 	}
 
+	/**
+	 * Creates a new {@code LaserRandom} with identical states to this one, so if the same LaserRandom methods are
+	 * called on this object and its copy (in the same order), the same outputs will be produced. This is not
+	 * guaranteed to copy the inherited state of the {@link Random} parent class, so if you call methods that are
+	 * only implemented by Random and not LaserRandom, the results may differ.
+	 * @return a deep copy of this LaserRandom.
+	 */
 	public LaserRandom copy () {
 		return new LaserRandom(stateA, stateB);
 	}
@@ -629,19 +676,16 @@ public class LaserRandom extends Random implements Serializable {
 		if (d <= 0 || d >= 1) {
 			return Math.copySign(38.5, d - 0.5);
 		}
-		// Rational approximation for lower region:
 		else if (d < 0.02425) {
 			final double q = Math.sqrt(-2.0 * Math.log(d));
 			return (((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
 				(((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
 		}
-		// Rational approximation for upper region:
 		else if (0.97575 < d) {
 			final double q = Math.sqrt(-2.0 * Math.log(1 - d));
 			return -(((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
 				(((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
 		}
-		// Rational approximation for central region:
 		else {
 			final double q = d - 0.5;
 			final double r = q * q;
@@ -719,6 +763,14 @@ public class LaserRandom extends Random implements Serializable {
 		return max - (float)Math.sqrt((1 - u) * d * (max - mode));
 	}
 
+	/**
+	 * Gets a randomly-selected item from the given array, which must be non-null and non-empty
+	 * @param array a non-null, non-empty array of {@code T} items
+	 * @param <T> any reference type
+	 * @return a random item from {@code array}
+	 * @throws NullPointerException if array is null
+	 * @throws IndexOutOfBoundsException if array is empty
+	 */
 	public <T> T randomElement (T[] array) {
 		return array[nextInt(array.length)];
 	}
