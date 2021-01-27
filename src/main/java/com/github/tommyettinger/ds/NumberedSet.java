@@ -315,4 +315,11 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
 	public String toString () {
 		return map.toString();
 	}
+
+
+	@SafeVarargs
+	public static <T> NumberedSet<T> with (T... array) {
+		return new NumberedSet<>(array);
+	}
+
 }

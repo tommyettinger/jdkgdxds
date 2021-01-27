@@ -439,9 +439,7 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 	}
 
 	public static IntSet with (int... array) {
-		IntSet set = new IntSet();
-		set.addAll(array);
-		return set;
+		return new IntSet(array);
 	}
 
 	@Override

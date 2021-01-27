@@ -446,9 +446,7 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 	}
 
 	public static LongSet with (long... array) {
-		LongSet set = new LongSet();
-		set.addAll(array);
-		return set;
+		return new LongSet(array);
 	}
 
 	public static class LongSetIterator implements PrimitiveIterator.OfLong {

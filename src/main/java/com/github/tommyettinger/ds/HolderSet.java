@@ -652,9 +652,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 
 	@SafeVarargs
 	public static <T, K> HolderSet<T, K> with (Function<T, K> extractor, T... array) {
-		HolderSet<T, K> set = new HolderSet<T, K>(extractor, array.length);
-		set.addAll(array);
-		return set;
+		return new HolderSet<T, K>(extractor, array);
 	}
 
 	public static class ObjectSetIterator<T, K> implements Iterable<T>, Iterator<T> {

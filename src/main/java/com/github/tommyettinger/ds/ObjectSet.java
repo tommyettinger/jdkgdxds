@@ -536,9 +536,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 
 	@SafeVarargs
 	public static <T> ObjectSet<T> with (T... array) {
-		ObjectSet<T> set = new ObjectSet<T>();
-		set.addAll(array);
-		return set;
+		return new ObjectSet<>(array);
 	}
 
 	public static class ObjectSetIterator<T> implements Iterable<T>, Iterator<T> {

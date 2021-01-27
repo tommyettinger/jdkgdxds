@@ -358,8 +358,6 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	@SafeVarargs
 	public static <T, K> HolderOrderedSet<T, K> with (Function<T, K> extractor, T... array) {
-		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, array.length);
-		set.addAll(array);
-		return set;
+		return new HolderOrderedSet<>(extractor, array);
 	}
 }
