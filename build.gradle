@@ -19,10 +19,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 def projectName = 'jdkgdxds'
-version '0.0.5-SNAPSHOT'
+version '0.0.5'
 group 'com.github.tommyettinger'
 
-//api "com.github.tommyettinger:jdkgdxds:0.0.4"
+//api "com.github.tommyettinger:jdkgdxds:0.0.5"
 
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
@@ -38,7 +38,9 @@ if (JavaVersion.current().isJava8Compatible()) {
         }
     }
 }
-
+if (JavaVersion.current().isJava9Compatible()) {
+    targetCompatibility = 8
+}
 compileJava.exclude("emu")
 javadoc.exclude("emu")
 javadoc.options.source("15")
