@@ -10,7 +10,7 @@ import java.util.SplittableRandom;
  */
 public class LaserRandomTest {
 	public static void main(String[] args) {
-		int upperBound = 79;
+		int upperBound = 5;
 		System.out.println("Consecutive seeds:");
 		System.out.println("\nRandom");
 		for(int i = 0; i < 50; i++) System.out.print(new java.util.Random(i).nextInt(upperBound) + " ");
@@ -39,7 +39,7 @@ public class LaserRandomTest {
 		System.out.println("\nSplittableRandom");
 		for(int i = 0; i < 50; i++) System.out.print((((jusr.nextInt() & 0xFFFFFFFFL) * -2 >> 32) - (-2 >> 31)) + " ");
 		System.out.println("\nLaserRandom");
-		for(int i = 0; i < 50; i++) System.out.print(lr.nextSignedLong(-2) + " ");
+		for(int i = 0; i < 50; i++) System.out.print(lr.nextSignedLong(-2L) + " ");
 
 		System.out.println("\n\nRepeat count:");
 		jur = new java.util.Random(100);
@@ -67,10 +67,11 @@ public class LaserRandomTest {
 
 		System.out.println("Generating 2 to the 35 longs, should all be 0 or -1...");
 		lr = new LaserRandom(-0xC6BC279692B5C323L, -0x9E3779B97F4A7C17L);
+		long res;
 		for (int i = 0; i < 0x40000; i++) {
 			for (int j = 0; j < 0x20000; j++) {
-				if(lr.nextSignedLong(-2) > 0) {
-					System.out.println("nextSignedLong(-2) had an incorrect result.\nFAILURE!");
+				if((res = lr.nextSignedLong(-2L)) > 0) {
+					System.out.println("nextSignedLong(-2) had an incorrect result: "+ res + "\nFAILURE!");
 					System.out.printf("0x%016XL, 0x%016XL", lr.getStateA(), lr.getStateB());
 					return;
 				}

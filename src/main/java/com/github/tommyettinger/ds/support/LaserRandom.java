@@ -368,17 +368,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * from this random number generator's sequence
 	 */
 	public long nextLong (long bound) {
-		final long s = stateA += 0xC6BC279692B5C323L;
-		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		if (bound <= 0) { return 0; }
-		long rand = z ^ z >>> 26 ^ z >>> 6;
-		final long randLow = rand & 0xFFFFFFFFL;
-		final long boundLow = bound & 0xFFFFFFFFL;
-		rand >>>= 32;
-		bound >>>= 32;
-		final long a = rand * bound;
-		final long b = randLow * boundLow;
-		return ((b >>> 32) + (rand + randLow) * (bound + boundLow) - a - b >>> 32) + a;
+		return nextLong(0L, bound);
 	}
 
 	/**
@@ -401,16 +391,7 @@ public class LaserRandom extends Random implements Serializable {
 	 * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
 	 */
 	public long nextSignedLong (long outerBound) {
-		final long s = stateA += 0xC6BC279692B5C323L;
-		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		long rand = z ^ z >>> 26 ^ z >>> 6;
-		final long randLow = rand & 0xFFFFFFFFL;
-		final long boundLow = outerBound & 0xFFFFFFFFL;
-		rand >>= 32;
-		outerBound >>= 32;
-		long a = rand * outerBound;
-		final long b = randLow * boundLow;
-		return a + ((b >>> 32) + (rand + randLow) * (outerBound + boundLow) - a - b >> 32);
+		return nextSignedLong(0L, outerBound);
 	}
 
 	/**
@@ -423,12 +404,19 @@ public class LaserRandom extends Random implements Serializable {
 	 * can use {@link #nextSignedLong(long, long)}.
 	 *
 	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-	 * @param innerBound the inclusive inner bound; may be any long, allowing negative
-	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
+	 * @param inner the inclusive inner bound; may be any long, allowing negative
+	 * @param outer the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	public long nextLong (long innerBound, long outerBound) {
-		return innerBound + nextLong(outerBound - innerBound);
+	public long nextLong (long inner, long outer) {
+		final long rand = nextLong();
+		if(inner >= outer) return inner;
+		final long bound = outer - inner;
+		final long randLow = rand & 0xFFFFFFFFL;
+		final long boundLow = bound & 0xFFFFFFFFL;
+		final long randHigh = (rand >>> 32);
+		final long boundHigh = (bound >>> 32);
+		return inner + (randHigh * boundLow >>> 32) + (randLow * boundHigh >>> 32) + randHigh * boundHigh;
 	}
 
 	/**
@@ -438,12 +426,23 @@ public class LaserRandom extends Random implements Serializable {
 	 * especially if the bounds are unknown or may be user-specified.
 	 *
 	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-	 * @param innerBound the inclusive inner bound; may be any long, allowing negative
-	 * @param outerBound the exclusive outer bound; may be any long, allowing negative
+	 * @param inner the inclusive inner bound; may be any long, allowing negative
+	 * @param outer the exclusive outer bound; may be any long, allowing negative
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	public long nextSignedLong (long innerBound, long outerBound) {
-		return innerBound + nextSignedLong(outerBound - innerBound);
+	public long nextSignedLong (long inner, long outer) {
+		final long rand = nextLong();
+		if(outer < inner) {
+			long t = outer;
+			outer = inner + 1L;
+			inner = t + 1L;
+		}
+		final long bound = outer - inner;
+		final long randLow = rand & 0xFFFFFFFFL;
+		final long boundLow = bound & 0xFFFFFFFFL;
+		final long randHigh = (rand >>> 32);
+		final long boundHigh = (bound >>> 32);
+		return inner + (randHigh * boundLow >>> 32) + (randLow * boundHigh >>> 32) + randHigh * boundHigh;
 	}
 
 	/**
