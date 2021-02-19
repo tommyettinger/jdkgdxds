@@ -603,9 +603,27 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 		if (size == 0) { return 0; }
 		return items[random.nextInt(size)];
 	}
-
+	
+	/**
+	 * Allocates a new int array with {@code size} elements and fills it with the items in this.
+	 * @return a new int array with the same contents as this
+	 */
 	public int[] toArray () {
 		int[] array = new int[size];
+		System.arraycopy(items, 0, array, 0, size);
+		return array;
+	}
+
+	/**
+	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
+	 * into {@code array} and returns it; otherwise, it allocates a new int array that can fit all
+	 * of the items in this, and proceeds to copy into that and return that.
+	 * @param array a int array that will be modified if it can fit {@link #size()} items
+	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
+	 */
+	public int[] toArray (int[] array) {
+		if(array.length < size)
+			array = new int[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
 	}

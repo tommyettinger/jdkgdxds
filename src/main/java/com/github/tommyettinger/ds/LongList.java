@@ -603,8 +603,26 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		return items[random.nextInt(size)];
 	}
 
+	/**
+	 * Allocates a new long array with {@code size} elements and fills it with the items in this.
+	 * @return a new long array with the same contents as this
+	 */
 	public long[] toArray () {
 		long[] array = new long[size];
+		System.arraycopy(items, 0, array, 0, size);
+		return array;
+	}
+
+	/**
+	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
+	 * into {@code array} and returns it; otherwise, it allocates a new long array that can fit all
+	 * of the items in this, and proceeds to copy into that and return that.
+	 * @param array a long array that will be modified if it can fit {@link #size()} items
+	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
+	 */
+	public long[] toArray (long[] array) {
+		if(array.length < size)
+			array = new long[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
 	}
