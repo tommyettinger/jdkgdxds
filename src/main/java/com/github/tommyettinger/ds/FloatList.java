@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.ds.support.function.FloatUnaryOperator;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
@@ -473,6 +474,17 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 		}
 
 		return size != (this.size = w);
+	}
+
+	/**
+	 * Replaces each element of this list with the result of applying the
+	 * given operator to that element.
+	 * @param operator a FloatUnaryOperator (an interface defined in this library)
+	 */
+	public void replaceAll(FloatUnaryOperator operator) {
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] = operator.applyAsFloat(items[i]);
+		}
 	}
 
 	/**

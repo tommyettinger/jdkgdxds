@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Random;
+import java.util.function.IntUnaryOperator;
 
 /**
  * A resizable, ordered or unordered int list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Integer.
@@ -474,6 +475,17 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 	}
 
 	/**
+	 * Replaces each element of this list with the result of applying the
+	 * given operator to that element.
+	 * @param operator an IntUnaryOperator (an interface defined in the JDK)
+	 */
+	public void replaceAll(IntUnaryOperator operator) {
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] = operator.applyAsInt(items[i]);
+		}
+	}
+
+	/**
 	 * Removes and returns the last item.
 	 */
 	public int pop () {
@@ -603,7 +615,7 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 		if (size == 0) { return 0; }
 		return items[random.nextInt(size)];
 	}
-	
+
 	/**
 	 * Allocates a new int array with {@code size} elements and fills it with the items in this.
 	 * @return a new int array with the same contents as this

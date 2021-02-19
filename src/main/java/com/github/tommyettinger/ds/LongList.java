@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Random;
+import java.util.function.LongUnaryOperator;
 
 /**
  * A resizable, ordered or unordered long list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Long.
@@ -471,6 +472,17 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		}
 
 		return size != (this.size = w);
+	}
+
+	/**
+	 * Replaces each element of this list with the result of applying the
+	 * given operator to that element.
+	 * @param operator a LongUnaryOperator (an interface defined in the JDK)
+	 */
+	public void replaceAll(LongUnaryOperator operator) {
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] = operator.applyAsLong(items[i]);
+		}
 	}
 
 	/**
