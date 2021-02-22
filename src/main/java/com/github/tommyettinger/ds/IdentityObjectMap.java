@@ -100,7 +100,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 */
 	@Override
 	protected int place (Object item) {
-		return (int)(System.identityHashCode(item) * 0x9E3779B97F4A7C15L >>> shift);
+		return (System.identityHashCode(item) & mask);
 	}
 
 	/**
