@@ -365,12 +365,22 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		return true;
 	}
 
+	/**
+	 * Returns the first index in this list that contains the specified value, or -1 if it is not present.
+	 * @param value a long value to search for
+	 * @return the first index of the given value, or -1 if it is not present
+	 */
 	public int indexOf (long value) {
 		long[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) { if (items[i] == value) { return i; } }
 		return -1;
 	}
 
+	/**
+	 * Returns the last index in this list that contains the specified value, or -1 if it is not present.
+	 * @param value a long value to search for
+	 * @return the last index of the given value, or -1 if it is not present
+	 */
 	public int lastIndexOf (long value) {
 		long[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) { if (items[i] == value) { return i; } }
@@ -487,29 +497,35 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 
 	/**
 	 * Removes and returns the last item.
+	 * @return the last item, removed from this
 	 */
 	public long pop () {
+		if (size == 0) { throw new IndexOutOfBoundsException("LongList is empty."); }
 		return items[--size];
 	}
 
 	/**
 	 * Returns the last item.
+	 * @return the last item, without modifying this
 	 */
 	public long peek () {
+		if (size == 0) { throw new IndexOutOfBoundsException("LongList is empty."); }
 		return items[size - 1];
 	}
 
 	/**
 	 * Returns the first item.
+	 * @return the first item, without modifying this
 	 */
 	// Modified from libGDX
 	public long first () {
-		if (size == 0) { throw new IndexOutOfBoundsException("Array is empty."); }
+		if (size == 0) { throw new IndexOutOfBoundsException("LongList is empty."); }
 		return items[0];
 	}
 
 	/**
-	 * Returns true if the array has one or more items.
+	 * Returns true if the array has one or more items, or false otherwise.
+	 * @return true if the array has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
 		return size > 0;
@@ -517,12 +533,17 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 
 	/**
 	 * Returns true if the array is empty.
+	 * @return true if the array is empty, or false if it has any items
 	 */
 	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
 
+	/**
+	 * Effectively removes all items from this LongList.
+	 * This is done simply by setting size to 0; because a {@code long} item isn't a reference, it doesn't need to be set to null.
+	 */
 	@Override
 	public void clear () {
 		size = 0;
@@ -532,7 +553,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	 * Reduces the size of the backing array to the size of the actual items. This is useful to release memory when many items
 	 * have been removed, or if it is known that more items will not be added.
 	 *
-	 * @return {@link #items}
+	 * @return {@link #items}; this will be a different reference if this resized
 	 */
 	public long[] shrink () {
 		if (items.length != size) { resize(size); }
@@ -543,7 +564,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	 * Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
 	 * items to avoid multiple backing array resizes.
 	 *
-	 * @return {@link #items}
+	 * @return {@link #items}; this will be a different reference if this resized
 	 */
 	public long[] ensureCapacity (int additionalCapacity) {
 		if (additionalCapacity < 0) { throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity); }
@@ -555,7 +576,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	/**
 	 * Sets the array size, leaving any values beyond the current size undefined.
 	 *
-	 * @return {@link #items}
+	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
 	public long[] setSize (int newSize) {
 		if (newSize < 0) { throw new IllegalArgumentException("newSize must be >= 0: " + newSize); }
@@ -609,6 +630,8 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
+	 * @param random a {@link Random} or a (recommended) subclass such as {@link com.github.tommyettinger.ds.support.LaserRandom} from this library
+	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	public long random (Random random) {
 		if (size == 0) { return 0; }
@@ -880,7 +903,7 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 	/**
 	 * Sorts all elements according to the order induced by the specified
 	 * comparator using mergesort. If {@code c} is null, this instead delegates to {@link #sort()},
-	 * which uses {@link Arrays#sort(float[])}, and does not always run in-place.
+	 * which uses {@link Arrays#sort(long[])}, and does not always run in-place.
 	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a

@@ -354,7 +354,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	/**
 	 * Returns true if this FloatList contains, at least once, every item in {@code other}; otherwise returns false.
 	 *
-	 * @param other an FloatList
+	 * @param other a FloatList
 	 * @return true if this contains every item in {@code other}, otherwise false
 	 */
 	// Newly-added
@@ -367,12 +367,22 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 		return true;
 	}
 
+	/**
+	 * Returns the first index in this list that contains the specified value, or -1 if it is not present.
+	 * @param value a float value to search for
+	 * @return the first index of the given value, or -1 if it is not present
+	 */
 	public int indexOf (float value) {
 		float[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) { if (items[i] == value) { return i; } }
 		return -1;
 	}
 
+	/**
+	 * Returns the last index in this list that contains the specified value, or -1 if it is not present.
+	 * @param value a float value to search for
+	 * @return the last index of the given value, or -1 if it is not present
+	 */
 	public int lastIndexOf (float value) {
 		float[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) { if (items[i] == value) { return i; } }
@@ -459,7 +469,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	/**
 	 * Removes all items from this FloatList that are not present somewhere in {@code other}, any number of times.
 	 *
-	 * @param other an FloatList that contains the items that this should keep, whenever present
+	 * @param other a FloatList that contains the items that this should keep, whenever present
 	 * @return true if this FloatList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
@@ -489,29 +499,35 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 
 	/**
 	 * Removes and returns the last item.
+	 * @return the last item, removed from this
 	 */
 	public float pop () {
+		if (size == 0) { throw new IndexOutOfBoundsException("FloatList is empty."); }
 		return items[--size];
 	}
 
 	/**
 	 * Returns the last item.
+	 * @return the last item, without modifying this
 	 */
 	public float peek () {
+		if (size == 0) { throw new IndexOutOfBoundsException("FloatList is empty."); }
 		return items[size - 1];
 	}
 
 	/**
 	 * Returns the first item.
+	 * @return the first item, without modifying this
 	 */
 	// Modified from libGDX
 	public float first () {
-		if (size == 0) { throw new IndexOutOfBoundsException("Array is empty."); }
+		if (size == 0) { throw new IndexOutOfBoundsException("FloatList is empty."); }
 		return items[0];
 	}
 
 	/**
-	 * Returns true if the array has one or more items.
+	 * Returns true if the array has one or more items, or false otherwise.
+	 * @return true if the array has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
 		return size > 0;
@@ -519,12 +535,17 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 
 	/**
 	 * Returns true if the array is empty.
+	 * @return true if the array is empty, or false if it has any items
 	 */
 	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
 
+	/**
+	 * Effectively removes all items from this FloatList.
+	 * This is done simply by setting size to 0; because a {@code float} item isn't a reference, it doesn't need to be set to null.
+	 */
 	@Override
 	public void clear () {
 		size = 0;
@@ -534,7 +555,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	 * Reduces the size of the backing array to the size of the actual items. This is useful to release memory when many items
 	 * have been removed, or if it is known that more items will not be added.
 	 *
-	 * @return {@link #items}
+	 * @return {@link #items}; this will be a different reference if this resized
 	 */
 	public float[] shrink () {
 		if (items.length != size) { resize(size); }
@@ -545,7 +566,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	 * Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
 	 * items to avoid multiple backing array resizes.
 	 *
-	 * @return {@link #items}
+	 * @return {@link #items}; this will be a different reference if this resized
 	 */
 	public float[] ensureCapacity (int additionalCapacity) {
 		if (additionalCapacity < 0) { throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity); }
@@ -557,7 +578,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 	/**
 	 * Sets the array size, leaving any values beyond the current size undefined.
 	 *
-	 * @return {@link #items}
+	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
 	public float[] setSize (int newSize) {
 		if (newSize < 0) { throw new IllegalArgumentException("newSize must be >= 0: " + newSize); }
@@ -611,6 +632,8 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
+	 * @param random a {@link Random} or a (recommended) subclass such as {@link com.github.tommyettinger.ds.support.LaserRandom} from this library
+	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	public float random (Random random) {
 		if (size == 0) { return 0; }
