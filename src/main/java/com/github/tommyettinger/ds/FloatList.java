@@ -787,6 +787,13 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 			return list.get(index++);
 		}
 
+		@Override
+		public void remove () {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (index >= list.size) { throw new NoSuchElementException(); }
+			list.remove(index);
+		}
+
 		/**
 		 * Returns {@code true} if the iteration has more elements.
 		 * (In other words, returns {@code true} if {@link #next} would
