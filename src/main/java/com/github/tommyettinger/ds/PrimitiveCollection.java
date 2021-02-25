@@ -3,6 +3,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.function.FloatConsumer;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
+import java.util.Iterator;
 import java.util.PrimitiveIterator;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
@@ -61,6 +62,18 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return has;
 		}
 
+		default boolean retainAll (OfInt other) {
+			boolean changed = false;
+			PrimitiveIterator.OfInt it = iterator();
+			while (it.hasNext()) {
+				if (!other.contains(it.nextInt())) {
+					it.remove();
+					changed = true;
+				}
+			}
+			return changed;
+		}
+
 		@Override
 		PrimitiveIterator.OfInt iterator ();
 	}
@@ -99,6 +112,18 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return has;
 		}
 
+		default boolean retainAll (OfLong other) {
+			boolean changed = false;
+			PrimitiveIterator.OfLong it = iterator();
+			while (it.hasNext()) {
+				if (!other.contains(it.nextLong())) {
+					it.remove();
+					changed = true;
+				}
+			}
+			return changed;
+		}
+
 		@Override
 		PrimitiveIterator.OfLong iterator ();
 	}
@@ -135,6 +160,18 @@ public interface PrimitiveCollection<T, T_CONS> {
 				has &= contains(it.nextFloat());
 			}
 			return has;
+		}
+
+		default boolean retainAll (OfFloat other) {
+			boolean changed = false;
+			FloatIterator it = iterator();
+			while (it.hasNext()) {
+				if (!other.contains(it.nextFloat())) {
+					it.remove();
+					changed = true;
+				}
+			}
+			return changed;
 		}
 
 		@Override
