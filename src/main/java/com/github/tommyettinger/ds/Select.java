@@ -16,6 +16,10 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.sort.FloatComparator;
+import com.github.tommyettinger.ds.support.sort.IntComparator;
+import com.github.tommyettinger.ds.support.sort.LongComparator;
+
 import java.util.Comparator;
 
 /** This class is for selecting a ranked element (kth ordered statistic) from an unordered list in faster time than sorting the
@@ -81,6 +85,7 @@ public class Select {
 		}
 		return highestIdx;
 	}
+
 	public static <T> T select (ObjectList<T> items, Comparator<T> comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
 		return items.get(idx);
@@ -120,6 +125,153 @@ public class Select {
 
 	/** Faster than quickselect for n = max */
 	private static <T> int fastMax (ObjectList<T> items, Comparator<T> comp, int size) {
+		int highestIdx = 0;
+		for (int i = 1; i < size; i++) {
+			int comparison = comp.compare(items.get(i), items.get(highestIdx));
+			if (comparison > 0) {
+				highestIdx = i;
+			}
+		}
+		return highestIdx;
+	}
+
+	public static int select (IntList items, IntComparator comp, int kthLowest, int size) {
+		int idx = selectIndex(items, comp, kthLowest, size);
+		return items.get(idx);
+	}
+
+	public static int selectIndex (IntList items, IntComparator comp, int kthLowest, int size) {
+		if (size < 1) {
+			throw new RuntimeException("cannot select from empty array (size < 1)");
+		} else if (kthLowest > size) {
+			throw new RuntimeException("Kth rank is larger than size. k: " + kthLowest + ", size: " + size);
+		}
+		int idx;
+		// naive partial selection sort almost certain to outperform quickselect where n is min or max
+		if (kthLowest == 1) {
+			// find min
+			idx = fastMin(items, comp, size);
+		} else if (kthLowest == size) {
+			// find max
+			idx = fastMax(items, comp, size);
+		} else {
+			idx = QuickSelect.select(items, comp, kthLowest, size);
+		}
+		return idx;
+	}
+
+	/** Faster than quickselect for n = min */
+	private static int fastMin (IntList items, IntComparator comp, int size) {
+		int lowestIdx = 0;
+		for (int i = 1; i < size; i++) {
+			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
+			if (comparison < 0) {
+				lowestIdx = i;
+			}
+		}
+		return lowestIdx;
+	}
+
+	/** Faster than quickselect for n = max */
+	private static int fastMax (IntList items, IntComparator comp, int size) {
+		int highestIdx = 0;
+		for (int i = 1; i < size; i++) {
+			int comparison = comp.compare(items.get(i), items.get(highestIdx));
+			if (comparison > 0) {
+				highestIdx = i;
+			}
+		}
+		return highestIdx;
+	}
+
+	public static long select (LongList items, LongComparator comp, int kthLowest, int size) {
+		int idx = selectIndex(items, comp, kthLowest, size);
+		return items.get(idx);
+	}
+
+	public static int selectIndex (LongList items, LongComparator comp, int kthLowest, int size) {
+		if (size < 1) {
+			throw new RuntimeException("cannot select from empty array (size < 1)");
+		} else if (kthLowest > size) {
+			throw new RuntimeException("Kth rank is larger than size. k: " + kthLowest + ", size: " + size);
+		}
+		int idx;
+		// naive partial selection sort almost certain to outperform quickselect where n is min or max
+		if (kthLowest == 1) {
+			// find min
+			idx = fastMin(items, comp, size);
+		} else if (kthLowest == size) {
+			// find max
+			idx = fastMax(items, comp, size);
+		} else {
+			idx = QuickSelect.select(items, comp, kthLowest, size);
+		}
+		return idx;
+	}
+
+	/** Faster than quickselect for n = min */
+	private static int fastMin (LongList items, LongComparator comp, int size) {
+		int lowestIdx = 0;
+		for (int i = 1; i < size; i++) {
+			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
+			if (comparison < 0) {
+				lowestIdx = i;
+			}
+		}
+		return lowestIdx;
+	}
+
+	/** Faster than quickselect for n = max */
+	private static int fastMax (LongList items, LongComparator comp, int size) {
+		int highestIdx = 0;
+		for (int i = 1; i < size; i++) {
+			int comparison = comp.compare(items.get(i), items.get(highestIdx));
+			if (comparison > 0) {
+				highestIdx = i;
+			}
+		}
+		return highestIdx;
+	}
+
+	public static float select (FloatList items, FloatComparator comp, int kthLowest, int size) {
+		int idx = selectIndex(items, comp, kthLowest, size);
+		return items.get(idx);
+	}
+
+	public static int selectIndex (FloatList items, FloatComparator comp, int kthLowest, int size) {
+		if (size < 1) {
+			throw new RuntimeException("cannot select from empty array (size < 1)");
+		} else if (kthLowest > size) {
+			throw new RuntimeException("Kth rank is larger than size. k: " + kthLowest + ", size: " + size);
+		}
+		int idx;
+		// naive partial selection sort almost certain to outperform quickselect where n is min or max
+		if (kthLowest == 1) {
+			// find min
+			idx = fastMin(items, comp, size);
+		} else if (kthLowest == size) {
+			// find max
+			idx = fastMax(items, comp, size);
+		} else {
+			idx = QuickSelect.select(items, comp, kthLowest, size);
+		}
+		return idx;
+	}
+
+	/** Faster than quickselect for n = min */
+	private static int fastMin (FloatList items, FloatComparator comp, int size) {
+		int lowestIdx = 0;
+		for (int i = 1; i < size; i++) {
+			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
+			if (comparison < 0) {
+				lowestIdx = i;
+			}
+		}
+		return lowestIdx;
+	}
+
+	/** Faster than quickselect for n = max */
+	private static int fastMax (FloatList items, FloatComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(highestIdx));
