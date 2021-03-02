@@ -93,4 +93,67 @@ public class QuickSelect {
 		items[left] = items[right];
 		items[right] = tmp;
 	}
+
+	public static <T> int select (ObjectList<T> items, Comparator<? super T> comp, int n, int size) {
+		return recursiveSelect(items, comp, 0, size - 1, n);
+	}
+
+	private static <T> int partition (ObjectList<T> items, Comparator<? super T> comp, int left, int right, int pivot) {
+		T pivotValue = items.get(pivot);
+		items.swap(right, pivot);
+		int storage = left;
+		for (int i = left; i < right; i++) {
+			if (comp.compare(items.get(i), pivotValue) < 0) {
+				items.swap(storage, i);
+				storage++;
+			}
+		}
+		items.swap(right, storage);
+		return storage;
+	}
+
+	private static <T> int recursiveSelect (ObjectList<T> items, Comparator<? super T> comp, int left, int right, int k) {
+		if (left == right) return left;
+		int pivotIndex = medianOfThreePivot(items, comp, left, right);
+		int pivotNewIndex = partition(items, comp, left, right, pivotIndex);
+		int pivotDist = (pivotNewIndex - left) + 1;
+		int result;
+		if (pivotDist == k) {
+			result = pivotNewIndex;
+		} else if (k < pivotDist) {
+			result = recursiveSelect(items, comp, left, pivotNewIndex - 1, k);
+		} else {
+			result = recursiveSelect(items, comp, pivotNewIndex + 1, right, k - pivotDist);
+		}
+		return result;
+	}
+
+	/** Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays */
+	private static <T> int medianOfThreePivot (ObjectList<T> items, Comparator<? super T> comp, int leftIdx, int rightIdx) {
+		T left = items.get(leftIdx);
+		int midIdx = (leftIdx + rightIdx) / 2;
+		T mid = items.get(midIdx);
+		T right = items.get(rightIdx);
+
+		// spaghetti median of three algorithm
+		// does at most 3 comparisons
+		if (comp.compare(left, mid) > 0) {
+			if (comp.compare(mid, right) > 0) {
+				return midIdx;
+			} else if (comp.compare(left, right) > 0) {
+				return rightIdx;
+			} else {
+				return leftIdx;
+			}
+		} else {
+			if (comp.compare(left, right) > 0) {
+				return leftIdx;
+			} else if (comp.compare(mid, right) > 0) {
+				return rightIdx;
+			} else {
+				return midIdx;
+			}
+		}
+	}
+
 }
