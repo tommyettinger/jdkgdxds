@@ -16,6 +16,10 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.sort.FloatComparator;
+import com.github.tommyettinger.ds.support.sort.IntComparator;
+import com.github.tommyettinger.ds.support.sort.LongComparator;
+
 import java.util.Comparator;
 
 /**
@@ -134,6 +138,197 @@ public class QuickSelect {
 		int midIdx = (leftIdx + rightIdx) / 2;
 		T mid = items.get(midIdx);
 		T right = items.get(rightIdx);
+
+		// spaghetti median of three algorithm
+		// does at most 3 comparisons
+		if (comp.compare(left, mid) > 0) {
+			if (comp.compare(mid, right) > 0) {
+				return midIdx;
+			} else if (comp.compare(left, right) > 0) {
+				return rightIdx;
+			} else {
+				return leftIdx;
+			}
+		} else {
+			if (comp.compare(left, right) > 0) {
+				return leftIdx;
+			} else if (comp.compare(mid, right) > 0) {
+				return rightIdx;
+			} else {
+				return midIdx;
+			}
+		}
+	}
+	
+	//// primitive lists
+	
+	// ints
+	public static int select (IntList items, IntComparator comp, int n, int size) {
+		return recursiveSelect(items, comp, 0, size - 1, n);
+	}
+
+	private static int partition (IntList items, IntComparator comp, int left, int right, int pivot) {
+		int pivotValue = items.get(pivot);
+		items.swap(right, pivot);
+		int storage = left;
+		for (int i = left; i < right; i++) {
+			if (comp.compare(items.get(i), pivotValue) < 0) {
+				items.swap(storage, i);
+				storage++;
+			}
+		}
+		items.swap(right, storage);
+		return storage;
+	}
+
+	private static int recursiveSelect (IntList items, IntComparator comp, int left, int right, int k) {
+		if (left == right) return left;
+		int pivotIndex = medianOfThreePivot(items, comp, left, right);
+		int pivotNewIndex = partition(items, comp, left, right, pivotIndex);
+		int pivotDist = (pivotNewIndex - left) + 1;
+		int result;
+		if (pivotDist == k) {
+			result = pivotNewIndex;
+		} else if (k < pivotDist) {
+			result = recursiveSelect(items, comp, left, pivotNewIndex - 1, k);
+		} else {
+			result = recursiveSelect(items, comp, pivotNewIndex + 1, right, k - pivotDist);
+		}
+		return result;
+	}
+
+	/** Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays */
+	private static int medianOfThreePivot (IntList items, IntComparator comp, int leftIdx, int rightIdx) {
+		int left = items.get(leftIdx);
+		int midIdx = (leftIdx + rightIdx) / 2;
+		int mid = items.get(midIdx);
+		int right = items.get(rightIdx);
+
+		// spaghetti median of three algorithm
+		// does at most 3 comparisons
+		if (comp.compare(left, mid) > 0) {
+			if (comp.compare(mid, right) > 0) {
+				return midIdx;
+			} else if (comp.compare(left, right) > 0) {
+				return rightIdx;
+			} else {
+				return leftIdx;
+			}
+		} else {
+			if (comp.compare(left, right) > 0) {
+				return leftIdx;
+			} else if (comp.compare(mid, right) > 0) {
+				return rightIdx;
+			} else {
+				return midIdx;
+			}
+		}
+	}
+
+	// longs
+	public static int select (LongList items, LongComparator comp, int n, int size) {
+		return recursiveSelect(items, comp, 0, size - 1, n);
+	}
+
+	private static int partition (LongList items, LongComparator comp, int left, int right, int pivot) {
+		long pivotValue = items.get(pivot);
+		items.swap(right, pivot);
+		int storage = left;
+		for (int i = left; i < right; i++) {
+			if (comp.compare(items.get(i), pivotValue) < 0) {
+				items.swap(storage, i);
+				storage++;
+			}
+		}
+		items.swap(right, storage);
+		return storage;
+	}
+
+	private static int recursiveSelect (LongList items, LongComparator comp, int left, int right, int k) {
+		if (left == right) return left;
+		int pivotIndex = medianOfThreePivot(items, comp, left, right);
+		int pivotNewIndex = partition(items, comp, left, right, pivotIndex);
+		int pivotDist = (pivotNewIndex - left) + 1;
+		int result;
+		if (pivotDist == k) {
+			result = pivotNewIndex;
+		} else if (k < pivotDist) {
+			result = recursiveSelect(items, comp, left, pivotNewIndex - 1, k);
+		} else {
+			result = recursiveSelect(items, comp, pivotNewIndex + 1, right, k - pivotDist);
+		}
+		return result;
+	}
+
+	/** Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays */
+	private static int medianOfThreePivot (LongList items, LongComparator comp, int leftIdx, int rightIdx) {
+		long left = items.get(leftIdx);
+		int midIdx = (leftIdx + rightIdx) / 2;
+		long mid = items.get(midIdx);
+		long right = items.get(rightIdx);
+
+		// spaghetti median of three algorithm
+		// does at most 3 comparisons
+		if (comp.compare(left, mid) > 0) {
+			if (comp.compare(mid, right) > 0) {
+				return midIdx;
+			} else if (comp.compare(left, right) > 0) {
+				return rightIdx;
+			} else {
+				return leftIdx;
+			}
+		} else {
+			if (comp.compare(left, right) > 0) {
+				return leftIdx;
+			} else if (comp.compare(mid, right) > 0) {
+				return rightIdx;
+			} else {
+				return midIdx;
+			}
+		}
+	}
+	
+	//// floats
+	public static int select (FloatList items, FloatComparator comp, int n, int size) {
+		return recursiveSelect(items, comp, 0, size - 1, n);
+	}
+
+	private static int partition (FloatList items, FloatComparator comp, int left, int right, int pivot) {
+		float pivotValue = items.get(pivot);
+		items.swap(right, pivot);
+		int storage = left;
+		for (int i = left; i < right; i++) {
+			if (comp.compare(items.get(i), pivotValue) < 0) {
+				items.swap(storage, i);
+				storage++;
+			}
+		}
+		items.swap(right, storage);
+		return storage;
+	}
+
+	private static int recursiveSelect (FloatList items, FloatComparator comp, int left, int right, int k) {
+		if (left == right) return left;
+		int pivotIndex = medianOfThreePivot(items, comp, left, right);
+		int pivotNewIndex = partition(items, comp, left, right, pivotIndex);
+		int pivotDist = (pivotNewIndex - left) + 1;
+		int result;
+		if (pivotDist == k) {
+			result = pivotNewIndex;
+		} else if (k < pivotDist) {
+			result = recursiveSelect(items, comp, left, pivotNewIndex - 1, k);
+		} else {
+			result = recursiveSelect(items, comp, pivotNewIndex + 1, right, k - pivotDist);
+		}
+		return result;
+	}
+
+	/** Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays */
+	private static int medianOfThreePivot (FloatList items, FloatComparator comp, int leftIdx, int rightIdx) {
+		float left = items.get(leftIdx);
+		int midIdx = (leftIdx + rightIdx) / 2;
+		float mid = items.get(midIdx);
+		float right = items.get(rightIdx);
 
 		// spaghetti median of three algorithm
 		// does at most 3 comparisons
