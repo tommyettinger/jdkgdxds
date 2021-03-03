@@ -1,6 +1,9 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.sort.FloatComparator;
+import com.github.tommyettinger.ds.support.sort.IntComparator;
+import com.github.tommyettinger.ds.support.sort.LongComparator;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -79,30 +82,30 @@ public interface Ordered<T> extends Arrangeable {
 
 	/**
 	 * Selects the kth-lowest element from this Ordered according to Comparator ranking. This might partially sort the Ordered,
-	 * changing its order. The array must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+	 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
 	 * @see Select
 	 * @param comparator used for comparison
-	 * @param kthLowest rank of desired object according to comparison, k is based on ordinal numbers, not array indices. for min
-	 *           value use 1, for max value use size of array, using 0 results in runtime exception.
+	 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+	 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
 	 * @return the value of the kth lowest ranked object. */
 	default T selectRanked (Comparator<T> comparator, int kthLowest) {
 		if (kthLowest < 1) {
-			throw new RuntimeException("kthLowest must be greater than 0, 1 = first, 2 = second...");
+			throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 		}
 		return Select.select(order(), comparator, kthLowest, size());
 	}
 
 	/**
 	 * Gets the index of the kth-lowest element from this Ordered according to Comparator ranking. This might partially sort the
-	 * Ordered, changing its order. The array must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+	 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
 	 * @see Ordered#selectRanked(java.util.Comparator, int)
 	 * @param comparator used for comparison
-	 * @param kthLowest rank of desired object according to comparison, k is based on ordinal numbers, not array indices. for min
-	 *           value use 1, for max value use size of array, using 0 results in runtime exception.
+	 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+	 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
 	 * @return the index of the kth lowest ranked object. */
 	default int selectRankedIndex (Comparator<T> comparator, int kthLowest) {
 		if (kthLowest < 1) {
-			throw new RuntimeException("kthLowest must be greater than 0, 1 = first, 2 = second...");
+			throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 		}
 		return Select.selectIndex(order(), comparator, kthLowest, size());
 	}
@@ -170,7 +173,36 @@ public interface Ordered<T> extends Arrangeable {
 		default int random (Random rng) {
 			return order().random(rng);
 		}
+		
+		/**
+		 * Selects the kth-lowest element from this Ordered according to IntComparator ranking. This might partially sort the Ordered,
+		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+		 * @see Select
+		 * @param comparator used for comparison
+		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item. */
+		default int selectRanked (IntComparator comparator, int kthLowest) {
+			if (kthLowest < 1) {
+				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
+			}
+			return Select.select(order(), comparator, kthLowest, size());
+		}
 
+		/**
+		 * Gets the index of the kth-lowest element from this Ordered according to IntComparator ranking. This might partially sort the
+		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+		 * @see Ordered.OfInt#selectRanked(java.util.Comparator, int)
+		 * @param comparator used for comparison
+		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the index of the kth lowest ranked item. */
+		default int selectRankedIndex (IntComparator comparator, int kthLowest) {
+			if (kthLowest < 1) {
+				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
+			}
+			return Select.selectIndex(order(), comparator, kthLowest, size());
+		}
 	}
 
 	/**
@@ -236,6 +268,36 @@ public interface Ordered<T> extends Arrangeable {
 		default long random (Random rng) {
 			return order().random(rng);
 		}
+
+		/**
+		 * Selects the kth-lowest element from this Ordered according to LongComparator ranking. This might partially sort the Ordered,
+		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+		 * @see Select
+		 * @param comparator used for comparison
+		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item. */
+		default long selectRanked (LongComparator comparator, int kthLowest) {
+			if (kthLowest < 1) {
+				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
+			}
+			return Select.select(order(), comparator, kthLowest, size());
+		}
+
+		/**
+		 * Gets the index of the kth-lowest element from this Ordered according to LongComparator ranking. This might partially sort the
+		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+		 * @see Ordered.OfLong#selectRanked(LongComparator, int)
+		 * @param comparator used for comparison
+		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the index of the kth lowest ranked item. */
+		default int selectRankedIndex (LongComparator comparator, int kthLowest) {
+			if (kthLowest < 1) {
+				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
+			}
+			return Select.selectIndex(order(), comparator, kthLowest, size());
+		}
 	}
 
 	/**
@@ -300,6 +362,37 @@ public interface Ordered<T> extends Arrangeable {
 		 */
 		default float random (Random rng) {
 			return order().random(rng);
+		}
+
+		/**
+		 * Selects the kth-lowest element from this Ordered according to FloatComparator ranking. This might partially sort the Ordered,
+		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+		 * @see Select
+		 * @param comparator used for comparison
+		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item. */
+		default float selectRanked (FloatComparator comparator, int kthLowest) {
+			if (kthLowest < 1) {
+				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
+			}
+			return Select.select(order(), comparator, kthLowest, size());
+		}
+
+		/**
+		 * Gets the index of the kth-lowest element from this Ordered according to FloatComparator ranking. This might partially sort the
+		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+		 * @see Ordered.OfFloat#selectRanked(FloatComparator, int)
+		 * @param comparator used for comparison
+		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the index of the kth lowest ranked item.
+		 */
+		default int selectRankedIndex (FloatComparator comparator, int kthLowest) {
+			if (kthLowest < 1) {
+				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
+			}
+			return Select.selectIndex(order(), comparator, kthLowest, size());
 		}
 	}
 }
