@@ -193,7 +193,20 @@ public interface Ordered<T> extends Arrangeable {
 		default int random (Random rng) {
 			return order().random(rng);
 		}
-		
+
+		/**
+		 * Sorts this Ordered according to the order induced by the specified
+		 * {@link IntComparator}.  The sort is <i>stable</i>: this method must not
+		 * reorder equal elements.
+		 * <br>
+		 * If the specified comparator is {@code null} then the numeric elements'
+		 * natural ordering should be used.
+		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
+		 */
+		default void sort(@Nullable IntComparator comparator) {
+			order().sort(comparator);
+		}
+
 		/**
 		 * Selects the kth-lowest element from this Ordered according to IntComparator ranking. This might partially sort the Ordered,
 		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
@@ -290,6 +303,19 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
+		 * Sorts this Ordered according to the order induced by the specified
+		 * {@link LongComparator}.  The sort is <i>stable</i>: this method must not
+		 * reorder equal elements.
+		 * <br>
+		 * If the specified comparator is {@code null} then the numeric elements'
+		 * natural ordering should be used.
+		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
+		 */
+		default void sort(@Nullable LongComparator comparator) {
+			order().sort(comparator);
+		}
+
+		/**
 		 * Selects the kth-lowest element from this Ordered according to LongComparator ranking. This might partially sort the Ordered,
 		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
 		 * @see Select
@@ -382,6 +408,18 @@ public interface Ordered<T> extends Arrangeable {
 		 */
 		default float random (Random rng) {
 			return order().random(rng);
+		}
+		/**
+		 * Sorts this Ordered according to the order induced by the specified
+		 * {@link FloatComparator}.  The sort is <i>stable</i>: this method must not
+		 * reorder equal elements.
+		 * <br>
+		 * If the specified comparator is {@code null} then the numeric elements'
+		 * natural ordering should be used.
+		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
+		 */
+		default void sort(@Nullable FloatComparator comparator) {
+			order().sort(comparator);
 		}
 
 		/**

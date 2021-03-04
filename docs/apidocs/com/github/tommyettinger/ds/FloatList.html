@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":10,"i42":10,"i43":10,"i44":10,"i45":10,"i46":10,"i47":10,"i48":10,"i49":10,"i50":10,"i51":10,"i52":10,"i53":10,"i54":10,"i55":10,"i56":10,"i57":10,"i58":10,"i59":9};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":10,"i42":10,"i43":10,"i44":10,"i45":10,"i46":10,"i47":10,"i48":10,"i49":10,"i50":10,"i51":10,"i52":10,"i53":10,"i54":10,"i55":10,"i56":10,"i57":10,"i58":10,"i59":10,"i60":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -81,12 +81,12 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a></code>, <code><a href="PrimitiveCollection.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection</a>&lt;java.lang.Float,&#8203;<a href="support/function/FloatConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">FloatConsumer</a>&gt;</code>, <code><a href="PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a></code>, <code>java.io.Serializable</code></dd>
+<dd><code><a href="Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a></code>, <code><a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a></code>, <code><a href="PrimitiveCollection.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection</a>&lt;java.lang.Float,&#8203;<a href="support/function/FloatConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">FloatConsumer</a>&gt;</code>, <code><a href="PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a></code>, <code>java.io.Serializable</code></dd>
 </dl>
 <hr>
 <pre>public class <span class="type-name-label">FloatList</span>
 extends java.lang.Object
-implements <a href="PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a>, <a href="Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a>, java.io.Serializable</pre>
+implements <a href="PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a>, <a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a>, <a href="Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a>, java.io.Serializable</pre>
 <div class="block">A resizable, ordered or unordered float list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Float.
  If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
  This tries to imitate most of the <code>List</code> interface, though it can't implement it without boxing its items.
@@ -442,74 +442,81 @@ float&nbsp;value)</code></th>
 </td>
 </tr>
 <tr class="alt-color" id="i28">
+<td class="col-first"><code><a href="FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#order()">order</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Returns this FloatList, since it is its own order.</div>
+</td>
+</tr>
+<tr class="row-color" id="i29">
 <td class="col-first"><code>float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#peek()">peek</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns the last item.</div>
 </td>
 </tr>
-<tr class="row-color" id="i29">
+<tr class="alt-color" id="i30">
 <td class="col-first"><code><a href="FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#plus(float)">plus</a></span>&#8203;(float&nbsp;value)</code></th>
 <td class="col-last">
 <div class="block">Adds <code>value</code> to each item in this FloatList, stores it in this and returns it.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i30">
+<tr class="row-color" id="i31">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#plus(int,float)">plus</a></span>&#8203;(int&nbsp;index,
 float&nbsp;value)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i31">
+<tr class="alt-color" id="i32">
 <td class="col-first"><code>float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#pop()">pop</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Removes and returns the last item.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i32">
+<tr class="row-color" id="i33">
 <td class="col-first"><code>float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#random(java.util.Random)">random</a></span>&#8203;(java.util.Random&nbsp;random)</code></th>
 <td class="col-last">
 <div class="block">Returns a random item from the array, or zero if the array is empty.</div>
 </td>
 </tr>
-<tr class="row-color" id="i33">
+<tr class="alt-color" id="i34">
 <td class="col-first"><code><a href="FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#rem(float)">rem</a></span>&#8203;(float&nbsp;value)</code></th>
 <td class="col-last">
 <div class="block">Gets the remainder of each item in this FloatList with <code>value</code>, stores it in this and returns it.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i34">
+<tr class="row-color" id="i35">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#rem(int,float)">rem</a></span>&#8203;(int&nbsp;index,
 float&nbsp;value)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i35">
+<tr class="alt-color" id="i36">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#remove(float)">remove</a></span>&#8203;(float&nbsp;value)</code></th>
 <td class="col-last">
 <div class="block">Removes the first occurrence of <code>value</code> from this FloatList, returning true if anything was removed.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i36">
+<tr class="row-color" id="i37">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#removeAll(com.github.tommyettinger.ds.FloatList)">removeAll</a></span>&#8203;(<a href="FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a>&nbsp;array)</code></th>
 <td class="col-last">
 <div class="block">Removes from this array all of elements contained in the specified array.</div>
 </td>
 </tr>
-<tr class="row-color" id="i37">
+<tr class="alt-color" id="i38">
 <td class="col-first"><code>float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#removeAt(int)">removeAt</a></span>&#8203;(int&nbsp;index)</code></th>
 <td class="col-last">
 <div class="block">Removes and returns the item at the specified index.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i38">
+<tr class="row-color" id="i39">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#removeRange(int,int)">removeRange</a></span>&#8203;(int&nbsp;startIndex,
 int&nbsp;endIndex)</code></th>
@@ -517,7 +524,7 @@ int&nbsp;endIndex)</code></th>
 <div class="block">Removes the items between the specified indices, inclusive.</div>
 </td>
 </tr>
-<tr class="row-color" id="i39">
+<tr class="alt-color" id="i40">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#replaceAll(com.github.tommyettinger.ds.support.function.FloatUnaryOperator)">replaceAll</a></span>&#8203;(<a href="support/function/FloatUnaryOperator.html" title="interface in com.github.tommyettinger.ds.support.function">FloatUnaryOperator</a>&nbsp;operator)</code></th>
 <td class="col-last">
@@ -525,65 +532,65 @@ int&nbsp;endIndex)</code></th>
  given operator to that element.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i40">
+<tr class="row-color" id="i41">
 <td class="col-first"><code>protected float[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resize(int)">resize</a></span>&#8203;(int&nbsp;newSize)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i41">
+<tr class="alt-color" id="i42">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#retainAll(com.github.tommyettinger.ds.FloatList)">retainAll</a></span>&#8203;(<a href="FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a>&nbsp;other)</code></th>
 <td class="col-last">
 <div class="block">Removes all items from this FloatList that are not present somewhere in <code>other</code>, any number of times.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i42">
+<tr class="row-color" id="i43">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#reverse()">reverse</a></span>()</code></th>
 <td class="col-last">
-<div class="block">Reverses this Arrangeable in-place.</div>
+<div class="block">Reverses the order of this Ordered in-place.</div>
 </td>
 </tr>
-<tr class="row-color" id="i43">
+<tr class="alt-color" id="i44">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#set(int,float)">set</a></span>&#8203;(int&nbsp;index,
 float&nbsp;value)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i44">
+<tr class="row-color" id="i45">
 <td class="col-first"><code>float[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setSize(int)">setSize</a></span>&#8203;(int&nbsp;newSize)</code></th>
 <td class="col-last">
 <div class="block">Sets the array size, leaving any values beyond the current size undefined.</div>
 </td>
 </tr>
-<tr class="row-color" id="i45">
+<tr class="alt-color" id="i46">
 <td class="col-first"><code>float[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shrink()">shrink</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Reduces the size of the backing array to the size of the actual items.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i46">
+<tr class="row-color" id="i47">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(java.util.Random)">shuffle</a></span>&#8203;(java.util.Random&nbsp;random)</code></th>
 <td class="col-last">
-<div class="block">Pseudo-randomly shuffles the order of this Arrangeable in-place.</div>
+<div class="block">Pseudo-randomly shuffles the order of this Ordered in-place.</div>
 </td>
 </tr>
-<tr class="row-color" id="i47">
+<tr class="alt-color" id="i48">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#size()">size</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns the number of elements in this Arrangeable.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i48">
+<tr class="row-color" id="i49">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sort()">sort</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i49">
+<tr class="alt-color" id="i50">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sort(int,int,com.github.tommyettinger.ds.support.sort.FloatComparator)">sort</a></span>&#8203;(int&nbsp;from,
 int&nbsp;to,
@@ -593,7 +600,7 @@ int&nbsp;to,
  comparator using mergesort.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i50">
+<tr class="row-color" id="i51">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sort(com.github.tommyettinger.ds.support.sort.FloatComparator)">sort</a></span>&#8203;(<a href="support/sort/FloatComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">FloatComparator</a>&nbsp;c)</code></th>
 <td class="col-last">
@@ -601,7 +608,7 @@ int&nbsp;to,
  comparator using mergesort.</div>
 </td>
 </tr>
-<tr class="row-color" id="i51">
+<tr class="alt-color" id="i52">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#swap(int,int)">swap</a></span>&#8203;(int&nbsp;first,
 int&nbsp;second)</code></th>
@@ -609,27 +616,27 @@ int&nbsp;second)</code></th>
 <div class="block">Switches the ordering of positions <code>a</code> and <code>b</code>, without changing any items beyond that.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i52">
+<tr class="row-color" id="i53">
 <td class="col-first"><code><a href="FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#times(float)">times</a></span>&#8203;(float&nbsp;value)</code></th>
 <td class="col-last">
 <div class="block">Multiplies each item in this FloatList by <code>value</code>, stores it in this and returns it.</div>
 </td>
 </tr>
-<tr class="row-color" id="i53">
+<tr class="alt-color" id="i54">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#times(int,float)">times</a></span>&#8203;(int&nbsp;index,
 float&nbsp;value)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i54">
+<tr class="row-color" id="i55">
 <td class="col-first"><code>float[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toArray()">toArray</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Allocates a new float array with <code>size</code> elements and fills it with the items in this.</div>
 </td>
 </tr>
-<tr class="row-color" id="i55">
+<tr class="alt-color" id="i56">
 <td class="col-first"><code>float[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toArray(float%5B%5D)">toArray</a></span>&#8203;(float[]&nbsp;array)</code></th>
 <td class="col-last">
@@ -638,24 +645,24 @@ float&nbsp;value)</code></th>
  of the items in this, and proceeds to copy into that and return that.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i56">
+<tr class="row-color" id="i57">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i57">
+<tr class="alt-color" id="i58">
 <td class="col-first"><code>java.lang.String</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toString(java.lang.String)">toString</a></span>&#8203;(java.lang.String&nbsp;separator)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i58">
+<tr class="row-color" id="i59">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#truncate(int)">truncate</a></span>&#8203;(int&nbsp;newSize)</code></th>
 <td class="col-last">
 <div class="block">Reduces the size of the array to the specified size.</div>
 </td>
 </tr>
-<tr class="row-color" id="i59">
+<tr class="alt-color" id="i60">
 <td class="col-first"><code>static <a href="FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#with(float...)">with</a></span>&#8203;(float...&nbsp;array)</code></th>
 <td class="col-last">&nbsp;</td>
@@ -667,6 +674,9 @@ float&nbsp;value)</code></th>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.Object</h3>
 <code>clone, finalize, getClass, notify, notifyAll, wait, wait, wait</code></div>
+<div class="inherited-list">
+<h3 id="methods.inherited.from.class.com.github.tommyettinger.ds.Ordered.OfFloat">Methods inherited from interface&nbsp;com.github.tommyettinger.ds.<a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a></h3>
+<code><a href="Ordered.OfFloat.html#selectRanked(com.github.tommyettinger.ds.support.sort.FloatComparator,int)">selectRanked</a>, <a href="Ordered.OfFloat.html#selectRankedIndex(com.github.tommyettinger.ds.support.sort.FloatComparator,int)">selectRankedIndex</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.github.tommyettinger.ds.PrimitiveCollection.OfFloat">Methods inherited from interface&nbsp;com.github.tommyettinger.ds.<a href="PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a></h3>
 <code><a href="PrimitiveCollection.OfFloat.html#addAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">addAll</a>, <a href="PrimitiveCollection.OfFloat.html#containsAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">containsAll</a>, <a href="PrimitiveCollection.OfFloat.html#removeAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">removeAll</a>, <a href="PrimitiveCollection.OfFloat.html#retainAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">retainAll</a></code></div>
@@ -1030,15 +1040,31 @@ int&nbsp;count)</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="order()">
+<h3>order</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a></span>&nbsp;<span class="member-name">order</span>()</div>
+<div class="block">Returns this FloatList, since it is its own order. This is only here to satisfy
+ the <a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds"><code>Ordered.OfFloat</code></a> interface.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="Ordered.OfFloat.html#order()">order</a></code>&nbsp;in interface&nbsp;<code><a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a></code></dd>
+<dt>Returns:</dt>
+<dd>this FloatList</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="swap(int,int)">
 <h3>swap</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">swap</span>&#8203;(<span class="parameters">int&nbsp;first,
 int&nbsp;second)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Arrangeable.html#swap(int,int)">Arrangeable</a></code></span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Ordered.OfFloat.html#swap(int,int)">Ordered.OfFloat</a></code></span></div>
 <div class="block">Switches the ordering of positions <code>a</code> and <code>b</code>, without changing any items beyond that.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="Arrangeable.html#swap(int,int)">swap</a></code>&nbsp;in interface&nbsp;<code><a href="Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a></code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="Ordered.OfFloat.html#swap(int,int)">swap</a></code>&nbsp;in interface&nbsp;<code><a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>first</code> - the first position</dd>
 <dd><code>second</code> - the second position</dd>
@@ -1292,11 +1318,13 @@ int&nbsp;endIndex)</span></div>
 <section class="detail" id="reverse()">
 <h3>reverse</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">reverse</span>()</div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Arrangeable.html#reverse()">Arrangeable</a></code></span></div>
-<div class="block">Reverses this Arrangeable in-place.</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Ordered.OfFloat.html#reverse()">Ordered.OfFloat</a></code></span></div>
+<div class="block">Reverses the order of this Ordered in-place.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="Arrangeable.html#reverse()">reverse</a></code>&nbsp;in interface&nbsp;<code><a href="Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a></code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="Ordered.OfFloat.html#reverse()">reverse</a></code>&nbsp;in interface&nbsp;<code><a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a></code></dd>
 </dl>
 </section>
 </li>
@@ -1304,11 +1332,20 @@ int&nbsp;endIndex)</span></div>
 <section class="detail" id="shuffle(java.util.Random)">
 <h3>shuffle</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">shuffle</span>&#8203;(<span class="parameters">java.util.Random&nbsp;random)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Arrangeable.html#shuffle(java.util.Random)">Arrangeable</a></code></span></div>
-<div class="block">Pseudo-randomly shuffles the order of this Arrangeable in-place.</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Ordered.OfFloat.html#shuffle(java.util.Random)">Ordered.OfFloat</a></code></span></div>
+<div class="block">Pseudo-randomly shuffles the order of this Ordered in-place.
+ You can seed <code>rng</code>, the random number generator, with an identical seed (or in <a href="support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support"><code>LaserRandom</code></a>'s
+ case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same <a href="Arrangeable.html#size()"><code>Arrangeable.size()</code></a>.
+ Using <a href="support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support"><code>LaserRandom</code></a> is recommended because it has the potential to produce all shuffles for up to 33
+ items (though it would take millions of years to do so, and would require changing the stream every few
+ years), while <code>Random</code> can only produce all shuffles for up to 16 items. The RandomXS128 class in
+ libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
+ somewhat slower and is not ideal in terms of statistical bias.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="Arrangeable.html#shuffle(java.util.Random)">shuffle</a></code>&nbsp;in interface&nbsp;<code><a href="Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a></code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="Ordered.OfFloat.html#shuffle(java.util.Random)">shuffle</a></code>&nbsp;in interface&nbsp;<code><a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>random</code> - any <code>Random</code> implementation; prefer <a href="support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support"><code>LaserRandom</code></a> in this library</dd>
 </dl>
@@ -1328,6 +1365,8 @@ int&nbsp;endIndex)</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">random</span>&#8203;(<span class="parameters">java.util.Random&nbsp;random)</span></div>
 <div class="block">Returns a random item from the array, or zero if the array is empty.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="Ordered.OfFloat.html#random(java.util.Random)">random</a></code>&nbsp;in interface&nbsp;<code><a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>random</code> - a <code>Random</code> or a (recommended) subclass such as <a href="support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support"><code>LaserRandom</code></a> from this library</dd>
 <dt>Returns:</dt>
@@ -1453,6 +1492,8 @@ float&nbsp;tolerance)</span></div>
  standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
  used as a generic sorting algorithm.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="Ordered.OfFloat.html#sort(com.github.tommyettinger.ds.support.sort.FloatComparator)">sort</a></code>&nbsp;in interface&nbsp;<code><a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>c</code> - the comparator to determine the order of the FloatList</dd>
 </dl>

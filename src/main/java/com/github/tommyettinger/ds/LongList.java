@@ -35,7 +35,7 @@ import java.util.function.LongUnaryOperator;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serializable {
+public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public long[] items;
 	protected int size;
@@ -329,6 +329,17 @@ public class LongList implements PrimitiveCollection.OfLong, Arrangeable, Serial
 		if (sizeNeeded > items.length) { items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f))); }
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
+	}
+
+	/**
+	 * Returns this LongList, since it is its own order. This is only here to satisfy
+	 * the {@link Ordered.OfLong} interface.
+	 *
+	 * @return this LongList
+	 */
+	@Override
+	public LongList order () {
+		return this;
 	}
 
 	@Override

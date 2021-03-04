@@ -35,7 +35,7 @@ import java.util.function.IntUnaryOperator;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializable {
+public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public int[] items;
 	protected int size;
@@ -331,6 +331,17 @@ public class IntList implements PrimitiveCollection.OfInt, Arrangeable, Serializ
 		size = sizeNeeded;
 	}
 
+	/**
+	 * Returns this IntList, since it is its own order. This is only here to satisfy
+	 * the {@link Ordered.OfInt} interface.
+	 *
+	 * @return this IntList
+	 */
+	@Override
+	public IntList order () {
+		return this;
+	}
+	
 	@Override
 	public void swap (int first, int second) {
 		if (first >= size) { throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size); }

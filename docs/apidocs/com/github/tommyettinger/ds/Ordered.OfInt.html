@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":6,"i1":18,"i2":18,"i3":18,"i4":18,"i5":18,"i6":18};
+<script type="text/javascript">var data = {"i0":6,"i1":18,"i2":18,"i3":18,"i4":18,"i5":18,"i6":18,"i7":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -82,7 +82,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="IntFloatOrderedMap.html" title="class in com.github.tommyettinger.ds">IntFloatOrderedMap</a></code>, <code><a href="IntIntOrderedMap.html" title="class in com.github.tommyettinger.ds">IntIntOrderedMap</a></code>, <code><a href="IntLongOrderedMap.html" title="class in com.github.tommyettinger.ds">IntLongOrderedMap</a></code>, <code><a href="IntObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">IntObjectOrderedMap</a></code>, <code><a href="IntOrderedSet.html" title="class in com.github.tommyettinger.ds">IntOrderedSet</a></code></dd>
+<dd><code><a href="IntFloatOrderedMap.html" title="class in com.github.tommyettinger.ds">IntFloatOrderedMap</a></code>, <code><a href="IntIntOrderedMap.html" title="class in com.github.tommyettinger.ds">IntIntOrderedMap</a></code>, <code><a href="IntList.html" title="class in com.github.tommyettinger.ds">IntList</a></code>, <code><a href="IntLongOrderedMap.html" title="class in com.github.tommyettinger.ds">IntLongOrderedMap</a></code>, <code><a href="IntObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">IntObjectOrderedMap</a></code>, <code><a href="IntOrderedSet.html" title="class in com.github.tommyettinger.ds">IntOrderedSet</a></code></dd>
 </dl>
 <dl class="notes">
 <dt>Enclosing interface:</dt>
@@ -156,6 +156,14 @@ int&nbsp;kthLowest)</code></th>
 </td>
 </tr>
 <tr class="alt-color" id="i6">
+<td class="col-first"><code>default void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#sort(com.github.tommyettinger.ds.support.sort.IntComparator)">sort</a></span>&#8203;(<a href="support/sort/IntComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">IntComparator</a>&nbsp;comparator)</code></th>
+<td class="col-last">
+<div class="block">Sorts this Ordered according to the order induced by the specified
+ <a href="support/sort/IntComparator.html" title="interface in com.github.tommyettinger.ds.support.sort"><code>IntComparator</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i7">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#swap(int,int)">swap</a></span>&#8203;(int&nbsp;a,
 int&nbsp;b)</code></th>
@@ -252,6 +260,23 @@ int&nbsp;b)</span></div>
 <dd><code>rng</code> - any <code>Random</code> implementation; prefer <a href="support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support"><code>LaserRandom</code></a> in this library</dd>
 <dt>Returns:</dt>
 <dd>a random int key or item from this Ordered.OfInt</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="sort(com.github.tommyettinger.ds.support.sort.IntComparator)">
+<h3>sort</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">sort</span>&#8203;(<span class="parameters">@Nullable
+<a href="support/sort/IntComparator.html" title="interface in com.github.tommyettinger.ds.support.sort">IntComparator</a>&nbsp;comparator)</span></div>
+<div class="block">Sorts this Ordered according to the order induced by the specified
+ <a href="support/sort/IntComparator.html" title="interface in com.github.tommyettinger.ds.support.sort"><code>IntComparator</code></a>.  The sort is <i>stable</i>: this method must not
+ reorder equal elements.
+ <br>
+ If the specified comparator is <code>null</code> then the numeric elements'
+ natural ordering should be used.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>comparator</code> - used to sort the T items this contains; may be null to use natural ordering</dd>
 </dl>
 </section>
 </li>

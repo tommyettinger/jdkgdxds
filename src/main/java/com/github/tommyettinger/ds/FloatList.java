@@ -37,7 +37,7 @@ import java.util.Random;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Serializable {
+public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public float[] items;
 	protected int size;
@@ -331,6 +331,17 @@ public class FloatList implements PrimitiveCollection.OfFloat, Arrangeable, Seri
 		if (sizeNeeded > items.length) { items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f))); }
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
+	}
+
+	/**
+	 * Returns this FloatList, since it is its own order. This is only here to satisfy
+	 * the {@link Ordered.OfFloat} interface.
+	 *
+	 * @return this FloatList
+	 */
+	@Override
+	public FloatList order () {
+		return this;
 	}
 
 	@Override
