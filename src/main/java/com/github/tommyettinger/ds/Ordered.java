@@ -30,15 +30,15 @@ public interface Ordered<T> extends Arrangeable {
 	ObjectList<T> order ();
 
 	/**
-	 * Switches the ordering of positions {@code a} and {@code b}, without changing any items beyond that.
+	 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 	 *
-	 * @param a the first position
-	 * @param b the second position
+	 * @param first the first position, must not be negative and must be less than {@link #size()}
+	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
 	@Override
-	default void swap (int a, int b) {
+	default void swap (int first, int second) {
 		ObjectList<T> order = order();
-		order.set(a, order.set(b, order.get(a)));
+		order.set(first, order.set(second, order.get(first)));
 	}
 
 	/**
@@ -144,14 +144,14 @@ public interface Ordered<T> extends Arrangeable {
 		IntList order ();
 
 		/**
-		 * Switches the ordering of positions {@code a} and {@code b}, without changing any items beyond that.
+		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 		 *
-		 * @param a the first position
-		 * @param b the second position
+		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
-		default void swap (int a, int b) {
-			order().swap(a, b);
+		default void swap (int first, int second) {
+			order().swap(first, second);
 		}
 
 		/**
@@ -252,14 +252,14 @@ public interface Ordered<T> extends Arrangeable {
 		LongList order ();
 
 		/**
-		 * Switches the ordering of positions {@code a} and {@code b}, without changing any items beyond that.
+		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 		 *
-		 * @param a the first position
-		 * @param b the second position
+		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
-		default void swap (int a, int b) {
-			order().swap(a, b);
+		default void swap (int first, int second) {
+			order().swap(first, second);
 		}
 
 		/**
@@ -360,14 +360,14 @@ public interface Ordered<T> extends Arrangeable {
 		FloatList order ();
 
 		/**
-		 * Switches the ordering of positions {@code a} and {@code b}, without changing any items beyond that.
+		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 		 *
-		 * @param a the first position
-		 * @param b the second position
+		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
-		default void swap (int a, int b) {
-			order().swap(a, b);
+		default void swap (int first, int second) {
+			order().swap(first, second);
 		}
 
 		/**

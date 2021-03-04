@@ -28,6 +28,7 @@ import java.util.Comparator;
  * comparator.
  *
  * @see Comparator
+ * @see IntComparators
  */
 @FunctionalInterface
 public interface IntComparator extends Comparator<Integer> {

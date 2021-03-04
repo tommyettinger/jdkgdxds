@@ -28,6 +28,7 @@ import java.util.Comparator;
  * comparator.
  *
  * @see Comparator
+ * @see LongComparators
  */
 @FunctionalInterface
 public interface LongComparator extends Comparator<Long> {

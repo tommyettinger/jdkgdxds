@@ -664,12 +664,12 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 	/**
 	 * Switches the ordering of positions {@code a} and {@code b}, without changing any items beyond that.
 	 *
-	 * @param a the first position
-	 * @param b the second position
+	 * @param first the first position
+	 * @param second the second position
 	 */
 	@Override
-	public void swap (int a, int b) {
-		set(a, set(b, get(a)));
+	public void swap (int first, int second) {
+		set(first, set(second, get(first)));
 
 	}
 

@@ -37,7 +37,6 @@ import java.util.function.UnaryOperator;
  * whose functional method is {@link #applyAsFloat(float)}.
  *
  * @see UnaryOperator
- * @since 1.8
  */
 @FunctionalInterface
 public interface FloatUnaryOperator {

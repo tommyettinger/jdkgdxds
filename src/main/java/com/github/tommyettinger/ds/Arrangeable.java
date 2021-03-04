@@ -13,12 +13,12 @@ import java.util.Random;
  */
 public interface Arrangeable {
 	/**
-	 * Switches the ordering of positions {@code a} and {@code b}, without changing any items beyond that.
+	 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 	 *
-	 * @param a the first position
-	 * @param b the second position
+	 * @param first the first position, must not be negative and must be less than {@link #size()}
+	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
-	void swap (int a, int b);
+	void swap (int first, int second);
 
 	/**
 	 * Pseudo-randomly shuffles the order of this Arrangeable in-place.

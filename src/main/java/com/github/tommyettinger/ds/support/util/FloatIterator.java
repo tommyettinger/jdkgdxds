@@ -33,8 +33,9 @@ import java.util.function.Consumer;
 
 /**
  * An Iterator specialized for {@code float} values.
- *
- * @since 1.8
+ * This is a {@link PrimitiveIterator}, like the existing {@link PrimitiveIterator.OfInt}
+ * and {@link PrimitiveIterator.OfLong} interfaces, but it can't be a nested interface like
+ * those because it is defined outside of the JDK.
  */
 public interface FloatIterator extends PrimitiveIterator<Float, FloatConsumer> {
 	/**

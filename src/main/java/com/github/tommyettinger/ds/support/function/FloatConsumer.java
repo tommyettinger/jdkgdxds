@@ -38,7 +38,6 @@ import java.util.function.Consumer;
  * whose functional method is {@link #accept(float)}.
  *
  * @see Consumer
- * @since 1.8
  */
 @FunctionalInterface
 public interface FloatConsumer {
