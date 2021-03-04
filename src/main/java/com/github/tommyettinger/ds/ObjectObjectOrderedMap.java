@@ -327,7 +327,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 *
 	 * @param comp a Comparator that can compare two {@code K} keys, or null to use the keys' natural ordering
 	 */
-	public void sort (@Nullable Comparator<K> comp) {
+	public void sort (@Nullable Comparator<? super K> comp) {
 		keys.sort(comp);
 	}
 

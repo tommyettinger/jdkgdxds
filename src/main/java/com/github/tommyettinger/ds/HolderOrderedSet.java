@@ -275,7 +275,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 *
 	 * @param comp a Comparator that can compare two {@code T} keys, or null to use the keys' natural ordering
 	 */
-	public void sort (@Nullable Comparator<T> comp) {
+	public void sort (@Nullable Comparator<? super T> comp) {
 		items.sort(comp);
 	}
 

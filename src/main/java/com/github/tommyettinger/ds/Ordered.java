@@ -5,6 +5,7 @@ import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
@@ -78,6 +79,25 @@ public interface Ordered<T> extends Arrangeable {
 	 */
 	default T random (Random rng) {
 		return order().random(rng);
+	}
+
+	/**
+	 * Sorts this Ordered according to the order induced by the specified
+	 * {@link Comparator}.  The sort is <i>stable</i>: this method must not
+	 * reorder equal elements.
+	 * <br>
+	 * All elements in the {@link #order()} must be <i>mutually comparable</i> using the
+	 * specified comparator (that is, {@code c.compare(e1, e2)} must not throw
+	 * a {@code ClassCastException} for any elements {@code e1} and {@code e2}
+	 * in the list).
+	 * <br>
+	 * If the specified comparator is {@code null} then all elements in this
+	 * Ordered must implement the {@link Comparable} interface and the elements'
+	 * {@linkplain Comparable natural ordering} should be used.
+	 * @param comparator used to sort the T items this contains; may be null if T implements Comparable
+	 */
+	default void sort(@Nullable Comparator<? super T> comparator) {
+		order().sort(comparator);
 	}
 
 	/**

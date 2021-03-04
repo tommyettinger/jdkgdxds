@@ -243,7 +243,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 	 *
 	 * @param comp a Comparator that can compare two {@code T} keys, or null to use the keys' natural ordering
 	 */
-	public void sort (@Nullable Comparator<T> comp) {
+	public void sort (@Nullable Comparator<? super T> comp) {
 		items.sort(comp);
 	}
 
