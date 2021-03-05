@@ -3,13 +3,17 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.function.FloatConsumer;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
-import java.util.Iterator;
 import java.util.PrimitiveIterator;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
 /**
- * Created by Tommy Ettinger on 10/22/2020.
+ * Analogous to {@link java.util.Collection} but for a primitive type, this is built around
+ * {@link PrimitiveIterator} (or more typically, one of the nested interfaces here, like
+ * {@link OfInt}, is built around one of PrimitiveIterator's nested interfaces, like
+ * {@link PrimitiveIterator.OfInt}). This is not necessarily a modifiable collection. The
+ * nested interfaces define most of the actually useful operations, and you will probably
+ * never use PrimitiveCollection directly.
  */
 public interface PrimitiveCollection<T, T_CONS> {
 	int size ();
@@ -76,6 +80,21 @@ public interface PrimitiveCollection<T, T_CONS> {
 
 		@Override
 		PrimitiveIterator.OfInt iterator ();
+
+		/**
+		 * Performs the given action for each element of the {@code PrimitiveCollection.OfInt}
+		 * until all elements have been processed or the action throws an
+		 * exception.  Actions are performed in the order of iteration, if that
+		 * order is specified.  Exceptions thrown by the action are relayed to the
+		 * caller.
+		 *
+		 * @param action The action to be performed for each element
+		 */
+		default void forEach(IntConsumer action) {
+			PrimitiveIterator.OfInt it = iterator();
+			while (it.hasNext())
+				action.accept(it.nextInt());
+		}
 	}
 
 	interface OfLong extends PrimitiveCollection<Long, LongConsumer> {
@@ -126,6 +145,21 @@ public interface PrimitiveCollection<T, T_CONS> {
 
 		@Override
 		PrimitiveIterator.OfLong iterator ();
+
+		/**
+		 * Performs the given action for each element of the {@code PrimitiveCollection.OfLong}
+		 * until all elements have been processed or the action throws an
+		 * exception.  Actions are performed in the order of iteration, if that
+		 * order is specified.  Exceptions thrown by the action are relayed to the
+		 * caller.
+		 *
+		 * @param action The action to be performed for each element
+		 */
+		default void forEach(LongConsumer action) {
+			PrimitiveIterator.OfLong it = iterator();
+			while (it.hasNext())
+				action.accept(it.nextLong());
+		}
 	}
 
 	interface OfFloat extends PrimitiveCollection<Float, FloatConsumer> {
@@ -176,5 +210,20 @@ public interface PrimitiveCollection<T, T_CONS> {
 
 		@Override
 		FloatIterator iterator ();
+
+		/**
+		 * Performs the given action for each element of the {@code PrimitiveCollection.OfFloat}
+		 * until all elements have been processed or the action throws an
+		 * exception.  Actions are performed in the order of iteration, if that
+		 * order is specified.  Exceptions thrown by the action are relayed to the
+		 * caller.
+		 *
+		 * @param action The action to be performed for each element
+		 */
+		default void forEach(FloatConsumer action) {
+			FloatIterator it = iterator();
+			while (it.hasNext())
+				action.accept(it.nextFloat());
+		}
 	}
 }
