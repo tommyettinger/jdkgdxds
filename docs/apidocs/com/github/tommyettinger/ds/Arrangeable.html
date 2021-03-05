@@ -130,10 +130,10 @@ loadScripts(document, 'script');</script>
 </tr>
 <tr class="row-color" id="i3">
 <td class="col-first"><code>void</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#swap(int,int)">swap</a></span>&#8203;(int&nbsp;a,
-int&nbsp;b)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#swap(int,int)">swap</a></span>&#8203;(int&nbsp;first,
+int&nbsp;second)</code></th>
 <td class="col-last">
-<div class="block">Switches the ordering of positions <code>a</code> and <code>b</code>, without changing any items beyond that.</div>
+<div class="block">Switches the ordering of positions <code>first</code> and <code>second</code>, without changing any items beyond that.</div>
 </td>
 </tr>
 </tbody>
@@ -154,13 +154,13 @@ int&nbsp;b)</code></th>
 <li>
 <section class="detail" id="swap(int,int)">
 <h3>swap</h3>
-<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="member-name">swap</span>&#8203;(<span class="parameters">int&nbsp;a,
-int&nbsp;b)</span></div>
-<div class="block">Switches the ordering of positions <code>a</code> and <code>b</code>, without changing any items beyond that.</div>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="member-name">swap</span>&#8203;(<span class="parameters">int&nbsp;first,
+int&nbsp;second)</span></div>
+<div class="block">Switches the ordering of positions <code>first</code> and <code>second</code>, without changing any items beyond that.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>a</code> - the first position</dd>
-<dd><code>b</code> - the second position</dd>
+<dd><code>first</code> - the first position, must not be negative and must be less than <a href="#size()"><code>size()</code></a></dd>
+<dd><code>second</code> - the second position, must not be negative and must be less than <a href="#size()"><code>size()</code></a></dd>
 </dl>
 </section>
 </li>

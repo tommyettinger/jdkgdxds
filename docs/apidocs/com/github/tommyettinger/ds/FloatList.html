@@ -613,7 +613,7 @@ int&nbsp;to,
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#swap(int,int)">swap</a></span>&#8203;(int&nbsp;first,
 int&nbsp;second)</code></th>
 <td class="col-last">
-<div class="block">Switches the ordering of positions <code>a</code> and <code>b</code>, without changing any items beyond that.</div>
+<div class="block">Switches the ordering of positions <code>first</code> and <code>second</code>, without changing any items beyond that.</div>
 </td>
 </tr>
 <tr class="row-color" id="i53">
@@ -679,7 +679,7 @@ float&nbsp;value)</code></th>
 <code><a href="Ordered.OfFloat.html#selectRanked(com.github.tommyettinger.ds.support.sort.FloatComparator,int)">selectRanked</a>, <a href="Ordered.OfFloat.html#selectRankedIndex(com.github.tommyettinger.ds.support.sort.FloatComparator,int)">selectRankedIndex</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.github.tommyettinger.ds.PrimitiveCollection.OfFloat">Methods inherited from interface&nbsp;com.github.tommyettinger.ds.<a href="PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a></h3>
-<code><a href="PrimitiveCollection.OfFloat.html#addAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">addAll</a>, <a href="PrimitiveCollection.OfFloat.html#containsAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">containsAll</a>, <a href="PrimitiveCollection.OfFloat.html#removeAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">removeAll</a>, <a href="PrimitiveCollection.OfFloat.html#retainAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">retainAll</a></code></div>
+<code><a href="PrimitiveCollection.OfFloat.html#addAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">addAll</a>, <a href="PrimitiveCollection.OfFloat.html#containsAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">containsAll</a>, <a href="PrimitiveCollection.OfFloat.html#forEach(com.github.tommyettinger.ds.support.function.FloatConsumer)">forEach</a>, <a href="PrimitiveCollection.OfFloat.html#removeAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">removeAll</a>, <a href="PrimitiveCollection.OfFloat.html#removeIf(com.github.tommyettinger.ds.support.function.FloatPredicate)">removeIf</a>, <a href="PrimitiveCollection.OfFloat.html#retainAll(com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">retainAll</a></code></div>
 </section>
 </li>
 </ul>
@@ -1059,15 +1059,15 @@ int&nbsp;count)</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">swap</span>&#8203;(<span class="parameters">int&nbsp;first,
 int&nbsp;second)</span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Ordered.OfFloat.html#swap(int,int)">Ordered.OfFloat</a></code></span></div>
-<div class="block">Switches the ordering of positions <code>a</code> and <code>b</code>, without changing any items beyond that.</div>
+<div class="block">Switches the ordering of positions <code>first</code> and <code>second</code>, without changing any items beyond that.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="Arrangeable.html#swap(int,int)">swap</a></code>&nbsp;in interface&nbsp;<code><a href="Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a></code></dd>
 <dt>Specified by:</dt>
 <dd><code><a href="Ordered.OfFloat.html#swap(int,int)">swap</a></code>&nbsp;in interface&nbsp;<code><a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a></code></dd>
 <dt>Parameters:</dt>
-<dd><code>first</code> - the first position</dd>
-<dd><code>second</code> - the second position</dd>
+<dd><code>first</code> - the first position, must not be negative and must be less than <a href="Arrangeable.html#size()"><code>Arrangeable.size()</code></a></dd>
+<dd><code>second</code> - the second position, must not be negative and must be less than <a href="Arrangeable.html#size()"><code>Arrangeable.size()</code></a></dd>
 </dl>
 </section>
 </li>
@@ -1380,6 +1380,8 @@ int&nbsp;endIndex)</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float[]</span>&nbsp;<span class="member-name">toArray</span>()</div>
 <div class="block">Allocates a new float array with <code>size</code> elements and fills it with the items in this.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="PrimitiveCollection.OfFloat.html#toArray()">toArray</a></code>&nbsp;in interface&nbsp;<code><a href="PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a></code></dd>
 <dt>Returns:</dt>
 <dd>a new float array with the same contents as this</dd>
 </dl>
@@ -1393,6 +1395,8 @@ int&nbsp;endIndex)</span></div>
  into <code>array</code> and returns it; otherwise, it allocates a new float array that can fit all
  of the items in this, and proceeds to copy into that and return that.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="PrimitiveCollection.OfFloat.html#toArray(float%5B%5D)">toArray</a></code>&nbsp;in interface&nbsp;<code><a href="PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>array</code> - a float array that will be modified if it can fit <a href="#size()"><code>size()</code></a> items</dd>
 <dt>Returns:</dt>

@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":6,"i1":18,"i2":6,"i3":18,"i4":6,"i5":6,"i6":18,"i7":18};
+<script type="text/javascript">var data = {"i0":6,"i1":18,"i2":6,"i3":18,"i4":18,"i5":6,"i6":6,"i7":18,"i8":18,"i9":18,"i10":18,"i11":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -140,24 +140,58 @@ extends <a href="PrimitiveCollection.html" title="interface in com.github.tommye
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i4">
+<td class="col-first"><code>default void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#forEach(java.util.function.LongConsumer)">forEach</a></span>&#8203;(java.util.function.LongConsumer&nbsp;action)</code></th>
+<td class="col-last">
+<div class="block">Performs the given action for each element of the <code>PrimitiveCollection.OfLong</code>
+ until all elements have been processed or the action throws an
+ exception.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
 <td class="col-first"><code>java.util.PrimitiveIterator.OfLong</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#iterator()">iterator</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#remove(long)">remove</a></span>&#8203;(long&nbsp;item)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>default boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#removeAll(com.github.tommyettinger.ds.PrimitiveCollection.OfLong)">removeAll</a></span>&#8203;(<a href="PrimitiveCollection.OfLong.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfLong</a>&nbsp;other)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
+<td class="col-first"><code>default boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#removeIf(java.util.function.LongPredicate)">removeIf</a></span>&#8203;(java.util.function.LongPredicate&nbsp;filter)</code></th>
+<td class="col-last">
+<div class="block">Removes all of the elements of this collection that satisfy the given
+ predicate.</div>
+</td>
+</tr>
+<tr class="row-color" id="i9">
 <td class="col-first"><code>default boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#retainAll(com.github.tommyettinger.ds.PrimitiveCollection.OfLong)">retainAll</a></span>&#8203;(<a href="PrimitiveCollection.OfLong.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfLong</a>&nbsp;other)</code></th>
 <td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i10">
+<td class="col-first"><code>default long[]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toArray()">toArray</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Allocates a new long array with exactly <a href="PrimitiveCollection.html#size()"><code>PrimitiveCollection.size()</code></a> items, fills it with the
+ contents of this PrimitiveCollection, and returns it.</div>
+</td>
+</tr>
+<tr class="row-color" id="i11">
+<td class="col-first"><code>default long[]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toArray(long%5B%5D)">toArray</a></span>&#8203;(long[]&nbsp;receiver)</code></th>
+<td class="col-last">
+<div class="block">Fills the given array with the entire contents of this PrimitiveCollection, up to
+ <a href="PrimitiveCollection.html#size()"><code>PrimitiveCollection.size()</code></a> items, or if receiver is not large enough, then this allocates a new
+ long array with <a href="PrimitiveCollection.html#size()"><code>PrimitiveCollection.size()</code></a> items and returns that.</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -214,6 +248,33 @@ extends <a href="PrimitiveCollection.html" title="interface in com.github.tommye
 </section>
 </li>
 <li>
+<section class="detail" id="removeIf(java.util.function.LongPredicate)">
+<h3>removeIf</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">removeIf</span>&#8203;(<span class="parameters">java.util.function.LongPredicate&nbsp;filter)</span></div>
+<div class="block">Removes all of the elements of this collection that satisfy the given
+ predicate.  Errors or runtime exceptions thrown during iteration or by
+ the predicate are relayed to the caller.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>filter</code> - a predicate which returns <code>true</code> for elements to be
+        removed</dd>
+<dt>Returns:</dt>
+<dd><code>true</code> if any elements were removed</dd>
+<dt>Throws:</dt>
+<dd><code>java.lang.UnsupportedOperationException</code> - if elements cannot be removed
+         from this collection.  Implementations may throw this exception if a
+         matching element cannot be removed or if, in general, removal is not
+         supported.</dd>
+<dt>"Implementation Requirements"</dt>
+<dd>The default implementation traverses all elements of the collection using
+ its <a href="#iterator()"><code>iterator()</code></a>.  Each matching element is removed using
+ <code>Iterator.remove()</code>.  If the collection's iterator does not
+ support removal then an <code>UnsupportedOperationException</code> will be
+ thrown on the first matching element.</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="retainAll(com.github.tommyettinger.ds.PrimitiveCollection.OfLong)">
 <h3>retainAll</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">retainAll</span>&#8203;(<span class="parameters"><a href="PrimitiveCollection.OfLong.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfLong</a>&nbsp;other)</span></div>
@@ -226,6 +287,48 @@ extends <a href="PrimitiveCollection.html" title="interface in com.github.tommye
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PrimitiveCollection.html#iterator()">iterator</a></code>&nbsp;in interface&nbsp;<code><a href="PrimitiveCollection.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection</a>&lt;java.lang.Long,&#8203;java.util.function.LongConsumer&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toArray()">
+<h3>toArray</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">long[]</span>&nbsp;<span class="member-name">toArray</span>()</div>
+<div class="block">Allocates a new long array with exactly <a href="PrimitiveCollection.html#size()"><code>PrimitiveCollection.size()</code></a> items, fills it with the
+ contents of this PrimitiveCollection, and returns it.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a new long array</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toArray(long[])">
+<h3>toArray</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">long[]</span>&nbsp;<span class="member-name">toArray</span>&#8203;(<span class="parameters">long[]&nbsp;receiver)</span></div>
+<div class="block">Fills the given array with the entire contents of this PrimitiveCollection, up to
+ <a href="PrimitiveCollection.html#size()"><code>PrimitiveCollection.size()</code></a> items, or if receiver is not large enough, then this allocates a new
+ long array with <a href="PrimitiveCollection.html#size()"><code>PrimitiveCollection.size()</code></a> items and returns that.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>receiver</code> - a long array that will be filled with the items from this, if possible</dd>
+<dt>Returns:</dt>
+<dd><code>receiver</code>, if it was modified, or a new long array otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="forEach(java.util.function.LongConsumer)">
+<h3>forEach</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">forEach</span>&#8203;(<span class="parameters">java.util.function.LongConsumer&nbsp;action)</span></div>
+<div class="block">Performs the given action for each element of the <code>PrimitiveCollection.OfLong</code>
+ until all elements have been processed or the action throws an
+ exception.  Actions are performed in the order of iteration, if that
+ order is specified.  Exceptions thrown by the action are relayed to the
+ caller.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>action</code> - The action to be performed for each element</dd>
 </dl>
 </section>
 </li>

@@ -87,11 +87,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <pre>public interface <span class="type-name-label">FloatIterator</span>
 extends java.util.PrimitiveIterator&lt;java.lang.Float,&#8203;<a href="../function/FloatConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">FloatConsumer</a>&gt;</pre>
-<div class="block">An Iterator specialized for <code>float</code> values.</div>
-<dl class="notes">
-<dt>Since:</dt>
-<dd>1.8</dd>
-</dl>
+<div class="block">An Iterator specialized for <code>float</code> values.
+ This is a <code>PrimitiveIterator</code>, like the existing <code>PrimitiveIterator.OfInt</code>
+ and <code>PrimitiveIterator.OfLong</code> interfaces, but it can't be a nested interface like
+ those because it is defined outside of the JDK.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

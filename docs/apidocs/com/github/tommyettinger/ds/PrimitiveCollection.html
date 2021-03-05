@@ -86,7 +86,12 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <pre>public interface <span class="type-name-label">PrimitiveCollection&lt;T,&#8203;T_CONS&gt;</span></pre>
-<div class="block">Created by Tommy Ettinger on 10/22/2020.</div>
+<div class="block">Analogous to <code>Collection</code> but for a primitive type, this is built around
+ <code>PrimitiveIterator</code> (or more typically, one of the nested interfaces here, like
+ <a href="PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds"><code>PrimitiveCollection.OfInt</code></a>, is built around one of PrimitiveIterator's nested interfaces, like
+ <code>PrimitiveIterator.OfInt</code>). This is not necessarily a modifiable collection. The
+ nested interfaces define most of the actually useful operations, and you will probably
+ never use PrimitiveCollection directly.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

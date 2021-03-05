@@ -55,9 +55,11 @@ loadScripts(document, 'script');</script>
 <h1 title="Package" class="title">Package&nbsp;com.github.tommyettinger.ds.support.function</h1>
 </div>
 <section class="package-description" id="package.description">
-<div class="block">Fills in code missing from the java.util.function package; this package is separate in
- an attempt to keep a clean break between the rest of the library and code based on OpenJDK's GPL
- v2 (with classpath exception)-licensed code.</div>
+<div class="block">Fills in code missing from the java.util.function package, mostly
+ with primitive-specialized functions. This package is separate in
+ an attempt to keep a clean break between the rest of the library
+ and code based on OpenJDK's GPL v2 (with classpath
+ exception)-licensed code.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -73,10 +75,107 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="FloatBinaryOperator.html" title="interface in com.github.tommyettinger.ds.support.function">FloatBinaryOperator</a></th>
+<td class="col-last">
+<div class="block">Represents an operation upon two <code>float</code>-valued operands and producing a
+ <code>float</code>-valued result.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="FloatConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">FloatConsumer</a></th>
 <td class="col-last">
 <div class="block">Represents an operation that accepts a single <code>float</code>-valued argument and
  returns no result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="FloatFloatConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">FloatFloatConsumer</a></th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts a <code>float</code>-valued and a
+ <code>float</code>-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="FloatFloatToFloatBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">FloatFloatToFloatBiFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>float</code> argument and a <code>float</code>
+ argument, and produces a float-valued result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="FloatFunction.html" title="interface in com.github.tommyettinger.ds.support.function">FloatFunction</a>&lt;R&gt;</th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a float-valued argument and produces a
+ result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="FloatIntConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">FloatIntConsumer</a></th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts a <code>float</code>-valued and an
+ <code>int</code>-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="FloatIntToIntBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">FloatIntToIntBiFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>float</code> argument and a <code>int</code>
+ argument, and produces a int-valued result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="FloatLongConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">FloatLongConsumer</a></th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts a <code>float</code>-valued and a
+ <code>long</code>-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="FloatLongToLongBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">FloatLongToLongBiFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>float</code> argument and a <code>long</code>
+ argument, and produces a long-valued result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="FloatObjBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">FloatObjBiFunction</a>&lt;U,&#8203;R&gt;</th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>float</code> argument and an Object
+ argument, and produces an Object result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="FloatObjConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">FloatObjConsumer</a>&lt;U&gt;</th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts a <code>float</code>-valued and an
+ object-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="FloatPredicate.html" title="interface in com.github.tommyettinger.ds.support.function">FloatPredicate</a></th>
+<td class="col-last">
+<div class="block">Represents a predicate (boolean-valued function) of one <code>float</code>-valued
+ argument.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="FloatSupplier.html" title="interface in com.github.tommyettinger.ds.support.function">FloatSupplier</a></th>
+<td class="col-last">
+<div class="block">Represents a supplier of <code>float</code>-valued results.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="FloatToIntFunction.html" title="interface in com.github.tommyettinger.ds.support.function">FloatToIntFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a float-valued argument and produces an
+ int-valued result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="FloatToLongFunction.html" title="interface in com.github.tommyettinger.ds.support.function">FloatToLongFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a float-valued argument and produces a
+ long-valued result.</div>
 </td>
 </tr>
 <tr class="row-color">
@@ -84,6 +183,173 @@ loadScripts(document, 'script');</script>
 <td class="col-last">
 <div class="block">Represents an operation on a single <code>float</code>-valued operand that produces
  a <code>float</code>-valued result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="IntFloatConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">IntFloatConsumer</a></th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts an <code>int</code>-valued and a
+ <code>float</code>-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="IntFloatToFloatBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">IntFloatToFloatBiFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>int</code> argument and a <code>float</code>
+ argument, and produces a float-valued result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="IntIntConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">IntIntConsumer</a></th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts an <code>int</code>-valued and an
+ <code>int</code>-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="IntIntToIntBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">IntIntToIntBiFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>int</code> argument and a <code>int</code>
+ argument, and produces a int-valued result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="IntLongConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">IntLongConsumer</a></th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts an <code>int</code>-valued and a
+ <code>long</code>-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="IntLongToLongBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">IntLongToLongBiFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>int</code> argument and a <code>long</code>
+ argument, and produces a long-valued result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="IntObjBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">IntObjBiFunction</a>&lt;U,&#8203;R&gt;</th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>int</code> argument and an Object
+ argument, and produces an Object result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="IntObjConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">IntObjConsumer</a>&lt;U&gt;</th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts a <code>int</code>-valued and an
+ object-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="IntToFloatFunction.html" title="interface in com.github.tommyettinger.ds.support.function">IntToFloatFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts an int-valued argument and produces a
+ float-valued result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="LongFloatConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">LongFloatConsumer</a></th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts a <code>long</code>-valued and a
+ <code>float</code>-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="LongFloatToFloatBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">LongFloatToFloatBiFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>long</code> argument and a <code>float</code>
+ argument, and produces a float-valued result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="LongIntConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">LongIntConsumer</a></th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts a <code>long</code>-valued and an
+ <code>int</code>-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="LongIntToIntBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">LongIntToIntBiFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>long</code> argument and a <code>int</code>
+ argument, and produces a int-valued result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="LongLongConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">LongLongConsumer</a></th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts a <code>long</code>-valued and a
+ <code>long</code>-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="LongLongToLongBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">LongLongToLongBiFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>long</code> argument and a <code>long</code>
+ argument, and produces a long-valued result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="LongObjBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">LongObjBiFunction</a>&lt;U,&#8203;R&gt;</th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a <code>long</code> argument and an Object
+ argument, and produces an Object result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="LongObjConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">LongObjConsumer</a>&lt;U&gt;</th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts a <code>long</code>-valued and an
+ object-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="LongToFloatFunction.html" title="interface in com.github.tommyettinger.ds.support.function">LongToFloatFunction</a></th>
+<td class="col-last">
+<div class="block">Represents a function that accepts a long-valued argument and produces a
+ float-valued result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="ObjFloatConsumer.html" title="interface in com.github.tommyettinger.ds.support.function">ObjFloatConsumer</a>&lt;T&gt;</th>
+<td class="col-last">
+<div class="block">Represents an operation that accepts an object-valued and a
+ <code>float</code>-valued argument, and returns no result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="ObjFloatToFloatBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">ObjFloatToFloatBiFunction</a>&lt;T&gt;</th>
+<td class="col-last">
+<div class="block">Represents a function that accepts an Object argument and a <code>float</code>
+ argument, and produces a float-valued result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="ObjIntToIntBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">ObjIntToIntBiFunction</a>&lt;T&gt;</th>
+<td class="col-last">
+<div class="block">Represents a function that accepts an Object argument and a <code>int</code>
+ argument, and produces a int-valued result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="ObjLongToLongBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">ObjLongToLongBiFunction</a>&lt;T&gt;</th>
+<td class="col-last">
+<div class="block">Represents a function that accepts an Object argument and a <code>long</code>
+ argument, and produces a long-valued result.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="ToFloatBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">ToFloatBiFunction</a>&lt;T,&#8203;U&gt;</th>
+<td class="col-last">
+<div class="block">Represents a function that accepts two arguments and produces a float-valued
+ result.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="ToFloatFunction.html" title="interface in com.github.tommyettinger.ds.support.function">ToFloatFunction</a>&lt;T&gt;</th>
+<td class="col-last">
+<div class="block">Represents a function that produces a float-valued result.</div>
 </td>
 </tr>
 </tbody>

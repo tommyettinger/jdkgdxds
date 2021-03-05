@@ -1,11 +1,17 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.function.FloatConsumer;
+import com.github.tommyettinger.ds.support.function.FloatPredicate;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
+import java.util.Iterator;
+import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.function.IntConsumer;
+import java.util.function.IntPredicate;
 import java.util.function.LongConsumer;
+import java.util.function.LongPredicate;
+import java.util.function.Predicate;
 
 /**
  * Analogous to {@link java.util.Collection} but for a primitive type, this is built around
@@ -64,6 +70,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 				has &= contains(it.nextInt());
 			}
 			return has;
+		}
+
+		/**
+		 * Removes all of the elements of this collection that satisfy the given
+		 * predicate.  Errors or runtime exceptions thrown during iteration or by
+		 * the predicate are relayed to the caller.
+		 *
+		 * @implSpec
+		 * The default implementation traverses all elements of the collection using
+		 * its {@link #iterator()}.  Each matching element is removed using
+		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * support removal then an {@code UnsupportedOperationException} will be
+		 * thrown on the first matching element.
+		 *
+		 * @param filter a predicate which returns {@code true} for elements to be
+		 *        removed
+		 * @return {@code true} if any elements were removed
+		 * @throws UnsupportedOperationException if elements cannot be removed
+		 *         from this collection.  Implementations may throw this exception if a
+		 *         matching element cannot be removed or if, in general, removal is not
+		 *         supported.
+		 */
+		default boolean removeIf(IntPredicate filter) {
+			boolean removed = false;
+			final PrimitiveIterator.OfInt each = iterator();
+			while (each.hasNext()) {
+				if (filter.test(each.nextInt())) {
+					each.remove();
+					removed = true;
+				}
+			}
+			return removed;
 		}
 
 		default boolean retainAll (OfInt other) {
@@ -164,6 +202,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return has;
 		}
 
+		/**
+		 * Removes all of the elements of this collection that satisfy the given
+		 * predicate.  Errors or runtime exceptions thrown during iteration or by
+		 * the predicate are relayed to the caller.
+		 *
+		 * @implSpec
+		 * The default implementation traverses all elements of the collection using
+		 * its {@link #iterator()}.  Each matching element is removed using
+		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * support removal then an {@code UnsupportedOperationException} will be
+		 * thrown on the first matching element.
+		 *
+		 * @param filter a predicate which returns {@code true} for elements to be
+		 *        removed
+		 * @return {@code true} if any elements were removed
+		 * @throws UnsupportedOperationException if elements cannot be removed
+		 *         from this collection.  Implementations may throw this exception if a
+		 *         matching element cannot be removed or if, in general, removal is not
+		 *         supported.
+		 */
+		default boolean removeIf(LongPredicate filter) {
+			boolean removed = false;
+			final PrimitiveIterator.OfLong each = iterator();
+			while (each.hasNext()) {
+				if (filter.test(each.nextLong())) {
+					each.remove();
+					removed = true;
+				}
+			}
+			return removed;
+		}
+
 		default boolean retainAll (OfLong other) {
 			boolean changed = false;
 			PrimitiveIterator.OfLong it = iterator();
@@ -259,6 +329,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 				has &= contains(it.nextFloat());
 			}
 			return has;
+		}
+
+		/**
+		 * Removes all of the elements of this collection that satisfy the given
+		 * predicate.  Errors or runtime exceptions thrown during iteration or by
+		 * the predicate are relayed to the caller.
+		 *
+		 * @implSpec
+		 * The default implementation traverses all elements of the collection using
+		 * its {@link #iterator()}.  Each matching element is removed using
+		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * support removal then an {@code UnsupportedOperationException} will be
+		 * thrown on the first matching element.
+		 *
+		 * @param filter a predicate which returns {@code true} for elements to be
+		 *        removed
+		 * @return {@code true} if any elements were removed
+		 * @throws UnsupportedOperationException if elements cannot be removed
+		 *         from this collection.  Implementations may throw this exception if a
+		 *         matching element cannot be removed or if, in general, removal is not
+		 *         supported.
+		 */
+		default boolean removeIf(FloatPredicate filter) {
+			boolean removed = false;
+			final FloatIterator each = iterator();
+			while (each.hasNext()) {
+				if (filter.test(each.nextFloat())) {
+					each.remove();
+					removed = true;
+				}
+			}
+			return removed;
 		}
 
 		default boolean retainAll (OfFloat other) {
