@@ -82,6 +82,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 		PrimitiveIterator.OfInt iterator ();
 
 		/**
+		 * Allocates a new int array with exactly {@link #size()} items, fills it with the
+		 * contents of this PrimitiveCollection, and returns it.
+		 * @return a new int array
+		 */
+		default int[] toArray () {
+			final int sz = size();
+			int[] receiver = new int[sz];
+			PrimitiveIterator.OfInt it = iterator();
+			int i = 0;
+			while (it.hasNext())
+				receiver[i++] = it.nextInt();
+			return receiver;
+		}
+		/**
+		 * Fills the given array with the entire contents of this PrimitiveCollection, up to
+		 * {@link #size()} items, or if receiver is not large enough, then this allocates a new
+		 * int array with {@link #size()} items and returns that.
+		 * @param receiver an int array that will be filled with the items from this, if possible
+		 * @return {@code receiver}, if it was modified, or a new int array otherwise
+		 */
+		default int[] toArray (int[] receiver){
+			final int sz = size();
+			if(receiver.length < sz)
+				receiver = new int[sz];
+			PrimitiveIterator.OfInt it = iterator();
+			int i = 0;
+			while (it.hasNext())
+				receiver[i++] = it.nextInt();
+			return receiver;
+		}
+
+		/**
 		 * Performs the given action for each element of the {@code PrimitiveCollection.OfInt}
 		 * until all elements have been processed or the action throws an
 		 * exception.  Actions are performed in the order of iteration, if that
@@ -95,6 +127,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 			while (it.hasNext())
 				action.accept(it.nextInt());
 		}
+
 	}
 
 	interface OfLong extends PrimitiveCollection<Long, LongConsumer> {
@@ -145,6 +178,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 
 		@Override
 		PrimitiveIterator.OfLong iterator ();
+
+		/**
+		 * Allocates a new long array with exactly {@link #size()} items, fills it with the
+		 * contents of this PrimitiveCollection, and returns it.
+		 * @return a new long array
+		 */
+		default long[] toArray () {
+			final int sz = size();
+			long[] receiver = new long[sz];
+			PrimitiveIterator.OfLong it = iterator();
+			int i = 0;
+			while (it.hasNext())
+				receiver[i++] = it.nextLong();
+			return receiver;
+		}
+		/**
+		 * Fills the given array with the entire contents of this PrimitiveCollection, up to
+		 * {@link #size()} items, or if receiver is not large enough, then this allocates a new
+		 * long array with {@link #size()} items and returns that.
+		 * @param receiver a long array that will be filled with the items from this, if possible
+		 * @return {@code receiver}, if it was modified, or a new long array otherwise
+		 */
+		default long[] toArray (long[] receiver){
+			final int sz = size();
+			if(receiver.length < sz)
+				receiver = new long[sz];
+			PrimitiveIterator.OfLong it = iterator();
+			int i = 0;
+			while (it.hasNext())
+				receiver[i++] = it.nextLong();
+			return receiver;
+		}
 
 		/**
 		 * Performs the given action for each element of the {@code PrimitiveCollection.OfLong}
@@ -210,6 +275,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 
 		@Override
 		FloatIterator iterator ();
+
+		/**
+		 * Allocates a new float array with exactly {@link #size()} items, fills it with the
+		 * contents of this PrimitiveCollection, and returns it.
+		 * @return a new float array
+		 */
+		default float[] toArray () {
+			final int sz = size();
+			float[] receiver = new float[sz];
+			FloatIterator it = iterator();
+			int i = 0;
+			while (it.hasNext())
+				receiver[i++] = it.nextFloat();
+			return receiver;
+		}
+		/**
+		 * Fills the given array with the entire contents of this PrimitiveCollection, up to
+		 * {@link #size()} items, or if receiver is not large enough, then this allocates a new
+		 * float array with {@link #size()} items and returns that.
+		 * @param receiver a float array that will be filled with the items from this, if possible
+		 * @return {@code receiver}, if it was modified, or a new float array otherwise
+		 */
+		default float[] toArray (float[] receiver){
+			final int sz = size();
+			if(receiver.length < sz)
+				receiver = new float[sz];
+			FloatIterator it = iterator();
+			int i = 0;
+			while (it.hasNext())
+				receiver[i++] = it.nextFloat();
+			return receiver;
+		}
 
 		/**
 		 * Performs the given action for each element of the {@code PrimitiveCollection.OfFloat}
