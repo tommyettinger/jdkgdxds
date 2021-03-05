@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,28 +24,27 @@
  */
 package com.github.tommyettinger.ds.support.function;
 
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 /**
- * Represents an operation that accepts an {@code int}-valued and a
- * {@code float}-valued argument, and returns no result.  This is the
- * {@code (int, float)} specialization of {@link BiConsumer}.
- * Unlike most other functional interfaces, {@code IntFloatConsumer} is
- * expected to operate via side-effects.
+ * Represents a function that accepts a {@code float} argument and a {@code long}
+ * argument, and produces a long-valued result.  This is the {@code (float, long)},
+ * {@code long}-producing primitive specialization for {@link BiFunction}.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #accept(int, float)}.
+ * whose functional method is {@link #applyAsLong(float, long)}.
  *
- * @see BiConsumer
+ * @see BiFunction
  */
 @FunctionalInterface
-public interface IntFloatConsumer {
+public interface FloatLongToLongBiFunction {
 
     /**
-     * Performs this operation on the given arguments.
+     * Applies this function to the given arguments.
      *
-     * @param first the first input argument
-     * @param second the second input argument
+     * @param first the first function argument
+     * @param second the second function argument
+     * @return the function result
      */
-    void accept(int first, float second);
+    long applyAsLong(float first, long second);
 }
