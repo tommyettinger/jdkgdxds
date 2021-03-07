@@ -635,4 +635,42 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt, Seri
 			return iter;
 		}
 	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number key to a primitive int, regardless of which Number type was used.
+	 * @param key0 the first and only key; will be converted to a primitive int
+	 * @param value0 the first and only value; will be converted to a primitive long
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static IntLongOrderedMap with(Number key0, Number value0) {
+		IntLongOrderedMap map = new IntLongOrderedMap(1);
+		map.put(key0.intValue(), value0.longValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link #IntLongOrderedMap(int[], long[])}, which takes all keys and then all values.
+	 * This needs all keys to be some kind of (boxed) Number, and converts them to primitive
+	 * {@code int}s. It also needs all values to be a (boxed) Number, and converts them to
+	 * primitive {@code long}s. Any keys or values that aren't {@code Number}s have that
+	 * entry skipped.
+	 * @param key0 the first key; will be converted to a primitive int
+	 * @param value0 the first value; will be converted to a primitive long
+	 * @param rest an array or varargs of Number elements
+	 * @return a new map containing the given keys and values
+	 */
+	public static IntLongOrderedMap with(Number key0, Number value0, Number... rest){
+		IntLongOrderedMap map = new IntLongOrderedMap(1 + (rest.length >>> 1));
+		map.put(key0.intValue(), value0.longValue());
+		for (int i = 1; i < rest.length; i += 2) {
+			map.put(rest[i - 1].intValue(), rest[i].longValue());
+		}
+		return map;
+	}
 }

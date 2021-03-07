@@ -1143,4 +1143,42 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 		}
 		return curValue;
 	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number key to a primitive int, regardless of which Number type was used.
+	 * @param key0 the first and only key; will be converted to a primitive int
+	 * @param value0 the first and only value; will be converted to a primitive float
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static IntFloatMap with(Number key0, Number value0) {
+		IntFloatMap map = new IntFloatMap(1);
+		map.put(key0.intValue(), value0.floatValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link #IntFloatMap(int[], float[])}, which takes all keys and then all values.
+	 * This needs all keys to be some kind of (boxed) Number, and converts them to primitive
+	 * {@code int}s. It also needs all values to be a (boxed) Number, and converts them to
+	 * primitive {@code float}s. Any keys or values that aren't {@code Number}s have that
+	 * entry skipped.
+	 * @param key0 the first key; will be converted to a primitive int
+	 * @param value0 the first value; will be converted to a primitive float
+	 * @param rest an array or varargs of Number elements
+	 * @return a new map containing the given keys and values
+	 */
+	public static IntFloatMap with(Number key0, Number value0, Number... rest){
+		IntFloatMap map = new IntFloatMap(1 + (rest.length >>> 1));
+		map.put(key0.intValue(), value0.floatValue());
+		for (int i = 1; i < rest.length; i += 2) {
+			map.put(rest[i - 1].intValue(), rest[i].floatValue());
+		}
+		return map;
+	}
 }
