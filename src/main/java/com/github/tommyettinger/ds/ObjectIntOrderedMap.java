@@ -615,4 +615,48 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 			return iter;
 		}
 	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number value to a primitive int, regardless of which Number type was used.
+	 * @param key0 the first and only key
+	 * @param value0 the first and only value; will be converted to primitive int
+	 * @param <K> the type of key0
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static <K> ObjectIntOrderedMap<K> with(K key0, Number value0) {
+		ObjectIntOrderedMap<K> map = new ObjectIntOrderedMap<>(1);
+		map.put(key0, value0.intValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link #ObjectIntOrderedMap(Object[], int[])}, which takes all keys and then all values.
+	 * This needs all keys to have the same type, because it gets a generic type from the
+	 * first key parameter. All values must be some type of boxed Number, such as {@link Integer}
+	 * or {@link Double}, and will be converted to primitive {@code int}s. Any keys that don't
+	 * have K as their type or values that aren't {@code Number}s have that entry skipped.
+	 * @param key0 the first key; will be used to determine the type of all keys
+	 * @param value0 the first value; will be converted to primitive int
+	 * @param rest an array or varargs of alternating K, Number, K, Number... elements
+	 * @param <K> the type of keys, inferred from key0
+	 * @return a new map containing the given keys and values
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K> ObjectIntOrderedMap<K> with(K key0, Number value0, Object... rest){
+		ObjectIntOrderedMap<K> map = new ObjectIntOrderedMap<>(1 + (rest.length >>> 1));
+		map.put(key0, value0.intValue());
+		for (int i = 1; i < rest.length; i += 2) {
+			try {
+				map.put((K)rest[i - 1], ((Number)rest[i]).intValue());
+			}catch (ClassCastException ignored){
+			}
+		}
+		return map;
+	}
 }
