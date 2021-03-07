@@ -1095,4 +1095,78 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		}
 		return curValue;
 	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number key to a primitive long, regardless of which Number type was used.
+	 * @param key0 the first and only key; will be converted to a primitive long
+	 * @param value0 the first and only value; will be converted to a primitive long
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static LongLongMap with(Number key0, Number value0) {
+		LongLongMap map = new LongLongMap(1);
+		map.put(key0.longValue(), value0.longValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link #LongLongMap(long[], long[])}, which takes all keys and then all values.
+	 * This needs all keys to be some kind of (boxed) Number, and converts them to primitive
+	 * {@code long}s. It also needs all values to be a (boxed) Number, and converts them to
+	 * primitive {@code long}s. Any keys or values that aren't {@code Number}s have that
+	 * entry skipped.
+	 * @param key0 the first key; will be converted to a primitive long
+	 * @param value0 the first value; will be converted to a primitive long
+	 * @param rest an array or varargs of Number elements
+	 * @return a new map containing the given keys and values
+	 */
+	public static LongLongMap with(Number key0, Number value0, Number... rest){
+		LongLongMap map = new LongLongMap(1 + (rest.length >>> 1));
+		map.put(key0.longValue(), value0.longValue());
+		for (int i = 1; i < rest.length; i += 2) {
+			map.put(rest[i - 1].longValue(), rest[i].longValue());
+		}
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. This variation requires both the key
+	 * and the value to be primitive {@code long}s.
+	 * @param key0 the first and only key; must not be boxed
+	 * @param value0 the first and only value; must not be boxed
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static LongLongMap with(long key0, long value0) {
+		LongLongMap map = new LongLongMap(1);
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link #LongLongMap(long[], long[])}, which takes all keys and then all values.
+	 * This needs all keys and all values to be primitive {@code long}s; if any are boxed,
+	 * then you'll actually be calling {@link #with(Number, Number, Number...)}.
+	 * @param key0 the first key; must not be boxed
+	 * @param value0 the first value; must not be boxed
+	 * @param rest an array or varargs of primitive long elements
+	 * @return a new map containing the given keys and values
+	 */
+	public static LongLongMap with(long key0, long value0, long... rest){
+		LongLongMap map = new LongLongMap(1 + (rest.length >>> 1));
+		map.put(key0, value0);
+		for (int i = 1; i < rest.length; i += 2) {
+			map.put(rest[i - 1], rest[i]);
+		}
+		return map;
+	}
 }

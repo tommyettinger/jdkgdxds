@@ -659,7 +659,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 		map.put(key0.longValue(), value0);
 		return map;
 	}
-	
+
 	/**
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
