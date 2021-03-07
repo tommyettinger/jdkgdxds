@@ -15,8 +15,8 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":9,"i23":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -252,7 +252,7 @@ java.util.Collection&lt;? extends <a href="LongObjectOrderedMap.html" title="typ
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div class="member-summary" id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -414,6 +414,23 @@ boolean&nbsp;braces)</code></th>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#values()">values</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns a Collection for the values in the map.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i22">
+<td class="col-first"><code>static &lt;V&gt;&nbsp;<a href="LongObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">LongObjectOrderedMap</a>&lt;V&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#with(java.lang.Number,V)">with</a></span>&#8203;(java.lang.Number&nbsp;key0,
+V&nbsp;value0)</code></th>
+<td class="col-last">
+<div class="block">Constructs a single-entry map given one key and one value.</div>
+</td>
+</tr>
+<tr class="row-color" id="i23">
+<td class="col-first"><code>static &lt;V&gt;&nbsp;<a href="LongObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">LongObjectOrderedMap</a>&lt;V&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#with(java.lang.Number,V,java.lang.Object...)">with</a></span>&#8203;(java.lang.Number&nbsp;key0,
+V&nbsp;value0,
+java.lang.Object...&nbsp;rest)</code></th>
+<td class="col-last">
+<div class="block">Constructs a map given alternating keys and values.</div>
 </td>
 </tr>
 </tbody>
@@ -864,6 +881,52 @@ boolean&nbsp;braces)</span></div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="LongObjectMap.html#toString(java.lang.String,boolean)">toString</a></code>&nbsp;in class&nbsp;<code><a href="LongObjectMap.html" title="class in com.github.tommyettinger.ds">LongObjectMap</a>&lt;<a href="LongObjectOrderedMap.html" title="type parameter in LongObjectOrderedMap">V</a>&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="with(java.lang.Number,V)">
+<h3 id="with(java.lang.Number,java.lang.Object)">with</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;V&gt;</span>&nbsp;<span class="return-type"><a href="LongObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">LongObjectOrderedMap</a>&lt;V&gt;</span>&nbsp;<span class="member-name">with</span>&#8203;(<span class="parameters">java.lang.Number&nbsp;key0,
+V&nbsp;value0)</span></div>
+<div class="block">Constructs a single-entry map given one key and one value.
+ This is mostly useful as an optimization for <a href="#with(java.lang.Number,V,java.lang.Object...)"><code>with(Number, Object, Object...)</code></a>
+ when there's no "rest" of the keys or values. Like the more-argument with(), this will
+ convert its Number key to a primitive long, regardless of which Number type was used.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>V</code> - the type of value0</dd>
+<dt>Parameters:</dt>
+<dd><code>key0</code> - the first and only key; will be converted to a primitive long</dd>
+<dd><code>value0</code> - the first and only value</dd>
+<dt>Returns:</dt>
+<dd>a new map containing just the entry mapping key0 to value0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="with(java.lang.Number,V,java.lang.Object...)">
+<h3 id="with(java.lang.Number,java.lang.Object,java.lang.Object[])">with</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;V&gt;</span>&nbsp;<span class="return-type"><a href="LongObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">LongObjectOrderedMap</a>&lt;V&gt;</span>&nbsp;<span class="member-name">with</span>&#8203;(<span class="parameters">java.lang.Number&nbsp;key0,
+V&nbsp;value0,
+java.lang.Object...&nbsp;rest)</span></div>
+<div class="block">Constructs a map given alternating keys and values.
+ This can be useful in some code-generation scenarios, or when you want to make a
+ map conveniently by-hand and have it populated at the start. You can also use
+ <a href="#%3Cinit%3E(long%5B%5D,V%5B%5D)"><code>LongObjectOrderedMap(long[], Object[])</code></a>, which takes all keys and then all values.
+ This needs all keys to be some kind of (boxed) Number, and converts them to primitive
+ <code>long</code>s. It also needs all values to have the same type, because it gets those
+ types from the first key parameter and first value parameter. Any keys that aren't
+ <code>Number</code>s or values that don't have V as their type have that entry skipped.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>V</code> - the type of values, inferred from value0</dd>
+<dt>Parameters:</dt>
+<dd><code>key0</code> - the first key; will be converted to a primitive long</dd>
+<dd><code>value0</code> - the first value; will be used to determine the type of all values</dd>
+<dd><code>rest</code> - an array or varargs of alternating Number, V, Number, V... elements</dd>
+<dt>Returns:</dt>
+<dd>a new map containing the given keys and values</dd>
 </dl>
 </section>
 </li>

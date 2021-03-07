@@ -15,8 +15,8 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":10,"i42":9,"i43":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -340,7 +340,7 @@ float[]&nbsp;values)</code></th>
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div class="member-summary" id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -637,6 +637,23 @@ boolean&nbsp;braces)</code></th>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#values()">values</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns a Collection of the values in the map.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i42">
+<td class="col-first"><code>static <a href="LongFloatMap.html" title="class in com.github.tommyettinger.ds">LongFloatMap</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#with(java.lang.Number,java.lang.Number)">with</a></span>&#8203;(java.lang.Number&nbsp;key0,
+java.lang.Number&nbsp;value0)</code></th>
+<td class="col-last">
+<div class="block">Constructs a single-entry map given one key and one value.</div>
+</td>
+</tr>
+<tr class="row-color" id="i43">
+<td class="col-first"><code>static <a href="LongFloatMap.html" title="class in com.github.tommyettinger.ds">LongFloatMap</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#with(java.lang.Number,java.lang.Number,java.lang.Number...)">with</a></span>&#8203;(java.lang.Number&nbsp;key0,
+java.lang.Number&nbsp;value0,
+java.lang.Number...&nbsp;rest)</code></th>
+<td class="col-last">
+<div class="block">Constructs a map given alternating keys and values.</div>
 </td>
 </tr>
 </tbody>
@@ -1295,6 +1312,48 @@ float&nbsp;newValue)</span></div>
 <h3>replace</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">replace</span>&#8203;(<span class="parameters">long&nbsp;key,
 float&nbsp;value)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="with(java.lang.Number,java.lang.Number)">
+<h3>with</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="LongFloatMap.html" title="class in com.github.tommyettinger.ds">LongFloatMap</a></span>&nbsp;<span class="member-name">with</span>&#8203;(<span class="parameters">java.lang.Number&nbsp;key0,
+java.lang.Number&nbsp;value0)</span></div>
+<div class="block">Constructs a single-entry map given one key and one value.
+ This is mostly useful as an optimization for <a href="#with(java.lang.Number,java.lang.Number,java.lang.Number...)"><code>with(Number, Number, Number...)</code></a>
+ when there's no "rest" of the keys or values. Like the more-argument with(), this will
+ convert its Number key to a primitive long, regardless of which Number type was used.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>key0</code> - the first and only key; will be converted to a primitive long</dd>
+<dd><code>value0</code> - the first and only value; will be converted to a primitive float</dd>
+<dt>Returns:</dt>
+<dd>a new map containing just the entry mapping key0 to value0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="with(java.lang.Number,java.lang.Number,java.lang.Number...)">
+<h3>with</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="LongFloatMap.html" title="class in com.github.tommyettinger.ds">LongFloatMap</a></span>&nbsp;<span class="member-name">with</span>&#8203;(<span class="parameters">java.lang.Number&nbsp;key0,
+java.lang.Number&nbsp;value0,
+java.lang.Number...&nbsp;rest)</span></div>
+<div class="block">Constructs a map given alternating keys and values.
+ This can be useful in some code-generation scenarios, or when you want to make a
+ map conveniently by-hand and have it populated at the start. You can also use
+ <a href="#%3Cinit%3E(long%5B%5D,float%5B%5D)"><code>LongFloatMap(long[], float[])</code></a>, which takes all keys and then all values.
+ This needs all keys to be some kind of (boxed) Number, and converts them to primitive
+ <code>long</code>s. It also needs all values to be a (boxed) Number, and converts them to
+ primitive <code>float</code>s. Any keys or values that aren't <code>Number</code>s have that
+ entry skipped.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>key0</code> - the first key; will be converted to a primitive long</dd>
+<dd><code>value0</code> - the first value; will be converted to a primitive float</dd>
+<dd><code>rest</code> - an array or varargs of Number elements</dd>
+<dt>Returns:</dt>
+<dd>a new map containing the given keys and values</dd>
+</dl>
 </section>
 </li>
 </ul>
