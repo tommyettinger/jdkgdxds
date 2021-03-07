@@ -1084,4 +1084,48 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 		}
 		return curValue;
 	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number key to a primitive long, regardless of which Number type was used.
+	 * @param key0 the first and only key; will be converted to a primitive long
+	 * @param value0 the first and only value
+	 * @param <V> the type of value0
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static <V> LongObjectMap<V> with(Number key0, V value0) {
+		LongObjectMap<V> map = new LongObjectMap<>(1);
+		map.put(key0.longValue(), value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link #LongObjectMap(long[], Object[])}, which takes all keys and then all values.
+	 * This needs all keys to be some kind of (boxed) Number, and converts them to primitive
+	 * {@code long}s. It also needs all values to have the same type, because it gets those
+	 * types from the first key parameter and first value parameter. Any keys that aren't
+	 * {@code Number}s or values that don't have V as their type have that entry skipped.
+	 * @param key0 the first key; will be converted to a primitive long
+	 * @param value0 the first value; will be used to determine the type of all values
+	 * @param rest an array or varargs of alternating Number, V, Number, V... elements
+	 * @param <V> the type of values, inferred from value0
+	 * @return a new map containing the given keys and values
+	 */
+	@SuppressWarnings("unchecked")
+	public static <V> LongObjectMap<V> with(Number key0, V value0, Object... rest){
+		LongObjectMap<V> map = new LongObjectMap<>(1 + (rest.length >>> 1));
+		map.put(key0.longValue(), value0);
+		for (int i = 1; i < rest.length; i += 2) {
+			try {
+				map.put(((Number)rest[i - 1]).longValue(), (V)rest[i]);
+			}catch (ClassCastException ignored){
+			}
+		}
+		return map;
+	}
 }
