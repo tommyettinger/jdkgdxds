@@ -240,4 +240,45 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> impl
 			return h;
 		}
 	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 * @param key0 the first and only key
+	 * @param value0 the first and only value
+	 * @param <V> the type of value0
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static <V> CaseInsensitiveMap<V> with(CharSequence key0, V value0) {
+		CaseInsensitiveMap<V> map = new CaseInsensitiveMap<>(1);
+		map.put(key0, value0);
+		return map;
+	}
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link #CaseInsensitiveMap(CharSequence[], Object[])}, which takes all keys and then all values.
+	 * This needs all keys to be {@code CharSequence}s (like String or StringBuilder) and all values to
+	 * have the same type, because it gets those types from the first value parameter. Any keys that
+	 * aren't CharSequences or values that don't have V as their type have that entry skipped.
+	 * @param key0 the first key; will be used to determine the type of all keys
+	 * @param value0 the first value; will be used to determine the type of all values
+	 * @param rest an array or varargs of alternating K, V, K, V... elements
+	 * @param <V> the type of values, inferred from value0
+	 * @return a new map containing the given keys and values
+	 */
+	@SuppressWarnings("unchecked")
+	public static <V> CaseInsensitiveMap<V> with(CharSequence key0, V value0, Object... rest){
+		CaseInsensitiveMap<V> map = new CaseInsensitiveMap<>(1 + (rest.length >>> 1));
+		map.put(key0, value0);
+		for (int i = 1; i < rest.length; i += 2) {
+			try {
+				map.put((CharSequence)rest[i - 1], (V)rest[i]);
+			}catch (ClassCastException ignored){
+			}
+		}
+		return map;
+	}
 }
