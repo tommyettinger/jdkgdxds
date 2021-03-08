@@ -650,11 +650,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 		return iterator2;
 	}
 
-	@SafeVarargs
-	public static <T, K> HolderSet<T, K> with (Function<T, K> extractor, T... array) {
-		return new HolderSet<T, K>(extractor, array);
-	}
-
 	public static class ObjectSetIterator<T, K> implements Iterable<T>, Iterator<T> {
 		public boolean hasNext;
 
@@ -752,5 +747,10 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 			hasNext = hn;
 			return list;
 		}
+	}
+
+	@SafeVarargs
+	public static <T, K> HolderSet<T, K> with (Function<T, K> extractor, T... array) {
+		return new HolderSet<T, K>(extractor, array);
 	}
 }

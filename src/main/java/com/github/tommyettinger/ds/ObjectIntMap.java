@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.ObjIntConsumer;
+import java.util.function.ObjLongConsumer;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -598,6 +600,22 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		}
 		if (braces) { buffer.append('}'); }
 		return buffer.toString();
+	}
+
+	/**
+	 * Performs the given action for each entry in this map until all entries
+	 * have been processed or the action throws an exception.  Unless
+	 * otherwise specified by the implementing class, actions are performed in
+	 * the order of entry set iteration (if an iteration order is specified.)
+	 * Exceptions thrown by the action are relayed to the caller.
+	 *
+	 * @param action The action to be performed for each entry
+	 * @throws NullPointerException if the specified action is null
+	 */
+	public void forEach(ObjIntConsumer<? super K> action) {
+		for(Entry<K> entry : entrySet()) {
+			action.accept(entry.getKey(), entry.getValue());
+		}
 	}
 
 	/**
