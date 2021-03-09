@@ -15,8 +15,8 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":9,"i5":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -212,7 +212,7 @@ java.util.Collection&lt;? extends <a href="IdentityObjectOrderedMap.html" title=
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div class="member-summary" id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -247,13 +247,32 @@ java.util.Collection&lt;? extends <a href="IdentityObjectOrderedMap.html" title=
 <div class="block">Returns an index &gt;= 0 and &lt;= <a href="ObjectObjectMap.html#mask"><code>ObjectObjectMap.mask</code></a> for the specified <code>item</code>.</div>
 </td>
 </tr>
+<tr class="alt-color" id="i4">
+<td class="col-first"><code>static &lt;K,&#8203;
+V&gt;&nbsp;<a href="IdentityObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">IdentityObjectOrderedMap</a>&lt;K,&#8203;V&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#with(K,V)">with</a></span>&#8203;(K&nbsp;key0,
+V&nbsp;value0)</code></th>
+<td class="col-last">
+<div class="block">Constructs a single-entry map given one key and one value.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
+<td class="col-first"><code>static &lt;K,&#8203;
+V&gt;&nbsp;<a href="IdentityObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">IdentityObjectOrderedMap</a>&lt;K,&#8203;V&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#with(K,V,java.lang.Object...)">with</a></span>&#8203;(K&nbsp;key0,
+V&nbsp;value0,
+java.lang.Object...&nbsp;rest)</code></th>
+<td class="col-last">
+<div class="block">Constructs a map given alternating keys and values.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.github.tommyettinger.ds.ObjectObjectOrderedMap">Methods inherited from class&nbsp;com.github.tommyettinger.ds.<a href="ObjectObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectOrderedMap</a></h3>
-<code><a href="ObjectObjectOrderedMap.html#alter(K,K)">alter</a>, <a href="ObjectObjectOrderedMap.html#alterAt(int,K)">alterAt</a>, <a href="ObjectObjectOrderedMap.html#clear()">clear</a>, <a href="ObjectObjectOrderedMap.html#clear(int)">clear</a>, <a href="ObjectObjectOrderedMap.html#ensureCapacity(int)">ensureCapacity</a>, <a href="ObjectObjectOrderedMap.html#entrySet()">entrySet</a>, <a href="ObjectObjectOrderedMap.html#getAt(int)">getAt</a>, <a href="ObjectObjectOrderedMap.html#iterator()">iterator</a>, <a href="ObjectObjectOrderedMap.html#keyAt(int)">keyAt</a>, <a href="ObjectObjectOrderedMap.html#keySet()">keySet</a>, <a href="ObjectObjectOrderedMap.html#order()">order</a>, <a href="ObjectObjectOrderedMap.html#put(K,V)">put</a>, <a href="ObjectObjectOrderedMap.html#put(K,V,int)">put</a>, <a href="ObjectObjectOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectObjectOrderedMap)">putAll</a>, <a href="ObjectObjectOrderedMap.html#remove(java.lang.Object)">remove</a>, <a href="ObjectObjectOrderedMap.html#removeAt(int)">removeAt</a>, <a href="ObjectObjectOrderedMap.html#setIndex(int,V)">setIndex</a>, <a href="ObjectObjectOrderedMap.html#sort()">sort</a>, <a href="ObjectObjectOrderedMap.html#sort(java.util.Comparator)">sort</a>, <a href="ObjectObjectOrderedMap.html#sortByValue(java.util.Comparator)">sortByValue</a>, <a href="ObjectObjectOrderedMap.html#toString(java.lang.String,boolean)">toString</a>, <a href="ObjectObjectOrderedMap.html#values()">values</a>, <a href="ObjectObjectOrderedMap.html#with(K,V)">with</a>, <a href="ObjectObjectOrderedMap.html#with(K,V,java.lang.Object...)">with</a></code></div>
+<code><a href="ObjectObjectOrderedMap.html#alter(K,K)">alter</a>, <a href="ObjectObjectOrderedMap.html#alterAt(int,K)">alterAt</a>, <a href="ObjectObjectOrderedMap.html#clear()">clear</a>, <a href="ObjectObjectOrderedMap.html#clear(int)">clear</a>, <a href="ObjectObjectOrderedMap.html#ensureCapacity(int)">ensureCapacity</a>, <a href="ObjectObjectOrderedMap.html#entrySet()">entrySet</a>, <a href="ObjectObjectOrderedMap.html#getAt(int)">getAt</a>, <a href="ObjectObjectOrderedMap.html#iterator()">iterator</a>, <a href="ObjectObjectOrderedMap.html#keyAt(int)">keyAt</a>, <a href="ObjectObjectOrderedMap.html#keySet()">keySet</a>, <a href="ObjectObjectOrderedMap.html#order()">order</a>, <a href="ObjectObjectOrderedMap.html#put(K,V)">put</a>, <a href="ObjectObjectOrderedMap.html#put(K,V,int)">put</a>, <a href="ObjectObjectOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectObjectOrderedMap)">putAll</a>, <a href="ObjectObjectOrderedMap.html#remove(java.lang.Object)">remove</a>, <a href="ObjectObjectOrderedMap.html#removeAt(int)">removeAt</a>, <a href="ObjectObjectOrderedMap.html#setIndex(int,V)">setIndex</a>, <a href="ObjectObjectOrderedMap.html#sort()">sort</a>, <a href="ObjectObjectOrderedMap.html#sort(java.util.Comparator)">sort</a>, <a href="ObjectObjectOrderedMap.html#sortByValue(java.util.Comparator)">sortByValue</a>, <a href="ObjectObjectOrderedMap.html#toString(java.lang.String,boolean)">toString</a>, <a href="ObjectObjectOrderedMap.html#values()">values</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.github.tommyettinger.ds.ObjectObjectMap">Methods inherited from class&nbsp;com.github.tommyettinger.ds.<a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a></h3>
 <code><a href="ObjectObjectMap.html#containsKey(java.lang.Object)">containsKey</a>, <a href="ObjectObjectMap.html#containsValue(java.lang.Object)">containsValue</a>, <a href="ObjectObjectMap.html#containsValue(java.lang.Object,boolean)">containsValue</a>, <a href="ObjectObjectMap.html#equalsIdentity(java.lang.Object)">equalsIdentity</a>, <a href="ObjectObjectMap.html#findKey(java.lang.Object,boolean)">findKey</a>, <a href="ObjectObjectMap.html#get(java.lang.Object)">get</a>, <a href="ObjectObjectMap.html#getLoadFactor()">getLoadFactor</a>, <a href="ObjectObjectMap.html#getOrDefault(java.lang.Object,V)">getOrDefault</a>, <a href="ObjectObjectMap.html#isEmpty()">isEmpty</a>, <a href="ObjectObjectMap.html#notEmpty()">notEmpty</a>, <a href="ObjectObjectMap.html#putAll(com.github.tommyettinger.ds.ObjectObjectMap)">putAll</a>, <a href="ObjectObjectMap.html#putAll(java.util.Collection,java.util.Collection)">putAll</a>, <a href="ObjectObjectMap.html#putAll(java.util.Map)">putAll</a>, <a href="ObjectObjectMap.html#putAll(K%5B%5D,int,V%5B%5D,int,int)">putAll</a>, <a href="ObjectObjectMap.html#putAll(K%5B%5D,V%5B%5D)">putAll</a>, <a href="ObjectObjectMap.html#putAll(K%5B%5D,V%5B%5D,int)">putAll</a>, <a href="ObjectObjectMap.html#resize(int)">resize</a>, <a href="ObjectObjectMap.html#setLoadFactor(float)">setLoadFactor</a>, <a href="ObjectObjectMap.html#shrink(int)">shrink</a>, <a href="ObjectObjectMap.html#size()">size</a>, <a href="ObjectObjectMap.html#toString()">toString</a>, <a href="ObjectObjectMap.html#toString(java.lang.String)">toString</a></code></div>
@@ -437,6 +456,54 @@ java.util.Collection&lt;? extends <a href="IdentityObjectOrderedMap.html" title=
 <dd><code>hashCode</code>&nbsp;in interface&nbsp;<code>java.util.Map&lt;<a href="IdentityObjectOrderedMap.html" title="type parameter in IdentityObjectOrderedMap">K</a>,&#8203;<a href="IdentityObjectOrderedMap.html" title="type parameter in IdentityObjectOrderedMap">V</a>&gt;</code></dd>
 <dt>Overrides:</dt>
 <dd><code><a href="ObjectObjectMap.html#hashCode()">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;<a href="IdentityObjectOrderedMap.html" title="type parameter in IdentityObjectOrderedMap">K</a>,&#8203;<a href="IdentityObjectOrderedMap.html" title="type parameter in IdentityObjectOrderedMap">V</a>&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="with(K,V)">
+<h3 id="with(java.lang.Object,java.lang.Object)">with</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;K,&#8203;
+V&gt;</span>&nbsp;<span class="return-type"><a href="IdentityObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">IdentityObjectOrderedMap</a>&lt;K,&#8203;V&gt;</span>&nbsp;<span class="member-name">with</span>&#8203;(<span class="parameters">K&nbsp;key0,
+V&nbsp;value0)</span></div>
+<div class="block">Constructs a single-entry map given one key and one value.
+ This is mostly useful as an optimization for <a href="#with(K,V,java.lang.Object...)"><code>with(Object, Object, Object...)</code></a>
+ when there's no "rest" of the keys or values.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>K</code> - the type of key0</dd>
+<dd><code>V</code> - the type of value0</dd>
+<dt>Parameters:</dt>
+<dd><code>key0</code> - the first and only key</dd>
+<dd><code>value0</code> - the first and only value</dd>
+<dt>Returns:</dt>
+<dd>a new map containing just the entry mapping key0 to value0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="with(K,V,java.lang.Object...)">
+<h3 id="with(java.lang.Object,java.lang.Object,java.lang.Object[])">with</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;K,&#8203;
+V&gt;</span>&nbsp;<span class="return-type"><a href="IdentityObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">IdentityObjectOrderedMap</a>&lt;K,&#8203;V&gt;</span>&nbsp;<span class="member-name">with</span>&#8203;(<span class="parameters">K&nbsp;key0,
+V&nbsp;value0,
+java.lang.Object...&nbsp;rest)</span></div>
+<div class="block">Constructs a map given alternating keys and values.
+ This can be useful in some code-generation scenarios, or when you want to make a
+ map conveniently by-hand and have it populated at the start. You can also use
+ <a href="#%3Cinit%3E(K%5B%5D,V%5B%5D)"><code>IdentityObjectOrderedMap(Object[], Object[])</code></a>, which takes all keys and then all values.
+ This needs all keys to have the same type and all values to have the same type, because
+ it gets those types from the first key parameter and first value parameter. Any keys that don't
+ have K as their type or values that don't have V as their type have that entry skipped.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>K</code> - the type of keys, inferred from key0</dd>
+<dd><code>V</code> - the type of values, inferred from value0</dd>
+<dt>Parameters:</dt>
+<dd><code>key0</code> - the first key; will be used to determine the type of all keys</dd>
+<dd><code>value0</code> - the first value; will be used to determine the type of all values</dd>
+<dd><code>rest</code> - an array or varargs of alternating K, V, K, V... elements</dd>
+<dt>Returns:</dt>
+<dd>a new map containing the given keys and values</dd>
 </dl>
 </section>
 </li>

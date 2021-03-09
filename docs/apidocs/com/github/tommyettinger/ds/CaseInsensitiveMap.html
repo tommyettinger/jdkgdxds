@@ -15,8 +15,8 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":9,"i7":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -220,7 +220,7 @@ java.util.Collection&lt;? extends <a href="CaseInsensitiveMap.html" title="type 
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div class="member-summary" id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -268,6 +268,23 @@ java.util.Collection&lt;? extends <a href="CaseInsensitiveMap.html" title="type 
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#place(java.lang.Object)">place</a></span>&#8203;(java.lang.Object&nbsp;item)</code></th>
 <td class="col-last">
 <div class="block">Returns an index &gt;= 0 and &lt;= <a href="ObjectObjectMap.html#mask"><code>ObjectObjectMap.mask</code></a> for the specified <code>item</code>.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i6">
+<td class="col-first"><code>static &lt;V&gt;&nbsp;<a href="CaseInsensitiveMap.html" title="class in com.github.tommyettinger.ds">CaseInsensitiveMap</a>&lt;V&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#with(java.lang.CharSequence,V)">with</a></span>&#8203;(java.lang.CharSequence&nbsp;key0,
+V&nbsp;value0)</code></th>
+<td class="col-last">
+<div class="block">Constructs a single-entry map given one key and one value.</div>
+</td>
+</tr>
+<tr class="row-color" id="i7">
+<td class="col-first"><code>static &lt;V&gt;&nbsp;<a href="CaseInsensitiveMap.html" title="class in com.github.tommyettinger.ds">CaseInsensitiveMap</a>&lt;V&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#with(java.lang.CharSequence,V,java.lang.Object...)">with</a></span>&#8203;(java.lang.CharSequence&nbsp;key0,
+V&nbsp;value0,
+java.lang.Object...&nbsp;rest)</code></th>
+<td class="col-last">
+<div class="block">Constructs a map given alternating keys and values.</div>
 </td>
 </tr>
 </tbody>
@@ -510,6 +527,50 @@ java.util.Collection&lt;? extends <a href="CaseInsensitiveMap.html" title="type 
 <dd><code><a href="ObjectObjectMap.html#keySet()">keySet</a></code>&nbsp;in class&nbsp;<code><a href="ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a>&lt;java.lang.CharSequence,&#8203;<a href="CaseInsensitiveMap.html" title="type parameter in CaseInsensitiveMap">V</a>&gt;</code></dd>
 <dt>Returns:</dt>
 <dd>a set view of the keys contained in this map</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="with(java.lang.CharSequence,V)">
+<h3 id="with(java.lang.CharSequence,java.lang.Object)">with</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;V&gt;</span>&nbsp;<span class="return-type"><a href="CaseInsensitiveMap.html" title="class in com.github.tommyettinger.ds">CaseInsensitiveMap</a>&lt;V&gt;</span>&nbsp;<span class="member-name">with</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;key0,
+V&nbsp;value0)</span></div>
+<div class="block">Constructs a single-entry map given one key and one value.
+ This is mostly useful as an optimization for <a href="ObjectObjectMap.html#with(K,V,java.lang.Object...)"><code>ObjectObjectMap.with(Object, Object, Object...)</code></a>
+ when there's no "rest" of the keys or values.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>V</code> - the type of value0</dd>
+<dt>Parameters:</dt>
+<dd><code>key0</code> - the first and only key</dd>
+<dd><code>value0</code> - the first and only value</dd>
+<dt>Returns:</dt>
+<dd>a new map containing just the entry mapping key0 to value0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="with(java.lang.CharSequence,V,java.lang.Object...)">
+<h3 id="with(java.lang.CharSequence,java.lang.Object,java.lang.Object[])">with</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;V&gt;</span>&nbsp;<span class="return-type"><a href="CaseInsensitiveMap.html" title="class in com.github.tommyettinger.ds">CaseInsensitiveMap</a>&lt;V&gt;</span>&nbsp;<span class="member-name">with</span>&#8203;(<span class="parameters">java.lang.CharSequence&nbsp;key0,
+V&nbsp;value0,
+java.lang.Object...&nbsp;rest)</span></div>
+<div class="block">Constructs a map given alternating keys and values.
+ This can be useful in some code-generation scenarios, or when you want to make a
+ map conveniently by-hand and have it populated at the start. You can also use
+ <a href="#%3Cinit%3E(java.lang.CharSequence%5B%5D,V%5B%5D)"><code>CaseInsensitiveMap(CharSequence[], Object[])</code></a>, which takes all keys and then all values.
+ This needs all keys to be <code>CharSequence</code>s (like String or StringBuilder) and all values to
+ have the same type, because it gets those types from the first value parameter. Any keys that
+ aren't CharSequences or values that don't have V as their type have that entry skipped.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>V</code> - the type of values, inferred from value0</dd>
+<dt>Parameters:</dt>
+<dd><code>key0</code> - the first key; will be used to determine the type of all keys</dd>
+<dd><code>value0</code> - the first value; will be used to determine the type of all values</dd>
+<dd><code>rest</code> - an array or varargs of alternating K, V, K, V... elements</dd>
+<dt>Returns:</dt>
+<dd>a new map containing the given keys and values</dd>
 </dl>
 </section>
 </li>

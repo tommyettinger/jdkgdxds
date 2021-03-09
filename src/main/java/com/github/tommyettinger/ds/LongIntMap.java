@@ -16,6 +16,9 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.function.LongFloatConsumer;
+import com.github.tommyettinger.ds.support.function.LongIntConsumer;
+
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.AbstractSet;
@@ -622,6 +625,22 @@ public class LongIntMap implements Iterable<LongIntMap.Entry>, Serializable {
 		}
 		if (braces) { buffer.append('}'); }
 		return buffer.toString();
+	}
+
+	/**
+	 * Performs the given action for each entry in this map until all entries
+	 * have been processed or the action throws an exception.  Unless
+	 * otherwise specified by the implementing class, actions are performed in
+	 * the order of entry set iteration (if an iteration order is specified.)
+	 * Exceptions thrown by the action are relayed to the caller.
+	 *
+	 * @param action The action to be performed for each entry
+	 * @throws NullPointerException if the specified action is null
+	 */
+	public void forEach(LongIntConsumer action) {
+		for(Entry entry : entrySet()) {
+			action.accept(entry.getKey(), entry.getValue());
+		}
 	}
 
 	/**

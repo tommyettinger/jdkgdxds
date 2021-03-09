@@ -24,6 +24,7 @@
  */
 package com.github.tommyettinger.ds.support.function;
 
+import javax.annotation.Nullable;
 import java.util.function.BiFunction;
 
 /**
@@ -48,5 +49,5 @@ public interface FloatObjBiFunction<U, R> {
      * @param second the second function argument
      * @return the function result
      */
-    R apply(float first, U second);
+    R apply(float first, @Nullable U second);
 }

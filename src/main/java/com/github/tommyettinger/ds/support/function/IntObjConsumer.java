@@ -24,6 +24,7 @@
  */
 package com.github.tommyettinger.ds.support.function;
 
+import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 
 /**
@@ -49,5 +50,5 @@ public interface IntObjConsumer<U> {
      * @param value the first input argument
      * @param u the second input argument
      */
-    void accept(int value, U u);
+    void accept(int value, @Nullable U u);
 }

@@ -24,6 +24,7 @@
  */
 package com.github.tommyettinger.ds.support.function;
 
+import javax.annotation.Nullable;
 import java.util.function.BiFunction;
 
 /**
@@ -48,5 +49,5 @@ public interface IntObjBiFunction<U, R> {
      * @param second the second function argument
      * @return the function result
      */
-    R apply(int first, U second);
+    R apply(int first, @Nullable U second);
 }
