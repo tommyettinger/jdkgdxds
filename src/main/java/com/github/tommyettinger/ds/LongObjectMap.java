@@ -619,7 +619,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 	 * Exceptions thrown by the action are relayed to the caller.
 	 *
 	 * @param action The action to be performed for each entry
-	 * @throws NullPointerException if the specified action is null
 	 */
 	public void forEach(LongObjConsumer<? super V> action) {
 		for(Entry<V> entry : entrySet()) {

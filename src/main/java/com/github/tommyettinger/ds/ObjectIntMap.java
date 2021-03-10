@@ -610,7 +610,6 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	 * Exceptions thrown by the action are relayed to the caller.
 	 *
 	 * @param action The action to be performed for each entry
-	 * @throws NullPointerException if the specified action is null
 	 */
 	public void forEach(ObjIntConsumer<? super K> action) {
 		for(Entry<K> entry : entrySet()) {

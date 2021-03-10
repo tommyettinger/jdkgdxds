@@ -611,7 +611,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	 * Exceptions thrown by the action are relayed to the caller.
 	 *
 	 * @param action The action to be performed for each entry
-	 * @throws NullPointerException if the specified action is null
 	 */
 	public void forEach(ObjLongConsumer<? super K> action) {
 		for(Entry<K> entry : entrySet()) {
