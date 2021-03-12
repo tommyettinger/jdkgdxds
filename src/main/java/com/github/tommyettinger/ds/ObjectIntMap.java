@@ -1050,11 +1050,13 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 	}
 
 	public int replace (K key, int value) {
-		int curValue = get(key);
-		if (containsKey(key)) {
-			curValue = put(key, value);
+		int i = locateKey(key);
+		if (i >= 0) {
+			int oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
 		}
-		return curValue;
+		return defaultValue;
 	}
 
 	/**

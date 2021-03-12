@@ -1126,11 +1126,21 @@ public class LongIntMap implements Iterable<LongIntMap.Entry>, Serializable {
 	}
 
 	public int replace (long key, int value) {
-		int curValue = get(key);
-		if (containsKey(key)) {
-			curValue = put(key, value);
+		if (key == 0) {
+			if(hasZeroValue) {
+				int oldValue = zeroValue;
+				zeroValue = value;
+				return oldValue;
+			}
+			return defaultValue;
 		}
-		return curValue;
+		int i = locateKey(key);
+		if (i >= 0) {
+			int oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
+		}
+		return defaultValue;
 	}
 
 	/**

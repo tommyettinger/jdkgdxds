@@ -1091,11 +1091,13 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	}
 
 	public float replace (K key, float value) {
-		float curValue = get(key);
-		if (containsKey(key)) {
-			curValue = put(key, value);
+		int i = locateKey(key);
+		if (i >= 0) {
+			float oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
 		}
-		return curValue;
+		return defaultValue;
 	}
 
 	/**

@@ -1116,11 +1116,21 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 
 	@Nullable
 	public V replace (long key, V value) {
-		V curValue = get(key);
-		if (containsKey(key)) {
-			curValue = put(key, value);
+		if (key == 0) {
+			if(hasZeroValue) {
+				V oldValue = zeroValue;
+				zeroValue = value;
+				return oldValue;
+			}
+			return defaultValue;
 		}
-		return curValue;
+		int i = locateKey(key);
+		if (i >= 0) {
+			V oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
+		}
+		return defaultValue;
 	}
 
 	/**

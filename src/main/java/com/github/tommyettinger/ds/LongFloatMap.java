@@ -1171,11 +1171,21 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 	}
 
 	public float replace (long key, float value) {
-		float curValue = get(key);
-		if (containsKey(key)) {
-			curValue = put(key, value);
+		if (key == 0) {
+			if(hasZeroValue) {
+				float oldValue = zeroValue;
+				zeroValue = value;
+				return oldValue;
+			}
+			return defaultValue;
 		}
-		return curValue;
+		int i = locateKey(key);
+		if (i >= 0) {
+			float oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
+		}
+		return defaultValue;
 	}
 
 	/**

@@ -1051,11 +1051,13 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	}
 
 	public long replace (K key, long value) {
-		long curValue = get(key);
-		if (containsKey(key)) {
-			curValue = put(key, value);
+		int i = locateKey(key);
+		if (i >= 0) {
+			long oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
 		}
-		return curValue;
+		return defaultValue;
 	}
 
 	/**
