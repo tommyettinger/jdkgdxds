@@ -22,11 +22,9 @@ import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.ObjLongConsumer;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;

@@ -26,7 +26,6 @@ import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.function.ObjIntConsumer;
-import java.util.function.ObjLongConsumer;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 

@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import static com.github.tommyettinger.ds.Utilities.tableSize;
-
 /**
  * An Ordered Set of {@code T} items where the {@link #indexOf(Object)} operation runs in constant time, but
  * any removal from the middle of the order runs in linear time. If you primarily append to a Set with

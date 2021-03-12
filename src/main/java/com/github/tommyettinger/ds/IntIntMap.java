@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.function.IntIntConsumer;
+import com.github.tommyettinger.ds.support.function.IntIntToIntBiFunction;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -642,6 +643,19 @@ public class IntIntMap implements Iterable<IntIntMap.Entry>, Serializable {
 	}
 
 	/**
+	 * Replaces each entry's value with the result of invoking the given
+	 * function on that entry until all entries have been processed or the
+	 * function throws an exception.  Exceptions thrown by the function are
+	 * relayed to the caller.
+	 * @param function the function to apply to each entry
+	 */
+	public void replaceAll(IntIntToIntBiFunction function){
+		for (Entry entry : entrySet()) {
+			entry.setValue(function.applyAsInt(entry.getKey(), entry.getValue()));
+		}
+	}
+
+	 /**
 	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
 	 * does not permit nested iteration. Iterate over {@link Entries#Entries(IntIntMap)} if you
 	 * need nested or multithreaded iteration. You can remove an Entry from this IntIntMap

@@ -25,7 +25,6 @@
 
 package com.github.tommyettinger.ds.support.function;
 
-import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 /**

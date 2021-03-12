@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.function.IntObjBiFunction;
 import com.github.tommyettinger.ds.support.function.IntObjConsumer;
 
 import javax.annotation.Nullable;
@@ -623,6 +624,19 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 	public void forEach(IntObjConsumer<? super V> action) {
 		for(Entry<V> entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
+		}
+	}
+
+	/**
+	 * Replaces each entry's value with the result of invoking the given
+	 * function on that entry until all entries have been processed or the
+	 * function throws an exception.  Exceptions thrown by the function are
+	 * relayed to the caller.
+	 * @param function the function to apply to each entry
+	 */
+	public void replaceAll(IntObjBiFunction<? super V, ? extends V> function){
+		for (Entry<V> entry : entrySet()) {
+			entry.setValue(function.apply(entry.getKey(), entry.getValue()));
 		}
 	}
 

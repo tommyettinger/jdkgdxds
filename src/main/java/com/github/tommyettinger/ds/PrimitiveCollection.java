@@ -4,14 +4,11 @@ import com.github.tommyettinger.ds.support.function.FloatConsumer;
 import com.github.tommyettinger.ds.support.function.FloatPredicate;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
-import java.util.Iterator;
-import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.LongConsumer;
 import java.util.function.LongPredicate;
-import java.util.function.Predicate;
 
 /**
  * Analogous to {@link java.util.Collection} but for a primitive type, this is built around

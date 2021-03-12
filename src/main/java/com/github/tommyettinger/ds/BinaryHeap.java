@@ -40,7 +40,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	public int size;
 
 	private Node[] nodes;
-	private boolean isMaxHeap;
+	private final boolean isMaxHeap;
 
 	@Nullable protected transient HeapIterator<T> iterator1 = null;
 	@Nullable protected transient HeapIterator<T> iterator2 = null;

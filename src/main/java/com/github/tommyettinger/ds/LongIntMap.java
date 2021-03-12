@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.LongFloatConsumer;
 import com.github.tommyettinger.ds.support.function.LongIntConsumer;
 
 import javax.annotation.Nullable;
