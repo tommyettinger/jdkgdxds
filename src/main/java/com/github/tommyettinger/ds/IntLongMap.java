@@ -1092,11 +1092,17 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 	}
 
 	public long putIfAbsent (int key, long value) {
-		long v = get(key);
-		if (!containsKey(key)) {
-			v = put(key, value);
+		if (key == 0) {
+			if(hasZeroValue) {
+				return zeroValue;
+			}
+			return put(key, value);
 		}
-		return v;
+		int i = locateKey(key);
+		if (i >= 0) {
+			return valueTable[i];
+		}
+		return put(key, value);
 	}
 
 	public boolean replace (int key, long oldValue, long newValue) {

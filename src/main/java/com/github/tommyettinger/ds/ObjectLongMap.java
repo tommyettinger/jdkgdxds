@@ -1034,11 +1034,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	}
 
 	public long putIfAbsent (K key, long value) {
-		long v = get(key);
-		if (!containsKey(key)) {
-			v = put(key, value);
+		int i = locateKey(key);
+		if (i >= 0) {
+			return valueTable[i];
 		}
-		return v;
+		return put(key, value);
 	}
 
 	public boolean replace (K key, long oldValue, long newValue) {

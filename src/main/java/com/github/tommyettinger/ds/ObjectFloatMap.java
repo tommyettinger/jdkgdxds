@@ -1074,11 +1074,11 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 	}
 
 	public float putIfAbsent (K key, float value) {
-		float v = get(key);
-		if (!containsKey(key)) {
-			v = put(key, value);
+		int i = locateKey(key);
+		if (i >= 0) {
+			return valueTable[i];
 		}
-		return v;
+		return put(key, value);
 	}
 
 	public boolean replace (K key, float oldValue, float newValue) {

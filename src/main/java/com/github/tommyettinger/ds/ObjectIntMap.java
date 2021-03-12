@@ -1032,12 +1032,12 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 		}
 	}
 
-	public long putIfAbsent (K key, int value) {
-		int v = get(key);
-		if (!containsKey(key)) {
-			v = put(key, value);
+	public int putIfAbsent (K key, int value) {
+		int i = locateKey(key);
+		if (i >= 0) {
+			return valueTable[i];
 		}
-		return v;
+		return put(key, value);
 	}
 
 	public boolean replace (K key, int oldValue, int newValue) {

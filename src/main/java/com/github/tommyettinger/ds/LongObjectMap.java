@@ -1090,12 +1090,19 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 		}
 	}
 
+	@Nullable
 	public V putIfAbsent (long key, V value) {
-		V v = get(key);
-		if (!containsKey(key)) {
-			v = put(key, value);
+		if (key == 0) {
+			if(hasZeroValue) {
+				return zeroValue;
+			}
+			return put(key, value);
 		}
-		return v;
+		int i = locateKey(key);
+		if (i >= 0) {
+			return valueTable[i];
+		}
+		return put(key, value);
 	}
 
 	public boolean replace (long key, V oldValue, V newValue) {

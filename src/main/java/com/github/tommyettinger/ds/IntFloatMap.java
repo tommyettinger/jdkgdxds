@@ -1150,11 +1150,17 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 	}
 
 	public float putIfAbsent (int key, float value) {
-		float v = get(key);
-		if (!containsKey(key)) {
-			v = put(key, value);
+		if (key == 0) {
+			if(hasZeroValue) {
+				return zeroValue;
+			}
+			return put(key, value);
 		}
-		return v;
+		int i = locateKey(key);
+		if (i >= 0) {
+			return valueTable[i];
+		}
+		return put(key, value);
 	}
 
 	public boolean replace (int key, float oldValue, float newValue) {
