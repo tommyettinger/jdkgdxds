@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.function.LongLongConsumer;
+import com.github.tommyettinger.ds.support.function.LongLongToLongBiFunction;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -639,6 +640,19 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 	public void forEach(LongLongConsumer action) {
 		for(Entry entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
+		}
+	}
+
+	/**
+	 * Replaces each entry's value with the result of invoking the given
+	 * function on that entry until all entries have been processed or the
+	 * function throws an exception.  Exceptions thrown by the function are
+	 * relayed to the caller.
+	 * @param function the function to apply to each entry
+	 */
+	public void replaceAll(LongLongToLongBiFunction function){
+		for (Entry entry : entrySet()) {
+			entry.setValue(function.applyAsLong(entry.getKey(), entry.getValue()));
 		}
 	}
 

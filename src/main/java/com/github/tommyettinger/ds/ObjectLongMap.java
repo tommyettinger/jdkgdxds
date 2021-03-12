@@ -16,6 +16,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.function.ObjLongToLongBiFunction;
+
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.AbstractSet;
@@ -613,6 +615,19 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 	public void forEach(ObjLongConsumer<? super K> action) {
 		for(Entry<K> entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
+		}
+	}
+
+	/**
+	 * Replaces each entry's value with the result of invoking the given
+	 * function on that entry until all entries have been processed or the
+	 * function throws an exception.  Exceptions thrown by the function are
+	 * relayed to the caller.
+	 * @param function the function to apply to each entry
+	 */
+	public void replaceAll(ObjLongToLongBiFunction<? super K> function){
+		for (Entry<K> entry : entrySet()) {
+			entry.setValue(function.applyAsLong(entry.getKey(), entry.getValue()));
 		}
 	}
 
