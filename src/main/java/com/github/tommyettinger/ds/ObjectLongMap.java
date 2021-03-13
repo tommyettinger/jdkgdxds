@@ -28,6 +28,7 @@ import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.function.ObjLongConsumer;
+import java.util.function.ToLongFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -1058,6 +1059,16 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 			return oldValue;
 		}
 		return defaultValue;
+	}
+
+	public long computeIfAbsent(K key, ToLongFunction<? super K> mappingFunction) {
+		int i = locateKey(key);
+		if (i < 0) {
+			long newValue = mappingFunction.applyAsLong(key);
+			put(key, newValue);
+			return newValue;
+		}
+		else return valueTable[i];
 	}
 
 	/**

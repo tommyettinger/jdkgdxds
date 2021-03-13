@@ -28,6 +28,7 @@ import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.function.ObjIntConsumer;
+import java.util.function.ToIntFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -1057,6 +1058,16 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			return oldValue;
 		}
 		return defaultValue;
+	}
+
+	public int computeIfAbsent(K key, ToIntFunction<? super K> mappingFunction) {
+		int i = locateKey(key);
+		if (i < 0) {
+			int newValue = mappingFunction.applyAsInt(key);
+			put(key, newValue);
+			return newValue;
+		}
+		else return valueTable[i];
 	}
 
 	/**

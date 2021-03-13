@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.function.ObjFloatConsumer;
 import com.github.tommyettinger.ds.support.function.ObjFloatToFloatBiFunction;
+import com.github.tommyettinger.ds.support.function.ToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;
@@ -1098,6 +1099,16 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Ser
 			return oldValue;
 		}
 		return defaultValue;
+	}
+
+	public float computeIfAbsent(K key, ToFloatFunction<? super K> mappingFunction) {
+		int i = locateKey(key);
+		if (i < 0) {
+			float newValue = mappingFunction.applyAsFloat(key);
+			put(key, newValue);
+			return newValue;
+		}
+		else return valueTable[i];
 	}
 
 	/**
