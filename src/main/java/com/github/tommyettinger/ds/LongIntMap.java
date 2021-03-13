@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.function.LongIntConsumer;
 import com.github.tommyettinger.ds.support.function.LongIntToIntBiFunction;
+import com.github.tommyettinger.ds.support.function.LongToLongFunction;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -27,6 +28,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.LongToIntFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -1141,6 +1143,16 @@ public class LongIntMap implements Iterable<LongIntMap.Entry>, Serializable {
 			return oldValue;
 		}
 		return defaultValue;
+	}
+
+	public int computeIfAbsent(long key, LongToIntFunction mappingFunction) {
+		int i = locateKey(key);
+		if (i < 0) {
+			int newValue = mappingFunction.applyAsInt(key);
+			put(key, newValue);
+			return newValue;
+		}
+		else return valueTable[i];
 	}
 
 	/**

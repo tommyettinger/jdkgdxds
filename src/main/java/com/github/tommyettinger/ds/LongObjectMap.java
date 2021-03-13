@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.function.LongObjBiFunction;
 import com.github.tommyettinger.ds.support.function.LongObjConsumer;
+import com.github.tommyettinger.ds.support.function.LongToLongFunction;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -30,6 +31,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.LongFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -1131,6 +1133,16 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 			return oldValue;
 		}
 		return defaultValue;
+	}
+
+	public V computeIfAbsent(long key, LongFunction<? extends V> mappingFunction) {
+		int i = locateKey(key);
+		if (i < 0) {
+			V newValue = mappingFunction.apply(key);
+			put(key, newValue);
+			return newValue;
+		}
+		else return valueTable[i];
 	}
 
 	/**

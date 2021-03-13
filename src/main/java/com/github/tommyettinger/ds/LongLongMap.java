@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.function.LongLongConsumer;
 import com.github.tommyettinger.ds.support.function.LongLongToLongBiFunction;
+import com.github.tommyettinger.ds.support.function.LongToLongFunction;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -1141,6 +1142,16 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 			return oldValue;
 		}
 		return defaultValue;
+	}
+
+	public long computeIfAbsent(long key, LongToLongFunction mappingFunction) {
+		int i = locateKey(key);
+		if (i < 0) {
+			long newValue = mappingFunction.applyAsLong(key);
+			put(key, newValue);
+			return newValue;
+		}
+		else return valueTable[i];
 	}
 
 	/**

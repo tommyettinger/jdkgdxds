@@ -19,6 +19,8 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.function.LongFloatConsumer;
 import com.github.tommyettinger.ds.support.function.LongFloatToFloatBiFunction;
+import com.github.tommyettinger.ds.support.function.LongToFloatFunction;
+import com.github.tommyettinger.ds.support.function.LongToLongFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;
@@ -1186,6 +1188,16 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 			return oldValue;
 		}
 		return defaultValue;
+	}
+
+	public float computeIfAbsent(long key, LongToFloatFunction mappingFunction) {
+		int i = locateKey(key);
+		if (i < 0) {
+			float newValue = mappingFunction.applyAsFloat(key);
+			put(key, newValue);
+			return newValue;
+		}
+		else return valueTable[i];
 	}
 
 	/**
