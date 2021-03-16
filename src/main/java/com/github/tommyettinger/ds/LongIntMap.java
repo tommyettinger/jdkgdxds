@@ -18,7 +18,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.function.LongIntConsumer;
 import com.github.tommyettinger.ds.support.function.LongIntToIntBiFunction;
-import com.github.tommyettinger.ds.support.function.LongToLongFunction;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;

@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.IntToLongFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -1130,6 +1131,16 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 			return oldValue;
 		}
 		return defaultValue;
+	}
+
+	public long computeIfAbsent(int key, IntToLongFunction mappingFunction) {
+		int i = locateKey(key);
+		if (i < 0) {
+			long newValue = mappingFunction.applyAsLong(key);
+			put(key, newValue);
+			return newValue;
+		}
+		else return valueTable[i];
 	}
 
 	/**

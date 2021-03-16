@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.function.LongFloatConsumer;
 import com.github.tommyettinger.ds.support.function.LongFloatToFloatBiFunction;
 import com.github.tommyettinger.ds.support.function.LongToFloatFunction;
-import com.github.tommyettinger.ds.support.function.LongToLongFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;

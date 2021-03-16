@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.function.IntFloatConsumer;
 import com.github.tommyettinger.ds.support.function.IntFloatToFloatBiFunction;
+import com.github.tommyettinger.ds.support.function.IntToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;
@@ -1188,6 +1189,16 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 			return oldValue;
 		}
 		return defaultValue;
+	}
+
+	public float computeIfAbsent(int key, IntToFloatFunction mappingFunction) {
+		int i = locateKey(key);
+		if (i < 0) {
+			float newValue = mappingFunction.applyAsFloat(key);
+			put(key, newValue);
+			return newValue;
+		}
+		else return valueTable[i];
 	}
 
 	/**

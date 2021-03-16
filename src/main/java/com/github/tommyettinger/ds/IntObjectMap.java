@@ -30,6 +30,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.IntFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -1129,6 +1130,16 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 			return oldValue;
 		}
 		return defaultValue;
+	}
+
+	public V computeIfAbsent(int key, IntFunction<? extends V> mappingFunction) {
+		int i = locateKey(key);
+		if (i < 0) {
+			V newValue = mappingFunction.apply(key);
+			put(key, newValue);
+			return newValue;
+		}
+		else return valueTable[i];
 	}
 
 	/**
