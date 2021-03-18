@@ -1,192 +1,12 @@
 package com.github.tommyettinger.ds.support;
 
-import java.io.Serializable;
 import java.util.Random;
 
 /**
- * A faster and much-higher-quality substitute for {@link Random}.
- * This allows many different random number streams that don't overlap, and offers a much more substantial
- * API for commonly-used functions.
- * <br>
- * This fills in much of the functionality of MathUtils in libGDX, though with all code as instance methods
- * instead of static methods, and some things renamed (randomTriangular() became {@link #nextTriangular()},
- * for instance, and random() became {@link #nextFloat()}). It also supplies some rare and sometimes-useful
- * code: {@link #skip(long)} allows "fast-forward" and "rewind," you can get and set the exact state with
- * {@link #getStateA()}, {@link #getStateB()}, {@link #setStateA(long)}, and {@link #setStateB(long)} (which
- * is useful if you want to save a LaserRandom and reload it later), and there's bounded int and long
- * generators which can use a negative number as their exclusive outer bound {@link #nextSignedInt(int)} and
- * {@link #nextSignedLong(long)}, plus overloads that take an inner bound).
- * <br>
- * Every method defined in this class advances the state by the same amount unless otherwise documented (only
- * {@link #nextTriangular()} and {@link #nextTriangular(float)} advance the state twice). The state can
- * advance 2 to the 64 times before the sequence of random numbers repeats, which would take a few years of
- * continuous generation. There are also 2 to the 63 possible sequences this can produce; you can tell which
- * one you're using with {@link #getStream()}. Note, {@link Random} can only advance 2 to the 48 times, which
- * takes under half a day to make it repeat on recent laptop hardware while also analyzing the numbers for
- * statistical issues. This generator is more comparable to SplittableRandom, introduced in JDK 8 but not
- * available in Android (even with desugaring) or GWT currently. SplittableRandom also can produce 2 to the
- * 64 numbers before repeating the sequence, and also has 2 to the 63 streams, but it will always produce
- * each possible long value exactly once over the course of that sequence. Each of LaserRandom's streams
- * produces a different sequence of numbers with a different set of numbers it omits and a different set of
- * numbers it produces more than once; each of SplittableRandom's streams simply rearranges the order of all
- * possible longs. Though it might seem like an issue that a LaserRandom stream has gaps in its possible
- * output, if you appended all 2 to the 63 possible LaserRandom streams in full, the gargantuan result would
- * include all longs equally often. So, if the stream is selected effectively at random, then the subset of
- * that stream that actually gets used should be fair (and it's very unlikely that any usage will need a full
- * stream of over 18 quintillion pseudo-random longs).
- * <br>
- * If statistical quality is a concern, don't use {@link Random}, since the aforementioned
- * analysis finds statistical failures in about a minute when checking about 16GB of output; this class can
- * produce 64TB of random output without a tool like PractRand finding any failures (sometimes it can't find
- * any minor anomaly over several days of testing). RandomXS128 has some flaws, though they are not nearly as
- * severe as Random's; mostly they are limited to a particular kind of failure affecting the least
- * significant bits (the technical name for the test it fails is a "binary matrix rank" test, which a wide
- * variety of related generators can fail if they don't adequately randomize their outputs). RandomXS128's
- * flaws would be permissible if it was faster than any competitors, but it isn't, and there have been two
- * improved relatives of its algorithm published since it was created. Both of these improvements,
- * xoroshiro128** and xoshiro256**, are slower when implemented in Java than LaserRandom (also when all are
- * implemented in C and compiled with GCC or Clang, typically). There are also some concerns about specific
- * failure cases when the output of xoroshiro128** or xoshiro256** is multiplied by any of quadrillions of
- * constants and tested after that multiplication (see M.E. O'Neill's dissection of xoshiro256**
- * <a href="https://www.pcg-random.org/posts/a-quick-look-at-xoshiro256.html">here</a>).
- * <br>
- * You can copy this class independently of the library it's part of; it's meant as a general replacement for
- * Random and also RandomXS128. LaserRandom is generally faster than RandomXS128, and can be over 3x faster
- * when running on OpenJ9 (generating over 3 billion random long values per second).
- * <br>
- * Pew pew! Lasers!
- *
- * @author Tommy Ettinger
+ * A superset of the functionality in {@link java.util.Random}, meant for random number generators
+ * that would be too bare-bones with just Random's methods.
  */
-public class LaserRandom extends Random implements Serializable, EnhancedRandom {
-	private static final long serialVersionUID = 0L;
-	/**
-	 * Can be any long value.
-	 */
-	protected long stateA;
-
-	/**
-	 * Must be odd.
-	 */
-	protected long stateB;
-
-	/**
-	 * Creates a new LaserRandom. This constructor sets the states of the
-	 * random number generator to values very likely to be distinct from
-	 * any other invocation of this constructor.
-	 */
-	public LaserRandom () {
-		super();
-		stateA = super.nextLong();
-		stateB = super.nextLong() | 1L;
-	}
-
-	/**
-	 * Creates a new LaserRandom using a single {@code long} seed; the stream depends on whether the seed is even or odd.
-	 *
-	 * @param seed the initial seed
-	 * @see #setSeed(long)
-	 */
-	public LaserRandom (long seed) {
-		super(seed);
-		stateA = seed;
-		stateB = seed | 1L;
-	}
-
-	/**
-	 * Creates a new LaserRandom using {@code seedA} exactly to set stateA (as with {@link #setStateA(long)},,
-	 * and using {@code seedB} to set stateB as with {@link #setStateB(long)} (meaning seedB will be used exactly if odd,
-	 * otherwise it will have 1 added to it and then used).
-	 *
-	 * @param seedA any long; will be used exactly to set stateA as with {@link #setStateA(long)}
-	 * @param seedB any odd long will be used exactly to set stateB, otherwise, as with {@link #setStateB(long)}, it will be made odd
-	 */
-	public LaserRandom (final long seedA, final long seedB) {
-		super(seedA);
-		stateA = seedA;
-		stateB = seedB | 1L;
-	}
-
-	/**
-	 * Get the "A" part of the internal state as a long.
-	 *
-	 * @return the current internal "A" state of this object.
-	 */
-	public long getStateA () {
-		return stateA;
-	}
-
-	/**
-	 * Set the "A" part of the internal state with a long.
-	 *
-	 * @param stateA a 64-bit long
-	 */
-	public void setStateA (long stateA) {
-		this.stateA = stateA;
-	}
-
-	/**
-	 * Get the "B" part of the internal state as a long.
-	 *
-	 * @return the current internal "B" state of this object.
-	 */
-	public long getStateB () {
-		return stateB;
-	}
-
-	/**
-	 * Set the "B" part of the internal state with a long; the least significant bit is ignored (will always be odd).
-	 * That is, if stateB is odd, this uses it verbatim; if stateB is even, it adds 1 to it to make it odd.
-	 *
-	 * @param stateB a 64-bit long; the lowest bit will be ignored and the result always used as an odd number
-	 */
-	public void setStateB (long stateB) {
-		this.stateB = stateB | 1L;
-	}
-
-	/**
-	 * Sets both parts of the internal state with one call; {@code stateA} is used verbatim, but {@code stateB} has
-	 * its least significant bit ignored and always overwritten with a '1' bit (meaning stateB will always be odd).
-	 * You can use any long for stateA without it being changed, and can use any odd long for stateB without it
-	 * being changed; as such, keeping {@code stateB} an odd number should be optimal.
-	 *
-	 * @param stateA a 64-bit long
-	 * @param stateB a 64-bit long; the lowest bit will be ignored and the result always used as an odd number
-	 */
-	public void setState (long stateA, long stateB) {
-		this.stateA = stateA;
-		this.stateB = stateB | 1L;
-	}
-
-	/**
-	 * Gets a selected state value from this EnhancedRandom. If selection is an even number,
-	 * this returns stateA, and if selection is odd, it returns stateB. This returns the
-	 * exact value of the selected state.
-	 *
-	 * @param selection used to select which state variable to get (usually 0 or 1)
-	 * @return the exact value of the selected state
-	 */
-	@Override
-	public long getSelectedState (int selection) {
-		return (selection & 1) == 0 ? stateA : stateB;
-	}
-
-	/**
-	 * Sets a selected state value to the given long {@code value}. If selection is an even
-	 * number, this sets stateA to value as-is, and if selection is odd, this sets stateB to
-	 * value made odd (that is, if value is even, it uses value + 1, otherwise it uses value).
-	 *
-	 * @param selection used to select which state variable to set (usually 0 or 1)
-	 * @param value     the exact value to use for the selected state, if valid
-	 */
-	@Override
-	public void setSelectedState (int selection, long value) {
-		if((selection & 1) == 0)
-			stateA = value;
-		else
-			stateB = value | 1L;
-	}
-
+public interface EnhancedRandom {
 	/**
 	 * Sets the seed of this random number generator using a single
 	 * {@code long} seed. The general contract of {@code setSeed} is
@@ -194,17 +14,34 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * so as to be in exactly the same state as if it had just been
 	 * created with the argument {@code seed} as a seed.
 	 *
-	 * <p>The implementation of {@code setSeed} by class
-	 * {@code LaserRandom} uses all 64 bits of the given seed for
-	 * {@link #setStateA(long)}, and all but the least-significant bit
-	 * of the seed for {@link #setStateB(long)} (the omitted bit is
-	 * always set to 1 in stateB, meaning stateB is always odd).
-	 *
 	 * @param seed the initial seed
 	 */
-	@Override
-	public void setSeed (long seed) {
-		stateB = (stateA = seed) | 1L;
+	void setSeed (long seed);
+
+	/**
+	 * Gets a selected state value from this EnhancedRandom. The number of possible selections
+	 * is up to the implementing class, but negative values for {@code selection} are
+	 * typically not tolerated. This should return the exact value of the selected state,
+	 * assuming it is implemented. The default implementation throws an
+	 * UnsupportedOperationException, and implementors only have to allow reading the state if
+	 * they choose to implement this differently.
+	 * @param selection used to select which state variable to get; generally non-negative
+	 * @return the exact value of the selected state
+	 */
+	default long getSelectedState(int selection) {
+		throw new UnsupportedOperationException("getSelectedState() not supported.");
+	}
+
+	/**
+	 * Sets a selected state value to the given long {@code value}. The number of possible
+	 * selections is up to the implementing class, but negative values for {@code selection}
+	 * are typically not tolerated. Implementors are permitted to change {@code value} if it
+	 * is not valid, but they should not alter it if it is valid.
+	 * @param selection used to select which state variable to set; generally non-negative
+	 * @param value the exact value to use for the selected state, if valid
+	 */
+	default void setSelectedState(int selection, long value) {
+		setSeed(value);
 	}
 
 	/**
@@ -229,11 +66,8 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @return the next pseudorandom value from this random number
 	 * generator's sequence
 	 */
-	@Override
-	public int next (int bits) {
-		final long s = stateA += 0xC6BC279692B5C323L;
-		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		return (int)(z ^ z >>> 26 ^ z >>> 6) >>> 32 - bits;
+	default int next (int bits) {
+		return (int)nextLong() >>> 32 - bits;
 	}
 
 	/**
@@ -244,8 +78,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param bytes the byte array to fill with random bytes
 	 * @throws NullPointerException if the byte array is null
 	 */
-	@Override
-	public void nextBytes (byte[] bytes) {
+	default void nextBytes (byte[] bytes) {
 		for (int i = 0; i < bytes.length; ) { for (long r = nextLong(), n = Math.min(bytes.length - i, 8); n-- > 0; r >>>= 8) { bytes[i++] = (byte)r; } }
 	}
 
@@ -259,11 +92,8 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @return the next pseudorandom, uniformly distributed {@code int}
 	 * value from this random number generator's sequence
 	 */
-	@Override
-	public int nextInt () {
-		final long s = stateA += 0xC6BC279692B5C323L;
-		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		return (int)(z ^ z >>> 26 ^ z >>> 6);
+	default int nextInt () {
+		return (int)nextLong();
 	}
 
 	/**
@@ -289,11 +119,8 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * value between zero (inclusive) and {@code bound} (exclusive)
 	 * from this random number generator's sequence
 	 */
-	@Override
-	public int nextInt (int bound) {
-		final long s = stateA += 0xC6BC279692B5C323L;
-		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		return (int)(bound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL) >> 32) & ~(bound >> 31);
+	default int nextInt (int bound) {
+		return (int)(bound * (nextLong() & 0xFFFFFFFFL) >> 32) & ~(bound >> 31);
 	}
 
 	/**
@@ -309,10 +136,8 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the outer exclusive bound; may be any int value, allowing negative
 	 * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
 	 */
-	public int nextSignedInt (int outerBound) {
-		final long s = stateA += 0xC6BC279692B5C323L;
-		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		outerBound = (int)(outerBound * ((z ^ z >>> 26 ^ z >>> 6) & 0xFFFFFFFFL) >> 32);
+	default int nextSignedInt (int outerBound) {
+		outerBound = (int)(outerBound * (nextLong() & 0xFFFFFFFFL) >> 32);
 		return outerBound + (outerBound >>> 31);
 	}
 
@@ -330,7 +155,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	public int nextInt (int innerBound, int outerBound) {
+	default int nextInt (int innerBound, int outerBound) {
 		return innerBound + nextInt(outerBound - innerBound);
 	}
 
@@ -346,7 +171,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound; may be any int, allowing negative
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	public int nextSignedInt (int innerBound, int outerBound) {
+	default int nextSignedInt (int innerBound, int outerBound) {
 		return innerBound + nextSignedInt(outerBound - innerBound);
 	}
 
@@ -356,19 +181,15 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * contract of {@code nextLong} is that one {@code long} value is
 	 * pseudorandomly generated and returned.
 	 * <br>
-	 * An individual {@code LaserRNG} can't return all 18-quintillion possible {@code long} values,
-	 * but the full set of 9-quintillion possible random number streams that this class can produce will,
-	 * as a whole, produce all {@code long} values with equal likelihood.
+	 * The only methods that need to be implemented by this interface are
+	 * this and {@link #copy()}, though other methods can be implemented
+	 * as appropriate for generators that, for instance, natively produce
+	 * ints rather than longs.
 	 *
 	 * @return the next pseudorandom, uniformly distributed {@code long}
 	 * value from this random number generator's sequence
 	 */
-	@Override
-	public long nextLong () {
-		final long s = stateA += 0xC6BC279692B5C323L;
-		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		return z ^ z >>> 26 ^ z >>> 6;
-	}
+	long nextLong ();
 
 	/**
 	 * Returns a pseudorandom, uniformly distributed {@code long} value
@@ -396,7 +217,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * value between zero (inclusive) and {@code bound} (exclusive)
 	 * from this random number generator's sequence
 	 */
-	public long nextLong (long bound) {
+	default long nextLong (long bound) {
 		return nextLong(0L, bound);
 	}
 
@@ -419,7 +240,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the outer exclusive bound; may be any long value, allowing negative
 	 * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
 	 */
-	public long nextSignedLong (long outerBound) {
+	default long nextSignedLong (long outerBound) {
 		return nextSignedLong(0L, outerBound);
 	}
 
@@ -437,7 +258,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outer the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	public long nextLong (long inner, long outer) {
+	default long nextLong (long inner, long outer) {
 		final long rand = nextLong();
 		if(inner >= outer) return inner;
 		final long bound = outer - inner;
@@ -459,7 +280,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outer the exclusive outer bound; may be any long, allowing negative
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	public long nextSignedLong (long inner, long outer) {
+	default long nextSignedLong (long inner, long outer) {
 		final long rand = nextLong();
 		if(outer < inner) {
 			long t = outer;
@@ -486,10 +307,8 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * {@code boolean} value from this random number generator's
 	 * sequence
 	 */
-	@Override
-	public boolean nextBoolean () {
-		final long s = stateA += 0xC6BC279692B5C323L;
-		return (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L) < 0L;
+	default boolean nextBoolean () {
+		return nextLong() < 0L;
 	}
 
 	/**
@@ -515,11 +334,8 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * value between {@code 0.0} and {@code 1.0} from this
 	 * random number generator's sequence
 	 */
-	@Override
-	public float nextFloat () {
-		final long s = stateA += 0xC6BC279692B5C323L;
-		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		return ((z ^ z >>> 6) >>> 40) * 0x1p-24f;
+	default float nextFloat () {
+		return (nextLong() >>> 40) * 0x1p-24f;
 	}
 
 	/**
@@ -529,7 +345,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound
 	 * @return a float between 0 (inclusive) and {@code outerBound} (exclusive)
 	 */
-	public float nextFloat (float outerBound) {
+	default float nextFloat (float outerBound) {
 		return nextFloat() * outerBound;
 	}
 
@@ -541,7 +357,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound; may be negative
 	 * @return a float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
 	 */
-	public float nextFloat (float innerBound, float outerBound) {
+	default float nextFloat (float innerBound, float outerBound) {
 		return innerBound + nextFloat() * (outerBound - innerBound);
 	}
 
@@ -565,11 +381,8 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * value between {@code 0.0} and {@code 1.0} from this
 	 * random number generator's sequence
 	 */
-	@Override
-	public double nextDouble () {
-		final long s = stateA += 0xC6BC279692B5C323L;
-		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
-		return (z >>> 11 ^ z >>> 37 ^ z >>> 17) * 0x1.0p-53;
+	default double nextDouble () {
+		return (nextLong() >>> 11) * 0x1.0p-53;
 	}
 
 	/**
@@ -579,7 +392,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound
 	 * @return a double between 0 (inclusive) and {@code outerBound} (exclusive)
 	 */
-	public double nextDouble (double outerBound) {
+	default double nextDouble (double outerBound) {
 		return nextDouble() * outerBound;
 	}
 
@@ -591,7 +404,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound; may be negative
 	 * @return a double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
 	 */
-	public double nextDouble (double innerBound, double outerBound) {
+	default double nextDouble (double innerBound, double outerBound) {
 		return innerBound + nextDouble() * (outerBound - innerBound);
 	}
 
@@ -616,8 +429,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * standard deviation {@code 1.0} from this random number
 	 * generator's sequence
 	 */
-	@Override
-	public double nextGaussian () {
+	default double nextGaussian () {
 		return probit(nextDouble());
 	}
 
@@ -627,45 +439,25 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * and returns the random number produced at that step. Negative numbers can be used to step backward, or 0 can be
 	 * given to get the most-recently-generated long from {@link #nextLong()}.
 	 *
-	 * <p>Note that none of the number-generating methods here advance state differently from {@link #nextLong()} except
-	 * for the Stream APIs. This is somewhat unusual; in many generators, calls to {@link #nextInt(int)} and similar
-	 * bounded-range random generators can advance the state by a variable amount. Using a fixed advance permits this
-	 * method and also allows guaranteeing the cycle length (also called period), but introduces a tiny amount of bias
-	 * for some bounds (mostly very large ones).
+	 * <p>The default implementation throws an UnsupportedOperationException. Many types of random
+	 * number generator do not have an efficient way of skipping arbitrarily through the state sequence,
+	 * and those types should not implement this method differently.
 	 *
 	 * @param advance Number of future generations to skip over; can be negative to backtrack, 0 gets the most-recently-generated number
 	 * @return the random long generated after skipping forward or backwards by {@code advance} numbers
 	 */
-	public long skip (long advance) {
-		final long s = stateA += 0xC6BC279692B5C323L * advance;
-		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L * advance);
-		return z ^ z >>> 26 ^ z >>> 6;
+	default long skip (long advance) {
+		throw new UnsupportedOperationException("skip() not supported.");
 	}
 
 	/**
-	 * Creates a new {@code LaserRandom} with identical states to this one, so if the same LaserRandom methods are
+	 * Creates a new EnhancedRandom with identical states to this one, so if the same EnhancedRandom methods are
 	 * called on this object and its copy (in the same order), the same outputs will be produced. This is not
-	 * guaranteed to copy the inherited state of the {@link Random} parent class, so if you call methods that are
-	 * only implemented by Random and not LaserRandom, the results may differ.
+	 * guaranteed to copy the inherited state of any parent class, so if you call methods that are
+	 * only implemented by a superclass (like {@link Random}) and not this one, the results may differ.
 	 * @return a deep copy of this LaserRandom.
 	 */
-	public LaserRandom copy () {
-		return new LaserRandom(stateA, stateB);
-	}
-
-	/**
-	 * Gets a long that identifies which stream of numbers this generator is producing; this stream identifier is always
-	 * an odd long and won't change by generating numbers. It is determined at construction and will usually (not
-	 * always) change if {@link #setStateA(long)} or {@link #setStateB(long)} are called. Each stream is a
-	 * probably-unique sequence of 2 to the 64 longs, where approximately 1/3 of all possible longs will not ever occur
-	 * (while others occur twice or more), but this set of results is different for every stream. There are 2 to the 63
-	 * possible streams, one for every odd long.
-	 *
-	 * @return an odd long that identifies which stream this LaserRandom is generating from
-	 */
-	public long getStream () {
-		return stateB - stateA * 0x1743CE5C6E1B848BL * 0x9E3779B97F4A7C16L;
-	}
+	EnhancedRandom copy ();
 
 	/**
 	 * A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
@@ -700,7 +492,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param d should be between 0 and 1, exclusive, but other values are tolerated
 	 * @return a normal-distributed double centered on 0.0; all results will be between -38.5 and 38.5, both inclusive
 	 */
-	public static double probit (final double d) {
+	static double probit (final double d) {
 		if (d <= 0 || d >= 1) {
 			return Math.copySign(38.5, d - 0.5);
 		}
@@ -728,7 +520,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
 	 * @return a boolean selected with the given {@code chance} of being true
 	 */
-	public boolean nextBoolean (float chance) {
+	default boolean nextBoolean (float chance) {
 		return nextFloat() < chance;
 	}
 
@@ -737,7 +529,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @return -1 or 1, selected with approximately equal likelihood
 	 */
-	public int nextSign () {
+	default int nextSign () {
 		return 1 | nextInt() >> 31;
 	}
 
@@ -747,7 +539,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * <p>
 	 * This is an optimized version of {@link #nextTriangular(float, float, float) randomTriangular(-1, 1, 0)}
 	 */
-	public float nextTriangular () {
+	default float nextTriangular () {
 		return nextFloat() - nextFloat();
 	}
 
@@ -759,7 +551,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param max the upper limit
 	 */
-	public float nextTriangular (float max) {
+	default float nextTriangular (float max) {
 		return (nextFloat() - nextFloat()) * max;
 	}
 
@@ -772,7 +564,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param min the lower limit
 	 * @param max the upper limit
 	 */
-	public float nextTriangular (float min, float max) {
+	default float nextTriangular (float min, float max) {
 		return nextTriangular(min, max, (min + max) * 0.5f);
 	}
 
@@ -784,7 +576,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param max  the upper limit
 	 * @param mode the point around which the values are more likely
 	 */
-	public float nextTriangular (float min, float max, float mode) {
+	default float nextTriangular (float min, float max, float mode) {
 		float u = nextFloat();
 		float d = max - min;
 		if (u <= (mode - min) / d) { return min + (float)Math.sqrt(u * d * (mode - min)); }
@@ -799,7 +591,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @throws NullPointerException if array is null
 	 * @throws IndexOutOfBoundsException if array is empty
 	 */
-	public <T> T randomElement (T[] array) {
+	default <T> T randomElement (T[] array) {
 		return array[nextInt(array.length)];
 	}
 
@@ -808,7 +600,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items an int array; must be non-null
 	 */
-	public void shuffle (int[] items) {
+	default void shuffle (int[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			int temp = items[i];
@@ -822,7 +614,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a long array; must be non-null
 	 */
-	public void shuffle (long[] items) {
+	default void shuffle (long[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			long temp = items[i];
@@ -836,7 +628,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a float array; must be non-null
 	 */
-	public void shuffle (float[] items) {
+	default void shuffle (float[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			float temp = items[i];
@@ -850,7 +642,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a char array; must be non-null
 	 */
-	public void shuffle (char[] items) {
+	default void shuffle (char[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			char temp = items[i];
@@ -864,7 +656,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a double array; must be non-null
 	 */
-	public void shuffle (double[] items) {
+	default void shuffle (double[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			double temp = items[i];
@@ -878,7 +670,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a short array; must be non-null
 	 */
-	public void shuffle (short[] items) {
+	default void shuffle (short[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			short temp = items[i];
@@ -892,7 +684,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a boolean array; must be non-null
 	 */
-	public void shuffle (boolean[] items) {
+	default void shuffle (boolean[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			boolean temp = items[i];
@@ -906,7 +698,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items an array of some reference type; must be non-null but may contain null items
 	 */
-	public <T> void shuffle (T[] items) {
+	default <T> void shuffle (T[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
 			T temp = items[i];
