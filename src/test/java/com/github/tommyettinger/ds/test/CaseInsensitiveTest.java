@@ -4,7 +4,7 @@ import com.github.tommyettinger.ds.CaseInsensitiveMap;
 import com.github.tommyettinger.ds.CaseInsensitiveOrderedMap;
 import com.github.tommyettinger.ds.CaseInsensitiveOrderedSet;
 import com.github.tommyettinger.ds.CaseInsensitiveSet;
-import com.sun.org.apache.bcel.internal.generic.PUSH;
+import com.github.tommyettinger.ds.ObjectList;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -64,6 +64,13 @@ public class CaseInsensitiveTest {
 		for(Map.Entry<CharSequence, String> ent : map){
 			Assert.assertEquals(ent.getKey(), ent.getValue());
 		}
+		CaseInsensitiveOrderedMap<ObjectList<String>> synonyms = CaseInsensitiveOrderedMap.with(
+			"intelligence", ObjectList.with("cunning", "acumen", "wits", "wisdom", "intellect"),
+			"strength", ObjectList.with("power", "potency", "brawn", "muscle", "force")
+		);
+		CaseInsensitiveOrderedMap<ObjectList<String>> syn2 =
+			new CaseInsensitiveOrderedMap<>();
+		syn2.putAll(synonyms); // this was a problem due to some generics... messiness.
 	}
 
 	@Test

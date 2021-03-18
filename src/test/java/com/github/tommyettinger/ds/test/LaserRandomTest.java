@@ -70,8 +70,8 @@ public class LaserRandomTest {
 		long res;
 		for (int i = 0; i < 0x40000; i++) {
 			for (int j = 0; j < 0x20000; j++) {
-				if((res = lr.nextSignedLong(-2L)) > 0) {
-					System.out.println("nextSignedLong(-2) had an incorrect result: "+ res + "\nFAILURE!");
+				if((res = lr.nextSignedLong(-1L, 1L)) > 0) {
+					System.out.println("nextSignedLong(-1L, 1L) had an incorrect result: "+ res + "\nFAILURE!");
 					System.out.printf("0x%016XL, 0x%016XL", lr.getStateA(), lr.getStateB());
 					return;
 				}

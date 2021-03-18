@@ -178,14 +178,10 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		return null;
 	}
 
-	public <T extends K> void putAll (ObjectObjectOrderedMap<T, ? extends V> map) {
+	public void putAll (ObjectObjectOrderedMap<? extends K, ? extends V> map) {
 		ensureCapacity(map.size);
-		ObjectList<T> ks = map.keys;
-		int kl = ks.size();
-		T k;
-		for (int i = 0; i < kl; i++) {
-			k = ks.get(i);
-			put(k, map.get(k));
+		for (int i = 0, kl = map.size; i < kl; i++) {
+			put(map.keyAt(i), map.getAt(i));
 		}
 	}
 
