@@ -180,14 +180,10 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		return defaultValue;
 	}
 
-	public <T extends K> void putAll (ObjectFloatOrderedMap<T> map) {
+	public void putAll (ObjectFloatOrderedMap<? extends K> map) {
 		ensureCapacity(map.size);
-		ObjectList<T> ks = map.keys;
-		int kl = ks.size();
-		T k;
-		for (int i = 0; i < kl; i++) {
-			k = ks.get(i);
-			put(k, map.get(k));
+		for (int i = 0, kl = map.size; i < kl; i++) {
+			put(map.keyAt(i), map.getAt(i));
 		}
 	}
 

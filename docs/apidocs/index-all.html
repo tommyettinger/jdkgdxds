@@ -512,6 +512,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Applies this function to the given arguments.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/function/FloatToFloatFunction.html#applyAsFloat(float)">applyAsFloat(float)</a></span> - Method in interface com.github.tommyettinger.ds.support.function.<a href="com/github/tommyettinger/ds/support/function/FloatToFloatFunction.html" title="interface in com.github.tommyettinger.ds.support.function">FloatToFloatFunction</a></dt>
+<dd>
+<div class="block">Applies this function to the given argument.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/function/FloatUnaryOperator.html#applyAsFloat(float)">applyAsFloat(float)</a></span> - Method in interface com.github.tommyettinger.ds.support.function.<a href="com/github/tommyettinger/ds/support/function/FloatUnaryOperator.html" title="interface in com.github.tommyettinger.ds.support.function">FloatUnaryOperator</a></dt>
 <dd>
 <div class="block">Applies this operator to the given operand.</div>
@@ -560,6 +564,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Applies this function to the given arguments.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/function/IntToIntFunction.html#applyAsInt(int)">applyAsInt(int)</a></span> - Method in interface com.github.tommyettinger.ds.support.function.<a href="com/github/tommyettinger/ds/support/function/IntToIntFunction.html" title="interface in com.github.tommyettinger.ds.support.function">IntToIntFunction</a></dt>
+<dd>
+<div class="block">Applies this function to the given argument.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/function/IntIntToIntBiFunction.html#applyAsInt(int,int)">applyAsInt(int, int)</a></span> - Method in interface com.github.tommyettinger.ds.support.function.<a href="com/github/tommyettinger/ds/support/function/IntIntToIntBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">IntIntToIntBiFunction</a></dt>
 <dd>
 <div class="block">Applies this function to the given arguments.</div>
@@ -583,6 +591,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/function/IntLongToLongBiFunction.html#applyAsLong(int,long)">applyAsLong(int, long)</a></span> - Method in interface com.github.tommyettinger.ds.support.function.<a href="com/github/tommyettinger/ds/support/function/IntLongToLongBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">IntLongToLongBiFunction</a></dt>
 <dd>
 <div class="block">Applies this function to the given arguments.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/function/LongToLongFunction.html#applyAsLong(long)">applyAsLong(long)</a></span> - Method in interface com.github.tommyettinger.ds.support.function.<a href="com/github/tommyettinger/ds/support/function/LongToLongFunction.html" title="interface in com.github.tommyettinger.ds.support.function">LongToLongFunction</a></dt>
+<dd>
+<div class="block">Applies this function to the given argument.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/function/LongLongToLongBiFunction.html#applyAsLong(long,long)">applyAsLong(long, long)</a></span> - Method in interface com.github.tommyettinger.ds.support.function.<a href="com/github/tommyettinger/ds/support/function/LongLongToLongBiFunction.html" title="interface in com.github.tommyettinger.ds.support.function">LongLongToLongBiFunction</a></dt>
 <dd>
@@ -1119,6 +1131,28 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns a composed operator that first applies the <code>before</code>
  operator to its input, and then applies this operator to the result.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.html#computeIfAbsent(int,com.github.tommyettinger.ds.support.function.IntToFloatFunction)">computeIfAbsent(int, IntToFloatFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.html" title="class in com.github.tommyettinger.ds">IntFloatMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntIntMap.html#computeIfAbsent(int,com.github.tommyettinger.ds.support.function.IntToIntFunction)">computeIfAbsent(int, IntToIntFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntIntMap.html" title="class in com.github.tommyettinger.ds">IntIntMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntObjectMap.html#computeIfAbsent(int,java.util.function.IntFunction)">computeIfAbsent(int, IntFunction&lt;? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntObjectMap.html" title="class in com.github.tommyettinger.ds">IntObjectMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntLongMap.html#computeIfAbsent(int,java.util.function.IntToLongFunction)">computeIfAbsent(int, IntToLongFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntLongMap.html" title="class in com.github.tommyettinger.ds">IntLongMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongFloatMap.html#computeIfAbsent(long,com.github.tommyettinger.ds.support.function.LongToFloatFunction)">computeIfAbsent(long, LongToFloatFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongFloatMap.html" title="class in com.github.tommyettinger.ds">LongFloatMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongLongMap.html#computeIfAbsent(long,com.github.tommyettinger.ds.support.function.LongToLongFunction)">computeIfAbsent(long, LongToLongFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongLongMap.html" title="class in com.github.tommyettinger.ds">LongLongMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongObjectMap.html#computeIfAbsent(long,java.util.function.LongFunction)">computeIfAbsent(long, LongFunction&lt;? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.html" title="class in com.github.tommyettinger.ds">LongObjectMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongIntMap.html#computeIfAbsent(long,java.util.function.LongToIntFunction)">computeIfAbsent(long, LongToIntFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongIntMap.html" title="class in com.github.tommyettinger.ds">LongIntMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectFloatMap.html#computeIfAbsent(K,com.github.tommyettinger.ds.support.function.ToFloatFunction)">computeIfAbsent(K, ToFloatFunction&lt;? super K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.html" title="class in com.github.tommyettinger.ds">ObjectFloatMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectIntMap.html#computeIfAbsent(K,java.util.function.ToIntFunction)">computeIfAbsent(K, ToIntFunction&lt;? super K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.html" title="class in com.github.tommyettinger.ds">ObjectIntMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectLongMap.html#computeIfAbsent(K,java.util.function.ToLongFunction)">computeIfAbsent(K, ToLongFunction&lt;? super K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.html" title="class in com.github.tommyettinger.ds">ObjectLongMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/FloatList.html#contains(float)">contains(float)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.Values.html#contains(float)">contains(float)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.Values.html" title="class in com.github.tommyettinger.ds">IntFloatMap.Values</a></dt>
@@ -1318,6 +1352,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns true if the specified value is in the map.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#copy()">copy()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Creates a new EnhancedRandom with identical states to this one, so if the same EnhancedRandom methods are
+ called on this object and its copy (in the same order), the same outputs will be produced.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#copy()">copy()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Creates a new <code>LaserRandom</code> with identical states to this one, so if the same LaserRandom methods are
@@ -1418,6 +1457,11 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/BinaryHeap.html#element()">element()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/BinaryHeap.html" title="class in com.github.tommyettinger.ds">BinaryHeap</a></dt>
 <dd>
 <div class="block">Returns the first item in the heap.</div>
+</dd>
+<dt><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support"><span class="type-name-link">EnhancedRandom</span></a> - Interface in <a href="com/github/tommyettinger/ds/support/package-summary.html">com.github.tommyettinger.ds.support</a></dt>
+<dd>
+<div class="block">A superset of the functionality in <code>Random</code>, meant for random number generators
+ that would be too bare-bones with just Random's methods.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/FloatList.html#ensureCapacity(int)">ensureCapacity(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a></dt>
 <dd>
@@ -2133,6 +2177,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Represents a supplier of <code>float</code>-valued results.</div>
 </dd>
+<dt><a href="com/github/tommyettinger/ds/support/function/FloatToFloatFunction.html" title="interface in com.github.tommyettinger.ds.support.function"><span class="type-name-link">FloatToFloatFunction</span></a> - Interface in <a href="com/github/tommyettinger/ds/support/function/package-summary.html">com.github.tommyettinger.ds.support.function</a></dt>
+<dd>
+<div class="block">Represents a function that accepts a float-valued argument and produces a
+ float-valued result.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/BitConversion.html#floatToIntBits(float)">floatToIntBits(float)</a></span> - Static method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/BitConversion.html" title="class in com.github.tommyettinger.ds.support">BitConversion</a></dt>
 <dd>
 <div class="block">Identical to <code>Float.floatToIntBits(float)</code> on desktop; optimized on GWT.</div>
@@ -2165,6 +2214,26 @@ loadScripts(document, 'script');</script>
 <div class="block">Performs the given action for each element of the <code>PrimitiveCollection.OfFloat</code>
  until all elements have been processed or the action throws an
  exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.html#forEach(com.github.tommyettinger.ds.support.function.IntFloatConsumer)">forEach(IntFloatConsumer)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.html" title="class in com.github.tommyettinger.ds">IntFloatMap</a></dt>
+<dd>
+<div class="block">Performs the given action for each entry in this map until all entries
+ have been processed or the action throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntIntMap.html#forEach(com.github.tommyettinger.ds.support.function.IntIntConsumer)">forEach(IntIntConsumer)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntIntMap.html" title="class in com.github.tommyettinger.ds">IntIntMap</a></dt>
+<dd>
+<div class="block">Performs the given action for each entry in this map until all entries
+ have been processed or the action throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntLongMap.html#forEach(com.github.tommyettinger.ds.support.function.IntLongConsumer)">forEach(IntLongConsumer)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntLongMap.html" title="class in com.github.tommyettinger.ds">IntLongMap</a></dt>
+<dd>
+<div class="block">Performs the given action for each entry in this map until all entries
+ have been processed or the action throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntObjectMap.html#forEach(com.github.tommyettinger.ds.support.function.IntObjConsumer)">forEach(IntObjConsumer&lt;? super V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntObjectMap.html" title="class in com.github.tommyettinger.ds">IntObjectMap</a></dt>
+<dd>
+<div class="block">Performs the given action for each entry in this map until all entries
+ have been processed or the action throws an exception.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongFloatMap.html#forEach(com.github.tommyettinger.ds.support.function.LongFloatConsumer)">forEach(LongFloatConsumer)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongFloatMap.html" title="class in com.github.tommyettinger.ds">LongFloatMap</a></dt>
 <dd>
@@ -2566,6 +2635,14 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectObjectMap.html#getOrDefault(java.lang.Object,V)">getOrDefault(Object, V)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a></dt>
 <dd>
 <div class="block">Returns the value for the specified key, or the given default value if the key is not in the map.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#getSelectedState(int)">getSelectedState(int)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Gets a selected state value from this EnhancedRandom.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#getSelectedState(int)">getSelectedState(int)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
+<dd>
+<div class="block">Gets a selected state value from this EnhancedRandom.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#getStateA()">getStateA()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -3638,6 +3715,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Represents a function that accepts an int-valued argument and produces a
  float-valued result.</div>
+</dd>
+<dt><a href="com/github/tommyettinger/ds/support/function/IntToIntFunction.html" title="interface in com.github.tommyettinger.ds.support.function"><span class="type-name-link">IntToIntFunction</span></a> - Interface in <a href="com/github/tommyettinger/ds/support/function/package-summary.html">com.github.tommyettinger.ds.support.function</a></dt>
+<dd>
+<div class="block">Represents a function that accepts an int-valued argument and produces an
+ int-valued result.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/BinaryHeap.html#isEmpty()">isEmpty()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/BinaryHeap.html" title="class in com.github.tommyettinger.ds">BinaryHeap</a></dt>
 <dd>
@@ -5295,6 +5377,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Represents a function that accepts a long-valued argument and produces a
  float-valued result.</div>
 </dd>
+<dt><a href="com/github/tommyettinger/ds/support/function/LongToLongFunction.html" title="interface in com.github.tommyettinger.ds.support.function"><span class="type-name-link">LongToLongFunction</span></a> - Interface in <a href="com/github/tommyettinger/ds/support/function/package-summary.html">com.github.tommyettinger.ds.support.function</a></dt>
+<dd>
+<div class="block">Represents a function that accepts a long-valued argument and produces a
+ long-valued result.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/BitConversion.html#lowestOneBit(int)">lowestOneBit(int)</a></span> - Static method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/BitConversion.html" title="class in com.github.tommyettinger.ds.support">BitConversion</a></dt>
 <dd>
 <div class="block">Returns an int value with at most a single one-bit, in the position of the lowest-order ("rightmost") one-bit in
@@ -5539,9 +5626,19 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectSet.ObjectSetIterator.html#next()">next()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">ObjectSet.ObjectSetIterator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/util/FloatIterator.html#next()">next()</a></span> - Method in interface com.github.tommyettinger.ds.support.util.<a href="com/github/tommyettinger/ds/support/util/FloatIterator.html" title="interface in com.github.tommyettinger.ds.support.util">FloatIterator</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#next(int)">next(int)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Generates the next pseudorandom number with a specific maximum size in bits (not a max number).</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#next(int)">next(int)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Generates the next pseudorandom number with a specific maximum size in bits (not a max number).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextBoolean()">nextBoolean()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns the next pseudorandom, uniformly distributed
+ <code>boolean</code> value from this random number generator's
+ sequence.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextBoolean()">nextBoolean()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -5549,14 +5646,29 @@ loadScripts(document, 'script');</script>
  <code>boolean</code> value from this random number generator's
  sequence.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextBoolean(float)">nextBoolean(float)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns true if a random value between 0 and 1 is less than the specified value.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextBoolean(float)">nextBoolean(float)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns true if a random value between 0 and 1 is less than the specified value.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextBytes(byte%5B%5D)">nextBytes(byte[])</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Generates random bytes and places them into a user-supplied
+ byte array.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextBytes(byte%5B%5D)">nextBytes(byte[])</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Generates random bytes and places them into a user-supplied
  byte array.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextDouble()">nextDouble()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns the next pseudorandom, uniformly distributed
+ <code>double</code> value between <code>0.0</code> (inclusive) and <code>1.0</code>
+ (exclusive) from this random number generator's sequence.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextDouble()">nextDouble()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -5564,9 +5676,17 @@ loadScripts(document, 'script');</script>
  <code>double</code> value between <code>0.0</code> (inclusive) and <code>1.0</code>
  (exclusive) from this random number generator's sequence.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextDouble(double)">nextDouble(double)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Gets a pseudo-random double between 0 (inclusive) and <code>outerBound</code> (exclusive).</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextDouble(double)">nextDouble(double)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Gets a pseudo-random double between 0 (inclusive) and <code>outerBound</code> (exclusive).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextDouble(double,double)">nextDouble(double, double)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Gets a pseudo-random double between <code>innerBound</code> (inclusive) and <code>outerBound</code> (exclusive).</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextDouble(double,double)">nextDouble(double, double)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -5588,6 +5708,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the next <code>float</code> element in the iteration.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextFloat()">nextFloat()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns the next pseudorandom, uniformly distributed <code>float</code>
+ value between <code>0.0</code> (inclusive) and <code>1.0</code> (exclusive)
+ from this random number generator's sequence.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextFloat()">nextFloat()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns the next pseudorandom, uniformly distributed <code>float</code>
@@ -5598,13 +5724,27 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the next <code>float</code> element in the iteration.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextFloat(float)">nextFloat(float)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Gets a pseudo-random float between 0 (inclusive) and <code>outerBound</code> (exclusive).</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextFloat(float)">nextFloat(float)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Gets a pseudo-random float between 0 (inclusive) and <code>outerBound</code> (exclusive).</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextFloat(float,float)">nextFloat(float, float)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Gets a pseudo-random float between <code>innerBound</code> (inclusive) and <code>outerBound</code> (exclusive).</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextFloat(float,float)">nextFloat(float, float)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Gets a pseudo-random float between <code>innerBound</code> (inclusive) and <code>outerBound</code> (exclusive).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextGaussian()">nextGaussian()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns the next pseudorandom, Gaussian ("normally") distributed
+ <code>double</code> value with mean <code>0.0</code> and standard
+ deviation <code>1.0</code> from this random number generator's sequence.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextGaussian()">nextGaussian()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -5669,16 +5809,33 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the next <code>int</code> element in the iteration.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextInt()">nextInt()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns the next pseudorandom, uniformly distributed <code>int</code>
+ value from this random number generator's sequence.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextInt()">nextInt()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns the next pseudorandom, uniformly distributed <code>int</code>
  value from this random number generator's sequence.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextInt(int)">nextInt(int)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value
+ between 0 (inclusive) and the specified value (exclusive), drawn from
+ this random number generator's sequence.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextInt(int)">nextInt(int)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value
  between 0 (inclusive) and the specified value (exclusive), drawn from
  this random number generator's sequence.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextInt(int,int)">nextInt(int, int)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive).</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextInt(int,int)">nextInt(int, int)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -5714,10 +5871,21 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the next <code>long</code> element in the iteration.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextLong()">nextLong()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns the next pseudorandom, uniformly distributed <code>long</code>
+ value from this random number generator's sequence.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextLong()">nextLong()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns the next pseudorandom, uniformly distributed <code>long</code>
  value from this random number generator's sequence.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextLong(long)">nextLong(long)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value
+ between 0 (inclusive) and the specified value (exclusive), drawn from
+ this random number generator's sequence.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextLong(long)">nextLong(long)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -5725,20 +5893,41 @@ loadScripts(document, 'script');</script>
  between 0 (inclusive) and the specified value (exclusive), drawn from
  this random number generator's sequence.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextLong(long,long)">nextLong(long, long)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive).</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextLong(long,long)">nextLong(long, long)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value between the
  specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
  (exclusive).</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextSign()">nextSign()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns -1 or 1, randomly.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextSign()">nextSign()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns -1 or 1, randomly.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextSignedInt(int)">nextSignedInt(int)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value between an
+ inner bound of 0 (inclusive) and the specified <code>outerBound</code> (exclusive).</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextSignedInt(int)">nextSignedInt(int)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value between an
  inner bound of 0 (inclusive) and the specified <code>outerBound</code> (exclusive).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextSignedInt(int,int)">nextSignedInt(int, int)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>int</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive).</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextSignedInt(int,int)">nextSignedInt(int, int)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -5746,10 +5935,21 @@ loadScripts(document, 'script');</script>
  specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
  (exclusive).</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextSignedLong(long)">nextSignedLong(long)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value between an
+ inner bound of 0 (inclusive) and the specified <code>outerBound</code> (exclusive).</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextSignedLong(long)">nextSignedLong(long)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value between an
  inner bound of 0 (inclusive) and the specified <code>outerBound</code> (exclusive).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextSignedLong(long,long)">nextSignedLong(long, long)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a pseudorandom, uniformly distributed <code>long</code> value between the
+ specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
+ (exclusive).</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextSignedLong(long,long)">nextSignedLong(long, long)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -5757,20 +5957,40 @@ loadScripts(document, 'script');</script>
  specified <code>innerBound</code> (inclusive) and the specified <code>outerBound</code>
  (exclusive).</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextTriangular()">nextTriangular()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
+ more likely.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextTriangular()">nextTriangular()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
  more likely.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextTriangular(float)">nextTriangular(float)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a triangularly distributed random number between <code>-max</code> (exclusive) and <code>max</code> (exclusive), where values
+ around zero are more likely.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextTriangular(float)">nextTriangular(float)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns a triangularly distributed random number between <code>-max</code> (exclusive) and <code>max</code> (exclusive), where values
  around zero are more likely.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextTriangular(float,float)">nextTriangular(float, float)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a triangularly distributed random number between <code>min</code> (inclusive) and <code>max</code> (exclusive), where the
+ <code>mode</code> argument defaults to the midpoint between the bounds, giving a symmetric distribution.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextTriangular(float,float)">nextTriangular(float, float)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Returns a triangularly distributed random number between <code>min</code> (inclusive) and <code>max</code> (exclusive), where the
  <code>mode</code> argument defaults to the midpoint between the bounds, giving a symmetric distribution.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextTriangular(float,float,float)">nextTriangular(float, float, float)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Returns a triangularly distributed random number between <code>min</code> (inclusive) and <code>max</code> (exclusive), where values
+ around <code>mode</code> are more likely.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#nextTriangular(float,float,float)">nextTriangular(float, float, float)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -6775,6 +6995,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/tommyettinger/ds/PrimitiveCollection.OfLong.html" title="interface in com.github.tommyettinger.ds"><span class="type-name-link">PrimitiveCollection.OfLong</span></a> - Interface in <a href="com/github/tommyettinger/ds/package-summary.html">com.github.tommyettinger.ds</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#probit(double)">probit(double)</a></span> - Static method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
+ inputs correspond to high outputs, and similarly for the low range.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#probit(double)">probit(double)</a></span> - Static method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
@@ -7030,19 +7255,19 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectFloatMap.html#putAll(com.github.tommyettinger.ds.ObjectFloatMap)">putAll(ObjectFloatMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.html" title="class in com.github.tommyettinger.ds">ObjectFloatMap</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectFloatOrderedMap)">putAll(ObjectFloatOrderedMap&lt;T&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectFloatOrderedMap</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectFloatOrderedMap)">putAll(ObjectFloatOrderedMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectFloatOrderedMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectIntMap.html#putAll(com.github.tommyettinger.ds.ObjectIntMap)">putAll(ObjectIntMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.html" title="class in com.github.tommyettinger.ds">ObjectIntMap</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectIntOrderedMap)">putAll(ObjectIntOrderedMap&lt;T&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectIntOrderedMap</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectIntOrderedMap)">putAll(ObjectIntOrderedMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectIntOrderedMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectLongMap.html#putAll(com.github.tommyettinger.ds.ObjectLongMap)">putAll(ObjectLongMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.html" title="class in com.github.tommyettinger.ds">ObjectLongMap</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectLongOrderedMap)">putAll(ObjectLongOrderedMap&lt;T&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectLongOrderedMap</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectLongOrderedMap)">putAll(ObjectLongOrderedMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectLongOrderedMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectObjectMap.html#putAll(com.github.tommyettinger.ds.ObjectObjectMap)">putAll(ObjectObjectMap&lt;? extends K, ? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectObjectOrderedMap)">putAll(ObjectObjectOrderedMap&lt;T, ? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectOrderedMap</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectObjectOrderedMap)">putAll(ObjectObjectOrderedMap&lt;? extends K, ? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectOrderedMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.html#putAll(com.github.tommyettinger.ds.PrimitiveCollection.OfInt,com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">putAll(PrimitiveCollection.OfInt, PrimitiveCollection.OfFloat)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.html" title="class in com.github.tommyettinger.ds">IntFloatMap</a></dt>
 <dd>
@@ -7255,6 +7480,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets a random T value from this Ordered, where T is typically the key type for Maps and the
  item type for Lists and Sets.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#randomElement(T%5B%5D)">randomElement(T[])</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Gets a randomly-selected item from the given array, which must be non-null and non-empty</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#randomElement(T%5B%5D)">randomElement(T[])</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -7634,6 +7863,72 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Replaces each element of this list with the result of applying the
  given operator to that element.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.html#replaceAll(com.github.tommyettinger.ds.support.function.IntFloatToFloatBiFunction)">replaceAll(IntFloatToFloatBiFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.html" title="class in com.github.tommyettinger.ds">IntFloatMap</a></dt>
+<dd>
+<div class="block">Replaces each entry's value with the result of invoking the given
+ function on that entry until all entries have been processed or the
+ function throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntIntMap.html#replaceAll(com.github.tommyettinger.ds.support.function.IntIntToIntBiFunction)">replaceAll(IntIntToIntBiFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntIntMap.html" title="class in com.github.tommyettinger.ds">IntIntMap</a></dt>
+<dd>
+<div class="block">Replaces each entry's value with the result of invoking the given
+ function on that entry until all entries have been processed or the
+ function throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntLongMap.html#replaceAll(com.github.tommyettinger.ds.support.function.IntLongToLongBiFunction)">replaceAll(IntLongToLongBiFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntLongMap.html" title="class in com.github.tommyettinger.ds">IntLongMap</a></dt>
+<dd>
+<div class="block">Replaces each entry's value with the result of invoking the given
+ function on that entry until all entries have been processed or the
+ function throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntObjectMap.html#replaceAll(com.github.tommyettinger.ds.support.function.IntObjBiFunction)">replaceAll(IntObjBiFunction&lt;? super V, ? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntObjectMap.html" title="class in com.github.tommyettinger.ds">IntObjectMap</a></dt>
+<dd>
+<div class="block">Replaces each entry's value with the result of invoking the given
+ function on that entry until all entries have been processed or the
+ function throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongFloatMap.html#replaceAll(com.github.tommyettinger.ds.support.function.LongFloatToFloatBiFunction)">replaceAll(LongFloatToFloatBiFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongFloatMap.html" title="class in com.github.tommyettinger.ds">LongFloatMap</a></dt>
+<dd>
+<div class="block">Replaces each entry's value with the result of invoking the given
+ function on that entry until all entries have been processed or the
+ function throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongIntMap.html#replaceAll(com.github.tommyettinger.ds.support.function.LongIntToIntBiFunction)">replaceAll(LongIntToIntBiFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongIntMap.html" title="class in com.github.tommyettinger.ds">LongIntMap</a></dt>
+<dd>
+<div class="block">Replaces each entry's value with the result of invoking the given
+ function on that entry until all entries have been processed or the
+ function throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongLongMap.html#replaceAll(com.github.tommyettinger.ds.support.function.LongLongToLongBiFunction)">replaceAll(LongLongToLongBiFunction)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongLongMap.html" title="class in com.github.tommyettinger.ds">LongLongMap</a></dt>
+<dd>
+<div class="block">Replaces each entry's value with the result of invoking the given
+ function on that entry until all entries have been processed or the
+ function throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongObjectMap.html#replaceAll(com.github.tommyettinger.ds.support.function.LongObjBiFunction)">replaceAll(LongObjBiFunction&lt;? super V, ? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.html" title="class in com.github.tommyettinger.ds">LongObjectMap</a></dt>
+<dd>
+<div class="block">Replaces each entry's value with the result of invoking the given
+ function on that entry until all entries have been processed or the
+ function throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectFloatMap.html#replaceAll(com.github.tommyettinger.ds.support.function.ObjFloatToFloatBiFunction)">replaceAll(ObjFloatToFloatBiFunction&lt;? super K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.html" title="class in com.github.tommyettinger.ds">ObjectFloatMap</a></dt>
+<dd>
+<div class="block">Replaces each entry's value with the result of invoking the given
+ function on that entry until all entries have been processed or the
+ function throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectIntMap.html#replaceAll(com.github.tommyettinger.ds.support.function.ObjIntToIntBiFunction)">replaceAll(ObjIntToIntBiFunction&lt;? super K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.html" title="class in com.github.tommyettinger.ds">ObjectIntMap</a></dt>
+<dd>
+<div class="block">Replaces each entry's value with the result of invoking the given
+ function on that entry until all entries have been processed or the
+ function throws an exception.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectLongMap.html#replaceAll(com.github.tommyettinger.ds.support.function.ObjLongToLongBiFunction)">replaceAll(ObjLongToLongBiFunction&lt;? super K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.html" title="class in com.github.tommyettinger.ds">ObjectLongMap</a></dt>
+<dd>
+<div class="block">Replaces each entry's value with the result of invoking the given
+ function on that entry until all entries have been processed or the
+ function throws an exception.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntList.html#replaceAll(java.util.function.IntUnaryOperator)">replaceAll(IntUnaryOperator)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntList.html" title="class in com.github.tommyettinger.ds">IntList</a></dt>
 <dd>
@@ -8037,10 +8332,23 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectSet.html#setLoadFactor(float)">setLoadFactor(float)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#setSeed(long)">setSeed(long)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Sets the seed of this random number generator using a single
+ <code>long</code> seed.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#setSeed(long)">setSeed(long)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Sets the seed of this random number generator using a single
  <code>long</code> seed.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#setSelectedState(int,long)">setSelectedState(int, long)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Sets a selected state value to the given long <code>value</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#setSelectedState(int,long)">setSelectedState(int, long)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
+<dd>
+<div class="block">Sets a selected state value to the given long <code>value</code>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/FloatList.html#setSize(int)">setSize(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a></dt>
 <dd>
@@ -8247,7 +8555,15 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Reduces the size of the backing arrays to be the specified capacity / loadFactor, or less.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#shuffle(boolean%5B%5D)">shuffle(boolean[])</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#shuffle(boolean%5B%5D)">shuffle(boolean[])</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
+<dd>
+<div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#shuffle(char%5B%5D)">shuffle(char[])</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </dd>
@@ -8255,7 +8571,15 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#shuffle(double%5B%5D)">shuffle(double[])</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#shuffle(double%5B%5D)">shuffle(double[])</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
+<dd>
+<div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#shuffle(float%5B%5D)">shuffle(float[])</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </dd>
@@ -8263,11 +8587,23 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#shuffle(int%5B%5D)">shuffle(int[])</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#shuffle(int%5B%5D)">shuffle(int[])</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#shuffle(long%5B%5D)">shuffle(long[])</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#shuffle(long%5B%5D)">shuffle(long[])</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
+<dd>
+<div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#shuffle(short%5B%5D)">shuffle(short[])</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </dd>
@@ -8304,6 +8640,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/Ordered.html#shuffle(java.util.Random)">shuffle(Random)</a></span> - Method in interface com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a></dt>
 <dd>
 <div class="block">Pseudo-randomly shuffles the order of this Ordered in-place.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#shuffle(T%5B%5D)">shuffle(T[])</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#shuffle(T%5B%5D)">shuffle(T[])</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
@@ -8499,6 +8839,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/PrimitiveCollection.html#size()">size()</a></span> - Method in interface com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#skip(long)">skip(long)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Advances or rolls back the <code>LaserRandom</code>' state without actually generating each number.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#skip(long)">skip(long)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Advances or rolls back the <code>LaserRandom</code>' state without actually generating each number.</div>

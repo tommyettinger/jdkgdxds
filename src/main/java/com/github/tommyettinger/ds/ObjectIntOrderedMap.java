@@ -180,14 +180,10 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 		return defaultValue;
 	}
 
-	public <T extends K> void putAll (ObjectIntOrderedMap<T> map) {
+	public void putAll (ObjectIntOrderedMap<? extends K> map) {
 		ensureCapacity(map.size);
-		ObjectList<T> ks = map.keys;
-		int kl = ks.size();
-		T k;
-		for (int i = 0; i < kl; i++) {
-			k = ks.get(i);
-			put(k, map.get(k));
+		for (int i = 0, kl = map.size; i < kl; i++) {
+			put(map.keyAt(i), map.getAt(i));
 		}
 	}
 
