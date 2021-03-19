@@ -357,6 +357,12 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		}
 	}
 
+	public static <T, K> HolderOrderedSet<T, K> with (Function<T, K> extractor, T item) {
+		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 1);
+		set.add(item);
+		return set;
+	}
+
 	@SafeVarargs
 	public static <T, K> HolderOrderedSet<T, K> with (Function<T, K> extractor, T... array) {
 		return new HolderOrderedSet<>(extractor, array);

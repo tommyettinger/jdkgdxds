@@ -752,6 +752,12 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 		}
 	}
 
+	public static <T, K> HolderSet<T, K> with (Function<T, K> extractor, T item) {
+		HolderSet<T, K> set = new HolderSet<>(extractor, 1);
+		set.add(item);
+		return set;
+	}
+
 	@SafeVarargs
 	public static <T, K> HolderSet<T, K> with (Function<T, K> extractor, T... array) {
 		return new HolderSet<>(extractor, array);

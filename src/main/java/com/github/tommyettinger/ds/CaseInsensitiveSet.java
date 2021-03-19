@@ -173,6 +173,12 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 		return true;
 	}
 
+	public static CaseInsensitiveSet with(CharSequence item) {
+		CaseInsensitiveSet set = new CaseInsensitiveSet(1);
+		set.add(item);
+		return set;
+	}
+
 	public static CaseInsensitiveSet with (CharSequence... array) {
 		return new CaseInsensitiveSet(array);
 	}

@@ -185,6 +185,12 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> im
 		return true;
 	}
 
+	public static CaseInsensitiveOrderedSet with(CharSequence item) {
+		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(1);
+		set.add(item);
+		return set;
+	}
+
 	public static CaseInsensitiveOrderedSet with (CharSequence... array) {
 		return new CaseInsensitiveOrderedSet(array);
 	}
