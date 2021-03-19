@@ -801,6 +801,12 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		}
 	}
 
+	public static IntList with(int item) {
+		IntList list = new IntList(1);
+		list.add(item);
+		return list;
+	}
+
 	/**
 	 * @see #IntList(int[])
 	 */

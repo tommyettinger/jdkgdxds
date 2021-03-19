@@ -645,11 +645,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 		}
 	}
 
-	@SafeVarargs
-	public static <T> ObjectList<T> with (T... varargs) {
-		return new ObjectList<>(varargs);
-	}
-
 	/**
 	 * Gets the ObjectList of T items that this data structure holds, in the order it uses for iteration.
 	 * This method actually returns this ObjectList directly, since it extends ArrayList.
@@ -704,5 +699,16 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 	@Override
 	public void reverse () {
 		Collections.reverse(this);
+	}
+
+	public static <T> ObjectList<T> with(T item) {
+		ObjectList<T> list = new ObjectList<>(1);
+		list.add(item);
+		return list;
+	}
+
+	@SafeVarargs
+	public static <T> ObjectList<T> with (T... varargs) {
+		return new ObjectList<>(varargs);
 	}
 }

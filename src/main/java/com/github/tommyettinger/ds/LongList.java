@@ -809,6 +809,12 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		}
 	}
 
+	public static LongList with(long item) {
+		LongList list = new LongList(1);
+		list.add(item);
+		return list;
+	}
+
 	/**
 	 * @see #LongList(long[])
 	 */

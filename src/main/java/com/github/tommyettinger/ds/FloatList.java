@@ -823,6 +823,12 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		}
 	}
 
+	public static FloatList with(float item) {
+		FloatList list = new FloatList(1);
+		list.add(item);
+		return list;
+	}
+
 	/**
 	 * @see #FloatList(float[])
 	 */
