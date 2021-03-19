@@ -1144,6 +1144,15 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 		else return valueTable[i];
 	}
 
+	public boolean remove(long key, Object value) {
+		int i = locateKey(key);
+		if (i >= 0 && Objects.equals(valueTable[i], value)) {
+			remove(key);
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
