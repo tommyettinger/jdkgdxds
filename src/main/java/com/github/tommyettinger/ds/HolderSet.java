@@ -232,6 +232,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 			if (other == null) {
 				return ~i; // Always negative; means empty space is available at i.
 			}
+			assert extractor != null;
 			if (key.equals(extractor.apply(other))) // If you want to change how equality is determined, do it here.
 			{
 				return i; // Same key was found.
@@ -246,6 +247,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 	 */
 	@Override
 	public boolean add (T key) {
+		assert extractor != null;
 		int i = locateKey(extractor.apply(key));
 		if (i >= 0) {
 			return false; // Existing key was found.
@@ -689,6 +691,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 			int mask = set.mask, next = i + 1 & mask;
 			T key;
 			while ((key = keyTable[next]) != null) {
+				assert set.extractor != null;
 				int placement = set.place(set.extractor.apply(key));
 				if ((next - placement & mask) > (i - placement & mask)) {
 					keyTable[i] = key;
@@ -751,6 +754,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
 
 	@SafeVarargs
 	public static <T, K> HolderSet<T, K> with (Function<T, K> extractor, T... array) {
-		return new HolderSet<T, K>(extractor, array);
+		return new HolderSet<>(extractor, array);
 	}
 }

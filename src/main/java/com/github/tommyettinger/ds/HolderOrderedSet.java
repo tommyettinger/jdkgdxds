@@ -175,6 +175,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	public T removeAt (int index) {
 		T key = items.remove(index);
+		assert extractor != null;
 		super.remove(extractor.apply(key));
 		return key;
 	}

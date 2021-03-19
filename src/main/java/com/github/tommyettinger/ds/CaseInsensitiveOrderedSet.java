@@ -54,16 +54,26 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> im
 	/**
 	 * Creates a new set identical to the specified set.
 	 *
-	 * @param set
+	 * @param set an ObjectSet or one of its subclasses; ObjectOrderedSet uses a different constructor
 	 */
 	public CaseInsensitiveOrderedSet (ObjectSet<? extends CharSequence> set) {
 		super(set);
 	}
 
 	/**
+	 * Creates a new ordered set identical to the specified ordered set.
+	 * Typically this would take another CaseInsensitiveOrderedSet, but you can use an ObjectOrderedSet
+	 * or one of its other subclasses as well.
+	 * @param set an ObjectOrderedSet or one of its subclasses, such as a CaseInsensitiveOrderedSet
+	 */
+	public CaseInsensitiveOrderedSet (ObjectOrderedSet<? extends CharSequence> set) {
+		super(set);
+	}
+
+	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 *
-	 * @param coll
+	 * @param coll a Collection implementation, such as an ObjectList
 	 */
 	public CaseInsensitiveOrderedSet (Collection<? extends CharSequence> coll) {
 		super(coll);

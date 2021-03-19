@@ -50,7 +50,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 	/**
 	 * Creates a new set identical to the specified set.
 	 *
-	 * @param set
+	 * @param set an ObjectSet or subclass to copy, such as another CaseInsensitiveSet
 	 */
 	public CaseInsensitiveSet (ObjectSet<? extends CharSequence> set) {
 		super(set);
@@ -59,7 +59,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 *
-	 * @param coll
+	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that doesn't subclass ObjectSet
 	 */
 	public CaseInsensitiveSet (Collection<? extends CharSequence> coll) {
 		super(coll);
@@ -67,7 +67,8 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 
 	/**
 	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
-	 *
+	 * This takes a CharSequence array, not a String array, though Strings can be put into a CharSequence array (along with
+	 * StringBuilders and similar CharSequences).
 	 * @param array  an array to draw items from
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
@@ -78,7 +79,8 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Seria
 
 	/**
 	 * Creates a new set containing all of the items in the given array.
-	 *
+	 * This takes a CharSequence array, not a String array, though Strings can be put into a CharSequence array (along with
+	 * StringBuilders and similar CharSequences).
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
 	public CaseInsensitiveSet (CharSequence[] array) {
