@@ -1143,6 +1143,15 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 		else return valueTable[i];
 	}
 
+	public boolean remove(int key, long value) {
+		int i = locateKey(key);
+		if (i >= 0 && valueTable[i] == value) {
+			remove(key);
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
