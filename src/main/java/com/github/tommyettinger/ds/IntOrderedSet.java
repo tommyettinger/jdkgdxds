@@ -305,6 +305,12 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt, Serializable
 		}
 	}
 
+	public static IntOrderedSet with(int item) {
+		IntOrderedSet set = new IntOrderedSet(1);
+		set.add(item);
+		return set;
+	}
+
 	public static IntOrderedSet with (int... array) {
 		return new IntOrderedSet(array);
 	}

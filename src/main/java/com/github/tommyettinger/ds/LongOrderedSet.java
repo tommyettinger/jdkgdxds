@@ -305,6 +305,12 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializa
 		}
 	}
 
+	public static LongOrderedSet with(long item) {
+		LongOrderedSet set = new LongOrderedSet(1);
+		set.add(item);
+		return set;
+	}
+
 	public static LongOrderedSet with (long... array) {
 		return new LongOrderedSet(array);
 	}

@@ -324,6 +324,12 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T>, Ser
 		}
 	}
 
+	public static <T> ObjectOrderedSet<T> with(T item) {
+		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(1);
+		set.add(item);
+		return set;
+	}
+
 	@SafeVarargs
 	public static <T> ObjectOrderedSet<T> with (T... array) {
 		return new ObjectOrderedSet<>(array);

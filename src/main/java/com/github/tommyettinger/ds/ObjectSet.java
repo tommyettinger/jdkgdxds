@@ -534,11 +534,6 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 		return iterator2;
 	}
 
-	@SafeVarargs
-	public static <T> ObjectSet<T> with (T... array) {
-		return new ObjectSet<>(array);
-	}
-
 	public static class ObjectSetIterator<T> implements Iterable<T>, Iterator<T> {
 		public boolean hasNext;
 
@@ -624,5 +619,16 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, Serializable {
 			hasNext = hn;
 			return list;
 		}
+	}
+
+	public static <T> ObjectSet<T> with(T item) {
+		ObjectSet<T> set = new ObjectSet<>(1);
+		set.add(item);
+		return set;
+	}
+
+	@SafeVarargs
+	public static <T> ObjectSet<T> with (T... array) {
+		return new ObjectSet<>(array);
 	}
 }

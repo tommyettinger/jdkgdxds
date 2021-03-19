@@ -445,10 +445,6 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 		return iterator2;
 	}
 
-	public static LongSet with (long... array) {
-		return new LongSet(array);
-	}
-
 	public static class LongSetIterator implements PrimitiveIterator.OfLong {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
@@ -543,5 +539,15 @@ public class LongSet implements PrimitiveCollection.OfLong, Serializable {
 			hasNext = hn;
 			return list;
 		}
+	}
+
+	public static LongSet with(long item) {
+		LongSet set = new LongSet(1);
+		set.add(item);
+		return set;
+	}
+
+	public static LongSet with (long... array) {
+		return new LongSet(array);
 	}
 }

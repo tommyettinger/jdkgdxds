@@ -438,10 +438,6 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 		return iterator2;
 	}
 
-	public static IntSet with (int... array) {
-		return new IntSet(array);
-	}
-
 	@Override
 	public int size () {
 		return size;
@@ -539,5 +535,15 @@ public class IntSet implements PrimitiveCollection.OfInt, Serializable {
 			hasNext = hn;
 			return list;
 		}
+	}
+
+	public static IntSet with(int item) {
+		IntSet set = new IntSet(1);
+		set.add(item);
+		return set;
+	}
+
+	public static IntSet with (int... array) {
+		return new IntSet(array);
 	}
 }
