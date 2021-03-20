@@ -30,6 +30,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.LongFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
@@ -1151,6 +1152,17 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 			return true;
 		}
 		return false;
+	}
+
+	@Nullable
+	public V merge(long key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+		int i = locateKey(key);
+		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
+		if(next == null)
+			remove(key);
+		else
+			put(key, next);
+		return next;
 	}
 
 	/**

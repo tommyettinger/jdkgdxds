@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.function.IntIntToIntBiFunction;
 import com.github.tommyettinger.ds.support.function.LongIntConsumer;
 import com.github.tommyettinger.ds.support.function.LongIntToIntBiFunction;
 
@@ -1161,6 +1162,13 @@ public class LongIntMap implements Iterable<LongIntMap.Entry>, Serializable {
 			return true;
 		}
 		return false;
+	}
+
+	public int merge(long key, int value, IntIntToIntBiFunction remappingFunction) {
+		int i = locateKey(key);
+		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
+		put(key, next);
+		return next;
 	}
 
 	/**

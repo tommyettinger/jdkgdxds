@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.ds.support.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.ds.support.function.LongFloatConsumer;
 import com.github.tommyettinger.ds.support.function.LongFloatToFloatBiFunction;
 import com.github.tommyettinger.ds.support.function.LongToFloatFunction;
@@ -1206,6 +1207,13 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry>, Serializable 
 			return true;
 		}
 		return false;
+	}
+
+	public float merge(long key, float value, FloatFloatToFloatBiFunction remappingFunction) {
+		int i = locateKey(key);
+		float next = (i < 0) ? value : remappingFunction.applyAsFloat(valueTable[i], value);
+		put(key, next);
+		return next;
 	}
 
 	/**

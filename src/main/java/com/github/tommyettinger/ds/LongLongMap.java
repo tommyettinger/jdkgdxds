@@ -1163,6 +1163,13 @@ public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
 		return false;
 	}
 
+	public long merge(long key, long value, LongLongToLongBiFunction remappingFunction) {
+		int i = locateKey(key);
+		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
+		put(key, next);
+		return next;
+	}
+
 	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
