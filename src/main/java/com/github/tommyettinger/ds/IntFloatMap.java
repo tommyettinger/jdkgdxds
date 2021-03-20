@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.ds.support.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.ds.support.function.IntFloatConsumer;
 import com.github.tommyettinger.ds.support.function.IntFloatToFloatBiFunction;
 import com.github.tommyettinger.ds.support.function.IntToFloatFunction;
@@ -1208,6 +1209,13 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry>, Serializable {
 			return true;
 		}
 		return false;
+	}
+
+	public float merge(int key, float value, FloatFloatToFloatBiFunction remappingFunction) {
+		int i = locateKey(key);
+		float next = (i < 0) ? value : remappingFunction.applyAsFloat(valueTable[i], value);
+		put(key, next);
+		return next;
 	}
 
 	/**

@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.function.IntLongConsumer;
 import com.github.tommyettinger.ds.support.function.IntLongToLongBiFunction;
+import com.github.tommyettinger.ds.support.function.LongLongToLongBiFunction;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -1150,6 +1151,13 @@ public class IntLongMap implements Iterable<IntLongMap.Entry>, Serializable {
 			return true;
 		}
 		return false;
+	}
+
+	public long merge(int key, long value, LongLongToLongBiFunction remappingFunction) {
+		int i = locateKey(key);
+		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
+		put(key, next);
+		return next;
 	}
 
 	/**
