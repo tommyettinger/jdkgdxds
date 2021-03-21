@@ -1,5 +1,5 @@
 /**
- * Created by Tommy Ettinger on 9/28/2020.
+ * A large package of all data structures in this library, plus some interfaces they use.
  */
 
 @NotNullDefault

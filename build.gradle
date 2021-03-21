@@ -2,7 +2,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
+        gradlePluginPortal()
     }
     dependencies {
         classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
@@ -19,7 +19,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 def projectName = 'jdkgdxds'
-version '0.0.6-SNAPSHOT'
+version '0.0.6'
 group 'com.github.tommyettinger'
 
 //api "com.github.tommyettinger:jdkgdxds:0.0.5"
@@ -39,7 +39,7 @@ if (JavaVersion.current().isJava8Compatible()) {
     }
 }
 if (JavaVersion.current().isJava9Compatible()) {
-    targetCompatibility = 8
+    compileJava.targetCompatibility = 8
 }
 compileJava.exclude("emu")
 javadoc.exclude("emu")

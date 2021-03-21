@@ -35,30 +35,33 @@ There's `IntFloatMap`, `IntFloatOrderedMap`, `IntIntMap`, `IntIntOrderedMap`, `I
 still `ObjectFloatMap`, `ObjectFloatOrderedMap`, `ObjectIntMap`, `ObjectIntOrderedMap`, `ObjectLongMap`, and
 `ObjectLongOrderedMap` for the primitive-valued maps with Object keys. There's a `CaseInsensitiveMap` (and a
 `CaseInsensitiveOrderedMap`) that requires `CharSequence` keys (such as String or StringBuilder), but treats them as
-case-insensitive, and allows a generic Object type for its values. There's the unusual `HolderSet` and `HolderOrderedSet`, which
-take an "extractor" function when constructed and use it to hash items by an extracted value; this lets you, for example, make a
-HolderSet of "Employee" objects and look up a full Employee given only their UUID. In that case, an Employee's value could change,
-and the result of hashCode() on an Employee would change, but as long as the UUID of the Employee stays the same, the same
-Employee will be found by methods like `get()` and `contains()`. `NumberedSet` wraps an `ObjectIntOrderedMap` and makes it so that
-Object keys can be looked up by index (using the standard ordered set methods like `getAt()`), but also so that their `indexOf()`
-method runs in constant time instead of linear time. This is at the expense of slower removal from the middle of the NumberedSet;
-that class doesn't implement insertion in the middle of the NumberedSet either.
+case-insensitive, and allows a generic Object type for its values. There's `IdentityObjectMap` and `IdentityObjectOrderedMap`,
+which compare keys by reference identity (not by `equals()`) and hash their keys using their identity hash code. There's the
+unusual `HolderSet` and `HolderOrderedSet`, which take an "extractor" function when constructed and use it to hash items by an
+extracted value; this lets you, for example, make a HolderSet of "Employee" objects and look up a full Employee given only their
+UUID. In that case, an Employee's value could change, and the result of hashCode() on an Employee would change, but as long as the
+UUID of the Employee stays the same, the same Employee will be found by methods like `get()` and `contains()`. `NumberedSet` wraps
+an `ObjectIntOrderedMap` and makes it so that Object keys can be looked up by index (using the standard ordered set methods like
+`getAt()`), but also so that their `indexOf()` method runs in constant time instead of linear time. This is at the expense of
+slower removal from the middle of the NumberedSet; that class doesn't implement insertion in the middle of the NumberedSet either.
+There's also a close relative of libGDX's `BinaryHeap` class, but the one here implements the JDK's `Queue`.
 
 The library includes expanded interfaces for these to implement, like the aforementioned `Ordered` interface,
 `PrimitiveCollection` to complement Java 8's `PrimitiveIterator`, some `float`-based versions of primitive specializations where
 the JDK only offers `int`, `long`, and `double`, and primitive `Comparator`s (which are Java 8 `FunctionalInterface`s). Lastly,
 because there are some randomized methods here and `java.util.SplittableRandom` isn't available everywhere, an alternative
 high-quality and very-fast random number generator is here, `com.github.tommyettinger.ds.support.LaserRandom`, which extends
-`java.util.Random` for maximum compatibility.
+`java.util.Random` for maximum compatibility. It implements `com.github.tommyettinger.ds.support.EnhancedRandom`, an interface
+that allows external code to match the API used by LaserRandom; EnhancedRandom is mostly default methods.
 
 ## How do I get it?
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.0.5'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.0.6'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.0.5:sources'` to its dependencies, and in its
+`implementation 'com.github.tommyettinger:jdkgdxds:0.0.6:sources'` to its dependencies, and in its
 `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />
