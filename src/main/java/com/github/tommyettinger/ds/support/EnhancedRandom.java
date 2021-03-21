@@ -1,5 +1,11 @@
 package com.github.tommyettinger.ds.support;
 
+import com.github.tommyettinger.ds.FloatList;
+import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.LongList;
+import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.Ordered;
+
 import java.util.Random;
 
 /**
@@ -596,13 +602,71 @@ public interface EnhancedRandom {
 	}
 
 	/**
+	 * Gets a randomly selected item from the given Ordered, such as an ObjectList or ObjectOrderedSet.
+	 * If the Ordered is empty, this throws an IndexOutOfBoundsException.
+	 * @param ordered a non-empty implementation of Ordered, such as ObjectList
+	 * @param <T> the type of items
+	 * @return a randomly-selected item from ordered
+	 */
+	default <T> T randomElement (Ordered<T> ordered) {
+		ObjectList<T> order = ordered.order();
+		return order.get(nextInt(order.size()));
+	}
+
+	/**
+	 * Gets a randomly selected item from the given Ordered.OfInt, such as an IntList or IntOrderedSet.
+	 * If the Ordered.OfInt is empty, this throws an IndexOutOfBoundsException.
+	 * @param ordered a non-empty implementation of Ordered.OfInt, such as IntList
+	 * @return a randomly-selected item from ordered
+	 */
+	default int randomElement (Ordered.OfInt ordered) {
+		IntList order = ordered.order();
+		return order.get(nextInt(order.size()));
+	}
+
+	/**
+	 * Gets a randomly selected item from the given Ordered.OfLong, such as a LongList or LongOrderedSet.
+	 * If the Ordered.OfLong is empty, this throws an IndexOutOfBoundsException.
+	 * @param ordered a non-empty implementation of Ordered.OfLong, such as LongList
+	 * @return a randomly-selected item from ordered
+	 */
+	default long randomElement (Ordered.OfLong ordered) {
+		LongList order = ordered.order();
+		return order.get(nextInt(order.size()));
+	}
+
+	/**
+	 * Gets a randomly selected item from the given Ordered.OfFloat, such as a FloatList or FloatOrderedSet.
+	 * If the Ordered.OfFloat is empty, this throws an IndexOutOfBoundsException.
+	 * @param ordered a non-empty implementation of Ordered.OfFloat, such as FloatList
+	 * @return a randomly-selected item from ordered
+	 */
+	default float randomElement (Ordered.OfFloat ordered) {
+		FloatList order = ordered.order();
+		return order.get(nextInt(order.size()));
+	}
+
+	/**
 	 * Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.
 	 *
 	 * @param items an int array; must be non-null
 	 */
 	default void shuffle (int[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
-			int ii = nextInt(i + 1);
+		shuffle(items, 0, items.length);
+	}
+
+	/**
+	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
+	 * @param items an int array; must be non-null
+	 * @param offset the index of the first element of the array that can be shuffled
+	 * @param length the length of the section to shuffle
+	 */
+	default void shuffle (int[] items, int offset, int length) {
+		offset = Math.min(Math.max(0, offset), items.length);
+		length = Math.min(items.length - offset, Math.max(0, length));
+		for (int i = offset + length - 1; i >= offset; i--) {
+			int ii = nextInt(offset, i + 1);
 			int temp = items[i];
 			items[i] = items[ii];
 			items[ii] = temp;
@@ -615,8 +679,21 @@ public interface EnhancedRandom {
 	 * @param items a long array; must be non-null
 	 */
 	default void shuffle (long[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
-			int ii = nextInt(i + 1);
+		shuffle(items, 0, items.length);
+	}
+
+	/**
+	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
+	 * @param items a long array; must be non-null
+	 * @param offset the index of the first element of the array that can be shuffled
+	 * @param length the length of the section to shuffle
+	 */
+	default void shuffle (long[] items, int offset, int length) {
+		offset = Math.min(Math.max(0, offset), items.length);
+		length = Math.min(items.length - offset, Math.max(0, length));
+		for (int i = offset + length - 1; i >= offset; i--) {
+			int ii = nextInt(offset, i + 1);
 			long temp = items[i];
 			items[i] = items[ii];
 			items[ii] = temp;
@@ -629,8 +706,21 @@ public interface EnhancedRandom {
 	 * @param items a float array; must be non-null
 	 */
 	default void shuffle (float[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
-			int ii = nextInt(i + 1);
+		shuffle(items, 0, items.length);
+	}
+
+	/**
+	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
+	 * @param items a float array; must be non-null
+	 * @param offset the index of the first element of the array that can be shuffled
+	 * @param length the length of the section to shuffle
+	 */
+	default void shuffle (float[] items, int offset, int length) {
+		offset = Math.min(Math.max(0, offset), items.length);
+		length = Math.min(items.length - offset, Math.max(0, length));
+		for (int i = offset + length - 1; i >= offset; i--) {
+			int ii = nextInt(offset, i + 1);
 			float temp = items[i];
 			items[i] = items[ii];
 			items[ii] = temp;
@@ -643,8 +733,21 @@ public interface EnhancedRandom {
 	 * @param items a char array; must be non-null
 	 */
 	default void shuffle (char[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
-			int ii = nextInt(i + 1);
+		shuffle(items, 0, items.length);
+	}
+
+	/**
+	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
+	 * @param items a char array; must be non-null
+	 * @param offset the index of the first element of the array that can be shuffled
+	 * @param length the length of the section to shuffle
+	 */
+	default void shuffle (char[] items, int offset, int length) {
+		offset = Math.min(Math.max(0, offset), items.length);
+		length = Math.min(items.length - offset, Math.max(0, length));
+		for (int i = offset + length - 1; i >= offset; i--) {
+			int ii = nextInt(offset, i + 1);
 			char temp = items[i];
 			items[i] = items[ii];
 			items[ii] = temp;
@@ -657,8 +760,21 @@ public interface EnhancedRandom {
 	 * @param items a double array; must be non-null
 	 */
 	default void shuffle (double[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
-			int ii = nextInt(i + 1);
+		shuffle(items, 0, items.length);
+	}
+
+	/**
+	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
+	 * @param items a double array; must be non-null
+	 * @param offset the index of the first element of the array that can be shuffled
+	 * @param length the length of the section to shuffle
+	 */
+	default void shuffle (double[] items, int offset, int length) {
+		offset = Math.min(Math.max(0, offset), items.length);
+		length = Math.min(items.length - offset, Math.max(0, length));
+		for (int i = offset + length - 1; i >= offset; i--) {
+			int ii = nextInt(offset, i + 1);
 			double temp = items[i];
 			items[i] = items[ii];
 			items[ii] = temp;
@@ -671,8 +787,21 @@ public interface EnhancedRandom {
 	 * @param items a short array; must be non-null
 	 */
 	default void shuffle (short[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
-			int ii = nextInt(i + 1);
+		shuffle(items, 0, items.length);
+	}
+
+	/**
+	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
+	 * @param items a short array; must be non-null
+	 * @param offset the index of the first element of the array that can be shuffled
+	 * @param length the length of the section to shuffle
+	 */
+	default void shuffle (short[] items, int offset, int length) {
+		offset = Math.min(Math.max(0, offset), items.length);
+		length = Math.min(items.length - offset, Math.max(0, length));
+		for (int i = offset + length - 1; i >= offset; i--) {
+			int ii = nextInt(offset, i + 1);
 			short temp = items[i];
 			items[i] = items[ii];
 			items[ii] = temp;
@@ -685,8 +814,21 @@ public interface EnhancedRandom {
 	 * @param items a boolean array; must be non-null
 	 */
 	default void shuffle (boolean[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
-			int ii = nextInt(i + 1);
+		shuffle(items, 0, items.length);
+	}
+
+	/**
+	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
+	 * @param items a boolean array; must be non-null
+	 * @param offset the index of the first element of the array that can be shuffled
+	 * @param length the length of the section to shuffle
+	 */
+	default void shuffle (boolean[] items, int offset, int length) {
+		offset = Math.min(Math.max(0, offset), items.length);
+		length = Math.min(items.length - offset, Math.max(0, length));
+		for (int i = offset + length - 1; i >= offset; i--) {
+			int ii = nextInt(offset, i + 1);
 			boolean temp = items[i];
 			items[i] = items[ii];
 			items[ii] = temp;
@@ -699,8 +841,21 @@ public interface EnhancedRandom {
 	 * @param items an array of some reference type; must be non-null but may contain null items
 	 */
 	default <T> void shuffle (T[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
-			int ii = nextInt(i + 1);
+		shuffle(items, 0, items.length);
+	}
+
+	/**
+	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
+	 * @param items an array of some reference type; must be non-null but may contain null items
+	 * @param offset the index of the first element of the array that can be shuffled
+	 * @param length the length of the section to shuffle
+	 */
+	default <T> void shuffle (T[] items, int offset, int length) {
+		offset = Math.min(Math.max(0, offset), items.length);
+		length = Math.min(items.length - offset, Math.max(0, length));
+		for (int i = offset + length - 1; i >= offset; i--) {
+			int ii = nextInt(offset, i + 1);
 			T temp = items[i];
 			items[i] = items[ii];
 			items[ii] = temp;
