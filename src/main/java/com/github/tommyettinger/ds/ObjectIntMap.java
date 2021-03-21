@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.function.IntIntToIntBiFunction;
 import com.github.tommyettinger.ds.support.function.ObjIntToIntBiFunction;
 
 import javax.annotation.Nullable;
@@ -1077,6 +1078,13 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>>, Seriali
 			return true;
 		}
 		return false;
+	}
+
+	public int merge(K key, int value, IntIntToIntBiFunction remappingFunction) {
+		int i = locateKey(key);
+		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
+		put(key, next);
+		return next;
 	}
 
 	/**

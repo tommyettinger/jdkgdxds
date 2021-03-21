@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.function.LongLongToLongBiFunction;
 import com.github.tommyettinger.ds.support.function.ObjLongToLongBiFunction;
 
 import javax.annotation.Nullable;
@@ -1078,6 +1079,13 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>>, Seria
 			return true;
 		}
 		return false;
+	}
+
+	public long merge(K key, long value, LongLongToLongBiFunction remappingFunction) {
+		int i = locateKey(key);
+		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
+		put(key, next);
+		return next;
 	}
 
 	/**
