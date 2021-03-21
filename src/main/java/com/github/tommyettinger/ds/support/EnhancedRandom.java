@@ -862,4 +862,39 @@ public interface EnhancedRandom {
 		}
 	}
 
+	/**
+	 * Shuffles the given Ordered.OfLong in-place pseudo-randomly, using this to determine how to shuffle.
+	 * @param ordered an Ordered.OfLong, such as a LongList
+	 */
+	default void shuffle (Ordered.OfLong ordered){
+		shuffle(ordered.order().items, 0, ordered.size());
+	}
+
+	/**
+	 * Shuffles the given Ordered.OfInt in-place pseudo-randomly, using this to determine how to shuffle.
+	 * @param ordered an Ordered.OfInt, such as an IntList
+	 */
+	default void shuffle (Ordered.OfInt ordered){
+		shuffle(ordered.order().items, 0, ordered.size());
+	}
+
+	/**
+	 * Shuffles the given Ordered.OfFloat in-place pseudo-randomly, using this to determine how to shuffle.
+	 * @param ordered an Ordered.OfFloat, such as a FloatList
+	 */
+	default void shuffle (Ordered.OfFloat ordered){
+		shuffle(ordered.order().items, 0, ordered.size());
+	}
+
+	/**
+	 * Shuffles the given Ordered in-place pseudo-randomly, using this to determine how to shuffle.
+	 * @param ordered an Ordered, such as an ObjectList or ObjectOrderedSet
+	 */
+	default <T> void shuffle (Ordered<T> ordered){
+		ObjectList<T> order = ordered.order();
+		for (int i = order.size() - 1; i >= 0; i--) {
+			order.set(i, order.set(nextInt(i + 1), order.get(i)));
+		}
+	}
+
 }
