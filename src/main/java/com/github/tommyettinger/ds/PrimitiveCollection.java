@@ -2,7 +2,10 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.function.FloatConsumer;
 import com.github.tommyettinger.ds.support.function.FloatPredicate;
+import com.github.tommyettinger.ds.support.function.ShortConsumer;
+import com.github.tommyettinger.ds.support.function.ShortPredicate;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
+import com.github.tommyettinger.ds.support.util.ShortIterator;
 
 import java.util.PrimitiveIterator;
 import java.util.function.IntConsumer;
@@ -420,6 +423,135 @@ public interface PrimitiveCollection<T, T_CONS> {
 			FloatIterator it = iterator();
 			while (it.hasNext())
 				action.accept(it.nextFloat());
+		}
+	}
+
+	interface OfShort extends PrimitiveCollection<Short, ShortConsumer> {
+		boolean add (short item);
+
+		boolean remove (short item);
+
+		boolean contains (short item);
+
+		default boolean addAll (OfShort other) {
+			ShortIterator it = other.iterator();
+			boolean changed = false;
+			while (it.hasNext()) {
+				changed |= add(it.nextShort());
+			}
+			return changed;
+		}
+
+		default boolean removeAll (OfShort other) {
+			ShortIterator it = other.iterator();
+			boolean changed = false;
+			while (it.hasNext()) {
+				changed |= remove(it.nextShort());
+			}
+			return changed;
+		}
+
+		default boolean containsAll (OfShort other) {
+			ShortIterator it = other.iterator();
+			boolean has = true;
+			while (it.hasNext()) {
+				has &= contains(it.nextShort());
+			}
+			return has;
+		}
+
+		/**
+		 * Removes all of the elements of this collection that satisfy the given
+		 * predicate.  Errors or runtime exceptions thrown during iteration or by
+		 * the predicate are relayed to the caller.
+		 *
+		 * @implSpec
+		 * The default implementation traverses all elements of the collection using
+		 * its {@link #iterator()}.  Each matching element is removed using
+		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * support removal then an {@code UnsupportedOperationException} will be
+		 * thrown on the first matching element.
+		 *
+		 * @param filter a predicate which returns {@code true} for elements to be
+		 *        removed
+		 * @return {@code true} if any elements were removed
+		 * @throws UnsupportedOperationException if elements cannot be removed
+		 *         from this collection.  Implementations may throw this exception if a
+		 *         matching element cannot be removed or if, in general, removal is not
+		 *         supported.
+		 */
+		default boolean removeIf(ShortPredicate filter) {
+			boolean removed = false;
+			final ShortIterator each = iterator();
+			while (each.hasNext()) {
+				if (filter.test(each.nextShort())) {
+					each.remove();
+					removed = true;
+				}
+			}
+			return removed;
+		}
+
+		default boolean retainAll (OfShort other) {
+			boolean changed = false;
+			ShortIterator it = iterator();
+			while (it.hasNext()) {
+				if (!other.contains(it.nextShort())) {
+					it.remove();
+					changed = true;
+				}
+			}
+			return changed;
+		}
+
+		@Override
+		ShortIterator iterator ();
+
+		/**
+		 * Allocates a new short array with exactly {@link #size()} items, fills it with the
+		 * contents of this PrimitiveCollection, and returns it.
+		 * @return a new short array
+		 */
+		default short[] toArray () {
+			final int sz = size();
+			short[] receiver = new short[sz];
+			ShortIterator it = iterator();
+			int i = 0;
+			while (it.hasNext())
+				receiver[i++] = it.nextShort();
+			return receiver;
+		}
+		/**
+		 * Fills the given array with the entire contents of this PrimitiveCollection, up to
+		 * {@link #size()} items, or if receiver is not large enough, then this allocates a new
+		 * short array with {@link #size()} items and returns that.
+		 * @param receiver a short array that will be filled with the items from this, if possible
+		 * @return {@code receiver}, if it was modified, or a new short array otherwise
+		 */
+		default short[] toArray (short[] receiver){
+			final int sz = size();
+			if(receiver.length < sz)
+				receiver = new short[sz];
+			ShortIterator it = iterator();
+			int i = 0;
+			while (it.hasNext())
+				receiver[i++] = it.nextShort();
+			return receiver;
+		}
+
+		/**
+		 * Performs the given action for each element of the {@code PrimitiveCollection.OfShort}
+		 * until all elements have been processed or the action throws an
+		 * exception.  Actions are performed in the order of iteration, if that
+		 * order is specified.  Exceptions thrown by the action are relayed to the
+		 * caller.
+		 *
+		 * @param action The action to be performed for each element
+		 */
+		default void forEach(ShortConsumer action) {
+			ShortIterator it = iterator();
+			while (it.hasNext())
+				action.accept(it.nextShort());
 		}
 	}
 }
