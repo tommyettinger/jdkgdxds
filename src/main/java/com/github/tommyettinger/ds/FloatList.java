@@ -802,7 +802,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		public void remove () {
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			if (index >= list.size) { throw new NoSuchElementException(); }
-			list.remove(index);
+			list.removeAt(index);
 		}
 
 		/**

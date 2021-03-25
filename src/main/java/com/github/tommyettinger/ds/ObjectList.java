@@ -566,7 +566,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializa
 		public void remove () {
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			if (index >= list.size()) { throw new NoSuchElementException(); }
-			list.remove(index);
+			list.removeAt(index);
 		}
 
 		/**
