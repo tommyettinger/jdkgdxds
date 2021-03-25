@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
+import com.github.tommyettinger.ds.support.sort.ShortComparator;
 
 import java.util.Comparator;
 
@@ -281,4 +282,56 @@ public class Select {
 		}
 		return highestIdx;
 	}
+
+
+
+	public static short select (ShortList items, ShortComparator comp, int kthLowest, int size) {
+		int idx = selectIndex(items, comp, kthLowest, size);
+		return items.get(idx);
+	}
+
+	public static int selectIndex (ShortList items, ShortComparator comp, int kthLowest, int size) {
+		if (size < 1) {
+			throw new RuntimeException("cannot select from empty array (size < 1)");
+		} else if (kthLowest > size) {
+			throw new RuntimeException("Kth rank is larger than size. k: " + kthLowest + ", size: " + size);
+		}
+		int idx;
+		// naive partial selection sort almost certain to outperform quickselect where n is min or max
+		if (kthLowest == 1) {
+			// find min
+			idx = fastMin(items, comp, size);
+		} else if (kthLowest == size) {
+			// find max
+			idx = fastMax(items, comp, size);
+		} else {
+			idx = QuickSelect.select(items, comp, kthLowest, size);
+		}
+		return idx;
+	}
+
+	/** Faster than quickselect for n = min */
+	private static int fastMin (ShortList items, ShortComparator comp, int size) {
+		int lowestIdx = 0;
+		for (int i = 1; i < size; i++) {
+			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
+			if (comparison < 0) {
+				lowestIdx = i;
+			}
+		}
+		return lowestIdx;
+	}
+
+	/** Faster than quickselect for n = max */
+	private static int fastMax (ShortList items, ShortComparator comp, int size) {
+		int highestIdx = 0;
+		for (int i = 1; i < size; i++) {
+			int comparison = comp.compare(items.get(i), items.get(highestIdx));
+			if (comparison > 0) {
+				highestIdx = i;
+			}
+		}
+		return highestIdx;
+	}
+
 }

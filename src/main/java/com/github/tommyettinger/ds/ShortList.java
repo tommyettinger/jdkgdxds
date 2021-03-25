@@ -36,7 +36,7 @@ import java.util.Random;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class ShortList implements PrimitiveCollection.OfShort, Arrangeable, Serializable {
+public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public short[] items;
 	protected int size;
@@ -333,16 +333,16 @@ public class ShortList implements PrimitiveCollection.OfShort, Arrangeable, Seri
 		size = sizeNeeded;
 	}
 
-//	/**
-//	 * Returns this ShortList, since it is its own order. This is only here to satisfy
-//	 * the {@link Ordered.OfShort} interface.
-//	 *
-//	 * @return this ShortList
-//	 */
-//	@Override
-//	public ShortList order () {
-//		return this;
-//	}
+	/**
+	 * Returns this ShortList, since it is its own order. This is only here to satisfy
+	 * the {@link Ordered.OfShort} interface.
+	 *
+	 * @return this ShortList
+	 */
+	@Override
+	public ShortList order () {
+		return this;
+	}
 
 	@Override
 	public void swap (int first, int second) {
