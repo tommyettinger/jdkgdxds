@@ -309,6 +309,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the outer exclusive bound; may be any int value, allowing negative
 	 * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
 	 */
+	@Override
 	public int nextSignedInt (int outerBound) {
 		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
@@ -330,6 +331,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
+	@Override
 	public int nextInt (int innerBound, int outerBound) {
 		return innerBound + nextInt(outerBound - innerBound);
 	}
@@ -346,6 +348,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound; may be any int, allowing negative
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
+	@Override
 	public int nextSignedInt (int innerBound, int outerBound) {
 		return innerBound + nextSignedInt(outerBound - innerBound);
 	}
@@ -396,6 +399,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * value between zero (inclusive) and {@code bound} (exclusive)
 	 * from this random number generator's sequence
 	 */
+	@Override
 	public long nextLong (long bound) {
 		return nextLong(0L, bound);
 	}
@@ -419,6 +423,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the outer exclusive bound; may be any long value, allowing negative
 	 * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
 	 */
+	@Override
 	public long nextSignedLong (long outerBound) {
 		return nextSignedLong(0L, outerBound);
 	}
@@ -437,6 +442,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outer the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
 	 */
+	@Override
 	public long nextLong (long inner, long outer) {
 		final long rand = nextLong();
 		if(inner >= outer) return inner;
@@ -459,6 +465,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outer the exclusive outer bound; may be any long, allowing negative
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
 	 */
+	@Override
 	public long nextSignedLong (long inner, long outer) {
 		final long rand = nextLong();
 		if(outer < inner) {
@@ -529,6 +536,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound
 	 * @return a float between 0 (inclusive) and {@code outerBound} (exclusive)
 	 */
+	@Override
 	public float nextFloat (float outerBound) {
 		return nextFloat() * outerBound;
 	}
@@ -541,6 +549,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound; may be negative
 	 * @return a float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
 	 */
+	@Override
 	public float nextFloat (float innerBound, float outerBound) {
 		return innerBound + nextFloat() * (outerBound - innerBound);
 	}
@@ -579,6 +588,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound
 	 * @return a double between 0 (inclusive) and {@code outerBound} (exclusive)
 	 */
+	@Override
 	public double nextDouble (double outerBound) {
 		return nextDouble() * outerBound;
 	}
@@ -591,36 +601,22 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param outerBound the exclusive outer bound; may be negative
 	 * @return a double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
 	 */
+	@Override
 	public double nextDouble (double innerBound, double outerBound) {
 		return innerBound + nextDouble() * (outerBound - innerBound);
 	}
 
 	/**
-	 * Returns the next pseudorandom, Gaussian ("normally") distributed
-	 * {@code double} value with mean {@code 0.0} and standard
-	 * deviation {@code 1.0} from this random number generator's sequence.
-	 * <p>
-	 * The general contract of {@code nextGaussian} is that one
-	 * {@code double} value, chosen from (approximately) the usual
-	 * normal distribution with mean {@code 0.0} and standard deviation
-	 * {@code 1.0}, is pseudorandomly generated and returned.
-	 *
-	 * <p>This uses an approximation as implemented by {@link #probit(double)},
-	 * which can't produce as extreme results in extremely-rare cases as methods
-	 * like Box-Muller and Marsaglia Polar can. All but one possible result are
-	 * between {@code -8.209536145151493} and {@code 8.209536145151493}, and the
-	 * one result outside that is {@code -38.5}.
-	 *
-	 * @return the next pseudorandom, Gaussian ("normally") distributed
-	 * {@code double} value with mean {@code 0.0} and
-	 * standard deviation {@code 1.0} from this random number
-	 * generator's sequence
+	 * Refer to (and preferably use) {@link EnhancedRandom#probit(double)} instead of using the code here.
+	 * @see EnhancedRandom#probit(double)
+	 * @param d a double between 0 and 1, typically exclusive
+	 * @return a Gaussian-distributed double with a mean of 0 and a standard deviation of 1.
+	 * @deprecated Use {@link EnhancedRandom#probit(double)} instead.
 	 */
-	@Override
-	public double nextGaussian () {
-		return probit(nextDouble());
+	@Deprecated
+	public static double probit(double d) {
+		return EnhancedRandom.probit(d);
 	}
-
 	/**
 	 * Advances or rolls back the {@code LaserRandom}' state without actually generating each number. Skips forward
 	 * or backward a number of steps specified by advance, where a step is equal to one call to {@link #nextLong()},
@@ -636,6 +632,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param advance Number of future generations to skip over; can be negative to backtrack, 0 gets the most-recently-generated number
 	 * @return the random long generated after skipping forward or backwards by {@code advance} numbers
 	 */
+	@Override
 	public long skip (long advance) {
 		final long s = stateA += 0xC6BC279692B5C323L * advance;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L * advance);
@@ -649,6 +646,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * only implemented by Random and not LaserRandom, the results may differ.
 	 * @return a deep copy of this LaserRandom.
 	 */
+	@Override
 	public LaserRandom copy () {
 		return new LaserRandom(stateA, stateB);
 	}
@@ -668,66 +666,12 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	}
 
 	/**
-	 * A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
-	 * inputs correspond to high outputs, and similarly for the low range. This is centered on 0.0 and its standard
-	 * deviation seems to be 1.0 (the same as {@link java.util.Random#nextGaussian()}). If this is given an input of 0.0
-	 * or less, it returns -38.5, which is slightly less than the result when given {@link Double#MIN_VALUE}. If it is
-	 * given an input of 1.0 or more, it returns 38.5, which is significantly larger than the result when given the
-	 * largest double less than 1.0 (this value is further from 1.0 than {@link Double#MIN_VALUE} is from 0.0). If
-	 * given {@link Double#NaN}, it returns whatever {@link Math#copySign(double, double)} returns for the arguments
-	 * {@code 38.5, Double.NaN}, which is implementation-dependent. It uses an algorithm by Peter John Acklam, as
-	 * implemented by Sherali Karimov.
-	 * <a href="https://web.archive.org/web/20150910002142/http://home.online.no/~pjacklam/notes/invnorm/impl/karimov/StatUtil.java">Original source</a>.
-	 * <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Information on the algorithm</a>.
-	 * <a href="https://en.wikipedia.org/wiki/Probit_function">Wikipedia's page on the probit function</a> may help, but
-	 * is more likely to just be confusing.
-	 * <br>
-	 * Acklam's algorithm and Karimov's implementation are both quite fast. This appears faster than generating
-	 * Gaussian-distributed numbers using either the Box-Muller Transform or Marsaglia's Polar Method, though it isn't
-	 * as precise and can't produce as extreme min and max results in the extreme cases they should appear. If given
-	 * a typical uniform random {@code double} that's exclusive on 1.0, it won't produce a result higher than
-	 * {@code 8.209536145151493}, and will only produce results of at least {@code -8.209536145151493} if 0.0 is
-	 * excluded from the inputs (if 0.0 is an input, the result is {@code 38.5}). A chief advantage of using this with
-	 * a random number generator is that it only requires one random double to obtain one Gaussian value;
-	 * {@link Random#nextGaussian()} generates at least two random doubles for each two Gaussian values, but may rarely
-	 * require much more random generation.
-	 * <br>
-	 * This can be used both as an optimization for generating Gaussian random values, and as a way of generating
-	 * Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
-	 * as the input, such as those produced by a van der Corput, Halton, Sobol or R2 sequence). Most methods of generating
-	 * Gaussian values (e.g. Box-Muller and Marsaglia polar) do not have any way to preserve a particular pattern.
-	 *
-	 * @param d should be between 0 and 1, exclusive, but other values are tolerated
-	 * @return a normal-distributed double centered on 0.0; all results will be between -38.5 and 38.5, both inclusive
-	 */
-	public static double probit (final double d) {
-		if (d <= 0 || d >= 1) {
-			return Math.copySign(38.5, d - 0.5);
-		}
-		else if (d < 0.02425) {
-			final double q = Math.sqrt(-2.0 * Math.log(d));
-			return (((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
-				(((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
-		}
-		else if (0.97575 < d) {
-			final double q = Math.sqrt(-2.0 * Math.log(1 - d));
-			return -(((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
-				(((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
-		}
-		else {
-			final double q = d - 0.5;
-			final double r = q * q;
-			return (((((-3.969683028665376e+01 * r + 2.209460984245205e+02) * r + -2.759285104469687e+02) * r + 1.383577518672690e+02) * r + -3.066479806614716e+01) * r + 2.506628277459239e+00) * q / (
-				((((-5.447609879822406e+01 * r + 1.615858368580409e+02) * r + -1.556989798598866e+02) * r + 6.680131188771972e+01) * r + -1.328068155288572e+01) * r + 1.0);
-		}
-	}
-
-	/**
 	 * Returns true if a random value between 0 and 1 is less than the specified value.
 	 *
 	 * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
 	 * @return a boolean selected with the given {@code chance} of being true
 	 */
+	@Override
 	public boolean nextBoolean (float chance) {
 		return nextFloat() < chance;
 	}
@@ -737,6 +681,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @return -1 or 1, selected with approximately equal likelihood
 	 */
+	@Override
 	public int nextSign () {
 		return 1 | nextInt() >> 31;
 	}
@@ -747,6 +692,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * <p>
 	 * This is an optimized version of {@link #nextTriangular(float, float, float) randomTriangular(-1, 1, 0)}
 	 */
+	@Override
 	public float nextTriangular () {
 		return nextFloat() - nextFloat();
 	}
@@ -759,6 +705,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param max the upper limit
 	 */
+	@Override
 	public float nextTriangular (float max) {
 		return (nextFloat() - nextFloat()) * max;
 	}
@@ -772,6 +719,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param min the lower limit
 	 * @param max the upper limit
 	 */
+	@Override
 	public float nextTriangular (float min, float max) {
 		return nextTriangular(min, max, (min + max) * 0.5f);
 	}
@@ -784,6 +732,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @param max  the upper limit
 	 * @param mode the point around which the values are more likely
 	 */
+	@Override
 	public float nextTriangular (float min, float max, float mode) {
 		float u = nextFloat();
 		float d = max - min;
@@ -799,6 +748,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 * @throws NullPointerException if array is null
 	 * @throws IndexOutOfBoundsException if array is empty
 	 */
+	@Override
 	public <T> T randomElement (T[] array) {
 		return array[nextInt(array.length)];
 	}
@@ -808,6 +758,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items an int array; must be non-null
 	 */
+	@Override
 	public void shuffle (int[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -822,6 +773,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a long array; must be non-null
 	 */
+	@Override
 	public void shuffle (long[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -836,6 +788,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a float array; must be non-null
 	 */
+	@Override
 	public void shuffle (float[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -850,6 +803,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a char array; must be non-null
 	 */
+	@Override
 	public void shuffle (char[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -864,6 +818,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a double array; must be non-null
 	 */
+	@Override
 	public void shuffle (double[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -878,6 +833,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a short array; must be non-null
 	 */
+	@Override
 	public void shuffle (short[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -892,6 +848,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items a boolean array; must be non-null
 	 */
+	@Override
 	public void shuffle (boolean[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -906,6 +863,7 @@ public class LaserRandom extends Random implements Serializable, EnhancedRandom 
 	 *
 	 * @param items an array of some reference type; must be non-null but may contain null items
 	 */
+	@Override
 	public <T> void shuffle (T[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);

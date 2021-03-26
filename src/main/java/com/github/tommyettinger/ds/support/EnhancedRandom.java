@@ -415,6 +415,53 @@ public interface EnhancedRandom {
 	}
 
 	/**
+	 * Gets a random double between 0.0 and 1.0, exclusive at both ends. This method is also more uniform than
+	 * {@link #nextDouble()} if you use the bit-patterns of the returned doubles. This is a simplified version of
+	 * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This can return double
+	 * values between 2.710505431213761E-20 and 0.9999999999999999, or 0x1.0p-65 and 0x1.fffffffffffffp-1 in hex
+	 * notation. It cannot return 0 or 1. To compare, nextDouble() is less likely to produce a "1" bit for its
+	 * lowest 5 bits of mantissa/significand (the least significant bits numerically, but potentially important
+	 * for some uses), with the least significant bit produced half as often as the most significant bit in the
+	 * mantissa. As for this method, it has approximately the same likelihood of producing a "1" bit for any
+	 * position in the mantissa.
+	 * <br>
+	 * The default implementation may have different performance characteristics than {@link #nextDouble()},
+	 * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
+	 * obtained by one call to {@link #nextLong()}. This uses {@link BitConversion#longBitsToDouble(long)} and
+	 * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
+	 * and this is branchless and loopless, unlike the original algorithm by Allen Downey.
+	 * @return a random uniform double between 0 and 1 (both exclusive)
+	 */
+	default double nextExclusiveDouble(){
+		final long bits = nextLong();
+		return BitConversion.longBitsToDouble(1022L - Long.numberOfTrailingZeros(bits) << 52
+			| bits >>> 12);
+	}
+	/**
+	 * Gets a random float between 0.0 and 1.0, exclusive at both ends. This method is also more uniform than
+	 * {@link #nextFloat()} if you use the bit-patterns of the returned floats. This is a simplified version of
+	 * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This version can
+	 * return float values between 2.7105054E-20 to 0.99999994, or 0x1.0p-65 to 0x1.fffffep-1 in hex notation.
+	 * It cannot return 0 or 1. To compare, nextFloat() is less likely to produce a "1" bit for its
+	 * lowest 5 bits of mantissa/significand (the least significant bits numerically, but potentially important
+	 * for some uses), with the least significant bit produced half as often as the most significant bit in the
+	 * mantissa. As for this method, it has approximately the same likelihood of producing a "1" bit for any
+	 * position in the mantissa.
+	 * <br>
+	 * The default implementation may have different performance characteristics than {@link #nextFloat()},
+	 * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
+	 * obtained by one call to {@link #nextLong()}. This uses {@link BitConversion#intBitsToFloat(int)} and
+	 * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
+	 * and this is branchless and loopless, unlike the original algorithm by Allen Downey.
+	 * @return a random uniform float between 0 and 1 (both exclusive)
+	 */
+	default float nextExclusiveFloat(){
+		final long bits = nextLong();
+		return BitConversion.intBitsToFloat(126 - Long.numberOfTrailingZeros(bits) << 23
+			| (int)(bits >>> 41));
+	}
+
+	/**
 	 * Returns the next pseudorandom, Gaussian ("normally") distributed
 	 * {@code double} value with mean {@code 0.0} and standard
 	 * deviation {@code 1.0} from this random number generator's sequence.
@@ -426,17 +473,20 @@ public interface EnhancedRandom {
 	 *
 	 * <p>This uses an approximation as implemented by {@link #probit(double)},
 	 * which can't produce as extreme results in extremely-rare cases as methods
-	 * like Box-Muller and Marsaglia Polar can. All but one possible result are
-	 * between {@code -8.209536145151493} and {@code 8.209536145151493}, and the
-	 * one result outside that is {@code -38.5}.
+	 * like Box-Muller and Marsaglia Polar can. All possible results are
+	 * between {@code -9.155293773112453} and {@code 8.209536145151493}. The
+	 * discrepancy between the highest and lowest values is because there are
+	 * more possible double values approaching 0 than there are approaching 1 .
+	 * Internally, this uses {@link #nextExclusiveDouble()}, not
+	 * {@link #nextDouble()}, because probit() produces a sudden jump if given
+	 * an input of 0, so we exclude 0 from the possible random probit() inputs.
 	 *
 	 * @return the next pseudorandom, Gaussian ("normally") distributed
-	 * {@code double} value with mean {@code 0.0} and
-	 * standard deviation {@code 1.0} from this random number
-	 * generator's sequence
+	 * {@code double} value with mean {@code 0.0} and standard deviation
+	 * {@code 1.0} from this random number generator's sequence
 	 */
 	default double nextGaussian () {
-		return probit(nextDouble());
+		return probit(nextExclusiveDouble());
 	}
 
 	/**
