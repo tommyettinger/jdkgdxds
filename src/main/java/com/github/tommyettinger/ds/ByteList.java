@@ -36,7 +36,7 @@ import java.util.Random;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class ByteList implements PrimitiveCollection.OfByte, Arrangeable, Serializable {
+public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public byte[] items;
 	protected int size;
@@ -333,16 +333,16 @@ public class ByteList implements PrimitiveCollection.OfByte, Arrangeable, Serial
 		size = sizeNeeded;
 	}
 
-//	/**
-//	 * Returns this ByteList, since it is its own order. This is only here to satisfy
-//	 * the {@link Ordered.OfByte} interface.
-//	 *
-//	 * @return this ByteList
-//	 */
-//	@Override
-//	public ByteList order () {
-//		return this;
-//	}
+	/**
+	 * Returns this ByteList, since it is its own order. This is only here to satisfy
+	 * the {@link Ordered.OfByte} interface.
+	 *
+	 * @return this ByteList
+	 */
+	@Override
+	public ByteList order () {
+		return this;
+	}
 
 	@Override
 	public void swap (int first, int second) {
