@@ -124,4 +124,52 @@ public final class IntComparators {
 			}
 		};
 	}
+
+	/**
+	 * A type-specific comparator that compares items in the natural order, but as if they are unsigned
+	 * (so, all negative items are greater than any non-negative items).
+	 */
+	protected static class UnsignedComparator implements IntComparator, java.io.Serializable {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public final int compare (final int a, final int b) {
+			return Integer.compareUnsigned(a, b);
+		}
+
+		@Override
+		public IntComparator reversed () {
+			return UNSIGNED_OPPOSITE_COMPARATOR;
+		}
+
+		private Object readResolve () {
+			return UNSIGNED_COMPARATOR;
+		}
+	}
+
+	public static final IntComparator UNSIGNED_COMPARATOR = new IntComparators.UnsignedComparator();
+
+	/**
+	 * A type-specific comparator that compares items in the opposite of the natural order, but as if they
+	 * are unsigned.
+	 */
+	protected static class UnsignedOppositeComparator implements IntComparator, java.io.Serializable {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public final int compare (final int a, final int b) {
+			return -Integer.compareUnsigned(a, b);
+		}
+
+		@Override
+		public IntComparator reversed () {
+			return UNSIGNED_COMPARATOR;
+		}
+
+		private Object readResolve () {
+			return UNSIGNED_OPPOSITE_COMPARATOR;
+		}
+	}
+
+	public static final IntComparator UNSIGNED_OPPOSITE_COMPARATOR = new IntComparators.UnsignedComparator();
 }

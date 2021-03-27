@@ -124,4 +124,52 @@ public final class LongComparators {
 			}
 		};
 	}
+
+	/**
+	 * A type-specific comparator that compares items in the natural order, but as if they are unsigned
+	 * (so, all negative items are greater than any non-negative items).
+	 */
+	protected static class UnsignedComparator implements LongComparator, java.io.Serializable {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public final int compare (final long a, final long b) {
+			return Long.compareUnsigned(a, b);
+		}
+
+		@Override
+		public LongComparator reversed () {
+			return UNSIGNED_OPPOSITE_COMPARATOR;
+		}
+
+		private Object readResolve () {
+			return UNSIGNED_COMPARATOR;
+		}
+	}
+
+	public static final LongComparator UNSIGNED_COMPARATOR = new UnsignedComparator();
+
+	/**
+	 * A type-specific comparator that compares items in the opposite of the natural order, but as if they
+	 * are unsigned.
+	 */
+	protected static class UnsignedOppositeComparator implements LongComparator, java.io.Serializable {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public final int compare (final long a, final long b) {
+			return -Long.compareUnsigned(a, b);
+		}
+
+		@Override
+		public LongComparator reversed () {
+			return UNSIGNED_COMPARATOR;
+		}
+
+		private Object readResolve () {
+			return UNSIGNED_OPPOSITE_COMPARATOR;
+		}
+	}
+
+	public static final LongComparator UNSIGNED_OPPOSITE_COMPARATOR = new UnsignedComparator();
 }
