@@ -36,7 +36,7 @@ import java.util.Random;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class CharList implements PrimitiveCollection.OfChar, Arrangeable, Serializable {
+public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public char[] items;
 	protected int size;
@@ -222,16 +222,16 @@ public class CharList implements PrimitiveCollection.OfChar, Arrangeable, Serial
 		size = sizeNeeded;
 	}
 
-//	/**
-//	 * Returns this CharList, since it is its own order. This is only here to satisfy
-//	 * the {@link Ordered.OfChar} interface.
-//	 *
-//	 * @return this CharList
-//	 */
-//	@Override
-//	public CharList order () {
-//		return this;
-//	}
+	/**
+	 * Returns this CharList, since it is its own order. This is only here to satisfy
+	 * the {@link Ordered.OfChar} interface.
+	 *
+	 * @return this CharList
+	 */
+	@Override
+	public CharList order () {
+		return this;
+	}
 
 	@Override
 	public void swap (int first, int second) {
