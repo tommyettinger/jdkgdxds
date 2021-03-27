@@ -2,11 +2,14 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.function.ByteConsumer;
 import com.github.tommyettinger.ds.support.function.BytePredicate;
+import com.github.tommyettinger.ds.support.function.CharConsumer;
+import com.github.tommyettinger.ds.support.function.CharPredicate;
 import com.github.tommyettinger.ds.support.function.FloatConsumer;
 import com.github.tommyettinger.ds.support.function.FloatPredicate;
 import com.github.tommyettinger.ds.support.function.ShortConsumer;
 import com.github.tommyettinger.ds.support.function.ShortPredicate;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
+import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 
@@ -684,6 +687,135 @@ public interface PrimitiveCollection<T, T_CONS> {
 			ByteIterator it = iterator();
 			while (it.hasNext())
 				action.accept(it.nextByte());
+		}
+	}
+
+	interface OfChar extends PrimitiveCollection<Character, CharConsumer> {
+		boolean add (char item);
+
+		boolean remove (char item);
+
+		boolean contains (char item);
+
+		default boolean addAll (OfChar other) {
+			CharIterator it = other.iterator();
+			boolean changed = false;
+			while (it.hasNext()) {
+				changed |= add(it.nextChar());
+			}
+			return changed;
+		}
+
+		default boolean removeAll (OfChar other) {
+			CharIterator it = other.iterator();
+			boolean changed = false;
+			while (it.hasNext()) {
+				changed |= remove(it.nextChar());
+			}
+			return changed;
+		}
+
+		default boolean containsAll (OfChar other) {
+			CharIterator it = other.iterator();
+			boolean has = true;
+			while (it.hasNext()) {
+				has &= contains(it.nextChar());
+			}
+			return has;
+		}
+
+		/**
+		 * Removes all of the elements of this collection that satisfy the given
+		 * predicate.  Errors or runtime exceptions thrown during iteration or by
+		 * the predicate are relayed to the caller.
+		 *
+		 * @implSpec
+		 * The default implementation traverses all elements of the collection using
+		 * its {@link #iterator()}.  Each matching element is removed using
+		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * support removal then an {@code UnsupportedOperationException} will be
+		 * thrown on the first matching element.
+		 *
+		 * @param filter a predicate which returns {@code true} for elements to be
+		 *        removed
+		 * @return {@code true} if any elements were removed
+		 * @throws UnsupportedOperationException if elements cannot be removed
+		 *         from this collection.  Implementations may throw this exception if a
+		 *         matching element cannot be removed or if, in general, removal is not
+		 *         supported.
+		 */
+		default boolean removeIf(CharPredicate filter) {
+			boolean removed = false;
+			final CharIterator each = iterator();
+			while (each.hasNext()) {
+				if (filter.test(each.nextChar())) {
+					each.remove();
+					removed = true;
+				}
+			}
+			return removed;
+		}
+
+		default boolean retainAll (OfChar other) {
+			boolean changed = false;
+			CharIterator it = iterator();
+			while (it.hasNext()) {
+				if (!other.contains(it.nextChar())) {
+					it.remove();
+					changed = true;
+				}
+			}
+			return changed;
+		}
+
+		@Override
+		CharIterator iterator ();
+
+		/**
+		 * Allocates a new char array with exactly {@link #size()} items, fills it with the
+		 * contents of this PrimitiveCollection, and returns it.
+		 * @return a new char array
+		 */
+		default char[] toArray () {
+			final int sz = size();
+			char[] receiver = new char[sz];
+			CharIterator it = iterator();
+			int i = 0;
+			while (it.hasNext())
+				receiver[i++] = it.nextChar();
+			return receiver;
+		}
+		/**
+		 * Fills the given array with the entire contents of this PrimitiveCollection, up to
+		 * {@link #size()} items, or if receiver is not large enough, then this allocates a new
+		 * char array with {@link #size()} items and returns that.
+		 * @param receiver a char array that will be filled with the items from this, if possible
+		 * @return {@code receiver}, if it was modified, or a new char array otherwise
+		 */
+		default char[] toArray (char[] receiver){
+			final int sz = size();
+			if(receiver.length < sz)
+				receiver = new char[sz];
+			CharIterator it = iterator();
+			int i = 0;
+			while (it.hasNext())
+				receiver[i++] = it.nextChar();
+			return receiver;
+		}
+
+		/**
+		 * Performs the given action for each element of the {@code PrimitiveCollection.OfChar}
+		 * until all elements have been processed or the action throws an
+		 * exception.  Actions are performed in the order of iteration, if that
+		 * order is specified.  Exceptions thrown by the action are relayed to the
+		 * caller.
+		 *
+		 * @param action The action to be performed for each element
+		 */
+		default void forEach(CharConsumer action) {
+			CharIterator it = iterator();
+			while (it.hasNext())
+				action.accept(it.nextChar());
 		}
 	}
 }
