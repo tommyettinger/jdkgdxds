@@ -18,7 +18,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.function.IntIntConsumer;
 import com.github.tommyettinger.ds.support.function.IntIntToIntBiFunction;
-import com.github.tommyettinger.ds.support.function.IntToIntFunction;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -28,6 +27,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.IntUnaryOperator;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -1146,7 +1146,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry>, Serializable {
 		return defaultValue;
 	}
 
-	public int computeIfAbsent(int key, IntToIntFunction mappingFunction) {
+	public int computeIfAbsent(int key, IntUnaryOperator mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
 			int newValue = mappingFunction.applyAsInt(key);
