@@ -36,7 +36,7 @@ import java.util.function.DoubleUnaryOperator;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class DoubleList implements PrimitiveCollection.OfDouble, Arrangeable, Serializable {
+public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDouble, Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public double[] items;
 	protected int size;
@@ -332,16 +332,16 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Arrangeable, Se
 		size = sizeNeeded;
 	}
 
-//	/**
-//	 * Returns this DoubleList, since it is its own order. This is only here to satisfy
-//	 * the {@link Ordered.OfDouble} interface.
-//	 *
-//	 * @return this DoubleList
-//	 */
-//	@Override
-//	public DoubleList order () {
-//		return this;
-//	}
+	/**
+	 * Returns this DoubleList, since it is its own order. This is only here to satisfy
+	 * the {@link Ordered.OfDouble} interface.
+	 *
+	 * @return this DoubleList
+	 */
+	@Override
+	public DoubleList order () {
+		return this;
+	}
 
 	@Override
 	public void swap (int first, int second) {
