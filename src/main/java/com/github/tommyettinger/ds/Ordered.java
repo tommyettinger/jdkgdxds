@@ -1,6 +1,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
@@ -875,6 +876,111 @@ public interface Ordered<T> extends Arrangeable {
 		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
 		 * @return the index of the kth lowest ranked item. */
 		default int selectRankedIndex (CharComparator comparator, int kthLowest) {
+			if (kthLowest < 1) {
+				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
+			}
+			return Select.selectIndex(order(), comparator, kthLowest, size());
+		}
+	}
+
+	interface OfBoolean extends Arrangeable {
+		/**
+		 * Gets the BooleanList of boolean items that this data structure holds, in the order it uses for iteration.
+		 * This should usually return a direct reference to an BooleanList used inside this object, so changes
+		 * to the list will affect this.
+		 *
+		 * @return the BooleanList of boolean items that this data structure holds
+		 */
+		BooleanList order ();
+
+		/**
+		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
+		 *
+		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param second the second position, must not be negative and must be less than {@link #size()}
+		 */
+		@Override
+		default void swap (int first, int second) {
+			order().swap(first, second);
+		}
+
+		/**
+		 * Pseudo-randomly shuffles the order of this Ordered in-place.
+		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
+		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
+		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
+		 * items (though it would take millions of years to do so, and would require changing the stream every few
+		 * years), while {@link Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
+		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
+		 * somewhat slower and is not ideal in terms of statistical bias.
+		 *
+		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
+		 */
+		@Override
+		default void shuffle (Random rng) {
+			BooleanList order = order();
+			for (int i = order.size() - 1; i >= 0; i--) {
+				order.swap(i, rng.nextInt(i + 1));
+			}
+		}
+
+		/**
+		 * Reverses the order of this Ordered in-place.
+		 */
+		@Override
+		default void reverse () {
+			order().reverse();
+		}
+
+		/**
+		 * Gets a random boolean value from this Ordered. The random number generator {@code rng} should
+		 * probably be a {@link LaserRandom}, because it implements a fast
+		 * {@link LaserRandom#nextInt(int)} method.
+		 *
+		 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
+		 * @return a random boolean key or item from this Ordered.OfBoolean
+		 */
+		default boolean random (Random rng) {
+			return order().random(rng);
+		}
+
+		/**
+		 * Sorts this Ordered according to the order induced by the specified
+		 * {@link BooleanComparator}.  The sort is <i>stable</i>: this method must not
+		 * reorder equal elements.
+		 * <br>
+		 * If the specified comparator is {@code null} then the numeric elements'
+		 * natural ordering should be used.
+		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
+		 */
+		default void sort(@Nullable BooleanComparator comparator) {
+			order().sort(comparator);
+		}
+
+		/**
+		 * Selects the kth-lowest element from this Ordered according to BooleanComparator ranking. This might partially sort the Ordered,
+		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+		 * @see Select
+		 * @param comparator used for comparison
+		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item. */
+		default boolean selectRanked (BooleanComparator comparator, int kthLowest) {
+			if (kthLowest < 1) {
+				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
+			}
+			return Select.select(order(), comparator, kthLowest, size());
+		}
+
+		/**
+		 * Gets the index of the kth-lowest element from this Ordered according to BooleanComparator ranking. This might partially sort the
+		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+		 * @see Ordered.OfBoolean#selectRanked(BooleanComparator, int)
+		 * @param comparator used for comparison
+		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the index of the kth lowest ranked item. */
+		default int selectRankedIndex (BooleanComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}

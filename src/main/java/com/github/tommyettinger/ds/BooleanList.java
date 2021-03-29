@@ -37,7 +37,7 @@ import java.util.Random;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class BooleanList implements PrimitiveCollection.OfBoolean, Arrangeable, Serializable {
+public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoolean, Arrangeable, Serializable {
 	private static final long serialVersionUID = 0L;
 	public boolean[] items;
 	protected int size;
@@ -243,16 +243,16 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Arrangeable, 
 		size = sizeNeeded;
 	}
 
-//	/**
-//	 * Returns this BooleanList, since it is its own order. This is only here to satisfy
-//	 * the {@link Ordered.OfBoolean} interface.
-//	 *
-//	 * @return this BooleanList
-//	 */
-//	@Override
-//	public BooleanList order () {
-//		return this;
-//	}
+	/**
+	 * Returns this BooleanList, since it is its own order. This is only here to satisfy
+	 * the {@link Ordered.OfBoolean} interface.
+	 *
+	 * @return this BooleanList
+	 */
+	@Override
+	public BooleanList order () {
+		return this;
+	}
 
 	@Override
 	public void swap (int first, int second) {
