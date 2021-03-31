@@ -861,6 +861,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>>, Seria
 			int i = currentIndex;
 			if (i == INDEX_ZERO && map.hasZeroValue) {
 				map.hasZeroValue = false;
+				map.zeroValue = null;
 			} else if (i < 0) {
 				throw new IllegalStateException("next must be called before remove.");
 			} else {

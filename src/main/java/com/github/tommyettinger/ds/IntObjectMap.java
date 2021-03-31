@@ -861,10 +861,12 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 			int i = currentIndex;
 			if (i == INDEX_ZERO && map.hasZeroValue) {
 				map.hasZeroValue = false;
+				map.zeroValue = null;
 			} else if (i < 0) {
 				throw new IllegalStateException("next must be called before remove.");
 			} else {
 				int[] keyTable = map.keyTable;
+				V[] valueTable = map.valueTable;
 				int mask = map.mask;
 				int next = i + 1 & mask;
 				int key;
@@ -872,11 +874,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Seriali
 					int placement = map.place(key);
 					if ((next - placement & mask) > (i - placement & mask)) {
 						keyTable[i] = key;
+						valueTable[i] = valueTable[next];
 						i = next;
 					}
 					next = next + 1 & mask;
 				}
 				keyTable[i] = 0;
+				valueTable[i] = null;
 				if (i != currentIndex) { --nextIndex; }
 			}
 			currentIndex = INDEX_ILLEGAL;
