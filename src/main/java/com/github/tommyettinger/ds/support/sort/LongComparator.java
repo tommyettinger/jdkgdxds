@@ -68,7 +68,7 @@ public interface LongComparator extends Comparator<Long> {
 	 * @see Comparator#thenComparing(Comparator)
 	 */
 	default LongComparator thenComparing (LongComparator second) {
-		return (LongComparator & java.io.Serializable)(k1, k2) -> {
+		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
 		};

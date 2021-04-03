@@ -21,7 +21,6 @@ import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -58,8 +57,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Ordered<K>, Serializable {
-	private static final long serialVersionUID = 0L;
+public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Ordered<K> {
+
 
 	protected final ObjectList<K> keys;
 

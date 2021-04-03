@@ -29,8 +29,8 @@ public final class ByteComparators {
 	/**
 	 * A type-specific comparator mimicking the natural order.
 	 */
-	protected static class NaturalImplicitComparator implements ByteComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class NaturalImplicitComparator implements ByteComparator {
+
 
 		@Override
 		public final int compare (final byte a, final byte b) {
@@ -48,8 +48,8 @@ public final class ByteComparators {
 	/**
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
-	protected static class OppositeImplicitComparator implements ByteComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeImplicitComparator implements ByteComparator {
+
 
 		@Override
 		public final int compare (final byte a, final byte b) {
@@ -64,8 +64,8 @@ public final class ByteComparators {
 
 	public static final ByteComparator OPPOSITE_COMPARATOR = new OppositeImplicitComparator();
 
-	protected static class OppositeComparator implements ByteComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeComparator implements ByteComparator {
+
 		final ByteComparator comparator;
 
 		protected OppositeComparator (final ByteComparator c) {
@@ -121,8 +121,8 @@ public final class ByteComparators {
 	 * A type-specific comparator that compares items in the natural order, but as if they are unsigned
 	 * (so, all negative items are greater than any non-negative items).
 	 */
-	protected static class UnsignedComparator implements ByteComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class UnsignedComparator implements ByteComparator {
+
 
 		@Override
 		public final int compare (final byte a, final byte b) {
@@ -134,9 +134,7 @@ public final class ByteComparators {
 			return UNSIGNED_OPPOSITE_COMPARATOR;
 		}
 
-		private Object readResolve () {
-			return UNSIGNED_COMPARATOR;
-		}
+
 	}
 
 	public static final ByteComparator UNSIGNED_COMPARATOR = new ByteComparators.UnsignedComparator();
@@ -145,12 +143,12 @@ public final class ByteComparators {
 	 * A type-specific comparator that compares items in the opposite of the natural order, but as if they
 	 * are unsigned.
 	 */
-	protected static class UnsignedOppositeComparator implements ByteComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class UnsignedOppositeComparator implements ByteComparator {
+
 
 		@Override
 		public final int compare (final byte a, final byte b) {
-			return -Integer.compareUnsigned(a & 0xFF, b & 0xFF);
+			return Integer.compareUnsigned(b & 0xFF, a & 0xFF);
 		}
 
 		@Override
@@ -158,9 +156,7 @@ public final class ByteComparators {
 			return UNSIGNED_COMPARATOR;
 		}
 
-		private Object readResolve () {
-			return UNSIGNED_OPPOSITE_COMPARATOR;
-		}
+
 	}
 
 	public static final ByteComparator UNSIGNED_OPPOSITE_COMPARATOR = new ByteComparators.UnsignedComparator();

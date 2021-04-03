@@ -22,8 +22,6 @@ import com.github.tommyettinger.ds.support.sort.BooleanComparators;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Random;
@@ -37,8 +35,8 @@ import java.util.Random;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoolean, Arrangeable, Serializable {
-	private static final long serialVersionUID = 0L;
+public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoolean, Arrangeable {
+
 	public boolean[] items;
 	protected int size;
 	public boolean ordered;

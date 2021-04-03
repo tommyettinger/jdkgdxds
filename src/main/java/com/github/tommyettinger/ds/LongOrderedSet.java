@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
@@ -50,8 +49,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongOrderedSet extends LongSet implements Ordered.OfLong, Serializable {
-	private static final long serialVersionUID = 0L;
+public class LongOrderedSet extends LongSet implements Ordered.OfLong {
+
 	protected final LongList items;
 
 	public LongOrderedSet () {

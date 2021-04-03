@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
@@ -36,8 +35,8 @@ import java.util.function.DoubleUnaryOperator;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDouble, Arrangeable, Serializable {
-	private static final long serialVersionUID = 0L;
+public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDouble, Arrangeable {
+
 	public double[] items;
 	protected int size;
 	public boolean ordered;

@@ -1,6 +1,5 @@
 package com.github.tommyettinger.ds.support;
 
-import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -58,8 +57,7 @@ import java.util.Random;
  *
  * @author Tommy Ettinger
  */
-public class LaserRandom extends Random implements Serializable, EnhancedRandom {
-	private static final long serialVersionUID = 0L;
+public class LaserRandom extends Random implements EnhancedRandom {
 	/**
 	 * Can be any long value.
 	 */

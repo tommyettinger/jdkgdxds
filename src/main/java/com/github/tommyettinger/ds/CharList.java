@@ -21,7 +21,6 @@ import com.github.tommyettinger.ds.support.sort.CharComparator;
 import com.github.tommyettinger.ds.support.util.CharIterator;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
@@ -36,8 +35,8 @@ import java.util.Random;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable, Serializable {
-	private static final long serialVersionUID = 0L;
+public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable {
+
 	public char[] items;
 	protected int size;
 	public boolean ordered;

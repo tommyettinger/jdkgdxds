@@ -29,8 +29,8 @@ public final class IntComparators {
 	/**
 	 * A type-specific comparator mimicking the natural order.
 	 */
-	protected static class NaturalImplicitComparator implements IntComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class NaturalImplicitComparator implements IntComparator {
+
 
 		@Override
 		public final int compare (final int a, final int b) {
@@ -42,9 +42,7 @@ public final class IntComparators {
 			return OPPOSITE_COMPARATOR;
 		}
 
-		private Object readResolve () {
-			return NATURAL_COMPARATOR;
-		}
+
 	}
 
 	public static final IntComparator NATURAL_COMPARATOR = new NaturalImplicitComparator();
@@ -52,12 +50,12 @@ public final class IntComparators {
 	/**
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
-	protected static class OppositeImplicitComparator implements IntComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeImplicitComparator implements IntComparator {
+
 
 		@Override
 		public final int compare (final int a, final int b) {
-			return -Integer.compare(a, b);
+			return Integer.compare(b, a);
 		}
 
 		@Override
@@ -65,15 +63,13 @@ public final class IntComparators {
 			return NATURAL_COMPARATOR;
 		}
 
-		private Object readResolve () {
-			return OPPOSITE_COMPARATOR;
-		}
+
 	}
 
 	public static final IntComparator OPPOSITE_COMPARATOR = new OppositeImplicitComparator();
 
-	protected static class OppositeComparator implements IntComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeComparator implements IntComparator {
+
 		final IntComparator comparator;
 
 		protected OppositeComparator (final IntComparator c) {
@@ -129,8 +125,8 @@ public final class IntComparators {
 	 * A type-specific comparator that compares items in the natural order, but as if they are unsigned
 	 * (so, all negative items are greater than any non-negative items).
 	 */
-	protected static class UnsignedComparator implements IntComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class UnsignedComparator implements IntComparator {
+
 
 		@Override
 		public final int compare (final int a, final int b) {
@@ -142,9 +138,7 @@ public final class IntComparators {
 			return UNSIGNED_OPPOSITE_COMPARATOR;
 		}
 
-		private Object readResolve () {
-			return UNSIGNED_COMPARATOR;
-		}
+
 	}
 
 	public static final IntComparator UNSIGNED_COMPARATOR = new IntComparators.UnsignedComparator();
@@ -153,12 +147,12 @@ public final class IntComparators {
 	 * A type-specific comparator that compares items in the opposite of the natural order, but as if they
 	 * are unsigned.
 	 */
-	protected static class UnsignedOppositeComparator implements IntComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class UnsignedOppositeComparator implements IntComparator {
+
 
 		@Override
 		public final int compare (final int a, final int b) {
-			return -Integer.compareUnsigned(a, b);
+			return Integer.compareUnsigned(b, a);
 		}
 
 		@Override
@@ -166,9 +160,7 @@ public final class IntComparators {
 			return UNSIGNED_COMPARATOR;
 		}
 
-		private Object readResolve () {
-			return UNSIGNED_OPPOSITE_COMPARATOR;
-		}
+
 	}
 
 	public static final IntComparator UNSIGNED_OPPOSITE_COMPARATOR = new IntComparators.UnsignedComparator();

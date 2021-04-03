@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -58,8 +57,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K>, Serializable {
-	private static final long serialVersionUID = 0L;
+public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K> {
+
 
 	protected final ObjectList<K> keys;
 

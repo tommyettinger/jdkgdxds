@@ -21,7 +21,6 @@ import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
@@ -36,8 +35,8 @@ import java.util.Random;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arrangeable, Serializable {
-	private static final long serialVersionUID = 0L;
+public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arrangeable {
+
 	public byte[] items;
 	protected int size;
 	public boolean ordered;

@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.LaserRandom;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,8 +39,8 @@ import java.util.Random;
  *
  * @author Tommy Ettinger
  */
-public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, Serializable {
-	private static final long serialVersionUID = 0L;
+public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
+
 	public boolean ordered = true;
 	@Nullable protected transient ObjectListIterator<T> iterator1;
 	@Nullable protected transient ObjectListIterator<T> iterator2;

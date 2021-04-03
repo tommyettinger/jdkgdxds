@@ -29,8 +29,8 @@ public final class CharComparators {
 	/**
 	 * A type-specific comparator mimicking the natural order.
 	 */
-	protected static class NaturalImplicitComparator implements CharComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class NaturalImplicitComparator implements CharComparator {
+
 
 		@Override
 		public final int compare (final char a, final char b) {
@@ -48,8 +48,8 @@ public final class CharComparators {
 	/**
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
-	protected static class OppositeImplicitComparator implements CharComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeImplicitComparator implements CharComparator {
+
 
 		@Override
 		public final int compare (final char a, final char b) {
@@ -64,8 +64,8 @@ public final class CharComparators {
 
 	public static final CharComparator OPPOSITE_COMPARATOR = new OppositeImplicitComparator();
 
-	protected static class OppositeComparator implements CharComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeComparator implements CharComparator {
+
 		final CharComparator comparator;
 
 		protected OppositeComparator (final CharComparator c) {

@@ -29,8 +29,8 @@ public final class DoubleComparators {
 	/**
 	 * A type-specific comparator mimicking the natural order.
 	 */
-	protected static class NaturalImplicitComparator implements DoubleComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class NaturalImplicitComparator implements DoubleComparator {
+
 
 		@Override
 		public final int compare (final double a, final double b) {
@@ -48,8 +48,8 @@ public final class DoubleComparators {
 	/**
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
-	protected static class OppositeImplicitComparator implements DoubleComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeImplicitComparator implements DoubleComparator {
+
 
 		@Override
 		public final int compare (final double a, final double b) {
@@ -64,8 +64,8 @@ public final class DoubleComparators {
 
 	public static final DoubleComparator OPPOSITE_COMPARATOR = new OppositeImplicitComparator();
 
-	protected static class OppositeComparator implements DoubleComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeComparator implements DoubleComparator {
+
 		final DoubleComparator comparator;
 
 		protected OppositeComparator (final DoubleComparator c) {
@@ -117,8 +117,8 @@ public final class DoubleComparators {
 		};
 	}
 
-	protected static class TolerantComparator implements DoubleComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class TolerantComparator implements DoubleComparator {
+
 		public final double tolerance;
 		protected final DoubleComparator reverse;
 

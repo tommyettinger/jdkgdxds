@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -54,8 +53,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K>, Serializable {
-	private static final long serialVersionUID = 0L;
+public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implements Ordered<K> {
+
 
 	protected final ObjectList<K> keys;
 

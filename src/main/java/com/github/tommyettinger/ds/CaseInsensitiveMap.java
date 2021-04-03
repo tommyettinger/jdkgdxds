@@ -1,7 +1,6 @@
 package com.github.tommyettinger.ds;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.*;
 
 import static com.github.tommyettinger.ds.Utilities.neverIdentical;
@@ -21,8 +20,8 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * widespread use. There's also {@link Utilities#equalsIgnoreCase(CharSequence, CharSequence)} for equality
  * comparisons that are similarly case-insensitive, except for Georgian.
  */
-public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> implements Serializable {
-	private static final long serialVersionUID = 0L;
+public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
+
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
 	 */

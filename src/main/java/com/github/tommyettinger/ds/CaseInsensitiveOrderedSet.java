@@ -1,6 +1,5 @@
 package com.github.tommyettinger.ds;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -21,8 +20,8 @@ import java.util.Comparator;
  * {@link CaseInsensitiveSet}, except that this class maintains insertion order and can be sorted with
  * {@link #sort()}, {@link #sort(Comparator)}, etc.
  */
-public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> implements Serializable {
-	private static final long serialVersionUID = 0L;
+public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
+
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.

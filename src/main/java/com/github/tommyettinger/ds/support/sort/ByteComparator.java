@@ -63,7 +63,7 @@ public interface ByteComparator extends Comparator<Byte> {
 	 * @see Comparator#thenComparing(Comparator)
 	 */
 	default ByteComparator thenComparing (ByteComparator second) {
-		return (ByteComparator & java.io.Serializable)(k1, k2) -> {
+		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
 		};

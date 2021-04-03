@@ -29,8 +29,8 @@ public final class FloatComparators {
 	/**
 	 * A type-specific comparator mimicking the natural order.
 	 */
-	protected static class NaturalImplicitComparator implements FloatComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class NaturalImplicitComparator implements FloatComparator {
+
 
 		@Override
 		public final int compare (final float a, final float b) {
@@ -48,8 +48,8 @@ public final class FloatComparators {
 	/**
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
-	protected static class OppositeImplicitComparator implements FloatComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeImplicitComparator implements FloatComparator {
+
 
 		@Override
 		public final int compare (final float a, final float b) {
@@ -64,8 +64,8 @@ public final class FloatComparators {
 
 	public static final FloatComparator OPPOSITE_COMPARATOR = new OppositeImplicitComparator();
 
-	protected static class OppositeComparator implements FloatComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeComparator implements FloatComparator {
+
 		final FloatComparator comparator;
 
 		protected OppositeComparator (final FloatComparator c) {
@@ -117,8 +117,8 @@ public final class FloatComparators {
 		};
 	}
 
-	protected static class TolerantComparator implements FloatComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class TolerantComparator implements FloatComparator {
+
 		public final float tolerance;
 		protected final FloatComparator reverse;
 

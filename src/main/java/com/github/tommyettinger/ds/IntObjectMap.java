@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.support.function.IntObjBiFunction;
 import com.github.tommyettinger.ds.support.function.IntObjConsumer;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -58,8 +57,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>>, Serializable {
-	private static final long serialVersionUID = 0L;
+public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
+
 
 	protected int size;
 

@@ -29,8 +29,8 @@ public final class ShortComparators {
 	/**
 	 * A type-specific comparator mimicking the natural order.
 	 */
-	protected static class NaturalImplicitComparator implements ShortComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class NaturalImplicitComparator implements ShortComparator {
+
 
 		@Override
 		public final int compare (final short a, final short b) {
@@ -48,8 +48,8 @@ public final class ShortComparators {
 	/**
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
-	protected static class OppositeImplicitComparator implements ShortComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeImplicitComparator implements ShortComparator {
+
 
 		@Override
 		public final int compare (final short a, final short b) {
@@ -64,8 +64,8 @@ public final class ShortComparators {
 
 	public static final ShortComparator OPPOSITE_COMPARATOR = new OppositeImplicitComparator();
 
-	protected static class OppositeComparator implements ShortComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeComparator implements ShortComparator {
+
 		final ShortComparator comparator;
 
 		protected OppositeComparator (final ShortComparator c) {
@@ -121,8 +121,8 @@ public final class ShortComparators {
 	 * A type-specific comparator that compares items in the natural order, but as if they are unsigned
 	 * (so, all negative items are greater than any non-negative items).
 	 */
-	protected static class UnsignedComparator implements ShortComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class UnsignedComparator implements ShortComparator {
+
 
 		@Override
 		public final int compare (final short a, final short b) {
@@ -134,9 +134,7 @@ public final class ShortComparators {
 			return UNSIGNED_OPPOSITE_COMPARATOR;
 		}
 
-		private Object readResolve () {
-			return UNSIGNED_COMPARATOR;
-		}
+
 	}
 
 	public static final ShortComparator UNSIGNED_COMPARATOR = new ShortComparators.UnsignedComparator();
@@ -145,12 +143,12 @@ public final class ShortComparators {
 	 * A type-specific comparator that compares items in the opposite of the natural order, but as if they
 	 * are unsigned.
 	 */
-	protected static class UnsignedOppositeComparator implements ShortComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class UnsignedOppositeComparator implements ShortComparator {
+
 
 		@Override
 		public final int compare (final short a, final short b) {
-			return -Integer.compareUnsigned(a & 0xFFFF, b & 0xFFFF);
+			return Integer.compareUnsigned(b & 0xFFFF, a & 0xFFFF);
 		}
 
 		@Override
@@ -158,9 +156,7 @@ public final class ShortComparators {
 			return UNSIGNED_COMPARATOR;
 		}
 
-		private Object readResolve () {
-			return UNSIGNED_OPPOSITE_COMPARATOR;
-		}
+
 	}
 
 	public static final ShortComparator UNSIGNED_OPPOSITE_COMPARATOR = new ShortComparators.UnsignedComparator();

@@ -63,7 +63,7 @@ public interface ShortComparator extends Comparator<Short> {
 	 * @see Comparator#thenComparing(Comparator)
 	 */
 	default ShortComparator thenComparing (ShortComparator second) {
-		return (ShortComparator & java.io.Serializable)(k1, k2) -> {
+		return(k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
 		};

@@ -24,7 +24,6 @@ import com.github.tommyettinger.ds.support.function.ToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
@@ -57,8 +56,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>>, Serializable {
-	private static final long serialVersionUID = 0L;
+public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
+
 
 	protected int size;
 

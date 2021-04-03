@@ -63,7 +63,7 @@ public interface BooleanComparator extends Comparator<Boolean> {
 	 * @see Comparator#thenComparing(Comparator)
 	 */
 	default BooleanComparator thenComparing (BooleanComparator second) {
-		return (BooleanComparator & java.io.Serializable)(k1, k2) -> {
+		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
 		};

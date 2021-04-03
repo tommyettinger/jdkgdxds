@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -55,8 +54,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong, Serializable {
-	private static final long serialVersionUID = 0L;
+public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
+
 
 	protected final LongList keys;
 

@@ -63,7 +63,7 @@ public interface FloatComparator extends Comparator<Float> {
 	 * @see Comparator#thenComparing(Comparator)
 	 */
 	default FloatComparator thenComparing (FloatComparator second) {
-		return (FloatComparator & java.io.Serializable)(k1, k2) -> {
+		return(k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
 		};

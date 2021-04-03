@@ -1,7 +1,6 @@
 package com.github.tommyettinger.ds;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
@@ -26,8 +25,8 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * {@link CaseInsensitiveMap}, except that this class maintains insertion order and can be sorted with
  * {@link #sort()}, {@link #sortByValue(Comparator)}, etc.
  */
-public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSequence, V> implements Serializable {
-	private static final long serialVersionUID = 0L;
+public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSequence, V> {
+
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
 	 */

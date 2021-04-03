@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
@@ -40,8 +39,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class IntSet implements PrimitiveCollection.OfInt, Serializable {
-	private static final long serialVersionUID = 0L;
+public class IntSet implements PrimitiveCollection.OfInt {
+
 
 	protected int size;
 

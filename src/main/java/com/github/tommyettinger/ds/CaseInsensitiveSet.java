@@ -1,6 +1,5 @@
 package com.github.tommyettinger.ds;
 
-import java.io.Serializable;
 import java.util.Collection;
 /**
  * A custom variant on ObjectSet that always uses CharSequence keys and compares them as case-insensitive.
@@ -17,8 +16,8 @@ import java.util.Collection;
  * widespread use. There's also {@link Utilities#equalsIgnoreCase(CharSequence, CharSequence)} for equality
  * comparisons that are similarly case-insensitive, except for Georgian.
  */
-public class CaseInsensitiveSet extends ObjectSet<CharSequence> implements Serializable {
-	private static final long serialVersionUID = 0L;
+public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
+
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.

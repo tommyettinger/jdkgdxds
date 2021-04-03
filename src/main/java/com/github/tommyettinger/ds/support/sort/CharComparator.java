@@ -63,7 +63,7 @@ public interface CharComparator extends Comparator<Character> {
 	 * @see Comparator#thenComparing(Comparator)
 	 */
 	default CharComparator thenComparing (CharComparator second) {
-		return (CharComparator & java.io.Serializable)(k1, k2) -> {
+		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
 		};

@@ -1,6 +1,5 @@
 package com.github.tommyettinger.ds;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -17,8 +16,8 @@ import java.util.Set;
  *
  * @param <T> the type of items; should implement {@link Object#equals(Object)} and {@link Object#hashCode()}
  */
-public class NumberedSet<T> implements Set<T>, Ordered<T>, Serializable {
-	private static final long serialVersionUID = 0L;
+public class NumberedSet<T> implements Set<T>, Ordered<T> {
+
 
 	protected ObjectIntOrderedMap<T> map;
 

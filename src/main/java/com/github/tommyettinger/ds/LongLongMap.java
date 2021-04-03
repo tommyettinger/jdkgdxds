@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.support.function.LongLongConsumer;
 import com.github.tommyettinger.ds.support.function.LongLongToLongBiFunction;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -54,8 +53,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongLongMap implements Iterable<LongLongMap.Entry>, Serializable {
-	private static final long serialVersionUID = 0L;
+public class LongLongMap implements Iterable<LongLongMap.Entry> {
+
 
 	protected int size;
 

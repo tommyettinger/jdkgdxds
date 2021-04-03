@@ -29,8 +29,8 @@ public final class BooleanComparators {
 	/**
 	 * A type-specific comparator mimicking the natural order (false then true)
 	 */
-	protected static class NaturalImplicitComparator implements BooleanComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class NaturalImplicitComparator implements BooleanComparator {
+
 
 		@Override
 		public final int compare (final boolean a, final boolean b) {
@@ -48,8 +48,8 @@ public final class BooleanComparators {
 	/**
 	 * A type-specific comparator mimicking the opposite of the natural order (the opposite being true then false).
 	 */
-	protected static class OppositeImplicitComparator implements BooleanComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeImplicitComparator implements BooleanComparator {
+
 
 		@Override
 		public final int compare (final boolean a, final boolean b) {
@@ -64,8 +64,8 @@ public final class BooleanComparators {
 
 	public static final BooleanComparator OPPOSITE_COMPARATOR = new OppositeImplicitComparator();
 
-	protected static class OppositeComparator implements BooleanComparator, java.io.Serializable {
-		private static final long serialVersionUID = 1L;
+	protected static class OppositeComparator implements BooleanComparator {
+
 		final BooleanComparator comparator;
 
 		protected OppositeComparator (final BooleanComparator c) {

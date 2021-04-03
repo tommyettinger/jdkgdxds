@@ -68,7 +68,7 @@ public interface IntComparator extends Comparator<Integer> {
 	 * @see Comparator#thenComparing(Comparator)
 	 */
 	default IntComparator thenComparing (IntComparator second) {
-		return (IntComparator & java.io.Serializable)(k1, k2) -> {
+		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
 		};

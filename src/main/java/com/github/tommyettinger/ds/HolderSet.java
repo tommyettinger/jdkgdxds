@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
 
@@ -38,8 +37,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class HolderSet<T, K> implements Iterable<T>, Set<T>, Serializable {
-	private static final long serialVersionUID = 0L;
+public class HolderSet<T, K> implements Iterable<T>, Set<T> {
+
 
 	protected int size;
 

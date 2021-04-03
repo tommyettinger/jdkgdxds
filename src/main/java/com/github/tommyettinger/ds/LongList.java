@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
@@ -35,8 +34,8 @@ import java.util.function.LongUnaryOperator;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arrangeable, Serializable {
-	private static final long serialVersionUID = 0L;
+public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arrangeable {
+
 	public long[] items;
 	protected int size;
 	public boolean ordered;
