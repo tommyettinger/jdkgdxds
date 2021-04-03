@@ -106,6 +106,16 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	}
 
 	/**
+	 * LaserRandom has two possible states, both {@code long}.
+	 * The second state (selection {@code 1}) is always an odd number, and if
+	 * anything tries to set an even number to that state, the actual state used
+	 * will be one greater.
+	 * @return 2 (two)
+	 */
+	public int getStateCount() {
+		return 2;
+	}
+	/**
 	 * Get the "A" part of the internal state as a long.
 	 *
 	 * @return the current internal "A" state of this object.

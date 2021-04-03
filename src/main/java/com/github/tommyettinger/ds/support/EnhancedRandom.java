@@ -18,19 +18,38 @@ public interface EnhancedRandom {
 	 * {@code long} seed. The general contract of {@code setSeed} is
 	 * that it alters the state of this random number generator object
 	 * so as to be in exactly the same state as if it had just been
-	 * created with the argument {@code seed} as a seed.
+	 * created with the argument {@code seed} as a seed. This does not
+	 * necessarily assign the state variable(s) of the implementation
+	 * with the exact contents of seed, so {@link #getSelectedState(int)}]
+	 * should not be expected to return {@code seed} after this, though
+	 * it may.
 	 *
 	 * @param seed the initial seed
 	 */
 	void setSeed (long seed);
 
 	/**
+	 * Gets the number of possible state variables that can be selected with
+	 * {@link #getSelectedState(int)} or {@link #setSelectedState(int, long)}.
+	 * This defaults to returning 0, making no state variable available for
+	 * reading or writing. An implementation that has only one {@code long}
+	 * state, like a SplitMix64 generator, should return {@code 1}. A
+	 * generator that permits setting two different {@code long} values, like
+	 * {@link LaserRandom}, should return {@code 2}. Much larger values are
+	 * possible for types like the Mersenne Twister or some CMWC generators.
+	 * @return the non-negative number of selections possible for state variables
+	 */
+	default int getStateCount() {
+		return 0;
+	}
+	/**
 	 * Gets a selected state value from this EnhancedRandom. The number of possible selections
-	 * is up to the implementing class, but negative values for {@code selection} are
-	 * typically not tolerated. This should return the exact value of the selected state,
-	 * assuming it is implemented. The default implementation throws an
-	 * UnsupportedOperationException, and implementors only have to allow reading the state if
-	 * they choose to implement this differently.
+	 * is up to the implementing class, and is accessible via {@link #getStateCount()}, but
+	 * negative values for {@code selection} are typically not tolerated. This should return
+	 * the exact value of the selected state, assuming it is implemented. The default
+	 * implementation throws an UnsupportedOperationException, and implementors only have to
+	 * allow reading the state if they choose to implement this differently. If this method
+	 * is intended to be used, {@link #getStateCount()} must also be implemented.
 	 * @param selection used to select which state variable to get; generally non-negative
 	 * @return the exact value of the selected state
 	 */
