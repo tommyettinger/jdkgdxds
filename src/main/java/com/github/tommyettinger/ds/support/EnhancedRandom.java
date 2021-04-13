@@ -659,6 +659,74 @@ public interface EnhancedRandom {
 	}
 
 	/**
+	 * Returns the minimum result of {@code trials} calls to {@link #nextSignedInt(int, int)} using the given {@code innerBound}
+	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+	 * The higher trials is, the lower the average value this returns.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @param trials how many random numbers to acquire and compare
+	 * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+	 */
+	default int minIntOf(int innerBound, int outerBound, int trials) {
+		int v = nextSignedInt(innerBound, outerBound);
+		for (int i = 1; i < trials; i++) {
+			v = Math.min(v, nextSignedInt(innerBound, outerBound));
+		}
+		return v;
+	}
+
+	/**
+	 * Returns the maximum result of {@code trials} calls to {@link #nextSignedInt(int, int)} using the given {@code innerBound}
+	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+	 * The higher trials is, the higher the average value this returns.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @param trials how many random numbers to acquire and compare
+	 * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+	 */
+	default int maxIntOf(int innerBound, int outerBound, int trials) {
+		int v = nextSignedInt(innerBound, outerBound);
+		for (int i = 1; i < trials; i++) {
+			v = Math.max(v, nextSignedInt(innerBound, outerBound));
+		}
+		return v;
+	}
+
+	/**
+	 * Returns the minimum result of {@code trials} calls to {@link #nextSignedLong(long, long)} using the given {@code innerBound}
+	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+	 * The higher trials is, the lower the average value this returns.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @param trials how many random numbers to acquire and compare
+	 * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+	 */
+	default long minLongOf(long innerBound, long outerBound, int trials) {
+		long v = nextSignedLong(innerBound, outerBound);
+		for (int i = 1; i < trials; i++) {
+			v = Math.min(v, nextSignedLong(innerBound, outerBound));
+		}
+		return v;
+	}
+
+	/**
+	 * Returns the maximum result of {@code trials} calls to {@link #nextSignedLong(long, long)} using the given {@code innerBound}
+	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+	 * The higher trials is, the higher the average value this returns.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @param trials how many random numbers to acquire and compare
+	 * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+	 */
+	default long maxLongOf(long innerBound, long outerBound, int trials) {
+		long v = nextSignedLong(innerBound, outerBound);
+		for (int i = 1; i < trials; i++) {
+			v = Math.max(v, nextSignedLong(innerBound, outerBound));
+		}
+		return v;
+	}
+
+	/**
 	 * Gets a randomly-selected item from the given array, which must be non-null and non-empty
 	 * @param array a non-null, non-empty array of {@code T} items
 	 * @param <T> any reference type
