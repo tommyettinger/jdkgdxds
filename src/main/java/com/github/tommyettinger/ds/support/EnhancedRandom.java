@@ -795,6 +795,29 @@ public interface EnhancedRandom {
 	}
 
 	/**
+	 * This is just like {@link #nextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+	 * It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
+	 * can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
+	 * subtly-different results.
+	 * @return a double between 0.0, inclusive, and 1.0, inclusive
+	 */
+	default double nextInclusiveDouble() {
+		return nextLong(0x20000000000001L) * 0x1p-53;
+	}
+
+	/**
+	 * This is just like {@link #nextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+	 * It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
+	 * has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
+	 * it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
+	 * likely to accomplish that in the same time, or at all, depending on the generator.
+	 * @return a float between 0.0, inclusive, and 1.0, inclusive
+	 */
+	default float nextInclusiveFloat() {
+		return nextInt(0x1000001) * 0x1p-24f;
+	}
+
+	/**
 	 * Gets a randomly-selected item from the given array, which must be non-null and non-empty
 	 * @param array a non-null, non-empty array of {@code T} items
 	 * @param <T> any reference type
