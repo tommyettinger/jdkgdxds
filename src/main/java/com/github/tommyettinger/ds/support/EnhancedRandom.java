@@ -806,6 +806,25 @@ public interface EnhancedRandom {
 	}
 
 	/**
+	 * Just like {@link #nextDouble(double)}, but this is inclusive on both 0.0 and {@code outerBound}.
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a double between 0.0, inclusive, and {@code outerBound}, inclusive
+	 */
+	default double nextInclusiveDouble(double outerBound) {
+		return nextInclusiveDouble() * outerBound;
+	}
+
+	/**
+	 * Just like {@link #nextDouble(double, double)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a double between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
+	 */
+	default double nextInclusiveDouble(double innerBound, double outerBound) {
+		return innerBound + nextInclusiveDouble() * (outerBound - innerBound);
+	}
+
+	/**
 	 * This is just like {@link #nextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
 	 * It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
 	 * has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
@@ -815,6 +834,25 @@ public interface EnhancedRandom {
 	 */
 	default float nextInclusiveFloat() {
 		return nextInt(0x1000001) * 0x1p-24f;
+	}
+
+	/**
+	 * Just like {@link #nextFloat(float)}, but this is inclusive on both 0.0 and {@code outerBound}.
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a float between 0.0, inclusive, and {@code outerBound}, inclusive
+	 */
+	default float nextInclusiveFloat(float outerBound) {
+		return nextInclusiveFloat() * outerBound;
+	}
+
+	/**
+	 * Just like {@link #nextFloat(float, float)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a float between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
+	 */
+	default float nextInclusiveFloat(float innerBound, float outerBound) {
+		return innerBound + nextInclusiveFloat() * (outerBound - innerBound);
 	}
 
 	/**
