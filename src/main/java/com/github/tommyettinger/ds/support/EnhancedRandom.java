@@ -727,6 +727,74 @@ public interface EnhancedRandom {
 	}
 
 	/**
+	 * Returns the minimum result of {@code trials} calls to {@link #nextDouble(double, double)} using the given {@code innerBound}
+	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+	 * The higher trials is, the lower the average value this returns.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @param trials how many random numbers to acquire and compare
+	 * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+	 */
+	default double minDoubleOf(double innerBound, double outerBound, int trials) {
+		double v = nextDouble(innerBound, outerBound);
+		for (int i = 1; i < trials; i++) {
+			v = Math.min(v, nextDouble(innerBound, outerBound));
+		}
+		return v;
+	}
+
+	/**
+	 * Returns the maximum result of {@code trials} calls to {@link #nextDouble(double, double)} using the given {@code innerBound}
+	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+	 * The higher trials is, the higher the average value this returns.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @param trials how many random numbers to acquire and compare
+	 * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+	 */
+	default double maxDoubleOf(double innerBound, double outerBound, int trials) {
+		double v = nextDouble(innerBound, outerBound);
+		for (int i = 1; i < trials; i++) {
+			v = Math.max(v, nextDouble(innerBound, outerBound));
+		}
+		return v;
+	}
+
+	/**
+	 * Returns the minimum result of {@code trials} calls to {@link #nextFloat(float, float)} using the given {@code innerBound}
+	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+	 * The higher trials is, the lower the average value this returns.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @param trials how many random numbers to acquire and compare
+	 * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+	 */
+	default float minFloatOf(float innerBound, float outerBound, int trials) {
+		float v = nextFloat(innerBound, outerBound);
+		for (int i = 1; i < trials; i++) {
+			v = Math.min(v, nextFloat(innerBound, outerBound));
+		}
+		return v;
+	}
+
+	/**
+	 * Returns the maximum result of {@code trials} calls to {@link #nextFloat(float, float)} using the given {@code innerBound}
+	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+	 * The higher trials is, the higher the average value this returns.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @param trials how many random numbers to acquire and compare
+	 * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+	 */
+	default float maxFloatOf(float innerBound, float outerBound, int trials) {
+		float v = nextFloat(innerBound, outerBound);
+		for (int i = 1; i < trials; i++) {
+			v = Math.max(v, nextFloat(innerBound, outerBound));
+		}
+		return v;
+	}
+
+	/**
 	 * Gets a randomly-selected item from the given array, which must be non-null and non-empty
 	 * @param array a non-null, non-empty array of {@code T} items
 	 * @param <T> any reference type
