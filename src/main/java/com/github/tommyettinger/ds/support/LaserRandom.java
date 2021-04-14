@@ -670,7 +670,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @return an odd long that identifies which stream this LaserRandom is generating from
 	 */
 	public long getStream () {
-		return stateB - stateA * 0x1743CE5C6E1B848BL * 0x9E3779B97F4A7C16L;
+		return stateB - stateA * 0x3085776F0FBEB7F2L; // 0x3085776F0FBEB7F2L == 0x1743CE5C6E1B848BL * 0x9E3779B97F4A7C16L
 	}
 
 	/**

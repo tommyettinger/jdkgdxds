@@ -434,6 +434,73 @@ public interface EnhancedRandom {
 	}
 
 	/**
+	 * This is just like {@link #nextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+	 * It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
+	 * can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
+	 * subtly-different results.
+	 * @return a double between 0.0, inclusive, and 1.0, inclusive
+	 */
+	default double nextInclusiveDouble() {
+		return nextLong(0x20000000000001L) * 0x1p-53;
+	}
+
+	/**
+	 * Just like {@link #nextDouble(double)}, but this is inclusive on both 0.0 and {@code outerBound}.
+	 * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a double between 0.0, inclusive, and {@code outerBound}, inclusive
+	 */
+	default double nextInclusiveDouble(double outerBound) {
+		return nextInclusiveDouble() * outerBound;
+	}
+
+	/**
+	 * Just like {@link #nextDouble(double, double)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
+	 * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
+	 * return it at all because of floating-point imprecision when innerBound is a larger number.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a double between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
+	 */
+	default double nextInclusiveDouble(double innerBound, double outerBound) {
+		return innerBound + nextInclusiveDouble() * (outerBound - innerBound);
+	}
+
+	/**
+	 * This is just like {@link #nextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+	 * It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
+	 * has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
+	 * it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
+	 * likely to accomplish that in the same time, or at all, depending on the generator.
+	 * @return a float between 0.0, inclusive, and 1.0, inclusive
+	 */
+	default float nextInclusiveFloat() {
+		return nextInt(0x1000001) * 0x1p-24f;
+	}
+
+	/**
+	 * Just like {@link #nextFloat(float)}, but this is inclusive on both 0.0 and {@code outerBound}.
+	 * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a float between 0.0, inclusive, and {@code outerBound}, inclusive
+	 */
+	default float nextInclusiveFloat(float outerBound) {
+		return nextInclusiveFloat() * outerBound;
+	}
+
+	/**
+	 * Just like {@link #nextFloat(float, float)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
+	 * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
+	 * it at all because of floating-point imprecision when innerBound is a larger number.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a float between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
+	 */
+	default float nextInclusiveFloat(float innerBound, float outerBound) {
+		return innerBound + nextInclusiveFloat() * (outerBound - innerBound);
+	}
+
+	/**
 	 * Gets a random double between 0.0 and 1.0, exclusive at both ends. This method is also more uniform than
 	 * {@link #nextDouble()} if you use the bit-patterns of the returned doubles. This is a simplified version of
 	 * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This can return double
@@ -456,6 +523,30 @@ public interface EnhancedRandom {
 		return BitConversion.longBitsToDouble(1022L - Long.numberOfTrailingZeros(bits) << 52
 			| bits >>> 12);
 	}
+
+	/**
+	 * Just like {@link #nextDouble(double)}, but this is exclusive on both 0.0 and {@code outerBound}.
+	 * Like {@link #nextExclusiveDouble()}, this may have better bit-distribution of double values, and
+	 * it may also be better able to produce very small doubles when {@code outerBound} is large.
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @return a double between 0.0, exclusive, and {@code outerBound}, exclusive
+	 */
+	default double nextExclusiveDouble(double outerBound) {
+		return nextExclusiveDouble() * outerBound;
+	}
+
+	/**
+	 * Just like {@link #nextDouble(double, double)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
+	 * Like {@link #nextExclusiveDouble()}, this may have better bit-distribution of double values, and
+	 * it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
+	 * @param innerBound the inner exclusive bound; may be positive or negative
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @return a double between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
+	 */
+	default double nextExclusiveDouble(double innerBound, double outerBound) {
+		return innerBound + nextExclusiveDouble() * (outerBound - innerBound);
+	}
+
 	/**
 	 * Gets a random float between 0.0 and 1.0, exclusive at both ends. This method is also more uniform than
 	 * {@link #nextFloat()} if you use the bit-patterns of the returned floats. This is a simplified version of
@@ -478,6 +569,29 @@ public interface EnhancedRandom {
 		final long bits = nextLong();
 		return BitConversion.intBitsToFloat(126 - Long.numberOfTrailingZeros(bits) << 23
 			| (int)(bits >>> 41));
+	}
+
+	/**
+	 * Just like {@link #nextFloat(float)}, but this is exclusive on both 0.0 and {@code outerBound}.
+	 * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+	 * it may also be better able to produce very small floats when {@code outerBound} is large.
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @return a float between 0.0, exclusive, and {@code outerBound}, exclusive
+	 */
+	default float nextExclusiveFloat(float outerBound) {
+		return nextExclusiveFloat() * outerBound;
+	}
+
+	/**
+	 * Just like {@link #nextFloat(float, float)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
+	 * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+	 * it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
+	 * @param innerBound the inner exclusive bound; may be positive or negative
+	 * @param outerBound the outer exclusive bound; may be positive or negative
+	 * @return a float between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
+	 */
+	default float nextExclusiveFloat(float innerBound, float outerBound) {
+		return innerBound + nextExclusiveFloat() * (outerBound - innerBound);
 	}
 
 	/**
@@ -792,67 +906,6 @@ public interface EnhancedRandom {
 			v = Math.max(v, nextFloat(innerBound, outerBound));
 		}
 		return v;
-	}
-
-	/**
-	 * This is just like {@link #nextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
-	 * It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
-	 * can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
-	 * subtly-different results.
-	 * @return a double between 0.0, inclusive, and 1.0, inclusive
-	 */
-	default double nextInclusiveDouble() {
-		return nextLong(0x20000000000001L) * 0x1p-53;
-	}
-
-	/**
-	 * Just like {@link #nextDouble(double)}, but this is inclusive on both 0.0 and {@code outerBound}.
-	 * @param outerBound the outer inclusive bound; may be positive or negative
-	 * @return a double between 0.0, inclusive, and {@code outerBound}, inclusive
-	 */
-	default double nextInclusiveDouble(double outerBound) {
-		return nextInclusiveDouble() * outerBound;
-	}
-
-	/**
-	 * Just like {@link #nextDouble(double, double)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
-	 * @param innerBound the inner inclusive bound; may be positive or negative
-	 * @param outerBound the outer inclusive bound; may be positive or negative
-	 * @return a double between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
-	 */
-	default double nextInclusiveDouble(double innerBound, double outerBound) {
-		return innerBound + nextInclusiveDouble() * (outerBound - innerBound);
-	}
-
-	/**
-	 * This is just like {@link #nextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
-	 * It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
-	 * has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
-	 * it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
-	 * likely to accomplish that in the same time, or at all, depending on the generator.
-	 * @return a float between 0.0, inclusive, and 1.0, inclusive
-	 */
-	default float nextInclusiveFloat() {
-		return nextInt(0x1000001) * 0x1p-24f;
-	}
-
-	/**
-	 * Just like {@link #nextFloat(float)}, but this is inclusive on both 0.0 and {@code outerBound}.
-	 * @param outerBound the outer inclusive bound; may be positive or negative
-	 * @return a float between 0.0, inclusive, and {@code outerBound}, inclusive
-	 */
-	default float nextInclusiveFloat(float outerBound) {
-		return nextInclusiveFloat() * outerBound;
-	}
-
-	/**
-	 * Just like {@link #nextFloat(float, float)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
-	 * @param innerBound the inner inclusive bound; may be positive or negative
-	 * @param outerBound the outer inclusive bound; may be positive or negative
-	 * @return a float between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
-	 */
-	default float nextInclusiveFloat(float innerBound, float outerBound) {
-		return innerBound + nextInclusiveFloat() * (outerBound - innerBound);
 	}
 
 	/**
