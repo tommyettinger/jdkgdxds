@@ -1,5 +1,6 @@
 package com.github.tommyettinger.ds.support;
 
+import com.github.tommyettinger.ds.Arrangeable;
 import com.github.tommyettinger.ds.FloatList;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.LongList;
@@ -1216,4 +1217,13 @@ public interface EnhancedRandom {
 		}
 	}
 
+	/**
+	 * Shuffles the given Arrangeable in-place pseudo-randomly, using this to determine how to shuffle.
+	 * @param arrangeable an Arrangeable, such as an ObjectList, IntOrderedSet, or LongFloatOrderedMap
+	 */
+	default void shuffle (Arrangeable arrangeable){
+		for (int i = arrangeable.size() - 1; i >= 0; i--) {
+			arrangeable.swap(i, nextInt(i + 1));
+		}
+	}
 }

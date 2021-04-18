@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":6,"i1":18,"i2":18,"i3":18,"i4":18,"i5":18,"i6":18,"i7":18,"i8":18,"i9":18,"i10":18,"i11":18,"i12":18,"i13":18,"i14":18,"i15":18,"i16":18,"i17":18,"i18":18,"i19":6,"i20":18,"i21":18,"i22":18,"i23":18,"i24":18,"i25":18,"i26":18,"i27":18,"i28":18,"i29":18,"i30":18,"i31":1,"i32":18,"i33":18,"i34":18,"i35":18,"i36":18,"i37":6,"i38":18,"i39":18,"i40":18,"i41":18,"i42":18,"i43":18,"i44":18,"i45":18,"i46":18,"i47":18,"i48":18,"i49":18,"i50":18,"i51":18,"i52":18,"i53":18,"i54":18,"i55":18,"i56":18,"i57":18,"i58":18,"i59":18};
+<script type="text/javascript">var data = {"i0":6,"i1":18,"i2":18,"i3":18,"i4":18,"i5":18,"i6":18,"i7":18,"i8":18,"i9":18,"i10":18,"i11":18,"i12":18,"i13":18,"i14":18,"i15":18,"i16":18,"i17":18,"i18":18,"i19":18,"i20":18,"i21":18,"i22":18,"i23":18,"i24":18,"i25":18,"i26":18,"i27":18,"i28":18,"i29":18,"i30":18,"i31":18,"i32":18,"i33":18,"i34":18,"i35":18,"i36":18,"i37":6,"i38":18,"i39":18,"i40":18,"i41":18,"i42":18,"i43":18,"i44":18,"i45":18,"i46":18,"i47":18,"i48":18,"i49":1,"i50":18,"i51":18,"i52":18,"i53":18,"i54":18,"i55":6,"i56":18,"i57":18,"i58":18,"i59":18,"i60":18,"i61":18,"i62":18,"i63":18,"i64":18,"i65":18,"i66":18,"i67":18,"i68":18,"i69":18,"i70":18,"i71":18,"i72":18,"i73":18,"i74":18,"i75":18,"i76":18,"i77":18,"i78":18};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -127,13 +127,93 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="row-color" id="i3">
+<td class="col-first"><code>default double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#maxDoubleOf(double,double,int)">maxDoubleOf</a></span>&#8203;(double&nbsp;innerBound,
+double&nbsp;outerBound,
+int&nbsp;trials)</code></th>
+<td class="col-last">
+<div class="block">Returns the maximum result of <code>trials</code> calls to <a href="#nextDouble(double,double)"><code>nextDouble(double, double)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i4">
+<td class="col-first"><code>default float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#maxFloatOf(float,float,int)">maxFloatOf</a></span>&#8203;(float&nbsp;innerBound,
+float&nbsp;outerBound,
+int&nbsp;trials)</code></th>
+<td class="col-last">
+<div class="block">Returns the maximum result of <code>trials</code> calls to <a href="#nextFloat(float,float)"><code>nextFloat(float, float)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
+<td class="col-first"><code>default int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#maxIntOf(int,int,int)">maxIntOf</a></span>&#8203;(int&nbsp;innerBound,
+int&nbsp;outerBound,
+int&nbsp;trials)</code></th>
+<td class="col-last">
+<div class="block">Returns the maximum result of <code>trials</code> calls to <a href="#nextSignedInt(int,int)"><code>nextSignedInt(int, int)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i6">
+<td class="col-first"><code>default long</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#maxLongOf(long,long,int)">maxLongOf</a></span>&#8203;(long&nbsp;innerBound,
+long&nbsp;outerBound,
+int&nbsp;trials)</code></th>
+<td class="col-last">
+<div class="block">Returns the maximum result of <code>trials</code> calls to <a href="#nextSignedLong(long,long)"><code>nextSignedLong(long, long)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i7">
+<td class="col-first"><code>default double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#minDoubleOf(double,double,int)">minDoubleOf</a></span>&#8203;(double&nbsp;innerBound,
+double&nbsp;outerBound,
+int&nbsp;trials)</code></th>
+<td class="col-last">
+<div class="block">Returns the minimum result of <code>trials</code> calls to <a href="#nextDouble(double,double)"><code>nextDouble(double, double)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i8">
+<td class="col-first"><code>default float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#minFloatOf(float,float,int)">minFloatOf</a></span>&#8203;(float&nbsp;innerBound,
+float&nbsp;outerBound,
+int&nbsp;trials)</code></th>
+<td class="col-last">
+<div class="block">Returns the minimum result of <code>trials</code> calls to <a href="#nextFloat(float,float)"><code>nextFloat(float, float)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i9">
+<td class="col-first"><code>default int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#minIntOf(int,int,int)">minIntOf</a></span>&#8203;(int&nbsp;innerBound,
+int&nbsp;outerBound,
+int&nbsp;trials)</code></th>
+<td class="col-last">
+<div class="block">Returns the minimum result of <code>trials</code> calls to <a href="#nextSignedInt(int,int)"><code>nextSignedInt(int, int)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i10">
+<td class="col-first"><code>default long</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#minLongOf(long,long,int)">minLongOf</a></span>&#8203;(long&nbsp;innerBound,
+long&nbsp;outerBound,
+int&nbsp;trials)</code></th>
+<td class="col-last">
+<div class="block">Returns the minimum result of <code>trials</code> calls to <a href="#nextSignedLong(long,long)"><code>nextSignedLong(long, long)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i11">
 <td class="col-first"><code>default int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#next(int)">next</a></span>&#8203;(int&nbsp;bits)</code></th>
 <td class="col-last">
 <div class="block">Generates the next pseudorandom number with a specific maximum size in bits (not a max number).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>default boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextBoolean()">nextBoolean</a></span>()</code></th>
 <td class="col-last">
@@ -142,14 +222,14 @@ loadScripts(document, 'script');</script>
  sequence.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>default boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextBoolean(float)">nextBoolean</a></span>&#8203;(float&nbsp;chance)</code></th>
 <td class="col-last">
 <div class="block">Returns true if a random value between 0 and 1 is less than the specified value.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextBytes(byte%5B%5D)">nextBytes</a></span>&#8203;(byte[]&nbsp;bytes)</code></th>
 <td class="col-last">
@@ -157,7 +237,7 @@ loadScripts(document, 'script');</script>
  byte array.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i15">
 <td class="col-first"><code>default double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextDouble()">nextDouble</a></span>()</code></th>
 <td class="col-last">
@@ -166,14 +246,14 @@ loadScripts(document, 'script');</script>
  (exclusive) from this random number generator's sequence.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="alt-color" id="i16">
 <td class="col-first"><code>default double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextDouble(double)">nextDouble</a></span>&#8203;(double&nbsp;outerBound)</code></th>
 <td class="col-last">
 <div class="block">Gets a pseudo-random double between 0 (inclusive) and <code>outerBound</code> (exclusive).</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="row-color" id="i17">
 <td class="col-first"><code>default double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextDouble(double,double)">nextDouble</a></span>&#8203;(double&nbsp;innerBound,
 double&nbsp;outerBound)</code></th>
@@ -181,21 +261,51 @@ double&nbsp;outerBound)</code></th>
 <div class="block">Gets a pseudo-random double between <code>innerBound</code> (inclusive) and <code>outerBound</code> (exclusive).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="alt-color" id="i18">
 <td class="col-first"><code>default double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextExclusiveDouble()">nextExclusiveDouble</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Gets a random double between 0.0 and 1.0, exclusive at both ends.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="row-color" id="i19">
+<td class="col-first"><code>default double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextExclusiveDouble(double)">nextExclusiveDouble</a></span>&#8203;(double&nbsp;outerBound)</code></th>
+<td class="col-last">
+<div class="block">Just like <a href="#nextDouble(double)"><code>nextDouble(double)</code></a>, but this is exclusive on both 0.0 and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i20">
+<td class="col-first"><code>default double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextExclusiveDouble(double,double)">nextExclusiveDouble</a></span>&#8203;(double&nbsp;innerBound,
+double&nbsp;outerBound)</code></th>
+<td class="col-last">
+<div class="block">Just like <a href="#nextDouble(double,double)"><code>nextDouble(double, double)</code></a>, but this is exclusive on both <code>innerBound</code> and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i21">
 <td class="col-first"><code>default float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextExclusiveFloat()">nextExclusiveFloat</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Gets a random float between 0.0 and 1.0, exclusive at both ends.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="alt-color" id="i22">
+<td class="col-first"><code>default float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextExclusiveFloat(float)">nextExclusiveFloat</a></span>&#8203;(float&nbsp;outerBound)</code></th>
+<td class="col-last">
+<div class="block">Just like <a href="#nextFloat(float)"><code>nextFloat(float)</code></a>, but this is exclusive on both 0.0 and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i23">
+<td class="col-first"><code>default float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextExclusiveFloat(float,float)">nextExclusiveFloat</a></span>&#8203;(float&nbsp;innerBound,
+float&nbsp;outerBound)</code></th>
+<td class="col-last">
+<div class="block">Just like <a href="#nextFloat(float,float)"><code>nextFloat(float, float)</code></a>, but this is exclusive on both <code>innerBound</code> and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i24">
 <td class="col-first"><code>default float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextFloat()">nextFloat</a></span>()</code></th>
 <td class="col-last">
@@ -204,14 +314,14 @@ double&nbsp;outerBound)</code></th>
  from this random number generator's sequence.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="row-color" id="i25">
 <td class="col-first"><code>default float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextFloat(float)">nextFloat</a></span>&#8203;(float&nbsp;outerBound)</code></th>
 <td class="col-last">
 <div class="block">Gets a pseudo-random float between 0 (inclusive) and <code>outerBound</code> (exclusive).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="alt-color" id="i26">
 <td class="col-first"><code>default float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextFloat(float,float)">nextFloat</a></span>&#8203;(float&nbsp;innerBound,
 float&nbsp;outerBound)</code></th>
@@ -219,7 +329,7 @@ float&nbsp;outerBound)</code></th>
 <div class="block">Gets a pseudo-random float between <code>innerBound</code> (inclusive) and <code>outerBound</code> (exclusive).</div>
 </td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="row-color" id="i27">
 <td class="col-first"><code>default double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextGaussian()">nextGaussian</a></span>()</code></th>
 <td class="col-last">
@@ -228,7 +338,51 @@ float&nbsp;outerBound)</code></th>
  deviation <code>1.0</code> from this random number generator's sequence.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="alt-color" id="i28">
+<td class="col-first"><code>default double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextInclusiveDouble()">nextInclusiveDouble</a></span>()</code></th>
+<td class="col-last">
+<div class="block">This is just like <a href="#nextDouble()"><code>nextDouble()</code></a>, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.</div>
+</td>
+</tr>
+<tr class="row-color" id="i29">
+<td class="col-first"><code>default double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextInclusiveDouble(double)">nextInclusiveDouble</a></span>&#8203;(double&nbsp;outerBound)</code></th>
+<td class="col-last">
+<div class="block">Just like <a href="#nextDouble(double)"><code>nextDouble(double)</code></a>, but this is inclusive on both 0.0 and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i30">
+<td class="col-first"><code>default double</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextInclusiveDouble(double,double)">nextInclusiveDouble</a></span>&#8203;(double&nbsp;innerBound,
+double&nbsp;outerBound)</code></th>
+<td class="col-last">
+<div class="block">Just like <a href="#nextDouble(double,double)"><code>nextDouble(double, double)</code></a>, but this is inclusive on both <code>innerBound</code> and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i31">
+<td class="col-first"><code>default float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextInclusiveFloat()">nextInclusiveFloat</a></span>()</code></th>
+<td class="col-last">
+<div class="block">This is just like <a href="#nextFloat()"><code>nextFloat()</code></a>, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i32">
+<td class="col-first"><code>default float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextInclusiveFloat(float)">nextInclusiveFloat</a></span>&#8203;(float&nbsp;outerBound)</code></th>
+<td class="col-last">
+<div class="block">Just like <a href="#nextFloat(float)"><code>nextFloat(float)</code></a>, but this is inclusive on both 0.0 and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i33">
+<td class="col-first"><code>default float</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextInclusiveFloat(float,float)">nextInclusiveFloat</a></span>&#8203;(float&nbsp;innerBound,
+float&nbsp;outerBound)</code></th>
+<td class="col-last">
+<div class="block">Just like <a href="#nextFloat(float,float)"><code>nextFloat(float, float)</code></a>, but this is inclusive on both <code>innerBound</code> and <code>outerBound</code>.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i34">
 <td class="col-first"><code>default int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextInt()">nextInt</a></span>()</code></th>
 <td class="col-last">
@@ -236,7 +390,7 @@ float&nbsp;outerBound)</code></th>
  value from this random number generator's sequence.</div>
 </td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="row-color" id="i35">
 <td class="col-first"><code>default int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextInt(int)">nextInt</a></span>&#8203;(int&nbsp;bound)</code></th>
 <td class="col-last">
@@ -245,7 +399,7 @@ float&nbsp;outerBound)</code></th>
  this random number generator's sequence.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="alt-color" id="i36">
 <td class="col-first"><code>default int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextInt(int,int)">nextInt</a></span>&#8203;(int&nbsp;innerBound,
 int&nbsp;outerBound)</code></th>
@@ -255,7 +409,7 @@ int&nbsp;outerBound)</code></th>
  (exclusive).</div>
 </td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="row-color" id="i37">
 <td class="col-first"><code>long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextLong()">nextLong</a></span>()</code></th>
 <td class="col-last">
@@ -263,7 +417,7 @@ int&nbsp;outerBound)</code></th>
  value from this random number generator's sequence.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i20">
+<tr class="alt-color" id="i38">
 <td class="col-first"><code>default long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextLong(long)">nextLong</a></span>&#8203;(long&nbsp;bound)</code></th>
 <td class="col-last">
@@ -272,7 +426,7 @@ int&nbsp;outerBound)</code></th>
  this random number generator's sequence.</div>
 </td>
 </tr>
-<tr class="row-color" id="i21">
+<tr class="row-color" id="i39">
 <td class="col-first"><code>default long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextLong(long,long)">nextLong</a></span>&#8203;(long&nbsp;inner,
 long&nbsp;outer)</code></th>
@@ -282,14 +436,14 @@ long&nbsp;outer)</code></th>
  (exclusive).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i22">
+<tr class="alt-color" id="i40">
 <td class="col-first"><code>default int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextSign()">nextSign</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns -1 or 1, randomly.</div>
 </td>
 </tr>
-<tr class="row-color" id="i23">
+<tr class="row-color" id="i41">
 <td class="col-first"><code>default int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextSignedInt(int)">nextSignedInt</a></span>&#8203;(int&nbsp;outerBound)</code></th>
 <td class="col-last">
@@ -297,7 +451,7 @@ long&nbsp;outer)</code></th>
  inner bound of 0 (inclusive) and the specified <code>outerBound</code> (exclusive).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i24">
+<tr class="alt-color" id="i42">
 <td class="col-first"><code>default int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextSignedInt(int,int)">nextSignedInt</a></span>&#8203;(int&nbsp;innerBound,
 int&nbsp;outerBound)</code></th>
@@ -307,7 +461,7 @@ int&nbsp;outerBound)</code></th>
  (exclusive).</div>
 </td>
 </tr>
-<tr class="row-color" id="i25">
+<tr class="row-color" id="i43">
 <td class="col-first"><code>default long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextSignedLong(long)">nextSignedLong</a></span>&#8203;(long&nbsp;outerBound)</code></th>
 <td class="col-last">
@@ -315,7 +469,7 @@ int&nbsp;outerBound)</code></th>
  inner bound of 0 (inclusive) and the specified <code>outerBound</code> (exclusive).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i26">
+<tr class="alt-color" id="i44">
 <td class="col-first"><code>default long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextSignedLong(long,long)">nextSignedLong</a></span>&#8203;(long&nbsp;inner,
 long&nbsp;outer)</code></th>
@@ -325,7 +479,7 @@ long&nbsp;outer)</code></th>
  (exclusive).</div>
 </td>
 </tr>
-<tr class="row-color" id="i27">
+<tr class="row-color" id="i45">
 <td class="col-first"><code>default float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextTriangular()">nextTriangular</a></span>()</code></th>
 <td class="col-last">
@@ -333,7 +487,7 @@ long&nbsp;outer)</code></th>
  more likely.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i28">
+<tr class="alt-color" id="i46">
 <td class="col-first"><code>default float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextTriangular(float)">nextTriangular</a></span>&#8203;(float&nbsp;max)</code></th>
 <td class="col-last">
@@ -341,7 +495,7 @@ long&nbsp;outer)</code></th>
  around zero are more likely.</div>
 </td>
 </tr>
-<tr class="row-color" id="i29">
+<tr class="row-color" id="i47">
 <td class="col-first"><code>default float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextTriangular(float,float)">nextTriangular</a></span>&#8203;(float&nbsp;min,
 float&nbsp;max)</code></th>
@@ -350,7 +504,7 @@ float&nbsp;max)</code></th>
  <code>mode</code> argument defaults to the midpoint between the bounds, giving a symmetric distribution.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i30">
+<tr class="alt-color" id="i48">
 <td class="col-first"><code>default float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#nextTriangular(float,float,float)">nextTriangular</a></span>&#8203;(float&nbsp;min,
 float&nbsp;max,
@@ -360,7 +514,7 @@ float&nbsp;mode)</code></th>
  around <code>mode</code> are more likely.</div>
 </td>
 </tr>
-<tr class="row-color" id="i31">
+<tr class="row-color" id="i49">
 <td class="col-first"><code>static double</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#probit(double)">probit</a></span>&#8203;(double&nbsp;d)</code></th>
 <td class="col-last">
@@ -368,42 +522,42 @@ float&nbsp;mode)</code></th>
  inputs correspond to high outputs, and similarly for the low range.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i32">
+<tr class="alt-color" id="i50">
 <td class="col-first"><code>default float</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomElement(com.github.tommyettinger.ds.Ordered.OfFloat)">randomElement</a></span>&#8203;(<a href="../Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a>&nbsp;ordered)</code></th>
 <td class="col-last">
 <div class="block">Gets a randomly selected item from the given Ordered.OfFloat, such as a FloatList or FloatOrderedSet.</div>
 </td>
 </tr>
-<tr class="row-color" id="i33">
+<tr class="row-color" id="i51">
 <td class="col-first"><code>default int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomElement(com.github.tommyettinger.ds.Ordered.OfInt)">randomElement</a></span>&#8203;(<a href="../Ordered.OfInt.html" title="interface in com.github.tommyettinger.ds">Ordered.OfInt</a>&nbsp;ordered)</code></th>
 <td class="col-last">
 <div class="block">Gets a randomly selected item from the given Ordered.OfInt, such as an IntList or IntOrderedSet.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i34">
+<tr class="alt-color" id="i52">
 <td class="col-first"><code>default long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomElement(com.github.tommyettinger.ds.Ordered.OfLong)">randomElement</a></span>&#8203;(<a href="../Ordered.OfLong.html" title="interface in com.github.tommyettinger.ds">Ordered.OfLong</a>&nbsp;ordered)</code></th>
 <td class="col-last">
 <div class="block">Gets a randomly selected item from the given Ordered.OfLong, such as a LongList or LongOrderedSet.</div>
 </td>
 </tr>
-<tr class="row-color" id="i35">
+<tr class="row-color" id="i53">
 <td class="col-first"><code>default &lt;T&gt;&nbsp;T</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomElement(com.github.tommyettinger.ds.Ordered)">randomElement</a></span>&#8203;(<a href="../Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;T&gt;&nbsp;ordered)</code></th>
 <td class="col-last">
 <div class="block">Gets a randomly selected item from the given Ordered, such as an ObjectList or ObjectOrderedSet.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i36">
+<tr class="alt-color" id="i54">
 <td class="col-first"><code>default &lt;T&gt;&nbsp;T</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#randomElement(T%5B%5D)">randomElement</a></span>&#8203;(T[]&nbsp;array)</code></th>
 <td class="col-last">
 <div class="block">Gets a randomly-selected item from the given array, which must be non-null and non-empty</div>
 </td>
 </tr>
-<tr class="row-color" id="i37">
+<tr class="row-color" id="i55">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setSeed(long)">setSeed</a></span>&#8203;(long&nbsp;seed)</code></th>
 <td class="col-last">
@@ -411,7 +565,7 @@ float&nbsp;mode)</code></th>
  <code>long</code> seed.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i38">
+<tr class="alt-color" id="i56">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setSelectedState(int,long)">setSelectedState</a></span>&#8203;(int&nbsp;selection,
 long&nbsp;value)</code></th>
@@ -419,14 +573,14 @@ long&nbsp;value)</code></th>
 <div class="block">Sets a selected state value to the given long <code>value</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i39">
+<tr class="row-color" id="i57">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(boolean%5B%5D)">shuffle</a></span>&#8203;(boolean[]&nbsp;items)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i40">
+<tr class="alt-color" id="i58">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(boolean%5B%5D,int,int)">shuffle</a></span>&#8203;(boolean[]&nbsp;items,
 int&nbsp;offset,
@@ -435,14 +589,14 @@ int&nbsp;length)</code></th>
 <div class="block">Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="row-color" id="i41">
+<tr class="row-color" id="i59">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(char%5B%5D)">shuffle</a></span>&#8203;(char[]&nbsp;items)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i42">
+<tr class="alt-color" id="i60">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(char%5B%5D,int,int)">shuffle</a></span>&#8203;(char[]&nbsp;items,
 int&nbsp;offset,
@@ -451,14 +605,14 @@ int&nbsp;length)</code></th>
 <div class="block">Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="row-color" id="i43">
+<tr class="row-color" id="i61">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(double%5B%5D)">shuffle</a></span>&#8203;(double[]&nbsp;items)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i44">
+<tr class="alt-color" id="i62">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(double%5B%5D,int,int)">shuffle</a></span>&#8203;(double[]&nbsp;items,
 int&nbsp;offset,
@@ -467,14 +621,14 @@ int&nbsp;length)</code></th>
 <div class="block">Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="row-color" id="i45">
+<tr class="row-color" id="i63">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(float%5B%5D)">shuffle</a></span>&#8203;(float[]&nbsp;items)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i46">
+<tr class="alt-color" id="i64">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(float%5B%5D,int,int)">shuffle</a></span>&#8203;(float[]&nbsp;items,
 int&nbsp;offset,
@@ -483,14 +637,14 @@ int&nbsp;length)</code></th>
 <div class="block">Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="row-color" id="i47">
+<tr class="row-color" id="i65">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(int%5B%5D)">shuffle</a></span>&#8203;(int[]&nbsp;items)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i48">
+<tr class="alt-color" id="i66">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(int%5B%5D,int,int)">shuffle</a></span>&#8203;(int[]&nbsp;items,
 int&nbsp;offset,
@@ -499,14 +653,14 @@ int&nbsp;length)</code></th>
 <div class="block">Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="row-color" id="i49">
+<tr class="row-color" id="i67">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(long%5B%5D)">shuffle</a></span>&#8203;(long[]&nbsp;items)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i50">
+<tr class="alt-color" id="i68">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(long%5B%5D,int,int)">shuffle</a></span>&#8203;(long[]&nbsp;items,
 int&nbsp;offset,
@@ -515,14 +669,14 @@ int&nbsp;length)</code></th>
 <div class="block">Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="row-color" id="i51">
+<tr class="row-color" id="i69">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(short%5B%5D)">shuffle</a></span>&#8203;(short[]&nbsp;items)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i52">
+<tr class="alt-color" id="i70">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(short%5B%5D,int,int)">shuffle</a></span>&#8203;(short[]&nbsp;items,
 int&nbsp;offset,
@@ -531,42 +685,49 @@ int&nbsp;length)</code></th>
 <div class="block">Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="row-color" id="i53">
+<tr class="row-color" id="i71">
+<td class="col-first"><code>default void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(com.github.tommyettinger.ds.Arrangeable)">shuffle</a></span>&#8203;(<a href="../Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a>&nbsp;arrangeable)</code></th>
+<td class="col-last">
+<div class="block">Shuffles the given Arrangeable in-place pseudo-randomly, using this to determine how to shuffle.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i72">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(com.github.tommyettinger.ds.Ordered.OfFloat)">shuffle</a></span>&#8203;(<a href="../Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a>&nbsp;ordered)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given Ordered.OfFloat in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i54">
+<tr class="row-color" id="i73">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(com.github.tommyettinger.ds.Ordered.OfInt)">shuffle</a></span>&#8203;(<a href="../Ordered.OfInt.html" title="interface in com.github.tommyettinger.ds">Ordered.OfInt</a>&nbsp;ordered)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given Ordered.OfInt in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="row-color" id="i55">
+<tr class="alt-color" id="i74">
 <td class="col-first"><code>default void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(com.github.tommyettinger.ds.Ordered.OfLong)">shuffle</a></span>&#8203;(<a href="../Ordered.OfLong.html" title="interface in com.github.tommyettinger.ds">Ordered.OfLong</a>&nbsp;ordered)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given Ordered.OfLong in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i56">
+<tr class="row-color" id="i75">
 <td class="col-first"><code>default &lt;T&gt;&nbsp;void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(com.github.tommyettinger.ds.Ordered)">shuffle</a></span>&#8203;(<a href="../Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a>&lt;T&gt;&nbsp;ordered)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given Ordered in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="row-color" id="i57">
+<tr class="alt-color" id="i76">
 <td class="col-first"><code>default &lt;T&gt;&nbsp;void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(T%5B%5D)">shuffle</a></span>&#8203;(T[]&nbsp;items)</code></th>
 <td class="col-last">
 <div class="block">Shuffles the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i58">
+<tr class="row-color" id="i77">
 <td class="col-first"><code>default &lt;T&gt;&nbsp;void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#shuffle(T%5B%5D,int,int)">shuffle</a></span>&#8203;(T[]&nbsp;items,
 int&nbsp;offset,
@@ -575,7 +736,7 @@ int&nbsp;length)</code></th>
 <div class="block">Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.</div>
 </td>
 </tr>
-<tr class="row-color" id="i59">
+<tr class="alt-color" id="i78">
 <td class="col-first"><code>default long</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#skip(long)">skip</a></span>&#8203;(long&nbsp;advance)</code></th>
 <td class="col-last">
@@ -1086,6 +1247,97 @@ double&nbsp;outerBound)</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="nextInclusiveDouble()">
+<h3>nextInclusiveDouble</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">nextInclusiveDouble</span>()</div>
+<div class="block">This is just like <a href="#nextDouble()"><code>nextDouble()</code></a>, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+ It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
+ can happen. This uses <a href="#nextLong(long)"><code>nextLong(long)</code></a> internally, so it may have some bias towards or against specific
+ subtly-different results.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a double between 0.0, inclusive, and 1.0, inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nextInclusiveDouble(double)">
+<h3>nextInclusiveDouble</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">nextInclusiveDouble</span>&#8203;(<span class="parameters">double&nbsp;outerBound)</span></div>
+<div class="block">Just like <a href="#nextDouble(double)"><code>nextDouble(double)</code></a>, but this is inclusive on both 0.0 and <code>outerBound</code>.
+ It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>outerBound</code> - the outer inclusive bound; may be positive or negative</dd>
+<dt>Returns:</dt>
+<dd>a double between 0.0, inclusive, and <code>outerBound</code>, inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nextInclusiveDouble(double,double)">
+<h3>nextInclusiveDouble</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">nextInclusiveDouble</span>&#8203;(<span class="parameters">double&nbsp;innerBound,
+double&nbsp;outerBound)</span></div>
+<div class="block">Just like <a href="#nextDouble(double,double)"><code>nextDouble(double, double)</code></a>, but this is inclusive on both <code>innerBound</code> and <code>outerBound</code>.
+ It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
+ return it at all because of floating-point imprecision when innerBound is a larger number.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner inclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer inclusive bound; may be positive or negative</dd>
+<dt>Returns:</dt>
+<dd>a double between <code>innerBound</code>, inclusive, and <code>outerBound</code>, inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nextInclusiveFloat()">
+<h3>nextInclusiveFloat</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">nextInclusiveFloat</span>()</div>
+<div class="block">This is just like <a href="#nextFloat()"><code>nextFloat()</code></a>, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+ It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
+ has been tested by generating 268435456 (or 0x10000000) random ints with <a href="#nextInt(int)"><code>nextInt(int)</code></a>, and just before the end of that
+ it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
+ likely to accomplish that in the same time, or at all, depending on the generator.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a float between 0.0, inclusive, and 1.0, inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nextInclusiveFloat(float)">
+<h3>nextInclusiveFloat</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">nextInclusiveFloat</span>&#8203;(<span class="parameters">float&nbsp;outerBound)</span></div>
+<div class="block">Just like <a href="#nextFloat(float)"><code>nextFloat(float)</code></a>, but this is inclusive on both 0.0 and <code>outerBound</code>.
+ It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>outerBound</code> - the outer inclusive bound; may be positive or negative</dd>
+<dt>Returns:</dt>
+<dd>a float between 0.0, inclusive, and <code>outerBound</code>, inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nextInclusiveFloat(float,float)">
+<h3>nextInclusiveFloat</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">nextInclusiveFloat</span>&#8203;(<span class="parameters">float&nbsp;innerBound,
+float&nbsp;outerBound)</span></div>
+<div class="block">Just like <a href="#nextFloat(float,float)"><code>nextFloat(float, float)</code></a>, but this is inclusive on both <code>innerBound</code> and <code>outerBound</code>.
+ It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
+ it at all because of floating-point imprecision when innerBound is a larger number.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner inclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer inclusive bound; may be positive or negative</dd>
+<dt>Returns:</dt>
+<dd>a float between <code>innerBound</code>, inclusive, and <code>outerBound</code>, inclusive</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="nextExclusiveDouble()">
 <h3>nextExclusiveDouble</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">nextExclusiveDouble</span>()</div>
@@ -1111,6 +1363,38 @@ double&nbsp;outerBound)</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="nextExclusiveDouble(double)">
+<h3>nextExclusiveDouble</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">nextExclusiveDouble</span>&#8203;(<span class="parameters">double&nbsp;outerBound)</span></div>
+<div class="block">Just like <a href="#nextDouble(double)"><code>nextDouble(double)</code></a>, but this is exclusive on both 0.0 and <code>outerBound</code>.
+ Like <a href="#nextExclusiveDouble()"><code>nextExclusiveDouble()</code></a>, this may have better bit-distribution of double values, and
+ it may also be better able to produce very small doubles when <code>outerBound</code> is large.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dt>Returns:</dt>
+<dd>a double between 0.0, exclusive, and <code>outerBound</code>, exclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nextExclusiveDouble(double,double)">
+<h3>nextExclusiveDouble</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">nextExclusiveDouble</span>&#8203;(<span class="parameters">double&nbsp;innerBound,
+double&nbsp;outerBound)</span></div>
+<div class="block">Just like <a href="#nextDouble(double,double)"><code>nextDouble(double, double)</code></a>, but this is exclusive on both <code>innerBound</code> and <code>outerBound</code>.
+ Like <a href="#nextExclusiveDouble()"><code>nextExclusiveDouble()</code></a>, this may have better bit-distribution of double values, and
+ it may also be better able to produce doubles close to innerBound when <code>outerBound - innerBound</code> is large.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner exclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dt>Returns:</dt>
+<dd>a double between <code>innerBound</code>, exclusive, and <code>outerBound</code>, exclusive</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="nextExclusiveFloat()">
 <h3>nextExclusiveFloat</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">nextExclusiveFloat</span>()</div>
@@ -1132,6 +1416,38 @@ double&nbsp;outerBound)</span></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>a random uniform float between 0 and 1 (both exclusive)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nextExclusiveFloat(float)">
+<h3>nextExclusiveFloat</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">nextExclusiveFloat</span>&#8203;(<span class="parameters">float&nbsp;outerBound)</span></div>
+<div class="block">Just like <a href="#nextFloat(float)"><code>nextFloat(float)</code></a>, but this is exclusive on both 0.0 and <code>outerBound</code>.
+ Like <a href="#nextExclusiveFloat()"><code>nextExclusiveFloat()</code></a>, this may have better bit-distribution of float values, and
+ it may also be better able to produce very small floats when <code>outerBound</code> is large.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dt>Returns:</dt>
+<dd>a float between 0.0, exclusive, and <code>outerBound</code>, exclusive</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="nextExclusiveFloat(float,float)">
+<h3>nextExclusiveFloat</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">nextExclusiveFloat</span>&#8203;(<span class="parameters">float&nbsp;innerBound,
+float&nbsp;outerBound)</span></div>
+<div class="block">Just like <a href="#nextFloat(float,float)"><code>nextFloat(float, float)</code></a>, but this is exclusive on both <code>innerBound</code> and <code>outerBound</code>.
+ Like <a href="#nextExclusiveFloat()"><code>nextExclusiveFloat()</code></a>, this may have better bit-distribution of float values, and
+ it may also be better able to produce floats close to innerBound when <code>outerBound - innerBound</code> is large.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner exclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dt>Returns:</dt>
+<dd>a float between <code>innerBound</code>, exclusive, and <code>outerBound</code>, exclusive</dd>
 </dl>
 </section>
 </li>
@@ -1316,6 +1632,158 @@ float&nbsp;mode)</span></div>
 <dd><code>min</code> - the lower limit</dd>
 <dd><code>max</code> - the upper limit</dd>
 <dd><code>mode</code> - the point around which the values are more likely</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="minIntOf(int,int,int)">
+<h3>minIntOf</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">minIntOf</span>&#8203;(<span class="parameters">int&nbsp;innerBound,
+int&nbsp;outerBound,
+int&nbsp;trials)</span></div>
+<div class="block">Returns the minimum result of <code>trials</code> calls to <a href="#nextSignedInt(int,int)"><code>nextSignedInt(int, int)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>. The innerBound is inclusive; the outerBound is exclusive.
+ The higher trials is, the lower the average value this returns.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner inclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dd><code>trials</code> - how many random numbers to acquire and compare</dd>
+<dt>Returns:</dt>
+<dd>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="maxIntOf(int,int,int)">
+<h3>maxIntOf</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">maxIntOf</span>&#8203;(<span class="parameters">int&nbsp;innerBound,
+int&nbsp;outerBound,
+int&nbsp;trials)</span></div>
+<div class="block">Returns the maximum result of <code>trials</code> calls to <a href="#nextSignedInt(int,int)"><code>nextSignedInt(int, int)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>. The innerBound is inclusive; the outerBound is exclusive.
+ The higher trials is, the higher the average value this returns.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner inclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dd><code>trials</code> - how many random numbers to acquire and compare</dd>
+<dt>Returns:</dt>
+<dd>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="minLongOf(long,long,int)">
+<h3>minLongOf</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="member-name">minLongOf</span>&#8203;(<span class="parameters">long&nbsp;innerBound,
+long&nbsp;outerBound,
+int&nbsp;trials)</span></div>
+<div class="block">Returns the minimum result of <code>trials</code> calls to <a href="#nextSignedLong(long,long)"><code>nextSignedLong(long, long)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>. The innerBound is inclusive; the outerBound is exclusive.
+ The higher trials is, the lower the average value this returns.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner inclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dd><code>trials</code> - how many random numbers to acquire and compare</dd>
+<dt>Returns:</dt>
+<dd>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="maxLongOf(long,long,int)">
+<h3>maxLongOf</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="member-name">maxLongOf</span>&#8203;(<span class="parameters">long&nbsp;innerBound,
+long&nbsp;outerBound,
+int&nbsp;trials)</span></div>
+<div class="block">Returns the maximum result of <code>trials</code> calls to <a href="#nextSignedLong(long,long)"><code>nextSignedLong(long, long)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>. The innerBound is inclusive; the outerBound is exclusive.
+ The higher trials is, the higher the average value this returns.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner inclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dd><code>trials</code> - how many random numbers to acquire and compare</dd>
+<dt>Returns:</dt>
+<dd>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="minDoubleOf(double,double,int)">
+<h3>minDoubleOf</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">minDoubleOf</span>&#8203;(<span class="parameters">double&nbsp;innerBound,
+double&nbsp;outerBound,
+int&nbsp;trials)</span></div>
+<div class="block">Returns the minimum result of <code>trials</code> calls to <a href="#nextDouble(double,double)"><code>nextDouble(double, double)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>. The innerBound is inclusive; the outerBound is exclusive.
+ The higher trials is, the lower the average value this returns.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner inclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dd><code>trials</code> - how many random numbers to acquire and compare</dd>
+<dt>Returns:</dt>
+<dd>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="maxDoubleOf(double,double,int)">
+<h3>maxDoubleOf</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="member-name">maxDoubleOf</span>&#8203;(<span class="parameters">double&nbsp;innerBound,
+double&nbsp;outerBound,
+int&nbsp;trials)</span></div>
+<div class="block">Returns the maximum result of <code>trials</code> calls to <a href="#nextDouble(double,double)"><code>nextDouble(double, double)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>. The innerBound is inclusive; the outerBound is exclusive.
+ The higher trials is, the higher the average value this returns.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner inclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dd><code>trials</code> - how many random numbers to acquire and compare</dd>
+<dt>Returns:</dt>
+<dd>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="minFloatOf(float,float,int)">
+<h3>minFloatOf</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">minFloatOf</span>&#8203;(<span class="parameters">float&nbsp;innerBound,
+float&nbsp;outerBound,
+int&nbsp;trials)</span></div>
+<div class="block">Returns the minimum result of <code>trials</code> calls to <a href="#nextFloat(float,float)"><code>nextFloat(float, float)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>. The innerBound is inclusive; the outerBound is exclusive.
+ The higher trials is, the lower the average value this returns.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner inclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dd><code>trials</code> - how many random numbers to acquire and compare</dd>
+<dt>Returns:</dt>
+<dd>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="maxFloatOf(float,float,int)">
+<h3>maxFloatOf</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="member-name">maxFloatOf</span>&#8203;(<span class="parameters">float&nbsp;innerBound,
+float&nbsp;outerBound,
+int&nbsp;trials)</span></div>
+<div class="block">Returns the maximum result of <code>trials</code> calls to <a href="#nextFloat(float,float)"><code>nextFloat(float, float)</code></a> using the given <code>innerBound</code>
+ and <code>outerBound</code>. The innerBound is inclusive; the outerBound is exclusive.
+ The higher trials is, the higher the average value this returns.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>innerBound</code> - the inner inclusive bound; may be positive or negative</dd>
+<dd><code>outerBound</code> - the outer exclusive bound; may be positive or negative</dd>
+<dd><code>trials</code> - how many random numbers to acquire and compare</dd>
+<dt>Returns:</dt>
+<dd>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</dd>
 </dl>
 </section>
 </li>
@@ -1644,6 +2112,17 @@ int&nbsp;length)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>ordered</code> - an Ordered, such as an ObjectList or ObjectOrderedSet</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="shuffle(com.github.tommyettinger.ds.Arrangeable)">
+<h3>shuffle</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">shuffle</span>&#8203;(<span class="parameters"><a href="../Arrangeable.html" title="interface in com.github.tommyettinger.ds">Arrangeable</a>&nbsp;arrangeable)</span></div>
+<div class="block">Shuffles the given Arrangeable in-place pseudo-randomly, using this to determine how to shuffle.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>arrangeable</code> - an Arrangeable, such as an ObjectList, IntOrderedSet, or LongFloatOrderedMap</dd>
 </dl>
 </section>
 </li>
