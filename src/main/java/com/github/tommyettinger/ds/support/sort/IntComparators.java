@@ -130,7 +130,7 @@ public final class IntComparators {
 
 		@Override
 		public final int compare (final int a, final int b) {
-			return Integer.compareUnsigned(a, b);
+			return Integer.compare(a + Integer.MIN_VALUE, b + Integer.MIN_VALUE);
 		}
 
 		@Override
@@ -152,7 +152,7 @@ public final class IntComparators {
 
 		@Override
 		public final int compare (final int a, final int b) {
-			return Integer.compareUnsigned(b, a);
+			return Integer.compare(b + Integer.MIN_VALUE, a + Integer.MIN_VALUE);
 		}
 
 		@Override

@@ -126,7 +126,7 @@ public final class ByteComparators {
 
 		@Override
 		public final int compare (final byte a, final byte b) {
-			return Integer.compareUnsigned(a & 0xFF, b & 0xFF);
+			return Integer.compare(a & 0xFF, b & 0xFF);
 		}
 
 		@Override
@@ -148,7 +148,7 @@ public final class ByteComparators {
 
 		@Override
 		public final int compare (final byte a, final byte b) {
-			return Integer.compareUnsigned(b & 0xFF, a & 0xFF);
+			return Integer.compare(b & 0xFF, a & 0xFF);
 		}
 
 		@Override

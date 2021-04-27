@@ -126,7 +126,7 @@ public final class ShortComparators {
 
 		@Override
 		public final int compare (final short a, final short b) {
-			return Integer.compareUnsigned(a & 0xFFFF, b & 0xFFFF);
+			return Integer.compare(a & 0xFFFF, b & 0xFFFF);
 		}
 
 		@Override
@@ -148,7 +148,7 @@ public final class ShortComparators {
 
 		@Override
 		public final int compare (final short a, final short b) {
-			return Integer.compareUnsigned(b & 0xFFFF, a & 0xFFFF);
+			return Integer.compare(b & 0xFFFF, a & 0xFFFF);
 		}
 
 		@Override

@@ -18,6 +18,8 @@ package com.github.tommyettinger.ds.support.sort;
 
 import java.util.Comparator;
 
+import static java.lang.Long.MIN_VALUE;
+
 /**
  * A class providing static methods and objects that do useful things with
  * comparators.
@@ -130,7 +132,7 @@ public final class LongComparators {
 
 		@Override
 		public final int compare (final long a, final long b) {
-			return Long.compareUnsigned(a, b);
+			return Long.compare(a + MIN_VALUE, b + MIN_VALUE);
 		}
 
 		@Override
@@ -152,7 +154,7 @@ public final class LongComparators {
 
 		@Override
 		public final int compare (final long a, final long b) {
-			return Long.compareUnsigned(b, a);
+			return Long.compare(b + MIN_VALUE, a + MIN_VALUE);
 		}
 
 		@Override
