@@ -1,4 +1,4 @@
-package emu.com.github.tommyettinger.ds.support;
+package com.github.tommyettinger.ds.support;
 
 import com.google.gwt.typedarrays.client.Float64ArrayNative;
 import com.google.gwt.typedarrays.client.Float32ArrayNative;
