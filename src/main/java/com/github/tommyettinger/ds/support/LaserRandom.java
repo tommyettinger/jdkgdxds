@@ -3,9 +3,8 @@ package com.github.tommyettinger.ds.support;
 import java.util.Random;
 
 /**
- * A faster and much-higher-quality substitute for {@link Random}.
- * This allows many different random number streams that don't overlap, and offers a much more substantial
- * API for commonly-used functions.
+ * A faster and much-higher-quality substitute for {@link Random}. This allows many different random number
+ * streams that don't overlap, and offers a more substantial API for commonly-used functions.
  * <br>
  * This fills in much of the functionality of MathUtils in libGDX, though with all code as instance methods
  * instead of static methods, and some things renamed (randomTriangular() became {@link #nextTriangular()},
@@ -51,7 +50,12 @@ import java.util.Random;
  * <br>
  * You can copy this class independently of the library it's part of; it's meant as a general replacement for
  * Random and also RandomXS128. LaserRandom is generally faster than RandomXS128, and can be over 3x faster
- * when running on OpenJ9 (generating over 3 billion random long values per second).
+ * when running on OpenJ9 (generating over 3 billion random long values per second). If you copy this, the
+ * only step you probably need to do is to remove {@code implements EnhancedRandom} from the class, since
+ * almost all of EnhancedRandom consists of either default methods that this implements explicitly, or to
+ * provide a common interface for pseudo-random number generators on the JVM. This class avoids using the
+ * Override annotation specifically because copying the class and removing the EnhancedRandom implementation
+ * would cause compile errors if Override annotations were present.
  * <br>
  * Pew pew! Lasers!
  *
@@ -167,14 +171,13 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	}
 
 	/**
-	 * Gets a selected state value from this EnhancedRandom. If selection is an even number,
+	 * Gets a selected state value from this LaserRandom. If selection is an even number,
 	 * this returns stateA, and if selection is odd, it returns stateB. This returns the
 	 * exact value of the selected state.
 	 *
 	 * @param selection used to select which state variable to get (usually 0 or 1)
 	 * @return the exact value of the selected state
 	 */
-	@Override
 	public long getSelectedState (int selection) {
 		return (selection & 1) == 0 ? stateA : stateB;
 	}
@@ -187,7 +190,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param selection used to select which state variable to set (usually 0 or 1)
 	 * @param value     the exact value to use for the selected state, if valid
 	 */
-	@Override
 	public void setSelectedState (int selection, long value) {
 		if((selection & 1) == 0)
 			stateA = value;
@@ -210,7 +212,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 *
 	 * @param seed the initial seed
 	 */
-	@Override
 	public void setSeed (long seed) {
 		stateB = (stateA = seed) | 1L;
 	}
@@ -237,7 +238,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @return the next pseudorandom value from this random number
 	 * generator's sequence
 	 */
-	@Override
 	public int next (int bits) {
 		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
@@ -252,7 +252,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param bytes the byte array to fill with random bytes
 	 * @throws NullPointerException if the byte array is null
 	 */
-	@Override
 	public void nextBytes (byte[] bytes) {
 		for (int i = 0; i < bytes.length; ) { for (long r = nextLong(), n = Math.min(bytes.length - i, 8); n-- > 0; r >>>= 8) { bytes[i++] = (byte)r; } }
 	}
@@ -267,7 +266,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @return the next pseudorandom, uniformly distributed {@code int}
 	 * value from this random number generator's sequence
 	 */
-	@Override
 	public int nextInt () {
 		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
@@ -297,7 +295,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * value between zero (inclusive) and {@code bound} (exclusive)
 	 * from this random number generator's sequence
 	 */
-	@Override
 	public int nextInt (int bound) {
 		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
@@ -317,7 +314,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param outerBound the outer exclusive bound; may be any int value, allowing negative
 	 * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
 	 */
-	@Override
 	public int nextSignedInt (int outerBound) {
 		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
@@ -339,7 +335,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	@Override
 	public int nextInt (int innerBound, int outerBound) {
 		return innerBound + nextInt(outerBound - innerBound);
 	}
@@ -356,7 +351,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param outerBound the exclusive outer bound; may be any int, allowing negative
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	@Override
 	public int nextSignedInt (int innerBound, int outerBound) {
 		return innerBound + nextSignedInt(outerBound - innerBound);
 	}
@@ -374,7 +368,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @return the next pseudorandom, uniformly distributed {@code long}
 	 * value from this random number generator's sequence
 	 */
-	@Override
 	public long nextLong () {
 		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
@@ -407,7 +400,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * value between zero (inclusive) and {@code bound} (exclusive)
 	 * from this random number generator's sequence
 	 */
-	@Override
 	public long nextLong (long bound) {
 		return nextLong(0L, bound);
 	}
@@ -431,7 +423,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param outerBound the outer exclusive bound; may be any long value, allowing negative
 	 * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
 	 */
-	@Override
 	public long nextSignedLong (long outerBound) {
 		return nextSignedLong(0L, outerBound);
 	}
@@ -450,7 +441,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param outer the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	@Override
 	public long nextLong (long inner, long outer) {
 		final long rand = nextLong();
 		if(inner >= outer) return inner;
@@ -473,7 +463,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param outer the exclusive outer bound; may be any long, allowing negative
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
 	 */
-	@Override
 	public long nextSignedLong (long inner, long outer) {
 		final long rand = nextLong();
 		if(outer < inner) {
@@ -501,7 +490,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * {@code boolean} value from this random number generator's
 	 * sequence
 	 */
-	@Override
 	public boolean nextBoolean () {
 		final long s = stateA += 0xC6BC279692B5C323L;
 		return (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L) < 0L;
@@ -530,7 +518,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * value between {@code 0.0} and {@code 1.0} from this
 	 * random number generator's sequence
 	 */
-	@Override
 	public float nextFloat () {
 		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
@@ -544,7 +531,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param outerBound the exclusive outer bound
 	 * @return a float between 0 (inclusive) and {@code outerBound} (exclusive)
 	 */
-	@Override
 	public float nextFloat (float outerBound) {
 		return nextFloat() * outerBound;
 	}
@@ -557,7 +543,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param outerBound the exclusive outer bound; may be negative
 	 * @return a float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
 	 */
-	@Override
 	public float nextFloat (float innerBound, float outerBound) {
 		return innerBound + nextFloat() * (outerBound - innerBound);
 	}
@@ -582,7 +567,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * value between {@code 0.0} and {@code 1.0} from this
 	 * random number generator's sequence
 	 */
-	@Override
 	public double nextDouble () {
 		final long s = stateA += 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L);
@@ -596,7 +580,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param outerBound the exclusive outer bound
 	 * @return a double between 0 (inclusive) and {@code outerBound} (exclusive)
 	 */
-	@Override
 	public double nextDouble (double outerBound) {
 		return nextDouble() * outerBound;
 	}
@@ -609,7 +592,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param outerBound the exclusive outer bound; may be negative
 	 * @return a double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
 	 */
-	@Override
 	public double nextDouble (double innerBound, double outerBound) {
 		return innerBound + nextDouble() * (outerBound - innerBound);
 	}
@@ -626,6 +608,105 @@ public class LaserRandom extends Random implements EnhancedRandom {
 		return EnhancedRandom.probit(d);
 	}
 	/**
+	 * This is just like {@link #nextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+	 * It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
+	 * can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
+	 * subtly-different results.
+	 * @return a double between 0.0, inclusive, and 1.0, inclusive
+	 */
+	public double nextInclusiveDouble() {
+		return nextLong(0x20000000000001L) * 0x1p-53;
+	}
+
+	/**
+	 * Just like {@link #nextDouble(double)}, but this is inclusive on both 0.0 and {@code outerBound}.
+	 * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a double between 0.0, inclusive, and {@code outerBound}, inclusive
+	 */
+	public double nextInclusiveDouble(double outerBound) {
+		return nextInclusiveDouble() * outerBound;
+	}
+
+	/**
+	 * Just like {@link #nextDouble(double, double)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
+	 * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
+	 * return it at all because of floating-point imprecision when innerBound is a larger number.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a double between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
+	 */
+	public double nextInclusiveDouble(double innerBound, double outerBound) {
+		return innerBound + nextInclusiveDouble() * (outerBound - innerBound);
+	}
+
+	/**
+	 * This is just like {@link #nextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+	 * It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
+	 * has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
+	 * it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
+	 * likely to accomplish that in the same time, or at all, depending on the generator.
+	 * @return a float between 0.0, inclusive, and 1.0, inclusive
+	 */
+	public float nextInclusiveFloat() {
+		return nextInt(0x1000001) * 0x1p-24f;
+	}
+
+	/**
+	 * Just like {@link #nextFloat(float)}, but this is inclusive on both 0.0 and {@code outerBound}.
+	 * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a float between 0.0, inclusive, and {@code outerBound}, inclusive
+	 */
+	public float nextInclusiveFloat(float outerBound) {
+		return nextInclusiveFloat() * outerBound;
+	}
+
+	/**
+	 * Just like {@link #nextFloat(float, float)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
+	 * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
+	 * it at all because of floating-point imprecision when innerBound is a larger number.
+	 * @param innerBound the inner inclusive bound; may be positive or negative
+	 * @param outerBound the outer inclusive bound; may be positive or negative
+	 * @return a float between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
+	 */
+	public float nextInclusiveFloat(float innerBound, float outerBound) {
+		return innerBound + nextInclusiveFloat() * (outerBound - innerBound);
+	}
+
+	/**
+	 * Approximates a random variate with a normal distribution by using EnhancedRandom's probit() method (inlined) with
+	 * EnhancedRandom's nextExclusiveDoubleEquidistant() as the input (also inlined). The mean is 0.0 and the standard
+	 * deviation is 1. All possible double results are between {@code -8.209536145151493} and {@code 8.209536145151493}.
+	 * This uses an algorithm by Peter John Acklam, as implemented by Sherali Karimov.
+	 * <a href="https://web.archive.org/web/20150910002142/http://home.online.no/~pjacklam/notes/invnorm/impl/karimov/StatUtil.java">Original source</a>.
+	 * <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Information on the algorithm</a>.
+	 * <a href="https://en.wikipedia.org/wiki/Probit_function">Wikipedia's page on the probit function</a> may help, but
+	 * is more likely to just be confusing.
+	 * @return a normal-distributed random double with mean 0 and standard deviation 1 .
+	 */
+	public double nextGaussian () {
+		final double d = (nextLong(0x1FFFFFFFFFFFFFL) + 1L) * 0x1p-53;
+		if (d < 0.02425) {
+			final double q = Math.sqrt(-2.0 * Math.log(d));
+			return (((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
+				(((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
+		}
+		else if (0.97575 < d) {
+			final double q = Math.sqrt(-2.0 * Math.log(1 - d));
+			return -(((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
+				(((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
+		}
+		else {
+			final double q = d - 0.5;
+			final double r = q * q;
+			return (((((-3.969683028665376e+01 * r + 2.209460984245205e+02) * r + -2.759285104469687e+02) * r + 1.383577518672690e+02) * r + -3.066479806614716e+01) * r + 2.506628277459239e+00) * q / (
+				((((-5.447609879822406e+01 * r + 1.615858368580409e+02) * r + -1.556989798598866e+02) * r + 6.680131188771972e+01) * r + -1.328068155288572e+01) * r + 1.0);
+		}
+
+	}
+
+	/**
 	 * Advances or rolls back the {@code LaserRandom}' state without actually generating each number. Skips forward
 	 * or backward a number of steps specified by advance, where a step is equal to one call to {@link #nextLong()},
 	 * and returns the random number produced at that step. Negative numbers can be used to step backward, or 0 can be
@@ -640,7 +721,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param advance Number of future generations to skip over; can be negative to backtrack, 0 gets the most-recently-generated number
 	 * @return the random long generated after skipping forward or backwards by {@code advance} numbers
 	 */
-	@Override
 	public long skip (long advance) {
 		final long s = stateA += 0xC6BC279692B5C323L * advance;
 		final long z = (s ^ s >>> 31) * (stateB += 0x9E3779B97F4A7C16L * advance);
@@ -654,7 +734,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * only implemented by Random and not LaserRandom, the results may differ.
 	 * @return a deep copy of this LaserRandom.
 	 */
-	@Override
 	public LaserRandom copy () {
 		return new LaserRandom(stateA, stateB);
 	}
@@ -679,7 +758,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
 	 * @return a boolean selected with the given {@code chance} of being true
 	 */
-	@Override
 	public boolean nextBoolean (float chance) {
 		return nextFloat() < chance;
 	}
@@ -689,7 +767,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 *
 	 * @return -1 or 1, selected with approximately equal likelihood
 	 */
-	@Override
 	public int nextSign () {
 		return 1 | nextInt() >> 31;
 	}
@@ -700,7 +777,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * <p>
 	 * This is an optimized version of {@link #nextTriangular(float, float, float) randomTriangular(-1, 1, 0)}
 	 */
-	@Override
 	public float nextTriangular () {
 		return nextFloat() - nextFloat();
 	}
@@ -713,7 +789,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 *
 	 * @param max the upper limit
 	 */
-	@Override
 	public float nextTriangular (float max) {
 		return (nextFloat() - nextFloat()) * max;
 	}
@@ -727,7 +802,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param min the lower limit
 	 * @param max the upper limit
 	 */
-	@Override
 	public float nextTriangular (float min, float max) {
 		return nextTriangular(min, max, (min + max) * 0.5f);
 	}
@@ -740,7 +814,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param max  the upper limit
 	 * @param mode the point around which the values are more likely
 	 */
-	@Override
 	public float nextTriangular (float min, float max, float mode) {
 		float u = nextFloat();
 		float d = max - min;
@@ -756,7 +829,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @throws NullPointerException if array is null
 	 * @throws IndexOutOfBoundsException if array is empty
 	 */
-	@Override
 	public <T> T randomElement (T[] array) {
 		return array[nextInt(array.length)];
 	}
@@ -766,7 +838,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 *
 	 * @param items an int array; must be non-null
 	 */
-	@Override
 	public void shuffle (int[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -781,7 +852,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 *
 	 * @param items a long array; must be non-null
 	 */
-	@Override
 	public void shuffle (long[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -796,7 +866,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 *
 	 * @param items a float array; must be non-null
 	 */
-	@Override
 	public void shuffle (float[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -811,7 +880,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 *
 	 * @param items a char array; must be non-null
 	 */
-	@Override
 	public void shuffle (char[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -826,7 +894,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 *
 	 * @param items a double array; must be non-null
 	 */
-	@Override
 	public void shuffle (double[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -841,7 +908,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 *
 	 * @param items a short array; must be non-null
 	 */
-	@Override
 	public void shuffle (short[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -856,7 +922,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 *
 	 * @param items a boolean array; must be non-null
 	 */
-	@Override
 	public void shuffle (boolean[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
@@ -871,7 +936,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 *
 	 * @param items an array of some reference type; must be non-null but may contain null items
 	 */
-	@Override
 	public <T> void shuffle (T[] items) {
 		for (int i = items.length - 1; i >= 0; i--) {
 			int ii = nextInt(i + 1);
