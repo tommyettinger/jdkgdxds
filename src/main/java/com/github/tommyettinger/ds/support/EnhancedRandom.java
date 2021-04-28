@@ -502,11 +502,17 @@ public interface EnhancedRandom {
 	}
 
 	/**
-	 * Gets a random double between 0.0 and 1.0, exclusive at both ends. This method is also more uniform than
+	 * Gets a random double between 0.0 and 1.0, exclusive at both ends; this method is also more uniform than
 	 * {@link #nextDouble()} if you use the bit-patterns of the returned doubles. This is a simplified version of
 	 * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This can return double
 	 * values between 2.710505431213761E-20 and 0.9999999999999999, or 0x1.0p-65 and 0x1.fffffffffffffp-1 in hex
-	 * notation. It cannot return 0 or 1. To compare, nextDouble() is less likely to produce a "1" bit for its
+	 * notation. It cannot return 0 or 1. Most cases can instead use {@link #nextExclusiveDoubleEquidistant()}, which is
+	 * implemented more traditionally but may have different performance. This method can also return doubles that
+	 * are extremely close to 0, but can't return doubles that are as close to 1, due to limits of doubles.
+	 * However, nextExclusiveDoubleEquidistant() can return only a minimum value that is as distant from 0 as its maximum
+	 * value is distant from 1.
+	 * <br>
+	 * To compare, nextDouble() and nextExclusiveDoubleEquidistant() are less likely to produce a "1" bit for their
 	 * lowest 5 bits of mantissa/significand (the least significant bits numerically, but potentially important
 	 * for some uses), with the least significant bit produced half as often as the most significant bit in the
 	 * mantissa. As for this method, it has approximately the same likelihood of producing a "1" bit for any
@@ -519,16 +525,33 @@ public interface EnhancedRandom {
 	 * and this is branchless and loopless, unlike the original algorithm by Allen Downey.
 	 * @return a random uniform double between 0 and 1 (both exclusive)
 	 */
-	default double nextExclusiveDouble(){
+	default double nextExclusiveDouble (){
 		final long bits = nextLong();
 		return BitConversion.longBitsToDouble(1022L - Long.numberOfTrailingZeros(bits) << 52
 			| bits >>> 12);
 	}
 
 	/**
+	 * Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
+	 * values between 1.1102230246251565E-16 and 0.9999999999999999, or 0x1.0p-53 and 0x1.fffffffffffffp-1 in hex
+	 * notation. It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
+	 * 1, respectively. Some usages may prefer {@link #nextExclusiveDouble()}, which is
+	 * better-distributed if you consider the bit representation of the returned doubles, may have different
+	 * performance, and can return doubles that much closer to 0 than this can.
+	 * <br>
+	 * The default implementation simply uses {@link #nextLong(long)} to get a uniformly-chosen long between 1 and
+	 * (2 to the 53) - 1, both inclusive, and multiplies it by (2 to the -53). Using larger values than (2 to the
+	 * 53) would cause issues with the double math.
+	 * @return a random uniform double between 0 and 1 (both exclusive)
+	 */
+	default double nextExclusiveDoubleEquidistant (){
+		return (nextLong(0x1FFFFFFFFFFFFFL) + 1L) * 0x1p-53;
+	}
+
+	/**
 	 * Just like {@link #nextDouble(double)}, but this is exclusive on both 0.0 and {@code outerBound}.
-	 * Like {@link #nextExclusiveDouble()}, this may have better bit-distribution of double values, and
-	 * it may also be better able to produce very small doubles when {@code outerBound} is large.
+	 * Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
+	 * double values, and it may also be better able to produce very small doubles when {@code outerBound} is large.
 	 * @param outerBound the outer exclusive bound; may be positive or negative
 	 * @return a double between 0.0, exclusive, and {@code outerBound}, exclusive
 	 */
@@ -538,8 +561,8 @@ public interface EnhancedRandom {
 
 	/**
 	 * Just like {@link #nextDouble(double, double)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
-	 * Like {@link #nextExclusiveDouble()}, this may have better bit-distribution of double values, and
-	 * it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
+	 * Like {@link #nextExclusiveDouble()}, which this uses,, this may have better bit-distribution of double values,
+	 * and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
 	 * @param innerBound the inner exclusive bound; may be positive or negative
 	 * @param outerBound the outer exclusive bound; may be positive or negative
 	 * @return a double between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
@@ -570,6 +593,23 @@ public interface EnhancedRandom {
 		final long bits = nextLong();
 		return BitConversion.intBitsToFloat(126 - Long.numberOfTrailingZeros(bits) << 23
 			| (int)(bits >>> 41));
+	}
+
+	/**
+	 * Gets a random float between 0.0 and 1.0, exclusive at both ends. This can return float
+	 * values between 5.9604645E-8 and 0.99999994, or 0x1.0p-24 and 0x1.fffffep-1 in hex notation.
+	 * It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
+	 * 1, respectively. Some usages may prefer {@link #nextExclusiveFloat()}, which is
+	 * better-distributed if you consider the bit representation of the returned floats, may have different
+	 * performance, and can return floats that much closer to 0 than this can.
+	 * <br>
+	 * The default implementation simply uses {@link #nextInt(int)} to get a uniformly-chosen int between 1 and
+	 * (2 to the 24) - 1, both inclusive, and multiplies it by (2 to the -24). Using larger values than (2 to the
+	 * 24) would cause issues with the float math.
+	 * @return a random uniform float between 0 and 1 (both exclusive)
+	 */
+	default float nextExclusiveFloatEquidistant (){
+		return (nextInt(0xFFFFFF) + 1) * 0x1p-24f;
 	}
 
 	/**
@@ -608,10 +648,8 @@ public interface EnhancedRandom {
 	 * <p>This uses an approximation as implemented by {@link #probit(double)},
 	 * which can't produce as extreme results in extremely-rare cases as methods
 	 * like Box-Muller and Marsaglia Polar can. All possible results are
-	 * between {@code -9.155293773112453} and {@code 8.209536145151493}. The
-	 * discrepancy between the highest and lowest values is because there are
-	 * more possible double values approaching 0 than there are approaching 1 .
-	 * Internally, this uses {@link #nextExclusiveDouble()}, not
+	 * between {@code -8.209536145151493} and {@code 8.209536145151493}.
+	 * Internally, this uses {@link #nextExclusiveDoubleEquidistant()}, not
 	 * {@link #nextDouble()}, because probit() produces a sudden jump if given
 	 * an input of 0, so we exclude 0 from the possible random probit() inputs.
 	 *
@@ -620,7 +658,7 @@ public interface EnhancedRandom {
 	 * {@code 1.0} from this random number generator's sequence
 	 */
 	default double nextGaussian () {
-		return probit(nextExclusiveDouble());
+		return probit(nextExclusiveDoubleEquidistant());
 	}
 
 	/**
