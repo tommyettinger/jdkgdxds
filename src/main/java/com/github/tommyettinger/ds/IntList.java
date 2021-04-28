@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
-import java.util.Random;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import java.util.function.IntUnaryOperator;
 
 /**
@@ -618,7 +618,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 
 	// Modified from libGDX
 	@Override
-	public void shuffle (Random random) {
+	public void shuffle (EnhancedRandom random) {
 		int[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) {
 			int ii = random.nextInt(i + 1);
@@ -638,11 +638,11 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
-	 * @param random a {@link Random} or a (recommended) subclass such as {@link com.github.tommyettinger.ds.support.LaserRandom} from this library
+	 * @param random a {@link EnhancedRandom} such as {@link com.github.tommyettinger.ds.support.LaserRandom} from this library
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	// Modified from libGDX
-	public int random (Random random) {
+	public int random (EnhancedRandom random) {
 		if (size == 0) { return 0; }
 		return items[random.nextInt(size)];
 	}

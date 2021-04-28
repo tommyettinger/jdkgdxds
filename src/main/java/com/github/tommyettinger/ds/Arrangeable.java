@@ -3,7 +3,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.LaserRandom;
 
 import java.util.Collection;
-import java.util.Random;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 
 /**
  * Indicates that a type can have its contents change position, without specifying the type of contents.
@@ -23,9 +23,9 @@ public interface Arrangeable {
 	/**
 	 * Pseudo-randomly shuffles the order of this Arrangeable in-place.
 	 *
-	 * @param random any {@link Random} implementation; prefer {@link LaserRandom} in this library
+	 * @param random any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
 	 */
-	void shuffle (Random random);
+	void shuffle (EnhancedRandom random);
 
 	/**
 	 * Reverses this Arrangeable in-place.

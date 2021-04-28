@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.Random;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 
 /**
  * A resizable, ordered list of {@code T} items, typically objects (they can also be arrays).
@@ -669,13 +669,13 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 
 	/**
 	 * Pseudo-randomly shuffles the order of this Ordered in-place.
-	 * You can technically use {@link Random} or any of its subclasses for {@code rng},
-	 * but java.util.Random is a really bad choice; {@link LaserRandom} is generally better.
+	 * You can use any {@link EnhancedRandom} implementation for {@code rng};
+	 * {@link LaserRandom} is generally a good choice.
 	 *
-	 * @param rng any {@link Random} implementation; prefer {@link LaserRandom} in this library
+	 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
 	 */
 	@Override
-	public void shuffle (Random rng) {
+	public void shuffle (EnhancedRandom rng) {
 		for (int i = size() - 1; i >= 0; i--) {
 			set(i, set(rng.nextInt(i + 1), get(i)));
 		}
@@ -685,11 +685,11 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * Returns a {@code T} item from anywhere in this ObjectList, chosen pseudo-randomly using {@code random}.
 	 * If this ObjectList is empty, throws an {@link IllegalStateException}.
 	 *
-	 * @param random a {@link Random} or a subclass, such as {@link LaserRandom} (recommended)
+	 * @param random a {@link EnhancedRandom} or a subclass, such as {@link LaserRandom} (recommended)
 	 * @return a pseudo-randomly selected item from this ObjectLists
 	 */
 	@Override
-	public T random (Random random) {
+	public T random (EnhancedRandom random) {
 		int n = size();
 		if (n == 0) { throw new IllegalStateException("ObjectList is empty."); }
 		return get(random.nextInt(n));

@@ -24,7 +24,7 @@ import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import javax.annotation.Nullable;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
-import java.util.Random;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 
 /**
  * A resizable, ordered or unordered boolean list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Boolean.
@@ -531,7 +531,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	// Modified from libGDX
 	@Override
-	public void shuffle (Random random) {
+	public void shuffle (EnhancedRandom random) {
 		boolean[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) {
 			int ii = random.nextInt(i + 1);
@@ -551,10 +551,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	/**
 	 * Returns a random item from the array, or false if the array is empty.
-	 * @param random a {@link Random} or a (recommended) subclass such as {@link com.github.tommyettinger.ds.support.LaserRandom} from this library
+	 * @param random a {@link EnhancedRandom} such as {@link com.github.tommyettinger.ds.support.LaserRandom} from this library
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
-	public boolean random (Random random) {
+	public boolean random (EnhancedRandom random) {
 		if (size == 0) { return false; }
 		return items[random.nextInt(size)];
 	}

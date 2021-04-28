@@ -7,8 +7,6 @@ import com.github.tommyettinger.ds.LongList;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.Ordered;
 
-import java.util.Random;
-
 /**
  * A superset of the functionality in {@link java.util.Random}, meant for random number generators
  * that would be too bare-bones with just Random's methods.
@@ -682,7 +680,7 @@ public interface EnhancedRandom {
 	 * Creates a new EnhancedRandom with identical states to this one, so if the same EnhancedRandom methods are
 	 * called on this object and its copy (in the same order), the same outputs will be produced. This is not
 	 * guaranteed to copy the inherited state of any parent class, so if you call methods that are
-	 * only implemented by a superclass (like {@link Random}) and not this one, the results may differ.
+	 * only implemented by a superclass (like {@link java.util.Random}) and not this one, the results may differ.
 	 * @return a deep copy of this LaserRandom.
 	 */
 	EnhancedRandom copy ();
@@ -709,8 +707,8 @@ public interface EnhancedRandom {
 	 * {@code 8.209536145151493}, and will only produce results of at least {@code -8.209536145151493} if 0.0 is
 	 * excluded from the inputs (if 0.0 is an input, the result is {@code 38.5}). A chief advantage of using this with
 	 * a random number generator is that it only requires one random double to obtain one Gaussian value;
-	 * {@link Random#nextGaussian()} generates at least two random doubles for each two Gaussian values, but may rarely
-	 * require much more random generation.
+	 * {@link java.util.Random#nextGaussian()} generates at least two random doubles for each two Gaussian values, but
+	 * may rarely require much more random generation.
 	 * <br>
 	 * This can be used both as an optimization for generating Gaussian random values, and as a way of generating
 	 * Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
