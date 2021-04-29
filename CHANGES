@@ -1,0 +1,7 @@
+[0.1.1]
+- [BREAKING CHANGE] Randomized algorithms no longer use a `java.util.Random`, and instead take a `com.github.tommyettinger.ds.support.EnhancedRandom`.
+- API addition: EnhancedRandom#nextInclusiveDouble(), EnhancedRandom#nextExclusiveDouble(), float versions of those, and Equidistant versions are all added.
+- GWT support has been fixed; it probably never worked before.
+
+[0.1.0]
+- First release published to Maven Central.

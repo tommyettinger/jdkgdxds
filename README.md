@@ -54,16 +54,18 @@ the JDK only offers `int`, `long`, and `double`, and primitive `Comparator`s (wh
 because there are some randomized methods here and `java.util.SplittableRandom` isn't available everywhere, an alternative
 high-quality and very-fast random number generator is here, `com.github.tommyettinger.ds.support.LaserRandom`, which extends
 `java.util.Random` for maximum compatibility. It implements `com.github.tommyettinger.ds.support.EnhancedRandom`, an interface
-that allows external code to match the API used by LaserRandom; EnhancedRandom is mostly default methods.
+that allows external code to match the API used by LaserRandom; EnhancedRandom is mostly default methods. There's also another
+implementation of EnhancedRandom here, `com.github.tommyettinger.ds.support.TricycleRandom`, which can be significantly faster
+but doesn't always produce very-random numbers right at the start of usage.
 
 ## How do I get it?
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.1.0'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.1.1'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.1.0:sources'` to its dependencies, and in its
+`implementation 'com.github.tommyettinger:jdkgdxds:0.1.1:sources'` to its dependencies, and in its
 `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />
@@ -71,15 +73,15 @@ cases; if it can't be found, you may need the repository `mavenCentral()` . If y
 in with the other `inherits` lines.
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/87537bb415).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/9e13d2150e).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:87537bb415'` or `api 'com.github.tommyettinger:jdkgdxds:87537bb415'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:9e13d2150e'` or `api 'com.github.tommyettinger:jdkgdxds:9e13d2150e'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
-project). If you have an HTML module, add `implementation 'com.github.tommyettinger:jdkgdxds:87537bb415:sources'` to its
+project). If you have an HTML module, add `implementation 'com.github.tommyettinger:jdkgdxds:9e13d2150e:sources'` to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. `87537bb415` is an example of a recent commit, and can be
+in with the other `inherits` lines. `9e13d2150e` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
