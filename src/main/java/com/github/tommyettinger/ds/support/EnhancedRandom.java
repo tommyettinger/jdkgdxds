@@ -60,7 +60,12 @@ public interface EnhancedRandom {
 	 * Sets a selected state value to the given long {@code value}. The number of possible
 	 * selections is up to the implementing class, but negative values for {@code selection}
 	 * are typically not tolerated. Implementors are permitted to change {@code value} if it
-	 * is not valid, but they should not alter it if it is valid.
+	 * is not valid, but they should not alter it if it is valid. The default implementation
+	 * calls {@link #setSeed(long)} with {@code value}, which doesn't need changing if the
+	 * generator has one state that is set verbatim by setSeed(). Otherwise, this method
+	 * should be implemented when {@link #getSelectedState(int)} is and the state is allowed
+	 * to be set by users. Having accurate ways to get and set the full state of a random
+	 * number generator makes it much easier to serialize and deserialize that class.
 	 * @param selection used to select which state variable to set; generally non-negative
 	 * @param value the exact value to use for the selected state, if valid
 	 */
@@ -85,6 +90,9 @@ public interface EnhancedRandom {
 	 * chosen bit values, each of which is (approximately) equally
 	 * likely to be {@code 0} or {@code 1}.
 	 * <p>
+	 * Note that you can give this values for {@code bits} that are outside its expected range of 1 to 32,
+	 * but the value used, as long as bits is positive, will effectively be {@code bits % 32}. As stated
+	 * before, a value of 0 for bits is the same as a value of 32.<p>
 	 *
 	 * @param bits the amount of random bits to request, from 1 to 32
 	 * @return the next pseudorandom value from this random number
@@ -326,6 +334,12 @@ public interface EnhancedRandom {
 	 * {@code boolean} value is pseudorandomly generated and returned.  The
 	 * values {@code true} and {@code false} are produced with
 	 * (approximately) equal probability.
+	 * <br>
+	 * The default implementation simply returns a sign check on {@link #nextLong()},
+	 * returning true if the generated long is negative. This is typically the safest
+	 * way to implement this method; many types of generators have less statistical
+	 * quality on their lowest bit, so just returning based on the lowest bit isn't
+	 * always a good idea.
 	 *
 	 * @return the next pseudorandom, uniformly distributed
 	 * {@code boolean} value from this random number generator's
@@ -348,11 +362,12 @@ public interface EnhancedRandom {
 	 * where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
 	 * produced with (approximately) equal probability.
 	 *
-	 * <p>The hedge "approximately" is used in the foregoing description only
-	 * because the next method is only approximately an unbiased source of
-	 * independently chosen bits. If it were a perfect source of randomly
-	 * chosen bits, then the algorithm shown would choose {@code float}
-	 * values from the stated range with perfect uniformity.<p>
+	 * <p>The default implementation uses the upper 24 bits of {@link #nextLong()},
+	 * with an unsigned right shift and a multiply by a very small float
+	 * ({@code 5.9604645E-8f} or {@code 0x1p-24f}). It tends to be fast if
+	 * nextLong() is fast, but alternative implementations could use 24 bits of
+	 * {@link #nextInt()} (or just {@link #next(int)}, giving it {@code 24})
+	 * if that generator doesn't efficiently generate 64-bit longs.<p>
 	 *
 	 * @return the next pseudorandom, uniformly distributed {@code float}
 	 * value between {@code 0.0} and {@code 1.0} from this
@@ -395,11 +410,11 @@ public interface EnhancedRandom {
 	 * range {@code 0.0d} (inclusive) to {@code 1.0d} (exclusive), is
 	 * pseudorandomly generated and returned.
 	 *
-	 * <p>The hedge "approximately" is used in the foregoing description only
-	 * because the {@code next} method is only approximately an unbiased
-	 * source of independently chosen bits. If it were a perfect source of
-	 * randomly chosen bits, then the algorithm shown would choose
-	 * {@code double} values from the stated range with perfect uniformity.
+	 * <p>The default implementation uses the upper 53 bits of {@link #nextLong()},
+	 * with an unsigned right shift and a multiply by a very small double
+	 * ({@code 1.1102230246251565E-16}, or {@code 0x1p-53}). It should perform well
+	 * if nextLong() performs well, and is expected to perform less well if the
+	 * generator naturally produces 32 or fewer bits at a time.<p>
 	 *
 	 * @return the next pseudorandom, uniformly distributed {@code double}
 	 * value between {@code 0.0} and {@code 1.0} from this
@@ -520,7 +535,8 @@ public interface EnhancedRandom {
 	 * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
 	 * obtained by one call to {@link #nextLong()}. This uses {@link BitConversion#longBitsToDouble(long)} and
 	 * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
-	 * and this is branchless and loopless, unlike the original algorithm by Allen Downey.
+	 * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
+	 * {@link #nextExclusiveDoubleEquidistant()}, this method performs better on at least HotSpot JVMs.
 	 * @return a random uniform double between 0 and 1 (both exclusive)
 	 */
 	default double nextExclusiveDouble (){
@@ -534,8 +550,8 @@ public interface EnhancedRandom {
 	 * values between 1.1102230246251565E-16 and 0.9999999999999999, or 0x1.0p-53 and 0x1.fffffffffffffp-1 in hex
 	 * notation. It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
 	 * 1, respectively. Some usages may prefer {@link #nextExclusiveDouble()}, which is
-	 * better-distributed if you consider the bit representation of the returned doubles, may have different
-	 * performance, and can return doubles that much closer to 0 than this can.
+	 * better-distributed if you consider the bit representation of the returned doubles, tends to perform
+	 * better, and can return doubles that much closer to 0 than this can.
 	 * <br>
 	 * The default implementation simply uses {@link #nextLong(long)} to get a uniformly-chosen long between 1 and
 	 * (2 to the 53) - 1, both inclusive, and multiplies it by (2 to the -53). Using larger values than (2 to the
@@ -584,7 +600,8 @@ public interface EnhancedRandom {
 	 * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
 	 * obtained by one call to {@link #nextLong()}. This uses {@link BitConversion#intBitsToFloat(int)} and
 	 * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
-	 * and this is branchless and loopless, unlike the original algorithm by Allen Downey.
+	 * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
+	 * {@link #nextExclusiveFloatEquidistant()}, this method performs better on at least HotSpot JVMs.
 	 * @return a random uniform float between 0 and 1 (both exclusive)
 	 */
 	default float nextExclusiveFloat(){
@@ -598,8 +615,8 @@ public interface EnhancedRandom {
 	 * values between 5.9604645E-8 and 0.99999994, or 0x1.0p-24 and 0x1.fffffep-1 in hex notation.
 	 * It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
 	 * 1, respectively. Some usages may prefer {@link #nextExclusiveFloat()}, which is
-	 * better-distributed if you consider the bit representation of the returned floats, may have different
-	 * performance, and can return floats that much closer to 0 than this can.
+	 * better-distributed if you consider the bit representation of the returned floats, tends to perform
+	 * better, and can return floats that much closer to 0 than this can.
 	 * <br>
 	 * The default implementation simply uses {@link #nextInt(int)} to get a uniformly-chosen int between 1 and
 	 * (2 to the 24) - 1, both inclusive, and multiplies it by (2 to the -24). Using larger values than (2 to the
