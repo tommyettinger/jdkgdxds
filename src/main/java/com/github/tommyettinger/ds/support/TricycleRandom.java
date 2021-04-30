@@ -86,10 +86,19 @@ public class TricycleRandom extends Random implements EnhancedRandom {
         this.stateC = stateC;
     }
 
+    /**
+     * This generator has 3 {@code long} states, so this returns 3.
+     * @return 3 (three)
+     */
     public int getStateCount() {
         return 3;
     }
 
+    /**
+     * Gets the state determined by {@code selection}, as-is.
+     * @param selection used to select which state variable to get; generally 0, 1, or 2
+     * @return the value of the selected state
+     */
     public long getSelectedState(int selection) {
         switch (selection & 3) {
             case 0:
@@ -101,41 +110,34 @@ public class TricycleRandom extends Random implements EnhancedRandom {
         }
     }
 
-    public long getStateA() {
-        return stateA;
-    }
-
-    public void setStateA(long stateA) {
-        this.stateA = stateA;
-    }
-
-    public long getStateB() {
-        return stateB;
-    }
-
-    public void setStateB(long stateB) {
-        this.stateB = stateB;
-    }
-
-    public long getStateC() {
-        return stateC;
-    }
-
-    public void setStateC(long stateC) {
-        this.stateC = stateC;
-    }
-
+    /**
+     * Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
+     * Selections 0, 1, and 2 refer to states A, B, and C, and if the selection is anything
+     * else, this treats it as 2 and sets stateC.
+     * @param selection used to select which state variable to set; generally 0, 1, or 2
+     * @param value the exact value to use for the selected state, if valid
+     */
     public void setSelectedState(int selection, long value) {
         switch (selection & 3) {
-            case 0:
-                stateA = value;
-            case 1:
-                stateB = value;
-            default:
-                stateC = value;
+        case 0:
+            stateA = value;
+            break;
+        case 1:
+            stateB = value;
+            break;
+        default:
+            stateC = value;
+            break;
         }
     }
 
+    /**
+     * This initializes all 3 states of the generator to random values based on the given seed.
+     * (2 to the 64) possible initial generator states can be produced here, all with a different
+     * first value returned by {@link #nextLong()} (because {@code stateA} is guaranteed to be
+     * different for every different {@code seed}).
+     * @param seed the initial seed; may be any long
+     */
     public void setSeed(long seed) {
         long x = (seed += 0x9E3779B97F4A7C15L);
         x ^= x >>> 27;
@@ -155,6 +157,62 @@ public class TricycleRandom extends Random implements EnhancedRandom {
         x ^= x >>> 33;
         x *= 0x1C69B3F74AC4AE35L;
         stateC = x ^ x >>> 27;
+    }
+
+    public long getStateA() {
+        return stateA;
+    }
+
+    /**
+     * Sets the first part of the state. Note that if you call {@link #nextLong()}
+     * immediately after this, it will return the given {@code stateA} as-is, so you
+     * may want to call some random generation methods (such as nextLong()) and discard
+     * the results after setting the state.
+     * @param stateA can be any long
+     */
+    public void setStateA(long stateA) {
+        this.stateA = stateA;
+    }
+
+    public long getStateB() {
+        return stateB;
+    }
+
+    /**
+     * Sets the second part of the state.
+     * @param stateB can be any long
+     */
+    public void setStateB(long stateB) {
+        this.stateB = stateB;
+    }
+
+    public long getStateC() {
+        return stateC;
+    }
+
+    /**
+     * Sets the third part of the state.
+     * @param stateC can be any long
+     */
+    public void setStateC(long stateC) {
+        this.stateC = stateC;
+    }
+
+    /**
+     * Sets the state completely to the given three state variables.
+     * This is the same as calling {@link #setStateA(long)}, {@link #setStateB(long)},
+     * and {@link #setStateC(long)} as a group. You may want to call {@link #nextLong()}
+     * a few times after setting the states like this, unless the value for stateA (in
+     * particular) is already adequately random; the first call to {@link #nextLong()},
+     * if it is made immediately after calling this, will return {@code stateA} as-is.
+     * @param stateA the first state; this will be returned as-is if the next call is to {@link #nextLong()}
+     * @param stateB the second state; can be any long
+     * @param stateC the third state; can be any long
+     */
+    public void setState(long stateA, long stateB, long stateC) {
+        this.stateA = stateA;
+        this.stateB = stateB;
+        this.stateC = stateC;
     }
 
     public long nextLong() {
