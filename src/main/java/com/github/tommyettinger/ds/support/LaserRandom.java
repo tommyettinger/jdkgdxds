@@ -13,7 +13,10 @@ import java.util.Random;
  * {@link #getStateA()}, {@link #getStateB()}, {@link #setStateA(long)}, and {@link #setStateB(long)} (which
  * is useful if you want to save a LaserRandom and reload it later), and there's bounded int and long
  * generators which can use a negative number as their exclusive outer bound {@link #nextSignedInt(int)} and
- * {@link #nextSignedLong(long)}, plus overloads that take an inner bound).
+ * {@link #nextSignedLong(long)}, plus overloads that take an inner bound). There's float and double
+ * generators that are inclusive on both ends ({@link #nextInclusiveFloat()}, and
+ * {@link #nextInclusiveDouble()}. There's {@link #nextGaussian()}, which is implemented differently from
+ * java.util.Random and always advances the state once.
  * <br>
  * Every method defined in this class advances the state by the same amount unless otherwise documented (only
  * {@link #nextTriangular()} and {@link #nextTriangular(float)} advance the state twice). The state can
@@ -55,7 +58,14 @@ import java.util.Random;
  * almost all of EnhancedRandom consists of either default methods that this implements explicitly, or to
  * provide a common interface for pseudo-random number generators on the JVM. This class avoids using the
  * Override annotation specifically because copying the class and removing the EnhancedRandom implementation
- * would cause compile errors if Override annotations were present.
+ * would cause compile errors if Override annotations were present. If you do keep this class implementing
+ * EnhancedRandom, then that permits some extra methods to come in via default implementations, like
+ * nextExclusiveFloat() (which uses the BitConversion class here in jdkgdxds), minIntOf(), maxLongOf(), etc.
+ * <br>
+ * You may want to compare this class with TricycleRandom in the same package; TricycleRandom has a larger
+ * state size (and should usually have a larger period), is usually faster, and also implements all of
+ * EnhancedRandom (except for {@link #skip(long)}), but doesn't randomize the first result it returns, so
+ * if the seeding has a pattern, then the start of its sequence will have a pattern.
  * <br>
  * Pew pew! Lasers!
  *
@@ -596,17 +606,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 		return innerBound + nextDouble() * (outerBound - innerBound);
 	}
 
-	/**
-	 * Refer to (and preferably use) {@link EnhancedRandom#probit(double)} instead of using the code here.
-	 * @see EnhancedRandom#probit(double)
-	 * @param d a double between 0 and 1, typically exclusive
-	 * @return a Gaussian-distributed double with a mean of 0 and a standard deviation of 1.
-	 * @deprecated Use {@link EnhancedRandom#probit(double)} instead.
-	 */
-	@Deprecated
-	public static double probit(double d) {
-		return EnhancedRandom.probit(d);
-	}
 	/**
 	 * This is just like {@link #nextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
 	 * It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
