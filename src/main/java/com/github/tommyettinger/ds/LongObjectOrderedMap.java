@@ -208,6 +208,33 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 		return null;
 	}
 
+	@Nullable
+	@Override
+	public V putOrDefault (long key, @Nullable V value, @Nullable V defaultValue) {
+		if (key == 0) {
+			V oldValue = defaultValue;
+			if (hasZeroValue) { oldValue = zeroValue; } else {
+				size++;
+				keys.add(key);
+			}
+			hasZeroValue = true;
+			zeroValue = value;
+			return oldValue;
+		}
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			V oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		keys.add(key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
+	}
+
 	public void putAll (LongObjectOrderedMap<? extends V> map) {
 		ensureCapacity(map.size);
 		LongList ks = map.keys;
