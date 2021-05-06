@@ -254,7 +254,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
 	@Nullable
-	public V setIndex (int index, V v) {
+	public V setAt (int index, V v) {
 		if (index < 0 || index >= size) { return null; }
 		final int pos = locateKey(keys.get(index));
 		final V oldValue = valueTable[pos];

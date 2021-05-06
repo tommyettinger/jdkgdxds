@@ -270,7 +270,7 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 * @param index the index in the iteration order to set {@code v} at
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
-	public long setIndex (int index, long v) {
+	public long setAt (int index, long v) {
 		if (index < 0 || index >= size) { return defaultValue; }
 		final int pos = locateKey(keys.get(index));
 		final long oldValue = valueTable[pos];

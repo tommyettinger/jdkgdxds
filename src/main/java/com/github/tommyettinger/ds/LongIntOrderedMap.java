@@ -301,7 +301,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * @param index the index in the iteration order to set {@code v} at
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
-	public int setIndex (int index, int v) {
+	public int setAt (int index, int v) {
 		if (index < 0 || index >= size) { return defaultValue; }
 		final int pos = locateKey(keys.get(index));
 		final int oldValue = valueTable[pos];
