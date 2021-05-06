@@ -241,6 +241,22 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 
 	}
 
+	@Override
+	public float getAndIncrement (int key, float defaultValue, float increment) {
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			float oldValue = valueTable[i];
+			valueTable[i] += increment;
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = defaultValue + increment;
+		keys.add(key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
+	}
+
 	/**
 	 * Changes the key {@code before} to {@code after} without changing its position in the order or its value. Returns true if
 	 * {@code after} has been added to the IntFloatOrderedMap and {@code before} has been removed; returns false if {@code after} is

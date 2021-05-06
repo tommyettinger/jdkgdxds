@@ -238,7 +238,22 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
 		if (keyTable.length < tableSize) { resize(tableSize); }
 		keys.ensureCapacity(size + additionalCapacity);
+	}
 
+	@Override
+	public long getAndIncrement (int key, long defaultValue, long increment) {
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			long oldValue = valueTable[i];
+			valueTable[i] += increment;
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = defaultValue + increment;
+		keys.add(key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
 	}
 
 	/**

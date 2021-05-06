@@ -210,6 +210,22 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 
 	}
 
+	@Override
+	public long getAndIncrement (K key, long defaultValue, long increment) {
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			long oldValue = valueTable[i];
+			valueTable[i] += increment;
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = defaultValue + increment;
+		keys.add(key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
+	}
+
 	/**
 	 * Changes the key {@code before} to {@code after} without changing its position in the order or its value. Returns true if
 	 * {@code after} has been added to the ObjectLongOrderedMap and {@code before} has been removed; returns false if {@code after} is
