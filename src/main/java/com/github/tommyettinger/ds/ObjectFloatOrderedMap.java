@@ -179,6 +179,22 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		return defaultValue;
 	}
 
+	@Override
+	public float putOrDefault (K key, float value, float defaultValue) {
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			float oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		keys.add(key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
+	}
+
 	public void putAll (ObjectFloatOrderedMap<? extends K> map) {
 		ensureCapacity(map.size);
 		for (int i = 0, kl = map.size; i < kl; i++) {

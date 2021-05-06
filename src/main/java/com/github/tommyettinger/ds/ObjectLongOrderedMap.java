@@ -152,13 +152,6 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 		return defaultValue;
 	}
 
-	public void putAll (ObjectLongOrderedMap<? extends K> map) {
-		ensureCapacity(map.size);
-		for (int i = 0, kl = map.size; i < kl; i++) {
-			put(map.keyAt(i), map.getAt(i));
-		}
-	}
-
 	/**
 	 * Puts the given key and value into this map at the given index in its order.
 	 * If the key is already present at a different index, it is moved to the given index and its
@@ -184,6 +177,29 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 		keys.insert(index, key);
 		if (++size >= threshold) { resize(keyTable.length << 1); }
 		return defaultValue;
+	}
+
+	@Override
+	public long putOrDefault (K key, long value, long defaultValue) {
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			long oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		keys.add(key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
+	}
+
+	public void putAll (ObjectLongOrderedMap<? extends K> map) {
+		ensureCapacity(map.size);
+		for (int i = 0, kl = map.size; i < kl; i++) {
+			put(map.keyAt(i), map.getAt(i));
+		}
 	}
 
 	@Override

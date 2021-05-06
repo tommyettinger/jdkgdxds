@@ -206,6 +206,32 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 		return defaultValue;
 	}
 
+	@Override
+	public float putOrDefault (int key, float value, float defaultValue) {
+		if (key == 0) {
+			float oldValue = defaultValue;
+			if (hasZeroValue) { oldValue = zeroValue; } else {
+				size++;
+				keys.add(key);
+			}
+			hasZeroValue = true;
+			zeroValue = value;
+			return oldValue;
+		}
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			float oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		keys.add(key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
+	}
+
 	public void putAll (IntFloatOrderedMap map) {
 		ensureCapacity(map.size);
 		IntList ks = map.keys;

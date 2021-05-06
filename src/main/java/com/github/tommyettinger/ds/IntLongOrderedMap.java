@@ -206,6 +206,32 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 		return defaultValue;
 	}
 
+	@Override
+	public long putOrDefault (int key, long value, long defaultValue) {
+		if (key == 0) {
+			long oldValue = defaultValue;
+			if (hasZeroValue) { oldValue = zeroValue; } else {
+				size++;
+				keys.add(key);
+			}
+			hasZeroValue = true;
+			zeroValue = value;
+			return oldValue;
+		}
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			long oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		keys.add(key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
+	}
+
 	public void putAll (IntLongOrderedMap map) {
 		ensureCapacity(map.size);
 		IntList ks = map.keys;

@@ -179,6 +179,22 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 		return defaultValue;
 	}
 
+	@Override
+	public int putOrDefault (K key, int value, int defaultValue) {
+		int i = locateKey(key);
+		if (i >= 0) { // Existing key was found.
+			int oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
+		}
+		i = ~i; // Empty space was found.
+		keyTable[i] = key;
+		valueTable[i] = value;
+		keys.add(key);
+		if (++size >= threshold) { resize(keyTable.length << 1); }
+		return defaultValue;
+	}
+
 	public void putAll (ObjectIntOrderedMap<? extends K> map) {
 		ensureCapacity(map.size);
 		for (int i = 0, kl = map.size; i < kl; i++) {
