@@ -80,7 +80,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * {@link LaserRandom}, because it implements a fast {@link LaserRandom#nextInt(int)} method.
 	 *
 	 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
-	 * @return a random T key or item from this Ordered
+	 * @return a random T value from this Ordered
 	 */
 	default T random (EnhancedRandom rng) {
 		return order().random(rng);
@@ -193,7 +193,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
 		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
-		 * @return a random int key or item from this Ordered.OfInt
+		 * @return a random int value from this Ordered.OfInt
 		 */
 		default int random (EnhancedRandom rng) {
 			return order().random(rng);
@@ -301,7 +301,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
 		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
-		 * @return a random long key or item from this Ordered.OfLong
+		 * @return a random long value from this Ordered.OfLong
 		 */
 		default long random (EnhancedRandom rng) {
 			return order().random(rng);
@@ -409,7 +409,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
 		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
-		 * @return a random float key or item from this Ordered.OfFloat
+		 * @return a random float value from this Ordered.OfFloat
 		 */
 		default float random (EnhancedRandom rng) {
 			return order().random(rng);
@@ -518,7 +518,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
 		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
-		 * @return a random double key or item from this Ordered.OfDouble
+		 * @return a random double value from this Ordered.OfDouble
 		 */
 		default double random (EnhancedRandom rng) {
 			return order().random(rng);
@@ -623,7 +623,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
 		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
-		 * @return a random short key or item from this Ordered.OfShort
+		 * @return a random short value from this Ordered.OfShort
 		 */
 		default short random (EnhancedRandom rng) {
 			return order().random(rng);
@@ -728,7 +728,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
 		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
-		 * @return a random byte key or item from this Ordered.OfByte
+		 * @return a random byte value from this Ordered.OfByte
 		 */
 		default byte random (EnhancedRandom rng) {
 			return order().random(rng);
@@ -833,7 +833,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
 		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
-		 * @return a random char key or item from this Ordered.OfChar
+		 * @return a random char value from this Ordered.OfChar
 		 */
 		default char random (EnhancedRandom rng) {
 			return order().random(rng);
@@ -938,7 +938,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
 		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
-		 * @return a random boolean key or item from this Ordered.OfBoolean
+		 * @return a random boolean value from this Ordered.OfBoolean
 		 */
 		default boolean random (EnhancedRandom rng) {
 			return order().random(rng);

@@ -39,6 +39,10 @@ public interface PrimitiveCollection<T, T_CONS> {
 		return size() == 0;
 	}
 
+	default boolean notEmpty () {
+		return size() != 0;
+	}
+
 	PrimitiveIterator<T, T_CONS> iterator ();
 
 	void clear ();
@@ -177,6 +181,27 @@ public interface PrimitiveCollection<T, T_CONS> {
 				action.accept(it.nextInt());
 		}
 
+		/**
+		 * Attempts to get the first item in this PrimitiveCollection, where "first" is only
+		 * defined meaningfully if this type is ordered. Many times, this applies to a class
+		 * that is not ordered, and in those cases it can get an arbitrary item, and that item
+		 * is permitted to be different for different calls to first().
+		 * <br>
+		 * This is useful for cases where you would normally be able to call something like
+		 * {@link java.util.List#get(int)} to get an item, any item, from a collection, but
+		 * whatever class you're using doesn't necessarily provide a get(), first(), peek(),
+		 * or similar method.
+		 * <br>
+		 * The default implementation uses {@link #iterator()}, tries to get the first item,
+		 * or throws an IllegalStateException if this is empty.
+		 * @throws IllegalStateException if this is empty
+		 * @return the first item in this PrimitiveCollection, as produced by {@link #iterator()}
+		 */
+		default int first() {
+			PrimitiveIterator.OfInt it = iterator();
+			if(it.hasNext()) return it.nextInt();
+			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
+		}
 	}
 
 	interface OfLong extends PrimitiveCollection<Long, LongConsumer> {
@@ -305,6 +330,28 @@ public interface PrimitiveCollection<T, T_CONS> {
 			PrimitiveIterator.OfLong it = iterator();
 			while (it.hasNext())
 				action.accept(it.nextLong());
+		}
+
+		/**
+		 * Attempts to get the first item in this PrimitiveCollection, where "first" is only
+		 * defined meaningfully if this type is ordered. Many times, this applies to a class
+		 * that is not ordered, and in those cases it can get an arbitrary item, and that item
+		 * is permitted to be different for different calls to first().
+		 * <br>
+		 * This is useful for cases where you would normally be able to call something like
+		 * {@link java.util.List#get(int)} to get an item, any item, from a collection, but
+		 * whatever class you're using doesn't necessarily provide a get(), first(), peek(),
+		 * or similar method.
+		 * <br>
+		 * The default implementation uses {@link #iterator()}, tries to get the first item,
+		 * or throws an IllegalStateException if this is empty.
+		 * @throws IllegalStateException if this is empty
+		 * @return the first item in this PrimitiveCollection, as produced by {@link #iterator()}
+		 */
+		default long first() {
+			PrimitiveIterator.OfLong it = iterator();
+			if(it.hasNext()) return it.nextLong();
+			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
 		}
 	}
 
@@ -435,6 +482,28 @@ public interface PrimitiveCollection<T, T_CONS> {
 			while (it.hasNext())
 				action.accept(it.nextFloat());
 		}
+
+		/**
+		 * Attempts to get the first item in this PrimitiveCollection, where "first" is only
+		 * defined meaningfully if this type is ordered. Many times, this applies to a class
+		 * that is not ordered, and in those cases it can get an arbitrary item, and that item
+		 * is permitted to be different for different calls to first().
+		 * <br>
+		 * This is useful for cases where you would normally be able to call something like
+		 * {@link java.util.List#get(int)} to get an item, any item, from a collection, but
+		 * whatever class you're using doesn't necessarily provide a get(), first(), peek(),
+		 * or similar method.
+		 * <br>
+		 * The default implementation uses {@link #iterator()}, tries to get the first item,
+		 * or throws an IllegalStateException if this is empty.
+		 * @throws IllegalStateException if this is empty
+		 * @return the first item in this PrimitiveCollection, as produced by {@link #iterator()}
+		 */
+		default float first() {
+			FloatIterator it = iterator();
+			if(it.hasNext()) return it.nextFloat();
+			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
+		}
 	}
 
 	interface OfDouble extends PrimitiveCollection<Double, DoubleConsumer> {
@@ -563,6 +632,28 @@ public interface PrimitiveCollection<T, T_CONS> {
 			PrimitiveIterator.OfDouble it = iterator();
 			while (it.hasNext())
 				action.accept(it.nextDouble());
+		}
+
+		/**
+		 * Attempts to get the first item in this PrimitiveCollection, where "first" is only
+		 * defined meaningfully if this type is ordered. Many times, this applies to a class
+		 * that is not ordered, and in those cases it can get an arbitrary item, and that item
+		 * is permitted to be different for different calls to first().
+		 * <br>
+		 * This is useful for cases where you would normally be able to call something like
+		 * {@link java.util.List#get(int)} to get an item, any item, from a collection, but
+		 * whatever class you're using doesn't necessarily provide a get(), first(), peek(),
+		 * or similar method.
+		 * <br>
+		 * The default implementation uses {@link #iterator()}, tries to get the first item,
+		 * or throws an IllegalStateException if this is empty.
+		 * @throws IllegalStateException if this is empty
+		 * @return the first item in this PrimitiveCollection, as produced by {@link #iterator()}
+		 */
+		default double first() {
+			PrimitiveIterator.OfDouble it = iterator();
+			if(it.hasNext()) return it.nextDouble();
+			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
 		}
 	}
 
@@ -693,6 +784,28 @@ public interface PrimitiveCollection<T, T_CONS> {
 			while (it.hasNext())
 				action.accept(it.nextShort());
 		}
+
+		/**
+		 * Attempts to get the first item in this PrimitiveCollection, where "first" is only
+		 * defined meaningfully if this type is ordered. Many times, this applies to a class
+		 * that is not ordered, and in those cases it can get an arbitrary item, and that item
+		 * is permitted to be different for different calls to first().
+		 * <br>
+		 * This is useful for cases where you would normally be able to call something like
+		 * {@link java.util.List#get(int)} to get an item, any item, from a collection, but
+		 * whatever class you're using doesn't necessarily provide a get(), first(), peek(),
+		 * or similar method.
+		 * <br>
+		 * The default implementation uses {@link #iterator()}, tries to get the first item,
+		 * or throws an IllegalStateException if this is empty.
+		 * @throws IllegalStateException if this is empty
+		 * @return the first item in this PrimitiveCollection, as produced by {@link #iterator()}
+		 */
+		default short first() {
+			ShortIterator it = iterator();
+			if(it.hasNext()) return it.nextShort();
+			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
+		}
 	}
 
 	interface OfByte extends PrimitiveCollection<Byte, ByteConsumer> {
@@ -821,6 +934,28 @@ public interface PrimitiveCollection<T, T_CONS> {
 			ByteIterator it = iterator();
 			while (it.hasNext())
 				action.accept(it.nextByte());
+		}
+
+		/**
+		 * Attempts to get the first item in this PrimitiveCollection, where "first" is only
+		 * defined meaningfully if this type is ordered. Many times, this applies to a class
+		 * that is not ordered, and in those cases it can get an arbitrary item, and that item
+		 * is permitted to be different for different calls to first().
+		 * <br>
+		 * This is useful for cases where you would normally be able to call something like
+		 * {@link java.util.List#get(int)} to get an item, any item, from a collection, but
+		 * whatever class you're using doesn't necessarily provide a get(), first(), peek(),
+		 * or similar method.
+		 * <br>
+		 * The default implementation uses {@link #iterator()}, tries to get the first item,
+		 * or throws an IllegalStateException if this is empty.
+		 * @throws IllegalStateException if this is empty
+		 * @return the first item in this PrimitiveCollection, as produced by {@link #iterator()}
+		 */
+		default byte first() {
+			ByteIterator it = iterator();
+			if(it.hasNext()) return it.nextByte();
+			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
 		}
 	}
 
@@ -951,6 +1086,28 @@ public interface PrimitiveCollection<T, T_CONS> {
 			while (it.hasNext())
 				action.accept(it.nextChar());
 		}
+
+		/**
+		 * Attempts to get the first item in this PrimitiveCollection, where "first" is only
+		 * defined meaningfully if this type is ordered. Many times, this applies to a class
+		 * that is not ordered, and in those cases it can get an arbitrary item, and that item
+		 * is permitted to be different for different calls to first().
+		 * <br>
+		 * This is useful for cases where you would normally be able to call something like
+		 * {@link java.util.List#get(int)} to get an item, any item, from a collection, but
+		 * whatever class you're using doesn't necessarily provide a get(), first(), peek(),
+		 * or similar method.
+		 * <br>
+		 * The default implementation uses {@link #iterator()}, tries to get the first item,
+		 * or throws an IllegalStateException if this is empty.
+		 * @throws IllegalStateException if this is empty
+		 * @return the first item in this PrimitiveCollection, as produced by {@link #iterator()}
+		 */
+		default char first() {
+			CharIterator it = iterator();
+			if(it.hasNext()) return it.nextChar();
+			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
+		}
 	}
 
 	interface OfBoolean extends PrimitiveCollection<Boolean, BooleanConsumer> {
@@ -1079,6 +1236,28 @@ public interface PrimitiveCollection<T, T_CONS> {
 			BooleanIterator it = iterator();
 			while (it.hasNext())
 				action.accept(it.nextBoolean());
+		}
+
+		/**
+		 * Attempts to get the first item in this PrimitiveCollection, where "first" is only
+		 * defined meaningfully if this type is ordered. Many times, this applies to a class
+		 * that is not ordered, and in those cases it can get an arbitrary item, and that item
+		 * is permitted to be different for different calls to first().
+		 * <br>
+		 * This is useful for cases where you would normally be able to call something like
+		 * {@link java.util.List#get(int)} to get an item, any item, from a collection, but
+		 * whatever class you're using doesn't necessarily provide a get(), first(), peek(),
+		 * or similar method.
+		 * <br>
+		 * The default implementation uses {@link #iterator()}, tries to get the first item,
+		 * or throws an IllegalStateException if this is empty.
+		 * @throws IllegalStateException if this is empty
+		 * @return the first item in this PrimitiveCollection, as produced by {@link #iterator()}
+		 */
+		default boolean first() {
+			BooleanIterator it = iterator();
+			if(it.hasNext()) return it.nextBoolean();
+			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
 		}
 	}
 }
