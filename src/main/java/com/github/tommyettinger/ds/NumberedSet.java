@@ -303,6 +303,12 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		map.setLoadFactor(loadFactor);
 	}
 
+	public T first() {
+		if (size() == 0)
+			throw new IllegalStateException("Cannot get the first() item of an empty NumberedSet.");
+		return map.keyAt(0);
+	}
+
 	@Override
 	public int hashCode () {
 		return map.hashCode();

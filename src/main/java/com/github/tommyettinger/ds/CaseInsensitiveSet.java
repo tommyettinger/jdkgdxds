@@ -17,8 +17,6 @@ import java.util.Collection;
  * comparisons that are similarly case-insensitive, except for Georgian.
  */
 public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
-
-
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
 	 */

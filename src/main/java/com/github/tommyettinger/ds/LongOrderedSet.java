@@ -143,6 +143,12 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		return key;
 	}
 
+	@Override
+	public long first () {
+		if(size == 0) throw new IllegalStateException("Cannot get the first() item of an empty LongOrderedSet.");
+		return items.items[0];
+	}
+
 	/**
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
