@@ -134,8 +134,13 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		return super.remove(key) && items.remove(key);
 	}
 
+	/**
+	 * Removes and returns the item at the given index in this set's order.
+	 * @param index the index of the item to remove
+	 * @return the removed item
+	 */
 	public T removeAt (int index) {
-		T key = items.remove(index);
+		T key = items.removeAt(index);
 		super.remove(key);
 		return key;
 	}

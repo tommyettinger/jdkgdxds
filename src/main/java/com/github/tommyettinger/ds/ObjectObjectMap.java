@@ -268,6 +268,11 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		return defaultValue;
 	}
 
+	/**
+	 * Puts every key-value pair in the given map into this, with the values from the given map
+	 * overwriting the previous values if two keys are identical.
+	 * @param map a map with compatible key and value types; will not be modified
+	 */
 	public void putAll (ObjectObjectMap<? extends K, ? extends V> map) {
 		ensureCapacity(map.size);
 		K[] keyTable = map.keyTable;
@@ -390,6 +395,9 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * for each mapping from key {@code k} to value {@code v} in the
 	 * specified map.  The behavior of this operation is undefined if the
 	 * specified map is modified while the operation is in progress.
+	 * <br>
+	 * Note that {@link #putAll(ObjectObjectMap)} is more specific and can be
+	 * more efficient by using the internal details of this class.
 	 *
 	 * @param m mappings to be stored in this map
 	 * @throws UnsupportedOperationException if the {@code putAll} operation

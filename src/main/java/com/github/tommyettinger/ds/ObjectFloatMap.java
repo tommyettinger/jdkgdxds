@@ -260,6 +260,11 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		return defaultValue;
 	}
 
+	/**
+	 * Puts every key-value pair in the given map into this, with the values from the given map
+	 * overwriting the previous values if two keys are identical.
+	 * @param map a map with compatible key and value types; will not be modified
+	 */
 	public void putAll (ObjectFloatMap<? extends K> map) {
 		ensureCapacity(map.size);
 		K[] keyTable = map.keyTable;

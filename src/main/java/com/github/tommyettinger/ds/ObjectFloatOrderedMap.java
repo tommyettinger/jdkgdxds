@@ -195,6 +195,11 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		return defaultValue;
 	}
 
+	/**
+	 * Puts every key-value pair in the given map into this, with the values from the given map
+	 * overwriting the previous values if two keys are identical. This will put keys in the order of the given map.
+	 * @param map a map with compatible key and value types; will not be modified
+	 */
 	public void putAll (ObjectFloatOrderedMap<? extends K> map) {
 		ensureCapacity(map.size);
 		for (int i = 0, kl = map.size; i < kl; i++) {
@@ -208,8 +213,13 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		return super.remove(key);
 	}
 
+	/**
+	 * Removes the entry at the given index in the order, returning the value of that entry.
+	 * @param index the index of the entry to remove; must be at least 0 and less than {@link #size()}
+	 * @return the value of the removed entry
+	 */
 	public float removeAt (int index) {
-		return super.remove(keys.remove(index));
+		return super.remove(keys.removeAt(index));
 	}
 
 	/**

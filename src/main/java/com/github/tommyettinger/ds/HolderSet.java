@@ -54,8 +54,8 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * minus 1.
 	 */
 	protected int mask;
-	@Nullable protected transient ObjectSetIterator<T, K> iterator1;
-	@Nullable protected transient ObjectSetIterator<T, K> iterator2;
+	@Nullable protected transient HolderSetIterator<T, K> iterator1;
+	@Nullable protected transient HolderSetIterator<T, K> iterator2;
 	@Nullable protected transient Function<T, K> extractor;
 
 	/**
@@ -328,7 +328,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		return oldSize != size;
 	}
 
-	public boolean addAll (HolderSet<T, K> set) {
+	public boolean addAll (HolderSet<T, ?> set) {
 		ensureCapacity(set.size);
 		T[] keyTable = set.keyTable;
 		int oldSize = size;
@@ -473,6 +473,12 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		return i < 0 ? null : keyTable[i];
 	}
 
+	/**
+	 * Gets the (arbitrarily-chosen) first item in this HolderSet. Which item is "first" can change
+	 * when this resizes, and you can't rely on the order of items in an unordered set like this.
+	 * @throws IllegalStateException if this HolderSet is empty
+	 * @return the "first" item in this HolderSet; really an arbitrary item in this
+	 */
 	public T first () {
 		T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -480,7 +486,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 				return keyTable[i];
 			}
 		}
-		throw new IllegalStateException("ObjectSet is empty.");
+		throw new IllegalStateException("HolderSet is empty.");
 	}
 
 	/**
@@ -631,13 +637,13 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
 	 * Reuses one of two iterators for this set. For nested or multithreaded
-	 * iteration, use {@link ObjectSetIterator#ObjectSetIterator(HolderSet)}.
+	 * iteration, use {@link HolderSetIterator#HolderSetIterator(HolderSet)}.
 	 */
 	@Override
 	public Iterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ObjectSetIterator<>(this);
-			iterator2 = new ObjectSetIterator<>(this);
+			iterator1 = new HolderSetIterator<>(this);
+			iterator2 = new HolderSetIterator<>(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -651,14 +657,14 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		return iterator2;
 	}
 
-	public static class ObjectSetIterator<T, K> implements Iterable<T>, Iterator<T> {
+	public static class HolderSetIterator<T, K> implements Iterable<T>, Iterator<T> {
 		public boolean hasNext;
 
 		final HolderSet<T, K> set;
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public ObjectSetIterator (HolderSet<T, K> set) {
+		public HolderSetIterator (HolderSet<T, K> set) {
 			this.set = set;
 			reset();
 		}
@@ -729,7 +735,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		}
 
 		@Override
-		public ObjectSetIterator<T, K> iterator () {
+		public HolderSetIterator<T, K> iterator () {
 			return this;
 		}
 

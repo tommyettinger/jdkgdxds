@@ -153,7 +153,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		return true;
 	}
 
-	public boolean addAll (HolderOrderedSet<T, K> set) {
+	public boolean addAll (HolderOrderedSet<T, ?> set) {
 		ensureCapacity(set.size);
 		ObjectList<T> si = set.items;
 		int oldSize = size;
@@ -172,11 +172,27 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		return items.remove(super.get(key)) && super.remove(key);
 	}
 
+	/**
+	 * Removes and returns the item at the given index in this set's order.
+	 * @param index the index of the item to remove
+	 * @return the removed item
+	 */
 	public T removeAt (int index) {
-		T key = items.remove(index);
+		T key = items.removeAt(index);
 		assert extractor != null;
 		super.remove(extractor.apply(key));
 		return key;
+	}
+
+	/**
+	 * Gets the first item in the order.
+	 * @throws IllegalStateException if this is empty.
+	 * @return the first item in this set's order
+	 */
+	@Override
+	public T first () {
+		if(size == 0) throw new IllegalStateException("HolderOrderedSet is empty.");
+		return items.get(0);
 	}
 
 	/**
@@ -282,15 +298,15 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
 	 * Reuses one of two iterators, and does not permit nested iteration;
-	 * use {@link OrderedSetIterator#OrderedSetIterator(HolderOrderedSet)} to nest iterators.
+	 * use {@link HolderOrderedSetIterator#HolderOrderedSetIterator(HolderOrderedSet)} to nest iterators.
 	 *
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
 	public Iterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new OrderedSetIterator<>(this);
-			iterator2 = new OrderedSetIterator<>(this);
+			iterator1 = new HolderOrderedSetIterator<>(this);
+			iterator2 = new HolderOrderedSetIterator<>(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -324,10 +340,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		return toString(", ");
 	}
 
-	public static class OrderedSetIterator<T, K> extends ObjectSetIterator<T, K> {
+	public static class HolderOrderedSetIterator<T, K> extends HolderSetIterator<T, K> {
 		private final ObjectList<T> items;
 
-		public OrderedSetIterator (HolderOrderedSet<T, K> set) {
+		public HolderOrderedSetIterator (HolderOrderedSet<T, K> set) {
 			super(set);
 			items = set.items;
 		}

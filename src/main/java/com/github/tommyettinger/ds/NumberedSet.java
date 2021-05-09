@@ -177,12 +177,16 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		return false;
 	}
 
-	public boolean removeAt (int index) {
-		if (index < 0 || index >= size())
-			return false;
+	/**
+	 * Removes and returns the item at the given index in this set's order.
+	 * @param index the index of the item to remove
+	 * @return the removed item
+	 */
+	public T removeAt (int index) {
+		T old = map.keyAt(index);
 		map.removeAt(index);
 		renumber(index);
-		return true;
+		return old;
 	}
 
 	public void ensureCapacity (int additionalCapacity) {

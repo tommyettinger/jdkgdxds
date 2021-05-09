@@ -233,6 +233,11 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 		return defaultValue;
 	}
 
+	/**
+	 * Puts every key-value pair in the given map into this, with the values from the given map
+	 * overwriting the previous values if two keys are identical. This will put keys in the order of the given map.
+	 * @param map a map with compatible key and value types; will not be modified
+	 */
 	public void putAll (LongFloatOrderedMap map) {
 		ensureCapacity(map.size);
 		LongList ks = map.keys;
@@ -250,6 +255,11 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 		return super.remove(key);
 	}
 
+	/**
+	 * Removes the entry at the given index in the order, returning the value of that entry.
+	 * @param index the index of the entry to remove; must be at least 0 and less than {@link #size()}
+	 * @return the value of the removed entry
+	 */
 	public float removeAt (int index) {
 		return super.remove(keys.removeAt(index));
 	}

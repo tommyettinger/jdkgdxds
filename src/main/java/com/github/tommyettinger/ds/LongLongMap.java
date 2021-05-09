@@ -251,6 +251,11 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		return defaultValue;
 	}
 
+	/**
+	 * Puts every key-value pair in the given map into this, with the values from the given map
+	 * overwriting the previous values if two keys are identical.
+	 * @param map a map with compatible key and value types; will not be modified
+	 */
 	public void putAll (LongLongMap map) {
 		ensureCapacity(map.size);
 		if (map.hasZeroValue) {

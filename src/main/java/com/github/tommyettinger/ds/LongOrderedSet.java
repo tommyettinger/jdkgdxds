@@ -132,6 +132,11 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		return super.remove(key) && items.remove(key);
 	}
 
+	/**
+	 * Removes and returns the item at the given index in this set's order.
+	 * @param index the index of the item to remove
+	 * @return the removed item
+	 */
 	public long removeAt (int index) {
 		long key = items.removeAt(index);
 		super.remove(key);
