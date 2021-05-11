@@ -703,6 +703,36 @@ public interface EnhancedRandom {
 	EnhancedRandom copy ();
 
 	/**
+	 * Similar to {@link #copy()}, but fills this EnhancedRandom with the state of another EnhancedRandom, usually
+	 * (but not necessarily) one of the same type. If this class has the same {@link #getStateCount()} as other's
+	 * class, then this method copies the full state of other into this object. Otherwise, if this class has a
+	 * larger state count than other's class, then all of other's state is copied into the same selections in this
+	 * object, and the rest of this object's state is filled with {@code -1L} using
+	 * {@link #setSelectedState(int, long)}. If this class has a smaller state count than other's class, then only
+	 * part of other's state is copied, and this method stops when all of this object's states have been assigned.
+	 * <br>
+	 * If this class has restrictions on its state, they will be respected by the default implementation of this
+	 * method as long as {@link #setSelectedState(int, long)} behaves correctly for those restrictions. Note that
+	 * this method will default to throwing an UnsupportedOperationException unless {@link #getSelectedState(int)}
+	 * is implemented by other so its state can be accessed. This may also behave badly if
+	 * {@link #setSelectedState(int, long)} isn't implemented (it may be fine for some cases where the state count
+	 * is 1, but don't count on it). If other's class doesn't implement {@link #getStateCount()}, then this method
+	 * sets the entire state of this object to -1L; if this class doesn't implement getStateCount(), then this
+	 * method does nothing.
+	 * @param other another EnhancedRandom, typically with the same class as this one, to copy its state into this
+	 */
+	default void setWith(EnhancedRandom other){
+		final int myCount = getStateCount(), otherCount = other.getStateCount();
+		int i = 0;
+		for (; i < myCount && i < otherCount; i++) {
+			setSelectedState(i, other.getSelectedState(i));
+		}
+		for(; i < myCount; i++){
+			setSelectedState(i, -1L);
+		}
+	}
+
+	/**
 	 * A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
 	 * inputs correspond to high outputs, and similarly for the low range. This is centered on 0.0 and its standard
 	 * deviation seems to be 1.0 (the same as {@link java.util.Random#nextGaussian()}). If this is given an input of 0.0
