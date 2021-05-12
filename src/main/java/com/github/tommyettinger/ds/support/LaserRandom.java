@@ -944,4 +944,22 @@ public class LaserRandom extends Random implements EnhancedRandom {
 		}
 	}
 
+	@Override
+	public boolean equals (Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		LaserRandom that = (LaserRandom)o;
+
+		if (stateA != that.stateA)
+			return false;
+		return stateB == that.stateB;
+	}
+
+	@Override
+	public String toString () {
+		return "LaserRandom{" + "stateA=" + stateA + "L, stateB=" + stateB + "L}";
+	}
 }

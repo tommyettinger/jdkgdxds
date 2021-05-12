@@ -267,6 +267,22 @@ public class TricycleRandom extends Random implements EnhancedRandom {
         return EnhancedRandom.super.nextGaussian();
     }
 
+    @Override
+    public boolean equals (Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        TricycleRandom that = (TricycleRandom)o;
+
+        if (stateA != that.stateA)
+            return false;
+        if (stateB != that.stateB)
+            return false;
+        return stateC == that.stateC;
+    }
+
     public String toString() {
         return "TricycleRandom{" +
                 "stateA=" + stateA +

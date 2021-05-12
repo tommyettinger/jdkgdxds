@@ -788,6 +788,30 @@ public interface EnhancedRandom {
 	}
 
 	/**
+	 * Given two EnhancedRandom objects that could have the same or different classes,
+	 * this returns true if they have the same class and same state, or false otherwise.
+	 * Both of the arguments should implement {@link #getSelectedState(int)}, or this
+	 * will throw an UnsupportedOperationException. This can be useful for comparing
+	 * EnhancedRandom classes that do not implement equals(), for whatever reason.
+	 * @param left an EnhancedRandom to compare for equality
+	 * @param right another EnhancedRandom to compare for equality
+	 * @return true if the two EnhancedRandom objects have the same class and state, or false otherwise
+	 */
+	static boolean areEqual(EnhancedRandom left, EnhancedRandom right){
+		if (left == right)
+			return true;
+		if (left.getClass() != right.getClass())
+			return false;
+
+		final int count = left.getStateCount();
+		for (int i = 0; i < count; i++) {
+			if(left.getSelectedState(i) != right.getSelectedState(i))
+				return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Returns true if a random value between 0 and 1 is less than the specified value.
 	 *
 	 * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
