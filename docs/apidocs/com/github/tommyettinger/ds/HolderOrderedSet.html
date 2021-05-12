@@ -125,12 +125,12 @@ implements <a href="Ordered.html" title="interface in com.github.tommyettinger.d
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="HolderOrderedSet.OrderedSetIterator.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet.OrderedSetIterator</a>&lt;<a href="HolderOrderedSet.OrderedSetIterator.html" title="type parameter in HolderOrderedSet.OrderedSetIterator">T</a>,&#8203;<a href="HolderOrderedSet.OrderedSetIterator.html" title="type parameter in HolderOrderedSet.OrderedSetIterator">K</a>&gt;</span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="HolderOrderedSet.HolderOrderedSetIterator.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet.HolderOrderedSetIterator</a>&lt;<a href="HolderOrderedSet.HolderOrderedSetIterator.html" title="type parameter in HolderOrderedSet.HolderOrderedSetIterator">T</a>,&#8203;<a href="HolderOrderedSet.HolderOrderedSetIterator.html" title="type parameter in HolderOrderedSet.HolderOrderedSetIterator">K</a>&gt;</span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="inherited-list">
 <h2 id="nested.classes.inherited.from.class.com.github.tommyettinger.ds.HolderSet">Nested classes/interfaces inherited from class&nbsp;com.github.tommyettinger.ds.<a href="HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a></h2>
-<code><a href="HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a>&lt;<a href="HolderSet.ObjectSetIterator.html" title="type parameter in HolderSet.ObjectSetIterator">T</a>,&#8203;<a href="HolderSet.ObjectSetIterator.html" title="type parameter in HolderSet.ObjectSetIterator">K</a>&gt;</code></div>
+<code><a href="HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a>&lt;<a href="HolderSet.HolderSetIterator.html" title="type parameter in HolderSet.HolderSetIterator">T</a>,&#8203;<a href="HolderSet.HolderSetIterator.html" title="type parameter in HolderSet.HolderSetIterator">K</a>&gt;</code></div>
 <div class="inherited-list">
 <h2 id="nested.classes.inherited.from.class.com.github.tommyettinger.ds.Ordered">Nested classes/interfaces inherited from interface&nbsp;com.github.tommyettinger.ds.<a href="Ordered.html" title="interface in com.github.tommyettinger.ds">Ordered</a></h2>
 <code><a href="Ordered.OfBoolean.html" title="interface in com.github.tommyettinger.ds">Ordered.OfBoolean</a>, <a href="Ordered.OfByte.html" title="interface in com.github.tommyettinger.ds">Ordered.OfByte</a>, <a href="Ordered.OfChar.html" title="interface in com.github.tommyettinger.ds">Ordered.OfChar</a>, <a href="Ordered.OfDouble.html" title="interface in com.github.tommyettinger.ds">Ordered.OfDouble</a>, <a href="Ordered.OfFloat.html" title="interface in com.github.tommyettinger.ds">Ordered.OfFloat</a>, <a href="Ordered.OfInt.html" title="interface in com.github.tommyettinger.ds">Ordered.OfInt</a>, <a href="Ordered.OfLong.html" title="interface in com.github.tommyettinger.ds">Ordered.OfLong</a>, <a href="Ordered.OfShort.html" title="interface in com.github.tommyettinger.ds">Ordered.OfShort</a></code></div>
@@ -221,7 +221,7 @@ implements <a href="Ordered.html" title="interface in com.github.tommyettinger.d
 <div class="block">Sets the key at the specfied index.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#addAll(com.github.tommyettinger.ds.HolderOrderedSet)">addAll</a></span>&#8203;(<a href="HolderOrderedSet.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet</a>&lt;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>,&#8203;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">K</a>&gt;&nbsp;set)</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#addAll(com.github.tommyettinger.ds.HolderOrderedSet)">addAll</a></span>&#8203;(<a href="HolderOrderedSet.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet</a>&lt;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>,&#8203;?&gt;&nbsp;set)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#alter(T,T)">alter</a></span>&#8203;(<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>&nbsp;before,
@@ -251,60 +251,67 @@ implements <a href="Ordered.html" title="interface in com.github.tommyettinger.d
 <div class="block">Increases the size of the backing array to accommodate the specified number of additional items / loadFactor.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getAt(int)">getAt</a></span>&#8203;(int&nbsp;index)</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#first()">first</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Gets the first item in the order.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getAt(int)">getAt</a></span>&#8203;(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets the T item at the given <code>index</code> in the insertion order.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Iterator.html" title="class or interface in java.util" class="external-link">Iterator</a>&lt;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#iterator()">iterator</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Iterator.html" title="class or interface in java.util" class="external-link">Iterator</a>&lt;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#iterator()">iterator</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Iterates through items in the same order as <a href="#order()"><code>order()</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#order()">order</a></span>()</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a>&lt;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#order()">order</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Gets the ObjectList of items in the order this class will iterate through them.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#remove(java.lang.Object)">remove</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#remove(java.lang.Object)">remove</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Takes a K key to remove from this HolderOrderedSet, not a T item.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#removeAt(int)">removeAt</a></span>&#8203;(int&nbsp;index)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#sort()">sort</a></span>()</code></div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#removeAt(int)">removeAt</a></span>&#8203;(int&nbsp;index)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Sorts this ObjectOrderedSet in-place by the keys' natural ordering; <code>T</code> must implement <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link"><code>Comparable</code></a>.</div>
+<div class="block">Removes and returns the item at the given index in this set's order.</div>
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#sort(java.util.Comparator)">sort</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Comparator.html" title="class or interface in java.util" class="external-link">Comparator</a>&lt;? super <a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>&gt;&nbsp;comp)</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#sort()">sort</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Sorts this ObjectOrderedSet in-place by the keys' natural ordering; <code>T</code> must implement <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link"><code>Comparable</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#sort(java.util.Comparator)">sort</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Comparator.html" title="class or interface in java.util" class="external-link">Comparator</a>&lt;? super <a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>&gt;&nbsp;comp)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Sorts this ObjectOrderedSet in-place by the given Comparator used on the keys.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#toString(java.lang.String)">toString</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;separator)</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static &lt;T,&#8203;
-K&gt;&nbsp;<a href="HolderOrderedSet.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet</a>&lt;T,&#8203;K&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#with(java.util.function.Function,T)">with</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;T,&#8203;K&gt;&nbsp;extractor,
- T&nbsp;item)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#toString(java.lang.String)">toString</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;separator)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static &lt;T,&#8203;
 K&gt;&nbsp;<a href="HolderOrderedSet.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet</a>&lt;T,&#8203;K&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#with(java.util.function.Function,T...)">with</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;T,&#8203;K&gt;&nbsp;extractor,
- T...&nbsp;array)</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#with(java.util.function.Function,T)">with</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;T,&#8203;K&gt;&nbsp;extractor,
+ T&nbsp;item)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static &lt;T,&#8203;
+K&gt;&nbsp;<a href="HolderOrderedSet.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet</a>&lt;T,&#8203;K&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#with(java.util.function.Function,T...)">with</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;T,&#8203;K&gt;&nbsp;extractor,
+ T...&nbsp;array)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.github.tommyettinger.ds.HolderSet">Methods inherited from class&nbsp;com.github.tommyettinger.ds.<a href="HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a></h3>
-<code><a href="HolderSet.html#addAll(com.github.tommyettinger.ds.HolderSet)">addAll</a>, <a href="HolderSet.html#addAll(java.util.Collection)">addAll</a>, <a href="HolderSet.html#addAll(T%5B%5D)">addAll</a>, <a href="HolderSet.html#addAll(T%5B%5D,int,int)">addAll</a>, <a href="HolderSet.html#contains(java.lang.Object)">contains</a>, <a href="HolderSet.html#containsAll(java.util.Collection)">containsAll</a>, <a href="HolderSet.html#equals(java.lang.Object)">equals</a>, <a href="HolderSet.html#first()">first</a>, <a href="HolderSet.html#get(java.lang.Object)">get</a>, <a href="HolderSet.html#getExtractor()">getExtractor</a>, <a href="HolderSet.html#getLoadFactor()">getLoadFactor</a>, <a href="HolderSet.html#hashCode()">hashCode</a>, <a href="HolderSet.html#isEmpty()">isEmpty</a>, <a href="HolderSet.html#locateKey(java.lang.Object)">locateKey</a>, <a href="HolderSet.html#notEmpty()">notEmpty</a>, <a href="HolderSet.html#place(java.lang.Object)">place</a>, <a href="HolderSet.html#removeAll(java.util.Collection)">removeAll</a>, <a href="HolderSet.html#resize(int)">resize</a>, <a href="HolderSet.html#retainAll(java.util.Collection)">retainAll</a>, <a href="HolderSet.html#setExtractor(java.util.function.Function)">setExtractor</a>, <a href="HolderSet.html#setLoadFactor(float)">setLoadFactor</a>, <a href="HolderSet.html#shrink(int)">shrink</a>, <a href="HolderSet.html#size()">size</a>, <a href="HolderSet.html#toArray()">toArray</a>, <a href="HolderSet.html#toArray(E%5B%5D)">toArray</a></code></div>
+<code><a href="HolderSet.html#addAll(com.github.tommyettinger.ds.HolderSet)">addAll</a>, <a href="HolderSet.html#addAll(java.util.Collection)">addAll</a>, <a href="HolderSet.html#addAll(T%5B%5D)">addAll</a>, <a href="HolderSet.html#addAll(T%5B%5D,int,int)">addAll</a>, <a href="HolderSet.html#contains(java.lang.Object)">contains</a>, <a href="HolderSet.html#containsAll(java.util.Collection)">containsAll</a>, <a href="HolderSet.html#equals(java.lang.Object)">equals</a>, <a href="HolderSet.html#get(java.lang.Object)">get</a>, <a href="HolderSet.html#getExtractor()">getExtractor</a>, <a href="HolderSet.html#getLoadFactor()">getLoadFactor</a>, <a href="HolderSet.html#hashCode()">hashCode</a>, <a href="HolderSet.html#isEmpty()">isEmpty</a>, <a href="HolderSet.html#locateKey(java.lang.Object)">locateKey</a>, <a href="HolderSet.html#notEmpty()">notEmpty</a>, <a href="HolderSet.html#place(java.lang.Object)">place</a>, <a href="HolderSet.html#removeAll(java.util.Collection)">removeAll</a>, <a href="HolderSet.html#resize(int)">resize</a>, <a href="HolderSet.html#retainAll(java.util.Collection)">retainAll</a>, <a href="HolderSet.html#setExtractor(java.util.function.Function)">setExtractor</a>, <a href="HolderSet.html#setLoadFactor(float)">setLoadFactor</a>, <a href="HolderSet.html#shrink(int)">shrink</a>, <a href="HolderSet.html#size()">size</a>, <a href="HolderSet.html#toArray()">toArray</a>, <a href="HolderSet.html#toArray(E%5B%5D)">toArray</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -470,7 +477,7 @@ K&gt;&nbsp;<a href="HolderOrderedSet.html" title="class in com.github.tommyettin
 <li>
 <section class="detail" id="addAll(com.github.tommyettinger.ds.HolderOrderedSet)">
 <h3>addAll</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">addAll</span>&#8203;<span class="parameters">(<a href="HolderOrderedSet.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet</a>&lt;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>,&#8203;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">K</a>&gt;&nbsp;set)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">addAll</span>&#8203;<span class="parameters">(<a href="HolderOrderedSet.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet</a>&lt;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>,&#8203;?&gt;&nbsp;set)</span></div>
 </section>
 </li>
 <li>
@@ -496,6 +503,28 @@ K&gt;&nbsp;<a href="HolderOrderedSet.html" title="class in com.github.tommyettin
 <section class="detail" id="removeAt(int)">
 <h3>removeAt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a></span>&nbsp;<span class="element-name">removeAt</span>&#8203;<span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Removes and returns the item at the given index in this set's order.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - the index of the item to remove</dd>
+<dt>Returns:</dt>
+<dd>the removed item</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="first()">
+<h3>first</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a></span>&nbsp;<span class="element-name">first</span>()</div>
+<div class="block">Gets the first item in the order.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="HolderSet.html#first()">first</a></code>&nbsp;in class&nbsp;<code><a href="HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a>&lt;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>,&#8203;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">K</a>&gt;</code></dd>
+<dt>Returns:</dt>
+<dd>the first item in this set's order</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if this is empty.</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -635,7 +664,7 @@ K&gt;&nbsp;<a href="HolderOrderedSet.html" title="class in com.github.tommyettin
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Iterator.html" title="class or interface in java.util" class="external-link">Iterator</a>&lt;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>&gt;</span>&nbsp;<span class="element-name">iterator</span>()</div>
 <div class="block">Iterates through items in the same order as <a href="#order()"><code>order()</code></a>.
  Reuses one of two iterators, and does not permit nested iteration;
- use <a href="HolderOrderedSet.OrderedSetIterator.html#%3Cinit%3E(com.github.tommyettinger.ds.HolderOrderedSet)"><code>OrderedSetIterator(HolderOrderedSet)</code></a> to nest iterators.</div>
+ use <a href="HolderOrderedSet.HolderOrderedSetIterator.html#%3Cinit%3E(com.github.tommyettinger.ds.HolderOrderedSet)"><code>HolderOrderedSetIterator(HolderOrderedSet)</code></a> to nest iterators.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Collection.html#iterator()" title="class or interface in java.util" class="external-link">iterator</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="HolderOrderedSet.html" title="type parameter in HolderOrderedSet">T</a>&gt;</code></dd>

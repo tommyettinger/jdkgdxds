@@ -380,7 +380,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#putAll(com.github.tommyettinger.ds.ObjectFloatMap)">putAll</a></span>&#8203;(<a href="ObjectFloatMap.html" title="class in com.github.tommyettinger.ds">ObjectFloatMap</a>&lt;? extends <a href="ObjectFloatMap.html" title="type parameter in ObjectFloatMap">K</a>&gt;&nbsp;map)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#putAll(java.util.Collection,com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">putAll</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="ObjectFloatMap.html" title="type parameter in ObjectFloatMap">K</a>&gt;&nbsp;keys,
  <a href="PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a>&nbsp;values)</code></div>
@@ -770,6 +773,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <section class="detail" id="putAll(com.github.tommyettinger.ds.ObjectFloatMap)">
 <h3>putAll</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">putAll</span>&#8203;<span class="parameters">(<a href="ObjectFloatMap.html" title="class in com.github.tommyettinger.ds">ObjectFloatMap</a>&lt;? extends <a href="ObjectFloatMap.html" title="type parameter in ObjectFloatMap">K</a>&gt;&nbsp;map)</span></div>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>map</code> - a map with compatible key and value types; will not be modified</dd>
+</dl>
 </section>
 </li>
 <li>

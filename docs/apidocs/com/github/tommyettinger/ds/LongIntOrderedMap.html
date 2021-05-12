@@ -286,7 +286,10 @@ implements <a href="Ordered.OfLong.html" title="interface in com.github.tommyett
 </div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#putAll(com.github.tommyettinger.ds.LongIntOrderedMap)">putAll</a></span>&#8203;(<a href="LongIntOrderedMap.html" title="class in com.github.tommyettinger.ds">LongIntOrderedMap</a>&nbsp;map)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#putOrDefault(long,int,int)">putOrDefault</a></span>&#8203;(long&nbsp;key,
  int&nbsp;value,
@@ -299,7 +302,9 @@ implements <a href="Ordered.OfLong.html" title="interface in com.github.tommyett
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#removeAt(int)">removeAt</a></span>&#8203;(int&nbsp;index)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setAt(int,int)">setAt</a></span>&#8203;(int&nbsp;index,
  int&nbsp;v)</code></div>
@@ -526,6 +531,12 @@ implements <a href="Ordered.OfLong.html" title="interface in com.github.tommyett
 <section class="detail" id="putAll(com.github.tommyettinger.ds.LongIntOrderedMap)">
 <h3>putAll</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">putAll</span>&#8203;<span class="parameters">(<a href="LongIntOrderedMap.html" title="class in com.github.tommyettinger.ds">LongIntOrderedMap</a>&nbsp;map)</span></div>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical. This will put keys in the order of the given map.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>map</code> - a map with compatible key and value types; will not be modified</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -542,6 +553,13 @@ implements <a href="Ordered.OfLong.html" title="interface in com.github.tommyett
 <section class="detail" id="removeAt(int)">
 <h3>removeAt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">removeAt</span>&#8203;<span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - the index of the entry to remove; must be at least 0 and less than <a href="LongIntMap.html#size()"><code>LongIntMap.size()</code></a></dd>
+<dt>Returns:</dt>
+<dd>the value of the removed entry</dd>
+</dl>
 </section>
 </li>
 <li>

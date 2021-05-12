@@ -113,7 +113,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a>&lt;<a href="HolderSet.ObjectSetIterator.html" title="type parameter in HolderSet.ObjectSetIterator">T</a>,&#8203;<a href="HolderSet.ObjectSetIterator.html" title="type parameter in HolderSet.ObjectSetIterator">K</a>&gt;</span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a>&lt;<a href="HolderSet.HolderSetIterator.html" title="type parameter in HolderSet.HolderSetIterator">T</a>,&#8203;<a href="HolderSet.HolderSetIterator.html" title="type parameter in HolderSet.HolderSetIterator">K</a>&gt;</span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -130,10 +130,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="col-first even-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="HolderSet.html" title="type parameter in HolderSet">K</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#extractor">extractor</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected <a href="HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="HolderSet.html" title="type parameter in HolderSet">K</a>&gt;</code></div>
+<div class="col-first odd-row-color"><code>protected <a href="HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="HolderSet.html" title="type parameter in HolderSet">K</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#iterator1">iterator1</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected <a href="HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="HolderSet.html" title="type parameter in HolderSet">K</a>&gt;</code></div>
+<div class="col-first even-row-color"><code>protected <a href="HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="HolderSet.html" title="type parameter in HolderSet">K</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#iterator2">iterator2</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected <a href="HolderSet.html" title="type parameter in HolderSet">T</a>[]</code></div>
@@ -220,7 +220,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="block">Returns true if the item was not already in the set.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#addAll(com.github.tommyettinger.ds.HolderSet)">addAll</a></span>&#8203;(<a href="HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="HolderSet.html" title="type parameter in HolderSet">K</a>&gt;&nbsp;set)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#addAll(com.github.tommyettinger.ds.HolderSet)">addAll</a></span>&#8203;(<a href="HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;?&gt;&nbsp;set)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#addAll(java.util.Collection)">addAll</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="HolderSet.html" title="type parameter in HolderSet">T</a>&gt;&nbsp;coll)</code></div>
@@ -261,7 +261,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="HolderSet.html" title="type parameter in HolderSet">T</a></code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#first()">first</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Gets the (arbitrarily-chosen) first item in this HolderSet.</div>
+</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="HolderSet.html" title="type parameter in HolderSet">T</a></code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#get(java.lang.Object)">get</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
@@ -436,14 +438,14 @@ K&gt;&nbsp;<a href="HolderSet.html" title="class in com.github.tommyettinger.ds"
 <section class="detail" id="iterator1">
 <h3>iterator1</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">protected transient</span>&nbsp;<span class="return-type"><a href="HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="HolderSet.html" title="type parameter in HolderSet">K</a>&gt;</span>&nbsp;<span class="element-name">iterator1</span></div>
+</span><span class="modifiers">protected transient</span>&nbsp;<span class="return-type"><a href="HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="HolderSet.html" title="type parameter in HolderSet">K</a>&gt;</span>&nbsp;<span class="element-name">iterator1</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="iterator2">
 <h3>iterator2</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">protected transient</span>&nbsp;<span class="return-type"><a href="HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="HolderSet.html" title="type parameter in HolderSet">K</a>&gt;</span>&nbsp;<span class="element-name">iterator2</span></div>
+</span><span class="modifiers">protected transient</span>&nbsp;<span class="return-type"><a href="HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="HolderSet.html" title="type parameter in HolderSet">K</a>&gt;</span>&nbsp;<span class="element-name">iterator2</span></div>
 </section>
 </li>
 <li>
@@ -724,7 +726,7 @@ K&gt;&nbsp;<a href="HolderSet.html" title="class in com.github.tommyettinger.ds"
 <li>
 <section class="detail" id="addAll(com.github.tommyettinger.ds.HolderSet)">
 <h3>addAll</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">addAll</span>&#8203;<span class="parameters">(<a href="HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="HolderSet.html" title="type parameter in HolderSet">K</a>&gt;&nbsp;set)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">addAll</span>&#8203;<span class="parameters">(<a href="HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;?&gt;&nbsp;set)</span></div>
 </section>
 </li>
 <li>
@@ -846,6 +848,14 @@ K&gt;&nbsp;<a href="HolderSet.html" title="class in com.github.tommyettinger.ds"
 <section class="detail" id="first()">
 <h3>first</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="HolderSet.html" title="type parameter in HolderSet">T</a></span>&nbsp;<span class="element-name">first</span>()</div>
+<div class="block">Gets the (arbitrarily-chosen) first item in this HolderSet. Which item is "first" can change
+ when this resizes, and you can't rely on the order of items in an unordered set like this.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the "first" item in this HolderSet; really an arbitrary item in this</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if this HolderSet is empty</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -968,7 +978,7 @@ K&gt;&nbsp;<a href="HolderSet.html" title="class in com.github.tommyettinger.ds"
 <div class="block">Returns an iterator for the keys in the set. Remove is supported.
  <p>
  Reuses one of two iterators for this set. For nested or multithreaded
- iteration, use <a href="HolderSet.ObjectSetIterator.html#%3Cinit%3E(com.github.tommyettinger.ds.HolderSet)"><code>ObjectSetIterator(HolderSet)</code></a>.</div>
+ iteration, use <a href="HolderSet.HolderSetIterator.html#%3Cinit%3E(com.github.tommyettinger.ds.HolderSet)"><code>HolderSetIterator(HolderSet)</code></a>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Collection.html#iterator()" title="class or interface in java.util" class="external-link">iterator</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="HolderSet.html" title="type parameter in HolderSet">T</a>&gt;</code></dd>

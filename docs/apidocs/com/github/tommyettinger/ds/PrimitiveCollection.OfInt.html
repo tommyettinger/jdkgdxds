@@ -125,40 +125,46 @@ extends <a href="PrimitiveCollection.html" title="interface in com.github.tommye
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default boolean</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#containsAll(com.github.tommyettinger.ds.PrimitiveCollection.OfInt)">containsAll</a></span>&#8203;(<a href="PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfInt</a>&nbsp;other)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#forEach(java.util.function.IntConsumer)">forEach</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/IntConsumer.html" title="class or interface in java.util.function" class="external-link">IntConsumer</a>&nbsp;action)</code></div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default int</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#first()">first</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#forEach(java.util.function.IntConsumer)">forEach</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/IntConsumer.html" title="class or interface in java.util.function" class="external-link">IntConsumer</a>&nbsp;action)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">
 <div class="block">Performs the given action for each element of the <code>PrimitiveCollection.OfInt</code>
  until all elements have been processed or the action throws an
  exception.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/PrimitiveIterator.OfInt.html" title="class or interface in java.util" class="external-link">PrimitiveIterator.OfInt</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#iterator()">iterator</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#remove(int)">remove</a></span>&#8203;(int&nbsp;item)</code></div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/PrimitiveIterator.OfInt.html" title="class or interface in java.util" class="external-link">PrimitiveIterator.OfInt</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#iterator()">iterator</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default boolean</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#removeAll(com.github.tommyettinger.ds.PrimitiveCollection.OfInt)">removeAll</a></span>&#8203;(<a href="PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfInt</a>&nbsp;other)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#remove(int)">remove</a></span>&#8203;(int&nbsp;item)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default boolean</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#removeIf(java.util.function.IntPredicate)">removeIf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;filter)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#removeAll(com.github.tommyettinger.ds.PrimitiveCollection.OfInt)">removeAll</a></span>&#8203;(<a href="PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfInt</a>&nbsp;other)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default boolean</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#removeIf(java.util.function.IntPredicate)">removeIf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;filter)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">
 <div class="block">Removes all of the elements of this collection that satisfy the given
  predicate.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default boolean</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#retainAll(com.github.tommyettinger.ds.PrimitiveCollection.OfInt)">retainAll</a></span>&#8203;(<a href="PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfInt</a>&nbsp;other)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default int[]</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#toArray()">toArray</a></span>()</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default boolean</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#retainAll(com.github.tommyettinger.ds.PrimitiveCollection.OfInt)">retainAll</a></span>&#8203;(<a href="PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfInt</a>&nbsp;other)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default int[]</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#toArray()">toArray</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">
 <div class="block">Allocates a new int array with exactly <a href="PrimitiveCollection.html#size()"><code>PrimitiveCollection.size()</code></a> items, fills it with the
  contents of this PrimitiveCollection, and returns it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default int[]</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#toArray(int%5B%5D)">toArray</a></span>&#8203;(int[]&nbsp;receiver)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default int[]</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#toArray(int%5B%5D)">toArray</a></span>&#8203;(int[]&nbsp;receiver)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">
 <div class="block">Fills the given array with the entire contents of this PrimitiveCollection, up to
  <a href="PrimitiveCollection.html#size()"><code>PrimitiveCollection.size()</code></a> items, or if receiver is not large enough, then this allocates a new
  int array with <a href="PrimitiveCollection.html#size()"><code>PrimitiveCollection.size()</code></a> items and returns that.</div>
@@ -168,7 +174,7 @@ extends <a href="PrimitiveCollection.html" title="interface in com.github.tommye
 </div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.github.tommyettinger.ds.PrimitiveCollection">Methods inherited from interface&nbsp;com.github.tommyettinger.ds.<a href="PrimitiveCollection.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection</a></h3>
-<code><a href="PrimitiveCollection.html#clear()">clear</a>, <a href="PrimitiveCollection.html#equals(java.lang.Object)">equals</a>, <a href="PrimitiveCollection.html#hashCode()">hashCode</a>, <a href="PrimitiveCollection.html#isEmpty()">isEmpty</a>, <a href="PrimitiveCollection.html#size()">size</a></code></div>
+<code><a href="PrimitiveCollection.html#clear()">clear</a>, <a href="PrimitiveCollection.html#equals(java.lang.Object)">equals</a>, <a href="PrimitiveCollection.html#hashCode()">hashCode</a>, <a href="PrimitiveCollection.html#isEmpty()">isEmpty</a>, <a href="PrimitiveCollection.html#notEmpty()">notEmpty</a>, <a href="PrimitiveCollection.html#size()">size</a></code></div>
 </section>
 </li>
 </ul>
@@ -298,6 +304,30 @@ extends <a href="PrimitiveCollection.html" title="interface in com.github.tommye
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>action</code> - The action to be performed for each element</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="first()">
+<h3>first</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">first</span>()</div>
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered. Many times, this applies to a class
+ that is not ordered, and in those cases it can get an arbitrary item, and that item
+ is permitted to be different for different calls to first().
+ <br>
+ This is useful for cases where you would normally be able to call something like
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/List.html#get(int)" title="class or interface in java.util" class="external-link"><code>List.get(int)</code></a> to get an item, any item, from a collection, but
+ whatever class you're using doesn't necessarily provide a get(), first(), peek(),
+ or similar method.
+ <br>
+ The default implementation uses <a href="#iterator()"><code>iterator()</code></a>, tries to get the first item,
+ or throws an IllegalStateException if this is empty.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the first item in this PrimitiveCollection, as produced by <a href="#iterator()"><code>iterator()</code></a></dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if this is empty</dd>
 </dl>
 </section>
 </li>

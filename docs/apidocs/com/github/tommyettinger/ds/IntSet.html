@@ -265,7 +265,10 @@ implements <a href="PrimitiveCollection.OfInt.html" title="interface in com.gith
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#first()">first</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered.</div>
+</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getLoadFactor()">getLoadFactor</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
@@ -585,6 +588,10 @@ implements <a href="PrimitiveCollection.OfInt.html" title="interface in com.gith
 <h3>notEmpty</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">notEmpty</span>()</div>
 <div class="block">Returns true if the set has one or more items.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="PrimitiveCollection.html#notEmpty()">notEmpty</a></code>&nbsp;in interface&nbsp;<code><a href="PrimitiveCollection.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/IntConsumer.html" title="class or interface in java.util.function" class="external-link">IntConsumer</a>&gt;</code></dd>
+</dl>
 </section>
 </li>
 <li>
@@ -638,6 +645,25 @@ implements <a href="PrimitiveCollection.OfInt.html" title="interface in com.gith
 <section class="detail" id="first()">
 <h3>first</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">first</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="PrimitiveCollection.OfInt.html#first()">PrimitiveCollection.OfInt</a></code></span></div>
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered. Many times, this applies to a class
+ that is not ordered, and in those cases it can get an arbitrary item, and that item
+ is permitted to be different for different calls to first().
+ <br>
+ This is useful for cases where you would normally be able to call something like
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/List.html#get(int)" title="class or interface in java.util" class="external-link"><code>List.get(int)</code></a> to get an item, any item, from a collection, but
+ whatever class you're using doesn't necessarily provide a get(), first(), peek(),
+ or similar method.
+ <br>
+ The default implementation uses <a href="PrimitiveCollection.OfInt.html#iterator()"><code>PrimitiveCollection.OfInt.iterator()</code></a>, tries to get the first item,
+ or throws an IllegalStateException if this is empty.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="PrimitiveCollection.OfInt.html#first()">first</a></code>&nbsp;in interface&nbsp;<code><a href="PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfInt</a></code></dd>
+<dt>Returns:</dt>
+<dd>the first item in this PrimitiveCollection, as produced by <a href="PrimitiveCollection.OfInt.html#iterator()"><code>PrimitiveCollection.OfInt.iterator()</code></a></dd>
+</dl>
 </section>
 </li>
 <li>

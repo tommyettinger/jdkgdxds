@@ -370,9 +370,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/FloatList.html#addAll(com.github.tommyettinger.ds.FloatList,int,int)">addAll(FloatList, int, int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/FloatList.html" title="class in com.github.tommyettinger.ds">FloatList</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.html#addAll(com.github.tommyettinger.ds.HolderOrderedSet)">addAll(HolderOrderedSet&lt;T, K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.html#addAll(com.github.tommyettinger.ds.HolderOrderedSet)">addAll(HolderOrderedSet&lt;T, ?&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.html#addAll(com.github.tommyettinger.ds.HolderSet)">addAll(HolderSet&lt;T, K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.html#addAll(com.github.tommyettinger.ds.HolderSet)">addAll(HolderSet&lt;T, ?&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntList.html#addAll(com.github.tommyettinger.ds.IntList)">addAll(IntList)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntList.html" title="class in com.github.tommyettinger.ds">IntList</a></dt>
 <dd>&nbsp;</dd>
@@ -786,6 +786,11 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/function/ShortUnaryOperator.html#applyAsShort(short)">applyAsShort(short)</a></span> - Method in interface com.github.tommyettinger.ds.support.function.<a href="com/github/tommyettinger/ds/support/function/ShortUnaryOperator.html" title="interface in com.github.tommyettinger.ds.support.function">ShortUnaryOperator</a></dt>
 <dd>
 <div class="block">Applies this operator to the given operand.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#areEqual(com.github.tommyettinger.ds.support.EnhancedRandom,com.github.tommyettinger.ds.support.EnhancedRandom)">areEqual(EnhancedRandom, EnhancedRandom)</a></span> - Static method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Given two EnhancedRandom objects that could have the same or different classes,
+ this returns true if they have the same class and same state, or false otherwise.</div>
 </dd>
 <dt><a href="com/github/tommyettinger/ds/Arrangeable.html" title="interface in com.github.tommyettinger.ds"><span class="type-name-link">Arrangeable</span></a> - Interface in <a href="com/github/tommyettinger/ds/package-summary.html">com.github.tommyettinger.ds</a></dt>
 <dd>
@@ -1997,6 +2002,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns true if the specified value is in the map.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#copy()">copy()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#copy()">copy()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Creates a new EnhancedRandom with identical states to this one, so if the same EnhancedRandom methods are
@@ -2058,6 +2065,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectLongMap.html#defaultValue">defaultValue</a></span> - Variable in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.html" title="class in com.github.tommyettinger.ds">ObjectLongMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support"><span class="type-name-link">DistinctRandom</span></a> - Class in <a href="com/github/tommyettinger/ds/support/package-summary.html">com.github.tommyettinger.ds.support</a></dt>
+<dd>
+<div class="block">A variant on Java 8's SplittableRandom algorithm, removing the splittable quality so this has one possible stream.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#%3Cinit%3E()">DistinctRandom()</a></span> - Constructor for class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>
+<div class="block">Creates a new DistinctRandom with a random state.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#%3Cinit%3E(long)">DistinctRandom(long)</a></span> - Constructor for class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>
+<div class="block">Creates a new DistinctRandom with the given state; all <code>long</code> values are permitted.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ByteList.html#div(byte)">div(byte)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ByteList.html" title="class in com.github.tommyettinger.ds">ByteList</a></dt>
 <dd>
 <div class="block">Divides each item in this ByteList by <code>value</code>, stores it in this and returns it.</div>
@@ -2702,6 +2721,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns false if either array is unordered.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/TricycleRandom.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/TricycleRandom.html" title="class in com.github.tommyettinger.ds.support">TricycleRandom</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/DoubleList.html#equals(java.lang.Object,double)">equals(Object, double)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/DoubleList.html" title="class in com.github.tommyettinger.ds">DoubleList</a></dt>
 <dd>
 <div class="block">Returns false if either array is unordered.</div>
@@ -2808,19 +2831,31 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the first item.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet</a></dt>
+<dd>
+<div class="block">Gets the first item in the order.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets the (arbitrarily-chosen) first item in this HolderSet.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntList.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntList.html" title="class in com.github.tommyettinger.ds">IntList</a></dt>
 <dd>
 <div class="block">Returns the first item.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntOrderedSet.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntOrderedSet.html" title="class in com.github.tommyettinger.ds">IntOrderedSet</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntSet.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntSet.html" title="class in com.github.tommyettinger.ds">IntSet</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongList.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongList.html" title="class in com.github.tommyettinger.ds">LongList</a></dt>
 <dd>
 <div class="block">Returns the first item.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongOrderedSet.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongOrderedSet.html" title="class in com.github.tommyettinger.ds">LongOrderedSet</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongSet.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongSet.html" title="class in com.github.tommyettinger.ds">LongSet</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/NumberedSet.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/NumberedSet.html" title="class in com.github.tommyettinger.ds">NumberedSet</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectList.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a></dt>
 <dd>
@@ -2830,6 +2865,46 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectSet.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/PrimitiveCollection.OfBoolean.html#first()">first()</a></span> - Method in interface com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfBoolean.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfBoolean</a></dt>
+<dd>
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/PrimitiveCollection.OfByte.html#first()">first()</a></span> - Method in interface com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfByte.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfByte</a></dt>
+<dd>
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/PrimitiveCollection.OfChar.html#first()">first()</a></span> - Method in interface com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfChar.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfChar</a></dt>
+<dd>
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/PrimitiveCollection.OfDouble.html#first()">first()</a></span> - Method in interface com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfDouble.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfDouble</a></dt>
+<dd>
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/PrimitiveCollection.OfFloat.html#first()">first()</a></span> - Method in interface com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfFloat.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfFloat</a></dt>
+<dd>
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/PrimitiveCollection.OfInt.html#first()">first()</a></span> - Method in interface com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfInt.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfInt</a></dt>
+<dd>
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/PrimitiveCollection.OfLong.html#first()">first()</a></span> - Method in interface com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfLong.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfLong</a></dt>
+<dd>
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/PrimitiveCollection.OfShort.html#first()">first()</a></span> - Method in interface com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.OfShort.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection.OfShort</a></dt>
+<dd>
+<div class="block">Attempts to get the first item in this PrimitiveCollection, where "first" is only
+ defined meaningfully if this type is ordered.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ShortList.html#first()">first()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ShortList.html" title="class in com.github.tommyettinger.ds">ShortList</a></dt>
 <dd>
 <div class="block">Returns the first item.</div>
@@ -3502,6 +3577,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the value for the specified key, or the given default value if the key is not in the map.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#getSelectedState(int)">getSelectedState(int)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>
+<div class="block">Gets the only state, which can be any long value.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#getSelectedState(int)">getSelectedState(int)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Gets a selected state value from this EnhancedRandom.</div>
@@ -3528,6 +3607,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/TricycleRandom.html#getStateC()">getStateC()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/TricycleRandom.html" title="class in com.github.tommyettinger.ds.support">TricycleRandom</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#getStateCount()">getStateCount()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>
+<div class="block">This has one long state.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#getStateCount()">getStateCount()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Gets the number of possible state variables that can be selected with
@@ -3701,7 +3784,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ShortList.html#hashCode()">hashCode()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ShortList.html" title="class in com.github.tommyettinger.ds">ShortList</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html#hasNext">hasNext</a></span> - Variable in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html#hasNext">hasNext</a></span> - Variable in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.KeyIterator.html#hasNext">hasNext</a></span> - Variable in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.KeyIterator.html" title="class in com.github.tommyettinger.ds">IntFloatMap.KeyIterator</a></dt>
 <dd>&nbsp;</dd>
@@ -3773,7 +3856,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns <code>true</code> if the iteration has more elements.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html#hasNext()">hasNext()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html#hasNext()">hasNext()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.EntryIterator.html#hasNext()">hasNext()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.EntryIterator.html" title="class in com.github.tommyettinger.ds">IntFloatMap.EntryIterator</a></dt>
 <dd>&nbsp;</dd>
@@ -3942,7 +4025,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new set that contains all distinct elements in <code>items</code>, using <code>extractor</code> to get the keys that determine distinctness.</div>
 </dd>
-<dt><a href="com/github/tommyettinger/ds/HolderOrderedSet.OrderedSetIterator.html" title="class in com.github.tommyettinger.ds"><span class="type-name-link">HolderOrderedSet.OrderedSetIterator</span></a>&lt;<a href="com/github/tommyettinger/ds/HolderOrderedSet.OrderedSetIterator.html" title="type parameter in HolderOrderedSet.OrderedSetIterator">T</a>,&#8203;<a href="com/github/tommyettinger/ds/HolderOrderedSet.OrderedSetIterator.html" title="type parameter in HolderOrderedSet.OrderedSetIterator">K</a>&gt; - Class in <a href="com/github/tommyettinger/ds/package-summary.html">com.github.tommyettinger.ds</a></dt>
+<dt><a href="com/github/tommyettinger/ds/HolderOrderedSet.HolderOrderedSetIterator.html" title="class in com.github.tommyettinger.ds"><span class="type-name-link">HolderOrderedSet.HolderOrderedSetIterator</span></a>&lt;<a href="com/github/tommyettinger/ds/HolderOrderedSet.HolderOrderedSetIterator.html" title="type parameter in HolderOrderedSet.HolderOrderedSetIterator">T</a>,&#8203;<a href="com/github/tommyettinger/ds/HolderOrderedSet.HolderOrderedSetIterator.html" title="type parameter in HolderOrderedSet.HolderOrderedSetIterator">K</a>&gt; - Class in <a href="com/github/tommyettinger/ds/package-summary.html">com.github.tommyettinger.ds</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.HolderOrderedSetIterator.html#%3Cinit%3E(com.github.tommyettinger.ds.HolderOrderedSet)">HolderOrderedSetIterator(HolderOrderedSet&lt;T, K&gt;)</a></span> - Constructor for class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.HolderOrderedSetIterator.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet.HolderOrderedSetIterator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/tommyettinger/ds/HolderSet.html" title="class in com.github.tommyettinger.ds"><span class="type-name-link">HolderSet</span></a>&lt;<a href="com/github/tommyettinger/ds/HolderSet.html" title="type parameter in HolderSet">T</a>,&#8203;<a href="com/github/tommyettinger/ds/HolderSet.html" title="type parameter in HolderSet">K</a>&gt; - Class in <a href="com/github/tommyettinger/ds/package-summary.html">com.github.tommyettinger.ds</a></dt>
 <dd>
@@ -3977,7 +4062,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new set that contains all distinct elements in <code>items</code>, using <code>extractor</code> to get the keys that determine distinctness.</div>
 </dd>
-<dt><a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds"><span class="type-name-link">HolderSet.ObjectSetIterator</span></a>&lt;<a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html" title="type parameter in HolderSet.ObjectSetIterator">T</a>,&#8203;<a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html" title="type parameter in HolderSet.ObjectSetIterator">K</a>&gt; - Class in <a href="com/github/tommyettinger/ds/package-summary.html">com.github.tommyettinger.ds</a></dt>
+<dt><a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds"><span class="type-name-link">HolderSet.HolderSetIterator</span></a>&lt;<a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html" title="type parameter in HolderSet.HolderSetIterator">T</a>,&#8203;<a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html" title="type parameter in HolderSet.HolderSetIterator">K</a>&gt; - Class in <a href="com/github/tommyettinger/ds/package-summary.html">com.github.tommyettinger.ds</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html#%3Cinit%3E(com.github.tommyettinger.ds.HolderSet)">HolderSetIterator(HolderSet&lt;T, K&gt;)</a></span> - Constructor for class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:I">I</h2>
@@ -4968,12 +5055,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Iterates through items in the same order as <a href="com/github/tommyettinger/ds/HolderOrderedSet.html#order()"><code>HolderOrderedSet.order()</code></a>.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html#iterator()">iterator()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.html#iterator()">iterator()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a></dt>
 <dd>
 <div class="block">Returns an iterator for the keys in the set.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html#iterator()">iterator()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.Entries.html#iterator()">iterator()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.Entries.html" title="class in com.github.tommyettinger.ds">IntFloatMap.Entries</a></dt>
 <dd>
 <div class="block">Returns an iterator over the elements contained in this collection.</div>
@@ -6790,9 +6877,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the next element in the iteration.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.OrderedSetIterator.html#next()">next()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.OrderedSetIterator.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet.OrderedSetIterator</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.HolderOrderedSetIterator.html#next()">next()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.HolderOrderedSetIterator.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet.HolderOrderedSetIterator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html#next()">next()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html#next()">next()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.EntryIterator.html#next()">next()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.EntryIterator.html" title="class in com.github.tommyettinger.ds">IntFloatMap.EntryIterator</a></dt>
 <dd>
@@ -6865,6 +6952,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/util/CharIterator.html#next()">next()</a></span> - Method in interface com.github.tommyettinger.ds.support.util.<a href="com/github/tommyettinger/ds/support/util/CharIterator.html" title="interface in com.github.tommyettinger.ds.support.util">CharIterator</a></dt>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/util/FloatIterator.html#next()">next()</a></span> - Method in interface com.github.tommyettinger.ds.support.util.<a href="com/github/tommyettinger/ds/support/util/FloatIterator.html" title="interface in com.github.tommyettinger.ds.support.util">FloatIterator</a></dt>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/util/ShortIterator.html#next()">next()</a></span> - Method in interface com.github.tommyettinger.ds.support.util.<a href="com/github/tommyettinger/ds/support/util/ShortIterator.html" title="interface in com.github.tommyettinger.ds.support.util">ShortIterator</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#next(int)">next(int)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#next(int)">next(int)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Generates the next pseudorandom number with a specific maximum size in bits (not a max number).</div>
@@ -6879,6 +6968,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the next <code>int</code> element in the iteration.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#nextBoolean()">nextBoolean()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextBoolean()">nextBoolean()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Returns the next pseudorandom, uniformly distributed
@@ -6913,6 +7004,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the next <code>byte</code> element in the iteration.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#nextBytes(byte%5B%5D)">nextBytes(byte[])</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextBytes(byte%5B%5D)">nextBytes(byte[])</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Generates random bytes and places them into a user-supplied
@@ -6937,6 +7030,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the next <code>int</code> element in the iteration.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#nextDouble()">nextDouble()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextDouble()">nextDouble()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Returns the next pseudorandom, uniformly distributed
@@ -7016,6 +7111,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the next <code>float</code> element in the iteration.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#nextFloat()">nextFloat()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextFloat()">nextFloat()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Returns the next pseudorandom, uniformly distributed <code>float</code>
@@ -7050,6 +7147,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets a pseudo-random float between <code>innerBound</code> (inclusive) and <code>outerBound</code> (exclusive).</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#nextGaussian()">nextGaussian()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextGaussian()">nextGaussian()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Returns the next pseudorandom, Gaussian ("normally") distributed
@@ -7168,6 +7267,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the next <code>int</code> element in the iteration.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#nextInt()">nextInt()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextInt()">nextInt()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Returns the next pseudorandom, uniformly distributed <code>int</code>
@@ -7179,6 +7280,8 @@ loadScripts(document, 'script');</script>
  value from this random number generator's sequence.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/TricycleRandom.html#nextInt()">nextInt()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/TricycleRandom.html" title="class in com.github.tommyettinger.ds.support">TricycleRandom</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#nextInt(int)">nextInt(int)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextInt(int)">nextInt(int)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
@@ -7234,6 +7337,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the next <code>long</code> element in the iteration.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#nextLong()">nextLong()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#nextLong()">nextLong()</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Returns the next pseudorandom, uniformly distributed <code>long</code>
@@ -7476,6 +7581,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns true if the set has one or more items.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/PrimitiveCollection.html#notEmpty()">notEmpty()</a></span> - Method in interface com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/PrimitiveCollection.html" title="interface in com.github.tommyettinger.ds">PrimitiveCollection</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ShortList.html#notEmpty()">notEmpty()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ShortList.html" title="class in com.github.tommyettinger.ds">ShortList</a></dt>
 <dd>
 <div class="block">Returns true if the array has one or more items, or false otherwise.</div>
@@ -7935,8 +8042,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/tommyettinger/ds/ObjectSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds"><span class="type-name-link">ObjectSet.ObjectSetIterator</span></a>&lt;<a href="com/github/tommyettinger/ds/ObjectSet.ObjectSetIterator.html" title="type parameter in ObjectSet.ObjectSetIterator">T</a>&gt; - Class in <a href="com/github/tommyettinger/ds/package-summary.html">com.github.tommyettinger.ds</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html#%3Cinit%3E(com.github.tommyettinger.ds.HolderSet)">ObjectSetIterator(HolderSet&lt;T, K&gt;)</a></span> - Constructor for class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectSet.ObjectSetIterator.html#%3Cinit%3E(com.github.tommyettinger.ds.ObjectSet)">ObjectSetIterator(ObjectSet&lt;T&gt;)</a></span> - Constructor for class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">ObjectSet.ObjectSetIterator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/tommyettinger/ds/support/function/ObjFloatConsumer.html" title="interface in com.github.tommyettinger.ds.support.function"><span class="type-name-link">ObjFloatConsumer</span></a>&lt;<a href="com/github/tommyettinger/ds/support/function/ObjFloatConsumer.html" title="type parameter in ObjFloatConsumer">T</a>&gt; - Interface in <a href="com/github/tommyettinger/ds/support/function/package-summary.html">com.github.tommyettinger.ds.support.function</a></dt>
@@ -8326,8 +8431,6 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.OrderedMapValues.html#%3Cinit%3E(com.github.tommyettinger.ds.ObjectLongOrderedMap)">OrderedMapValues(ObjectLongOrderedMap&lt;K&gt;)</a></span> - Constructor for class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.OrderedMapValues.html" title="class in com.github.tommyettinger.ds">ObjectLongOrderedMap.OrderedMapValues</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.OrderedMapValues.html#%3Cinit%3E(com.github.tommyettinger.ds.ObjectObjectOrderedMap)">OrderedMapValues(ObjectObjectOrderedMap&lt;K, V&gt;)</a></span> - Constructor for class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.OrderedMapValues.html" title="class in com.github.tommyettinger.ds">ObjectObjectOrderedMap.OrderedMapValues</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.OrderedSetIterator.html#%3Cinit%3E(com.github.tommyettinger.ds.HolderOrderedSet)">OrderedSetIterator(HolderOrderedSet&lt;T, K&gt;)</a></span> - Constructor for class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.OrderedSetIterator.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet.OrderedSetIterator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntOrderedSet.OrderedSetIterator.html#%3Cinit%3E(com.github.tommyettinger.ds.IntOrderedSet)">OrderedSetIterator(IntOrderedSet)</a></span> - Constructor for class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntOrderedSet.OrderedSetIterator.html" title="class in com.github.tommyettinger.ds">IntOrderedSet.OrderedSetIterator</a></dt>
 <dd>&nbsp;</dd>
@@ -8814,53 +8917,125 @@ loadScripts(document, 'script');</script>
 <div class="block">Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.html#putAll(com.github.tommyettinger.ds.IntFloatMap)">putAll(IntFloatMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.html" title="class in com.github.tommyettinger.ds">IntFloatMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatOrderedMap.html#putAll(com.github.tommyettinger.ds.IntFloatOrderedMap)">putAll(IntFloatOrderedMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatOrderedMap.html" title="class in com.github.tommyettinger.ds">IntFloatOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntIntMap.html#putAll(com.github.tommyettinger.ds.IntIntMap)">putAll(IntIntMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntIntMap.html" title="class in com.github.tommyettinger.ds">IntIntMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntIntOrderedMap.html#putAll(com.github.tommyettinger.ds.IntIntOrderedMap)">putAll(IntIntOrderedMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntIntOrderedMap.html" title="class in com.github.tommyettinger.ds">IntIntOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntLongMap.html#putAll(com.github.tommyettinger.ds.IntLongMap)">putAll(IntLongMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntLongMap.html" title="class in com.github.tommyettinger.ds">IntLongMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntLongOrderedMap.html#putAll(com.github.tommyettinger.ds.IntLongOrderedMap)">putAll(IntLongOrderedMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntLongOrderedMap.html" title="class in com.github.tommyettinger.ds">IntLongOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntObjectMap.html#putAll(com.github.tommyettinger.ds.IntObjectMap)">putAll(IntObjectMap&lt;? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntObjectMap.html" title="class in com.github.tommyettinger.ds">IntObjectMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntObjectOrderedMap.html#putAll(com.github.tommyettinger.ds.IntObjectOrderedMap)">putAll(IntObjectOrderedMap&lt;? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">IntObjectOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongFloatMap.html#putAll(com.github.tommyettinger.ds.LongFloatMap)">putAll(LongFloatMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongFloatMap.html" title="class in com.github.tommyettinger.ds">LongFloatMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongFloatOrderedMap.html#putAll(com.github.tommyettinger.ds.LongFloatOrderedMap)">putAll(LongFloatOrderedMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongFloatOrderedMap.html" title="class in com.github.tommyettinger.ds">LongFloatOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongIntMap.html#putAll(com.github.tommyettinger.ds.LongIntMap)">putAll(LongIntMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongIntMap.html" title="class in com.github.tommyettinger.ds">LongIntMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongIntOrderedMap.html#putAll(com.github.tommyettinger.ds.LongIntOrderedMap)">putAll(LongIntOrderedMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongIntOrderedMap.html" title="class in com.github.tommyettinger.ds">LongIntOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongLongMap.html#putAll(com.github.tommyettinger.ds.LongLongMap)">putAll(LongLongMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongLongMap.html" title="class in com.github.tommyettinger.ds">LongLongMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongLongOrderedMap.html#putAll(com.github.tommyettinger.ds.LongLongOrderedMap)">putAll(LongLongOrderedMap)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongLongOrderedMap.html" title="class in com.github.tommyettinger.ds">LongLongOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongObjectMap.html#putAll(com.github.tommyettinger.ds.LongObjectMap)">putAll(LongObjectMap&lt;? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectMap.html" title="class in com.github.tommyettinger.ds">LongObjectMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongObjectOrderedMap.html#putAll(com.github.tommyettinger.ds.LongObjectOrderedMap)">putAll(LongObjectOrderedMap&lt;? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">LongObjectOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectFloatMap.html#putAll(com.github.tommyettinger.ds.ObjectFloatMap)">putAll(ObjectFloatMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatMap.html" title="class in com.github.tommyettinger.ds">ObjectFloatMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectFloatOrderedMap)">putAll(ObjectFloatOrderedMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectFloatOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectIntMap.html#putAll(com.github.tommyettinger.ds.ObjectIntMap)">putAll(ObjectIntMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntMap.html" title="class in com.github.tommyettinger.ds">ObjectIntMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectIntOrderedMap)">putAll(ObjectIntOrderedMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectIntOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectLongMap.html#putAll(com.github.tommyettinger.ds.ObjectLongMap)">putAll(ObjectLongMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongMap.html" title="class in com.github.tommyettinger.ds">ObjectLongMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectLongOrderedMap)">putAll(ObjectLongOrderedMap&lt;? extends K&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectLongOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectObjectMap.html#putAll(com.github.tommyettinger.ds.ObjectObjectMap)">putAll(ObjectObjectMap&lt;? extends K, ? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.html#putAll(com.github.tommyettinger.ds.ObjectObjectOrderedMap)">putAll(ObjectObjectOrderedMap&lt;? extends K, ? extends V&gt;)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Puts every key-value pair in the given map into this, with the values from the given map
+ overwriting the previous values if two keys are identical.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.html#putAll(com.github.tommyettinger.ds.PrimitiveCollection.OfInt,com.github.tommyettinger.ds.PrimitiveCollection.OfFloat)">putAll(PrimitiveCollection.OfInt, PrimitiveCollection.OfFloat)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.html" title="class in com.github.tommyettinger.ds">IntFloatMap</a></dt>
 <dd>
 <div class="block">Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().</div>
@@ -9213,9 +9388,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/FloatList.FloatListIterator.html#remove()">remove()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/FloatList.FloatListIterator.html" title="class in com.github.tommyettinger.ds">FloatList.FloatListIterator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.OrderedSetIterator.html#remove()">remove()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.OrderedSetIterator.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet.OrderedSetIterator</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.HolderOrderedSetIterator.html#remove()">remove()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.HolderOrderedSetIterator.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet.HolderOrderedSetIterator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html#remove()">remove()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html#remove()">remove()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.MapIterator.html#remove()">remove()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.MapIterator.html" title="class in com.github.tommyettinger.ds">IntFloatMap.MapIterator</a></dt>
 <dd>&nbsp;</dd>
@@ -9531,51 +9706,85 @@ loadScripts(document, 'script');</script>
 <div class="block">Removes and returns the item at the specified index.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes and returns the item at the given index in this set's order.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatOrderedMap.html" title="class in com.github.tommyettinger.ds">IntFloatOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntIntOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntIntOrderedMap.html" title="class in com.github.tommyettinger.ds">IntIntOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntList.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntList.html" title="class in com.github.tommyettinger.ds">IntList</a></dt>
 <dd>
 <div class="block">Removes and returns the item at the specified index.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntLongOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntLongOrderedMap.html" title="class in com.github.tommyettinger.ds">IntLongOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntObjectOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">IntObjectOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntOrderedSet.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntOrderedSet.html" title="class in com.github.tommyettinger.ds">IntOrderedSet</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes and returns the item at the given index in this set's order.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongFloatOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongFloatOrderedMap.html" title="class in com.github.tommyettinger.ds">LongFloatOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongIntOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongIntOrderedMap.html" title="class in com.github.tommyettinger.ds">LongIntOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongList.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongList.html" title="class in com.github.tommyettinger.ds">LongList</a></dt>
 <dd>
 <div class="block">Removes and returns the item at the specified index.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongLongOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongLongOrderedMap.html" title="class in com.github.tommyettinger.ds">LongLongOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongObjectOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">LongObjectOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/LongOrderedSet.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/LongOrderedSet.html" title="class in com.github.tommyettinger.ds">LongOrderedSet</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes and returns the item at the given index in this set's order.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/NumberedSet.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/NumberedSet.html" title="class in com.github.tommyettinger.ds">NumberedSet</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes and returns the item at the given index in this set's order.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectFloatOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectFloatOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectIntOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectIntOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectList.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds">ObjectList</a></dt>
 <dd>
 <div class="block">This is an alias for <a href="com/github/tommyettinger/ds/ObjectList.html#remove(int)"><code>ObjectList.remove(int)</code></a> to make the API the same for primitive lists.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectLongOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectLongOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectObjectOrderedMap.html" title="class in com.github.tommyettinger.ds">ObjectObjectOrderedMap</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes the entry at the given index in the order, returning the value of that entry.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectOrderedSet.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectOrderedSet.html" title="class in com.github.tommyettinger.ds">ObjectOrderedSet</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes and returns the item at the given index in this set's order.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ShortList.html#removeAt(int)">removeAt(int)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ShortList.html" title="class in com.github.tommyettinger.ds">ShortList</a></dt>
 <dd>
 <div class="block">Removes and returns the item at the specified index.</div>
@@ -9826,9 +10035,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/FloatList.FloatListIterator.html#reset()">reset()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/FloatList.FloatListIterator.html" title="class in com.github.tommyettinger.ds">FloatList.FloatListIterator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.OrderedSetIterator.html#reset()">reset()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.OrderedSetIterator.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet.OrderedSetIterator</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderOrderedSet.HolderOrderedSetIterator.html#reset()">reset()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderOrderedSet.HolderOrderedSetIterator.html" title="class in com.github.tommyettinger.ds">HolderOrderedSet.HolderOrderedSetIterator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html#reset()">reset()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html#reset()">reset()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/IntFloatMap.MapIterator.html#reset()">reset()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/IntFloatMap.MapIterator.html" title="class in com.github.tommyettinger.ds">IntFloatMap.MapIterator</a></dt>
 <dd>&nbsp;</dd>
@@ -10426,6 +10635,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectSet.html#setLoadFactor(float)">setLoadFactor(float)</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#setSeed(long)">setSeed(long)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>
+<div class="block">Sets the only state, which can be given any long value; this seed value
+ will not be altered.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#setSeed(long)">setSeed(long)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Sets the seed of this random number generator using a single
@@ -10439,6 +10653,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/TricycleRandom.html#setSeed(long)">setSeed(long)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/TricycleRandom.html" title="class in com.github.tommyettinger.ds.support">TricycleRandom</a></dt>
 <dd>
 <div class="block">This initializes all 3 states of the generator to random values based on the given seed.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#setSelectedState(int,long)">setSelectedState(int, long)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>
+<div class="block">Sets the only state, which can be given any long value.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#setSelectedState(int,long)">setSelectedState(int, long)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
@@ -10576,6 +10794,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Replaces the value corresponding to this entry with the specified
  value (optional operation).</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#setWith(com.github.tommyettinger.ds.support.EnhancedRandom)">setWith(EnhancedRandom)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
+<dd>
+<div class="block">Similar to <a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#copy()"><code>EnhancedRandom.copy()</code></a>, but fills this EnhancedRandom with the state of another EnhancedRandom, usually
+ (but not necessarily) one of the same type.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.html#shift">shift</a></span> - Variable in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.html" title="class in com.github.tommyettinger.ds">HolderSet</a></dt>
 <dd>&nbsp;</dd>
@@ -11186,6 +11409,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ShortList.html#size()">size()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ShortList.html" title="class in com.github.tommyettinger.ds">ShortList</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#skip(long)">skip(long)</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>
+<div class="block">Skips the state forward or backwards by the given <code>advance</code>, then returns the result of <a href="com/github/tommyettinger/ds/support/DistinctRandom.html#nextLong()"><code>DistinctRandom.nextLong()</code></a>
+ at the same point in the sequence.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/EnhancedRandom.html#skip(long)">skip(long)</a></span> - Method in interface com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/EnhancedRandom.html" title="interface in com.github.tommyettinger.ds.support">EnhancedRandom</a></dt>
 <dd>
 <div class="block">Advances or rolls back the <code>LaserRandom</code>' state without actually generating each number.</div>
@@ -11503,6 +11731,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sorts this ObjectObjectOrderedMap in-place by the given Comparator used on the values.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/DistinctRandom.html#state">state</a></span> - Variable in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/DistinctRandom.html" title="class in com.github.tommyettinger.ds.support">DistinctRandom</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#stateA">stateA</a></span> - Variable in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>
 <div class="block">Can be any long value.</div>
@@ -11961,7 +12191,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/sort/FloatComparators.TolerantComparator.html#%3Cinit%3E(float)">TolerantComparator(float)</a></span> - Constructor for class com.github.tommyettinger.ds.support.sort.<a href="com/github/tommyettinger/ds/support/sort/FloatComparators.TolerantComparator.html" title="class in com.github.tommyettinger.ds.support.sort">FloatComparators.TolerantComparator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html#toList()">toList()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.ObjectSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.ObjectSetIterator</a></dt>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html#toList()">toList()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/HolderSet.HolderSetIterator.html" title="class in com.github.tommyettinger.ds">HolderSet.HolderSetIterator</a></dt>
 <dd>
 <div class="block">Returns a new <a href="com/github/tommyettinger/ds/ObjectList.html" title="class in com.github.tommyettinger.ds"><code>ObjectList</code></a> containing the remaining items.</div>
 </dd>
@@ -12096,6 +12326,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ObjectSet.html#toString()">toString()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ObjectSet.html" title="class in com.github.tommyettinger.ds">ObjectSet</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/ShortList.html#toString()">toString()</a></span> - Method in class com.github.tommyettinger.ds.<a href="com/github/tommyettinger/ds/ShortList.html" title="class in com.github.tommyettinger.ds">ShortList</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/LaserRandom.html#toString()">toString()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/LaserRandom.html" title="class in com.github.tommyettinger.ds.support">LaserRandom</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/github/tommyettinger/ds/support/TricycleRandom.html#toString()">toString()</a></span> - Method in class com.github.tommyettinger.ds.support.<a href="com/github/tommyettinger/ds/support/TricycleRandom.html" title="class in com.github.tommyettinger.ds.support">TricycleRandom</a></dt>
 <dd>&nbsp;</dd>
