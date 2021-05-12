@@ -169,4 +169,21 @@ public class DistinctRandom extends Random implements EnhancedRandom {
     public double nextGaussian() {
         return EnhancedRandom.super.nextGaussian();
     }
+
+    @Override
+    public boolean equals (Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        DistinctRandom that = (DistinctRandom)o;
+
+        return state == that.state;
+    }
+
+    @Override
+    public String toString () {
+        return "DistinctRandom{" + "state=" + state + "L}";
+    }
 }
