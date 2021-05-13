@@ -54,18 +54,20 @@ the JDK only offers `int`, `long`, and `double`, and primitive `Comparator`s (wh
 because there are some randomized methods here and `java.util.SplittableRandom` isn't available everywhere, an alternative
 high-quality and very-fast random number generator is here, `com.github.tommyettinger.ds.support.LaserRandom`, which extends
 `java.util.Random` for maximum compatibility. It implements `com.github.tommyettinger.ds.support.EnhancedRandom`, an interface
-that allows external code to match the API used by LaserRandom; EnhancedRandom is mostly default methods. There's also another
-implementation of EnhancedRandom here, `com.github.tommyettinger.ds.support.TricycleRandom`, which can be significantly faster
-but doesn't always produce very-random numbers right at the start of usage.
+that allows external code to match the API used by LaserRandom; EnhancedRandom is mostly default methods. There's also more
+implementations of EnhancedRandom here. `com.github.tommyettinger.ds.support.TricycleRandom` can be significantly faster
+but doesn't always produce very-random numbers right at the start of usage. `com.github.tommyettinger.ds.support.DistinctRandom`
+is very similar to JDK 8's SplittableRandom, without the splitting, and will produce every possible `long` with its
+`nextLong()` method before it ever repeats a returned value.
 
 ## How do I get it?
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.1.1'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.1.2'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.1.1:sources'` to its dependencies, and in its
+`implementation 'com.github.tommyettinger:jdkgdxds:0.1.2:sources'` to its dependencies, and in its
 `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />

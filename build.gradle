@@ -20,7 +20,7 @@ def projectName = 'jdkgdxds'
 version "$VERSION_NAME"
 group 'com.github.tommyettinger'
 
-//api "com.github.tommyettinger:jdkgdxds:0.1.1"
+//api "com.github.tommyettinger:jdkgdxds:0.1.2"
 
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
@@ -41,7 +41,7 @@ if (JavaVersion.current().isJava9Compatible()) {
 }
 compileJava.exclude("emu")
 javadoc.exclude("emu")
-javadoc.options.source("15")
+javadoc.options.source("16")
 javadoc.destinationDir = file("docs/apidocs")
 
 sourceSets.test.resources.srcDirs = [ file('src/test/resources').path ]

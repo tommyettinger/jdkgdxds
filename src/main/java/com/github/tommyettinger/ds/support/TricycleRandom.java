@@ -29,6 +29,12 @@ import java.util.Random;
  * add, rotate, and XOR operations or their equivalents). Keeping with the Marx brother theme, there was also a
  * HarpoRandom, which was very similar to this but not quite as fast.
  * <br>
+ * There is a known issue with TricycleRandom where even though it passes one thorough test that looks for "bit
+ * dependencies" in the PractRand suite, and passes all other tests in PractRand, it eventually fails a similar
+ * test in a tool called hwd, though it takes over 400 terabytes of tested numbers to get to that point.
+ * <b>TricycleRandom isn't yet considered a stable API</b> as a result, and its algorithm may change (along with the
+ * numbers it produces) in future versions. Both {@link LaserRandom} and {@link DistinctRandom} are considered stable.
+ * <br>
  * This can be used as a substitute for {@link LaserRandom}, but it doesn't start out randomizing its early results very
  * well, unlike LaserRandom. If you initialize this with {@link #setSeed(long)}, then the results should be random from
  * the start, and unrelated to the original seed. It can also be more of a challenge to handle 3 states than 2 in some
