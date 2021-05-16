@@ -695,6 +695,14 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		return get(random.nextInt(n));
 	}
 
+	/**
+	 * Reduces the size of the array to the specified size. If the array is already smaller than the specified
+	 * size, no action is taken.
+	 */
+	public void truncate (int newSize) {
+		if (size() > newSize) { removeRange(newSize, size()); }
+	}
+
 	@Override
 	public void reverse () {
 		Collections.reverse(this);

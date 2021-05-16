@@ -599,13 +599,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		if (size == 0) { return "[]"; }
 		char[] items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
-		buffer.append('[');
+		buffer.append("['");
 		buffer.append(items[0]);
 		for (int i = 1; i < size; i++) {
-			buffer.append(", ");
+			buffer.append("', '");
 			buffer.append(items[i]);
 		}
-		buffer.append(']');
+		buffer.append("']");
 		return buffer.toString();
 	}
 
@@ -623,7 +623,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Simply returns all of the char items in this as one String, with no delimiters.
-	 * This is the same as calling {@code String.valueOf(charList.items, 0, charList.size)} .
+	 * This is the same as calling {@code String.valueOf(charList.items, 0, charList.size())} .
 	 * @return a String containing only the char items in this CharList
 	 */
 	public String toDenseString() {
