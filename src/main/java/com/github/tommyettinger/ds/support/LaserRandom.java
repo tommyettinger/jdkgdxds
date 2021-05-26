@@ -674,35 +674,46 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	}
 
 	/**
-	 * Approximates a random variate with a normal distribution by using EnhancedRandom's probit() method (inlined) with
-	 * EnhancedRandom's nextExclusiveDoubleEquidistant() as the input (also inlined). The mean is 0.0 and the standard
-	 * deviation is 1. All possible double results are between {@code -8.209536145151493} and {@code 8.209536145151493}.
-	 * This uses an algorithm by Peter John Acklam, as implemented by Sherali Karimov.
-	 * <a href="https://web.archive.org/web/20150910002142/http://home.online.no/~pjacklam/notes/invnorm/impl/karimov/StatUtil.java">Original source</a>.
-	 * <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Information on the algorithm</a>.
-	 * <a href="https://en.wikipedia.org/wiki/Probit_function">Wikipedia's page on the probit function</a> may help, but
-	 * is more likely to just be confusing.
-	 * @return a normal-distributed random double with mean 0 and standard deviation 1 .
+	 * Returns the next pseudorandom, Gaussian ("normally") distributed
+	 * {@code double} value with mean {@code 0.0} and standard
+	 * deviation {@code 1.0} from this random number generator's sequence.
+	 * <p>
+	 * The general contract of {@code nextGaussian} is that one
+	 * {@code double} value, chosen from (approximately) the usual
+	 * normal distribution with mean {@code 0.0} and standard deviation
+	 * {@code 1.0}, is pseudorandomly generated and returned.
+	 * <p>
+	 * This uses an imperfect approximation, but one that is much faster than
+	 * the Box-Muller transform, Marsaglia Polar method, or a transform using the
+	 * probit function. Like earlier versions that used probit(), it requests
+	 * exactly one long from the generator's sequence (using {@link #nextLong()}).
+	 * This makes it different from code like java.util.Random's nextGaussian()
+	 * method, which can (rarely) fetch a higher number of random doubles.
+	 * <p>
+	 * This can't produce as extreme results in extremely-rare cases as methods
+	 * like Box-Muller and Marsaglia Polar can. All possible results are
+	 * between {@code -7.881621123730187} and {@code 7.7975656902966115}.
+	 * <p>
+	 * <a href="https://marc-b-reynolds.github.io/distribution/2021/03/18/CheapGaussianApprox.html">Credit
+	 * to Marc B. Reynolds</a> for coming up with this clever fusion of the
+	 * already-bell-curved bit count and a triangular distribution to smooth
+	 * it out. Using one random long instead of two is the contribution here.
+	 *
+	 * @return the next pseudorandom, Gaussian ("normally") distributed
+	 * {@code double} value with mean {@code 0.0} and standard deviation
+	 * {@code 1.0} from this random number generator's sequence
 	 */
 	public double nextGaussian () {
-		final double d = (nextLong(0x1FFFFFFFFFFFFFL) + 1L) * 0x1p-53;
-		if (d < 0.02425) {
-			final double q = Math.sqrt(-2.0 * Math.log(d));
-			return (((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
-				(((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
-		}
-		else if (0.97575 < d) {
-			final double q = Math.sqrt(-2.0 * Math.log(1 - d));
-			return -(((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
-				(((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
-		}
-		else {
-			final double q = d - 0.5;
-			final double r = q * q;
-			return (((((-3.969683028665376e+01 * r + 2.209460984245205e+02) * r + -2.759285104469687e+02) * r + 1.383577518672690e+02) * r + -3.066479806614716e+01) * r + 2.506628277459239e+00) * q / (
-				((((-5.447609879822406e+01 * r + 1.615858368580409e+02) * r + -1.556989798598866e+02) * r + 6.680131188771972e+01) * r + -1.328068155288572e+01) * r + 1.0);
-		}
-
+		//// Because the bitCount() doesn't really care about the numerical value of its argument, only its Hamming weight,
+		//// we can do some very basic scrambling of the same random long and get the bit count of that.
+		//// We use an XLCG for this purpose, with reversed order to preserve some desirable qualities of the long (if u is
+		//// 0, then this returns 0.0, but it shouldn't return 0.0 for any other u value).
+		//// 0xC6BC279692B5C323L is arbitrary, except that its last three bits need to be 011. Half of its bits are 1.
+		//// 0xC6AC29E5C6AC29E5L is less arbitrary; it has a bit count of 32 as a whole, a bit count of 16 for both the
+		//// upper and lower halves, and its last three bits are 101, a requirement of an XLCG.
+		//// Because it only needs one floating-point operation, it is quite fast on a CPU.
+		final long u = nextLong();
+		return 0x1.fb760cp-35 * ((Long.bitCount(u * 0xC6BC279692B5C323L ^ 0xC6AC29E5C6AC29E5L) - 32L << 32) + (u & 0xFFFFFFFFL) - (u >>> 32));
 	}
 
 	/**

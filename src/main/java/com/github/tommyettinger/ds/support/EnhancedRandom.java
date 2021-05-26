@@ -659,21 +659,38 @@ public interface EnhancedRandom {
 	 * {@code double} value, chosen from (approximately) the usual
 	 * normal distribution with mean {@code 0.0} and standard deviation
 	 * {@code 1.0}, is pseudorandomly generated and returned.
-	 *
-	 * <p>This uses an approximation as implemented by {@link #probit(double)},
-	 * which can't produce as extreme results in extremely-rare cases as methods
+	 * <p>
+	 * This uses an imperfect approximation, but one that is much faster than
+	 * the Box-Muller transform, Marsaglia Polar method, or a transform using the
+	 * probit function. Like earlier versions that used probit(), it requests
+	 * exactly one long from the generator's sequence (using {@link #nextLong()}).
+	 * This makes it different from code like java.util.Random's nextGaussian()
+	 * method, which can (rarely) fetch a higher number of random doubles.
+	 * <p>
+	 * This can't produce as extreme results in extremely-rare cases as methods
 	 * like Box-Muller and Marsaglia Polar can. All possible results are
-	 * between {@code -8.209536145151493} and {@code 8.209536145151493}.
-	 * Internally, this uses {@link #nextExclusiveDoubleEquidistant()}, not
-	 * {@link #nextDouble()}, because probit() produces a sudden jump if given
-	 * an input of 0, so we exclude 0 from the possible random probit() inputs.
+	 * between {@code -7.881621123730187} and {@code 7.7975656902966115}.
+	 * <p>
+	 * <a href="https://marc-b-reynolds.github.io/distribution/2021/03/18/CheapGaussianApprox.html">Credit
+	 * to Marc B. Reynolds</a> for coming up with this clever fusion of the
+	 * already-bell-curved bit count and a triangular distribution to smooth
+	 * it out. Using one random long instead of two is the contribution here.
 	 *
-	 * @return the next pseudorandom, Gaussian ("normally") distributed
+	 * @return the next pseudorandom, approximately Gaussian ("normally") distributed
 	 * {@code double} value with mean {@code 0.0} and standard deviation
 	 * {@code 1.0} from this random number generator's sequence
 	 */
 	default double nextGaussian () {
-		return probit(nextExclusiveDoubleEquidistant());
+		//// Because the bitCount() doesn't really care about the numerical value of its argument, only its Hamming weight,
+		//// we can do some very basic scrambling of the same random long and get the bit count of that.
+		//// We use an XLCG for this purpose, with reversed order to preserve some desirable qualities of the long (if u is
+		//// 0, then this returns 0.0, but it shouldn't return 0.0 for any other u value).
+		//// 0xC6BC279692B5C323L is arbitrary, except that its last three bits need to be 011. Half of its bits are 1.
+		//// 0xC6AC29E5C6AC29E5L is less arbitrary; it has a bit count of 32 as a whole, a bit count of 16 for both the
+		//// upper and lower halves, and its last three bits are 101, a requirement of an XLCG.
+		//// Because it only needs one floating-point operation, it is quite fast on a CPU.
+		final long u = nextLong();
+		return 0x1.fb760cp-35 * ((Long.bitCount(u * 0xC6BC279692B5C323L ^ 0xC6AC29E5C6AC29E5L) - 32L << 32) + (u & 0xFFFFFFFFL) - (u >>> 32));
 	}
 
 	/**
