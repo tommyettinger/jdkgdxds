@@ -25,7 +25,11 @@ public interface Arrangeable {
 	 *
 	 * @param random any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
 	 */
-	void shuffle (EnhancedRandom random);
+	default void shuffle (EnhancedRandom random){
+		for (int i = size() - 1; i >= 0; i--) {
+			swap(i, random.nextInt(i + 1));
+		}
+	}
 
 	/**
 	 * Reverses this Arrangeable in-place.

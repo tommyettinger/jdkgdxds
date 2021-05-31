@@ -16,6 +16,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.EnhancedRandom;
+
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,7 +30,7 @@ import java.util.NoSuchElementException;
  * backing array may wrap back to the beginning, making add and remove at the beginning and end O(1) (unless the backing array needs to
  * resize when adding). Deque functionality is provided via {@link #removeLast()} and {@link #addFirst(Object)}.
  */
-public class ObjectDeque<T> implements Deque<T>, Iterable<T> {
+public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 	/** Contains the values in the queue. Head and tail indices go in a circle around this array, wrapping at the end. */
 	protected T[] values;
 
@@ -1132,6 +1134,62 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T> {
 			if (itsIndex == itsBackingLength) itsIndex = 0;
 		}
 		return true;
+	}
+
+	/**
+	 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
+	 *
+	 * @param first  the first position, must not be negative and must be less than {@link #size()}
+	 * @param second the second position, must not be negative and must be less than {@link #size()}
+	 */
+	@Override
+	public void swap (int first, int second) {
+		if (first < 0) throw new IndexOutOfBoundsException("first index can't be < 0: " + first);
+		if (first >= size) throw new IndexOutOfBoundsException("first index can't be >= size: " + first + " >= " + size);
+		if (second < 0) throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
+		if (second >= size) throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
+		final T[] values = this.values;
+
+		int f = head + first;
+		if (f >= values.length) {
+			f -= values.length;
+		}
+
+		int s = head + second;
+		if (s >= values.length) {
+			s -= values.length;
+		}
+
+		T fv = values[f];
+		values[f] = values[s];
+		values[s] = fv;
+
+	}
+
+	/**
+	 * Reverses this Arrangeable in-place.
+	 */
+	@Override
+	public void reverse () {
+		final T[] values = this.values;
+		int f, s, len = values.length;
+		T fv;
+		for (int n = size >> 1, b = 0, t = size - 1; b <= n && b != t; b++, t--) {
+			f = head + b;
+			if(f >= len) f -= len;
+			s = head + t;
+			if(s >= len) s -= len;
+			fv = values[f];
+			values[f] = values[s];
+			values[s] = fv;
+		}
+	}
+
+	public T random(EnhancedRandom random){
+		if(size <= 0) {
+			throw new NoSuchElementException("ObjectDeque is empty.");
+		}
+		return get(random.nextInt(size));
 	}
 
 	public static class DequeIterator<T> implements Iterator<T>, Iterable<T> {
