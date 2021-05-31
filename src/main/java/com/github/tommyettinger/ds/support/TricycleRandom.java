@@ -23,24 +23,26 @@ import java.util.Random;
  * 192, though this doesn't seem likely.
  * <br>
  * This is closely related to Mark Overton's <a href="https://www.romu-random.org/">Romu generators</a>, specifically
- * RomuTrio, but this avoids multiplication. TricycleRandom is usually about as fast as RomuTrio or a little faster.
- * Unlike RomuTrio, there isn't a clear problematic state with a period of 1 (which happens when all of its states are
- * 0). I have also called this generator ChicoRandom, and it's related to GrouchoRandom, both ARX generators (using only
- * add, rotate, and XOR operations or their equivalents). Keeping with the Marx brother theme, there was also a
- * HarpoRandom, which was very similar to this but not quite as fast.
+ * RomuTrio, but this gets a little faster than RomuTrio by using just one less rotation. Unlike RomuTrio, there isn't a
+ * clear problematic state with a period of 1 (which happens when all of its states are 0). This generator isn't an ARX
+ * generator any more (a previous version was), but its performance isn't much different (like RomuTrio, the one
+ * multiplication this uses pipelines very well, so it doesn't slow down the generator).
  * <br>
- * There is a known issue with TricycleRandom where even though it passes one thorough test that looks for "bit
- * dependencies" in the PractRand suite, and passes all other tests in PractRand, it eventually fails a similar
- * test in a tool called hwd, though it takes over 400 terabytes of tested numbers to get to that point.
+ * TricycleRandom passes 64TB of testing with PractRand, which uses a suite of tests to look for a variety of potential
+ * problems. Testing a larger amount of random data needs quite a bit more memory than I currently have, at least with
+ * PractRand -- another test, hwd, can test a much larger amount of data but only uses a single test. The test hwd uses
+ * looks for long-range bit-dependencies, where one bit's state earlier in the generated numbers determines the state of
+ * a future bit with a higher-than-reasonable likelihood. A previous version of TricycleRandom passed PractRand, also to
+ * 64TB, but failed hwd around 400 TB of data. This version of TricycleRandom
  * <b>TricycleRandom isn't yet considered a stable API</b> as a result, and its algorithm may change (along with the
  * numbers it produces) in future versions. Both {@link LaserRandom} and {@link DistinctRandom} are considered stable.
  * <br>
  * This can be used as a substitute for {@link LaserRandom}, but it doesn't start out randomizing its early results very
  * well, unlike LaserRandom. If you initialize this with {@link #setSeed(long)}, then the results should be random from
  * the start, and unrelated to the original seed. It can also be more of a challenge to handle 3 states than 2 in some
- * situations. You might prefer LaserRandom's many different streams, which shouldn't overlap and have a guaranteed
- * period of 2 to the 64, to TricycleRandom's big unknown sub-cycles. LaserRandom can also {@link LaserRandom#skip(long)}
- * and this cannot.
+ * situations, or 1 state for DistinctRandom. You might prefer LaserRandom's many different streams, which shouldn't
+ * overlap and have a guaranteed period of 2 to the 64, to TricycleRandom's big unknown sub-cycles. LaserRandom and
+ * DistinctRandom can also {@link LaserRandom#skip(long)} while this cannot.
  */
 public class TricycleRandom extends Random implements EnhancedRandom {
 
@@ -222,23 +224,23 @@ public class TricycleRandom extends Random implements EnhancedRandom {
     }
 
     public long nextLong() {
-        final long a0 = stateA;
-        final long b0 = stateB;
-        final long c0 = stateC;
-        stateA = b0 ^ c0 + 0xC6BC279692B5C323L;
-        stateB = Long.rotateLeft(a0, 46) + c0;
-        stateC = Long.rotateLeft(b0, 23) - a0;
-        return a0;
+        final long fa = this.stateA;
+        final long fb = this.stateB;
+        final long fc = this.stateC;
+        this.stateA = 0xD1342543DE82EF95L * fc;
+        this.stateB = fa ^ fb ^ fc;
+        this.stateC = Long.rotateLeft(fb, 41) + 0xC6BC279692B5C323L;
+        return fa;
     }
 
     public int next(int bits) {
-        final long a0 = stateA;
-        final long b0 = stateB;
-        final long c0 = stateC;
-        stateA = b0 ^ c0 + 0xC6BC279692B5C323L;
-        stateB = Long.rotateLeft(a0, 46) + c0;
-        stateC = Long.rotateLeft(b0, 23) - a0;
-        return (int)a0 >>> (32 - bits);
+        final long fa = this.stateA;
+        final long fb = this.stateB;
+        final long fc = this.stateC;
+        this.stateA = 0xD1342543DE82EF95L * fc;
+        this.stateB = fa ^ fb ^ fc;
+        this.stateC = Long.rotateLeft(fb, 41) + 0xC6BC279692B5C323L;
+        return (int)fa >>> (32 - bits);
     }
 
     public TricycleRandom copy() {
