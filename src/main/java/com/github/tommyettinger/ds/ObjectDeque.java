@@ -42,8 +42,11 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T> {
 	/** Number of elements in the queue. */
 	public int size = 0;
 
-	private transient @Nullable DequeIterator<T> iterator1;
-	private transient @Nullable DequeIterator<T> iterator2;
+	protected transient @Nullable DequeIterator<T> iterator1;
+	protected transient @Nullable DequeIterator<T> iterator2;
+
+	protected transient @Nullable DequeIterator<T> descendingIterator1;
+	protected transient @Nullable DequeIterator<T> descendingIterator2;
 
 	/** Creates a new ObjectDeque which can hold 16 values without needing to resize backing array. */
 	public ObjectDeque () {
@@ -62,7 +65,7 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T> {
 		T[] values = this.values;
 
 		if (size == values.length) {
-			resize(values.length << 1);// * 2
+			resize(values.length << 1);
 			values = this.values;
 		}
 
@@ -80,7 +83,7 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T> {
 		T[] values = this.values;
 
 		if (size == values.length) {
-			resize(values.length << 1);// * 2
+			resize(values.length << 1);
 			values = this.values;
 		}
 
@@ -609,7 +612,20 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T> {
 	 */
 	@Override
 	public Iterator<T> descendingIterator () {
-		throw new UnsupportedOperationException("descendingIterator() is not yet implemented.");
+		if (descendingIterator1 == null || descendingIterator2 == null) {
+			descendingIterator1 = new DequeIterator<>(this, true);
+			descendingIterator2 = new DequeIterator<>(this, true);
+		}
+		if (!descendingIterator1.valid) {
+			descendingIterator1.reset();
+			descendingIterator1.valid = true;
+			descendingIterator2.valid = false;
+			return descendingIterator1;
+		}
+		descendingIterator2.reset();
+		descendingIterator2.valid = true;
+		descendingIterator1.valid = false;
+		return descendingIterator2;
 	}
 
 	/**
@@ -1118,44 +1134,45 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T> {
 		return true;
 	}
 
-	static public class DequeIterator<T> implements Iterator<T>, Iterable<T> {
+	public static class DequeIterator<T> implements Iterator<T>, Iterable<T> {
 		private final ObjectDeque<T> deque;
-		private final boolean allowRemove;
+		private final boolean descending;
 		int index;
 		boolean valid = true;
 
 		public DequeIterator (ObjectDeque<T> deque) {
-			this(deque, true);
+			this(deque, false);
 		}
 
-		public DequeIterator (ObjectDeque<T> deque, boolean allowRemove) {
+		public DequeIterator (ObjectDeque<T> deque, boolean descendingOrder) {
 			this.deque = deque;
-			this.allowRemove = allowRemove;
+			if(this.descending = descendingOrder)
+				index = this.deque.size - 1;
 		}
 
 		public boolean hasNext () {
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
-			return index < deque.size;
+			return descending ? index >= 0 : index < deque.size;
 		}
 
 		public T next () {
-			if (index >= deque.size) throw new NoSuchElementException(String.valueOf(index));
+			if (index >= deque.size || index < 0) throw new NoSuchElementException(String.valueOf(index));
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
-			return deque.get(index++);
+			return deque.get(descending ? index-- : index++);
 		}
 
 		public void remove () {
-			if (!allowRemove) throw new RuntimeException("Removal from this QueueIterator is not allowed.");
-			index--;
+			if(descending) index++;
+			else index--;
 			deque.removeIndex(index);
 		}
 
 		public void reset () {
-			index = 0;
+			index = descending ? deque.size - 1 : 0;
 		}
 
 		public Iterator<T> iterator () {
