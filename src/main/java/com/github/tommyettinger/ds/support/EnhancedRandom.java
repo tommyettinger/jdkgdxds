@@ -668,8 +668,8 @@ public interface EnhancedRandom {
 	 * method, which can (rarely) fetch a higher number of random doubles.
 	 * <p>
 	 * This can't produce as extreme results in extremely-rare cases as methods
-	 * like Box-Muller and Marsaglia Polar can. All possible results are
-	 * between {@code -7.881621123730187} and {@code 7.7975656902966115}.
+	 * like Box-Muller and Marsaglia Polar can. All possible results are between
+	 * {@code -7.929080009460449} and {@code 7.929080009460449}, inclusive.
 	 * <p>
 	 * <a href="https://marc-b-reynolds.github.io/distribution/2021/03/18/CheapGaussianApprox.html">Credit
 	 * to Marc B. Reynolds</a> for coming up with this clever fusion of the
@@ -681,16 +681,20 @@ public interface EnhancedRandom {
 	 * {@code 1.0} from this random number generator's sequence
 	 */
 	default double nextGaussian () {
-		//// Because the bitCount() doesn't really care about the numerical value of its argument, only its Hamming weight,
-		//// we can do some very basic scrambling of the same random long and get the bit count of that.
-		//// We use an XLCG for this purpose, with reversed order to preserve some desirable qualities of the long (if u is
-		//// 0, then this returns 0.0, but it shouldn't return 0.0 for any other u value).
-		//// 0xC6BC279692B5C323L is arbitrary, except that its last three bits need to be 011. Half of its bits are 1.
-		//// 0xC6AC29E5C6AC29E5L is less arbitrary; it has a bit count of 32 as a whole, a bit count of 16 for both the
-		//// upper and lower halves, and its last three bits are 101, a requirement of an XLCG.
-		//// Because it only needs one floating-point operation, it is quite fast on a CPU.
-		final long u = nextLong();
-		return 0x1.fb760cp-35 * ((Long.bitCount(u * 0xC6BC279692B5C323L ^ 0xC6AC29E5C6AC29E5L) - 32L << 32) + (u & 0xFFFFFFFFL) - (u >>> 32));
+		//// here, we want to only request one long from this EnhancedRandom.
+		//// because the bitCount() doesn't really care about the numerical value of its argument, only its Hamming weight,
+		//// we use the random long un-scrambled, and get the bit count of that.
+		//// for the later steps, we multiply the random long by a specific constant and get the difference of its halves.
+		//// 0xC6AC29E4C6AC29E5L is... OK, it's complicated. It needs to have almost-identical upper and lower halves, but
+		//// for reasons I don't currently understand, if the upper and lower halves are equal, then the min and max results
+		//// of the Gaussian aren't equally distant from 0. By using an upper half that is exactly 1 less than the lower
+		//// half, we get bounds of -7.929080009460449 to 7.929080009460449, returned when the RNG gives 0 and -1 resp.
+		//// because it only needs one floating-point operation, it is quite fast on a CPU.
+		//// this winds up being a very smooth Gaussian, as Marc B. Reynolds had it with two random longs.
+		long u = nextLong();
+		final long c = Long.bitCount(u) - 32L << 32;
+		u *= 0xC6AC29E4C6AC29E5L;
+		return 0x1.fb760cp-35 * (c + (u & 0xFFFFFFFFL) - (u >>> 32));
 	}
 
 	/**
