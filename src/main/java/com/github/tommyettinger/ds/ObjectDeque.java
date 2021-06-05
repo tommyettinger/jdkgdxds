@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.support.EnhancedRandom;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -1193,6 +1194,26 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 			fv = values[f];
 			values[f] = values[s];
 			values[s] = fv;
+		}
+	}
+
+	/**
+	 * Sorts this deque in-place using {@link Arrays#sort(Object[], int, int, Comparator)}.
+	 * This should operate in O(n log(n)) time or less when the internals of the deque are
+	 * continuous (the head is before the tail in the array). If the internals are not
+	 * continuous, this takes an additional O(n) step (where n is less than the size of
+	 * the deque) to rearrange the internals before sorting.
+	 * @param comparator the Comparator to use for T items; may be null to use the natural
+	 *                   order of T items when T implements Comparable of T
+	 */
+	public void sort(@Nullable Comparator<? super T> comparator){
+		if(head <= tail) {
+			Arrays.sort(values, head, tail, comparator);
+		} else {
+			System.arraycopy(values, head, values, tail, values.length - head);
+			Arrays.sort(values, 0, tail + values.length - head);
+			tail = tail + values.length - head;
+			head = 0;
 		}
 	}
 
