@@ -30,7 +30,7 @@ import java.util.NoSuchElementException;
  * backing array may wrap back to the beginning, making add and remove at the beginning and end O(1) (unless the backing array needs to
  * resize when adding). Deque functionality is provided via {@link #removeLast()} and {@link #addFirst(Object)}.
  */
-public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
+public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/** Contains the values in the queue. Head and tail indices go in a circle around this array, wrapping at the end. */
 	protected T[] values;
 
@@ -605,32 +605,6 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 	}
 
 	/**
-	 * Returns an iterator over the elements in this deque in reverse
-	 * sequential order. The elements will be returned in order from
-	 * last (tail) to first (head).
-	 *
-	 * @return an iterator over the elements in this deque in reverse
-	 * sequence
-	 */
-	@Override
-	public Iterator<T> descendingIterator () {
-		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new DequeIterator<>(this, true);
-			descendingIterator2 = new DequeIterator<>(this, true);
-		}
-		if (!descendingIterator1.valid) {
-			descendingIterator1.reset();
-			descendingIterator1.valid = true;
-			descendingIterator2.valid = false;
-			return descendingIterator1;
-		}
-		descendingIterator2.reset();
-		descendingIterator2.valid = true;
-		descendingIterator1.valid = false;
-		return descendingIterator2;
-	}
-
-	/**
 	 * Returns an array containing all of the elements in this collection.
 	 * If this collection makes any guarantees as to what order its elements
 	 * are returned by its iterator, this method must return the elements in
@@ -789,7 +763,7 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 			int idx;
 			do{
 				if((idx = indexOf(o, false)) != -1)
-					removeIndex(idx);
+					removeAt(idx);
 			}while (idx == -1);
 		}
 		return oldSize != size;
@@ -876,7 +850,7 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 	public boolean removeValue (Object value, boolean identity) {
 		int index = indexOf(value, identity);
 		if (index == -1) return false;
-		removeIndex(index);
+		removeAt(index);
 		return true;
 	}
 
@@ -886,13 +860,13 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 	public boolean removeLastValue (Object value, boolean identity) {
 		int index = lastIndexOf(value, identity);
 		if (index == -1) return false;
-		removeIndex(index);
+		removeAt(index);
 		return true;
 	}
 
 	/** Removes and returns the item at the specified index. */
 	@Nullable
-	public T removeIndex (int index) {
+	public T removeAt (int index) {
 		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 
@@ -957,9 +931,7 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 		final T[] values = this.values;
 		int tail = this.tail;
 		tail--;
-		if (tail == -1) {
-			tail = values.length - 1;
-		}
+		if (tail == -1) tail = values.length - 1;
 		return values[tail];
 	}
 
@@ -972,10 +944,25 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 		final T[] values = this.values;
 
 		int i = head + index;
-		if (i >= values.length) {
-			i -= values.length;
-		}
+		if (i >= values.length) i -= values.length;
 		return values[i];
+	}
+
+	/** Sets an existing position in this deque to the given item. Indexing is from the front to back, zero based.
+	 * @param index the index to set
+	 * @param item what value should replace the contents of the specified index
+	 * @return the previous contents of the specified index
+	 * @throws IndexOutOfBoundsException when the index is negative or >= size */
+	public T set (int index, T item) {
+		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
+		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		final T[] values = this.values;
+
+		int i = head + index;
+		if (i >= values.length) i -= values.length;
+		T old = values[i];
+		values[i] = item;
+		return old;
 	}
 
 	/** Removes all values from this queue. Values in backing array are set to null to prevent memory leak, so this operates in
@@ -1006,9 +993,9 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 	}
 
 	/**
-	 * Returns an iterator for the keys in the set. Remove is supported.
-	 * <p>
-	 * Reuses one of two iterators for this set. For nested or multithreaded
+	 * Returns an iterator for the items in the deque. Remove is supported.
+	 * <br>
+	 * Reuses one of two iterators for this deque. For nested or multithreaded
 	 * iteration, use {@link DequeIterator#DequeIterator(ObjectDeque)}.
 	 */
 	@Override
@@ -1027,6 +1014,34 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 		iterator2.valid = true;
 		iterator1.valid = false;
 		return iterator2;
+	}
+
+	/**
+	 * Returns an iterator over the elements in this deque in reverse
+	 * sequential order. The elements will be returned in order from
+	 * last (tail) to first (head).
+	 * <br>
+	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
+	 * iteration, use {@link DequeIterator#DequeIterator(ObjectDeque, boolean)}.
+	 *
+	 * @return an iterator over the elements in this deque in reverse sequence
+	 */
+	@Override
+	public Iterator<T> descendingIterator () {
+		if (descendingIterator1 == null || descendingIterator2 == null) {
+			descendingIterator1 = new DequeIterator<>(this, true);
+			descendingIterator2 = new DequeIterator<>(this, true);
+		}
+		if (!descendingIterator1.valid) {
+			descendingIterator1.reset();
+			descendingIterator1.valid = true;
+			descendingIterator2.valid = false;
+			return descendingIterator1;
+		}
+		descendingIterator2.reset();
+		descendingIterator2.valid = true;
+		descendingIterator1.valid = false;
+		return descendingIterator2;
 	}
 
 	public String toString () {
@@ -1151,14 +1166,10 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 		final T[] values = this.values;
 
 		int f = head + first;
-		if (f >= values.length) {
-			f -= values.length;
-		}
+		if (f >= values.length) f -= values.length;
 
 		int s = head + second;
-		if (s >= values.length) {
-			s -= values.length;
-		}
+		if (s >= values.length) s -= values.length;
 
 		T fv = values[f];
 		values[f] = values[s];
@@ -1167,7 +1178,7 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 	}
 
 	/**
-	 * Reverses this Arrangeable in-place.
+	 * Reverses this ObjectDeque in-place.
 	 */
 	@Override
 	public void reverse () {
@@ -1226,7 +1237,7 @@ public class ObjectDeque<T> implements Deque<T>, Iterable<T>, Arrangeable {
 		public void remove () {
 			if(descending) index++;
 			else index--;
-			deque.removeIndex(index);
+			deque.removeAt(index);
 		}
 
 		public void reset () {
