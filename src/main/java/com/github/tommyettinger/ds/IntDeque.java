@@ -27,14 +27,14 @@ import java.util.PrimitiveIterator;
 /**
  * A resizable, insertion-ordered double-ended queue of objects with efficient add and remove at the beginning and end. Values in the
  * backing array may wrap back to the beginning, making add and remove at the beginning and end O(1) (unless the backing array needs to
- * resize when adding). Deque functionality is provided via {@link #removeLast()} and {@link #addFirst(long)}.
+ * resize when adding). Deque functionality is provided via {@link #removeLast()} and {@link #addFirst(int)}.
  */
-public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
+public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 
-	protected long defaultValue = -1;
+	protected int defaultValue = -1;
 
 	/** Contains the values in the queue. Head and tail indices go in a circle around this array, wrapping at the end. */
-	protected long[] values;
+	protected int[] values;
 
 	/** Index of first element. Logically smaller than tail. Unless empty, it points to a valid element inside queue. */
 	protected int head = 0;
@@ -46,35 +46,35 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	/** Number of elements in the queue. */
 	public int size = 0;
 
-	protected transient @Nullable LongDequeIterator iterator1;
-	protected transient @Nullable LongDequeIterator iterator2;
+	protected transient @Nullable IntDequeIterator iterator1;
+	protected transient @Nullable IntDequeIterator iterator2;
 
-	protected transient @Nullable LongDequeIterator descendingIterator1;
-	protected transient @Nullable LongDequeIterator descendingIterator2;
+	protected transient @Nullable IntDequeIterator descendingIterator1;
+	protected transient @Nullable IntDequeIterator descendingIterator2;
 
-	/** Creates a new LongDeque which can hold 16 values without needing to resize backing array. */
-	public LongDeque () {
+	/** Creates a new IntDeque which can hold 16 values without needing to resize backing array. */
+	public IntDeque () {
 		this(16);
 	}
 
-	/** Creates a new LongDeque which can hold the specified number of values without needing to resize backing array. */
-	public LongDeque (int initialSize) {
-		this.values = new long[initialSize];
+	/** Creates a new IntDeque which can hold the specified number of values without needing to resize backing array. */
+	public IntDeque (int initialSize) {
+		this.values = new int[initialSize];
 	}
 
-	public long getDefaultValue () {
+	public int getDefaultValue () {
 		return defaultValue;
 	}
 
-	public void setDefaultValue (long defaultValue) {
+	public void setDefaultValue (int defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
 	/** Append given item to the tail (enqueue to tail). Unless backing array needs resizing, operates in O(1) time.
-	 * @see #addFirst(long) 
-	 * @param item a long to add to the tail */
-	public void addLast (long item) {
-		long[] values = this.values;
+	 * @see #addFirst(int) 
+	 * @param item a int to add to the tail */
+	public void addLast (int item) {
+		int[] values = this.values;
 
 		if (size == values.length) {
 			resize(values.length << 1);
@@ -89,10 +89,10 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	}
 
 	/** Prepend given item to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
-	 * @see #addLast(long)
-	 * @param item a long to add to the head */
-	public void addFirst (long item) {
-		long[] values = this.values;
+	 * @see #addLast(int)
+	 * @param item a int to add to the head */
+	public void addFirst (int item) {
+		int[] values = this.values;
 
 		if (size == values.length) {
 			resize(values.length << 1);
@@ -121,11 +121,11 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	/** Resize backing array. newSize must be bigger than current size. */
 	protected void resize (int newSize) {
-		final long[] values = this.values;
+		final int[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final long[] newArray = new long[newSize];
+		final int[] newArray = new int[newSize];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);
@@ -143,15 +143,15 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	/** Remove the first item from the queue. (dequeue from head) Always O(1).
 	 * @return removed object
 	 * @throws NoSuchElementException when queue is empty */
-	public long removeFirst () {
+	public int removeFirst () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("LongDeque is empty.");
+			throw new NoSuchElementException("IntDeque is empty.");
 		}
 
-		final long[] values = this.values;
+		final int[] values = this.values;
 
-		final long result = values[head];
+		final int result = values[head];
 		head++;
 		if (head == values.length) {
 			head = 0;
@@ -165,18 +165,18 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @see #removeFirst()
 	 * @return removed item
 	 * @throws NoSuchElementException when queue is empty */
-	public long removeLast () {
+	public int removeLast () {
 		if (size == 0) {
-			throw new NoSuchElementException("LongDeque is empty.");
+			throw new NoSuchElementException("IntDeque is empty.");
 		}
 
-		final long[] values = this.values;
+		final int[] values = this.values;
 		int tail = this.tail;
 		tail--;
 		if (tail == -1) {
 			tail = values.length - 1;
 		}
-		final long result = values[tail];
+		final int result = values[tail];
 		this.tail = tail;
 		size--;
 
@@ -199,7 +199,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerFirst (long t) {
+	public boolean offerFirst (int t) {
 		int oldSize = size;
 		addFirst(t);
 		return oldSize != size;
@@ -221,7 +221,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerLast (long t) {
+	public boolean offerLast (int t) {
 		int oldSize = size;
 		addLast(t);
 		return oldSize != size;
@@ -233,7 +233,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 *
 	 * @return the head of this deque, or {@code null} if this deque is empty
 	 */
-	public long pollFirst () {
+	public int pollFirst () {
 		return removeFirst();
 	}
 
@@ -243,7 +243,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 *
 	 * @return the tail of this deque, or {@code null} if this deque is empty
 	 */
-	public long pollLast () {
+	public int pollLast () {
 		return removeLast();
 	}
 
@@ -256,7 +256,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @return the head of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public long getFirst () {
+	public int getFirst () {
 		return first();
 	}
 
@@ -268,7 +268,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @return the tail of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public long getLast () {
+	public int getLast () {
 		return last();
 	}
 
@@ -278,7 +278,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 *
 	 * @return the head of this deque, or {@link #defaultValue} if this deque is empty
 	 */
-	public long peekFirst () {
+	public int peekFirst () {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -292,12 +292,12 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 *
 	 * @return the tail of this deque, or {@link #defaultValue} if this deque is empty
 	 */
-	public long peekLast () {
+	public int peekLast () {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
 		}
-		final long[] values = this.values;
+		final int[] values = this.values;
 		int tail = this.tail;
 		tail--;
 		if (tail == -1) {
@@ -323,7 +323,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	public boolean removeFirstOccurrence (long o) {
+	public boolean removeFirstOccurrence (int o) {
 		return removeValue(o);
 	}
 
@@ -344,7 +344,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	public boolean removeLastOccurrence (long o) {
+	public boolean removeLastOccurrence (int o) {
 		return removeLastValue(o);
 	}
 
@@ -355,7 +355,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * {@code true} upon success and throwing an
 	 * {@code IllegalStateException} if no space is currently available.
 	 * When using a capacity-restricted deque, it is generally preferable to
-	 * use {@link #offer(long) offer}.
+	 * use {@link #offer(int) offer}.
 	 *
 	 * <p>This method is equivalent to {@link #addLast}.
 	 *
@@ -371,7 +371,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 *                                  element prevents it from being added to this deque
 	 */
 	@Override
-	public boolean add (long t) {
+	public boolean add (int t) {
 		int oldSize = size;
 		addLast(t);
 		return oldSize != size;
@@ -398,7 +398,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offer (long t) {
+	public boolean offer (int t) {
 		int oldSize = size;
 		addLast(t);
 		return oldSize != size;
@@ -415,7 +415,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public long remove () {
+	public int remove () {
 		return removeFirst();
 	}
 
@@ -429,7 +429,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @return the first element of this deque, or {@link #defaultValue} if
 	 * this deque is empty
 	 */
-	public long poll () {
+	public int poll () {
 		return removeFirst();
 	}
 
@@ -444,7 +444,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public long element () {
+	public int element () {
 		return first();
 	}
 
@@ -458,7 +458,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @return the head of the queue represented by this deque, or
 	 * {@link #defaultValue} if this deque is empty
 	 */
-	public long peek () {
+	public int peek () {
 		return peekFirst();
 	}
 
@@ -468,7 +468,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * in the order that they are returned by the collection's iterator.
 	 *
 	 * <p>When using a capacity-restricted deque, it is generally preferable
-	 * to call {@link #offer(long) offer} separately on each element.
+	 * to call {@link #offer(int) offer} separately on each element.
 	 *
 	 * <p>An exception encountered while trying to add an element may result
 	 * in only some of the elements having been successfully added when
@@ -487,11 +487,11 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 *                                  specified collection prevents it from being added to this deque
 	 */
 	@Override
-	public boolean addAll (PrimitiveCollection.OfLong c) {
+	public boolean addAll (OfInt c) {
 		int oldSize = size;
-		PrimitiveIterator.OfLong it = c.iterator();
+		PrimitiveIterator.OfInt it = c.iterator();
 		while (it.hasNext()) {
-			addLast(it.nextLong());
+			addLast(it.nextInt());
 		}
 		return oldSize != size;
 	}
@@ -514,7 +514,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public void push (long t) {
+	public void push (int t) {
 		addFirst(t);
 	}
 
@@ -528,7 +528,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * of the stack represented by this deque)
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public long pop () {
+	public int pop () {
 		return removeFirst();
 	}
 
@@ -540,7 +540,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * Returns {@code true} if this deque contained the specified element
 	 * (or equivalently, if this deque changed as a result of the call).
 	 *
-	 * <p>This method is equivalent to {@link #removeFirstOccurrence(long)}.
+	 * <p>This method is equivalent to {@link #removeFirstOccurrence(int)}.
 	 *
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
@@ -551,7 +551,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	public boolean remove (long o) {
+	public boolean remove (int o) {
 		return removeFirstOccurrence(o);
 	}
 
@@ -569,7 +569,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	public boolean contains (long o) {
+	public boolean contains (int o) {
 		return indexOf(o) != -1;
 	}
 
@@ -599,8 +599,8 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * type} is {@code Object}, containing all of the elements in this collection
 	 */
 	@Override
-	public long[] toArray () {
-		long[] next = new long[size];
+	public int[] toArray () {
+		int[] next = new int[size];
 		if(head < tail) {
 			System.arraycopy(values, head, next, 0, tail - head);
 		}
@@ -613,10 +613,10 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	/** Returns the index of first occurrence of value in the queue, or -1 if no such value exists.
 	 * @return An index of first occurrence of value in queue or -1 if no such value exists */
-	public int indexOf (long value) {
+	public int indexOf (int value) {
 		if (size == 0)
 			return -1;
-		long[] values = this.values;
+		int[] values = this.values;
 		final int head = this.head, tail = this.tail;
 		if (head < tail) {
 			for (int i = head; i < tail; i++)
@@ -635,10 +635,10 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	/** Returns the index of last occurrence of value in the queue, or -1 if no such value exists.
 	 * @return An index of last occurrence of value in queue or -1 if no such value exists */
-	public int lastIndexOf (long value) {
+	public int lastIndexOf (int value) {
 		if (size == 0)
 			return -1;
-		long[] values = this.values;
+		int[] values = this.values;
 		final int head = this.head, tail = this.tail;
 		if (head < tail) {
 			for (int i = tail - 1; i >= head; i--)
@@ -657,7 +657,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	/** Removes the first instance of the specified value in the queue.
 	 * @return true if value was found and removed, false otherwise */
-	public boolean removeValue (long value) {
+	public boolean removeValue (int value) {
 		int index = indexOf(value);
 		if (index == -1) return false;
 		removeAt(index);
@@ -666,7 +666,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	/** Removes the last instance of the specified value in the queue.
 	 * @return true if value was found and removed, false otherwise */
-	public boolean removeLastValue (long value) {
+	public boolean removeLastValue (int value) {
 		int index = lastIndexOf(value);
 		if (index == -1) return false;
 		removeAt(index);
@@ -674,14 +674,14 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	}
 
 	/** Removes and returns the item at the specified index. */
-	public long removeAt (int index) {
+	public int removeAt (int index) {
 		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 
-		long[] values = this.values;
+		int[] values = this.values;
 		int head = this.head, tail = this.tail;
 		index += head;
-		long value;
+		int value;
 		if (head < tail) { // index is between head and tail.
 			value = values[index];
 			System.arraycopy(values, index + 1, values, index, tail - index);
@@ -714,27 +714,27 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	}
 
 	/** Returns the first (head) item in the queue (without removing it).
-	 * @see #addFirst(long)
+	 * @see #addFirst(int)
 	 * @see #removeFirst()
 	 * @throws NoSuchElementException when queue is empty */
-	public long first () {
+	public int first () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("LongDeque is empty.");
+			throw new NoSuchElementException("IntDeque is empty.");
 		}
 		return values[head];
 	}
 
 	/** Returns the last (tail) item in the queue (without removing it).
-	 * @see #addLast(long)
+	 * @see #addLast(int)
 	 * @see #removeLast()
 	 * @throws NoSuchElementException when queue is empty */
-	public long last () {
+	public int last () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("LongDeque is empty.");
+			throw new NoSuchElementException("IntDeque is empty.");
 		}
-		final long[] values = this.values;
+		final int[] values = this.values;
 		int tail = this.tail;
 		tail--;
 		if (tail == -1) tail = values.length - 1;
@@ -744,10 +744,10 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	/** Retrieves the value in queue without removing it. Indexing is from the front to back, zero based. Therefore get(0) is the
 	 * same as {@link #first()}.
 	 * @throws IndexOutOfBoundsException when the index is negative or >= size */
-	public long get (int index) {
+	public int get (int index) {
 		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
-		final long[] values = this.values;
+		final int[] values = this.values;
 
 		int i = head + index;
 		if (i >= values.length) i -= values.length;
@@ -759,14 +759,14 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * @param item what value should replace the contents of the specified index
 	 * @return the previous contents of the specified index
 	 * @throws IndexOutOfBoundsException when the index is negative or >= size */
-	public long set (int index, long item) {
+	public int set (int index, int item) {
 		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
-		final long[] values = this.values;
+		final int[] values = this.values;
 
 		int i = head + index;
 		if (i >= values.length) i -= values.length;
-		long old = values[i];
+		int old = values[i];
 		values[i] = item;
 		return old;
 	}
@@ -784,13 +784,13 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * Returns an iterator for the items in the deque. Remove is supported.
 	 * <br>
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link LongDequeIterator#LongDequeIterator(LongDeque)}.
+	 * iteration, use {@link IntDequeIterator#IntDequeIterator(IntDeque)}.
 	 */
 	@Override
-	public PrimitiveIterator.OfLong iterator () {
+	public PrimitiveIterator.OfInt iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new LongDequeIterator(this);
-			iterator2 = new LongDequeIterator(this);
+			iterator1 = new IntDequeIterator(this);
+			iterator2 = new IntDequeIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -810,14 +810,14 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * last (tail) to first (head).
 	 * <br>
 	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link LongDequeIterator#LongDequeIterator(LongDeque, boolean)}.
+	 * iteration, use {@link IntDequeIterator#IntDequeIterator(IntDeque, boolean)}.
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public PrimitiveIterator.OfLong descendingIterator () {
+	public PrimitiveIterator.OfInt descendingIterator () {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new LongDequeIterator(this, true);
-			descendingIterator2 = new LongDequeIterator(this, true);
+			descendingIterator1 = new IntDequeIterator(this, true);
+			descendingIterator2 = new IntDequeIterator(this, true);
 		}
 		if (!descendingIterator1.valid) {
 			descendingIterator1.reset();
@@ -835,7 +835,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		if (size == 0) {
 			return "[]";
 		}
-		final long[] values = this.values;
+		final int[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
 
@@ -851,7 +851,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	public String toString (String separator) {
 		if (size == 0) return "";
-		final long[] values = this.values;
+		final int[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
 
@@ -864,16 +864,16 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	public int hashCode () {
 		final int size = this.size;
-		final long[] values = this.values;
+		final int[] values = this.values;
 		final int backingLength = values.length;
 		int index = this.head;
 
 		int hash = size + 1;
 		for (int s = 0; s < size; s++) {
-			final long value = values[index];
+			final int value = values[index];
 
 			hash *= 421;
-			hash += value ^ value >>> 32;
+			hash += value;
 			index++;
 			if (index == backingLength) index = 0;
 		}
@@ -883,23 +883,23 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	public boolean equals (Object o) {
 		if (this == o) return true;
-		if (!(o instanceof LongDeque)) return false;
+		if (!(o instanceof IntDeque)) return false;
 
-		LongDeque q = (LongDeque)o;
+		IntDeque q = (IntDeque)o;
 		final int size = this.size;
 
 		if (q.size != size) return false;
 
-		final long[] myValues = this.values;
+		final int[] myValues = this.values;
 		final int myBackingLength = myValues.length;
-		final long[] itsValues = q.values;
+		final int[] itsValues = q.values;
 		final int itsBackingLength = itsValues.length;
 
 		int myIndex = head;
 		int itsIndex = q.head;
 		for (int s = 0; s < size; s++) {
-			long myValue = myValues[myIndex];
-			long itsValue = itsValues[itsIndex];
+			int myValue = myValues[myIndex];
+			int itsValue = itsValues[itsIndex];
 
 			if (myValue != itsValue) return false;
 			myIndex++;
@@ -922,7 +922,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		if (first >= size) throw new IndexOutOfBoundsException("first index can't be >= size: " + first + " >= " + size);
 		if (second < 0) throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
 		if (second >= size) throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
-		final long[] values = this.values;
+		final int[] values = this.values;
 
 		int f = head + first;
 		if (f >= values.length) f -= values.length;
@@ -930,20 +930,20 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		int s = head + second;
 		if (s >= values.length) s -= values.length;
 
-		long fv = values[f];
+		int fv = values[f];
 		values[f] = values[s];
 		values[s] = fv;
 
 	}
 
 	/**
-	 * Reverses this LongDeque in-place.
+	 * Reverses this IntDeque in-place.
 	 */
 	@Override
 	public void reverse () {
-		final long[] values = this.values;
+		final int[] values = this.values;
 		int f, s, len = values.length;
-		long fv;
+		int fv;
 		for (int n = size >> 1, b = 0, t = size - 1; b <= n && b != t; b++, t--) {
 			f = head + b;
 			if(f >= len) f -= len;
@@ -956,7 +956,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	}
 
 	/**
-	 * Sorts this deque in-place using {@link Arrays#sort(long[], int, int)}.
+	 * Sorts this deque in-place using {@link Arrays#sort(int[], int, int)}.
 	 * This should operate in O(n log(n)) time or less when the internals of the deque are
 	 * continuous (the head is before the tail in the array). If the internals are not
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
@@ -973,24 +973,24 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		}
 	}
 
-	public long random(EnhancedRandom random){
+	public int random(EnhancedRandom random){
 		if(size <= 0) {
-			throw new NoSuchElementException("LongDeque is empty.");
+			throw new NoSuchElementException("IntDeque is empty.");
 		}
 		return get(random.nextInt(size));
 	}
 
-	public static class LongDequeIterator implements PrimitiveIterator.OfLong {
-		private final LongDeque deque;
+	public static class IntDequeIterator implements PrimitiveIterator.OfInt {
+		private final IntDeque deque;
 		private final boolean descending;
 		int index;
 		boolean valid = true;
 
-		public LongDequeIterator (LongDeque deque) {
+		public IntDequeIterator (IntDeque deque) {
 			this(deque, false);
 		}
 
-		public LongDequeIterator (LongDeque deque, boolean descendingOrder) {
+		public IntDequeIterator (IntDeque deque, boolean descendingOrder) {
 			this.deque = deque;
 			if(this.descending = descendingOrder)
 				index = this.deque.size - 1;
@@ -1003,7 +1003,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 			return descending ? index >= 0 : index < deque.size;
 		}
 
-		public long nextLong () {
+		public int nextInt () {
 			if (index >= deque.size || index < 0) throw new NoSuchElementException(String.valueOf(index));
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
@@ -1021,7 +1021,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 			index = descending ? deque.size - 1 : 0;
 		}
 
-		public PrimitiveIterator.OfLong iterator () {
+		public OfInt iterator () {
 			return this;
 		}
 	}
