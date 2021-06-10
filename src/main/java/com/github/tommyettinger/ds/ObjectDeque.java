@@ -45,11 +45,11 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/** Number of elements in the queue. */
 	public int size = 0;
 
-	protected transient @Nullable DequeIterator<T> iterator1;
-	protected transient @Nullable DequeIterator<T> iterator2;
+	protected transient @Nullable ObjectDequeIterator<T> iterator1;
+	protected transient @Nullable ObjectDequeIterator<T> iterator2;
 
-	protected transient @Nullable DequeIterator<T> descendingIterator1;
-	protected transient @Nullable DequeIterator<T> descendingIterator2;
+	protected transient @Nullable ObjectDequeIterator<T> descendingIterator1;
+	protected transient @Nullable ObjectDequeIterator<T> descendingIterator2;
 
 	/** Creates a new ObjectDeque which can hold 16 values without needing to resize backing array. */
 	public ObjectDeque () {
@@ -811,7 +811,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * Uses .equals() to compare items.
 	 * @return An index of the last occurrence of value in queue or -1 if no such value exists */
 	public int lastIndexOf (@Nullable Object value){
-		return indexOf(value, false);
+		return lastIndexOf(value, false);
 	}
 
 	/** Returns the index of last occurrence of value in the queue, or -1 if no such value exists.
@@ -848,7 +848,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/** Removes the first instance of the specified value in the queue.
 	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
 	 * @return true if value was found and removed, false otherwise */
-	public boolean removeValue (Object value, boolean identity) {
+	public boolean removeValue (@Nullable Object value, boolean identity) {
 		int index = indexOf(value, identity);
 		if (index == -1) return false;
 		removeAt(index);
@@ -858,7 +858,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/** Removes the last instance of the specified value in the queue.
 	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
 	 * @return true if value was found and removed, false otherwise */
-	public boolean removeLastValue (Object value, boolean identity) {
+	public boolean removeLastValue (@Nullable Object value, boolean identity) {
 		int index = lastIndexOf(value, identity);
 		if (index == -1) return false;
 		removeAt(index);
@@ -912,7 +912,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @see #addFirst(Object)
 	 * @see #removeFirst()
 	 * @throws NoSuchElementException when queue is empty */
-	public T first () {
+	public @Nullable T first () {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("ObjectDeque is empty.");
@@ -924,7 +924,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @see #addLast(Object)
 	 * @see #removeLast()
 	 * @throws NoSuchElementException when queue is empty */
-	public T last () {
+	public @Nullable T last () {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("ObjectDeque is empty.");
@@ -939,7 +939,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/** Retrieves the value in queue without removing it. Indexing is from the front to back, zero based. Therefore get(0) is the
 	 * same as {@link #first()}.
 	 * @throws IndexOutOfBoundsException when the index is negative or >= size */
-	public T get (int index) {
+	public @Nullable T get (int index) {
 		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		final T[] values = this.values;
@@ -954,7 +954,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @param item what value should replace the contents of the specified index
 	 * @return the previous contents of the specified index
 	 * @throws IndexOutOfBoundsException when the index is negative or >= size */
-	public T set (int index, T item) {
+	public @Nullable T set (int index, @Nullable T item) {
 		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		final T[] values = this.values;
@@ -997,13 +997,13 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * Returns an iterator for the items in the deque. Remove is supported.
 	 * <br>
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link DequeIterator#DequeIterator(ObjectDeque)}.
+	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque)}.
 	 */
 	@Override
 	public Iterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new DequeIterator<>(this);
-			iterator2 = new DequeIterator<>(this);
+			iterator1 = new ObjectDequeIterator<>(this);
+			iterator2 = new ObjectDequeIterator<>(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -1023,15 +1023,15 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * last (tail) to first (head).
 	 * <br>
 	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link DequeIterator#DequeIterator(ObjectDeque, boolean)}.
+	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque, boolean)}.
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
 	@Override
 	public Iterator<T> descendingIterator () {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new DequeIterator<>(this, true);
-			descendingIterator2 = new DequeIterator<>(this, true);
+			descendingIterator1 = new ObjectDequeIterator<>(this, true);
+			descendingIterator2 = new ObjectDequeIterator<>(this, true);
 		}
 		if (!descendingIterator1.valid) {
 			descendingIterator1.reset();
@@ -1211,12 +1211,13 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 			Arrays.sort(values, head, tail, comparator);
 		} else {
 			System.arraycopy(values, head, values, tail, values.length - head);
-			Arrays.sort(values, 0, tail + values.length - head);
+			Arrays.sort(values, 0, tail + values.length - head, comparator);
 			tail = tail + values.length - head;
 			head = 0;
 		}
 	}
 
+	@Nullable
 	public T random(EnhancedRandom random){
 		if(size <= 0) {
 			throw new NoSuchElementException("ObjectDeque is empty.");
@@ -1224,17 +1225,17 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		return get(random.nextInt(size));
 	}
 
-	public static class DequeIterator<T> implements Iterator<T>, Iterable<T> {
+	public static class ObjectDequeIterator<T> implements Iterator<T>, Iterable<T> {
 		private final ObjectDeque<T> deque;
 		private final boolean descending;
 		int index;
 		boolean valid = true;
 
-		public DequeIterator (ObjectDeque<T> deque) {
+		public ObjectDequeIterator (ObjectDeque<T> deque) {
 			this(deque, false);
 		}
 
-		public DequeIterator (ObjectDeque<T> deque, boolean descendingOrder) {
+		public ObjectDequeIterator (ObjectDeque<T> deque, boolean descendingOrder) {
 			this.deque = deque;
 			if(this.descending = descendingOrder)
 				index = this.deque.size - 1;
