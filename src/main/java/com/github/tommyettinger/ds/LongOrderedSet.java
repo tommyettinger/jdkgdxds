@@ -242,15 +242,15 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
 	 * Reuses one of two iterators, and does not permit nested iteration;
-	 * use {@link OrderedSetIterator#OrderedSetIterator(LongOrderedSet)} to nest iterators.
+	 * use {@link LongOrderedSetIterator#LongOrderedSetIterator(LongOrderedSet)} to nest iterators.
 	 *
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
 	public PrimitiveIterator.OfLong iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new OrderedSetIterator(this);
-			iterator2 = new OrderedSetIterator(this);
+			iterator1 = new LongOrderedSetIterator(this);
+			iterator2 = new LongOrderedSetIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -283,10 +283,10 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		return toString(", ");
 	}
 
-	public static class OrderedSetIterator extends LongSet.LongSetIterator {
+	public static class LongOrderedSetIterator extends LongSet.LongSetIterator {
 		private final LongList items;
 
-		public OrderedSetIterator (LongOrderedSet set) {
+		public LongOrderedSetIterator (LongOrderedSet set) {
 			super(set);
 			items = set.items;
 		}

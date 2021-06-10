@@ -242,15 +242,15 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
 	 * Reuses one of two iterators, and does not permit nested iteration;
-	 * use {@link OrderedSetIterator#OrderedSetIterator(IntOrderedSet)} to nest iterators.
+	 * use {@link IntOrderedSetIterator#IntOrderedSetIterator(IntOrderedSet)} to nest iterators.
 	 *
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
 	public PrimitiveIterator.OfInt iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new OrderedSetIterator(this);
-			iterator2 = new OrderedSetIterator(this);
+			iterator1 = new IntOrderedSetIterator(this);
+			iterator2 = new IntOrderedSetIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -283,10 +283,10 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 		return toString(", ");
 	}
 
-	public static class OrderedSetIterator extends IntSetIterator {
+	public static class IntOrderedSetIterator extends IntSetIterator {
 		private final IntList items;
 
-		public OrderedSetIterator (IntOrderedSet set) {
+		public IntOrderedSetIterator (IntOrderedSet set) {
 			super(set);
 			items = set.items;
 		}

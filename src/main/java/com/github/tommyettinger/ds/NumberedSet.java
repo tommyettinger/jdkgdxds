@@ -2,6 +2,7 @@ package com.github.tommyettinger.ds;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Set;
 
 /**
@@ -259,7 +260,15 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 
 	@Override
 	public Iterator<T> iterator () {
-		return map.keySet().iterator();
+		return map.order().iterator();
+	}
+
+	public ListIterator<T> listIterator () {
+		return map.order().listIterator();
+	}
+
+	public ListIterator<T> listIterator (int index) {
+		return map.order().listIterator(index);
 	}
 
 	@Override
