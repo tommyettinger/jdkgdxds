@@ -876,7 +876,7 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 			final byte value = values[index];
 
 			hash *= 421;
-			hash += value ^ value >>> 32;
+			hash += value;
 			index++;
 			if (index == backingLength) index = 0;
 		}

@@ -17,7 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.util.ShortIterator;
+import com.github.tommyettinger.ds.support.util.CharIterator;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -27,17 +27,17 @@ import java.util.NoSuchElementException;
 /**
  * A resizable, insertion-ordered double-ended queue of shorts with efficient add and remove at the beginning and end. Values in the
  * backing array may wrap back to the beginning, making add and remove at the beginning and end O(1) (unless the backing array needs to
- * resize when adding). Deque functionality is provided via {@link #removeLast()} and {@link #addFirst(short)}.
+ * resize when adding). Deque functionality is provided via {@link #removeLast()} and {@link #addFirst(char)}.
  * <br>
  * Unlike most Deque implementations in the JDK, you can get and set items anywhere in the deque in constant time with {@link #get(int)}
- * and {@link #set(int, short)}.
+ * and {@link #set(int, char)}.
  */
-public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
+public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 
-	protected short defaultValue = -1;
+	protected char defaultValue = '\uffff';
 
 	/** Contains the values in the queue. Head and tail indices go in a circle around this array, wrapping at the end. */
-	protected short[] values;
+	protected char[] values;
 
 	/** Index of first element. Logically smaller than tail. Unless empty, it points to a valid element inside queue. */
 	protected int head = 0;
@@ -49,35 +49,35 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	/** Number of elements in the queue. */
 	public int size = 0;
 
-	protected transient @Nullable ShortDequeIterator iterator1;
-	protected transient @Nullable ShortDequeIterator iterator2;
+	protected transient @Nullable CharDequeIterator iterator1;
+	protected transient @Nullable CharDequeIterator iterator2;
 
-	protected transient @Nullable ShortDequeIterator descendingIterator1;
-	protected transient @Nullable ShortDequeIterator descendingIterator2;
+	protected transient @Nullable CharDequeIterator descendingIterator1;
+	protected transient @Nullable CharDequeIterator descendingIterator2;
 
-	/** Creates a new ShortDeque which can hold 16 values without needing to resize backing array. */
-	public ShortDeque () {
+	/** Creates a new CharDeque which can hold 16 values without needing to resize backing array. */
+	public CharDeque () {
 		this(16);
 	}
 
-	/** Creates a new ShortDeque which can hold the specified number of values without needing to resize backing array. */
-	public ShortDeque (int initialSize) {
-		this.values = new short[initialSize];
+	/** Creates a new CharDeque which can hold the specified number of values without needing to resize backing array. */
+	public CharDeque (int initialSize) {
+		this.values = new char[initialSize];
 	}
 
-	public short getDefaultValue () {
+	public char getDefaultValue () {
 		return defaultValue;
 	}
 
-	public void setDefaultValue (short defaultValue) {
+	public void setDefaultValue (char defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
 	/** Append given item to the tail (enqueue to tail). Unless backing array needs resizing, operates in O(1) time.
-	 * @see #addFirst(short) 
-	 * @param item a short to add to the tail */
-	public void addLast (short item) {
-		short[] values = this.values;
+	 * @see #addFirst(char) 
+	 * @param item a char to add to the tail */
+	public void addLast (char item) {
+		char[] values = this.values;
 
 		if (size == values.length) {
 			resize(values.length << 1);
@@ -92,10 +92,10 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	}
 
 	/** Prepend given item to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
-	 * @see #addLast(short)
-	 * @param item a short to add to the head */
-	public void addFirst (short item) {
-		short[] values = this.values;
+	 * @see #addLast(char)
+	 * @param item a char to add to the head */
+	public void addFirst (char item) {
+		char[] values = this.values;
 
 		if (size == values.length) {
 			resize(values.length << 1);
@@ -124,11 +124,11 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 
 	/** Resize backing array. newSize must be bigger than current size. */
 	protected void resize (int newSize) {
-		final short[] values = this.values;
+		final char[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final short[] newArray = new short[newSize];
+		final char[] newArray = new char[newSize];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);
@@ -146,15 +146,15 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	/** Remove the first item from the queue. (dequeue from head) Always O(1).
 	 * @return removed item
 	 * @throws NoSuchElementException when queue is empty */
-	public short removeFirst () {
+	public char removeFirst () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("ShortDeque is empty.");
+			throw new NoSuchElementException("CharDeque is empty.");
 		}
 
-		final short[] values = this.values;
+		final char[] values = this.values;
 
-		final short result = values[head];
+		final char result = values[head];
 		head++;
 		if (head == values.length) {
 			head = 0;
@@ -168,18 +168,18 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @see #removeFirst()
 	 * @return removed item
 	 * @throws NoSuchElementException when queue is empty */
-	public short removeLast () {
+	public char removeLast () {
 		if (size == 0) {
-			throw new NoSuchElementException("ShortDeque is empty.");
+			throw new NoSuchElementException("CharDeque is empty.");
 		}
 
-		final short[] values = this.values;
+		final char[] values = this.values;
 		int tail = this.tail;
 		tail--;
 		if (tail == -1) {
 			tail = values.length - 1;
 		}
-		final short result = values[tail];
+		final char result = values[tail];
 		this.tail = tail;
 		size--;
 
@@ -202,7 +202,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerFirst (short t) {
+	public boolean offerFirst (char t) {
 		int oldSize = size;
 		addFirst(t);
 		return oldSize != size;
@@ -224,7 +224,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerLast (short t) {
+	public boolean offerLast (char t) {
 		int oldSize = size;
 		addLast(t);
 		return oldSize != size;
@@ -236,7 +236,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 *
 	 * @return the head of this deque, or {@code null} if this deque is empty
 	 */
-	public short pollFirst () {
+	public char pollFirst () {
 		return removeFirst();
 	}
 
@@ -246,7 +246,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 *
 	 * @return the tail of this deque, or {@code null} if this deque is empty
 	 */
-	public short pollLast () {
+	public char pollLast () {
 		return removeLast();
 	}
 
@@ -259,7 +259,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @return the head of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public short getFirst () {
+	public char getFirst () {
 		return first();
 	}
 
@@ -271,7 +271,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @return the tail of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public short getLast () {
+	public char getLast () {
 		return last();
 	}
 
@@ -281,7 +281,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 *
 	 * @return the head of this deque, or {@link #defaultValue} if this deque is empty
 	 */
-	public short peekFirst () {
+	public char peekFirst () {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -295,12 +295,12 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 *
 	 * @return the tail of this deque, or {@link #defaultValue} if this deque is empty
 	 */
-	public short peekLast () {
+	public char peekLast () {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
 		}
-		final short[] values = this.values;
+		final char[] values = this.values;
 		int tail = this.tail;
 		tail--;
 		if (tail == -1) {
@@ -326,7 +326,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	public boolean removeFirstOccurrence (short o) {
+	public boolean removeFirstOccurrence (char o) {
 		return removeValue(o);
 	}
 
@@ -347,7 +347,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	public boolean removeLastOccurrence (short o) {
+	public boolean removeLastOccurrence (char o) {
 		return removeLastValue(o);
 	}
 
@@ -358,7 +358,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * {@code true} upon success and throwing an
 	 * {@code IllegalStateException} if no space is currently available.
 	 * When using a capacity-restricted deque, it is generally preferable to
-	 * use {@link #offer(short) offer}.
+	 * use {@link #offer(char) offer}.
 	 *
 	 * <p>This method is equivalent to {@link #addLast}.
 	 *
@@ -374,7 +374,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 *                                  element prevents it from being added to this deque
 	 */
 	@Override
-	public boolean add (short t) {
+	public boolean add (char t) {
 		int oldSize = size;
 		addLast(t);
 		return oldSize != size;
@@ -401,7 +401,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offer (short t) {
+	public boolean offer (char t) {
 		int oldSize = size;
 		addLast(t);
 		return oldSize != size;
@@ -418,7 +418,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public short remove () {
+	public char remove () {
 		return removeFirst();
 	}
 
@@ -432,7 +432,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @return the first element of this deque, or {@link #defaultValue} if
 	 * this deque is empty
 	 */
-	public short poll () {
+	public char poll () {
 		return removeFirst();
 	}
 
@@ -447,7 +447,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public short element () {
+	public char element () {
 		return first();
 	}
 
@@ -461,7 +461,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @return the head of the queue represented by this deque, or
 	 * {@link #defaultValue} if this deque is empty
 	 */
-	public short peek () {
+	public char peek () {
 		return peekFirst();
 	}
 
@@ -471,7 +471,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * in the order that they are returned by the collection's iterator.
 	 *
 	 * <p>When using a capacity-restricted deque, it is generally preferable
-	 * to call {@link #offer(short) offer} separately on each element.
+	 * to call {@link #offer(char) offer} separately on each element.
 	 *
 	 * <p>An exception encountered while trying to add an element may result
 	 * in only some of the elements having been successfully added when
@@ -490,11 +490,11 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 *                                  specified collection prevents it from being added to this deque
 	 */
 	@Override
-	public boolean addAll (OfShort c) {
+	public boolean addAll (OfChar c) {
 		int oldSize = size;
-		ShortIterator it = c.iterator();
+		CharIterator it = c.iterator();
 		while (it.hasNext()) {
-			addLast(it.nextShort());
+			addLast(it.nextChar());
 		}
 		return oldSize != size;
 	}
@@ -517,7 +517,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public void push (short t) {
+	public void push (char t) {
 		addFirst(t);
 	}
 
@@ -531,7 +531,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * of the stack represented by this deque)
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public short pop () {
+	public char pop () {
 		return removeFirst();
 	}
 
@@ -543,7 +543,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * Returns {@code true} if this deque contained the specified element
 	 * (or equivalently, if this deque changed as a result of the call).
 	 *
-	 * <p>This method is equivalent to {@link #removeFirstOccurrence(short)}.
+	 * <p>This method is equivalent to {@link #removeFirstOccurrence(char)}.
 	 *
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
@@ -554,7 +554,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	public boolean remove (short o) {
+	public boolean remove (char o) {
 		return removeFirstOccurrence(o);
 	}
 
@@ -572,7 +572,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	public boolean contains (short o) {
+	public boolean contains (char o) {
 		return indexOf(o) != -1;
 	}
 
@@ -602,8 +602,8 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * type} is {@code Object}, containing all of the elements in this collection
 	 */
 	@Override
-	public short[] toArray () {
-		short[] next = new short[size];
+	public char[] toArray () {
+		char[] next = new char[size];
 		if(head < tail) {
 			System.arraycopy(values, head, next, 0, tail - head);
 		}
@@ -616,10 +616,10 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 
 	/** Returns the index of first occurrence of value in the queue, or -1 if no such value exists.
 	 * @return An index of first occurrence of value in queue or -1 if no such value exists */
-	public int indexOf (short value) {
+	public int indexOf (char value) {
 		if (size == 0)
 			return -1;
-		short[] values = this.values;
+		char[] values = this.values;
 		final int head = this.head, tail = this.tail;
 		if (head < tail) {
 			for (int i = head; i < tail; i++)
@@ -638,10 +638,10 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 
 	/** Returns the index of last occurrence of value in the queue, or -1 if no such value exists.
 	 * @return An index of last occurrence of value in queue or -1 if no such value exists */
-	public int lastIndexOf (short value) {
+	public int lastIndexOf (char value) {
 		if (size == 0)
 			return -1;
-		short[] values = this.values;
+		char[] values = this.values;
 		final int head = this.head, tail = this.tail;
 		if (head < tail) {
 			for (int i = tail - 1; i >= head; i--)
@@ -660,7 +660,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 
 	/** Removes the first instance of the specified value in the queue.
 	 * @return true if value was found and removed, false otherwise */
-	public boolean removeValue (short value) {
+	public boolean removeValue (char value) {
 		int index = indexOf(value);
 		if (index == -1) return false;
 		removeAt(index);
@@ -669,7 +669,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 
 	/** Removes the last instance of the specified value in the queue.
 	 * @return true if value was found and removed, false otherwise */
-	public boolean removeLastValue (short value) {
+	public boolean removeLastValue (char value) {
 		int index = lastIndexOf(value);
 		if (index == -1) return false;
 		removeAt(index);
@@ -677,14 +677,14 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	}
 
 	/** Removes and returns the item at the specified index. */
-	public short removeAt (int index) {
+	public char removeAt (int index) {
 		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 
-		short[] values = this.values;
+		char[] values = this.values;
 		int head = this.head, tail = this.tail;
 		index += head;
-		short value;
+		char value;
 		if (head < tail) { // index is between head and tail.
 			value = values[index];
 			System.arraycopy(values, index + 1, values, index, tail - index);
@@ -717,27 +717,27 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	}
 
 	/** Returns the first (head) item in the queue (without removing it).
-	 * @see #addFirst(short)
+	 * @see #addFirst(char)
 	 * @see #removeFirst()
 	 * @throws NoSuchElementException when queue is empty */
-	public short first () {
+	public char first () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("ShortDeque is empty.");
+			throw new NoSuchElementException("CharDeque is empty.");
 		}
 		return values[head];
 	}
 
 	/** Returns the last (tail) item in the queue (without removing it).
-	 * @see #addLast(short)
+	 * @see #addLast(char)
 	 * @see #removeLast()
 	 * @throws NoSuchElementException when queue is empty */
-	public short last () {
+	public char last () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("ShortDeque is empty.");
+			throw new NoSuchElementException("CharDeque is empty.");
 		}
-		final short[] values = this.values;
+		final char[] values = this.values;
 		int tail = this.tail;
 		tail--;
 		if (tail == -1) tail = values.length - 1;
@@ -747,10 +747,10 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	/** Retrieves the value in queue without removing it. Indexing is from the front to back, zero based. Therefore get(0) is the
 	 * same as {@link #first()}.
 	 * @throws IndexOutOfBoundsException when the index is negative or >= size */
-	public short get (int index) {
+	public char get (int index) {
 		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
-		final short[] values = this.values;
+		final char[] values = this.values;
 
 		int i = head + index;
 		if (i >= values.length) i -= values.length;
@@ -762,14 +762,14 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * @param item what value should replace the contents of the specified index
 	 * @return the previous contents of the specified index
 	 * @throws IndexOutOfBoundsException when the index is negative or >= size */
-	public short set (int index, short item) {
+	public char set (int index, char item) {
 		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
-		final short[] values = this.values;
+		final char[] values = this.values;
 
 		int i = head + index;
 		if (i >= values.length) i -= values.length;
-		short old = values[i];
+		char old = values[i];
 		values[i] = item;
 		return old;
 	}
@@ -787,13 +787,13 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * Returns an iterator for the items in the deque. Remove is supported.
 	 * <br>
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link ShortDequeIterator#ShortDequeIterator(ShortDeque)}.
+	 * iteration, use {@link CharDequeIterator#CharDequeIterator(CharDeque)}.
 	 */
 	@Override
-	public ShortIterator iterator () {
+	public CharIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ShortDequeIterator(this);
-			iterator2 = new ShortDequeIterator(this);
+			iterator1 = new CharDequeIterator(this);
+			iterator2 = new CharDequeIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -813,14 +813,14 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * last (tail) to first (head).
 	 * <br>
 	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link ShortDequeIterator#ShortDequeIterator(ShortDeque, boolean)}.
+	 * iteration, use {@link CharDequeIterator#CharDequeIterator(CharDeque, boolean)}.
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public ShortIterator descendingIterator () {
+	public CharIterator descendingIterator () {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new ShortDequeIterator(this, true);
-			descendingIterator2 = new ShortDequeIterator(this, true);
+			descendingIterator1 = new CharDequeIterator(this, true);
+			descendingIterator2 = new CharDequeIterator(this, true);
 		}
 		if (!descendingIterator1.valid) {
 			descendingIterator1.reset();
@@ -838,7 +838,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 		if (size == 0) {
 			return "[]";
 		}
-		final short[] values = this.values;
+		final char[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
 
@@ -854,7 +854,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 
 	public String toString (String separator) {
 		if (size == 0) return "";
-		final short[] values = this.values;
+		final char[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
 
@@ -864,16 +864,26 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 			sb.append(separator).append(values[i]);
 		return sb.toString();
 	}
+	/**
+	 * Simply returns all of the char items in this as one String, with no delimiters.
+	 * @return a String containing only the char items in this CharDeque
+	 */
+	public String toDenseString() {
+		if(head < tail)
+			return String.valueOf(values, head, size);
+		else
+			return String.valueOf(values, head, values.length - head) + String.valueOf(values, 0, tail);
+	}
 
 	public int hashCode () {
 		final int size = this.size;
-		final short[] values = this.values;
+		final char[] values = this.values;
 		final int backingLength = values.length;
 		int index = this.head;
 
 		int hash = size + 1;
 		for (int s = 0; s < size; s++) {
-			final short value = values[index];
+			final char value = values[index];
 
 			hash *= 421;
 			hash += value;
@@ -886,23 +896,23 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 
 	public boolean equals (Object o) {
 		if (this == o) return true;
-		if (!(o instanceof ShortDeque)) return false;
+		if (!(o instanceof CharDeque)) return false;
 
-		ShortDeque q = (ShortDeque)o;
+		CharDeque q = (CharDeque)o;
 		final int size = this.size;
 
 		if (q.size != size) return false;
 
-		final short[] myValues = this.values;
+		final char[] myValues = this.values;
 		final int myBackingLength = myValues.length;
-		final short[] itsValues = q.values;
+		final char[] itsValues = q.values;
 		final int itsBackingLength = itsValues.length;
 
 		int myIndex = head;
 		int itsIndex = q.head;
 		for (int s = 0; s < size; s++) {
-			short myValue = myValues[myIndex];
-			short itsValue = itsValues[itsIndex];
+			char myValue = myValues[myIndex];
+			char itsValue = itsValues[itsIndex];
 
 			if (myValue != itsValue) return false;
 			myIndex++;
@@ -925,7 +935,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 		if (first >= size) throw new IndexOutOfBoundsException("first index can't be >= size: " + first + " >= " + size);
 		if (second < 0) throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
 		if (second >= size) throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
-		final short[] values = this.values;
+		final char[] values = this.values;
 
 		int f = head + first;
 		if (f >= values.length) f -= values.length;
@@ -933,20 +943,20 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 		int s = head + second;
 		if (s >= values.length) s -= values.length;
 
-		short fv = values[f];
+		char fv = values[f];
 		values[f] = values[s];
 		values[s] = fv;
 
 	}
 
 	/**
-	 * Reverses this ShortDeque in-place.
+	 * Reverses this CharDeque in-place.
 	 */
 	@Override
 	public void reverse () {
-		final short[] values = this.values;
+		final char[] values = this.values;
 		int f, s, len = values.length;
-		short fv;
+		char fv;
 		for (int n = size >> 1, b = 0, t = size - 1; b <= n && b != t; b++, t--) {
 			f = head + b;
 			if(f >= len) f -= len;
@@ -959,7 +969,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	}
 
 	/**
-	 * Sorts this deque in-place using {@link Arrays#sort(short[], int, int)}.
+	 * Sorts this deque in-place using {@link Arrays#sort(char[], int, int)}.
 	 * This should operate in O(n log(n)) time or less when the internals of the deque are
 	 * continuous (the head is before the tail in the array). If the internals are not
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
@@ -976,24 +986,24 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 		}
 	}
 
-	public short random(EnhancedRandom random){
+	public char random(EnhancedRandom random){
 		if(size <= 0) {
-			throw new NoSuchElementException("ShortDeque is empty.");
+			throw new NoSuchElementException("CharDeque is empty.");
 		}
 		return get(random.nextInt(size));
 	}
 
-	public static class ShortDequeIterator implements ShortIterator {
-		private final ShortDeque deque;
+	public static class CharDequeIterator implements CharIterator {
+		private final CharDeque deque;
 		private final boolean descending;
 		int index;
 		boolean valid = true;
 
-		public ShortDequeIterator (ShortDeque deque) {
+		public CharDequeIterator (CharDeque deque) {
 			this(deque, false);
 		}
 
-		public ShortDequeIterator (ShortDeque deque, boolean descendingOrder) {
+		public CharDequeIterator (CharDeque deque, boolean descendingOrder) {
 			this.deque = deque;
 			if(this.descending = descendingOrder)
 				index = this.deque.size - 1;
@@ -1006,7 +1016,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 			return descending ? index >= 0 : index < deque.size;
 		}
 
-		public short nextShort () {
+		public char nextChar () {
 			if (index >= deque.size || index < 0) throw new NoSuchElementException(String.valueOf(index));
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
@@ -1024,7 +1034,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 			index = descending ? deque.size - 1 : 0;
 		}
 
-		public ShortIterator iterator () {
+		public CharIterator iterator () {
 			return this;
 		}
 	}
