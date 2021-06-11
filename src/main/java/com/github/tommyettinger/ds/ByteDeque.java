@@ -25,9 +25,12 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 
 /**
- * A resizable, insertion-ordered double-ended queue of objects with efficient add and remove at the beginning and end. Values in the
+ * A resizable, insertion-ordered double-ended queue of bytes with efficient add and remove at the beginning and end. Values in the
  * backing array may wrap back to the beginning, making add and remove at the beginning and end O(1) (unless the backing array needs to
  * resize when adding). Deque functionality is provided via {@link #removeLast()} and {@link #addFirst(byte)}.
+ * <br>
+ * Unlike most Deque implementations in the JDK, you can get and set items anywhere in the deque in constant time with {@link #get(int)}
+ * and {@link #set(int, byte)}.
  */
 public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 
@@ -141,7 +144,7 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 	}
 
 	/** Remove the first item from the queue. (dequeue from head) Always O(1).
-	 * @return removed object
+	 * @return removed item
 	 * @throws NoSuchElementException when queue is empty */
 	public byte removeFirst () {
 		if (size == 0) {

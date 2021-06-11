@@ -30,6 +30,9 @@ import java.util.NoSuchElementException;
  * A resizable, insertion-ordered double-ended queue of objects with efficient add and remove at the beginning and end. Values in the
  * backing array may wrap back to the beginning, making add and remove at the beginning and end O(1) (unless the backing array needs to
  * resize when adding). Deque functionality is provided via {@link #removeLast()} and {@link #addFirst(Object)}.
+ * <br>
+ * Unlike most Deque implementations in the JDK, you can get and set items anywhere in the deque in constant time with {@link #get(int)}
+ * and {@link #set(int, Object)}.
  */
 public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/** Contains the values in the queue. Head and tail indices go in a circle around this array, wrapping at the end. */
