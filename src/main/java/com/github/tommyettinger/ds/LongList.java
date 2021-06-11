@@ -825,7 +825,8 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	/**
 	 * Sorts all elements according to the order induced by the specified
-	 * comparator using mergesort. If {@code c} is null, this instead delegates to {@link #sort()},
+	 * comparator using {@link LongComparators#sort(long[], int, int, LongComparator)}.
+	 * If {@code c} is null, this instead delegates to {@link #sort()},
 	 * which uses {@link Arrays#sort(long[])}, and does not always run in-place.
 	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result

@@ -17,6 +17,8 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.ds.support.sort.LongComparator;
+import com.github.tommyettinger.ds.support.sort.LongComparators;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -970,8 +972,26 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 			Arrays.sort(values, head, tail);
 		} else {
 			System.arraycopy(values, head, values, tail, values.length - head);
-			Arrays.sort(values, 0, tail + values.length - head);
-			tail = tail + values.length - head;
+			Arrays.sort(values, 0, size);
+			tail = size;
+			head = 0;
+		}
+	}
+
+	/**
+	 * Sorts this deque in-place using {@link LongComparators#sort(long[], int, int, LongComparator)}.
+	 * This should operate in O(n log(n)) time or less when the internals of the deque are
+	 * continuous (the head is before the tail in the array). If the internals are not
+	 * continuous, this takes an additional O(n) step (where n is less than the size of
+	 * the deque) to rearrange the internals before sorting.
+	 */
+	public void sort(@Nullable LongComparator c){
+		if(head <= tail) {
+			LongComparators.sort(values, head, tail, c);
+		} else {
+			System.arraycopy(values, head, values, tail, values.length - head);
+			LongComparators.sort(values, 0, size, c);
+			tail = size;
 			head = 0;
 		}
 	}
