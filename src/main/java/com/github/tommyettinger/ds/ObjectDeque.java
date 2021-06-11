@@ -831,7 +831,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 			} else {
 				for (int i = tail - 1; i >= 0; i--)
 					if (values[i] == value) return i + values.length - head;
-				for (int i = values.length - 1, n = head; i >= n; i--)
+				for (int i = values.length - 1; i >= head; i--)
 					if (values[i] == value) return i - head;
 			}
 		} else {
@@ -841,7 +841,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 			} else {
 				for (int i = tail - 1; i >= 0; i--)
 					if (value.equals(values[i])) return i + values.length - head;
-				for (int i = values.length - 1, n = head; i >= n; i--)
+				for (int i = values.length - 1; i >= head; i--)
 					if (value.equals(values[i])) return i - head;
 			}
 		}
@@ -1251,7 +1251,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 			return descending ? index >= 0 : index < deque.size;
 		}
 
-		public T next () {
+		public @Nullable T next () {
 			if (index >= deque.size || index < 0) throw new NoSuchElementException(String.valueOf(index));
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
