@@ -18,6 +18,8 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.ds.support.sort.FloatComparator;
+import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;
@@ -960,7 +962,7 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 	}
 
 	/**
-	 * Sorts this deque in-place using {@link Arrays#sort(float[], int, int)}.
+	 * Sorts this deque in-place using {@link Arrays#sort(long[], int, int)}.
 	 * This should operate in O(n log(n)) time or less when the internals of the deque are
 	 * continuous (the head is before the tail in the array). If the internals are not
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
@@ -971,8 +973,26 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 			Arrays.sort(values, head, tail);
 		} else {
 			System.arraycopy(values, head, values, tail, values.length - head);
-			Arrays.sort(values, 0, tail + values.length - head);
-			tail = tail + values.length - head;
+			Arrays.sort(values, 0, size);
+			tail = size;
+			head = 0;
+		}
+	}
+
+	/**
+	 * Sorts this deque in-place using {@link FloatComparators#sort(float[], int, int, FloatComparator)}.
+	 * This should operate in O(n log(n)) time or less when the internals of the deque are
+	 * continuous (the head is before the tail in the array). If the internals are not
+	 * continuous, this takes an additional O(n) step (where n is less than the size of
+	 * the deque) to rearrange the internals before sorting.
+	 */
+	public void sort(@Nullable FloatComparator c){
+		if(head <= tail) {
+			FloatComparators.sort(values, head, tail, c);
+		} else {
+			System.arraycopy(values, head, values, tail, values.length - head);
+			FloatComparators.sort(values, 0, size, c);
+			tail = size;
 			head = 0;
 		}
 	}
