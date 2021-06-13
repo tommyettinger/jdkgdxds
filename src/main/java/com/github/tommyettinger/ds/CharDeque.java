@@ -17,6 +17,8 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.ds.support.sort.CharComparator;
+import com.github.tommyettinger.ds.support.sort.CharComparators;
 import com.github.tommyettinger.ds.support.util.CharIterator;
 
 import javax.annotation.Nullable;
@@ -980,8 +982,26 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 			Arrays.sort(values, head, tail);
 		} else {
 			System.arraycopy(values, head, values, tail, values.length - head);
-			Arrays.sort(values, 0, tail + values.length - head);
-			tail = tail + values.length - head;
+			Arrays.sort(values, 0, size);
+			tail = size;
+			head = 0;
+		}
+	}
+
+	/**
+	 * Sorts this deque in-place using {@link CharComparators#sort(char[], int, int, CharComparator)}.
+	 * This should operate in O(n log(n)) time or less when the internals of the deque are
+	 * continuous (the head is before the tail in the array). If the internals are not
+	 * continuous, this takes an additional O(n) step (where n is less than the size of
+	 * the deque) to rearrange the internals before sorting.
+	 */
+	public void sort(@Nullable CharComparator c){
+		if(head <= tail) {
+			CharComparators.sort(values, head, tail, c);
+		} else {
+			System.arraycopy(values, head, values, tail, values.length - head);
+			CharComparators.sort(values, 0, size, c);
+			tail = size;
 			head = 0;
 		}
 	}
