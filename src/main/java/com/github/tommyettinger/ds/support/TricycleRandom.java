@@ -5,37 +5,30 @@ import java.util.Random;
 /**
  * An unusual RNG that's extremely fast on HotSpot JDK 16 and higher, and still fairly fast on earlier JDKs. It has
  * three {@code long} states, which as far as I can tell can be initialized to any values without hitting any known
- * problems for initialization. These states, a, b, and c, are passed around so b and c affect the next result for a,
- * but the previous value of a will only affect the next results for b and c, not a itself. The next values for b and c
- * involve a rotation with {@link Long#rotateLeft(long, int)} for one state, and an extra operation using another state
- * (b uses add, c uses subtract). The next value for a is {@code (c + 0xC6BC279692B5C323L) ^ b}, where the long constant
- * is a probable prime with an equal number of 1 and 0 bits, but is otherwise arbitrary.
- * <br>
- * This complicated transfer of states happens to be optimized very nicely by recent JVM versions (mostly for HotSpot,
- * but OpenJ9 also does well), since a, b, and c can all be updated in parallel instructions. It passes 64TB of
- * PractRand testing with no anomalies and also passes Dieharder. It's also really fast, and is one of only a few
- * generators I have benchmarked as producing more than 1 billion longs per second on a HotSpot JVM (on a recent laptop).
+ * problems for initialization. These states, a, b, and c, are passed around so a is determined by the previous c, b is
+ * determined by the previous a, b, and c, and c is determined by the previous b. This updates a with a multiplication,
+ * b with two XOR operations, and c with a bitwise-left-rotate by 41 and then an addition with a constant. If you want
+ * to alter this generator so results will be harder to reproduce, the simplest way is to change the constant added to
+ * c -- it can be any substantially-large odd number, though preferably one with a {@link Long#bitCount(long)} of 32.
  * <br>
  * Other useful traits of this generator are that it almost certainly has a longer period than you need for a game, and
  * that all values are permitted for the states (that we know of). It is possible that some initialization will put the
  * generator in a shorter-period subcycle, but the odds of this being a subcycle that's small enough to run out of
  * period during a game are effectively 0. It's also possible that the generator only has one cycle of length 2 to the
- * 192, though this doesn't seem likely.
+ * 192, though this doesn't seem at all likely.
  * <br>
  * This is closely related to Mark Overton's <a href="https://www.romu-random.org/">Romu generators</a>, specifically
- * RomuTrio, but this gets a little faster than RomuTrio by using just one less rotation. Unlike RomuTrio, there isn't a
- * clear problematic state with a period of 1 (which happens when all of its states are 0). This generator isn't an ARX
- * generator any more (a previous version was), but its performance isn't much different (like RomuTrio, the one
- * multiplication this uses pipelines very well, so it doesn't slow down the generator).
+ * RomuTrio, but this gets a little faster than RomuTrio in some situations by using just one less rotation. Unlike
+ * RomuTrio, there isn't a clear problematic state with a period of 1 (which happens when all of its states are 0).
+ * This is often slightly slower than RomuTrio, but only by a tiny margin. This generator isn't an ARX generator any
+ * more (a previous version was), but its performance isn't much different (like RomuTrio, the one multiplication this
+ * uses pipelines very well, so it doesn't slow down the generator).
  * <br>
  * TricycleRandom passes 64TB of testing with PractRand, which uses a suite of tests to look for a variety of potential
- * problems. Testing a larger amount of random data needs quite a bit more memory than I currently have, at least with
- * PractRand -- another test, hwd, can test a much larger amount of data but only uses a single test. The test hwd uses
- * looks for long-range bit-dependencies, where one bit's state earlier in the generated numbers determines the state of
- * a future bit with a higher-than-reasonable likelihood. A previous version of TricycleRandom passed PractRand, also to
- * 64TB, but failed hwd around 400 TB of data. This version of TricycleRandom
- * <b>TricycleRandom isn't yet considered a stable API</b> as a result, and its algorithm may change (along with the
- * numbers it produces) in future versions. Both {@link LaserRandom} and {@link DistinctRandom} are considered stable.
+ * problems. It has also passed a whopping 4 petabytes of testing with hwd, can test a much larger amount of data but
+ * only runs a single test. The test hwd uses looks for long-range bit-dependencies, where one bit's state earlier in
+ * the generated numbers determines the state of a future bit with a higher-than-reasonable likelihood. All three of
+ * this generator, {@link LaserRandom} and {@link DistinctRandom} are considered stable.
  * <br>
  * This can be used as a substitute for {@link LaserRandom}, but it doesn't start out randomizing its early results very
  * well, unlike LaserRandom. If you initialize this with {@link #setSeed(long)}, then the results should be random from
