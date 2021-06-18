@@ -79,7 +79,9 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @param a an array of T that will be copied into this and used in full
 	 */
 	public ObjectDeque (T[] a) {
-		this.values = Arrays.copyOf(a, a.length);
+		tail = a.length;
+		this.values = Arrays.copyOf(a, tail);
+		size = tail;
 	}
 
 	/**
@@ -90,6 +92,8 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 */
 	public ObjectDeque (T[] a, int offset, int count) {
 		this.values = Arrays.copyOfRange(a, offset, offset + count);
+		tail = count;
+		size = count;
 	}
 
 	/** Append given object to the tail (enqueue to tail). Unless backing array needs resizing, operates in O(1) time.
