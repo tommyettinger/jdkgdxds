@@ -65,6 +65,33 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		this.values = (T[])new Object[initialSize];
 	}
 
+	/**
+	 * Creates a new ObjectDeque using all of the contents of the given Collection.
+	 * @param coll a Collection of T that will be copied into this and used in full
+	 */
+	public ObjectDeque (Collection<? extends T> coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+
+	/**
+	 * Creates a new ObjectDeque using all of the contents of the given array.
+	 * @param a an array of T that will be copied into this and used in full
+	 */
+	public ObjectDeque (T[] a) {
+		this.values = Arrays.copyOf(a, a.length);
+	}
+
+	/**
+	 * Creates a new ObjectDeque using {@code count} items from {@code a}, starting at {@code offset}.
+	 * @param a an array of T
+	 * @param offset where in {@code a} to start using items
+	 * @param count how many items to use from {@code a}
+	 */
+	public ObjectDeque (T[] a, int offset, int count) {
+		this.values = Arrays.copyOfRange(a, offset, offset + count);
+	}
+
 	/** Append given object to the tail (enqueue to tail). Unless backing array needs resizing, operates in O(1) time.
 	 * @param object can be null */
 	public void addLast (@Nullable T object) {
@@ -1201,11 +1228,20 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	}
 
 	/**
+	 * Attempts to sort this deque in-place using its natural ordering, which requires T to
+	 * implement {@link Comparable} of T.
+	 */
+	public void sort() {
+		sort(null);
+	}
+	/**
 	 * Sorts this deque in-place using {@link Arrays#sort(Object[], int, int, Comparator)}.
 	 * This should operate in O(n log(n)) time or less when the internals of the deque are
 	 * continuous (the head is before the tail in the array). If the internals are not
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
-	 * the deque) to rearrange the internals before sorting.
+	 * the deque) to rearrange the internals before sorting. You can pass null as the value
+	 * for {@code comparator} if T implements {@link Comparable} of T, which will make this
+	 * use the natural ordering for T.
 	 * @param comparator the Comparator to use for T items; may be null to use the natural
 	 *                   order of T items when T implements Comparable of T
 	 */
@@ -1272,5 +1308,10 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		public Iterator<T> iterator () {
 			return this;
 		}
+	}
+
+	@SafeVarargs
+	public static <T> ObjectDeque<T> with(T... items){
+		return new ObjectDeque<>(items);
 	}
 }
