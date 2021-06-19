@@ -67,6 +67,49 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		this.values = new long[initialSize];
 	}
 
+	/**
+	 * Creates a new LongDeque using all of the contents of the given PrimitiveCollection.OfLong, such as
+	 * a {@link LongList} or {@link LongSet}.
+	 * @param coll a PrimitiveCollection.OfLong that will be copied into this and used in full
+	 */
+	public LongDeque (PrimitiveCollection.OfLong coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+
+	/**
+	 * Copies the given LongDeque exactly into this one. Individual values will be shallow-copied.
+	 * @param deque another LongDeque to copy
+	 */
+	public LongDeque (LongDeque deque) {
+		this.values = Arrays.copyOf(deque.values, deque.values.length);
+		this.size = deque.size;
+		this.head = deque.head;
+		this.tail = deque.tail;
+	}
+
+	/**
+	 * Creates a new LongDeque using all of the contents of the given array.
+	 * @param a an array of long that will be copied into this and used in full
+	 */
+	public LongDeque (long[] a) {
+		tail = a.length;
+		this.values = Arrays.copyOf(a, tail);
+		size = tail;
+	}
+
+	/**
+	 * Creates a new LongDeque using {@code count} items from {@code a}, starting at {@code offset}.
+	 * @param a an array of long
+	 * @param offset where in {@code a} to start using items
+	 * @param count how many items to use from {@code a}
+	 */
+	public LongDeque (long[] a, int offset, int count) {
+		this.values = Arrays.copyOfRange(a, offset, offset + count);
+		tail = count;
+		size = count;
+	}
+
 	public long getDefaultValue () {
 		return defaultValue;
 	}
@@ -1047,5 +1090,9 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		public PrimitiveIterator.OfLong iterator () {
 			return this;
 		}
+	}
+	
+	public static LongDeque with(long... items){
+		return new LongDeque(items);
 	}
 }

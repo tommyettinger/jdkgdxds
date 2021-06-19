@@ -75,6 +75,17 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	}
 
 	/**
+	 * Copies the given ObjectDeque exactly into this one. Individual values will be shallow-copied.
+	 * @param deque another ObjectDeque to copy
+	 */
+	public ObjectDeque (ObjectDeque<? extends T> deque) {
+		this.values = Arrays.copyOf(deque.values, deque.values.length);
+		this.size = deque.size;
+		this.head = deque.head;
+		this.tail = deque.tail;
+	}
+
+	/**
 	 * Creates a new ObjectDeque using all of the contents of the given array.
 	 * @param a an array of T that will be copied into this and used in full
 	 */
