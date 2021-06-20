@@ -86,6 +86,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		this.size = deque.size;
 		this.head = deque.head;
 		this.tail = deque.tail;
+		this.defaultValue = deque.defaultValue;
 	}
 
 	/**

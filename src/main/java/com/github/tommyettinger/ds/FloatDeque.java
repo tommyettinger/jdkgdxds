@@ -88,6 +88,7 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		this.size = deque.size;
 		this.head = deque.head;
 		this.tail = deque.tail;
+		this.defaultValue = deque.defaultValue;
 	}
 
 	/**

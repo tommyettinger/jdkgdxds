@@ -68,6 +68,50 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 		this.values = new double[initialSize];
 	}
 
+	/**
+	 * Creates a new DoubleDeque using all of the contents of the given PrimitiveCollection.OfDouble, such as
+	 * a {@link DoubleList}.
+	 * @param coll a PrimitiveCollection.OfDouble that will be copied into this and used in full
+	 */
+	public DoubleDeque (PrimitiveCollection.OfDouble coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+
+	/**
+	 * Copies the given DoubleDeque exactly into this one. Individual values will be shallow-copied.
+	 * @param deque another DoubleDeque to copy
+	 */
+	public DoubleDeque (DoubleDeque deque) {
+		this.values = Arrays.copyOf(deque.values, deque.values.length);
+		this.size = deque.size;
+		this.head = deque.head;
+		this.tail = deque.tail;
+		this.defaultValue = deque.defaultValue;
+	}
+
+	/**
+	 * Creates a new DoubleDeque using all of the contents of the given array.
+	 * @param a an array of long that will be copied into this and used in full
+	 */
+	public DoubleDeque (double[] a) {
+		tail = a.length;
+		this.values = Arrays.copyOf(a, tail);
+		size = tail;
+	}
+
+	/**
+	 * Creates a new DoubleDeque using {@code count} items from {@code a}, starting at {@code offset}.
+	 * @param a an array of long
+	 * @param offset where in {@code a} to start using items
+	 * @param count how many items to use from {@code a}
+	 */
+	public DoubleDeque (double[] a, int offset, int count) {
+		this.values = Arrays.copyOfRange(a, offset, offset + count);
+		tail = count;
+		size = count;
+	}
+	
 	public double getDefaultValue () {
 		return defaultValue;
 	}
@@ -1048,5 +1092,9 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 		public OfDouble iterator () {
 			return this;
 		}
+	}
+
+	public static DoubleDeque with(double... items){
+		return new DoubleDeque(items);
 	}
 }

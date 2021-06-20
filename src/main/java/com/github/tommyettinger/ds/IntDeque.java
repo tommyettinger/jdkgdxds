@@ -86,6 +86,7 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 		this.size = deque.size;
 		this.head = deque.head;
 		this.tail = deque.tail;
+		this.defaultValue = deque.defaultValue;
 	}
 
 	/**
