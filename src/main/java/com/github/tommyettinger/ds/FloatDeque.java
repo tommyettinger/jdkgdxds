@@ -68,6 +68,50 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		this.values = new float[initialSize];
 	}
 
+
+	/**
+	 * Creates a new FloatDeque using all of the contents of the given PrimitiveCollection.OfFloat, such as
+	 * a {@link FloatList} or {@link ObjectFloatMap.Values}.
+	 * @param coll a PrimitiveCollection.OfFloat that will be copied into this and used in full
+	 */
+	public FloatDeque (PrimitiveCollection.OfFloat coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+
+	/**
+	 * Copies the given FloatDeque exactly into this one. Individual values will be shallow-copied.
+	 * @param deque another FloatDeque to copy
+	 */
+	public FloatDeque (FloatDeque deque) {
+		this.values = Arrays.copyOf(deque.values, deque.values.length);
+		this.size = deque.size;
+		this.head = deque.head;
+		this.tail = deque.tail;
+	}
+
+	/**
+	 * Creates a new FloatDeque using all of the contents of the given array.
+	 * @param a an array of long that will be copied into this and used in full
+	 */
+	public FloatDeque (float[] a) {
+		tail = a.length;
+		this.values = Arrays.copyOf(a, tail);
+		size = tail;
+	}
+
+	/**
+	 * Creates a new FloatDeque using {@code count} items from {@code a}, starting at {@code offset}.
+	 * @param a an array of long
+	 * @param offset where in {@code a} to start using items
+	 * @param count how many items to use from {@code a}
+	 */
+	public FloatDeque (float[] a, int offset, int count) {
+		this.values = Arrays.copyOfRange(a, offset, offset + count);
+		tail = count;
+		size = count;
+	}
+
 	public float getDefaultValue () {
 		return defaultValue;
 	}
@@ -1048,5 +1092,9 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		public FloatIterator iterator () {
 			return this;
 		}
+	}
+	
+	public static FloatDeque with(float... items){
+		return new FloatDeque(items);
 	}
 }
