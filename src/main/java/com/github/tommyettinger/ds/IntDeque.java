@@ -67,6 +67,49 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 		this.values = new int[initialSize];
 	}
 
+	/**
+	 * Creates a new IntDeque using all of the contents of the given PrimitiveCollection.OfInt, such as
+	 * a {@link IntList} or {@link IntSet}.
+	 * @param coll a PrimitiveCollection.OfInt that will be copied into this and used in full
+	 */
+	public IntDeque (PrimitiveCollection.OfInt coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+
+	/**
+	 * Copies the given IntDeque exactly into this one. Individual values will be shallow-copied.
+	 * @param deque another IntDeque to copy
+	 */
+	public IntDeque (IntDeque deque) {
+		this.values = Arrays.copyOf(deque.values, deque.values.length);
+		this.size = deque.size;
+		this.head = deque.head;
+		this.tail = deque.tail;
+	}
+
+	/**
+	 * Creates a new IntDeque using all of the contents of the given array.
+	 * @param a an array of long that will be copied into this and used in full
+	 */
+	public IntDeque (int[] a) {
+		tail = a.length;
+		this.values = Arrays.copyOf(a, tail);
+		size = tail;
+	}
+
+	/**
+	 * Creates a new IntDeque using {@code count} items from {@code a}, starting at {@code offset}.
+	 * @param a an array of long
+	 * @param offset where in {@code a} to start using items
+	 * @param count how many items to use from {@code a}
+	 */
+	public IntDeque (int[] a, int offset, int count) {
+		this.values = Arrays.copyOfRange(a, offset, offset + count);
+		tail = count;
+		size = count;
+	}
+
 	public int getDefaultValue () {
 		return defaultValue;
 	}
@@ -1049,4 +1092,8 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 			return this;
 		}
 	}
+	public static IntDeque with(int... items){
+		return new IntDeque(items);
+	}
+
 }

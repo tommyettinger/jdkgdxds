@@ -1091,7 +1091,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 			return this;
 		}
 	}
-	
+
 	public static LongDeque with(long... items){
 		return new LongDeque(items);
 	}
