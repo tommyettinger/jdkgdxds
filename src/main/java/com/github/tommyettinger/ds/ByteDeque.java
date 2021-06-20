@@ -67,6 +67,50 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 		this.values = new byte[initialSize];
 	}
 
+	/**
+	 * Creates a new ByteDeque using all of the contents of the given PrimitiveCollection.OfByte, such as
+	 * a {@link ByteList}.
+	 * @param coll a PrimitiveCollection.OfByte that will be copied into this and used in full
+	 */
+	public ByteDeque (PrimitiveCollection.OfByte coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+
+	/**
+	 * Copies the given ByteDeque exactly into this one. Individual values will be shallow-copied.
+	 * @param deque another ByteDeque to copy
+	 */
+	public ByteDeque (ByteDeque deque) {
+		this.values = Arrays.copyOf(deque.values, deque.values.length);
+		this.size = deque.size;
+		this.head = deque.head;
+		this.tail = deque.tail;
+		this.defaultValue = deque.defaultValue;
+	}
+
+	/**
+	 * Creates a new ByteDeque using all of the contents of the given array.
+	 * @param a an array of long that will be copied into this and used in full
+	 */
+	public ByteDeque (byte[] a) {
+		tail = a.length;
+		this.values = Arrays.copyOf(a, tail);
+		size = tail;
+	}
+
+	/**
+	 * Creates a new ByteDeque using {@code count} items from {@code a}, starting at {@code offset}.
+	 * @param a an array of long
+	 * @param offset where in {@code a} to start using items
+	 * @param count how many items to use from {@code a}
+	 */
+	public ByteDeque (byte[] a, int offset, int count) {
+		this.values = Arrays.copyOfRange(a, offset, offset + count);
+		tail = count;
+		size = count;
+	}
+
 	public byte getDefaultValue () {
 		return defaultValue;
 	}
@@ -1047,5 +1091,9 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 		public ByteIterator iterator () {
 			return this;
 		}
+	}
+
+	public static ByteDeque with(byte... items){
+		return new ByteDeque(items);
 	}
 }
