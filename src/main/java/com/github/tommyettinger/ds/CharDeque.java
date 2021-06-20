@@ -67,6 +67,50 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		this.values = new char[initialSize];
 	}
 
+	/**
+	 * Creates a new CharDeque using all of the contents of the given PrimitiveCollection.OfChar, such as
+	 * a {@link CharList}.
+	 * @param coll a PrimitiveCollection.OfChar that will be copied into this and used in full
+	 */
+	public CharDeque (PrimitiveCollection.OfChar coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+
+	/**
+	 * Copies the given CharDeque exactly into this one. Individual values will be shallow-copied.
+	 * @param deque another CharDeque to copy
+	 */
+	public CharDeque (CharDeque deque) {
+		this.values = Arrays.copyOf(deque.values, deque.values.length);
+		this.size = deque.size;
+		this.head = deque.head;
+		this.tail = deque.tail;
+		this.defaultValue = deque.defaultValue;
+	}
+
+	/**
+	 * Creates a new CharDeque using all of the contents of the given array.
+	 * @param a an array of long that will be copied into this and used in full
+	 */
+	public CharDeque (char[] a) {
+		tail = a.length;
+		this.values = Arrays.copyOf(a, tail);
+		size = tail;
+	}
+
+	/**
+	 * Creates a new CharDeque using {@code count} items from {@code a}, starting at {@code offset}.
+	 * @param a an array of long
+	 * @param offset where in {@code a} to start using items
+	 * @param count how many items to use from {@code a}
+	 */
+	public CharDeque (char[] a, int offset, int count) {
+		this.values = Arrays.copyOfRange(a, offset, offset + count);
+		tail = count;
+		size = count;
+	}
+
 	public char getDefaultValue () {
 		return defaultValue;
 	}
@@ -1057,5 +1101,9 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		public CharIterator iterator () {
 			return this;
 		}
+	}
+
+	public static CharDeque with(char... items){
+		return new CharDeque(items);
 	}
 }
