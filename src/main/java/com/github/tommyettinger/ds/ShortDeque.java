@@ -67,6 +67,50 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 		this.values = new short[initialSize];
 	}
 
+	/**
+	 * Creates a new ShortDeque using all of the contents of the given PrimitiveCollection.OfShort, such as
+	 * a {@link ShortList}.
+	 * @param coll a PrimitiveCollection.OfShort that will be copied into this and used in full
+	 */
+	public ShortDeque (PrimitiveCollection.OfShort coll) {
+		this(coll.size());
+		addAll(coll);
+	}
+
+	/**
+	 * Copies the given ShortDeque exactly into this one. Individual values will be shallow-copied.
+	 * @param deque another ShortDeque to copy
+	 */
+	public ShortDeque (ShortDeque deque) {
+		this.values = Arrays.copyOf(deque.values, deque.values.length);
+		this.size = deque.size;
+		this.head = deque.head;
+		this.tail = deque.tail;
+		this.defaultValue = deque.defaultValue;
+	}
+
+	/**
+	 * Creates a new ShortDeque using all of the contents of the given array.
+	 * @param a an array of long that will be copied into this and used in full
+	 */
+	public ShortDeque (short[] a) {
+		tail = a.length;
+		this.values = Arrays.copyOf(a, tail);
+		size = tail;
+	}
+
+	/**
+	 * Creates a new ShortDeque using {@code count} items from {@code a}, starting at {@code offset}.
+	 * @param a an array of long
+	 * @param offset where in {@code a} to start using items
+	 * @param count how many items to use from {@code a}
+	 */
+	public ShortDeque (short[] a, int offset, int count) {
+		this.values = Arrays.copyOfRange(a, offset, offset + count);
+		tail = count;
+		size = count;
+	}
+
 	public short getDefaultValue () {
 		return defaultValue;
 	}
@@ -1048,4 +1092,9 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 			return this;
 		}
 	}
+
+	public static ShortDeque with(short... items){
+		return new ShortDeque(items);
+	}
+
 }
