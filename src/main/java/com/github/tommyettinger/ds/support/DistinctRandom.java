@@ -29,6 +29,9 @@ import java.util.Random;
  */
 public class DistinctRandom extends Random implements EnhancedRandom {
 
+    /**
+     * The only state variable; can be any {@code long}.
+     */
     public long state;
 
     /**
@@ -86,6 +89,26 @@ public class DistinctRandom extends Random implements EnhancedRandom {
     @Override
     public void setSeed(long seed) {
         state = seed;
+    }
+
+    /**
+     * Gets the current state; it's already public, but I guess this could still
+     * be useful.
+     * @return the current state, as a long
+     */
+    public long getState () {
+        return state;
+    }
+
+    /**
+     * Sets each state variable to the given {@code state}. This implementation
+     * simply sets the one state variable to {@code state}.
+     *
+     * @param state the long value to use for the state variable
+     */
+    @Override
+    public void setState (long state) {
+        this.state = state;
     }
 
     @Override

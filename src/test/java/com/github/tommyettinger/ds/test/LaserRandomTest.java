@@ -35,7 +35,7 @@ public class LaserRandomTest {
 		System.out.println("\nRandom");
 		jur = new java.util.Random(50);
 		jusr = new java.util.SplittableRandom(50);
-		lr = new LaserRandom(50);
+		lr.setState(50);
 		for(int i = 0; i < 50; i++) System.out.print((((jur.nextInt() & 0xFFFFFFFFL) * -2 >> 32) - (-2 >> 31)) + " ");
 		System.out.println("\nSplittableRandom");
 		for(int i = 0; i < 50; i++) System.out.print((((jusr.nextInt() & 0xFFFFFFFFL) * -2 >> 32) - (-2 >> 31)) + " ");
@@ -45,7 +45,7 @@ public class LaserRandomTest {
 		System.out.println("\n\nRepeat count:");
 		jur = new java.util.Random(100);
 		jusr = new java.util.SplittableRandom(100);
-		lr = new LaserRandom(100);
+		lr.setState(100);
 		int prev, count;
 		prev = -1;
 		count = 0;
