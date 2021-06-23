@@ -12,6 +12,7 @@ buildscript {
 
 apply plugin: 'java-library'
 apply plugin: 'com.vanniktech.maven.publish'
+apply plugin: 'idea'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -39,8 +40,10 @@ if (JavaVersion.current().isJava8Compatible()) {
 if (JavaVersion.current().isJava9Compatible()) {
     compileJava.targetCompatibility = 8
 }
-compileJava.exclude("emu")
-javadoc.exclude("emu")
+
+idea.module.excludeDirs += [file("src/main/java/emu/")]
+[compileJava, compileTestJava, javadoc]*.exclude("emu")
+
 javadoc.options.source("16")
 javadoc.destinationDir = file("docs/apidocs")
 
