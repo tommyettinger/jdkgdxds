@@ -5,8 +5,18 @@ import java.util.Random;
 /**
  * A random number generator that is extremely fast on Java 16, and has a very large probable period.
  * This generator is measurably faster than {@link TricycleRandom} on Java 16 but slightly slower than it on Java 8.
- * Not stable currently; API, algorithm, and results may change at any time. Testing performed is limited so far, but
- * this passes at least 16TB of PractRand and 125TB of hwd without issues.
+ * Not stable currently; API, algorithm, and results may change at any time. Testing performed is sufficient, but more
+ * can always be done; this passes at least 64TB of PractRand and 700TB of hwd without issues.
+ * <br>
+ * The algorithm used here has four states purely to exploit instruction-level parallelism; it isn't trying to extend the
+ * period of the generator beyond about 2 to the 64 (the expected bare minimum, though some cycles will likely be much
+ * longer). There's a complex tangle of dependencies across the four states, but it is possible to invert the generator
+ * given a full 256-bit state; this is vital for its period and quality. State A and state B operate like a staggered LCG
+ * that starts with stateD; this part is why 2 to the 64 is expected as the bare minimum period. State C and state D take
+ * two of the other states and combine them; C rotates state B and subtracts state D, while D simply XORs states B and C.
+ * This returns the state D that the previous step generated. This performs better than TricycleRandom simply because each
+ * of the states can be updated in parallel (using ILP) and all of the updates depend on either one or two states, instead
+ * of one, two, or three with TricycleRandom.
  */
 public class FourWheelRandom extends Random implements EnhancedRandom {
 
@@ -29,7 +39,7 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
     protected long stateD;
 
     /**
-     * Creates a new TricycleRandom with a random state.
+     * Creates a new FourWheelRandom with a random state.
      */
     public FourWheelRandom () {
         super();
@@ -40,7 +50,7 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
     }
 
     /**
-     * Creates a new TricycleRandom with the given seed; all {@code long} values are permitted.
+     * Creates a new FourWheelRandom with the given seed; all {@code long} values are permitted.
      * The seed will be passed to {@link #setSeed(long)} to attempt to adequately distribute the seed randomly.
      * @param seed any {@code long} value
      */
@@ -50,11 +60,12 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
     }
 
     /**
-     * Creates a new TricycleRandom with the given three states; all {@code long} values are permitted.
+     * Creates a new FourWheelRandom with the given four states; all {@code long} values are permitted.
      * These states will be used verbatim.
      * @param stateA any {@code long} value
      * @param stateB any {@code long} value
      * @param stateC any {@code long} value
+     * @param stateD any {@code long} value
      */
     public FourWheelRandom (long stateA, long stateB, long stateC, long stateD) {
         super(stateA + stateB ^ stateC - stateD);
@@ -294,7 +305,7 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
     }
 
     public String toString() {
-        return "TricycleRandom{" +
+        return "FourWheelRandom{" +
                 "stateA=" + stateA +
                 "L, stateB=" + stateB +
                 "L, stateC=" + stateC +
