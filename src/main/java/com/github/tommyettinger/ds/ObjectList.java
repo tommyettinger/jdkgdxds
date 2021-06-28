@@ -22,10 +22,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
+import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 
 /**
  * A resizable, ordered list of {@code T} items, typically objects (they can also be arrays).
@@ -706,6 +708,25 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	@Override
 	public void reverse () {
 		Collections.reverse(this);
+	}
+
+	/**
+	 * Sorts this ObjectList based on the natural order of its elements; {@code T} must implement {@link Comparable}
+	 * for this to succeed.
+	 */
+	public void sort () {
+		ObjectComparators.sort(this, null);
+	}
+
+	/**
+	 * Sorts this ObjectList using the given Comparator. If the Comparator is null, then this sorts based on the
+	 * natural order of its elements, and {@code T} must implement {@link Comparable}.
+	 * <br>
+	 * This is implemented explicitly and not annotated with Override because of Android limitations.
+	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
+	 */
+	public void sort (@Nullable Comparator<? super T> c) {
+		ObjectComparators.sort(this, c);
 	}
 
 	public static <T> ObjectList<T> with(T item) {

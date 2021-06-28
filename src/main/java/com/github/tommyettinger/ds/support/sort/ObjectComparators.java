@@ -30,149 +30,185 @@
 package com.github.tommyettinger.ds.support.sort;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public final class ObjectComparators {
 	private ObjectComparators () {
 	}
-	private static final int QUICKSORT_NO_REC = 16;
-	private static final int QUICKSORT_MEDIAN_OF_9 = 128;
+	/// The remainder of the code is based on FastUtil.
 
-	/** Swaps two elements of an anrray.
-	 *
-	 * @param x an array.
-	 * @param a a position in {@code x}.
-	 * @param b another position in {@code x}.
+	private static<K> void swap (List<K> items, int first, int second) {
+		K firstValue = items.get(first);
+		items.set(first, items.get(second));
+		items.set(second, firstValue);
+	}
+
+	/**
+	 * Transforms two consecutive sorted ranges into a single sorted range. The initial ranges are
+	 * {@code [first..middle)} and {@code [middle..last)}, and the resulting range is
+	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
+	 * the second.
 	 */
-	public static <K> void swap(final K x[], final int a, final int b) {
-		final K t = x[a];
-		x[a] = x[b];
-		x[b] = t;
+	private static <K> void inPlaceMerge (List<K> items, final int from, int mid, final int to, final Comparator<? super K> comp) {
+		if (from >= mid || mid >= to) { return; }
+		if (to - from == 2) {
+			if (comp.compare(items.get(mid), items.get(from)) < 0) { swap(items, from, mid); }
+			return;
+		}
+
+		int firstCut;
+		int secondCut;
+
+		if (mid - from > to - mid) {
+			firstCut = from + (mid - from) / 2;
+			secondCut = lowerBound(items, mid, to, firstCut, comp);
+		} else {
+			secondCut = mid + (to - mid) / 2;
+			firstCut = upperBound(items, from, mid, secondCut, comp);
+		}
+
+		int first2 = firstCut;
+		int middle2 = mid;
+		int last2 = secondCut;
+		if (middle2 != first2 && middle2 != last2) {
+			int first1 = first2;
+			int last1 = middle2;
+			while (first1 < --last1) { swap(items, first1++, last1); }
+			first1 = middle2;
+			last1 = last2;
+			while (first1 < --last1) { swap(items, first1++, last1); }
+			first1 = first2;
+			last1 = last2;
+			while (first1 < --last1) { swap(items, first1++, last1); }
+		}
+
+		mid = firstCut + secondCut - mid;
+		inPlaceMerge(items, from, firstCut, mid, comp);
+		inPlaceMerge(items, mid, secondCut, to, comp);
 	}
-	/** Swaps two sequences of elements of an array.
+
+	/**
+	 * Performs a binary search on an already-sorted range: finds the first position where an
+	 * element can be inserted without violating the ordering. Sorting is by a user-supplied
+	 * comparison function.
 	 *
-	 * @param x an array.
-	 * @param a a position in {@code x}.
-	 * @param b another position in {@code x}.
-	 * @param n the number of elements to exchange starting at {@code a} and {@code b}.
+	 * @param items the List to be sorted
+	 * @param from the index of the first element (inclusive) to be included in the binary search.
+	 * @param to   the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos  the position of the element to be searched for.
+	 * @param comp the comparison function.
+	 * @return the largest index i such that, for every j in the range {@code [first..i)},
+	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
-	public static <K> void swap(final K[] x, int a, int b, final int n) {
-		for(int i = 0; i < n; i++, a++, b++) swap(x, a, b);
-	}
-	private static <K> int med3(final K x[], final int a, final int b, final int c, Comparator <K> comp) {
-		final int ab = comp.compare(x[a], x[b]);
-		final int ac = comp.compare(x[a], x[c]);
-		final int bc = comp.compare(x[b], x[c]);
-		return (ab < 0 ?
-			(bc < 0 ? b : ac < 0 ? c : a) :
-			(bc > 0 ? b : ac > 0 ? c : a));
-	}
-	private static <K> void selectionSort(final K[] a, final int from, final int to, final Comparator <K> comp) {
-		for(int i = from; i < to - 1; i++) {
-			int m = i;
-			for(int j = i + 1; j < to; j++) if (comp.compare(a[j], a[m]) < 0) m = j;
-			if (m != i) {
-				final K u = a[i];
-				a[i] = a[m];
-				a[m] = u;
+	private static <K> int lowerBound (List<K> items, int from, final int to, final int pos, final Comparator<? super K> comp) {
+		int len = to - from;
+		while (len > 0) {
+			int half = len / 2;
+			int middle = from + half;
+			if (comp.compare(items.get(middle), items.get(pos)) < 0) {
+				from = middle + 1;
+				len -= half + 1;
+			} else {
+				len = half;
 			}
 		}
+		return from;
 	}
-	private static <K> void insertionSort(final K[] a, final int from, final int to, final Comparator <K> comp) {
-		for (int i = from; ++i < to;) {
-			K t = a[i];
-			int j = i;
-			for (K u = a[j - 1]; comp.compare(t, u) < 0; u = a[--j - 1]) {
-				a[j] = u;
-				if (from == j - 1) {
-					--j;
-					break;
-				}
+
+	/**
+	 * Performs a binary search on an already sorted range: finds the last position where an element
+	 * can be inserted without violating the ordering. Sorting is by a user-supplied comparison
+	 * function.
+	 *
+	 * @param items the List to be sorted
+	 * @param from the index of the first element (inclusive) to be included in the binary search.
+	 * @param to   the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos  the position of the element to be searched for.
+	 * @param comp the comparison function.
+	 * @return The largest index i such that, for every j in the range {@code [first..i)},
+	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
+	 */
+	private static <K> int upperBound (List<K> items, int from, final int to, final int pos, final Comparator<? super K> comp) {
+		int len = to - from;
+		while (len > 0) {
+			int half = len / 2;
+			int middle = from + half;
+			if (comp.compare(items.get(pos), items.get(middle)) < 0) {
+				len = half;
+			} else {
+				from = middle + 1;
+				len -= half + 1;
 			}
-			a[j] = t;
 		}
+		return from;
 	}
-	/** Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using quicksort.
+
+	/**
+	 * Sorts all of {@code items} by simply calling {@link #sort(List, int, int, Comparator)}
+	 * setting {@code from} and {@code to} so the whole array is sorted.
+	 * @param items the List to be sorted
+	 * @param c a Comparator to alter the sort order; if null, the natural order will be used
+	 */
+	public static <K> void sort(List<K> items, final @Nullable Comparator<? super K> c) {
+		sort(items, 0, items.size(), c);
+	}
+	/**
+	 * Sorts the specified range of elements according to the order induced by the specified
+	 * comparator using mergesort.
 	 *
-	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
-	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
-	 * 1249&minus;1265, 1993.
+	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
+	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>),
+	 * but it does not allocate additional memory; as a result, it can be
+	 * used as a generic sorting algorithm.
 	 *
-	 * <p>Note that this implementation does not allocate any object, contrarily to the implementation
-	 * used to sort primitive types in {@link java.util.Arrays}, which switches to mergesort on large inputs.
-	 *
-	 * @param x the array to be sorted.
+	 * @param items the List to be sorted
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
-	 * @param comp the comparator to determine the sorting order.
-	 *
+	 * @param c a Comparator to alter the sort order; if null, the natural order will be used
 	 */
-	@SuppressWarnings("unchecked")
-	public static <K> void sort (final K[] x, final int from, final int to, final @Nullable Comparator <K> comp) {
-		if(comp == null) {
-			sort(x, from, to, (Comparator<K>)Comparator.naturalOrder());
+	public static <K> void sort (List<K> items, final int from, final int to, final @Nullable Comparator<? super K> c) {
+		if (to <= 0) {
 			return;
 		}
-		final int len = to - from;
-		// Selection sort on smallest arrays
-		if (len < QUICKSORT_NO_REC) {
-			selectionSort(x, from, to, comp);
+		if (from < 0 || from >= items.size() || to > items.size()) {
+			throw new UnsupportedOperationException("The given from/to range in Comparators.sort() is invalid.");
+		}
+		if(c == null){
+			sort(items, from, to, (Comparator<K>)Comparator.naturalOrder());
 			return;
 		}
-		// Choose a partition element, v
-		int m = from + len / 2;
-		int l = from;
-		int n = to - 1;
-		if (len > QUICKSORT_MEDIAN_OF_9) { // Big arrays, pseudomedian of 9
-			int s = len / 8;
-			l = med3(x, l, l + s, l + 2 * s, comp);
-			m = med3(x, m - s, m, m + s, comp);
-			n = med3(x, n - 2 * s, n - s, n, comp);
-		}
-		m = med3(x, l, m, n, comp); // Mid-size, med of 3
-		final K v = x[m];
-		// Establish Invariant: v* (<v)* (>v)* v*
-		int a = from, b = a, c = to - 1, d = c;
-		while(true) {
-			int comparison;
-			while (b <= c && (comparison = comp.compare(x[b], v)) <= 0) {
-				if (comparison == 0) swap(x, a++, b);
-				b++;
-			}
-			while (c >= b && (comparison = comp.compare(x[c], v)) >=0) {
-				if (comparison == 0) swap(x, c, d--);
-				c--;
-			}
-			if (b > c) break;
-			swap(x, b++, c--);
-		}
-		// Swap partition elements back to middle
-		int s;
-		s = Math.min(a - from, b - a);
-		swap(x, from, b - s, s);
-		s = Math.min(d - c, to - d - 1);
-		swap(x, b, to - s, s);
-		// Recursively sort non-partition-elements
-		if ((s = b - a) > 1) sort(x, from, from + s, comp);
-		if ((s = d - c) > 1) sort(x, to - s, to, comp);
-	}
-	/** Sorts an array according to the order induced by the specified
-	 * comparator using quicksort.
-	 *
-	 * <p>The sorting algorithm is a tuned quicksort adapted from Jon L. Bentley and M. Douglas
-	 * McIlroy, &ldquo;Engineering a Sort Function&rdquo;, <i>Software: Practice and Experience</i>, 23(11), pages
-	 * 1249&minus;1265, 1993.
-	 *
-	 * <p>Note that this implementation does not allocate any object, contrarily to the implementation
-	 * used to sort primitive types in {@link java.util.Arrays}, which switches to mergesort on large inputs.
-	 *
-	 * @param x the array to be sorted.
-	 * @param comp the comparator to determine the sorting order.
-	 *
-	 */
-	public static <K> void sort (final K[] x, final @Nullable Comparator<K> comp) {
-		sort(x, 0, x.length, comp);
-	}
+		/*
+		 * We retain the same method signature as quickSort. Given only a comparator and this list
+		 * do not know how to copy and move elements from/to temporary arrays. Hence, in contrast to
+		 * the JDK mergesorts this is an "in-place" mergesort, i.e. does not allocate any temporary
+		 * arrays. A non-inplace mergesort would perhaps be faster in most cases, but would require
+		 * non-intuitive delegate objects...
+		 */
+		final int length = to - from;
 
+		// Insertion sort on smallest arrays, less than 16 items
+		if (length < 16) {
+			for (int i = from; i < to; i++) {
+				for (int j = i; j > from && c.compare(items.get(j - 1), items.get(j)) > 0; j--) {
+					swap(items, j, j - 1);
+				}
+			}
+			return;
+		}
+
+		// Recursively sort halves
+		int mid = from + to >>> 1;
+		sort(items, from, mid, c);
+		sort(items, mid, to, c);
+
+		// If list is already sorted, nothing left to do. This is an
+		// optimization that results in faster sorts for nearly ordered lists.
+		if (c.compare(items.get(mid - 1), items.get(mid)) <= 0) { return; }
+
+		// Merge sorted halves
+		inPlaceMerge(items, from, mid, to, c);
+	}
 }
