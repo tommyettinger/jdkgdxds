@@ -810,10 +810,10 @@ public interface EnhancedRandom {
 	}
 
 	/**
-	 * Advances or rolls back the {@code LaserRandom}' state without actually generating each number. Skips forward
-	 * or backward a number of steps specified by advance, where a step is equal to one call to {@link #nextLong()},
-	 * and returns the random number produced at that step. Negative numbers can be used to step backward, or 0 can be
-	 * given to get the most-recently-generated long from {@link #nextLong()}.
+	 * Optional; advances or rolls back the {@code EnhancedRandom}' state without actually generating each number.
+	 * Skips forward or backward a number of steps specified by advance, where a step is equal to one call to
+	 * {@link #nextLong()}, and returns the random number produced at that step. Negative numbers can be used to
+	 * step backward, or 0 can be given to get the most-recently-generated long from {@link #nextLong()}.
 	 *
 	 * <p>The default implementation throws an UnsupportedOperationException. Many types of random
 	 * number generator do not have an efficient way of skipping arbitrarily through the state sequence,
@@ -827,11 +827,24 @@ public interface EnhancedRandom {
 	}
 
 	/**
+	 * Optional; moves the state to its previous value and returns the previous long that would have been produced by
+	 * {@link #nextLong()}. This is often equivalent to calling {@link #skip(long)} with -1L, but not always; some
+	 * generators can't efficiently skip long distances, but can step back by one value.
+	 *
+	 * <p>The default implementation calls {@link #skip(long)} with -1L, and if skip() has not been implemented
+	 * differently, then it will throw an UnsupportedOperationException.
+	 * @return the previous number this would have produced with {@link #nextLong()}
+	 */
+	default long previousLong () {
+		return skip(-1L);
+	}
+
+	/**
 	 * Creates a new EnhancedRandom with identical states to this one, so if the same EnhancedRandom methods are
 	 * called on this object and its copy (in the same order), the same outputs will be produced. This is not
 	 * guaranteed to copy the inherited state of any parent class, so if you call methods that are
 	 * only implemented by a superclass (like {@link java.util.Random}) and not this one, the results may differ.
-	 * @return a deep copy of this LaserRandom.
+	 * @return a deep copy of this EnhancedRandom.
 	 */
 	EnhancedRandom copy ();
 

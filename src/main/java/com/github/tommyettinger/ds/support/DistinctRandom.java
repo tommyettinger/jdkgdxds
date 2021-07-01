@@ -141,6 +141,15 @@ public class DistinctRandom extends Random implements EnhancedRandom {
         x *= 0x1C69B3F74AC4AE35L;
         return x ^ x >>> 27;
     }
+    @Override
+    public long previousLong () {
+        long x = (state -= 0x9E3779B97F4A7C15L);
+        x ^= x >>> 27;
+        x *= 0x3C79AC492BA7B653L;
+        x ^= x >>> 33;
+        x *= 0x1C69B3F74AC4AE35L;
+        return x ^ x >>> 27;
+    }
 
     @Override
     public int next(int bits) {
