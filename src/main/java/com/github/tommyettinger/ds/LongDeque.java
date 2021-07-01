@@ -1093,6 +1093,12 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		}
 	}
 
+	public static LongDeque with(long item){
+		LongDeque deque = new LongDeque();
+		deque.add(item);
+		return deque;
+	}
+
 	public static LongDeque with(long... items){
 		return new LongDeque(items);
 	}

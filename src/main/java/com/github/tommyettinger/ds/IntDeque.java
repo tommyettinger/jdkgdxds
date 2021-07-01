@@ -1093,6 +1093,13 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 			return this;
 		}
 	}
+
+	public static IntDeque with(int item){
+		IntDeque deque = new IntDeque();
+		deque.add(item);
+		return deque;
+	}
+
 	public static IntDeque with(int... items){
 		return new IntDeque(items);
 	}

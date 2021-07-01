@@ -1094,6 +1094,12 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 		}
 	}
 
+	public static DoubleDeque with(double item){
+		DoubleDeque deque = new DoubleDeque();
+		deque.add(item);
+		return deque;
+	}
+
 	public static DoubleDeque with(double... items){
 		return new DoubleDeque(items);
 	}

@@ -1093,6 +1093,12 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 		}
 	}
 
+	public static ShortDeque with(short item){
+		ShortDeque deque = new ShortDeque();
+		deque.add(item);
+		return deque;
+	}
+
 	public static ShortDeque with(short... items){
 		return new ShortDeque(items);
 	}

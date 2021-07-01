@@ -1093,6 +1093,12 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 		}
 	}
 
+	public static ByteDeque with(byte item){
+		ByteDeque deque = new ByteDeque();
+		deque.add(item);
+		return deque;
+	}
+
 	public static ByteDeque with(byte... items){
 		return new ByteDeque(items);
 	}

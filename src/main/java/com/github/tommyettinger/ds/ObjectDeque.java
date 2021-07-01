@@ -1325,6 +1325,12 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		}
 	}
 
+	public static <T> ObjectDeque<T> with(T item){
+		ObjectDeque<T> deque = new ObjectDeque<>();
+		deque.add(item);
+		return deque;
+	}
+
 	@SafeVarargs
 	public static <T> ObjectDeque<T> with(T... items){
 		return new ObjectDeque<>(items);

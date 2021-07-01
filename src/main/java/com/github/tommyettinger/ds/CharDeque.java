@@ -1103,6 +1103,12 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		}
 	}
 
+	public static CharDeque with(char item){
+		CharDeque deque = new CharDeque();
+		deque.add(item);
+		return deque;
+	}
+	
 	public static CharDeque with(char... items){
 		return new CharDeque(items);
 	}

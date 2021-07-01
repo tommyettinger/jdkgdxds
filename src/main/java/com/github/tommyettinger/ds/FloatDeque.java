@@ -1094,7 +1094,13 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 			return this;
 		}
 	}
-	
+
+	public static FloatDeque with(float item){
+		FloatDeque deque = new FloatDeque();
+		deque.add(item);
+		return deque;
+	}
+
 	public static FloatDeque with(float... items){
 		return new FloatDeque(items);
 	}
