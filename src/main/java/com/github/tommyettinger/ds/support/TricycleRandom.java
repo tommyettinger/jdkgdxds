@@ -91,6 +91,7 @@ public class TricycleRandom extends Random implements EnhancedRandom {
      * This generator has 3 {@code long} states, so this returns 3.
      * @return 3 (three)
      */
+    @Override
     public int getStateCount() {
         return 3;
     }
@@ -100,6 +101,7 @@ public class TricycleRandom extends Random implements EnhancedRandom {
      * @param selection used to select which state variable to get; generally 0, 1, or 2
      * @return the value of the selected state
      */
+    @Override
     public long getSelectedState(int selection) {
         switch (selection & 3) {
             case 0:
@@ -118,6 +120,7 @@ public class TricycleRandom extends Random implements EnhancedRandom {
      * @param selection used to select which state variable to set; generally 0, 1, or 2
      * @param value the exact value to use for the selected state, if valid
      */
+    @Override
     public void setSelectedState(int selection, long value) {
         switch (selection & 3) {
         case 0:
@@ -139,6 +142,7 @@ public class TricycleRandom extends Random implements EnhancedRandom {
      * different for every different {@code seed}).
      * @param seed the initial seed; may be any long
      */
+    @Override
     public void setSeed(long seed) {
         long x = (seed += 0x9E3779B97F4A7C15L);
         x ^= x >>> 27;
@@ -210,12 +214,14 @@ public class TricycleRandom extends Random implements EnhancedRandom {
      * @param stateB the second state; can be any long
      * @param stateC the third state; can be any long
      */
+    @Override
     public void setState(long stateA, long stateB, long stateC) {
         this.stateA = stateA;
         this.stateB = stateB;
         this.stateC = stateC;
     }
 
+    @Override
     public long nextLong() {
         final long fa = this.stateA;
         final long fb = this.stateB;
@@ -226,6 +232,19 @@ public class TricycleRandom extends Random implements EnhancedRandom {
         return fa;
     }
 
+    @Override
+    public long previousLong() {
+        final long fa = this.stateA;
+        final long fb = this.stateB;
+        final long fc = this.stateC;
+        this.stateC = 0x572B5EE77A54E3BDL * fa;
+        this.stateB = Long.rotateRight(fc - 0xC6BC279692B5C323L, 41);
+        this.stateA = fb ^ this.stateB ^ this.stateC;
+        return this.stateB ^ 0x572B5EE77A54E3BDL * this.stateA ^ Long.rotateRight(this.stateC - 0xC6BC279692B5C323L, 41);
+
+    }
+
+    @Override
     public int next(int bits) {
         final long fa = this.stateA;
         final long fb = this.stateB;
@@ -236,34 +255,42 @@ public class TricycleRandom extends Random implements EnhancedRandom {
         return (int)fa >>> (32 - bits);
     }
 
+    @Override
     public TricycleRandom copy() {
         return new TricycleRandom(stateA, stateB, stateC);
     }
 
+    @Override
     public void nextBytes(byte[] bytes) {
         EnhancedRandom.super.nextBytes(bytes);
     }
 
+    @Override
     public int nextInt() {
         return EnhancedRandom.super.nextInt();
     }
 
+    @Override
     public int nextInt(int bound) {
         return EnhancedRandom.super.nextInt(bound);
     }
 
+    @Override
     public boolean nextBoolean() {
         return EnhancedRandom.super.nextBoolean();
     }
 
+    @Override
     public float nextFloat() {
         return EnhancedRandom.super.nextFloat();
     }
 
+    @Override
     public double nextDouble() {
         return EnhancedRandom.super.nextDouble();
     }
 
+    @Override
     public double nextGaussian() {
         return EnhancedRandom.super.nextGaussian();
     }

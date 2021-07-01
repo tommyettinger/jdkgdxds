@@ -6,7 +6,7 @@ import java.util.Random;
  * A random number generator that is extremely fast on Java 16, and has a very large probable period.
  * This generator is measurably faster than {@link TricycleRandom} on Java 16 but slightly slower than it on Java 8.
  * Not stable currently; API, algorithm, and results may change at any time. Testing performed is sufficient, but more
- * can always be done; this passes at least 64TB of PractRand and 700TB of hwd without issues.
+ * can always be done; this passes at least 64TB of PractRand and 1.75PB of hwd without issues.
  * <br>
  * The algorithm used here has four states purely to exploit instruction-level parallelism; it isn't trying to extend the
  * period of the generator beyond about 2 to the 64 (the expected bare minimum, though some cycles will likely be much
@@ -79,6 +79,7 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
      * This generator has 4 {@code long} states, so this returns 4.
      * @return 4 (four)
      */
+    @Override
     public int getStateCount() {
         return 4;
     }
@@ -89,6 +90,7 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
      * @param selection used to select which state variable to get; generally 0, 1, 2, or 3
      * @return the value of the selected state
      */
+    @Override
     public long getSelectedState(int selection) {
         switch (selection) {
             case 0:
@@ -109,6 +111,7 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
      * @param selection used to select which state variable to set; generally 0, 1, 2, or 3
      * @param value the exact value to use for the selected state, if valid
      */
+    @Override
     public void setSelectedState(int selection, long value) {
         switch (selection) {
         case 0:
@@ -133,6 +136,7 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
      * different for every different {@code seed}).
      * @param seed the initial seed; may be any long
      */
+    @Override
     public void setSeed(long seed) {
         long x = (seed += 0x9E3779B97F4A7C15L);
         x ^= x >>> 27;
@@ -223,6 +227,7 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
      * @param stateC the third state; can be any long
      * @param stateD the fourth state; this will be returned as-is if the next call is to {@link #nextLong()}
      */
+    @Override
     public void setState(long stateA, long stateB, long stateC, long stateD) {
         this.stateA = stateA;
         this.stateB = stateB;
@@ -230,6 +235,7 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
         this.stateD = stateD;
     }
 
+    @Override
     public long nextLong() {
         final long fa = this.stateA;
         final long fb = this.stateB;
@@ -242,6 +248,19 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
         return fd;
     }
 
+    @Override
+    public long previousLong() {
+        final long fa = this.stateA;
+        final long fb = this.stateB;
+        final long fc = this.stateC;
+        this.stateD = 0x572B5EE77A54E3BDL * fa;
+        this.stateA = fb - 0xC6BC279692B5C323L;
+        this.stateB = Long.rotateRight(fc + this.stateD, 47);
+        this.stateC = this.stateD ^ this.stateB;
+        return 0x572B5EE77A54E3BDL * this.stateA;
+    }
+
+    @Override
     public int next(int bits) {
         final long fa = this.stateA;
         final long fb = this.stateB;
@@ -254,34 +273,42 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
         return (int)fd >>> (32 - bits);
     }
 
+    @Override
     public FourWheelRandom copy() {
         return new FourWheelRandom(stateA, stateB, stateC, stateD);
     }
 
+    @Override
     public void nextBytes(byte[] bytes) {
         EnhancedRandom.super.nextBytes(bytes);
     }
 
+    @Override
     public int nextInt() {
         return EnhancedRandom.super.nextInt();
     }
 
+    @Override
     public int nextInt(int bound) {
         return EnhancedRandom.super.nextInt(bound);
     }
 
+    @Override
     public boolean nextBoolean() {
         return EnhancedRandom.super.nextBoolean();
     }
 
+    @Override
     public float nextFloat() {
         return EnhancedRandom.super.nextFloat();
     }
 
+    @Override
     public double nextDouble() {
         return EnhancedRandom.super.nextDouble();
     }
 
+    @Override
     public double nextGaussian() {
         return EnhancedRandom.super.nextGaussian();
     }
