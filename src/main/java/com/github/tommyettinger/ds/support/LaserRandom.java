@@ -9,14 +9,17 @@ import java.util.Random;
  * This fills in much of the functionality of MathUtils in libGDX, though with all code as instance methods
  * instead of static methods, and some things renamed (randomTriangular() became {@link #nextTriangular()},
  * for instance, and random() became {@link #nextFloat()}). It also supplies some rare and sometimes-useful
- * code: {@link #skip(long)} allows "fast-forward" and "rewind," you can get and set the exact state with
- * {@link #getStateA()}, {@link #getStateB()}, {@link #setStateA(long)}, and {@link #setStateB(long)} (which
- * is useful if you want to save a LaserRandom and reload it later), and there's bounded int and long
- * generators which can use a negative number as their exclusive outer bound {@link #nextSignedInt(int)} and
+ * code: {@link #skip(long)} allows "fast-forward" and "rewind" along with {@link #previousLong()} to simply
+ * go back one step, you can get and set the exact state with {@link #getStateA()}, {@link #getStateB()},
+ * {@link #setStateA(long)}, {@link #setStateB(long)}, and {@link #setState(long, long)} (which is useful
+ * if you want to save a LaserRandom and reload it later), and there's bounded int and long generators which
+ * can use a negative number as their exclusive outer bound ({@link #nextSignedInt(int)} and
  * {@link #nextSignedLong(long)}, plus overloads that take an inner bound). There's float and double
  * generators that are inclusive on both ends ({@link #nextInclusiveFloat()}, and
  * {@link #nextInclusiveDouble()}. There's {@link #nextGaussian()}, which is implemented differently from
- * java.util.Random and always advances the state once.
+ * java.util.Random and always advances the state once. This implements all optional methods in
+ * EnhancedRandom, and implements almost all EnhancedRandom methods explicitly, which allows LaserRandom to
+ * be copied more easily without depending on jdkgdxds (see below).
  * <br>
  * Every method defined in this class advances the state by the same amount unless otherwise documented (only
  * {@link #nextTriangular()} and {@link #nextTriangular(float)} advance the state twice). The state can
@@ -62,10 +65,10 @@ import java.util.Random;
  * EnhancedRandom, then that permits some extra methods to come in via default implementations, like
  * nextExclusiveFloat() (which uses the BitConversion class here in jdkgdxds), minIntOf(), maxLongOf(), etc.
  * <br>
- * You may want to compare this class with TricycleRandom in the same package; TricycleRandom has a larger
- * state size (and should usually have a larger period), is usually faster, and also implements all of
- * EnhancedRandom (except for {@link #skip(long)}), but doesn't randomize the first result it returns, so
- * if the seeding has a pattern, then the start of its sequence will have a pattern.
+ * You may want to compare this class with TricycleRandom and FourWheelRandom in the same package; both of
+ * those have a larger state size (and should usually have a larger period), are usually faster, and also
+ * implement all of EnhancedRandom (except for {@link #skip(long)}), but they don't randomize the first
+ * result they return, so if the seeding has a pattern, then the start of their sequences will have patterns.
  * <br>
  * Pew pew! Lasers!
  *

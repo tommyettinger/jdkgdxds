@@ -19,17 +19,20 @@ implements `com.github.tommyettinger.ds.Ordered.OfInt`, which specifies that the
 ## OK, how do I use it?
 
 You use jdkgdxds much like the standard JDK collections, just extended for primitive types. The Object-based classes are generic,
-centered around `com.github.tommyettinger.ds.ObjectList`, `com.github.tommyettinger.ds.ObjectSet`, and
-`com.github.tommyettinger.ds.ObjectObjectMap`; `ObjectOrderedSet` and `ObjectObjectOrderedMap` are also here and extend the other
-Set and Map. These are effectively replacements for `com.badlogic.gdx.utils.Array`, `com.badlogic.gdx.utils.ObjectSet`,
+centered around `com.github.tommyettinger.ds.ObjectList`, `com.github.tommyettinger.ds.ObjectDeque`,
+`com.github.tommyettinger.ds.ObjectSet`, and `com.github.tommyettinger.ds.ObjectObjectMap`; `ObjectOrderedSet` and
+`ObjectObjectOrderedMap` are also here and extend the other Set and Map. These are effectively replacements for
+`com.badlogic.gdx.utils.Array`, `com.badlogic.gdx.utils.Queue`, `com.badlogic.gdx.utils.ObjectSet`,
 `com.badlogic.gdx.utils.ObjectMap`, `com.badlogic.gdx.utils.OrderedSet`, and `com.badlogic.gdx.utils.OrderedMap`. As nice as it
 would be to just call these by the same names (except Array, that one's just confusing), we have other kinds of Object-keyed Maps,
 and other kinds of insertion-ordered Maps, so `ObjectMap` is now `ObjectObjectMap` because it has Object keys and Object values,
 while `OrderedMap` is now `ObjectObjectOrderedMap`, because of the same reason. Primitive-backed collections support `int`
-and `long` keys, and `int`, `long`, or `float` values; all primitive types are available for lists. So, there's `IntSet` and
-`LongSet`, with ordered variants `IntOrderedSet` and `LongOrderedSet`, while their map counterparts are more numerous.
-Most of the primitive lists are very similar, only changing the numeric type, but there are some small changes for `CharList`
-(which doesn't define math operations on its items) and `BooleanList` (which defines logical operations but not math ones).
+and `long` keys, and `int`, `long`, or `float` values; all primitive types are available for lists and deques (except that there's
+no BooleanDeque because it's easily handled with an existing ByteDeque holding `1` and `0`). So, there's `IntSet` and `LongSet`,
+with ordered variants `IntOrderedSet` and `LongOrderedSet`, while their map counterparts are more numerous. Most of the primitive
+lists are very similar, only changing the numeric type, but there are some small changes for `CharList` (which doesn't define math
+operations on its items) and `BooleanList` (which defines logical operations but not math ones). The deques don't currently
+implement math operations on their items. As for the maps...
 
 There's `IntFloatMap`, `IntFloatOrderedMap`, `IntIntMap`, `IntIntOrderedMap`, `IntLongMap`, `IntLongOrderedMap`,
 `IntObjectMap`, `IntObjectOrderedMap`, `LongFloatMap`, `LongFloatOrderedMap`, `LongIntMap`, `LongIntOrderedMap`,
@@ -51,23 +54,27 @@ There's also a close relative of libGDX's `BinaryHeap` class, but the one here i
 The library includes expanded interfaces for these to implement, like the aforementioned `Ordered` interface,
 `PrimitiveCollection` to complement Java 8's `PrimitiveIterator`, some `float`-based versions of primitive specializations where
 the JDK only offers `int`, `long`, and `double`, and primitive `Comparator`s (which are Java 8 `FunctionalInterface`s). Lastly,
-because there are some randomized methods here and `java.util.SplittableRandom` isn't available everywhere, an alternative
-high-quality and very-fast random number generator is here, `com.github.tommyettinger.ds.support.LaserRandom`, which extends
-`java.util.Random` for maximum compatibility. It implements `com.github.tommyettinger.ds.support.EnhancedRandom`, an interface
-that allows external code to match the API used by LaserRandom; EnhancedRandom is mostly default methods. There's also more
-implementations of EnhancedRandom here. `com.github.tommyettinger.ds.support.TricycleRandom` can be significantly faster
-but doesn't always produce very-random numbers right at the start of usage. `com.github.tommyettinger.ds.support.DistinctRandom`
-is very similar to JDK 8's SplittableRandom, without the splitting, and will produce every possible `long` with its
-`nextLong()` method before it ever repeats a returned value.
+because there are some randomized methods here and `java.util.SplittableRandom` isn't available everywhere, alternative
+high-quality and very-fast random number generators are here, such as `com.github.tommyettinger.ds.support.LaserRandom`,
+`com.github.tommyettinger.ds.support.TricycleRandom`, `com.github.tommyettinger.ds.support.DistinctRandom`, and
+`com.github.tommyettinger.ds.support.FourWheelRandom`, all of which extend `java.util.Random` for maximum compatibility. These
+implement `com.github.tommyettinger.ds.support.EnhancedRandom`, an interface that allows external code to match the API used by
+these random number generators; EnhancedRandom is mostly default methods. LaserRandom has a good balance of features, speed, and
+quality, but other generators here make different tradeoffs. TricycleRandom and FourWheelRandom can be significantly faster
+but don't always produce very-random numbers right at the start of usage; FourWheelRandom is the fastest generator here on Java 16
+with HotSpot. DistinctRandom is very similar to JDK 8's SplittableRandom, without the splitting, and will produce every possible
+`long` with its `nextLong()` method before it ever repeats a returned value. Both DistinctRandom and LaserRandom support the
+`skip()` method, which allows skipping ahead or behind in the sequence of generated numbers, but TricycleRandom and
+FourWheelRandom do not allow skipping.
 
 ## How do I get it?
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.1.3'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.1.4'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.1.3:sources'` to its dependencies, and in its
+`implementation 'com.github.tommyettinger:jdkgdxds:0.1.4:sources'` to its dependencies, and in its
 `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />

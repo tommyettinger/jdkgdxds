@@ -21,7 +21,7 @@ def projectName = 'jdkgdxds'
 version "$VERSION_NAME"
 group 'com.github.tommyettinger'
 
-//api "com.github.tommyettinger:jdkgdxds:0.1.2"
+//api "com.github.tommyettinger:jdkgdxds:0.1.4"
 
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 

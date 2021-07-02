@@ -5,8 +5,11 @@ import java.util.Random;
 /**
  * A random number generator that is extremely fast on Java 16, and has a very large probable period.
  * This generator is measurably faster than {@link TricycleRandom} on Java 16 but slightly slower than it on Java 8.
- * Not stable currently; API, algorithm, and results may change at any time. Testing performed is sufficient, but more
- * can always be done; this passes at least 64TB of PractRand and 1.75PB of hwd without issues.
+ * It can be considered stable, like the other EnhancedRandom implementations here. Testing performed should be sufficient,
+ * but more can always be done; this passes at least 64TB of PractRand and 2PB of hwd without issues. The second test, hwd,
+ * only checks for a specific type of quality issue, but also fails if the period is exhausted; going through 2 to the 52
+ * bytes of data (taking over a week to do so) without exhausting the period should be a strong sign that it will have
+ * enough period for most tasks.
  * <br>
  * The algorithm used here has four states purely to exploit instruction-level parallelism; it isn't trying to extend the
  * period of the generator beyond about 2 to the 64 (the expected bare minimum, though some cycles will likely be much
@@ -16,7 +19,8 @@ import java.util.Random;
  * two of the other states and combine them; C rotates state B and subtracts state D, while D simply XORs states B and C.
  * This returns the state D that the previous step generated. This performs better than TricycleRandom simply because each
  * of the states can be updated in parallel (using ILP) and all of the updates depend on either one or two states, instead
- * of one, two, or three with TricycleRandom.
+ * of one, two, or three with TricycleRandom. It implements all optional methods in EnhancedRandom except
+ * {@link #skip(long)}; it does implement {@link #previousLong()} without using skip().
  */
 public class FourWheelRandom extends Random implements EnhancedRandom {
 

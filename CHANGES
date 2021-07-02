@@ -1,3 +1,23 @@
+[0.1.4]
+- Fixed how `ObjectArray.sort()` works on Android across all versions. This was a potentially serious problem because of flaws in the Android library design.
+- Added FourWheelRandom as yet another choice of EnhancedRandom; this is the fastest so far on Java 16 with HotSpot, and has four `long`s of state.
+- Many convenience methods and important constructors in the deque classes, such as `with()` and copy constructors.
+- EnhancedRandom now optionally provides a `previousLong()` method, which steps the generator backwards; all generators here implement it.
+
+[0.1.3]
+- [BREAKING CHANGE] TricycleRandom needed its algorithm changed to improve its quality for some problem seeds; performance is pretty much unaffected.
+- Deque types everywhere! These are double-ended queues that also allow getting and setting internal items in constant time, though not inserting into the middle.
+- There are primitive Deque types too, for all types but boolean (there's no space savings for using booleans over bytes, and we have a ByteDeque).
+- The `nextGaussian()` method in EnhancedRandom is different and faster now, avoiding a call to `probit()` by using an approximation by Marc B. Reynolds.
+- Internal sorting code has been moved to the `com.github.tommyettinger.ds.support.sort` package, in the Comparators classes; this lets sorting apply to deques.
+
+[0.1.2]
+- [BREAKING CHANGE] The `setIndex()` methods in the ordered maps have been renamed to `setAt()` because they don't affect any index.
+- The `putOrDefault()` and `getAndIncrement()` methods in ordered maps have been fixed or improved.
+- There are `first()` methods in all PrimitiveCollection types now, which can be used even if the type isn't ordered (which gets an arbitrary item in that case).
+- EnhancedRandom has some new methods; `equals()` and `toString()` are always useful, and `setWith()` allows copying another EnhancedRandom into the current one.
+- DistinctRandom provides another choice of EnhancedRandom; it can't produce the same value twice without being reseeded or years of random number generation passing.
+
 [0.1.1]
 - [BREAKING CHANGE] Randomized algorithms no longer use a `java.util.Random`, and instead take a `com.github.tommyettinger.ds.support.EnhancedRandom`.
 - API addition: EnhancedRandom#nextInclusiveDouble(), EnhancedRandom#nextExclusiveDouble(), float versions of those, and Equidistant versions are all added.

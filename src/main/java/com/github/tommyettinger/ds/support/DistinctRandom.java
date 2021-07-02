@@ -21,11 +21,14 @@ import java.util.Random;
  * <br>
  * Other useful traits of this generator are that it has exactly one {@code long} of state, that all values are
  * permitted for that state, and that you can {@link #skip(long)} the state forwards or backwards in constant time.
- * It is also quite fast, though not as fast as {@link TricycleRandom} on Java 16 or newer.
+ * It is also quite fast, though not as fast as {@link TricycleRandom} or {@link FourWheelRandom} on Java 16 or newer.
  * <br>
  * This class is both a {@link Random} from the JDK and an {@link EnhancedRandom} from jdkgdxds, and can often be used
  * as a substitute for {@link LaserRandom}. LaserRandom has comparable speed, and supports many streams, but if you
- * want just one {@code long} of state, DistinctRandom is a better fit.
+ * want just one {@code long} of state, DistinctRandom is a better fit. For higher speed on Java 16 or higher, HotSpot,
+ * you can use {@link TricycleRandom} or {@link FourWheelRandom} (FourWheelRandom is preferred if you only target Java
+ * 16). Those generators also should have a longer period than DistinctRandom except in infinitesimally-rare cases. No
+ * other generators in jdkgdxds have the "distinct" quality this generator has.
  */
 public class DistinctRandom extends Random implements EnhancedRandom {
 

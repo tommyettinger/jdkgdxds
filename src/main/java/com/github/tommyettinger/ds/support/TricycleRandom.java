@@ -15,7 +15,8 @@ import java.util.Random;
  * that all values are permitted for the states (that we know of). It is possible that some initialization will put the
  * generator in a shorter-period subcycle, but the odds of this being a subcycle that's small enough to run out of
  * period during a game are effectively 0. It's also possible that the generator only has one cycle of length 2 to the
- * 192, though this doesn't seem at all likely.
+ * 192, though this doesn't seem at all likely. TricycleRandom implements all optional methods in EnhancedRandom except
+ * {@link #skip(long)}; it does implement {@link #previousLong()} without using skip().
  * <br>
  * This is closely related to Mark Overton's <a href="https://www.romu-random.org/">Romu generators</a>, specifically
  * RomuTrio, but this gets a little faster than RomuTrio in some situations by using just one less rotation. Unlike
@@ -35,7 +36,11 @@ import java.util.Random;
  * the start, and unrelated to the original seed. It can also be more of a challenge to handle 3 states than 2 in some
  * situations, or 1 state for DistinctRandom. You might prefer LaserRandom's many different streams, which shouldn't
  * overlap and have a guaranteed period of 2 to the 64, to TricycleRandom's big unknown sub-cycles. LaserRandom and
- * DistinctRandom can also {@link LaserRandom#skip(long)} while this cannot.
+ * DistinctRandom can also {@link LaserRandom#skip(long)} while this cannot. Another alternative is
+ * {@link FourWheelRandom}, which is similar to this class but has a larger state and tends to be faster on Java 16 with
+ * HotSpot, though slightly slower on Java 8 with HotSpot. If you don't want to use TricycleRandom because it has too
+ * many states or doesn't randomize its starting value enough, FourWheelRandom won't solve those either, and you should
+ * turn to DistinctRandom or LaserRandom.
  */
 public class TricycleRandom extends Random implements EnhancedRandom {
 
