@@ -714,7 +714,7 @@ public class CuckooObjectMap<K, V> {
 	}
 
 	static public class Entries<K, V> extends MapIterator<K, V> implements Iterable<Entry<K, V>>, Iterator<Entry<K, V>> {
-		Entry<K, V> entry = new Entry();
+		Entry<K, V> entry = new Entry<K, V>();
 
 		public Entries (CuckooObjectMap<K, V> map) {
 			super(map);

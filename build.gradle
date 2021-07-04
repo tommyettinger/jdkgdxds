@@ -72,5 +72,5 @@ repositories {
 
 dependencies {
     api 'com.google.code.findbugs:jsr305:3.0.2'
-    testImplementation "junit:junit:4.13.1"
+    testImplementation "junit:junit:4.13.2"
 }
