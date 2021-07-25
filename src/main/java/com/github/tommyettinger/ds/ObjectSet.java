@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -142,55 +143,50 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		this(array, 0, array.length);
 	}
 
-
 	/**
-	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
+	 * Returns an index >= 0 and <= {@link #mask} for the specified {@code item}.
 	 * <p>
-	 * The default behavior uses Fibonacci hashing; it simply gets the {@link Object#hashCode()}
-	 * of {@code item}, multiplies it by a specific long constant related to the golden ratio,
-	 * and makes an unsigned right shift by {@link #shift} before casting to int and returning.
-	 * This can be overridden to hash {@code item} differently, though all implementors must
-	 * ensure this returns results in the range of 0 to {@link #mask}, inclusive. If nothing
-	 * else is changed, then unsigned-right-shifting an int or long by {@link #shift} will also
-	 * restrict results to the correct range.
-	 *
-	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
+	 * The default implementation assumes the low-order bits of item.hashCode() are likely enough to avoid collisions,
+	 * and so just returns {@code item.hashCode() & mask}. This method can be overridden to customizing hashing. If you
+	 * aren't confident that the hashCode() implementation used by item will have reasonable quality, you can override
+	 * this with something such as {@code return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);}. That "magic
+	 * number" is 2 to the 64, divided by the golden ratio; the golden ratio is used because of various properties it
+	 * has that make it better at randomizing bits. You should usually override this method if you also override
+	 * {@link #equate(Object, Object)}, because two equal values should have the same hash.
+	 * @param item any non-null Object
+	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (Object item) {
-		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+		return item.hashCode() & mask;
+//		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
 	/**
-	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
-	 * to compare for equality differently than {@link Object#equals(Object)}.
-	 * <p>
-	 * If source is not easily available and you want to override this, the reference source is:
-	 * <pre>
-	 * protected int locateKey (Object key) {
-	 * 		T[] keyTable = this.keyTable;
-	 * 		for (int i = place(key); ; i = i + 1 &amp; mask) {
-	 * 			T other = keyTable[i];
-	 * 			if (other == null)
-	 * 				return ~i; // Always negative; means empty space is available at i.
-	 * 			if (other.equals(key)) // If you want to change how equality is determined, do it here.
-	 * 				return i; // Same key was found.
-	 *      }
-	 * }
-	 * </pre>
-	 *
-	 * @param key a non-null Object that should probably be a T
+	 * Compares the objects left and right, which are usually keys, for equality, returning true if they are considered
+	 * equal. This is used by the rest of this class to determine whether two keys are considered equal. Normally, this
+	 * returns {@code left.equals(right)}, but subclasses can override it to use reference equality, fuzzy equality, deep
+	 * array equality, or any other custom definition of equality. Usually, {@link #place(Object)} is also overridden if
+	 * this method is.
+	 * @param left must be non-null; typically a key being compared, but not necessarily
+	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
+	 * @return true if left and right are considered equal for the purposes of this class
+	 */
+	protected boolean equate(@Nonnull Object left, @Nullable Object right){
+		return left.equals(right);
+	}
+
+	/**
+	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This calls
+	 * {@link #equate(Object, Object)} to determine if two keys are equivalent.
+	 * @param key a non-null K key
+	 * @return a negative index if the key was not found, or the non-negative index of the existing key if found
 	 */
 	protected int locateKey (Object key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = i + 1 & mask) {
+		for (int i = place(key);; i = i + 1 & mask) {
 			T other = keyTable[i];
-			if (other == null) {
-				return ~i; // Always negative; means empty space is available at i.
-			}
-			if (other.equals(key)) // If you want to change how equality is determined, do it here.
-			{
-				return i; // Same key was found.
-			}
+			if (equate(key, other)) return i; // Same key was found.
+			if (other == null) return ~i; // Always negative; means empty space is available at i.
 		}
 	}
 
@@ -370,13 +366,22 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 
 	@Override
 	public boolean contains (Object key) {
-		return locateKey(key) >= 0;
+		T[] keyTable = this.keyTable;
+		for (int i = place(key);; i = i + 1 & mask) {
+			T other = keyTable[i];
+			if (equate(key, other)) return true;
+			if (other == null) return false;
+		}
 	}
 
 	@Nullable
 	public T get (T key) {
-		int i = locateKey(key);
-		return i < 0 ? null : keyTable[i];
+		T[] keyTable = this.keyTable;
+		for (int i = place(key);; i = i + 1 & mask) {
+			T other = keyTable[i];
+			if (equate(key, other)) return other;
+			if (other == null) return null;
+		}
 	}
 
 	public T first () {
@@ -474,6 +479,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		return h;
 	}
 
+	//TODO: THIS IS RATHER WRONG, see AbstractSet's implementation
 	@Override
 	public boolean equals (Object obj) {
 		if (!(obj instanceof ObjectSet)) { return false; }

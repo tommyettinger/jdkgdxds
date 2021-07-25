@@ -806,7 +806,7 @@ public class CuckooObjectMap<K, V> {
 		}
 	}
 
-	static public int nextPowerOfTwo (int value) {
+	public static int nextPowerOfTwo (int value) {
 		return 1 << -Integer.numberOfLeadingZeros(Math.max(2, value) - 1);
 	}
 }
