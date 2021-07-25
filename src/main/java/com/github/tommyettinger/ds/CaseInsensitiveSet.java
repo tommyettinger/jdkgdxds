@@ -3,6 +3,8 @@ package com.github.tommyettinger.ds;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Set;
+
 /**
  * A custom variant on ObjectSet that always uses CharSequence keys and compares them as case-insensitive.
  * This uses a fairly complex, quite-optimized hashing function because it needs to hash CharSequences rather
@@ -112,13 +114,19 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	}
 
 	@Override
-	public boolean equals (Object obj) {
-		if (!(obj instanceof CaseInsensitiveSet)) { return false; }
-		CaseInsensitiveSet other = (CaseInsensitiveSet)obj;
-		if (other.size != size) { return false; }
-		CharSequence[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != null && !other.contains(keyTable[i])) { return false; } }
-		return true;
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Set))
+			return false;
+		Set<?> s = (Set<?>) o;
+		if (s.size() != size())
+			return false;
+		try {
+			return containsAll(s);
+		} catch (ClassCastException | NullPointerException unused) {
+			return false;
+		}
 	}
 
 	public static CaseInsensitiveSet with(CharSequence item) {

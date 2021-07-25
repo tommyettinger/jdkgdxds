@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Set;
 
 /**
  * A custom variant on ObjectOrderedSet that always uses CharSequence keys and compares them as case-insensitive.
@@ -126,13 +127,19 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	}
 
 	@Override
-	public boolean equals (Object obj) {
-		if (!(obj instanceof CaseInsensitiveOrderedSet)) { return false; }
-		CaseInsensitiveOrderedSet other = (CaseInsensitiveOrderedSet)obj;
-		if (other.size != size) { return false; }
-		CharSequence[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != null && !other.contains(keyTable[i])) { return false; } }
-		return true;
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Set))
+			return false;
+		Set<?> s = (Set<?>) o;
+		if (s.size() != size())
+			return false;
+		try {
+			return containsAll(s);
+		} catch (ClassCastException | NullPointerException unused) {
+			return false;
+		}
 	}
 
 	public static CaseInsensitiveOrderedSet with(CharSequence item) {

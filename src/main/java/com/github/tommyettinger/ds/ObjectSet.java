@@ -479,15 +479,20 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		return h;
 	}
 
-	//TODO: THIS IS RATHER WRONG, see AbstractSet's implementation
 	@Override
-	public boolean equals (Object obj) {
-		if (!(obj instanceof ObjectSet)) { return false; }
-		ObjectSet other = (ObjectSet)obj;
-		if (other.size != size) { return false; }
-		T[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != null && !other.contains(keyTable[i])) { return false; } }
-		return true;
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Set))
+			return false;
+		Set<?> s = (Set<?>) o;
+		if (s.size() != size())
+			return false;
+		try {
+			return containsAll(s);
+		} catch (ClassCastException | NullPointerException unused) {
+			return false;
+		}
 	}
 
 	@Override
