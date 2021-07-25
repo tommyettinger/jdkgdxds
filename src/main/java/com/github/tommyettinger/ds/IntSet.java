@@ -379,14 +379,19 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	}
 
 	@Override
-	public boolean equals (Object obj) {
-		if (!(obj instanceof IntSet)) { return false; }
-		IntSet other = (IntSet)obj;
-		if (other.size != size) { return false; }
-		if (other.hasZeroValue != hasZeroValue) { return false; }
-		int[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != 0 && !other.contains(keyTable[i])) { return false; } }
-		return true;
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof IntSet))
+			return false;
+		IntSet s = (IntSet) o;
+		if (s.size() != size())
+			return false;
+		try {
+			return containsAll(s);
+		} catch (ClassCastException | NullPointerException unused) {
+			return false;
+		}
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
+import java.util.Set;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -386,14 +387,19 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	}
 
 	@Override
-	public boolean equals (Object obj) {
-		if (!(obj instanceof LongSet)) { return false; }
-		LongSet other = (LongSet)obj;
-		if (other.size != size) { return false; }
-		if (other.hasZeroValue != hasZeroValue) { return false; }
-		long[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != 0 && !other.contains(keyTable[i])) { return false; } }
-		return true;
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof LongSet))
+			return false;
+		LongSet s = (LongSet) o;
+		if (s.size() != size())
+			return false;
+		try {
+			return containsAll(s);
+		} catch (ClassCastException | NullPointerException unused) {
+			return false;
+		}
 	}
 
 	@Override
