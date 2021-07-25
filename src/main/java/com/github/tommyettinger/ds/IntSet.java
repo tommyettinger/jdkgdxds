@@ -182,14 +182,16 @@ public class IntSet implements PrimitiveCollection.OfInt {
 			size++;
 			return true;
 		}
-		int i = locateKey(key);
-		if (i >= 0) {
-			return false; // Existing key was found.
+		int[] keyTable = this.keyTable;
+		for (int i = place(key);; i = i + 1 & mask) {
+			int other = keyTable[i];
+			if (key == other) return false; // Existing key was found.
+			if (other == 0) {
+				keyTable[i] = key;
+				if (++size >= threshold) { resize(keyTable.length << 1); }
+				return true;
+			}
 		}
-		i = ~i; // Empty space was found.
-		keyTable[i] = key;
-		if (++size >= threshold) { resize(keyTable.length << 1); }
-		return true;
 	}
 
 	public boolean addAll (IntList array) {

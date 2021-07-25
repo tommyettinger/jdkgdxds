@@ -196,14 +196,16 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 */
 	@Override
 	public boolean add (T key) {
-		int i = locateKey(key);
-		if (i >= 0) {
-			return false; // Existing key was found.
+		T[] keyTable = this.keyTable;
+		for (int i = place(key);; i = i + 1 & mask) {
+			T other = keyTable[i];
+			if (equate(key, other)) return false; // Existing key was found.
+			if (other == null) {
+				keyTable[i] = key;
+				if (++size >= threshold) { resize(keyTable.length << 1); }
+				return true;
+			}
 		}
-		i = ~i; // Empty space was found.
-		keyTable[i] = key;
-		if (++size >= threshold) { resize(keyTable.length << 1); }
-		return true;
 	}
 
 	@Override
