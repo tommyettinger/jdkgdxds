@@ -148,10 +148,10 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 *
-	 * @param item any int; it is usually mixed so similar inputs still have different outputs
+	 * @param item any int; it is often mixed so similar inputs still have different outputs
 	 */
 	protected int place (int item) {
-		return (int)(item * 0x9E3779B97F4A7C15L >>> shift);
+		return item & mask;
 	}
 
 	/**

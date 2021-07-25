@@ -150,10 +150,10 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 *
-	 * @param item any long; it is usually mixed so similar inputs still have different outputs
+	 * @param item any long; it is often mixed so similar inputs still have different outputs
 	 */
 	protected int place (long item) {
-		return (int)((item ^ item >>> 32) * 0x9E3779B97F4A7C15L >>> shift);
+		return (int)((item ^ item >>> shift) & mask);
 	}
 
 	/**
