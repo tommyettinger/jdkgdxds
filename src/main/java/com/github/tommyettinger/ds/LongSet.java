@@ -322,7 +322,12 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	@Override
 	public boolean contains (long key) {
 		if (key == 0) { return hasZeroValue; }
-		return locateKey(key) >= 0;
+		long[] keyTable = this.keyTable;
+		for (int i = place(key);; i = i + 1 & mask) {
+			long other = keyTable[i];
+			if (key == other) return true;
+			if (other == 0) return false;
+		}
 	}
 
 	public long first () {

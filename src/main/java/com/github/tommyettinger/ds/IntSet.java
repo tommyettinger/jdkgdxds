@@ -319,7 +319,12 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	@Override
 	public boolean contains (int key) {
 		if (key == 0) { return hasZeroValue; }
-		return locateKey(key) >= 0;
+		int[] keyTable = this.keyTable;
+		for (int i = place(key);; i = i + 1 & mask) {
+			int other = keyTable[i];
+			if (key == other) return true;
+			if (other == 0) return false;
+		}
 	}
 
 	public int first () {
