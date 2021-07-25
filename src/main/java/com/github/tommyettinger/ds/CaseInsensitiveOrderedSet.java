@@ -1,5 +1,7 @@
 package com.github.tommyettinger.ds;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -104,63 +106,12 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 		return super.place(item);
 	}
 
-	/**
-	 * Gets a case-insensitive hash code for the String or other CharSequence {@code item} and shifts it so it is between 0 and
-	 * {@link #mask} inclusive. This gets the hash as if all cased letters have been converted to upper case by
-	 * {@link Character#toUpperCase(char)}; this should be correct for all alphabets in Unicode except Georgian.
-	 *
-	 * @param item any non-null CharSequence, such as a String or StringBuilder; will be treated as if it is all upper-case
-	 * @return a position in the key table where {@code item} would be placed; between 0 and {@link #mask} inclusive
-	 * @implNote Uses Water hash, which passes SMHasher's test battery and is very fast in Java. Water uses 64-bit math,
-	 * which behaves reliably but somewhat slowly on GWT, but uses it on usually-small char values. This can't use the
-	 * built-in pre-calculated hashCode of a String because it's case-sensitive. You can use the same hashing function as this
-	 * with {@link Utilities#longHashCodeIgnoreCase(CharSequence)}.
-	 */
-	protected int place (CharSequence item) {
-		return (int)Utilities.longHashCodeIgnoreCase(item) & mask;
-	}
-
-	/**
-	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
-	 * to compare for equality differently than {@link Object#equals(Object)}.
-	 * <p>
-	 * If source is not easily available and you want to override this, the reference source is:
-	 * <pre>
-	 * protected int locateKey (Object key) {
-	 * 	   if (!(key instanceof CharSequence))
-	 * 	       return super.locateKey(key);
-	 *     CharSequence sk = (CharSequence)key;
-	 * 	   CharSequence[] keyTable = this.keyTable;
-	 * 	   for (int i = place(sk); ; i = i + 1 &amp; mask) {
-	 * 	       CharSequence other = keyTable[i];
-	 *         if (other == null) {
-	 *             return ~i; // Always negative; means empty space is available at i.
-	 *         }
-	 *         if (Utilities.equalsIgnoreCase(other, sk)) // If you want to change how equality is determined, do it here.
-	 *         {
-	 *             return i; // Same key was found.
-	 *         }
-	 *     }
-	 * }
-	 * </pre>
-	 *
-	 * @param key a non-null Object that should probably be a CharSequence
-	 */
 	@Override
-	protected int locateKey (Object key) {
-		if (!(key instanceof CharSequence))
-			return super.locateKey(key);
-		CharSequence sk = (CharSequence)key;
-		Object[] keyTable = this.keyTable;
-		for (int i = place(sk); ; i = i + 1 & mask) {
-			Object other = keyTable[i];
-			if (other == null) {
-				return ~i;
-			}
-			if (other instanceof CharSequence && Utilities.equalsIgnoreCase(sk, (CharSequence)other)) {
-				return i;
-			}
+	protected boolean equate (@Nonnull Object left, @Nullable Object right) {
+		if((left instanceof CharSequence) && (right instanceof CharSequence)){
+			return Utilities.equalsIgnoreCase((CharSequence)left, (CharSequence)right);
 		}
+		return false;
 	}
 
 	@Override
