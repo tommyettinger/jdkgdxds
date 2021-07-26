@@ -35,7 +35,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * ObjectOrderedSet and ObjectObjectOrderedMap.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal. Linear probing continues to work even
- * when all hashCodes collide, just more slowly.
+ * when all hashCodes collide; it just works more slowly in that case.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
@@ -149,6 +149,10 @@ public class LongSet implements PrimitiveCollection.OfLong {
 
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
+	 * <br>
+	 * The implementation used here XORs the lowest bits with the highest bits, ignoring bits
+	 * between them. You may want to override this if you know your items have the most variety
+	 * in their bit-16-to-48 range.
 	 *
 	 * @param item any long; it is often mixed so similar inputs still have different outputs
 	 */
@@ -157,8 +161,9 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	}
 
 	/**
-	 * Returns the index of the key if already present, else {@code -1 - index} for the next empty index. This can be overridden
-	 * to compare for equality differently than {@code ==}.
+	 * Returns the index of the key if already present, else {@code ~index} for the next empty index.
+	 * While this can be overridden to compare for equality differently than {@code ==} between ints, that
+	 * isn't recommended because this has to treat zero keys differently, and it finds those with {@code ==}.
 	 */
 	protected int locateKey (long key) {
 		long[] keyTable = this.keyTable;

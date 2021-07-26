@@ -34,7 +34,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * ObjectOrderedSet and ObjectObjectOrderedMap.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal. Linear probing continues to work even
- * when all hashCodes collide, just more slowly.
+ * when all hashCodes collide; it just works more slowly in that case.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
@@ -155,8 +155,9 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	}
 
 	/**
-	 * Returns the index of the key if already present, else {@code -1 - index} for the next empty index. This can be overridden in this
-	 * pacakge to compare for equality differently than {@link Object#equals(Object)}.
+	 * Returns the index of the key if already present, else {@code ~index} for the next empty index.
+	 * While this can be overridden to compare for equality differently than {@code ==} between ints, that
+	 * isn't recommended because this has to treat zero keys differently, and it finds those with {@code ==}.
 	 */
 	protected int locateKey (int key) {
 		int[] keyTable = this.keyTable;
