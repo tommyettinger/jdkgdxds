@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -210,7 +209,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate(@Nonnull Object left, @Nullable Object right){
+	protected boolean equate(Object left, @Nullable Object right){
 		return left.equals(right);
 	}
 

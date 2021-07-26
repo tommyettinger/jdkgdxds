@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
-import java.util.Set;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 

@@ -1,6 +1,5 @@
 package com.github.tommyettinger.ds;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
@@ -108,7 +107,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	}
 
 	@Override
-	protected boolean equate (@Nonnull Object left, @Nullable Object right) {
+	protected boolean equate (Object left, @Nullable Object right) {
 		if((left instanceof CharSequence) && (right instanceof CharSequence)){
 			return Utilities.equalsIgnoreCase((CharSequence)left, (CharSequence)right);
 		}

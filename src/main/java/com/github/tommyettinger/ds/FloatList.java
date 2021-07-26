@@ -20,8 +20,6 @@ import com.github.tommyettinger.ds.support.BitConversion;
 import com.github.tommyettinger.ds.support.function.FloatUnaryOperator;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
-import com.github.tommyettinger.ds.support.sort.LongComparator;
-import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;

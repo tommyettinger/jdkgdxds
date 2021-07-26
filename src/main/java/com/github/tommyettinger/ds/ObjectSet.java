@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -172,7 +171,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate(@Nonnull Object left, @Nullable Object right){
+	protected boolean equate(Object left, @Nullable Object right){
 		return left.equals(right);
 	}
 
