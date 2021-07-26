@@ -43,12 +43,11 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * <p>
  * You can customize most behavior of this map by extending it. {@link #place(Object)} can be overridden to change how hashCodes
  * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
- * {@link #locateKey(Object)} can be overridden to change how equality is calculated.
+ * {@link #equate(Object, Object)} can be overridden to change how equality is calculated.
  * <p>
- * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
- * hashing, instead of the more common power-of-two mask, to better distribute poor hashCodes (see <a href=
- * "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
- * Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.
+ * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are not rehashed by default, but
+ * user code can subclass this and change the {@link #place(Object)} method if rehashing or an alternate hash is optimal. Linear
+ * probing continues to work even when all hashCodes collide; it just works more slowly in that case.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
