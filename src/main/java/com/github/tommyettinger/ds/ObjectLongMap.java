@@ -33,7 +33,7 @@ import java.util.function.ToLongFunction;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * An unordered map where the keys are objects and the values are ints. Null keys are not allowed. No allocation is done except
+ * An unordered map where the keys are objects and the values are unboxed longs. Null keys are not allowed. No allocation is done except
  * when growing the table size.
  * <p>
  * This class performs fast contains and remove (typically O(1), worst case O(n) but that is rare in practice). Add may be
