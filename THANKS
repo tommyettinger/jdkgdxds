@@ -1,0 +1,22 @@
+# This is the unofficial list of people who
+# have helped this project in some way.
+# This could be in the form of good ideas,
+# code that didn't make it into this project,
+# or earlier work that this builds on.
+
+Thanks to Nathan Sweet, https://github.com/NathanSweet ,
+for writing the original libGDX data structures, and
+adding various API improvements to the data structures
+used here when they were part of libGDX. Nathan wrote a
+lot of the API structure and has been very influential.
+
+Thanks to pyb1993, https://github.com/pyb1993 , for
+coming up with the idea and most of the implementation
+for several useful optimizations applied in version 0.2.0.
+
+Thanks to Jon Renner, https://github.com/jrenner , for
+the Select and QuickSelect code, as added to libGDX.
+Jon would be a contributor but I don't have a CLA to sign.
+
+Thanks to Sebastiano Vigna, https://github.com/vigna , for
+fastutil with its useful sorts and primitive comparators.

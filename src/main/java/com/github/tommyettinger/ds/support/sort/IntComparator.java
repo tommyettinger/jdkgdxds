@@ -22,11 +22,6 @@ import java.util.Comparator;
  * A type-specific {@link Comparator}; provides methods to compare two primitive
  * types both as objects and as primitive types.
  *
- * <p>
- * Note that {@code fastutil} provides a corresponding abstract class that can
- * be used to implement this interface just by specifying the type-specific
- * comparator.
- *
  * @see Comparator
  * @see IntComparators
  */
