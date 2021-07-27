@@ -102,43 +102,19 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 		super(keys, values);
 	}
 
+
 	@Override
 	protected int place (Object item) {
 		if(item instanceof CharSequence) return (int)Utilities.longHashCodeIgnoreCase((CharSequence)item) & mask;
 		return super.place(item);
 	}
 
-	/**
-	 * Gets a case-insensitive hash code for the String or other CharSequence {@code item} and shifts it so it is between 0 and
-	 * {@link #mask} inclusive. This gets the hash as if all cased letters have been converted to upper case by
-	 * {@link Character#toUpperCase(char)}; this should be correct for all alphabets in Unicode except Georgian.
-	 *
-	 * @param item any non-null CharSequence, such as a String or StringBuilder; will be treated as if it is all upper-case
-	 * @return a position in the key table where {@code item} would be placed; between 0 and {@link #mask} inclusive
-	 * @implNote Uses Water hash, which passes SMHasher's test battery and is very fast in Java. Water uses 64-bit math,
-	 * which behaves reliably but somewhat slowly on GWT, but uses it on usually-small char values. This can't use the
-	 * built-in pre-calculated hashCode of a String because it's case-sensitive. You can use the same hashing function as this
-	 * with {@link Utilities#longHashCodeIgnoreCase(CharSequence)}.
-	 */
-	protected int place (CharSequence item) {
-		return (int)Utilities.longHashCodeIgnoreCase(item) & mask;
-	}
-
 	@Override
-	protected int locateKey (Object key) {
-		if (!(key instanceof CharSequence))
-			return super.locateKey(key);
-		Object[] keyTable = this.keyTable;
-		CharSequence sk = (CharSequence)key;
-		for (int i = place(sk); ; i = i + 1 & mask) {
-			Object other = keyTable[i];
-			if (other == null) {
-				return ~i;
-			}
-			if (other instanceof CharSequence && Utilities.equalsIgnoreCase(sk, (CharSequence)other)) {
-				return i;
-			}
+	protected boolean equate (Object left, @Nullable Object right) {
+		if((left instanceof CharSequence) && (right instanceof CharSequence)){
+			return Utilities.equalsIgnoreCase((CharSequence)left, (CharSequence)right);
 		}
+		return false;
 	}
 
 	@Override
