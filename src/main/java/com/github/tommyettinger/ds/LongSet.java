@@ -163,6 +163,8 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	 * Returns the index of the key if already present, else {@code ~index} for the next empty index.
 	 * While this can be overridden to compare for equality differently than {@code ==} between ints, that
 	 * isn't recommended because this has to treat zero keys differently, and it finds those with {@code ==}.
+	 * If you want to treat equality between longs differently for some reason, you would also need to override
+	 * {@link #contains(long)} and {@link #add(long)}, at the very least.
 	 */
 	protected int locateKey (long key) {
 		long[] keyTable = this.keyTable;
