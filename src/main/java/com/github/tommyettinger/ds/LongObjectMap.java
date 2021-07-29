@@ -144,7 +144,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		putAll(keys, values);
 	}
 
-
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <br>
