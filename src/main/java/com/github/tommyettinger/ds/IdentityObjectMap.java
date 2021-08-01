@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -116,30 +117,9 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 		return (System.identityHashCode(item) & mask);
 	}
 
-	/**
-	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
-	 * to compare for equality differently than by using {@code ==}, as this does.
-	 *
-	 * @param key a non-null Object that should probably be a K
-	 */
 	@Override
-	protected int locateKey (Object key) {
-		K[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = i + 1 & mask) {
-			K other = keyTable[i];
-			if (other == null) {
-				return ~i; // Always negative; means empty space is available at i.
-			}
-			if (other == key) // If you want to change how equality is determined, do it here.
-			{
-				return i; // Same key was found.
-			}
-		}
-	}
-
-	@Override
-	public boolean equals (Object obj) {
-		return super.equalsIdentity(obj);
+	protected boolean equate (Object left, @Nullable Object right) {
+		return left == right;
 	}
 
 	@Override
