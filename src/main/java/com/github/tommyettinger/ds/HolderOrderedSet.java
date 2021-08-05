@@ -60,7 +60,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	protected final ObjectList<T> items;
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8. This does not set the
+	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}. This does not set the
 	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(Function)} is called with
 	 * a valid Function that gets K keys from T items.
 	 */
@@ -70,7 +70,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
+	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 */
 	public HolderOrderedSet (Function<T, K> extractor) {
@@ -79,7 +79,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new set with a load factor of 0.8.
+	 * Creates a new set with a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.

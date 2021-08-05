@@ -78,19 +78,19 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	@Nullable protected transient Keys<K, V> keys2;
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
+	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public ObjectObjectMap () {
-		this(51, 0.8f);
+		this(51, Utilities.getDefaultLoadFactor());
 	}
 
 	/**
-	 * Creates a new map with the given starting capacity and a load factor of 0.8.
+	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public ObjectObjectMap (int initialCapacity) {
-		this(initialCapacity, 0.8f);
+		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
 	/**

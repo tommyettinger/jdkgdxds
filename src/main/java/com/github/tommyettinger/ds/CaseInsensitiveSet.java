@@ -37,14 +37,14 @@ import java.util.Set;
  */
 public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
+	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public CaseInsensitiveSet () {
 		super();
 	}
 
 	/**
-	 * Creates a new set with a load factor of 0.8.
+	 * Creates a new set with a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */

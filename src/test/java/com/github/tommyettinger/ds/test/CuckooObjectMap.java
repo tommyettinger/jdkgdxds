@@ -19,6 +19,8 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.Utilities;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -51,16 +53,16 @@ public class CuckooObjectMap<K, V> {
 	private int pushIterations;
 	private boolean isBigTable;
 
-	/** Creates a new map with an initial capacity of 32 and a load factor of 0.8. This map will hold 25 items before growing the
+	/** Creates a new map with an initial capacity of 32 and a load factor of {@link Utilities#getDefaultLoadFactor()}. This map will hold 25 items before growing the
 	 * backing table. */
 	public CuckooObjectMap () {
-		this(32, 0.8f);
+		this(32, Utilities.getDefaultLoadFactor());
 	}
 
-	/** Creates a new map with a load factor of 0.8. This map will hold initialCapacity * 0.8 items before growing the backing
+	/** Creates a new map with a load factor of {@link Utilities#getDefaultLoadFactor()}. This map will hold initialCapacity * {@link Utilities#getDefaultLoadFactor()} items before growing the backing
 	 * table. */
 	public CuckooObjectMap (int initialCapacity) {
-		this(initialCapacity, 0.8f);
+		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
 	/** Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity * loadFactor

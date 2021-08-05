@@ -63,7 +63,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 	protected final LongList keys;
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
+	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public LongFloatOrderedMap () {
 		super();
@@ -71,7 +71,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 	}
 
 	/**
-	 * Creates a new map with the given starting capacity and a load factor of 0.8.
+	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */

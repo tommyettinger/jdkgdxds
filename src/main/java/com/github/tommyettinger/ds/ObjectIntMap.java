@@ -82,19 +82,19 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	public int defaultValue = 0;
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
+	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public ObjectIntMap () {
-		this(51, 0.8f);
+		this(51, Utilities.getDefaultLoadFactor());
 	}
 
 	/**
-	 * Creates a new map with the given starting capacity and a load factor of 0.8.
+	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public ObjectIntMap (int initialCapacity) {
-		this(initialCapacity, 0.8f);
+		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
 	/**

@@ -42,14 +42,14 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
+	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public CaseInsensitiveOrderedSet () {
 		super();
 	}
 
 	/**
-	 * Creates a new set with a load factor of 0.8.
+	 * Creates a new set with a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */

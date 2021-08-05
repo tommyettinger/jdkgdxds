@@ -22,6 +22,38 @@ package com.github.tommyettinger.ds;
  * @author Tommy Ettinger
  */
 public class Utilities {
+	private static float defaultLoadFactor = 0.7f;
+
+	/**
+	 * Sets the load factor that will be used when none is specified during construction (for
+	 * data structures that have a load factor, such as all sets and maps here). The load factor
+	 * will be clamped so it is greater than 0 (the lowest possible is {@link #FLOAT_ROUNDING_ERROR},
+	 * but it should never actually be that low) and less than or equal to 1. The initial value for
+	 * the default load factor is 0.7.
+	 * <br>
+	 * If multiple libraries and/or your own code depend on jdkgdxds, then they may attempt to set
+	 * the default load factor independently of each other, but this only has one setting at a time.
+	 * The best solution for this is to specify the load factor you want when it matters, possibly
+	 * to a variable set per-library or even per section of a library that needs some load factor.
+	 * That means <b>not using the default load factor in this class</b>, and always using the
+	 * constructors that specify a load factor. Libraries are generally discouraged from setting the
+	 * default load factor; that decision should be left up to the application using the library.
+	 * @param loadFactor a float that will be clamped between 0 (exclusive) and 1 (inclusive)
+	 */
+	public static void setDefaultLoadFactor(float loadFactor) {
+		defaultLoadFactor = Math.min(Math.max(loadFactor, FLOAT_ROUNDING_ERROR), 1f);
+	}
+
+	/**
+	 * Gets the default load factor, meant to be used when no load factor is specified during the
+	 * construction of a data structure such as a map or set. The initial value for the default
+	 * load factor is 0.7.
+	 * @return the default load factor, always between 0 (exclusive) and 1 (inclusive)
+	 */
+	public static float getDefaultLoadFactor() {
+		return defaultLoadFactor;
+	}
+
 	/**
 	 * Used to establish the size of a hash table for {@link ObjectSet}, {@link ObjectObjectMap}, and related code.
 	 * The table size will always be a power of two, and should be the next power of two that is at least equal

@@ -73,19 +73,19 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	@Nullable protected transient LongSetIterator iterator2;
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
+	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public LongSet () {
-		this(51, 0.8f);
+		this(51, Utilities.getDefaultLoadFactor());
 	}
 
 	/**
-	 * Creates a new set with a load factor of 0.8.
+	 * Creates a new set with a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public LongSet (int initialCapacity) {
-		this(initialCapacity, 0.8f);
+		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
 	/**

@@ -39,7 +39,7 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
+	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public CaseInsensitiveMap () {
 		super();

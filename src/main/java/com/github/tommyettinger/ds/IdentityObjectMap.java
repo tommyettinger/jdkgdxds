@@ -24,10 +24,10 @@ import java.util.Map;
  * A variant on {@link ObjectObjectMap} that compares keys by identity (using {@code ==}) instead of equality (using {@code equals()}).
  * It also hashes with {@link System#identityHashCode(Object)} instead of calling the {@code hashCode()} of a key. This can be useful in
  * some cases where keys may have invalid {@link Object#equals(Object)} and/or {@link Object#hashCode()} implementations, or if keys could
- * be very large (making a hashCode() that uses all of the items in the key slow). Oddly, {@link System#identityHashCode(Object)} tends to
- * be slower than the hashCode() for most smaller keys, because an explicitly-written hashCode() typically doesn't need to do anything
- * concurrently, but identityHashCode() needs to (concurrently) modify an internal variable that ensures the results are unique, which
- * requires the JVM to do lots of extra work whenever identityHashCode() is called (but it doesn't depends on the quantity of variables in
+ * be very large (making a hashCode() that uses all the items in the key slow). Oddly, {@link System#identityHashCode(Object)} tends to
+ * be slower than the hashCode() for most small keys, because an explicitly-written hashCode() typically doesn't need to do anything
+ * concurrently, but identityHashCode() needs to (concurrently) modify an internal JVM variable that ensures the results are unique, which
+ * requires the JVM to do lots of extra work whenever identityHashCode() is called (but it doesn't depend on the quantity of variables in
  * the key, so identityHashCode() gets relatively faster for larger keys). The equals() method also tends to slow down for large keys,
  * relative to the constant-time {@code ==} this uses.
  * <br>
@@ -36,14 +36,14 @@ import java.util.Map;
  */
 public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of 0.8.
+	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public IdentityObjectMap () {
 		super();
 	}
 
 	/**
-	 * Creates a new map with the given starting capacity and a load factor of 0.8.
+	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */

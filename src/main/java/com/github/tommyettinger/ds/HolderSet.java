@@ -59,13 +59,13 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	@Nullable protected transient Function<T, K> extractor;
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8. This does not set the
+	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}. This does not set the
 	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(Function)} is called with
 	 * a valid Function that gets K keys from T items.
 	 */
 	public HolderSet () {
 
-		loadFactor = 0.8f;
+		loadFactor = Utilities.getDefaultLoadFactor();
 
 		int tableSize = tableSize(51, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
@@ -77,21 +77,21 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	}
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of 0.8.
+	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 */
 	public HolderSet (Function<T, K> extractor) {
-		this(extractor, 51, 0.8f);
+		this(extractor, 51, Utilities.getDefaultLoadFactor());
 	}
 
 	/**
-	 * Creates a new set with a load factor of 0.8.
+	 * Creates a new set with a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public HolderSet (Function<T, K> extractor, int initialCapacity) {
-		this(extractor, initialCapacity, 0.8f);
+		this(extractor, initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
 	/**
