@@ -184,14 +184,15 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}, which here
-	 * should be a K.
+	 * should be a K key.
 	 * <p>
 	 * This can be overridden to hash {@code item} differently, though all implementors must
 	 * ensure this returns results in the range of 0 to {@link #mask}, inclusive. If nothing
 	 * else is changed, then unsigned-right-shifting an int or long by {@link #shift} will also
 	 * restrict results to the correct range.
 	 *
-	 * @param item a non-null Object; its hashCode() method should be used by most implementations.
+	 * @param item any non-null Object
+	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (Object item) {
 		return item.hashCode() & mask;
@@ -199,27 +200,23 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 
 
 	/**
-	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This can be overridden
-	 * to compare for equality differently than {@link Object#equals(Object)}. This expects key to be a K
+	 * Compares the objects left and right, which should be K keys (not T items), for equality, returning true if they are considered
+	 * equal. This is used by the rest of this class to determine whether two keys are considered equal. Normally, this
+	 * returns {@code left.equals(right)}, but subclasses can override it to use reference equality, fuzzy equality, deep
+	 * array equality, or any other custom definition of equality. Usually, {@link #place(Object)} is also overridden if
+	 * this method is.
+	 * @param left must be non-null; typically a K key being compared, but not necessarily
+	 * @param right may be null; typically a K key being compared, but can often be null for an empty key slot, or some other type
+	 * @return true if left and right are considered equal for the purposes of this class
+	 */
+	protected boolean equate(Object left, @Nullable Object right){
+		return left.equals(right);
+	}
+
+	/**
+	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This calls
+	 * {@link #equate(Object, Object)} to determine if two keys are equivalent. This expects key to be a K
 	 * object, not a T item, and will extract keys from existing items to compare against.
-	 * <p>
-	 * If source is not easily available and you want to override this, the reference source is:
-	 * <pre>
-	 *     protected int locateKey (Object key) {
-	 *         T[] keyTable = this.keyTable;
-	 *         for (int i = place(key); ; i = i + 1 &amp; mask) {
-	 *             T other = keyTable[i];
-	 *             if (other == null) {
-	 *                 return ~i; // Always negative; means empty space is available at i.
-	 *             }
-	 *             if (key.equals(extractor.apply(other))) // If you want to change how equality is determined, do it here.
-	 *             {
-	 *                 return i; // Same key was found.
-	 *             }
-	 *         }
-	 *     }
-	 * </pre>
-	 *
 	 * @param key a non-null Object that should probably be a K
 	 */
 	protected int locateKey (Object key) {
@@ -230,7 +227,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 				return ~i; // Always negative; means empty space is available at i.
 			}
 			assert extractor != null;
-			if (key.equals(extractor.apply(other))) // If you want to change how equality is determined, do it here.
+			if (equate(key, extractor.apply(other)))
 			{
 				return i; // Same key was found.
 			}
