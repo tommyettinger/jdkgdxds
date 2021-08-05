@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -35,26 +36,62 @@ import java.util.Set;
  */
 public class NumberedSet<T> implements Set<T>, Ordered<T> {
 
+	protected class InternalMap extends ObjectIntOrderedMap<T>{
+		public InternalMap () {
+			super();
+		}
 
-	protected ObjectIntOrderedMap<T> map;
+		public InternalMap (int initialCapacity) {
+			super(initialCapacity);
+		}
+
+		public InternalMap (int initialCapacity, float loadFactor) {
+			super(initialCapacity, loadFactor);
+		}
+
+		public InternalMap (ObjectIntOrderedMap<? extends T> map) {
+			super(map);
+		}
+
+		public InternalMap (ObjectIntMap<? extends T> map) {
+			super(map);
+		}
+
+		public InternalMap (T[] keys, int[] values) {
+			super(keys, values);
+		}
+
+		public InternalMap (Collection<? extends T> keys, PrimitiveCollection.OfInt values) {
+			super(keys, values);
+		}
+		@Override
+		protected int place (Object item) {
+			return NumberedSet.this.place(item);
+		}
+
+		@Override
+		protected boolean equate (Object left, @Nullable Object right) {
+			return NumberedSet.this.equate(left, right);
+		}
+	}
+
+	protected transient InternalMap map;
 
 	public NumberedSet () {
-		map = new ObjectIntOrderedMap<>();
-		map.setDefaultValue(-1);
+		this(51, Utilities.getDefaultLoadFactor());
 	}
 
 	public NumberedSet (int initialCapacity, float loadFactor) {
-		map = new ObjectIntOrderedMap<>(initialCapacity, loadFactor);
+		map = new InternalMap(initialCapacity, loadFactor);
 		map.setDefaultValue(-1);
 	}
 
 	public NumberedSet (int initialCapacity) {
-		map = new ObjectIntOrderedMap<>(initialCapacity);
-		map.setDefaultValue(-1);
+		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
 	public NumberedSet (NumberedSet<? extends T> other) {
-		map = new ObjectIntOrderedMap<>(other.map);
+		map = new InternalMap(other.map);
 	}
 
 	/**
@@ -87,6 +124,42 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		this(items.length);
 		addAll(items);
 	}
+
+	/**
+	 * Returns an index >= 0 and <= the {@code mask} of this NumberedSet's {@link #map} for the specified {@code item}.
+	 * <br>
+	 * You can override this, which will affect the internal map that NumberedSet uses.
+	 * <br>
+	 * The default implementation assumes the low-order bits of item.hashCode() are likely enough to avoid collisions,
+	 * and so just returns {@code item.hashCode() & mask}. This method can be overridden to customizing hashing. If you
+	 * aren't confident that the hashCode() implementation used by item will have reasonable quality, you can override
+	 * this with something such as {@code return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);}. That "magic
+	 * number" is 2 to the 64, divided by the golden ratio; the golden ratio is used because of various properties it
+	 * has that make it better at randomizing bits. You should usually override this method if you also override
+	 * {@link #equate(Object, Object)}, because two equal values should have the same hash.
+	 * @param item any non-null Object
+	 * @return an index between 0 and the {@code mask} of this NumberedSet's {@link #map} (both inclusive)
+	 */
+	protected int place (Object item) {
+		return item.hashCode() & map.mask;
+	}
+
+	/**
+	 * Compares the objects left and right, which are usually keys, for equality, returning true if they are considered
+	 * equal. This is used by the rest of this class to determine whether two keys are considered equal. Normally, this
+	 * returns {@code left.equals(right)}, but subclasses can override it to use reference equality, fuzzy equality, deep
+	 * array equality, or any other custom definition of equality. Usually, {@link #place(Object)} is also overridden if
+	 * this method is.
+	 * <br>
+	 * You can override this, which will affect the internal map that NumberedSet uses.
+	 * @param left must be non-null; typically a key being compared, but not necessarily
+	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
+	 * @return true if left and right are considered equal for the purposes of this class
+	 */
+	protected boolean equate(Object left, @Nullable Object right){
+		return left.equals(right);
+	}
+
 
 	@Override
 	public ObjectList<T> order () {
