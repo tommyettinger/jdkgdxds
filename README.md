@@ -18,8 +18,11 @@ implements `com.github.tommyettinger.ds.Ordered.OfInt`, which specifies that the
 
 ## OK, how do I use it?
 
-You use jdkgdxds much like the standard JDK collections, just extended for primitive types. The Object-based classes are generic,
-centered around `com.github.tommyettinger.ds.ObjectList`, `com.github.tommyettinger.ds.ObjectDeque`,
+You use jdkgdxds much like the standard JDK collections, just extended for primitive types. The types of data structure offered
+here are lists (array-backed, like `ArrayList`), deques (double-ended queues, like `ArrayDeque` but also allowing access inside
+the deque), sets (allowing only unique items, and coming in unordered and insertion-ordered varieties), maps (allowing unique keys
+associated with values, and also coming in unordered and insertion-ordered varieties), and some extra types. The Object-based
+classes are generic, centered around `com.github.tommyettinger.ds.ObjectList`, `com.github.tommyettinger.ds.ObjectDeque`,
 `com.github.tommyettinger.ds.ObjectSet`, and `com.github.tommyettinger.ds.ObjectObjectMap`; `ObjectOrderedSet` and
 `ObjectObjectOrderedMap` are also here and extend the other Set and Map. These are effectively replacements for
 `com.badlogic.gdx.utils.Array`, `com.badlogic.gdx.utils.Queue`, `com.badlogic.gdx.utils.ObjectSet`,
@@ -67,14 +70,25 @@ with HotSpot. DistinctRandom is very similar to JDK 8's SplittableRandom, withou
 `skip()` method, which allows skipping ahead or behind in the sequence of generated numbers, but TricycleRandom and
 FourWheelRandom do not allow skipping.
 
+You can extend essentially all classes in jdkgdxds, and it's meant to be friendlier to inherit from than the libGDX collections.
+The Object-keyed maps and sets have protected `place()` and `equate()` methods to allow changing the behavior of hashing (with
+`place()`) and equality (with `equate()`). If you, for instance, wanted to use `char[]` as a key type in a map, the normal
+behavior of an array in a hashed collection like a map or set is basically unusable. Arrays are compared by reference rather than
+by value, so you would need the exact `char[]` you had put in to get a value out. They're also hashed by identity, which means
+more than just the equality comparison needs to change. Thankfully, in jdkgdxds you can override `place()` to
+`return Arrays.hashCode(item) & mask;` and `equate()` to `return Objects.deepEquals(left, right);`; this uses standard JDK methods
+to hash and compare arrays, and will work as long as you don't edit any array keys while they are in the map. There are other
+potential uses for this extensibility, like the case-insensitive CharSequence comparison that `CaseInsensitiveMap` and related
+classes use, or some form of fuzzy equality for float or double keys.
+
 ## How do I get it?
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.1.4'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.0'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.1.4:sources'` to its dependencies, and in its
+`implementation 'com.github.tommyettinger:jdkgdxds:0.2.0:sources'` to its dependencies, and in its
 `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />

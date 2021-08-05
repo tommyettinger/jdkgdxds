@@ -174,7 +174,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	/**
-	 * Returns an index >= 0 and <= {@link #mask} for the specified {@code item}.
+	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * The default implementation assumes the low-order bits of item.hashCode() are likely enough to avoid collisions,
 	 * and so just returns {@code item.hashCode() & mask}. This method can be overridden to customizing hashing. If you

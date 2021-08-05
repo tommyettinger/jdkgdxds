@@ -126,7 +126,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	}
 
 	/**
-	 * Returns an index >= 0 and <= the {@code mask} of this NumberedSet's {@link #map} for the specified {@code item}.
+	 * Returns an index &gt;= 0 and &lt;= the {@code mask} of this NumberedSet's {@link #map} for the specified {@code item}.
 	 * <br>
 	 * You can override this, which will affect the internal map that NumberedSet uses.
 	 * <br>

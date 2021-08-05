@@ -145,7 +145,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 //		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
 
 	/**
-	 * Returns an index >= 0 and <= {@link #mask} for the specified {@code item}.
+	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * The default implementation assumes the low-order bits of item.hashCode() are likely enough to avoid collisions,
 	 * and so just returns {@code item.hashCode() & mask}. This method can be overridden to customizing hashing. If you
