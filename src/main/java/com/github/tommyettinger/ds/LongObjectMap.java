@@ -154,7 +154,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * @param item any long; it is often mixed so similar inputs still have different outputs
 	 */
 	protected int place (long item) {
-		return (int)((item ^ item >>> shift) & mask);
+		return (int)((item ^ item >>> 32) * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
 	/**

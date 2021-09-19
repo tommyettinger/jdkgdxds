@@ -112,7 +112,7 @@ public class DistinctRandom extends Random implements EnhancedRandom {
 
     /**
      * Gets the current state; it's already public, but I guess this could still
-     * be useful.
+     * be useful. The state can be any {@code long}.
      * @return the current state, as a long
      */
     public long getState () {

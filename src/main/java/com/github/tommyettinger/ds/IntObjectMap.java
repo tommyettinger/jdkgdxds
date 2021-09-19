@@ -178,7 +178,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param item any int; it is often mixed so similar inputs still have different outputs
 	 */
 	protected int place (int item) {
-		return item & mask;
+		return (int)(item * 0x9E3779B97F4A7C15L >>> shift);
 	}
 
 	/**

@@ -236,7 +236,7 @@ public class FourWheelRandom extends Random implements EnhancedRandom {
     }
 
     /**
-     * Sets the state completely to the given three state variables.
+     * Sets the state completely to the given four state variables.
      * This is the same as calling {@link #setStateA(long)}, {@link #setStateB(long)},
      * {@link #setStateC(long)}, and {@link #setStateD(long)} as a group. You may want
      * to call {@link #nextLong()} a few times after setting the states like this, unless
