@@ -191,11 +191,11 @@ public interface EnhancedRandom {
 	 * uses {@link #setSelectedState(int, long)} to change the states.
 	 * @param states an array or varargs of long values to use as states
 	 */
-	default void setState(@Nonnull long... states) {
-		final int c = getStateCount();
-		for (int s = 0; s < states.length; s++) {
-			final long curr = states[s];
-			for (int i = s; i < c; i += 3) {
+	default void setState (@Nonnull long... states) {
+		final int c = getStateCount(), sl = states.length;
+		for (int b = 0; b < sl; b++) {
+			final long curr = states[b];
+			for (int i = b; i < c; i += sl) {
 				setSelectedState(i, curr);
 			}
 		}
