@@ -77,4 +77,20 @@ public class EnhancedRandomTest {
 			Assert.assertTrue(bounded >= inner && bounded < outer);
 		}
 	}
+
+	@Test
+	public void testDistinctBoundedInt() {
+		DistinctRandom random = new DistinctRandom(123L);
+		int inner = -0x70000000, outer = 0x70000000;
+		for (int i = 0; i < 1024; i++) {
+			int bounded = random.nextInt(inner, outer);
+			System.out.println(bounded);
+			Assert.assertTrue(bounded >= inner && bounded < outer);
+		}
+		for (int i = 0; i < 1024; i++) {
+			int bounded = random.nextSignedInt(inner, outer);
+			System.out.println(bounded);
+			Assert.assertTrue(bounded >= inner && bounded < outer);
+		}
+	}
 }
