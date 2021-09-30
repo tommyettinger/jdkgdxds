@@ -305,10 +305,15 @@ public interface EnhancedRandom {
 	 * Returns a pseudorandom, uniformly distributed {@code int} value between the
 	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
 	 * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
-	 * this always returns {@code innerBound}.
+	 * this always returns {@code innerBound}. This is significantly slower than
+	 * {@link #nextInt(int)} or {@link #nextSignedInt(int)},
+	 * because this handles even ranges that go from large negative numbers to large
+	 * positive numbers, and since that would be larger than the largest possible int,
+	 * this has to use {@link #nextLong(long)}.
 	 *
 	 * <br> For any case where outerBound might be valid but less than innerBound, you
-	 * can use {@link #nextSignedInt(int, int)}.
+	 * can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
+	 * here, this simply returns innerBound.
 	 *
 	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
@@ -316,7 +321,7 @@ public interface EnhancedRandom {
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
 	default int nextInt (int innerBound, int outerBound) {
-		return innerBound + nextInt(outerBound - innerBound);
+		return (int)(innerBound + nextLong(outerBound - innerBound & 0xFFFFFFFFL));
 	}
 
 	/**
@@ -324,7 +329,11 @@ public interface EnhancedRandom {
 	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
 	 * (exclusive). This is meant for cases where either bound may be negative,
 	 * especially if the bounds are unknown or may be user-specified. It is slightly
-	 * slower than {@link #nextInt(int, int)}.
+	 * slower than {@link #nextInt(int, int)}, and significantly slower than
+	 * {@link #nextInt(int)} or {@link #nextSignedInt(int)}. This last part is
+	 * because this handles even ranges that go from large negative numbers to large
+	 * positive numbers, and since that range is larger than the largest possible int,
+	 * this has to use {@link #nextSignedLong(long)}.
 	 *
 	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
@@ -332,7 +341,7 @@ public interface EnhancedRandom {
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
 	default int nextSignedInt (int innerBound, int outerBound) {
-		return innerBound + nextSignedInt(outerBound - innerBound);
+		return (int)(innerBound + nextSignedLong(outerBound - innerBound & 0xFFFFFFFFL));
 	}
 
 	/**
