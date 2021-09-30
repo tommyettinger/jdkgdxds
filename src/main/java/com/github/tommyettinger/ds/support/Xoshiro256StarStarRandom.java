@@ -20,7 +20,8 @@ import java.util.Random;
 
 /**
  * A random number generator that is fairly fast and guarantees 4-dimensional equidistribution (with the exception of the
- * quartet with four zeroes in a row, every quartet of long results is produced exactly once over the period).
+ * quartet with four zeroes in a row, every quartet of long results is produced exactly once over the period). It has a
+ * period of (2 to the 256) - 1, which would take millennia to exhaust on current-generation hardware (at least).
  * It can be considered stable, like the other EnhancedRandom implementations here. This passes heavy testing, but isn't a
  * cryptographic generator, and it does have known issues when its output is multiplied by certain specific constants (any
  * of a lot) and tests are then run. The only invalid state is the one with 0 in each state variable, and this won't ever
@@ -157,7 +158,7 @@ public class Xoshiro256StarStarRandom extends Random implements EnhancedRandom {
     /**
      * This initializes all 4 states of the generator to random values based on the given seed.
      * (2 to the 64) possible initial generator states can be produced here, all with a different
-     * first value returned by {@link #nextLong()} (because {@code stateD} is guaranteed to be
+     * first value returned by {@link #nextLong()} (because {@code stateB} is guaranteed to be
      * different for every different {@code seed}).
      * @param seed the initial seed; may be any long
      */

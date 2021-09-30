@@ -61,4 +61,20 @@ public class EnhancedRandomTest {
 		Assert.assertEquals(n0, p0);
 		Assert.assertEquals(n1, p1);
 	}
+
+	@Test
+	public void testDistinctBoundedLong() {
+		DistinctRandom random = new DistinctRandom(123L);
+		long inner = -0x7000000000000000L, outer = 0x7000000000000000L;
+		for (int i = 0; i < 1024; i++) {
+			long bounded = random.nextLong(inner, outer);
+			System.out.println(bounded);
+			Assert.assertTrue(bounded >= inner && bounded < outer);
+		}
+		for (int i = 0; i < 1024; i++) {
+			long bounded = random.nextSignedLong(inner, outer);
+			System.out.println(bounded);
+			Assert.assertTrue(bounded >= inner && bounded < outer);
+		}
+	}
 }
