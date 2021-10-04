@@ -1005,7 +1005,7 @@ public interface EnhancedRandom {
 	 * Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
 	 * more likely. Advances the state twice.
 	 * <p>
-	 * This is an optimized version of {@link #nextTriangular(float, float, float) randomTriangular(-1, 1, 0)}
+	 * This is an optimized version of {@link #nextTriangular(float, float, float) nextTriangular(-1, 1, 0)}
 	 */
 	default float nextTriangular () {
 		return nextFloat() - nextFloat();
@@ -1015,7 +1015,7 @@ public interface EnhancedRandom {
 	 * Returns a triangularly distributed random number between {@code -max} (exclusive) and {@code max} (exclusive), where values
 	 * around zero are more likely. Advances the state twice.
 	 * <p>
-	 * This is an optimized version of {@link #nextTriangular(float, float, float) randomTriangular(-max, max, 0)}
+	 * This is an optimized version of {@link #nextTriangular(float, float, float) nextTriangular(-max, max, 0)}
 	 *
 	 * @param max the upper limit
 	 */
@@ -1027,7 +1027,7 @@ public interface EnhancedRandom {
 	 * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where the
 	 * {@code mode} argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
 	 * <p>
-	 * This method is equivalent of {@link #nextTriangular(float, float, float) randomTriangular(min, max, (min + max) * 0.5f)}
+	 * This method is equivalent to {@link #nextTriangular(float, float, float) nextTriangular(min, max, (min + max) * 0.5f)}
 	 *
 	 * @param min the lower limit
 	 * @param max the upper limit
@@ -1263,7 +1263,7 @@ public interface EnhancedRandom {
 	default void shuffle (int[] items, int offset, int length) {
 		offset = Math.min(Math.max(0, offset), items.length);
 		length = Math.min(items.length - offset, Math.max(0, length));
-		for (int i = offset + length - 1; i >= offset; i--) {
+		for (int i = offset + length - 1; i > offset; i--) {
 			int ii = nextInt(offset, i + 1);
 			int temp = items[i];
 			items[i] = items[ii];
@@ -1290,7 +1290,7 @@ public interface EnhancedRandom {
 	default void shuffle (long[] items, int offset, int length) {
 		offset = Math.min(Math.max(0, offset), items.length);
 		length = Math.min(items.length - offset, Math.max(0, length));
-		for (int i = offset + length - 1; i >= offset; i--) {
+		for (int i = offset + length - 1; i > offset; i--) {
 			int ii = nextInt(offset, i + 1);
 			long temp = items[i];
 			items[i] = items[ii];
@@ -1317,7 +1317,7 @@ public interface EnhancedRandom {
 	default void shuffle (float[] items, int offset, int length) {
 		offset = Math.min(Math.max(0, offset), items.length);
 		length = Math.min(items.length - offset, Math.max(0, length));
-		for (int i = offset + length - 1; i >= offset; i--) {
+		for (int i = offset + length - 1; i > offset; i--) {
 			int ii = nextInt(offset, i + 1);
 			float temp = items[i];
 			items[i] = items[ii];
@@ -1344,7 +1344,7 @@ public interface EnhancedRandom {
 	default void shuffle (char[] items, int offset, int length) {
 		offset = Math.min(Math.max(0, offset), items.length);
 		length = Math.min(items.length - offset, Math.max(0, length));
-		for (int i = offset + length - 1; i >= offset; i--) {
+		for (int i = offset + length - 1; i > offset; i--) {
 			int ii = nextInt(offset, i + 1);
 			char temp = items[i];
 			items[i] = items[ii];
@@ -1371,7 +1371,7 @@ public interface EnhancedRandom {
 	default void shuffle (double[] items, int offset, int length) {
 		offset = Math.min(Math.max(0, offset), items.length);
 		length = Math.min(items.length - offset, Math.max(0, length));
-		for (int i = offset + length - 1; i >= offset; i--) {
+		for (int i = offset + length - 1; i > offset; i--) {
 			int ii = nextInt(offset, i + 1);
 			double temp = items[i];
 			items[i] = items[ii];
@@ -1398,7 +1398,7 @@ public interface EnhancedRandom {
 	default void shuffle (short[] items, int offset, int length) {
 		offset = Math.min(Math.max(0, offset), items.length);
 		length = Math.min(items.length - offset, Math.max(0, length));
-		for (int i = offset + length - 1; i >= offset; i--) {
+		for (int i = offset + length - 1; i > offset; i--) {
 			int ii = nextInt(offset, i + 1);
 			short temp = items[i];
 			items[i] = items[ii];
@@ -1425,7 +1425,7 @@ public interface EnhancedRandom {
 	default void shuffle (boolean[] items, int offset, int length) {
 		offset = Math.min(Math.max(0, offset), items.length);
 		length = Math.min(items.length - offset, Math.max(0, length));
-		for (int i = offset + length - 1; i >= offset; i--) {
+		for (int i = offset + length - 1; i > offset; i--) {
 			int ii = nextInt(offset, i + 1);
 			boolean temp = items[i];
 			items[i] = items[ii];
@@ -1452,7 +1452,7 @@ public interface EnhancedRandom {
 	default <T> void shuffle (T[] items, int offset, int length) {
 		offset = Math.min(Math.max(0, offset), items.length);
 		length = Math.min(items.length - offset, Math.max(0, length));
-		for (int i = offset + length - 1; i >= offset; i--) {
+		for (int i = offset + length - 1; i > offset; i--) {
 			int ii = nextInt(offset, i + 1);
 			T temp = items[i];
 			items[i] = items[ii];
@@ -1490,7 +1490,7 @@ public interface EnhancedRandom {
 	 */
 	default <T> void shuffle (Ordered<T> ordered){
 		ObjectList<T> order = ordered.order();
-		for (int i = order.size() - 1; i >= 0; i--) {
+		for (int i = order.size() - 1; i > 0; i--) {
 			order.set(i, order.set(nextInt(i + 1), order.get(i)));
 		}
 	}
@@ -1500,7 +1500,7 @@ public interface EnhancedRandom {
 	 * @param arrangeable an Arrangeable, such as an ObjectList, IntOrderedSet, or LongFloatOrderedMap
 	 */
 	default void shuffle (Arrangeable arrangeable){
-		for (int i = arrangeable.size() - 1; i >= 0; i--) {
+		for (int i = arrangeable.size() - 1; i > 0; i--) {
 			arrangeable.swap(i, nextInt(i + 1));
 		}
 	}

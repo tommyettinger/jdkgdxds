@@ -877,7 +877,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param items an int array; must be non-null
 	 */
 	public void shuffle (int[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
+		for (int i = items.length - 1; i > 0; i--) {
 			int ii = nextInt(i + 1);
 			int temp = items[i];
 			items[i] = items[ii];
@@ -891,7 +891,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param items a long array; must be non-null
 	 */
 	public void shuffle (long[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
+		for (int i = items.length - 1; i > 0; i--) {
 			int ii = nextInt(i + 1);
 			long temp = items[i];
 			items[i] = items[ii];
@@ -905,7 +905,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param items a float array; must be non-null
 	 */
 	public void shuffle (float[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
+		for (int i = items.length - 1; i > 0; i--) {
 			int ii = nextInt(i + 1);
 			float temp = items[i];
 			items[i] = items[ii];
@@ -919,7 +919,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param items a char array; must be non-null
 	 */
 	public void shuffle (char[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
+		for (int i = items.length - 1; i > 0; i--) {
 			int ii = nextInt(i + 1);
 			char temp = items[i];
 			items[i] = items[ii];
@@ -933,7 +933,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param items a double array; must be non-null
 	 */
 	public void shuffle (double[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
+		for (int i = items.length - 1; i > 0; i--) {
 			int ii = nextInt(i + 1);
 			double temp = items[i];
 			items[i] = items[ii];
@@ -947,7 +947,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param items a short array; must be non-null
 	 */
 	public void shuffle (short[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
+		for (int i = items.length - 1; i > 0; i--) {
 			int ii = nextInt(i + 1);
 			short temp = items[i];
 			items[i] = items[ii];
@@ -961,7 +961,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param items a boolean array; must be non-null
 	 */
 	public void shuffle (boolean[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
+		for (int i = items.length - 1; i > 0; i--) {
 			int ii = nextInt(i + 1);
 			boolean temp = items[i];
 			items[i] = items[ii];
@@ -975,7 +975,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param items an array of some reference type; must be non-null but may contain null items
 	 */
 	public <T> void shuffle (T[] items) {
-		for (int i = items.length - 1; i >= 0; i--) {
+		for (int i = items.length - 1; i > 0; i--) {
 			int ii = nextInt(i + 1);
 			T temp = items[i];
 			items[i] = items[ii];
