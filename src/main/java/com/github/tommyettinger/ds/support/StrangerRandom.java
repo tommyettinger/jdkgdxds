@@ -67,7 +67,7 @@ public class StrangerRandom extends Random implements EnhancedRandom {
     /**
      * Jumps {@code state} ahead by 0x9E3779B97F4A7C15 steps of the generator StrangerRandom uses for its stateA
      * and stateB. When used how it is here, it ensures stateB is 11.4 quintillion steps ahead of stateA in their
-     * shared sequence, or 7 quintillion behind if you look at it another way. It would typically take decades of
+     * shared sequence, or 7 quintillion behind if you look at it another way. It would typically take years of
      * continuously running this generator at 100GB/s to have stateA become any state that stateB has already been.
      * Users only need this function if setting stateB by-hand; in that case, {@code state} should be their stateA.
      * <br>
@@ -165,10 +165,10 @@ public class StrangerRandom extends Random implements EnhancedRandom {
     public void setSelectedState(int selection, long value) {
         switch (selection) {
         case 0:
-            stateA = value;
+            stateA = value == 0L ? 0xD3833E804F4C574BL : value;
             break;
         case 1:
-            stateB = value;
+            stateB = value == 0L ? 0x790B300BF9FE738FL : value;
             break;
         case 2:
             stateC = value;
@@ -183,7 +183,11 @@ public class StrangerRandom extends Random implements EnhancedRandom {
      * This initializes all 4 states of the generator to random values based on the given seed.
      * (2 to the 64) possible initial generator states can be produced here, all with a different
      * first value returned by {@link #nextLong()} (because {@code stateC} is guaranteed to be
-     * different for every different {@code seed}).
+     * different for every different {@code seed}). This ensures stateB is a sufficient distance
+     * from stateA in their shared sequence, and also does some randomizing on the seed before it
+     * assigns the result to stateC. This isn't an instantaneously-fast method to call like some
+     * versions of setSeed(), but it shouldn't be too slow unless it is called before every
+     * generated number (even then, it might be fine).
      * @param seed the initial seed; may be any long
      */
     @Override
@@ -191,7 +195,7 @@ public class StrangerRandom extends Random implements EnhancedRandom {
         stateA = seed ^ 0xFA346CBFD5890825L;
         if(stateA == 0L) stateA = 0xD3833E804F4C574BL;
         stateB = jump(stateA);
-        stateC = seed ^ 0x05CB93402A76F7DAL;
+        stateC = jump(seed ^ 0x05CB93402A76F7DAL);
         stateD = ~seed;
     }
 
@@ -253,15 +257,34 @@ public class StrangerRandom extends Random implements EnhancedRandom {
      * to call {@link #nextLong()} a few times after setting the states like this, unless
      * the value for stateD (in particular) is already adequately random; the first call
      * to {@link #nextLong()}, if it is made immediately after calling this, will return {@code stateD} as-is.
-     * @param stateA the first state; can be any long
-     * @param stateB the second state; can be any long
-     * @param stateC the third state; can be any long
-     * @param stateD the fourth state; this will be returned as-is if the next call is to {@link #nextLong()}
+     * @param stateA the first state; can be any long; can be any long except 0
+     * @param stateB the second state; can be any long; can be any long except 0
+     * @param stateC the third state; this will be returned as-is if the next call is to {@link #nextLong()}
+     * @param stateD the fourth state; can be any long
      */
     @Override
     public void setState(long stateA, long stateB, long stateC, long stateD) {
         this.stateA = (stateA == 0L) ? 0xD3833E804F4C574BL : stateA;
         this.stateB = (stateB == 0L) ? 0x790B300BF9FE738FL : stateB;
+        this.stateC = stateC;
+        this.stateD = stateD;
+    }
+
+    /**
+     * Sets the state with three variables, ensuring that the result has states A and B
+     * sufficiently separated from each other, while keeping states C and D as given.
+     * Note that this does not take a stateB parameter, and instead obtains it by jumping
+     * stateA ahead by about 11.4 quintillion steps using {@link #jump(long)}. If stateA is
+     * given as 0, this uses 0xD3833E804F4C574BL instead for stateA and 0x790B300BF9FE738FL
+     * for stateB. States C and D can each be any long.
+     * @param stateA the long value to use for stateA and also used to get stateB; can be any long except 0
+     * @param stateC the long value to use for stateC; this will be returned as-is if the next call is to {@link #nextLong()}
+     * @param stateD the long value to use for stateD; can be any long
+     */
+    @Override
+    public void setState (long stateA, long stateC, long stateD) {
+        this.stateA = (stateA == 0L) ? 0xD3833E804F4C574BL : stateA;
+        this.stateB = jump(this.stateA);
         this.stateC = stateC;
         this.stateD = stateD;
     }
