@@ -195,8 +195,8 @@ public class StrangerRandom extends Random implements EnhancedRandom {
         stateA = seed ^ 0xFA346CBFD5890825L;
         if(stateA == 0L) stateA = 0xD3833E804F4C574BL;
         stateB = jump(stateA);
-        stateC = jump(seed ^ 0x05CB93402A76F7DAL);
-        stateD = ~seed;
+        stateC = jump(stateB - seed);
+        stateD = jump(stateC + 0xC6BC279692B5C323L);
     }
 
     public long getStateA() {
@@ -255,8 +255,8 @@ public class StrangerRandom extends Random implements EnhancedRandom {
      * This is the same as calling {@link #setStateA(long)}, {@link #setStateB(long)},
      * {@link #setStateC(long)}, and {@link #setStateD(long)} as a group. You may want
      * to call {@link #nextLong()} a few times after setting the states like this, unless
-     * the value for stateD (in particular) is already adequately random; the first call
-     * to {@link #nextLong()}, if it is made immediately after calling this, will return {@code stateD} as-is.
+     * the value for stateC (in particular) is already adequately random; the first call
+     * to {@link #nextLong()}, if it is made immediately after calling this, will return {@code stateC} as-is.
      * @param stateA the first state; can be any long; can be any long except 0
      * @param stateB the second state; can be any long; can be any long except 0
      * @param stateC the third state; this will be returned as-is if the next call is to {@link #nextLong()}
