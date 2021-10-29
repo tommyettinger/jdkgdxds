@@ -35,7 +35,14 @@ import java.util.Random;
  * two of the other states and combine them; C rotates state B and subtracts state D, while D simply XORs states B and C.
  * This returns the state D that the previous step generated. This performs better than TricycleRandom simply because each
  * of the states can be updated in parallel (using ILP) and all of the updates depend on either one or two states, instead
- * of one, two, or three with TricycleRandom. It implements all optional methods in EnhancedRandom except
+ * of one, two, or three with TricycleRandom.
+ * <br>
+ * It is strongly recommended that you seed this with {@link #setSeed(long)} instead of
+ * {@link #setState(long, long, long, long)}, because if you give sequential seeds to both setSeed() and setState(), the
+ * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
+ * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
+ * <br>
+ * This implements all optional methods in EnhancedRandom except
  * {@link #skip(long)}; it does implement {@link #previousLong()} without using skip().
  */
 public class FourWheelRandom extends Random implements EnhancedRandom {

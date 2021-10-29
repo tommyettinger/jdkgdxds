@@ -42,6 +42,12 @@ import java.util.Random;
  * not easy. This generator is meant in particular to optimize well for GPU computations, even though Java doesn't have much
  * ability to do this currently. Some uncommon platforms may also optimize this better than FourWheelRandom.
  * <br>
+ * It is strongly recommended that you seed this with {@link #setSeed(long)} instead of
+ * {@link #setState(long, long, long, long)}, because if you give sequential seeds to both setSeed() and setState(), the
+ * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
+ * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
+ * The setSeed() method isn't as fast here as it is in some other generators.
+ * <br>
  * It implements all optional methods in EnhancedRandom except {@link #skip(long)} and {@link #previousLong()}.
  */
 public class StrangerRandom extends Random implements EnhancedRandom {

@@ -53,7 +53,11 @@ import java.util.Random;
  * output, if you appended all 2 to the 63 possible LaserRandom streams in full, the gargantuan result would
  * include all longs equally often. So, if the stream is selected effectively at random, then the subset of
  * that stream that actually gets used should be fair (and it's very unlikely that any usage will need a full
- * stream of over 18 quintillion pseudo-random longs).
+ * stream of over 18 quintillion pseudo-random longs). It is strongly recommended that you use very different
+ * numbers when creating many LaserRandom objects with similar states, because there is a noticeable
+ * correlation between, for instance, a grid of LaserRandom objects initialized with stateA drawn from the
+ * odd numbers 1 through 101, and stateB drawn from another odd number 1 through 101. Using
+ * {@link #setSeed(long)} essentially eliminates this risk, so it's a good idea to seed this with one long.
  * <br>
  * If statistical quality is a concern, don't use {@link Random}, since the aforementioned
  * analysis finds statistical failures in about a minute when checking about 16GB of output; this class can
@@ -68,7 +72,10 @@ import java.util.Random;
  * implemented in C and compiled with GCC or Clang, typically). There are also some concerns about specific
  * failure cases when the output of xoroshiro128** or xoshiro256** is multiplied by any of quadrillions of
  * constants and tested after that multiplication (see M.E. O'Neill's dissection of xoshiro256**
- * <a href="https://www.pcg-random.org/posts/a-quick-look-at-xoshiro256.html">here</a>).
+ * <a href="https://www.pcg-random.org/posts/a-quick-look-at-xoshiro256.html">here</a>). Xoshiro256**, like
+ * LaserRandom, can't be reliably initialized using nearby values for its state variables, and does much
+ * better if you use its {@link Xoshiro256StarStarRandom#setSeed(long)} method. We do implement Xoshiro256**
+ * here, because it provides 4-dimensional equidistribution, and that is hard to find.
  * <br>
  * You can copy this class independently of the library it's part of; it's meant as a general replacement for
  * Random and also RandomXS128. LaserRandom is generally faster than RandomXS128, and can be over 3x faster
@@ -83,8 +90,11 @@ import java.util.Random;
  * <br>
  * You may want to compare this class with TricycleRandom and FourWheelRandom in the same package; both of
  * those have a larger state size (and should usually have a larger period), are usually faster, and also
- * implement all of EnhancedRandom (except for {@link #skip(long)}), but they don't randomize the first
- * result they return, so if the seeding has a pattern, then the start of their sequences will have patterns.
+ * implement all of EnhancedRandom (except for {@link #skip(long)}), but they do even less randomizing for
+ * the first result they return, so if the seeding has a pattern, then the start of their sequences will
+ * have patterns. These patterns are less obvious but do persist in LaserRandom, and don't persist in
+ * TricycleRandom or FourWheelRandom over a long run. All generators here do well when using
+ * {@link #setSeed(long)} to set the full state.
  * <br>
  * Pew pew! Lasers!
  *

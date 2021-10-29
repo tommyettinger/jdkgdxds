@@ -3,6 +3,8 @@
 - Added FourWheelRandom as yet another choice of EnhancedRandom; this is the fastest so far on Java 16 with HotSpot, and has four `long`s of state.
 - Many convenience methods and important constructors in the deque classes, such as `with()` and copy constructors.
 - EnhancedRandom now optionally provides a `previousLong()` method, which steps the generator backwards; all generators here implement it.
+- There is now an equate() method that can be overridden in all maps and sets, to change how equality is compared. This replaces the usage of locateKey() for the same task.
+- This release does not use Fibonacci hashing for any keys, though comments show how to implement it.
 
 [0.1.3]
 - [BREAKING CHANGE] TricycleRandom needed its algorithm changed to improve its quality for some problem seeds; performance is pretty much unaffected.

@@ -9,6 +9,10 @@ for writing the original libGDX data structures, and
 adding various API improvements to the data structures
 used here when they were part of libGDX. Nathan wrote a
 lot of the API structure and has been very influential.
+Nathan should be a contributor here, but I don't have a
+CLA to sign, and after he made me sign the CLA for
+libGDX, I don't feel like putting him through the same
+hassle. Do unto others, etc.
 
 Thanks to pyb1993, https://github.com/pyb1993 , for
 coming up with the idea and most of the implementation
@@ -16,7 +20,27 @@ for several useful optimizations applied in version 0.2.0.
 
 Thanks to Jon Renner, https://github.com/jrenner , for
 the Select and QuickSelect code, as added to libGDX.
-Jon would be a contributor but I don't have a CLA to sign.
+Jon would be a contributor but I don't have a CLA to sign,
+nor an inclination to ask him to go through that hassle.
 
 Thanks to Sebastiano Vigna, https://github.com/vigna , for
 fastutil with its useful sorts and primitive comparators.
+Most of the com.github.tommyettinger.ds.support.sort
+package is from fastutil.
+
+Thanks again to Sebastiano Vigna and David Blackman, who
+designed the Xoshiro256** generator, present here with
+only the changes necessary for the Java port from their
+CC0-licensed C code: https://prng.di.unimi.it/xoshiro256starstar.c
+
+Thanks to CERN, for not destroying the Earth in a black
+hole, and also for providing the sort code used by
+ObjectComparators.
+
+Thanks to Guy Steele and the rest of the team behind Java
+8's SplittableRandom class, which is very similar in
+structure and design to DistinctRandom here. Also some
+thanks to Guy Steele in particular for providing only
+"slow generators" in Java 17, leaving room for third
+parties to provide "fast generators." We don't implement
+Java 17 random number generator interfaces for a reason.

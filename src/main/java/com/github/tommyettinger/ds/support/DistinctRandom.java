@@ -45,6 +45,15 @@ import java.util.Random;
  * you can use {@link TricycleRandom} or {@link FourWheelRandom} (FourWheelRandom is preferred if you only target Java
  * 16). Those generators also should have a longer period than DistinctRandom except in infinitesimally-rare cases. No
  * other generators in jdkgdxds have the "distinct" quality this generator has.
+ * <br>
+ * Unlike the multiple-state generators here, DistinctRandom tolerates being given sequential seeds and/or states, and
+ * in fact doesn't randomize the seed when given one with {@link #setSeed(long)}. This is the only generator here that
+ * performs two multiplications on its output (other than {@link Xoshiro256StarStarRandom}, which doesn't do much good
+ * by multiplying by 5 and 9); having multiple large multiplications tends to mix bits very thoroughly as long as there
+ * are some xorshifts or rotations between the multiplications.
+ * <br>
+ * This implements all methods from {@link EnhancedRandom}, including the optional {@link #skip(long)} and
+ * {@link #previousLong()} methods.
  */
 public class DistinctRandom extends Random implements EnhancedRandom {
 

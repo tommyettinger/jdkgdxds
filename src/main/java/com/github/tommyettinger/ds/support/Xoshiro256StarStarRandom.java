@@ -25,7 +25,9 @@ import java.util.Random;
  * It can be considered stable, like the other EnhancedRandom implementations here. This passes heavy testing, but isn't a
  * cryptographic generator, and it does have known issues when its output is multiplied by certain specific constants (any
  * of a lot) and tests are then run. The only invalid state is the one with 0 in each state variable, and this won't ever
- * occur in the normal period of that contains all other states.
+ * occur in the normal period of that contains all other states. You should generally seed this with {@link #setSeed(long)},
+ * rather than {@link #setState(long, long, long, long)}, because if you give similar states to the latter, it tends to
+ * produce severely flawed output on at least the low-order bits. This can't happen with setSeed().
  * <br>
  * The main reasons you could prefer this generator to the typically-faster {@link FourWheelRandom} are:
  * <ul>

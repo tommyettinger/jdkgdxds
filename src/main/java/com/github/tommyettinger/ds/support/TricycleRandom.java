@@ -44,19 +44,13 @@ import java.util.Random;
  * TricycleRandom passes 64TB of testing with PractRand, which uses a suite of tests to look for a variety of potential
  * problems. It has also passed a whopping 4 petabytes of testing with hwd, can test a much larger amount of data but
  * only runs a single test. The test hwd uses looks for long-range bit-dependencies, where one bit's state earlier in
- * the generated numbers determines the state of a future bit with a higher-than-reasonable likelihood. All three of
- * this generator, {@link LaserRandom} and {@link DistinctRandom} are considered stable.
+ * the generated numbers determines the state of a future bit with a higher-than-reasonable likelihood. All the
+ * generators here are considered stable.
  * <br>
- * This can be used as a substitute for {@link LaserRandom}, but it doesn't start out randomizing its early results very
- * well, unlike LaserRandom. If you initialize this with {@link #setSeed(long)}, then the results should be random from
- * the start, and unrelated to the original seed. It can also be more of a challenge to handle 3 states than 2 in some
- * situations, or 1 state for DistinctRandom. You might prefer LaserRandom's many different streams, which shouldn't
- * overlap and have a guaranteed period of 2 to the 64, to TricycleRandom's big unknown sub-cycles. LaserRandom and
- * DistinctRandom can also {@link LaserRandom#skip(long)} while this cannot. Another alternative is
- * {@link FourWheelRandom}, which is similar to this class but has a larger state and tends to be faster on Java 16 with
- * HotSpot, though slightly slower on Java 8 with HotSpot. If you don't want to use TricycleRandom because it has too
- * many states or doesn't randomize its starting value enough, FourWheelRandom won't solve those either, and you should
- * turn to DistinctRandom or LaserRandom.
+ * It is strongly recommended that you seed this with {@link #setSeed(long)} instead of
+ * {@link #setState(long, long, long, long)}, because if you give sequential seeds to both setSeed() and setState(), the
+ * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
+ * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
  */
 public class TricycleRandom extends Random implements EnhancedRandom {
 
