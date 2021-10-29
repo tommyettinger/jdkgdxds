@@ -1,4 +1,12 @@
-[0.1.4]
+[0.2.1]
+- [BREAKING CHANGE] EnhancedRandom.nextInt(int, int) and nextSignedInt(int, int) were sometimes broken with two very-distant arguments, but now behave correctly. This changes the output of two-argument calls only.
+- The nice, human-readable natural sort is available as an option in NaturalTextComparator.
+- Int and long hashing is back to using Fibonacci hashing, because not having it showed severe performance loss on some key sets.
+- New StrangerRandom number generator doesn't use multiplication and is fairly fast/very-high-quality.
+- Added the Xoshiro256** random number generator, which is present in Java 17 but unavailable to non-desktop platforms without this or similar code.
+- Base provides configurable numeral base systems, such as hexadecimal and base-64, along with the option to scramble the base for light obfuscation.
+
+[0.2.0]
 - Fixed how `ObjectArray.sort()` works on Android across all versions. This was a potentially serious problem because of flaws in the Android library design.
 - Added FourWheelRandom as yet another choice of EnhancedRandom; this is the fastest so far on Java 16 with HotSpot, and has four `long`s of state.
 - Many convenience methods and important constructors in the deque classes, such as `with()` and copy constructors.
