@@ -155,7 +155,7 @@ public class Base {
             char to = toEncoded[i];
             fromEncoded[to & 127] = i;
             if (caseInsensitive)
-                fromEncoded[Character.toUpperCase(to) & 127] = i;
+                fromEncoded[Character.toLowerCase(to) & 127] = i;
         }
         double logBase = 1.0 / Math.log(base);
         length1Byte = (int) Math.ceil(Math.log(0x1p8) * logBase);

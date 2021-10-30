@@ -122,6 +122,13 @@ public class BaseTest {
 			Assert.assertArrayEquals(b.longSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
 			Assert.assertArrayEquals(b.longSplit2D(b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
 			Assert.assertArrayEquals(b.longSplit2D(" " + b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
+
+			if(b.base > 10 && b.base <= 36)
+			{
+				Assert.assertEquals(Long.parseLong("aaa", b.base), b.readLong("aaa"));
+				Assert.assertEquals(Long.parseLong("AAA", b.base), b.readLong("AAA"));
+				Assert.assertEquals(Long.parseLong("Aaa", b.base), b.readLong("Aaa"));
+			}
 		}
 	}
 
