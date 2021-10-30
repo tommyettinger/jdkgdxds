@@ -85,10 +85,10 @@ classes use, or some form of fuzzy equality for float or double keys.
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.1'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.2'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.2.1:sources'` to its dependencies, and in its
+`implementation 'com.github.tommyettinger:jdkgdxds:0.2.2:sources'` to its dependencies, and in its
 `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />
@@ -96,15 +96,15 @@ cases; if it can't be found, you may need the repository `mavenCentral()` . If y
 in with the other `inherits` lines.
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/9e13d2150e).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/8de0c52050).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:9e13d2150e'` or `api 'com.github.tommyettinger:jdkgdxds:9e13d2150e'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:8de0c52050'` or `api 'com.github.tommyettinger:jdkgdxds:8de0c52050'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
-project). If you have an HTML module, add `implementation 'com.github.tommyettinger:jdkgdxds:9e13d2150e:sources'` to its
+project). If you have an HTML module, add `implementation 'com.github.tommyettinger:jdkgdxds:8de0c52050:sources'` to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. `9e13d2150e` is an example of a recent commit, and can be
+in with the other `inherits` lines. `8de0c52050` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.

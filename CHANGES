@@ -1,3 +1,6 @@
+[0.2.2]
+- The recently-added Base class wasn't case-insensitive when it was supposed to be, and now it is correct.
+
 [0.2.1]
 - [BREAKING CHANGE] EnhancedRandom.nextInt(int, int) and nextSignedInt(int, int) were sometimes broken with two very-distant arguments, but now behave correctly. This changes the output of two-argument calls only.
 - The nice, human-readable natural sort is available as an option in NaturalTextComparator.
