@@ -127,6 +127,8 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
 		defaultValue = map.defaultValue;
+		zeroValue = map.zeroValue;
+		hasZeroValue = map.hasZeroValue;
 	}
 
 	/**

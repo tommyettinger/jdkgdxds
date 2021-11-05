@@ -123,6 +123,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 
 	/**
 	 * Creates a new map identical to the specified map.
+	 * This performs a shallow copy, so any references to values (as well as the default value) are shared with the old map.
 	 * @param map the map to copy
 	 */
 	public LongObjectMap (LongObjectMap<? extends V> map) {
@@ -130,6 +131,9 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
+		defaultValue = map.defaultValue;
+		zeroValue = map.zeroValue;
+		hasZeroValue = map.hasZeroValue;
 	}
 
 	/**
