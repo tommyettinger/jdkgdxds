@@ -579,7 +579,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		if (!(obj instanceof IntObjectMap)) { return false; }
 		IntObjectMap other = (IntObjectMap)obj;
 		if (other.size != size) { return false; }
-		if (other.hasZeroValue != hasZeroValue || other.zeroValue != zeroValue) { return false; }
+		if (other.hasZeroValue != hasZeroValue || !Objects.equals(other.zeroValue, zeroValue)) { return false; }
 		int[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {

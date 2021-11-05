@@ -585,7 +585,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		if (!(obj instanceof LongObjectMap)) { return false; }
 		LongObjectMap other = (LongObjectMap)obj;
 		if (other.size != size) { return false; }
-		if (other.hasZeroValue != hasZeroValue || other.zeroValue != zeroValue) { return false; }
+		if (other.hasZeroValue != hasZeroValue || !Objects.equals(other.zeroValue, zeroValue)) { return false; }
 		long[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
