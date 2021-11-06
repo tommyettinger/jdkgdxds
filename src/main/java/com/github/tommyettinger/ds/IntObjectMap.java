@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.IntFunction;
 
+import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
@@ -586,7 +587,11 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			int key = keyTable[i];
 			if (key != 0) {
 				V value = valueTable[i];
-				if (!Objects.equals(value, other.get(key))) { return false; }
+				if (value == null) {
+					if (other.getOrDefault(key, neverIdentical) != null) { return false; }
+				} else {
+					if (!value.equals(other.get(key))) { return false; }
+				}
 			}
 		}
 		return true;
