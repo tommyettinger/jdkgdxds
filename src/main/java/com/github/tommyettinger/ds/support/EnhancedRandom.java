@@ -309,7 +309,7 @@ public interface EnhancedRandom {
 	 * {@link #nextInt(int)} or {@link #nextSignedInt(int)},
 	 * because this handles even ranges that go from large negative numbers to large
 	 * positive numbers, and since that would be larger than the largest possible int,
-	 * this has to use {@link #nextLong(long)}.
+	 * this has to use {@link #nextLong(long, long)}.
 	 *
 	 * <br> For any case where outerBound might be valid but less than innerBound, you
 	 * can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
@@ -321,7 +321,7 @@ public interface EnhancedRandom {
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
 	default int nextInt (int innerBound, int outerBound) {
-		return (int)(innerBound + nextLong(outerBound - innerBound & 0xFFFFFFFFL));
+		return (int)nextLong(innerBound, outerBound);
 	}
 
 	/**
@@ -333,7 +333,7 @@ public interface EnhancedRandom {
 	 * {@link #nextInt(int)} or {@link #nextSignedInt(int)}. This last part is
 	 * because this handles even ranges that go from large negative numbers to large
 	 * positive numbers, and since that range is larger than the largest possible int,
-	 * this has to use {@link #nextSignedLong(long)}.
+	 * this has to use {@link #nextSignedLong(long, long)}.
 	 *
 	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
@@ -341,7 +341,7 @@ public interface EnhancedRandom {
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
 	default int nextSignedInt (int innerBound, int outerBound) {
-		return (int)(innerBound + nextSignedLong(outerBound - innerBound & 0xFFFFFFFFL));
+		return (int)nextSignedLong(innerBound, outerBound);
 	}
 
 	/**
