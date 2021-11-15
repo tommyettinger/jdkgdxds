@@ -364,7 +364,9 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * Returns a pseudorandom, uniformly distributed {@code int} value between the
 	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
 	 * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
-	 * this always returns {@code innerBound}.
+	 * this always returns {@code innerBound}. Internally, this calls
+	 * {@link #nextLong(long, long)} and casts it to int (because the range between
+	 * innerBound and outerBound can be greater than the largest int).
 	 *
 	 * <br> For any case where outerBound might be valid but less than innerBound, you
 	 * can use {@link #nextSignedInt(int, int)}.
@@ -375,7 +377,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
 	public int nextInt (int innerBound, int outerBound) {
-		return innerBound + nextInt(outerBound - innerBound);
+		return (int)nextLong(innerBound, outerBound);
 	}
 
 	/**
@@ -383,7 +385,9 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
 	 * (exclusive). This is meant for cases where either bound may be negative,
 	 * especially if the bounds are unknown or may be user-specified. It is slightly
-	 * slower than {@link #nextInt(int, int)}.
+	 * slower than {@link #nextInt(int, int)}. Internally, this calls
+	 * {@link #nextSignedLong(long, long)} and casts it to int (because the range
+	 * between innerBound and outerBound can be greater than the largest int).
 	 *
 	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
@@ -391,7 +395,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
 	 */
 	public int nextSignedInt (int innerBound, int outerBound) {
-		return innerBound + nextSignedInt(outerBound - innerBound);
+		return (int)nextSignedLong(innerBound, outerBound);
 	}
 
 	/**
