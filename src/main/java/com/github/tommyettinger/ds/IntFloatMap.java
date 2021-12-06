@@ -966,11 +966,6 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	}
 
 	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfInt {
-		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
-
-		int nextIndex, currentIndex;
-		boolean valid = true;
-
 		public KeyIterator (IntFloatMap map) {
 			super(map);
 		}
