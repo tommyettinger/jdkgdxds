@@ -968,8 +968,6 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfInt {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
-		public boolean hasNext;
-
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
@@ -995,6 +993,13 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			while (hasNext) { list.add(next()); }
 			return list;
 		}
+
+		@Override
+		public boolean hasNext () {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			return super.hasNext();
+		}
+
 	}
 
 	public static class ValueIterator extends MapIterator implements FloatIterator {
@@ -1021,7 +1026,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		@Override
 		public boolean hasNext () {
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			return hasNext;
+			return super.hasNext();
 		}
 	}
 
@@ -1044,12 +1049,11 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		public Entry next () {
 			if (!hasNext) { throw new NoSuchElementException(); }
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			int[] keyTable = map.keyTable;
 			if (nextIndex == INDEX_ZERO) {
 				entry.key = 0;
 				entry.value = map.zeroValue;
 			} else {
-				entry.key = keyTable[nextIndex];
+				entry.key = map.keyTable[nextIndex];
 				entry.value = map.valueTable[nextIndex];
 			}
 			currentIndex = nextIndex;
@@ -1060,7 +1064,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		@Override
 		public boolean hasNext () {
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			return hasNext;
+			return super.hasNext();
 		}
 	}
 
