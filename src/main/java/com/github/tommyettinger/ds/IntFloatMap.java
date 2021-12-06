@@ -962,7 +962,6 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			currentIndex = INDEX_ILLEGAL;
 			map.size--;
 		}
-
 	}
 
 	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfInt {
@@ -992,7 +991,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		@Override
 		public boolean hasNext () {
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			return super.hasNext();
+			return hasNext;
 		}
 
 	}
@@ -1059,7 +1058,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		@Override
 		public boolean hasNext () {
 			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			return super.hasNext();
+			return hasNext;
 		}
 	}
 

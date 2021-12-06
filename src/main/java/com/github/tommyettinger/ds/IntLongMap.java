@@ -908,12 +908,6 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	}
 
 	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfInt {
-		static private final int INDEX_ZERO = -1;
-
-		public boolean hasNext;
-
-		int nextIndex, currentIndex;
-		boolean valid = true;
 
 		public KeyIterator (IntLongMap map) {
 			super(map);
@@ -936,6 +930,12 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 			IntList list = new IntList(true, map.size);
 			while (hasNext) { list.add(next()); }
 			return list;
+		}
+
+		@Override
+		public boolean hasNext () {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			return hasNext;
 		}
 	}
 

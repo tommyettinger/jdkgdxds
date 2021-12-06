@@ -915,12 +915,6 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	public static class KeyIterator<V> extends MapIterator<V> implements PrimitiveIterator.OfInt {
-		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
-
-		public boolean hasNext;
-
-		int nextIndex, currentIndex;
-		boolean valid = true;
 
 		public KeyIterator (IntObjectMap<V> map) {
 			super(map);
@@ -943,6 +937,12 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			IntList list = new IntList(true, map.size);
 			while (hasNext) { list.add(next()); }
 			return list;
+		}
+
+		@Override
+		public boolean hasNext () {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			return hasNext;
 		}
 	}
 

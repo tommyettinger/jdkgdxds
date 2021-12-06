@@ -503,6 +503,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 		 */
 		@Override
 		public boolean hasNext () {
+			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
 			return hasNext;
 		}
 
