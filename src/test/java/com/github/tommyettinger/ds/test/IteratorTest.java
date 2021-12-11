@@ -1,5 +1,6 @@
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.BooleanList;
 import com.github.tommyettinger.ds.ByteList;
 import com.github.tommyettinger.ds.CharList;
 import com.github.tommyettinger.ds.DoubleList;
@@ -19,6 +20,7 @@ import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.ShortList;
+import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
 import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
@@ -34,6 +36,9 @@ public class IteratorTest {
 	public static final String[] strings = {
 		"alpha", "beta", "gamma", "delta", "epsilon", "zeta", "eta", "theta", "iota", "kappa", "lambda",
 		"mu", "nu", "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega"
+	};
+	public static final boolean[] booleans = {
+		true, false, false, false, true, false, true, true, false, true, true, false, true, true, false, true
 	};
 	public static final byte[] bytes = {
 		1, 0, -1, 2, -2, 3, -3, 11, 10, -11, 12, -12, 13, -13, 111, 110, -111, 112, -112, 113, -113
@@ -352,6 +357,18 @@ public class IteratorTest {
 		PrimitiveIterator.OfDouble it = data.iterator();
 		for (; it.hasNext();) {
 			double item = it.nextDouble();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+	
+	@Test
+	public void testBooleanListIterator() {
+		BooleanList data = BooleanList.with(booleans);
+		int counter = 0, size = data.size();
+		BooleanIterator it = data.iterator();
+		for (; it.hasNext();) {
+			boolean item = it.nextBoolean();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
