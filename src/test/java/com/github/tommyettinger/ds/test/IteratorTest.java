@@ -1,5 +1,11 @@
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.ByteList;
+import com.github.tommyettinger.ds.CharList;
+import com.github.tommyettinger.ds.DoubleList;
+import com.github.tommyettinger.ds.FloatList;
+import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.LongList;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
@@ -12,16 +18,31 @@ import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.ShortList;
+import com.github.tommyettinger.ds.support.util.ByteIterator;
+import com.github.tommyettinger.ds.support.util.CharIterator;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
+import com.github.tommyettinger.ds.support.util.ShortIterator;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.PrimitiveIterator;
 
 public class IteratorTest {
 	public static final String[] strings = {
 		"alpha", "beta", "gamma", "delta", "epsilon", "zeta", "eta", "theta", "iota", "kappa", "lambda",
 		"mu", "nu", "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega"
+	};
+	public static final byte[] bytes = {
+		1, 0, -1, 2, -2, 3, -3, 11, 10, -11, 12, -12, 13, -13, 111, 110, -111, 112, -112, 113, -113
+	};
+	public static final short[] shorts = {
+		'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
+	};
+	public static final char[] chars = {
+		'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
 	};
 	public static final int[] ints = {
 		'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
@@ -30,6 +51,9 @@ public class IteratorTest {
 		'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
 	};
 	public static final float[] floats = {
+		'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
+	};
+	public static final double[] doubles = {
 		'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
 	};
 
@@ -244,6 +268,90 @@ public class IteratorTest {
 		Iterator<ObjectFloatMap.Entry<String>> it = data.iterator();
 		for (; it.hasNext();) {
 			ObjectFloatMap.Entry<String> item = it.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testByteListIterator() {
+		ByteList data = ByteList.with(bytes);
+		int counter = 0, size = data.size();
+		ByteIterator it = data.iterator();
+		for (; it.hasNext();) {
+			byte item = it.nextByte();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testShortListIterator() {
+		ShortList data = ShortList.with(shorts);
+		int counter = 0, size = data.size();
+		ShortIterator it = data.iterator();
+		for (; it.hasNext();) {
+			short item = it.nextShort();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testCharListIterator() {
+		CharList data = CharList.with(chars);
+		int counter = 0, size = data.size();
+		CharIterator it = data.iterator();
+		for (; it.hasNext();) {
+			char item = it.nextChar();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testFloatListIterator() {
+		FloatList data = FloatList.with(floats);
+		int counter = 0, size = data.size();
+		FloatIterator it = data.iterator();
+		for (; it.hasNext();) {
+			float item = it.nextFloat();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testIntListIterator() {
+		IntList data = IntList.with(ints);
+		int counter = 0, size = data.size();
+		PrimitiveIterator.OfInt it = data.iterator();
+		for (; it.hasNext();) {
+			int item = it.nextInt();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testLongListIterator() {
+		LongList data = LongList.with(longs);
+		int counter = 0, size = data.size();
+		PrimitiveIterator.OfLong it = data.iterator();
+		for (; it.hasNext();) {
+			long item = it.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testDoubleListIterator() {
+		DoubleList data = DoubleList.with(doubles);
+		int counter = 0, size = data.size();
+		PrimitiveIterator.OfDouble it = data.iterator();
+		for (; it.hasNext();) {
+			double item = it.nextDouble();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
