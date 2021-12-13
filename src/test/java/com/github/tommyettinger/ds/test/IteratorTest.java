@@ -562,4 +562,52 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 	}
+
+	@Test
+	public void testIntSetIterator() {
+		IntSet data = IntSet.with(ints);
+		int counter = 0, size = data.size();
+		PrimitiveIterator.OfInt it = data.iterator();
+		while (it.hasNext()) {
+			int item = it.nextInt();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testIntOrderedSetIterator() {
+		IntOrderedSet data = IntOrderedSet.with(ints);
+		int counter = 0, size = data.size();
+		PrimitiveIterator.OfInt it = data.iterator();
+		while (it.hasNext()) {
+			int item = it.nextInt();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testLongSetIterator() {
+		LongSet data = LongSet.with(longs);
+		int counter = 0, size = data.size();
+		PrimitiveIterator.OfLong it = data.iterator();
+		while (it.hasNext()) {
+			long item = it.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testLongOrderedSetIterator() {
+		LongOrderedSet data = LongOrderedSet.with(longs);
+		int counter = 0, size = data.size();
+		PrimitiveIterator.OfLong it = data.iterator();
+		while (it.hasNext()) {
+			long item = it.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
 }
