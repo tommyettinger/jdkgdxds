@@ -370,6 +370,261 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 	}
+	@Test
+	public void testLongObjectMapIterator() {
+		LongObjectMap<String> data = new LongObjectMap<>(longs, strings);
+		int counter = 0, size = data.size();
+		for(LongObjectMap.Entry<String> item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<LongObjectMap.Entry<String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			LongObjectMap.Entry<String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			long item = ik.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> iv = data.values().iterator();
+		while (iv.hasNext()) {
+			String item = iv.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testLongObjectOrderedMapIterator() {
+		LongObjectOrderedMap<String> data = new LongObjectOrderedMap<>(longs, strings);
+		int counter = 0, size = data.size();
+		for(LongObjectMap.Entry<String> item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<LongObjectMap.Entry<String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			LongObjectMap.Entry<String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			long item = ik.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> iv = data.values().iterator();
+		while (iv.hasNext()) {
+			String item = iv.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testLongIntMapIterator() {
+		LongIntMap data = new LongIntMap(longs, ints);
+		int counter = 0, size = data.size();
+		for(LongIntMap.Entry item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<LongIntMap.Entry> ie = data.iterator();
+		while (ie.hasNext()) {
+			LongIntMap.Entry item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			long item = ik.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfInt iv = data.values().iterator();
+		while (iv.hasNext()) {
+			int item = iv.nextInt();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testLongIntOrderedMapIterator() {
+		LongIntOrderedMap data = new LongIntOrderedMap(longs, ints);
+		int counter = 0, size = data.size();
+		for(LongIntMap.Entry item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<LongIntMap.Entry> ie = data.iterator();
+		while (ie.hasNext()) {
+			LongIntMap.Entry item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			long item = ik.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfInt iv = data.values().iterator();
+		while (iv.hasNext()) {
+			int item = iv.nextInt();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testLongLongMapIterator() {
+		LongLongMap data = new LongLongMap(longs, longs);
+		int counter = 0, size = data.size();
+		for(LongLongMap.Entry item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<LongLongMap.Entry> ie = data.iterator();
+		while (ie.hasNext()) {
+			LongLongMap.Entry item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			long item = ik.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong iv = data.values().iterator();
+		while (iv.hasNext()) {
+			long item = iv.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testLongLongOrderedMapIterator() {
+		LongLongOrderedMap data = new LongLongOrderedMap(longs, longs);
+		int counter = 0, size = data.size();
+		for(LongLongMap.Entry item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<LongLongMap.Entry> ie = data.iterator();
+		while (ie.hasNext()) {
+			LongLongMap.Entry item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			long item = ik.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong iv = data.values().iterator();
+		while (iv.hasNext()) {
+			long item = iv.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testLongFloatMapIterator() {
+		LongFloatMap data = new LongFloatMap(longs, floats);
+		int counter = 0, size = data.size();
+		for(LongFloatMap.Entry item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<LongFloatMap.Entry> ie = data.iterator();
+		while (ie.hasNext()) {
+			LongFloatMap.Entry item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			long item = ik.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		FloatIterator iv = data.values().iterator();
+		while (iv.hasNext()) {
+			float item = iv.nextFloat();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testLongFloatOrderedMapIterator() {
+		LongFloatOrderedMap data = new LongFloatOrderedMap(longs, floats);
+		int counter = 0, size = data.size();
+		for(LongFloatMap.Entry item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<LongFloatMap.Entry> ie = data.iterator();
+		while (ie.hasNext()) {
+			LongFloatMap.Entry item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			long item = ik.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		FloatIterator iv = data.values().iterator();
+		while (iv.hasNext()) {
+			float item = iv.nextFloat();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
 
 	@Test
 	public void testByteListIterator() {
