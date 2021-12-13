@@ -125,9 +125,23 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		Iterator<Map.Entry<String, String>> it = data.iterator();
-		while (it.hasNext()) {
-			Map.Entry<String, String> item = it.next();
+		Iterator<Map.Entry<String, String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			Map.Entry<String, String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			String item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> iv = data.values().iterator();
+		while (iv.hasNext()) {
+			String item = iv.next();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
@@ -143,9 +157,23 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		Iterator<Map.Entry<String, String>> it = data.iterator();
-		while (it.hasNext()) {
-			Map.Entry<String, String> item = it.next();
+		Iterator<Map.Entry<String, String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			Map.Entry<String, String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			String item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> iv = data.values().iterator();
+		while (iv.hasNext()) {
+			String item = iv.next();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
@@ -161,9 +189,23 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		Iterator<ObjectIntMap.Entry<String>> it = data.iterator();
-		while (it.hasNext()) {
-			ObjectIntMap.Entry<String> item = it.next();
+		Iterator<ObjectIntMap.Entry<String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			ObjectIntMap.Entry<String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			String item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfInt iv = data.values().iterator();
+		while (iv.hasNext()) {
+			int item = iv.nextInt();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
@@ -179,9 +221,23 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		Iterator<ObjectIntMap.Entry<String>> it = data.iterator();
-		while (it.hasNext()) {
-			ObjectIntMap.Entry<String> item = it.next();
+		Iterator<ObjectIntMap.Entry<String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			ObjectIntMap.Entry<String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			String item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfInt iv = data.values().iterator();
+		while (iv.hasNext()) {
+			int item = iv.nextInt();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
@@ -197,9 +253,23 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		Iterator<ObjectLongMap.Entry<String>> it = data.iterator();
-		while (it.hasNext()) {
-			ObjectLongMap.Entry<String> item = it.next();
+		Iterator<ObjectLongMap.Entry<String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			ObjectLongMap.Entry<String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			String item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong iv = data.values().iterator();
+		while (iv.hasNext()) {
+			long item = iv.nextLong();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
@@ -215,9 +285,23 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		Iterator<ObjectLongMap.Entry<String>> it = data.iterator();
-		while (it.hasNext()) {
-			ObjectLongMap.Entry<String> item = it.next();
+		Iterator<ObjectLongMap.Entry<String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			ObjectLongMap.Entry<String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			String item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		PrimitiveIterator.OfLong iv = data.values().iterator();
+		while (iv.hasNext()) {
+			long item = iv.nextLong();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
@@ -233,9 +317,23 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		Iterator<ObjectFloatMap.Entry<String>> it = data.iterator();
-		while (it.hasNext()) {
-			ObjectFloatMap.Entry<String> item = it.next();
+		Iterator<ObjectFloatMap.Entry<String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			ObjectFloatMap.Entry<String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			String item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		FloatIterator iv = data.values().iterator();
+		while (iv.hasNext()) {
+			float item = iv.nextFloat();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
@@ -251,9 +349,23 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		Iterator<ObjectFloatMap.Entry<String>> it = data.iterator();
-		while (it.hasNext()) {
-			ObjectFloatMap.Entry<String> item = it.next();
+		Iterator<ObjectFloatMap.Entry<String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			ObjectFloatMap.Entry<String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			String item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		FloatIterator iv = data.values().iterator();
+		while (iv.hasNext()) {
+			float item = iv.nextFloat();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
