@@ -1,25 +1,6 @@
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.BooleanList;
-import com.github.tommyettinger.ds.ByteList;
-import com.github.tommyettinger.ds.CharList;
-import com.github.tommyettinger.ds.DoubleList;
-import com.github.tommyettinger.ds.FloatList;
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.LongList;
-import com.github.tommyettinger.ds.ObjectDeque;
-import com.github.tommyettinger.ds.ObjectFloatMap;
-import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
-import com.github.tommyettinger.ds.ObjectIntMap;
-import com.github.tommyettinger.ds.ObjectIntOrderedMap;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectLongMap;
-import com.github.tommyettinger.ds.ObjectLongOrderedMap;
-import com.github.tommyettinger.ds.ObjectObjectMap;
-import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
-import com.github.tommyettinger.ds.ObjectOrderedSet;
-import com.github.tommyettinger.ds.ObjectSet;
-import com.github.tommyettinger.ds.ShortList;
+import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
 import com.github.tommyettinger.ds.support.util.CharIterator;
@@ -73,7 +54,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<String> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			String item = it.next();
 			++counter;
 		}
@@ -91,7 +72,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<String> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			String item = it.next();
 			++counter;
 		}
@@ -109,7 +90,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<String> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			String item = it.next();
 			++counter;
 		}
@@ -127,7 +108,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<String> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			String item = it.next();
 			++counter;
 		}
@@ -145,7 +126,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<Map.Entry<String, String>> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			Map.Entry<String, String> item = it.next();
 			++counter;
 		}
@@ -163,7 +144,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<Map.Entry<String, String>> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			Map.Entry<String, String> item = it.next();
 			++counter;
 		}
@@ -181,7 +162,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<ObjectIntMap.Entry<String>> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			ObjectIntMap.Entry<String> item = it.next();
 			++counter;
 		}
@@ -199,7 +180,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<ObjectIntMap.Entry<String>> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			ObjectIntMap.Entry<String> item = it.next();
 			++counter;
 		}
@@ -217,7 +198,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<ObjectLongMap.Entry<String>> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			ObjectLongMap.Entry<String> item = it.next();
 			++counter;
 		}
@@ -235,7 +216,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<ObjectLongMap.Entry<String>> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			ObjectLongMap.Entry<String> item = it.next();
 			++counter;
 		}
@@ -253,7 +234,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<ObjectFloatMap.Entry<String>> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			ObjectFloatMap.Entry<String> item = it.next();
 			++counter;
 		}
@@ -271,7 +252,7 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 		counter = 0;
 		Iterator<ObjectFloatMap.Entry<String>> it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			ObjectFloatMap.Entry<String> item = it.next();
 			++counter;
 		}
@@ -283,7 +264,7 @@ public class IteratorTest {
 		ByteList data = ByteList.with(bytes);
 		int counter = 0, size = data.size();
 		ByteIterator it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			byte item = it.nextByte();
 			++counter;
 		}
@@ -295,7 +276,7 @@ public class IteratorTest {
 		ShortList data = ShortList.with(shorts);
 		int counter = 0, size = data.size();
 		ShortIterator it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			short item = it.nextShort();
 			++counter;
 		}
@@ -307,7 +288,7 @@ public class IteratorTest {
 		CharList data = CharList.with(chars);
 		int counter = 0, size = data.size();
 		CharIterator it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			char item = it.nextChar();
 			++counter;
 		}
@@ -319,7 +300,7 @@ public class IteratorTest {
 		FloatList data = FloatList.with(floats);
 		int counter = 0, size = data.size();
 		FloatIterator it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			float item = it.nextFloat();
 			++counter;
 		}
@@ -331,7 +312,7 @@ public class IteratorTest {
 		IntList data = IntList.with(ints);
 		int counter = 0, size = data.size();
 		PrimitiveIterator.OfInt it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			int item = it.nextInt();
 			++counter;
 		}
@@ -343,7 +324,7 @@ public class IteratorTest {
 		LongList data = LongList.with(longs);
 		int counter = 0, size = data.size();
 		PrimitiveIterator.OfLong it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			long item = it.nextLong();
 			++counter;
 		}
@@ -355,7 +336,7 @@ public class IteratorTest {
 		DoubleList data = DoubleList.with(doubles);
 		int counter = 0, size = data.size();
 		PrimitiveIterator.OfDouble it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
 			double item = it.nextDouble();
 			++counter;
 		}
@@ -367,7 +348,103 @@ public class IteratorTest {
 		BooleanList data = BooleanList.with(booleans);
 		int counter = 0, size = data.size();
 		BooleanIterator it = data.iterator();
-		for (; it.hasNext();) {
+		while (it.hasNext()) {
+			boolean item = it.nextBoolean();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testByteDequeIterator() {
+		ByteDeque data = ByteDeque.with(bytes);
+		int counter = 0, size = data.size();
+		ByteIterator it = data.iterator();
+		while (it.hasNext()) {
+			byte item = it.nextByte();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testShortDequeIterator() {
+		ShortDeque data = ShortDeque.with(shorts);
+		int counter = 0, size = data.size();
+		ShortIterator it = data.iterator();
+		while (it.hasNext()) {
+			short item = it.nextShort();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testCharDequeIterator() {
+		CharDeque data = CharDeque.with(chars);
+		int counter = 0, size = data.size();
+		CharIterator it = data.iterator();
+		while (it.hasNext()) {
+			char item = it.nextChar();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testFloatDequeIterator() {
+		FloatDeque data = FloatDeque.with(floats);
+		int counter = 0, size = data.size();
+		FloatIterator it = data.iterator();
+		while (it.hasNext()) {
+			float item = it.nextFloat();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testIntDequeIterator() {
+		IntDeque data = IntDeque.with(ints);
+		int counter = 0, size = data.size();
+		PrimitiveIterator.OfInt it = data.iterator();
+		while (it.hasNext()) {
+			int item = it.nextInt();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testLongDequeIterator() {
+		LongDeque data = LongDeque.with(longs);
+		int counter = 0, size = data.size();
+		PrimitiveIterator.OfLong it = data.iterator();
+		while (it.hasNext()) {
+			long item = it.nextLong();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testDoubleDequeIterator() {
+		DoubleDeque data = DoubleDeque.with(doubles);
+		int counter = 0, size = data.size();
+		PrimitiveIterator.OfDouble it = data.iterator();
+		while (it.hasNext()) {
+			double item = it.nextDouble();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+	
+	@Test
+	public void testBooleanDequeIterator() {
+		BooleanDeque data = BooleanDeque.with(booleans);
+		int counter = 0, size = data.size();
+		BooleanIterator it = data.iterator();
+		while (it.hasNext()) {
 			boolean item = it.nextBoolean();
 			++counter;
 		}
