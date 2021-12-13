@@ -1122,4 +1122,105 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 	}
+
+	@Test
+	public void testCaseInsensitiveSetIterator() {
+		CaseInsensitiveSet data = CaseInsensitiveSet.with(strings);
+		int counter = 0, size = data.size();
+		for(CharSequence item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<CharSequence> it = data.iterator();
+		while (it.hasNext()) {
+			CharSequence item = it.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testCaseInsensitiveOrderedSetIterator() {
+		CaseInsensitiveOrderedSet data = CaseInsensitiveOrderedSet.with(strings);
+		int counter = 0, size = data.size();
+		for(CharSequence item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<CharSequence> it = data.iterator();
+		while (it.hasNext()) {
+			CharSequence item = it.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testCaseInsensitiveMapIterator() {
+		CaseInsensitiveMap<String> data = new CaseInsensitiveMap<>(strings, strings);
+		int counter = 0, size = data.size();
+		for(Map.Entry<CharSequence, String> item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<Map.Entry<CharSequence, String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			Map.Entry<CharSequence, String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<CharSequence> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			CharSequence item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> iv = data.values().iterator();
+		while (iv.hasNext()) {
+			String item = iv.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testCaseInsensitiveOrderedMapIterator() {
+		CaseInsensitiveOrderedMap<String> data = new CaseInsensitiveOrderedMap<>(strings, strings);
+		int counter = 0, size = data.size();
+		for(Map.Entry<CharSequence, String> item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<Map.Entry<CharSequence, String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			Map.Entry<CharSequence, String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<CharSequence> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			CharSequence item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> iv = data.values().iterator();
+		while (iv.hasNext()) {
+			String item = iv.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
 }
