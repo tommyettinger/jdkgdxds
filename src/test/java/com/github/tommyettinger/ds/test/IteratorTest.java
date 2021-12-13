@@ -1223,4 +1223,123 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 	}
 
+	@Test
+	public void testNumberedSetIterator() {
+		NumberedSet<String> data = NumberedSet.with(strings);
+		int counter = 0, size = data.size();
+		for(String item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> it = data.iterator();
+		while (it.hasNext()) {
+			String item = it.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+
+	@Test
+	public void testHolderSetIterator() {
+		HolderSet<String, Integer> data = HolderSet.with(String::hashCode, strings);
+		int counter = 0, size = data.size();
+		for(String item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> it = data.iterator();
+		while (it.hasNext()) {
+			String item = it.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testHolderOrderedSetIterator() {
+		HolderOrderedSet<String, Integer> data = HolderOrderedSet.with(String::hashCode, strings);
+		int counter = 0, size = data.size();
+		for(String item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> it = data.iterator();
+		while (it.hasNext()) {
+			String item = it.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testIdentityObjectMapIterator() {
+		IdentityObjectMap<String, String> data = new IdentityObjectMap<>(strings, strings);
+		int counter = 0, size = data.size();
+		for(Map.Entry<String, String> item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<Map.Entry<String, String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			Map.Entry<String, String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			String item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> iv = data.values().iterator();
+		while (iv.hasNext()) {
+			String item = iv.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+	@Test
+	public void testIdentityObjectOrderedMapIterator() {
+		IdentityObjectMap<String, String> data = new IdentityObjectMap<>(strings, strings);
+		int counter = 0, size = data.size();
+		for(Map.Entry<String, String> item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<Map.Entry<String, String>> ie = data.iterator();
+		while (ie.hasNext()) {
+			Map.Entry<String, String> item = ie.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> ik = data.keySet().iterator();
+		while (ik.hasNext()) {
+			String item = ik.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		Iterator<String> iv = data.values().iterator();
+		while (iv.hasNext()) {
+			String item = iv.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+	}
+
 }
