@@ -1,6 +1,5 @@
 package com.github.tommyettinger.ds.test;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class CuckooTest {

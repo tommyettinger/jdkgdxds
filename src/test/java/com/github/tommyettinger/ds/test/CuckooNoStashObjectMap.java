@@ -33,7 +33,7 @@ import java.util.NoSuchElementException;
  * depending on hash collisions. Load factors greater than 0.91 greatly increase the chances the map will have to rehash to the
  * next higher POT size.
  * @author Nathan Sweet */
-public class CuckooObjectMap<K, V> {
+public class CuckooNoStashObjectMap<K, V> {
 	// primes for hash functions 2, 3, and 4
 	private static final int PRIME2 = 0xf48c5;// 0xbe1f14b1;
 	private static final int PRIME3 = 0x8aee1;//0xb4b82e39;
@@ -49,25 +49,23 @@ public class CuckooObjectMap<K, V> {
 
 	private float loadFactor;
 	private int hashShift, mask, threshold;
-	private int stashCapacity;
-	private int pushIterations;
 	private boolean isBigTable;
 
 	/** Creates a new map with an initial capacity of 32 and a load factor of {@link Utilities#getDefaultLoadFactor()}. This map will hold 25 items before growing the
 	 * backing table. */
-	public CuckooObjectMap () {
+	public CuckooNoStashObjectMap () {
 		this(32, Utilities.getDefaultLoadFactor());
 	}
 
 	/** Creates a new map with a load factor of {@link Utilities#getDefaultLoadFactor()}. This map will hold initialCapacity * {@link Utilities#getDefaultLoadFactor()} items before growing the backing
 	 * table. */
-	public CuckooObjectMap (int initialCapacity) {
+	public CuckooNoStashObjectMap (int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
 	/** Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity * loadFactor
 	 * items before growing the backing table. */
-	public CuckooObjectMap (int initialCapacity, float loadFactor) {
+	public CuckooNoStashObjectMap (int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) throw new IllegalArgumentException("initialCapacity must be >= 0: " + initialCapacity);
 		if (initialCapacity > 1 << 30) throw new IllegalArgumentException("initialCapacity is too large: " + initialCapacity);
 		capacity = nextPowerOfTwo(initialCapacity);
@@ -81,17 +79,14 @@ public class CuckooObjectMap<K, V> {
 		threshold = (int)(capacity * loadFactor);
 		mask = capacity - 1;
 		hashShift = 31 - Integer.numberOfTrailingZeros(capacity);
-		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(capacity)) * 2);
-		pushIterations = Math.max(Math.min(capacity, 8), (int)Math.sqrt(capacity) / 8);
 
-		keyTable = (K[])new Object[capacity + stashCapacity];
+		keyTable = (K[])new Object[capacity];
 		valueTable = (V[])new Object[keyTable.length];
 	}
 
 	/** Creates a new map identical to the specified map. */
-	public CuckooObjectMap (CuckooObjectMap<? extends K, ? extends V> map) {
+	public CuckooNoStashObjectMap (CuckooNoStashObjectMap<? extends K, ? extends V> map) {
 		this(map.capacity, map.loadFactor);
-		stashSize = map.stashSize;
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
@@ -147,15 +142,6 @@ public class CuckooObjectMap<K, V> {
 			}
 		}
 
-		// Update key in the stash.
-		for (int i = capacity, n = i + stashSize; i < n; i++) {
-			if (key.equals(keyTable[i])) {
-				V oldValue = valueTable[i];
-				valueTable[i] = value;
-				return oldValue;
-			}
-		}
-
 		// Check for empty buckets.
 		if (key1 == null) {
 			keyTable[index1] = key;
@@ -189,7 +175,7 @@ public class CuckooObjectMap<K, V> {
 		return null;
 	}
 
-	public void putAll (CuckooObjectMap<K, V> map) {
+	public void putAll (CuckooNoStashObjectMap<K, V> map) {
 		ensureCapacity(map.size);
 		for (Entry<K, V> entry : map.entries())
 			put(entry.key, entry.value);
@@ -253,7 +239,6 @@ public class CuckooObjectMap<K, V> {
 		// Push keys until an empty bucket is found.
 		K evictedKey;
 		V evictedValue;
-		int i = 0, pushIterations = this.pushIterations;
 		int n = isBigTable ? 4 : 3;
 		do {
 			random = random * 0x4F1BB ^ 0x7F4A7C15;
@@ -325,116 +310,39 @@ public class CuckooObjectMap<K, V> {
 				}
 			}
 
-			if (++i == pushIterations) break;
-
 			insertKey = evictedKey;
 			insertValue = evictedValue;
 		} while (true);
-
-		putStash(evictedKey, evictedValue);
-	}
-
-	private void putStash (K key, V value) {
-		if (stashSize == stashCapacity) {
-			// Too many pushes occurred and the stash is full, increase the table size.
-			resize(capacity << 1);
-			put_internal(key, value);
-			return;
-		}
-		// Store key in the stash.
-		int index = capacity + stashSize;
-		keyTable[index] = key;
-		valueTable[index] = value;
-		stashSize++;
-		size++;
 	}
 
 	public V get (K key) {
 		int hashCode = key.hashCode();
 		int index = hashCode & mask;
-		if (!key.equals(keyTable[index])) {
-			index = hash2(hashCode);
-			if (!key.equals(keyTable[index])) {
-				index = hash3(hashCode);
-				if (!key.equals(keyTable[index])) {
-					if (isBigTable) {
-						index = hash4(hashCode);
-						if (!key.equals(keyTable[index])) return getStash(key);
-					} else {
-						return getStash(key);
-					}
-				}
-			}
+		K k = keyTable[index];
+		while (!key.equals(k)) {
+			index = hash2(++hashCode);
+			if((k = keyTable[index]) == null) return null;
 		}
 		return valueTable[index];
-	}
-
-	private V getStash (K key) {
-		K[] keyTable = this.keyTable;
-		for (int i = capacity, n = i + stashSize; i < n; i++)
-			if (key.equals(keyTable[i])) return valueTable[i];
-		return null;
 	}
 
 	/** Returns the value for the specified key, or the default value if the key is not in the map. */
 	public V get (K key, V defaultValue) {
 		int hashCode = key.hashCode();
 		int index = hashCode & mask;
-		if (!key.equals(keyTable[index])) {
-			index = hash2(hashCode);
-			if (!key.equals(keyTable[index])) {
-				index = hash3(hashCode);
-				if (!key.equals(keyTable[index])) {
-					if (isBigTable) {
-						index = hash4(hashCode);
-						if (!key.equals(keyTable[index])) return getStash(key, defaultValue);
-					} else {
-						return getStash(key, defaultValue);
-					}
-				}
-			}
+		K k = keyTable[index];
+		while (!key.equals(k)) {
+			index = hash2(++hashCode);
+			if((k = keyTable[index]) == null) return defaultValue;
 		}
 		return valueTable[index];
-	}
-
-	private V getStash (K key, V defaultValue) {
-		K[] keyTable = this.keyTable;
-		for (int i = capacity, n = i + stashSize; i < n; i++)
-			if (key.equals(keyTable[i])) return valueTable[i];
-		return defaultValue;
 	}
 
 	public V remove (K key) {
 		int hashCode = key.hashCode();
 		int index = hashCode & mask;
-		if (key.equals(keyTable[index])) {
-			keyTable[index] = null;
-			V oldValue = valueTable[index];
-			valueTable[index] = null;
-			size--;
-			return oldValue;
-		}
-
-		index = hash2(hashCode);
-		if (key.equals(keyTable[index])) {
-			keyTable[index] = null;
-			V oldValue = valueTable[index];
-			valueTable[index] = null;
-			size--;
-			return oldValue;
-		}
-
-		index = hash3(hashCode);
-		if (key.equals(keyTable[index])) {
-			keyTable[index] = null;
-			V oldValue = valueTable[index];
-			valueTable[index] = null;
-			size--;
-			return oldValue;
-		}
-
-		if (isBigTable) {
-			index = hash4(hashCode);
+		K k = keyTable[index];
+		while (k != null) {
 			if (key.equals(keyTable[index])) {
 				keyTable[index] = null;
 				V oldValue = valueTable[index];
@@ -442,34 +350,11 @@ public class CuckooObjectMap<K, V> {
 				size--;
 				return oldValue;
 			}
+			index = hash2(++hashCode);
+			k = keyTable[index];
 		}
 
-		return removeStash(key);
-	}
-
-	V removeStash (K key) {
-		K[] keyTable = this.keyTable;
-		for (int i = capacity, n = i + stashSize; i < n; i++) {
-			if (key.equals(keyTable[i])) {
-				V oldValue = valueTable[i];
-				removeStashIndex(i);
-				size--;
-				return oldValue;
-			}
-		}
 		return null;
-	}
-
-	void removeStashIndex (int index) {
-		// If the removed location was not last, move the last tuple to the removed location.
-		stashSize--;
-		int lastIndex = capacity + stashSize;
-		if (index < lastIndex) {
-			keyTable[index] = keyTable[lastIndex];
-			valueTable[index] = valueTable[lastIndex];
-			valueTable[lastIndex] = null;
-		} else
-			valueTable[index] = null;
 	}
 
 	/** Reduces the size of the backing arrays to be the specified capacity or less. If the capacity is already less, nothing is
@@ -584,8 +469,6 @@ public class CuckooObjectMap<K, V> {
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
 		hashShift = 31 - Integer.numberOfTrailingZeros(newSize);
-		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(newSize)) * 2);
-		pushIterations = Math.max(Math.min(newSize, 8), (int)Math.sqrt(newSize) / 8);
 
 		// big table is when capacity >= 2^16
 		isBigTable = (capacity >>> 16) != 0;
@@ -593,8 +476,8 @@ public class CuckooObjectMap<K, V> {
 		K[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;
 
-		keyTable = (K[])new Object[newSize + stashCapacity];
-		valueTable = (V[])new Object[newSize + stashCapacity];
+		keyTable = (K[])new Object[newSize];
+		valueTable = (V[])new Object[newSize];
 
 		int oldSize = size;
 		size = 0;
@@ -676,10 +559,10 @@ public class CuckooObjectMap<K, V> {
 	static private class MapIterator<K, V> {
 		public boolean hasNext;
 
-		final CuckooObjectMap<K, V> map;
+		final CuckooNoStashObjectMap<K, V> map;
 		int nextIndex, currentIndex;
 
-		public MapIterator (CuckooObjectMap<K, V> map) {
+		public MapIterator (CuckooNoStashObjectMap<K, V> map) {
 			this.map = map;
 			reset();
 		}
@@ -704,7 +587,6 @@ public class CuckooObjectMap<K, V> {
 		public void remove () {
 			if (currentIndex < 0) throw new IllegalStateException("next must be called before remove.");
 			if (currentIndex >= map.capacity) {
-				map.removeStashIndex(currentIndex);
 				nextIndex = currentIndex - 1;
 				advance();
 			} else {
@@ -719,7 +601,7 @@ public class CuckooObjectMap<K, V> {
 	static public class Entries<K, V> extends MapIterator<K, V> implements Iterable<Entry<K, V>>, Iterator<Entry<K, V>> {
 		Entry<K, V> entry = new Entry<K, V>();
 
-		public Entries (CuckooObjectMap<K, V> map) {
+		public Entries (CuckooNoStashObjectMap<K, V> map) {
 			super(map);
 		}
 
@@ -744,8 +626,8 @@ public class CuckooObjectMap<K, V> {
 	}
 
 	static public class Values<V> extends MapIterator<Object, V> implements Iterable<V>, Iterator<V> {
-		public Values (CuckooObjectMap<?, V> map) {
-			super((CuckooObjectMap<Object, V>)map);
+		public Values (CuckooNoStashObjectMap<?, V> map) {
+			super((CuckooNoStashObjectMap<Object, V>)map);
 		}
 
 		public boolean hasNext () {
@@ -780,8 +662,8 @@ public class CuckooObjectMap<K, V> {
 	}
 
 	static public class Keys<K> extends MapIterator<K, Object> implements Iterable<K>, Iterator<K> {
-		public Keys (CuckooObjectMap<K, ?> map) {
-			super((CuckooObjectMap<K, Object>)map);
+		public Keys (CuckooNoStashObjectMap<K, ?> map) {
+			super((CuckooNoStashObjectMap<K, Object>)map);
 		}
 
 		public boolean hasNext () {
