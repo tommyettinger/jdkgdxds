@@ -36,7 +36,7 @@ import java.util.NoSuchElementException;
 public class CuckooObjectMap<K, V> {
 	// primes for hash functions 2, 3, and 4
 	private static final int PRIME2 = 0xf48c5;// 0xbe1f14b1;
-	private static final int PRIME3 = 0x8aee1;//0xb4b82e39;
+	private static final int PRIME3 = 0x8aee1;// 0xb4b82e39;
 	private static final int PRIME4 = 0xcb91d;// 0xced1c241;
 
 	static int random = 1;

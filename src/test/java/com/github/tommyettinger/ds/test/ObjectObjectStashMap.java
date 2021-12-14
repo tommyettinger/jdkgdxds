@@ -19,11 +19,18 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.Utilities;
 
+import javax.annotation.Nullable;
+import java.util.AbstractCollection;
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /** An unordered map. This implementation is a cuckoo hash map using 3 hashes (if table size is less than 2^16) or 4 hashes (if
  * table size is greater than or equal to 2^16), random walking, and a small stash for problematic keys Null keys are not allowed.
@@ -33,13 +40,13 @@ import java.util.NoSuchElementException;
  * depending on hash collisions. Load factors greater than 0.91 greatly increase the chances the map will have to rehash to the
  * next higher POT size.
  * @author Nathan Sweet */
-public class CuckooNoStashObjectMap<K, V> {
+public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	// primes for hash functions 2, 3, and 4
 	private static final int PRIME2 = 0xf48c5;// 0xbe1f14b1;
 	private static final int PRIME3 = 0x8aee1;// 0xb4b82e39;
 	private static final int PRIME4 = 0xcb91d;// 0xced1c241;
 
-	static int random = 1;
+	int random = 1;
 
 	public int size;
 
@@ -49,23 +56,25 @@ public class CuckooNoStashObjectMap<K, V> {
 
 	private float loadFactor;
 	private int hashShift, mask, threshold;
+	private int stashCapacity;
+	private int pushIterations;
 	private boolean isBigTable;
 
 	/** Creates a new map with an initial capacity of 32 and a load factor of {@link Utilities#getDefaultLoadFactor()}. This map will hold 25 items before growing the
 	 * backing table. */
-	public CuckooNoStashObjectMap () {
+	public ObjectObjectStashMap () {
 		this(32, Utilities.getDefaultLoadFactor());
 	}
 
 	/** Creates a new map with a load factor of {@link Utilities#getDefaultLoadFactor()}. This map will hold initialCapacity * {@link Utilities#getDefaultLoadFactor()} items before growing the backing
 	 * table. */
-	public CuckooNoStashObjectMap (int initialCapacity) {
+	public ObjectObjectStashMap (int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
 	/** Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity * loadFactor
 	 * items before growing the backing table. */
-	public CuckooNoStashObjectMap (int initialCapacity, float loadFactor) {
+	public ObjectObjectStashMap (int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) throw new IllegalArgumentException("initialCapacity must be >= 0: " + initialCapacity);
 		if (initialCapacity > 1 << 30) throw new IllegalArgumentException("initialCapacity is too large: " + initialCapacity);
 		capacity = nextPowerOfTwo(initialCapacity);
@@ -79,14 +88,17 @@ public class CuckooNoStashObjectMap<K, V> {
 		threshold = (int)(capacity * loadFactor);
 		mask = capacity - 1;
 		hashShift = 31 - Integer.numberOfTrailingZeros(capacity);
+		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(capacity)) * 2);
+		pushIterations = Math.max(Math.min(capacity, 8), (int)Math.sqrt(capacity) / 8);
 
-		keyTable = (K[])new Object[capacity];
+		keyTable = (K[])new Object[capacity + stashCapacity];
 		valueTable = (V[])new Object[keyTable.length];
 	}
 
 	/** Creates a new map identical to the specified map. */
-	public CuckooNoStashObjectMap (CuckooNoStashObjectMap<? extends K, ? extends V> map) {
+	public ObjectObjectStashMap (ObjectObjectStashMap<? extends K, ? extends V> map) {
 		this(map.capacity, map.loadFactor);
+		stashSize = map.stashSize;
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
@@ -105,7 +117,7 @@ public class CuckooNoStashObjectMap<K, V> {
 		boolean isBigTable = this.isBigTable;
 
 		// Check for existing keys.
-		int hashCode = key.hashCode();
+		int hashCode = key.hashCode() ^ stashSize;
 		int index1 = hashCode & mask;
 		K key1 = keyTable[index1];
 		if (key.equals(key1)) {
@@ -138,6 +150,15 @@ public class CuckooNoStashObjectMap<K, V> {
 			if (key.equals(key4)) {
 				V oldValue = valueTable[index4];
 				valueTable[index4] = value;
+				return oldValue;
+			}
+		}
+
+		// Update key in the stash.
+		for (int i = capacity, n = i + stashSize; i < n; i++) {
+			if (key.equals(keyTable[i])) {
+				V oldValue = valueTable[i];
+				valueTable[i] = value;
 				return oldValue;
 			}
 		}
@@ -175,16 +196,16 @@ public class CuckooNoStashObjectMap<K, V> {
 		return null;
 	}
 
-	public void putAll (CuckooNoStashObjectMap<K, V> map) {
+	public void putAll (ObjectObjectStashMap<K, V> map) {
 		ensureCapacity(map.size);
-		for (Entry<K, V> entry : map.entries())
-			put(entry.key, entry.value);
+		for (Map.Entry<K, V> entry : map.entrySet())
+			put(entry.getKey(), entry.getValue());
 	}
 
 	/** Skips checks for existing keys. */
 	private void putResize (K key, V value) {
 		// Check for empty buckets.
-		int hashCode = key.hashCode();
+		int hashCode = key.hashCode() ^ stashSize;
 		int index1 = hashCode & mask;
 		K key1 = keyTable[index1];
 		if (key1 == null) {
@@ -239,6 +260,7 @@ public class CuckooNoStashObjectMap<K, V> {
 		// Push keys until an empty bucket is found.
 		K evictedKey;
 		V evictedValue;
+		int i = 0, pushIterations = this.pushIterations;
 		int n = isBigTable ? 4 : 3;
 		do {
 			random = random * 0x4F1BB ^ 0x7F4A7C15;
@@ -271,7 +293,7 @@ public class CuckooNoStashObjectMap<K, V> {
 			}
 
 			// If the evicted key hashes to an empty bucket, put it there and stop.
-			int hashCode = evictedKey.hashCode();
+			int hashCode = evictedKey.hashCode() ^ stashSize;
 			index1 = hashCode & mask;
 			key1 = keyTable[index1];
 			if (key1 == null) {
@@ -310,39 +332,116 @@ public class CuckooNoStashObjectMap<K, V> {
 				}
 			}
 
+			if (++i == pushIterations) break;
+
 			insertKey = evictedKey;
 			insertValue = evictedValue;
 		} while (true);
+
+		putStash(evictedKey, evictedValue);
 	}
 
-	public V get (K key) {
-		int hashCode = key.hashCode();
+	private void putStash (K key, V value) {
+		if (stashSize == stashCapacity) {
+			// Too many pushes occurred and the stash is full, increase the table size.
+			resize(capacity << 1);
+			put_internal(key, value);
+			return;
+		}
+		// Store key in the stash.
+		int index = capacity + stashSize;
+		keyTable[index] = key;
+		valueTable[index] = value;
+		stashSize++;
+		size++;
+	}
+
+	public V get (Object key) {
+		int hashCode = key.hashCode() ^ stashSize;
 		int index = hashCode & mask;
-		K k = keyTable[index];
-		while (!key.equals(k)) {
-			index = hash2(++hashCode);
-			if((k = keyTable[index]) == null) return null;
+		if (!key.equals(keyTable[index])) {
+			index = hash2(hashCode);
+			if (!key.equals(keyTable[index])) {
+				index = hash3(hashCode);
+				if (!key.equals(keyTable[index])) {
+					if (isBigTable) {
+						index = hash4(hashCode);
+						if (!key.equals(keyTable[index])) return getStash(key);
+					} else {
+						return getStash(key);
+					}
+				}
+			}
 		}
 		return valueTable[index];
+	}
+
+	private V getStash (Object key) {
+		K[] keyTable = this.keyTable;
+		for (int i = capacity, n = i + stashSize; i < n; i++)
+			if (key.equals(keyTable[i])) return valueTable[i];
+		return null;
 	}
 
 	/** Returns the value for the specified key, or the default value if the key is not in the map. */
 	public V get (K key, V defaultValue) {
-		int hashCode = key.hashCode();
+		int hashCode = key.hashCode() ^ stashSize;
 		int index = hashCode & mask;
-		K k = keyTable[index];
-		while (!key.equals(k)) {
-			index = hash2(++hashCode);
-			if((k = keyTable[index]) == null) return defaultValue;
+		if (!key.equals(keyTable[index])) {
+			index = hash2(hashCode);
+			if (!key.equals(keyTable[index])) {
+				index = hash3(hashCode);
+				if (!key.equals(keyTable[index])) {
+					if (isBigTable) {
+						index = hash4(hashCode);
+						if (!key.equals(keyTable[index])) return getStash(key, defaultValue);
+					} else {
+						return getStash(key, defaultValue);
+					}
+				}
+			}
 		}
 		return valueTable[index];
 	}
 
-	public V remove (K key) {
-		int hashCode = key.hashCode();
+	private V getStash (K key, V defaultValue) {
+		K[] keyTable = this.keyTable;
+		for (int i = capacity, n = i + stashSize; i < n; i++)
+			if (key.equals(keyTable[i])) return valueTable[i];
+		return defaultValue;
+	}
+
+	public V remove (Object key) {
+		int hashCode = key.hashCode() ^ stashSize;
 		int index = hashCode & mask;
-		K k = keyTable[index];
-		while (k != null) {
+		if (key.equals(keyTable[index])) {
+			keyTable[index] = null;
+			V oldValue = valueTable[index];
+			valueTable[index] = null;
+			size--;
+			return oldValue;
+		}
+
+		index = hash2(hashCode);
+		if (key.equals(keyTable[index])) {
+			keyTable[index] = null;
+			V oldValue = valueTable[index];
+			valueTable[index] = null;
+			size--;
+			return oldValue;
+		}
+
+		index = hash3(hashCode);
+		if (key.equals(keyTable[index])) {
+			keyTable[index] = null;
+			V oldValue = valueTable[index];
+			valueTable[index] = null;
+			size--;
+			return oldValue;
+		}
+
+		if (isBigTable) {
+			index = hash4(hashCode);
 			if (key.equals(keyTable[index])) {
 				keyTable[index] = null;
 				V oldValue = valueTable[index];
@@ -350,11 +449,34 @@ public class CuckooNoStashObjectMap<K, V> {
 				size--;
 				return oldValue;
 			}
-			index = hash2(++hashCode);
-			k = keyTable[index];
 		}
 
+		return removeStash(key);
+	}
+
+	V removeStash (Object key) {
+		K[] keyTable = this.keyTable;
+		for (int i = capacity, n = i + stashSize; i < n; i++) {
+			if (key.equals(keyTable[i])) {
+				V oldValue = valueTable[i];
+				removeStashIndex(i);
+				size--;
+				return oldValue;
+			}
+		}
 		return null;
+	}
+
+	void removeStashIndex (int index) {
+		// If the removed location was not last, move the last tuple to the removed location.
+		stashSize--;
+		int lastIndex = capacity + stashSize;
+		if (index < lastIndex) {
+			keyTable[index] = keyTable[lastIndex];
+			valueTable[index] = valueTable[lastIndex];
+			valueTable[lastIndex] = null;
+		} else
+			valueTable[index] = null;
 	}
 
 	/** Reduces the size of the backing arrays to be the specified capacity or less. If the capacity is already less, nothing is
@@ -408,8 +530,8 @@ public class CuckooNoStashObjectMap<K, V> {
 		return false;
 	}
 
-	public boolean containsKey (K key) {
-		int hashCode = key.hashCode();
+	public boolean containsKey (Object key) {
+		int hashCode = key.hashCode() ^ stashSize;
 		int index = hashCode & mask;
 		if (!key.equals(keyTable[index])) {
 			index = hash2(hashCode);
@@ -428,7 +550,7 @@ public class CuckooNoStashObjectMap<K, V> {
 		return true;
 	}
 
-	private boolean containsKeyStash (K key) {
+	private boolean containsKeyStash (Object key) {
 		K[] keyTable = this.keyTable;
 		for (int i = capacity, n = i + stashSize; i < n; i++)
 			if (key.equals(keyTable[i])) return true;
@@ -469,6 +591,8 @@ public class CuckooNoStashObjectMap<K, V> {
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
 		hashShift = 31 - Integer.numberOfTrailingZeros(newSize);
+		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(newSize)) * 2);
+		pushIterations = Math.max(Math.min(newSize, 8), (int)Math.sqrt(newSize) / 8);
 
 		// big table is when capacity >= 2^16
 		isBigTable = (capacity >>> 16) != 0;
@@ -476,8 +600,8 @@ public class CuckooNoStashObjectMap<K, V> {
 		K[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;
 
-		keyTable = (K[])new Object[newSize];
-		valueTable = (V[])new Object[newSize];
+		keyTable = (K[])new Object[newSize + stashCapacity];
+		valueTable = (V[])new Object[newSize + stashCapacity];
 
 		int oldSize = size;
 		size = 0;
@@ -488,6 +612,29 @@ public class CuckooNoStashObjectMap<K, V> {
 				if (key != null) putResize(key, oldValueTable[i]);
 			}
 		}
+	}
+
+	@Override
+	public int size () {
+		return size;
+	}
+
+	@Override
+	public boolean isEmpty () {
+		return size == 0;
+	}
+
+	@Override
+	public boolean containsValue (Object value) {
+		return containsValue(value, false);
+	}
+
+	@Override
+	public void putAll (Map<? extends K, ? extends V> map) {
+		ensureCapacity(map.size());
+		for (Map.Entry<? extends K, ? extends V> entry : map.entrySet())
+			put(entry.getKey(), entry.getValue());
+
 	}
 
 	private int hash2 (int h) {
@@ -532,37 +679,255 @@ public class CuckooNoStashObjectMap<K, V> {
 		return buffer.toString();
 	}
 
+
 	/** Returns an iterator for the entries in the map. Remove is supported. */
-	public Entries<K, V> entries () {
-		return new Entries(this);
+	public Entries<K, V> entrySet () {
+		return new Entries<K, V>(this);
 	}
 
 	/** Returns an iterator for the values in the map. Remove is supported. */
-	public Values<V> values () {
-		return new Values(this);
+	public Values<K, V> values () {
+		return new Values<K, V>(this);
 	}
 
 	/** Returns an iterator for the keys in the map. Remove is supported. */
-	public Keys<K> keys () {
-		return new Keys(this);
+	public Keys<K, V> keySet () {
+		return new Keys<K, V>(this);
 	}
 
-	static public class Entry<K, V> {
-		public K key;
-		public V value;
+	public static class Entry<K, V> implements Map.Entry<K, V> {
+		@Nullable public K key;
+		@Nullable public V value;
 
+		@Override
+		@Nullable
 		public String toString () {
 			return key + "=" + value;
 		}
+
+		/**
+		 * Returns the key corresponding to this entry.
+		 *
+		 * @return the key corresponding to this entry
+		 * @throws IllegalStateException implementations may, but are not
+		 *                               required to, throw this exception if the entry has been
+		 *                               removed from the backing map.
+		 */
+		@Override
+		public K getKey () {
+			Objects.requireNonNull(key);
+			return key;
+		}
+
+		/**
+		 * Returns the value corresponding to this entry.  If the mapping
+		 * has been removed from the backing map (by the iterator's
+		 * {@code remove} operation), the results of this call are undefined.
+		 *
+		 * @return the value corresponding to this entry
+		 * @throws IllegalStateException implementations may, but are not
+		 *                               required to, throw this exception if the entry has been
+		 *                               removed from the backing map.
+		 */
+		@Override
+		@Nullable
+		public V getValue () {
+			return value;
+		}
+
+		/**
+		 * Replaces the value corresponding to this entry with the specified
+		 * value (optional operation).  (Writes through to the map.)  The
+		 * behavior of this call is undefined if the mapping has already been
+		 * removed from the map (by the iterator's {@code remove} operation).
+		 *
+		 * @param value new value to be stored in this entry
+		 * @return old value corresponding to the entry
+		 * @throws UnsupportedOperationException if the {@code put} operation
+		 *                                       is not supported by the backing map
+		 * @throws ClassCastException            if the class of the specified value
+		 *                                       prevents it from being stored in the backing map
+		 * @throws NullPointerException          if the backing map does not permit
+		 *                                       null values, and the specified value is null
+		 * @throws IllegalArgumentException      if some property of this value
+		 *                                       prevents it from being stored in the backing map
+		 * @throws IllegalStateException         implementations may, but are not
+		 *                                       required to, throw this exception if the entry has been
+		 *                                       removed from the backing map.
+		 */
+		@Override
+		@Nullable
+		public V setValue (V value) {
+			V old = this.value;
+			this.value = value;
+			return old;
+		}
+
+		@Override
+		public boolean equals (@Nullable Object o) {
+			if (this == o) { return true; }
+			if (o == null || getClass() != o.getClass()) { return false; }
+
+			ObjectObjectMap.Entry<?, ?> entry = (ObjectObjectMap.Entry<?, ?>)o;
+
+			if (!Objects.equals(key, entry.key)) { return false; }
+			return Objects.equals(value, entry.value);
+		}
+
+		@Override
+		public int hashCode () {
+			int result = key != null ? key.hashCode() : 0;
+			result = 31 * result + (value != null ? value.hashCode() : 0);
+			return result;
+		}
 	}
 
-	static private class MapIterator<K, V> {
+	public static class Entries<K, V> extends AbstractSet<Map.Entry<K, V>> {
+		protected Entry<K, V> entry = new Entry<>();
+		protected MapIterator<K, V, Map.Entry<K, V>> iter;
+
+		public Entries (ObjectObjectStashMap<K, V> map) {
+			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
+				@Override
+				public Iterator<Map.Entry<K, V>> iterator () {
+					return this;
+				}
+
+				/** Note the same entry instance is returned each time this method is called. */
+				@Override
+				public Map.Entry<K, V> next () {
+					if (!hasNext) { throw new NoSuchElementException(); }
+					K[] keyTable = map.keyTable;
+					entry.key = keyTable[nextIndex];
+					entry.value = map.valueTable[nextIndex];
+					currentIndex = nextIndex;
+					advance();
+					return entry;
+				}
+			};
+		}
+
+		@Override
+		public boolean contains (Object o) {
+			return iter.map.containsKey(o);
+		}
+
+		/**
+		 * Returns an iterator over the elements contained in this collection.
+		 *
+		 * @return an iterator over the elements contained in this collection
+		 */
+		@Override
+		public Iterator<Map.Entry<K, V>> iterator () {
+			return iter;
+		}
+
+		@Override
+		public int size () {
+			return iter.map.size;
+		}
+	}
+
+	public static class Values<K, V> extends AbstractCollection<V> {
+		protected MapIterator<K, V, V> iter;
+
+		public Values (ObjectObjectStashMap<K, V> map) {
+			iter = new MapIterator<K, V, V>(map) {
+				@Override
+				public Iterator<V> iterator () {
+					return this;
+				}
+
+				@Override
+				public V next () {
+					if (!hasNext) { throw new NoSuchElementException(); }
+					V value = map.valueTable[nextIndex];
+					currentIndex = nextIndex;
+					advance();
+					return value;
+				}
+			};
+
+		}
+
+		/**
+		 * Returns an iterator over the elements contained in this collection.
+		 *
+		 * @return an iterator over the elements contained in this collection
+		 */
+		@Override
+		public Iterator<V> iterator () {
+			return iter;
+		}
+
+		@Override
+		public int size () {
+			return iter.map.size;
+		}
+
+	}
+
+	public static class Keys<K, V> extends AbstractSet<K> {
+		protected MapIterator<K, V, K> iter;
+
+		public Keys (ObjectObjectStashMap<K, V> map) {
+			iter = new MapIterator<K, V, K>(map) {
+				@Override
+				public Iterator<K> iterator () {
+					return this;
+				}
+
+				@Override
+				public K next () {
+					if (!hasNext) { throw new NoSuchElementException(); }
+					K key = map.keyTable[nextIndex];
+					currentIndex = nextIndex;
+					advance();
+					return key;
+				}
+			};
+		}
+
+		@Override
+		public boolean contains (Object o) {
+			return iter.map.containsKey(o);
+		}
+
+		/**
+		 * Returns an iterator over the elements contained in this collection.
+		 *
+		 * @return an iterator over the elements contained in this collection
+		 */
+		@Override
+		public Iterator<K> iterator () {
+			return iter;
+		}
+
+		@Override
+		public int size () {
+			return iter.map.size;
+		}
+
+		@Override
+		public int hashCode () {
+			int h = 0;
+			iter.reset();
+			while (iter.hasNext()) {
+				K obj = iter.next();
+				if (obj != null)
+					h += obj.hashCode();
+			}
+			return h;
+		}
+	}
+
+	static protected abstract class MapIterator<K, V, I> implements Iterable<I>, Iterator<I> {
 		public boolean hasNext;
 
-		final CuckooNoStashObjectMap<K, V> map;
+		final ObjectObjectStashMap<K, V> map;
 		int nextIndex, currentIndex;
 
-		public MapIterator (CuckooNoStashObjectMap<K, V> map) {
+		public MapIterator (ObjectObjectStashMap<K, V> map) {
 			this.map = map;
 			reset();
 		}
@@ -584,9 +949,20 @@ public class CuckooNoStashObjectMap<K, V> {
 			}
 		}
 
+		@Override
+		public Iterator<I> iterator () {
+			return this;
+		}
+
+		@Override
+		public boolean hasNext () {
+			return hasNext;
+		}
+
 		public void remove () {
 			if (currentIndex < 0) throw new IllegalStateException("next must be called before remove.");
 			if (currentIndex >= map.capacity) {
+				map.removeStashIndex(currentIndex);
 				nextIndex = currentIndex - 1;
 				advance();
 			} else {
@@ -595,99 +971,6 @@ public class CuckooNoStashObjectMap<K, V> {
 			}
 			currentIndex = -1;
 			map.size--;
-		}
-	}
-
-	static public class Entries<K, V> extends MapIterator<K, V> implements Iterable<Entry<K, V>>, Iterator<Entry<K, V>> {
-		Entry<K, V> entry = new Entry<K, V>();
-
-		public Entries (CuckooNoStashObjectMap<K, V> map) {
-			super(map);
-		}
-
-		/** Note the same entry instance is returned each time this method is called. */
-		public Entry<K, V> next () {
-			if (!hasNext) throw new NoSuchElementException();
-			K[] keyTable = map.keyTable;
-			entry.key = keyTable[nextIndex];
-			entry.value = map.valueTable[nextIndex];
-			currentIndex = nextIndex;
-			advance();
-			return entry;
-		}
-
-		public boolean hasNext () {
-			return hasNext;
-		}
-
-		public Iterator<Entry<K, V>> iterator () {
-			return this;
-		}
-	}
-
-	static public class Values<V> extends MapIterator<Object, V> implements Iterable<V>, Iterator<V> {
-		public Values (CuckooNoStashObjectMap<?, V> map) {
-			super((CuckooNoStashObjectMap<Object, V>)map);
-		}
-
-		public boolean hasNext () {
-			return hasNext;
-		}
-
-		public V next () {
-			if (!hasNext) throw new NoSuchElementException();
-			V value = map.valueTable[nextIndex];
-			currentIndex = nextIndex;
-			advance();
-			return value;
-		}
-
-		public Iterator<V> iterator () {
-			return this;
-		}
-
-		/** Returns a new array containing the remaining values. */
-		public ArrayList<V> toArray () {
-			ArrayList array = new ArrayList(map.size);
-			while (hasNext)
-				array.add(next());
-			return array;
-		}
-
-		/** Adds the remaining values to the specified array. */
-		public void toArray (ArrayList<V> array) {
-			while (hasNext)
-				array.add(next());
-		}
-	}
-
-	static public class Keys<K> extends MapIterator<K, Object> implements Iterable<K>, Iterator<K> {
-		public Keys (CuckooNoStashObjectMap<K, ?> map) {
-			super((CuckooNoStashObjectMap<K, Object>)map);
-		}
-
-		public boolean hasNext () {
-			return hasNext;
-		}
-
-		public K next () {
-			if (!hasNext) throw new NoSuchElementException();
-			K key = map.keyTable[nextIndex];
-			currentIndex = nextIndex;
-			advance();
-			return key;
-		}
-
-		public Iterator<K> iterator () {
-			return this;
-		}
-
-		/** Returns a new array containing the remaining keys. */
-		public ArrayList<K> toArray () {
-			ArrayList array = new ArrayList(map.size);
-			while (hasNext)
-				array.add(next());
-			return array;
 		}
 	}
 
