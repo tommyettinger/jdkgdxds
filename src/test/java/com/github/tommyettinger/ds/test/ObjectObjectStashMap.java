@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -104,6 +105,12 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 		size = map.size;
 	}
 
+	/** Creates a new map identical to the specified map. */
+	public ObjectObjectStashMap (Map<? extends K, ? extends V> map) {
+		this(map.size());
+		putAll(map);
+	}
+
 	/** Returns the old value associated with the specified key, or null. */
 	public V put (K key, V value) {
 		if (key == null) throw new IllegalArgumentException("key cannot be null.");
@@ -117,7 +124,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 		boolean isBigTable = this.isBigTable;
 
 		// Check for existing keys.
-		int hashCode = key.hashCode() ^ stashSize;
+		int hashCode = key.hashCode();
 		int index1 = hashCode & mask;
 		K key1 = keyTable[index1];
 		if (key.equals(key1)) {
@@ -205,7 +212,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	/** Skips checks for existing keys. */
 	private void putResize (K key, V value) {
 		// Check for empty buckets.
-		int hashCode = key.hashCode() ^ stashSize;
+		int hashCode = key.hashCode();
 		int index1 = hashCode & mask;
 		K key1 = keyTable[index1];
 		if (key1 == null) {
@@ -293,7 +300,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 			}
 
 			// If the evicted key hashes to an empty bucket, put it there and stop.
-			int hashCode = evictedKey.hashCode() ^ stashSize;
+			int hashCode = evictedKey.hashCode();
 			index1 = hashCode & mask;
 			key1 = keyTable[index1];
 			if (key1 == null) {
@@ -344,7 +351,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	private void putStash (K key, V value) {
 		if (stashSize == stashCapacity) {
 			// Too many pushes occurred and the stash is full, increase the table size.
-			resize(capacity << 1);
+			resizeStash(stashSize << 1);
 			put_internal(key, value);
 			return;
 		}
@@ -357,7 +364,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	}
 
 	public V get (Object key) {
-		int hashCode = key.hashCode() ^ stashSize;
+		int hashCode = key.hashCode();
 		int index = hashCode & mask;
 		if (!key.equals(keyTable[index])) {
 			index = hash2(hashCode);
@@ -384,8 +391,8 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	}
 
 	/** Returns the value for the specified key, or the default value if the key is not in the map. */
-	public V get (K key, V defaultValue) {
-		int hashCode = key.hashCode() ^ stashSize;
+	public V getOrDefault (Object key, V defaultValue) {
+		int hashCode = key.hashCode();
 		int index = hashCode & mask;
 		if (!key.equals(keyTable[index])) {
 			index = hash2(hashCode);
@@ -404,7 +411,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 		return valueTable[index];
 	}
 
-	private V getStash (K key, V defaultValue) {
+	private V getStash (Object key, V defaultValue) {
 		K[] keyTable = this.keyTable;
 		for (int i = capacity, n = i + stashSize; i < n; i++)
 			if (key.equals(keyTable[i])) return valueTable[i];
@@ -412,7 +419,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	}
 
 	public V remove (Object key) {
-		int hashCode = key.hashCode() ^ stashSize;
+		int hashCode = key.hashCode();
 		int index = hashCode & mask;
 		if (key.equals(keyTable[index])) {
 			keyTable[index] = null;
@@ -531,7 +538,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	}
 
 	public boolean containsKey (Object key) {
-		int hashCode = key.hashCode() ^ stashSize;
+		int hashCode = key.hashCode();
 		int index = hashCode & mask;
 		if (!key.equals(keyTable[index])) {
 			index = hash2(hashCode);
@@ -614,6 +621,15 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 		}
 	}
 
+	private void resizeStash (int newStashSize) {
+		int oldStashSize = stashSize;
+
+		stashCapacity = Math.max(oldStashSize, newStashSize);
+
+		keyTable = Arrays.copyOf(keyTable, capacity + stashCapacity);
+		valueTable = Arrays.copyOf(valueTable, capacity + stashCapacity);
+	}
+
 	@Override
 	public int size () {
 		return size;
@@ -659,21 +675,24 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		int i = keyTable.length;
+		V v;
 		while (i-- > 0) {
 			K key = keyTable[i];
 			if (key == null) continue;
-			buffer.append(key);
+			buffer.append(key == this ? "(this)" : key);
 			buffer.append('=');
-			buffer.append(valueTable[i]);
+			v = valueTable[i];
+			buffer.append(v == this ? "(this)" : v);
 			break;
 		}
 		while (i-- > 0) {
 			K key = keyTable[i];
 			if (key == null) continue;
 			buffer.append(", ");
-			buffer.append(key);
+			buffer.append(key == this ? "(this)" : key);
 			buffer.append('=');
-			buffer.append(valueTable[i]);
+			v = valueTable[i];
+			buffer.append(v == this ? "(this)" : v);
 		}
 		buffer.append('}');
 		return buffer.toString();
