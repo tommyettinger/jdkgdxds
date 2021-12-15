@@ -1,3 +1,9 @@
+[0.2.3]
+- [BREAKING CHANGE] EnhancedRandom.nextInt(int, int) and nextSignedInt(int, int) were still broken when outerBound was less than innerBound; this has been fixed, but these methods will return different values now.
+- Fix the iterators for int- and long-keyed maps; there was a name-shadowing issue that made iteration stop immediately in some non-empty maps.
+- Added BooleanDeque, rounding out the primitive deques.
+- Added with(), minHeapWith(), and maxHeapWith() to BinaryHeap, to make building one a little easier.
+
 [0.2.2]
 - The recently-added Base class wasn't case-insensitive when it was supposed to be, and now it is correct.
 

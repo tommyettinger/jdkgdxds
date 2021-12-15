@@ -30,12 +30,11 @@ classes are generic, centered around `com.github.tommyettinger.ds.ObjectList`, `
 would be to just call these by the same names (except Array, that one's just confusing), we have other kinds of Object-keyed Maps,
 and other kinds of insertion-ordered Maps, so `ObjectMap` is now `ObjectObjectMap` because it has Object keys and Object values,
 while `OrderedMap` is now `ObjectObjectOrderedMap`, because of the same reason. Primitive-backed collections support `int`
-and `long` keys, and `int`, `long`, or `float` values; all primitive types are available for lists and deques (except that there's
-no BooleanDeque because it's easily handled with an existing ByteDeque holding `1` and `0`). So, there's `IntSet` and `LongSet`,
-with ordered variants `IntOrderedSet` and `LongOrderedSet`, while their map counterparts are more numerous. Most of the primitive
-lists are very similar, only changing the numeric type, but there are some small changes for `CharList` (which doesn't define math
-operations on its items) and `BooleanList` (which defines logical operations but not math ones). The deques don't currently
-implement math operations on their items. As for the maps...
+and `long` keys, and `int`, `long`, or `float` values; all primitive types are available for lists and deques. So, there's
+`IntSet` and `LongSet`, with ordered variants `IntOrderedSet` and `LongOrderedSet`, while their map counterparts are more
+numerous. Most of the primitive lists are very similar, only changing the numeric type, but there are some small changes for
+`CharList` (which doesn't define math operations on its items) and `BooleanList` (which defines logical operations but not math
+ones). The deques don't currently implement math operations on their items. As for the maps...
 
 There's `IntFloatMap`, `IntFloatOrderedMap`, `IntIntMap`, `IntIntOrderedMap`, `IntLongMap`, `IntLongOrderedMap`,
 `IntObjectMap`, `IntObjectOrderedMap`, `LongFloatMap`, `LongFloatOrderedMap`, `LongIntMap`, `LongIntOrderedMap`,
@@ -85,10 +84,10 @@ classes use, or some form of fuzzy equality for float or double keys.
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.2'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.3'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.2.2:sources'` to its dependencies, and in its
+`implementation 'com.github.tommyettinger:jdkgdxds:0.2.3:sources'` to its dependencies, and in its
 `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />

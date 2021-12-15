@@ -19,63 +19,113 @@
 
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.Utilities;
 
 import javax.annotation.Nullable;
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-/** An unordered map. This implementation is a cuckoo hash map using 3 hashes (if table size is less than 2^16) or 4 hashes (if
- * table size is greater than or equal to 2^16), random walking, and a small stash for problematic keys Null keys are not allowed.
- * Null values are allowed. No allocation is done except when growing the table size. <br>
+/**
+ * An unordered map implementing the JDK Map interface. This is a cuckoo hash map using 3 hashes (if table size is less than 2^16)
+ * or 4 hashes (if table size is greater than or equal to 2^16), and a small stash for problematic keys Null keys are not allowed.
+ * Null values are allowed. No allocation is done except when growing the table size.
  * <br>
- * This map performs very fast get, containsKey, and remove (typically O(1), worst case O(log(n))). Put may be a bit slower,
- * depending on hash collisions. Load factors greater than 0.91 greatly increase the chances the map will have to rehash to the
- * next higher POT size.
- * @author Nathan Sweet */
-public class ObjectObjectStashMap<K, V> implements Map<K, V> {
-	// primes for hash functions 2, 3, and 4
-	private static final int PRIME2 = 0xf48c5;// 0xbe1f14b1;
-	private static final int PRIME3 = 0x8aee1;// 0xb4b82e39;
-	private static final int PRIME4 = 0xcb91d;// 0xced1c241;
+ * This is based on the CuckooObjectMap from Kryo, which is based on the version in libGDX 1.9.10 and earlier, but fixes the issue
+ * where those maps could produce an OutOfMemoryError. That case would occur when one of the earlier maps was given a maliciously
+ * crafted set of about 46 Strings, a typical-usage but somewhat larger set of GridPoint2 or Vector2 keys, or any kind of key where
+ * the hashCode() was implemented very poorly. This version reliably doesn't get OOMEs on small inputs, but does instead slow down
+ * most operations by about a factor of 2-10 in those pathological cases. It normally has fairly fast iteration and containsKey()
+ * calls, but has considerably slower put() than the standard libGDX and jdkgdxds maps (about half the rate of insertion). It
+ * doesn't run much faster on any particular task relative to ObjectObjectMap, so it's only in the tests here.
+ * <br>
+ * This map performs very fast get, containsKey, and remove (typically O(1), worst case O(log(n))). Put is slower than just about
+ * any major map in use. Load factors greater than 0.91 greatly increase the chances the map will have to rehash to the
+ * next higher POT size. Cuckoo hashing can work much better with lower load factors, around 0.5 potentially.
+ *
+ * @author Nathan Sweet (original implementation)
+ * @author Tommy Ettinger (fix for stash, made it implement Map)
+ */
+public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
+	// primes for hash functions 2, 3, and 4; 20-bit for GWT reasons.
+	private static final int PRIME2 = 0xf48c5;
+	private static final int PRIME3 = 0x8aee1;
+	private static final int PRIME4 = 0xcb91d;
 
-	int random = 1;
-
+	/**
+	 * How many entries are present in this Map.
+	 * This can be changed by any code, but usually shouldn't be unless you have a good reason.
+	 * You may want {@link  #size()} for interoperability with the Map interface, instead.
+	 */
 	public int size;
 
-	K[] keyTable;
-	V[] valueTable;
-	int capacity, stashSize;
+	/**
+	 * The internal array of K keys and null (for slots where there is no key).
+	 * Only meant for use by this class or classes that extend it.
+	 */
+	protected K[] keyTable;
+	/**
+	 * The internal array of V values and null (for slots where there is no key, and for slots where null is the value).
+	 * Only meant for use by this class or classes that extend it.
+	 */
+	protected V[] valueTable;
+	/**
+	 * The size of the "regular hash table" in {@link #keyTable} and {@link #valueTable}, not including the stash.
+	 */
+	protected int capacity;
+	/**
+	 * The number of items currently in the stash.
+	 */
+	protected int stashSize;
 
-	private float loadFactor;
-	private int hashShift, mask, threshold;
-	private int stashCapacity;
+	/**
+	 * The load factor of the map; {@code loadFactor * capacity} determines how many entries this can hold before resizing
+	 * its non-stash section.
+	 */
+	protected float loadFactor;
+	/**
+	 * Used to limit hash codes to be at least 0 and less than the power-of-two {@link #capacity}; this is always one less
+	 * than a power of two.
+	 */
+	protected int mask;
+	/**
+	 * This is just the floor of {@code loadFactor * capacity}, to avoid frequently recalculating it.
+	 */
+	private int threshold;
+	/**
+	 * The amount of space in {@link #keyTable} reserved for the stash, which can resize (enlarging only) separately
+	 * from the capacity.
+	 */
+	protected int stashCapacity;
+	/**
+	 * Used only to know how many times to try to
+	 * {@link #push(Object, Object, int, Object, int, Object, int, Object, int, Object)} an entry before it goes in the stash.
+	 */
 	private int pushIterations;
-	private boolean isBigTable;
+	/**
+	 * True if capacity is greater than or equal to 65536; this affects how many hash functions the Map uses.
+	 */
+	protected boolean isBigTable;
 
 	/** Creates a new map with an initial capacity of 32 and a load factor of {@link Utilities#getDefaultLoadFactor()}. This map will hold 25 items before growing the
 	 * backing table. */
-	public ObjectObjectStashMap () {
+	public ObjectObjectCuckooMap () {
 		this(32, Utilities.getDefaultLoadFactor());
 	}
 
 	/** Creates a new map with a load factor of {@link Utilities#getDefaultLoadFactor()}. This map will hold initialCapacity * {@link Utilities#getDefaultLoadFactor()} items before growing the backing
 	 * table. */
-	public ObjectObjectStashMap (int initialCapacity) {
+	public ObjectObjectCuckooMap (int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
 	/** Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity * loadFactor
 	 * items before growing the backing table. */
-	public ObjectObjectStashMap (int initialCapacity, float loadFactor) {
+	public ObjectObjectCuckooMap (int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) throw new IllegalArgumentException("initialCapacity must be >= 0: " + initialCapacity);
 		if (initialCapacity > 1 << 30) throw new IllegalArgumentException("initialCapacity is too large: " + initialCapacity);
 		capacity = nextPowerOfTwo(initialCapacity);
@@ -88,7 +138,6 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 
 		threshold = (int)(capacity * loadFactor);
 		mask = capacity - 1;
-		hashShift = 31 - Integer.numberOfTrailingZeros(capacity);
 		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(capacity)) * 2);
 		pushIterations = Math.max(Math.min(capacity, 8), (int)Math.sqrt(capacity) / 8);
 
@@ -97,7 +146,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	}
 
 	/** Creates a new map identical to the specified map. */
-	public ObjectObjectStashMap (ObjectObjectStashMap<? extends K, ? extends V> map) {
+	public ObjectObjectCuckooMap (ObjectObjectCuckooMap<? extends K, ? extends V> map) {
 		this(map.capacity, map.loadFactor);
 		stashSize = map.stashSize;
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
@@ -106,7 +155,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	}
 
 	/** Creates a new map identical to the specified map. */
-	public ObjectObjectStashMap (Map<? extends K, ? extends V> map) {
+	public ObjectObjectCuckooMap (Map<? extends K, ? extends V> map) {
 		this(map.size());
 		putAll(map);
 	}
@@ -203,7 +252,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 		return null;
 	}
 
-	public void putAll (ObjectObjectStashMap<K, V> map) {
+	public void putAll (ObjectObjectCuckooMap<K, V> map) {
 		ensureCapacity(map.size);
 		for (Map.Entry<K, V> entry : map.entrySet())
 			put(entry.getKey(), entry.getValue());
@@ -267,7 +316,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 		// Push keys until an empty bucket is found.
 		K evictedKey;
 		V evictedValue;
-		int i = 0, pushIterations = this.pushIterations;
+		int i = 0, pushIterations = this.pushIterations, random = 0xb4b82e39;
 		int n = isBigTable ? 4 : 3;
 		do {
 			random = random * 0x4F1BB ^ 0x7F4A7C15;
@@ -597,8 +646,6 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 		capacity = newSize;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		hashShift = 31 - Integer.numberOfTrailingZeros(newSize);
-		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(newSize)) * 2);
 		pushIterations = Math.max(Math.min(newSize, 8), (int)Math.sqrt(newSize) / 8);
 
 		// big table is when capacity >= 2^16
@@ -655,17 +702,17 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 
 	private int hash2 (int h) {
 		h *= PRIME2;
-		return (h ^ h >>> hashShift) & mask;
+		return (h ^ h >>> 15) & mask;
 	}
 
 	private int hash3 (int h) {
 		h *= PRIME3;
-		return (h ^ h >>> hashShift) & mask;
+		return (h ^ h >>> 16) & mask;
 	}
 
 	private int hash4 (int h) {
 		h *= PRIME4;
-		return (h ^ h >>> hashShift) & mask;
+		return (h ^ h >>> 17) & mask;
 	}
 
 	public String toString () {
@@ -787,7 +834,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 			if (this == o) { return true; }
 			if (o == null || getClass() != o.getClass()) { return false; }
 
-			ObjectObjectMap.Entry<?, ?> entry = (ObjectObjectMap.Entry<?, ?>)o;
+			Entry<?, ?> entry = (Entry<?, ?>)o;
 
 			if (!Objects.equals(key, entry.key)) { return false; }
 			return Objects.equals(value, entry.value);
@@ -805,7 +852,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 		protected Entry<K, V> entry = new Entry<>();
 		protected MapIterator<K, V, Map.Entry<K, V>> iter;
 
-		public Entries (ObjectObjectStashMap<K, V> map) {
+		public Entries (ObjectObjectCuckooMap<K, V> map) {
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
 				public Iterator<Map.Entry<K, V>> iterator () {
@@ -850,7 +897,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	public static class Values<K, V> extends AbstractCollection<V> {
 		protected MapIterator<K, V, V> iter;
 
-		public Values (ObjectObjectStashMap<K, V> map) {
+		public Values (ObjectObjectCuckooMap<K, V> map) {
 			iter = new MapIterator<K, V, V>(map) {
 				@Override
 				public Iterator<V> iterator () {
@@ -889,7 +936,7 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	public static class Keys<K, V> extends AbstractSet<K> {
 		protected MapIterator<K, V, K> iter;
 
-		public Keys (ObjectObjectStashMap<K, V> map) {
+		public Keys (ObjectObjectCuckooMap<K, V> map) {
 			iter = new MapIterator<K, V, K>(map) {
 				@Override
 				public Iterator<K> iterator () {
@@ -943,10 +990,10 @@ public class ObjectObjectStashMap<K, V> implements Map<K, V> {
 	static protected abstract class MapIterator<K, V, I> implements Iterable<I>, Iterator<I> {
 		public boolean hasNext;
 
-		final ObjectObjectStashMap<K, V> map;
+		final ObjectObjectCuckooMap<K, V> map;
 		int nextIndex, currentIndex;
 
-		public MapIterator (ObjectObjectStashMap<K, V> map) {
+		public MapIterator (ObjectObjectCuckooMap<K, V> map) {
 			this.map = map;
 			reset();
 		}
