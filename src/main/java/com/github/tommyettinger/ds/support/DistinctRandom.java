@@ -39,12 +39,12 @@ import java.util.Random;
  * permitted for that state, and that you can {@link #skip(long)} the state forwards or backwards in constant time.
  * It is also quite fast, though not as fast as {@link TricycleRandom} or {@link FourWheelRandom} on Java 16 or newer.
  * <br>
- * This class is both a {@link Random} from the JDK and an {@link EnhancedRandom} from jdkgdxds, and can often be used
- * as a substitute for {@link LaserRandom}. LaserRandom has comparable speed, and supports many streams, but if you
- * want just one {@code long} of state, DistinctRandom is a better fit. For higher speed on Java 16 or higher, HotSpot,
- * you can use {@link TricycleRandom} or {@link FourWheelRandom} (FourWheelRandom is preferred if you only target Java
- * 16). Those generators also should have a longer period than DistinctRandom except in infinitesimally-rare cases. No
- * other generators in jdkgdxds have the "distinct" quality this generator has.
+ * This class is an {@link EnhancedRandom} from jdkgdxds and is no longer a {@link Random} because of Java 17 issues.
+ * It can often be used as a substitute for {@link LaserRandom}. LaserRandom has comparable speed, and supports many
+ * streams, but if you want just one {@code long} of state, DistinctRandom is a better fit. For higher speed on Java
+ * 16 or higher, HotSpot, you can use {@link TricycleRandom} or {@link FourWheelRandom} (FourWheelRandom is preferred
+ * if you only target Java 16+). Those generators also should have a longer period than DistinctRandom except in
+ * infinitesimally-rare cases. No other generators in jdkgdxds have the "distinct" quality this generator has.
  * <br>
  * Unlike the multiple-state generators here, DistinctRandom tolerates being given sequential seeds and/or states, and
  * in fact doesn't randomize the seed when given one with {@link #setSeed(long)}. This is the only generator here that
@@ -55,7 +55,7 @@ import java.util.Random;
  * This implements all methods from {@link EnhancedRandom}, including the optional {@link #skip(long)} and
  * {@link #previousLong()} methods.
  */
-public class DistinctRandom extends Random implements EnhancedRandom {
+public class DistinctRandom implements EnhancedRandom {
 
     /**
      * The only state variable; can be any {@code long}.
@@ -66,8 +66,7 @@ public class DistinctRandom extends Random implements EnhancedRandom {
      * Creates a new DistinctRandom with a random state.
      */
     public DistinctRandom () {
-        super();
-        state = super.nextLong();
+        this(EnhancedRandom.seedFromMath());
     }
 
     /**
@@ -192,42 +191,6 @@ public class DistinctRandom extends Random implements EnhancedRandom {
     @Override
     public DistinctRandom copy() {
         return new DistinctRandom(state);
-    }
-
-
-    @Override
-    public void nextBytes(byte[] bytes) {
-        EnhancedRandom.super.nextBytes(bytes);
-    }
-
-    @Override
-    public int nextInt() {
-        return EnhancedRandom.super.nextInt();
-    }
-
-    @Override
-    public int nextInt(int bound) {
-        return EnhancedRandom.super.nextInt(bound);
-    }
-
-    @Override
-    public boolean nextBoolean() {
-        return EnhancedRandom.super.nextBoolean();
-    }
-
-    @Override
-    public float nextFloat() {
-        return EnhancedRandom.super.nextFloat();
-    }
-
-    @Override
-    public double nextDouble() {
-        return EnhancedRandom.super.nextDouble();
-    }
-
-    @Override
-    public double nextGaussian() {
-        return EnhancedRandom.super.nextGaussian();
     }
 
     @Override

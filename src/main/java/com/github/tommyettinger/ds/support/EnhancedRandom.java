@@ -30,6 +30,16 @@ import javax.annotation.Nonnull;
  * that would be too bare-bones with just Random's methods.
  */
 public interface EnhancedRandom {
+
+	/**
+	 * Uses {@link Math#random()} to hastily put together a not-especially-uniform {@code long} value,
+	 * meant only to produce a seed when no seed was specified (the "I don't care" seed).
+	 * @return a kind-of-uniform {@code long} value
+	 */
+	static long seedFromMath(){
+		return (long) ((Math.random() - 0.5) * 0x1p52) ^ (long) ((Math.random() - 0.5) * 0x1p64);
+	}
+
 	/**
 	 * Sets the seed of this random number generator using a single
 	 * {@code long} seed. This should behave exactly the same as if a new

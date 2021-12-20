@@ -50,7 +50,7 @@ import java.util.Random;
  * <br>
  * It implements all optional methods in EnhancedRandom except {@link #skip(long)} and {@link #previousLong()}.
  */
-public class StrangerRandom extends Random implements EnhancedRandom {
+public class StrangerRandom implements EnhancedRandom {
 
     /**
      * The first state; can be any long except 0
@@ -96,12 +96,11 @@ public class StrangerRandom extends Random implements EnhancedRandom {
      * Creates a new StrangerRandom with a random state.
      */
     public StrangerRandom () {
-        super();
-        stateA = super.nextLong();
+        stateA = EnhancedRandom.seedFromMath();
         if(stateA == 0L) stateA = 0xD3833E804F4C574BL;
         stateB = jump(stateA);
-        stateC = super.nextLong();
-        stateD = super.nextLong();
+        stateC = EnhancedRandom.seedFromMath();
+        stateD = EnhancedRandom.seedFromMath();
     }
 
     /**
@@ -110,7 +109,6 @@ public class StrangerRandom extends Random implements EnhancedRandom {
      * @param seed any {@code long} value
      */
     public StrangerRandom (long seed) {
-        super(seed);
         setSeed(seed);
     }
 
@@ -124,7 +122,6 @@ public class StrangerRandom extends Random implements EnhancedRandom {
      * @param stateD any {@code long} value
      */
     public StrangerRandom (long stateA, long stateB, long stateC, long stateD) {
-        super(stateA + stateB ^ stateC - stateD);
         this.stateA = (stateA == 0L) ? 0xD3833E804F4C574BL : stateA;
         this.stateB = (stateB == 0L) ? 0x790B300BF9FE738FL : stateB;
         this.stateC = stateC;
@@ -324,41 +321,6 @@ public class StrangerRandom extends Random implements EnhancedRandom {
     @Override
     public StrangerRandom copy() {
         return new StrangerRandom(stateA, stateB, stateC, stateD);
-    }
-
-    @Override
-    public void nextBytes(byte[] bytes) {
-        EnhancedRandom.super.nextBytes(bytes);
-    }
-
-    @Override
-    public int nextInt() {
-        return EnhancedRandom.super.nextInt();
-    }
-
-    @Override
-    public int nextInt(int bound) {
-        return EnhancedRandom.super.nextInt(bound);
-    }
-
-    @Override
-    public boolean nextBoolean() {
-        return EnhancedRandom.super.nextBoolean();
-    }
-
-    @Override
-    public float nextFloat() {
-        return EnhancedRandom.super.nextFloat();
-    }
-
-    @Override
-    public double nextDouble() {
-        return EnhancedRandom.super.nextDouble();
-    }
-
-    @Override
-    public double nextGaussian() {
-        return EnhancedRandom.super.nextGaussian();
     }
 
     @Override

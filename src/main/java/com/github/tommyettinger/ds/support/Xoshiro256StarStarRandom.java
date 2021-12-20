@@ -42,7 +42,7 @@ import java.util.Random;
  * Xoshiro256** was written in 2018 by David Blackman and Sebastiano Vigna. You can consult their paper for technical details:
  * <a href="https://vigna.di.unimi.it/ftp/papers/ScrambledLinear.pdf">PDF link here</a>.
  */
-public class Xoshiro256StarStarRandom extends Random implements EnhancedRandom {
+public class Xoshiro256StarStarRandom implements EnhancedRandom {
 
     /**
      * The first state; can be any long, as long as all states are not 0.
@@ -67,11 +67,10 @@ public class Xoshiro256StarStarRandom extends Random implements EnhancedRandom {
      * Creates a new FourWheelRandom with a random state.
      */
     public Xoshiro256StarStarRandom () {
-        super();
-        stateA = super.nextLong();
-        stateB = super.nextLong();
-        stateC = super.nextLong();
-        stateD = super.nextLong();
+        stateA = EnhancedRandom.seedFromMath();
+        stateB = EnhancedRandom.seedFromMath();
+        stateC = EnhancedRandom.seedFromMath();
+        stateD = EnhancedRandom.seedFromMath();
         if((stateA | stateB | stateC | stateD) == 0L) stateD = 0x9E3779B97F4A7C15L;
     }
 
@@ -81,7 +80,6 @@ public class Xoshiro256StarStarRandom extends Random implements EnhancedRandom {
      * @param seed any {@code long} value
      */
     public Xoshiro256StarStarRandom (long seed) {
-        super(seed);
         setSeed(seed);
     }
 
@@ -94,7 +92,6 @@ public class Xoshiro256StarStarRandom extends Random implements EnhancedRandom {
      * @param stateD any {@code long} value
      */
     public Xoshiro256StarStarRandom (long stateA, long stateB, long stateC, long stateD) {
-        super(stateA + stateB ^ stateC - stateD);
         this.stateA = stateA;
         this.stateB = stateB;
         this.stateC = stateC;
@@ -288,41 +285,6 @@ public class Xoshiro256StarStarRandom extends Random implements EnhancedRandom {
     @Override
     public Xoshiro256StarStarRandom copy() {
         return new Xoshiro256StarStarRandom(stateA, stateB, stateC, stateD);
-    }
-
-    @Override
-    public void nextBytes(byte[] bytes) {
-        EnhancedRandom.super.nextBytes(bytes);
-    }
-
-    @Override
-    public int nextInt() {
-        return EnhancedRandom.super.nextInt();
-    }
-
-    @Override
-    public int nextInt(int bound) {
-        return EnhancedRandom.super.nextInt(bound);
-    }
-
-    @Override
-    public boolean nextBoolean() {
-        return EnhancedRandom.super.nextBoolean();
-    }
-
-    @Override
-    public float nextFloat() {
-        return EnhancedRandom.super.nextFloat();
-    }
-
-    @Override
-    public double nextDouble() {
-        return EnhancedRandom.super.nextDouble();
-    }
-
-    @Override
-    public double nextGaussian() {
-        return EnhancedRandom.super.nextGaussian();
     }
 
     @Override

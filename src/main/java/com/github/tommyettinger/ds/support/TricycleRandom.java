@@ -52,7 +52,7 @@ import java.util.Random;
  * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
  * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
  */
-public class TricycleRandom extends Random implements EnhancedRandom {
+public class TricycleRandom implements EnhancedRandom {
 
     /**
 	 * The first state; can be any long. If this has just been set to some value, then the next call to
@@ -72,10 +72,9 @@ public class TricycleRandom extends Random implements EnhancedRandom {
      * Creates a new TricycleRandom with a random state.
      */
     public TricycleRandom () {
-        super();
-        stateA = super.nextLong();
-        stateB = super.nextLong();
-        stateC = super.nextLong();
+        stateA = EnhancedRandom.seedFromMath();
+        stateB = EnhancedRandom.seedFromMath();
+        stateC = EnhancedRandom.seedFromMath();
     }
 
     /**
@@ -84,7 +83,6 @@ public class TricycleRandom extends Random implements EnhancedRandom {
      * @param seed any {@code long} value
      */
     public TricycleRandom (long seed) {
-        super(seed);
         setSeed(seed);
     }
 
@@ -96,7 +94,6 @@ public class TricycleRandom extends Random implements EnhancedRandom {
      * @param stateC any {@code long} value
      */
     public TricycleRandom (long stateA, long stateB, long stateC) {
-        super(stateA + stateB ^ stateC);
         this.stateA = stateA;
         this.stateB = stateB;
         this.stateC = stateC;
@@ -273,41 +270,6 @@ public class TricycleRandom extends Random implements EnhancedRandom {
     @Override
     public TricycleRandom copy() {
         return new TricycleRandom(stateA, stateB, stateC);
-    }
-
-    @Override
-    public void nextBytes(byte[] bytes) {
-        EnhancedRandom.super.nextBytes(bytes);
-    }
-
-    @Override
-    public int nextInt() {
-        return EnhancedRandom.super.nextInt();
-    }
-
-    @Override
-    public int nextInt(int bound) {
-        return EnhancedRandom.super.nextInt(bound);
-    }
-
-    @Override
-    public boolean nextBoolean() {
-        return EnhancedRandom.super.nextBoolean();
-    }
-
-    @Override
-    public float nextFloat() {
-        return EnhancedRandom.super.nextFloat();
-    }
-
-    @Override
-    public double nextDouble() {
-        return EnhancedRandom.super.nextDouble();
-    }
-
-    @Override
-    public double nextGaussian() {
-        return EnhancedRandom.super.nextGaussian();
     }
 
     @Override

@@ -94,6 +94,7 @@ public class EnhancedRandomTest {
 		}
 		for (int i = 0; i < 1024; i++) {
 			int bounded = random.nextInt(outer, inner);
+			// this will look strange, but it prints outer 1024 times.
 			System.out.println(bounded);
 			Assert.assertEquals(bounded, outer);
 		}
