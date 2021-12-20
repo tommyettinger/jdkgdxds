@@ -280,7 +280,7 @@ public class TrimRandom implements EnhancedRandom {
         t = Long.rotateRight(fa, 37);
         stateB = t - stateC;
         stateA = fc - stateB;
-        return stateC;
+        return Long.rotateRight(stateB, 26) ^ stateD - 0x9E3779B97F4A7C15L;
     }
 
     @Override
