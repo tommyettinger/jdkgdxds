@@ -297,8 +297,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	@Override
 	public void removeRange (int start, int end) {
-		Ordered.super.removeRange(start, end);
-		retainAll(items);
+		for (int i = Math.max(0, start); i < end && i < items.size(); i++) {
+			super.remove(items.get(i));
+		}
+		items.removeRange(start, end);
 	}
 
 	/**

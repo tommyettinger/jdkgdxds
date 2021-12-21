@@ -365,6 +365,14 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		keys.sort((a, b) -> comp.compare(get(a), get(b)));
 	}
 
+	@Override
+	public void removeRange (int start, int end) {
+		for (int i = Math.max(0, start); i < end && i < keys.size(); i++) {
+			super.remove(keys.get(i));
+		}
+		keys.removeRange(start, end);
+	}
+
 	/**
 	 * Returns a {@link Set} view of the keys contained in this map.
 	 * The set is backed by the map, so changes to the map are

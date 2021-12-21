@@ -231,7 +231,6 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		boolean modified = false;
 		for (Object o : this) {
 			if (!c.contains(o)) { modified |= remove(o); }
-
 		}
 		return modified;
 	}

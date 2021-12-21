@@ -363,8 +363,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 
 	@Override
 	public void removeRange (int start, int end) {
-		Ordered.super.removeRange(start, end);
-		retainAll(map.order());
+		map.removeRange(start, end);
 	}
 
 	@Override
