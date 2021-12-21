@@ -360,6 +360,13 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		return map.order().listIterator(index);
 	}
 
+
+	@Override
+	public void removeRange (int start, int end) {
+		Ordered.super.removeRange(start, end);
+		retainAll(map.order());
+	}
+
 	@Override
 	public Object[] toArray () {
 		return map.keySet().toArray();

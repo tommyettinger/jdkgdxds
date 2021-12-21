@@ -295,6 +295,12 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		items.sort(comp);
 	}
 
+	@Override
+	public void removeRange (int start, int end) {
+		Ordered.super.removeRange(start, end);
+		retainAll(items);
+	}
+
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
 	 * Reuses one of two iterators, and does not permit nested iteration;

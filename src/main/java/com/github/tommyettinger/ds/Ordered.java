@@ -152,6 +152,16 @@ public interface Ordered<T> extends Arrangeable {
 	}
 
 	/**
+	 * Removes T items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
+	 * and end, exclusive.
+	 * @param start inclusive start of the range to remove from the ordering
+	 * @param end exclusive end of the range to remove from the ordering
+	 */
+	default void removeRange(int start, int end){
+		order().removeRange(start, end);
+	}
+
+	/**
 	 * A primitive specialization of {@link Ordered} for collections of int values instead of objects.
 	 */
 	interface OfInt extends Arrangeable {
