@@ -223,11 +223,12 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 
 	@Override
 	public void removeRange (int start, int end) {
-		for (int i = Math.max(0, start); i < end && i < keys.size(); i++) {
+		start = Math.max(0, start);
+		end = Math.min(keys.size(), end);
+		for (int i = start; i < end; i++) {
 			super.remove(keys.get(i));
 		}
 		keys.removeRange(start, end);
-
 	}
 
 	/**

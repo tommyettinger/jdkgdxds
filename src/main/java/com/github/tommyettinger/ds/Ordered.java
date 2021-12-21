@@ -152,7 +152,7 @@ public interface Ordered<T> extends Arrangeable {
 	}
 
 	/**
-	 * Removes T items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
+	 * Removes items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
 	 * and end, exclusive.
 	 * @param start inclusive start of the range to remove from the ordering
 	 * @param end exclusive end of the range to remove from the ordering
@@ -266,6 +266,16 @@ public interface Ordered<T> extends Arrangeable {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
 			return Select.selectIndex(order(), comparator, kthLowest, size());
+		}
+
+		/**
+		 * Removes items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
+		 * and end, exclusive.
+		 * @param start inclusive start of the range to remove from the ordering
+		 * @param end exclusive end of the range to remove from the ordering
+		 */
+		default void removeRange(int start, int end){
+			order().removeRange(start, end);
 		}
 	}
 

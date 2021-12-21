@@ -261,6 +261,16 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 		return super.remove(keys.removeAt(index));
 	}
 
+	@Override
+	public void removeRange (int start, int end) {
+		start = Math.max(0, start);
+		end = Math.min(keys.size(), end);
+		for (int i = start; i < end; i++) {
+			super.remove(keys.get(i));
+		}
+		keys.removeRange(start, end);
+	}
+
 	/**
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
