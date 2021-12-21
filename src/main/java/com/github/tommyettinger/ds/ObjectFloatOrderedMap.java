@@ -221,6 +221,15 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		return super.remove(keys.removeAt(index));
 	}
 
+	@Override
+	public void removeRange (int start, int end) {
+		for (int i = Math.max(0, start); i < end && i < keys.size(); i++) {
+			super.remove(keys.get(i));
+		}
+		keys.removeRange(start, end);
+
+	}
+
 	/**
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
