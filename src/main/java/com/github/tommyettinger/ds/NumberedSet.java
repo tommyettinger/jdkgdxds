@@ -221,6 +221,21 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 			modified |= add(t);
 		return modified;
 	}
+	/**
+	 * Adds items from the iteration order of {@code other}, from start (inclusive) to end (exclusive).
+	 * @param other any Ordered with the same T type as this
+	 * @param start inclusive start index in the order of other
+	 * @param end exclusive end index in the order of other
+	 * @return true if this was modified
+	 */
+	public boolean addAll (Ordered<T> other, int start, int end) {
+		start = Math.max(0, start);
+		end = Math.min(other.size(), end);
+		ensureCapacity(end - start);
+		int oldSize = map.size;
+		for (int i = start; i < end; i++) { add(other.order().get(i)); }
+		return map.size != oldSize;
+	}
 
 	public boolean addAll (T[] array) {
 		return addAll(array, 0, array.length);

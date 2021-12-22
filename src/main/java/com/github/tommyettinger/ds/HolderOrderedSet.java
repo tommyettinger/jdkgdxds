@@ -170,7 +170,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 */
 	public boolean addAll (Ordered<T> other, int start, int end) {
 		start = Math.max(0, start);
-		end = Math.min(other.order().size(), end);
+		end = Math.min(other.size(), end);
 		ensureCapacity(end - start);
 		int oldSize = size;
 		for (int i = start; i < end; i++) { add(other.order().get(i)); }

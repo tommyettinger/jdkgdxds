@@ -248,6 +248,19 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 		}
 	}
 
+	/**
+	 * Adds entries from the iteration order of {@code map}, from start (inclusive) to end (exclusive).
+	 * @param map another map with the same type
+	 * @param start inclusive start index in the order of other
+	 * @param end exclusive end index in the order of other
+	 */
+	public void putAll (LongIntOrderedMap map, int start, int end) {
+		start = Math.max(0, start);
+		end = Math.min(map.size(), end);
+		ensureCapacity(end - start);
+		for (int i = start; i < end; i++) { put(map.keyAt(i), map.getAt(i)); }
+	}
+
 	@Override
 	public int remove (long key) {
 		if (!keys.remove(key)) { return defaultValue; }
