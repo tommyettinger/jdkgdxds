@@ -144,6 +144,16 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	}
 
 	@Override
+	public void removeRange (int start, int end) {
+		start = Math.max(0, start);
+		end = Math.min(items.size(), end);
+		for (int i = start; i < end; i++) {
+			super.remove(items.get(i));
+		}
+		items.removeRange(start, end);
+	}
+
+	@Override
 	public long first () {
 		if(size == 0) throw new IllegalStateException("Cannot get the first() item of an empty LongOrderedSet.");
 		return items.items[0];
