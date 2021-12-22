@@ -206,6 +206,19 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 		}
 	}
 
+	/**
+	 * Adds entries from the iteration order of {@code map}, from start (inclusive) to end (exclusive).
+	 * @param map another map with the same type and compatible generic types
+	 * @param start inclusive start index in the order of other
+	 * @param end exclusive end index in the order of other
+	 */
+	public void putAll (ObjectLongOrderedMap<? extends K> map, int start, int end) {
+		start = Math.max(0, start);
+		end = Math.min(map.size(), end);
+		ensureCapacity(end - start);
+		for (int i = start; i < end; i++) { put(map.keyAt(i), map.getAt(i)); }
+	}
+
 	@Override
 	public long remove (Object key) {
 		if (!keys.remove(key)) { return defaultValue; }
