@@ -185,7 +185,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
 		if (keyTable.length < tableSize) { resize(tableSize); }
-		items.ensureCapacity(size + additionalCapacity);
+		items.ensureCapacity(additionalCapacity);
 	}
 
 	/**

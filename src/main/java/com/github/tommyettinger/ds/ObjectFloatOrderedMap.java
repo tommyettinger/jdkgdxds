@@ -254,7 +254,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
 		if (keyTable.length < tableSize) { resize(tableSize); }
-		keys.ensureCapacity(size + additionalCapacity);
+		keys.ensureCapacity(additionalCapacity);
 
 	}
 

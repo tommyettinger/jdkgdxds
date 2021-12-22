@@ -182,7 +182,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * Adds each item in the array {@code a} to this ObjectList, appending to the end.
 	 *
 	 * @param a a non-null array of {@code T}
-	 * @return true, as {@link #addAll(Collection)} does
+	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
 	public boolean addAll (T[] a) {
 		return Collections.addAll(this, a);
@@ -193,7 +193,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 *
 	 * @param insertionIndex where to insert into this ObjectList
 	 * @param a              a non-null array of {@code T}
-	 * @return true, as {@link #addAll(Collection)} does
+	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
 	public boolean addAll (int insertionIndex, T[] a) {
 		return addAll(insertionIndex, a, 0, a.length);
@@ -205,13 +205,14 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * @param a      a non-null array of {@code T}
 	 * @param offset the first index in {@code a} to use
 	 * @param count  how many indices in {@code a} to use
-	 * @return true, as {@link #addAll(Collection)} does
+	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
 	public boolean addAll (T[] a, int offset, int count) {
+		boolean changed = false;
 		for (int i = offset, n = Math.min(offset + count, a.length); i < n; i++) {
-			add(a[i]);
+			changed |= add(a[i]);
 		}
-		return true;
+		return changed;
 	}
 
 	public boolean duplicateRange (int index, int count) {
@@ -234,19 +235,25 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
-	 * Adds up to {@code count} items, starting from {@code offset}, in the array {@code a} to this ObjectList, inserting starting at {@code insertionIndex}.
+	 * Adds up to {@code count} items, starting from {@code offset}, in the array {@code a} to this ObjectList,
+	 * inserting starting at {@code insertionIndex}.
 	 *
 	 * @param insertionIndex where to insert into this ObjectList
 	 * @param a              a non-null array of {@code T}
 	 * @param offset         the first index in {@code a} to use
 	 * @param count          how many indices in {@code a} to use
-	 * @return true, as {@link #addAll(Collection)} does
+	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
 	public boolean addAll (int insertionIndex, T[] a, int offset, int count) {
-		for (int i = offset, n = Math.min(offset + count, a.length); i < n; i++) {
+		boolean changed = false;
+		int end = Math.min(offset + count, a.length);
+		ensureCapacity(end - offset);
+		for (int i = offset; i < end; i++) {
 			add(insertionIndex++, a[i]);
+			changed = true;
 		}
-		return true;
+		return changed;
+	}
 	}
 
 	/**
@@ -280,6 +287,20 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 */
 	public boolean notEmpty () {
 		return size() != 0;
+	}
+
+	/**
+	 * Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
+	 * items to avoid multiple backing array resizes. Note that this has different behavior from {@link ArrayList#ensureCapacity(int)};
+	 * ArrayList's version specifies a minimum capacity (which can result in no change if the capacity is currently larger than that
+	 * minimum), whereas this version specifies additional capacity (which always increases capacity if {@code additionalCapacity} is
+	 * non-negative). The behavior here matches the primitive-backed lists like {@link IntList}, as well as libGDX Array classes.
+	 *
+	 * @param additionalCapacity how much room to add to the capacity; this is measured in the number of items this can store
+	 */
+	@Override
+	public void ensureCapacity (int additionalCapacity) {
+		super.ensureCapacity(size() + additionalCapacity);
 	}
 
 	/**
