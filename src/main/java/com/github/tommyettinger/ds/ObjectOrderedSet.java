@@ -127,6 +127,22 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		return size != oldSize;
 	}
 
+	/**
+	 * Adds items from the iteration order of {@code other}, from start (inclusive) to end (exclusive).
+	 * @param other any Ordered with the same T type as this
+	 * @param start inclusive start index in the order of other
+	 * @param end exclusive end index in the order of other
+	 * @return true if this was modified
+	 */
+	public boolean addAll (Ordered<T> other, int start, int end) {
+		start = Math.max(0, start);
+		end = Math.min(other.order().size(), end);
+		ensureCapacity(end - start);
+		int oldSize = size;
+		for (int i = start; i < end; i++) { add(other.order().get(i)); }
+		return size != oldSize;
+	}
+
 	@Override
 	public boolean remove (Object key) {
 		return super.remove(key) && items.remove(key);

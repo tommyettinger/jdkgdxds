@@ -127,6 +127,22 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 		return oldSize != size;
 	}
 
+	/**
+	 * Adds items from the iteration order of {@code other}, from start (inclusive) to end (exclusive).
+	 * @param other any Ordered.OfInt
+	 * @param start inclusive start index in the order of other
+	 * @param end exclusive end index in the order of other
+	 * @return true if this was modified
+	 */
+	public boolean addAll (Ordered.OfInt other, int start, int end) {
+		start = Math.max(0, start);
+		end = Math.min(other.order().size(), end);
+		ensureCapacity(end - start);
+		int oldSize = size;
+		for (int i = start; i < end; i++) { add(other.order().get(i)); }
+		return size != oldSize;
+	}
+
 	@Override
 	public boolean remove (int key) {
 		return super.remove(key) && items.remove(key);

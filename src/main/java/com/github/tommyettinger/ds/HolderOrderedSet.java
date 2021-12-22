@@ -162,6 +162,22 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
+	 * Adds items from the iteration order of {@code other}, from start (inclusive) to end (exclusive).
+	 * @param other any Ordered that has the same T type
+	 * @param start inclusive start index in the order of other
+	 * @param end exclusive end index in the order of other
+	 * @return true if this was modified
+	 */
+	public boolean addAll (Ordered<T> other, int start, int end) {
+		start = Math.max(0, start);
+		end = Math.min(other.order().size(), end);
+		ensureCapacity(end - start);
+		int oldSize = size;
+		for (int i = start; i < end; i++) { add(other.order().get(i)); }
+		return size != oldSize;
+	}
+
+	/**
 	 * Takes a K key to remove from this HolderOrderedSet, not a T item.
 	 *
 	 * @param key should be a K key, not a T item
