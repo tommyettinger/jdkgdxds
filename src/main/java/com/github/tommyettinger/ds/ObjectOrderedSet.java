@@ -133,19 +133,37 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	/**
-	 * Adds items from the iteration order of {@code other}, from start (inclusive) to end (exclusive).
-	 * @param other any Ordered with the same T type as this
-	 * @param start inclusive start index in the order of other
-	 * @param end exclusive end index in the order of other
-	 * @return true if this was modified
+	 * Adds up to {@code count} items, starting from {@code offset}, in the array {@code other} to this set,
+	 * inserting at the end of the iteration order.
+	 *
+	 * @param other          a non-null {@link Ordered} of {@code T}
+	 * @param offset         the first index in {@code a} to use
+	 * @param count          how many indices in {@code a} to use
+	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll (Ordered<T> other, int start, int end) {
-		start = Math.max(0, start);
-		end = Math.min(other.size(), end);
-		ensureCapacity(end - start);
-		int oldSize = size;
-		for (int i = start; i < end; i++) { add(other.order().get(i)); }
-		return size != oldSize;
+	public boolean addAll (Ordered<T> other, int offset, int count) {
+		return addAll(size, other, offset, count);
+	}
+
+	/**
+	 * Adds up to {@code count} items, starting from {@code offset}, in the array {@code other} to this set,
+	 * inserting starting at {@code insertionIndex} in the iteration order.
+	 *
+	 * @param insertionIndex where to insert into the iteration order
+	 * @param other          a non-null {@link Ordered} of {@code T}
+	 * @param offset         the first index in {@code a} to use
+	 * @param count          how many indices in {@code a} to use
+	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
+	 */
+	public boolean addAll (int insertionIndex, Ordered<T> other, int offset, int count) {
+		boolean changed = false;
+		int end = Math.min(offset + count, other.size());
+		ensureCapacity(end - offset);
+		for (int i = offset; i < end; i++) {
+			add(insertionIndex++, other.order().get(i));
+			changed = true;
+		}
+		return changed;
 	}
 
 	@Override

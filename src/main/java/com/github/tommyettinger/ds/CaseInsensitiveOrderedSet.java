@@ -108,7 +108,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	}
 
 	/**
-	 * Creates a new set containing all of the items in the given array.
+	 * Creates a new set containing all the items in the given array.
 	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
