@@ -173,6 +173,50 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		return addAll(array.items, offset, length);
 	}
 
+	/**
+	 * Adds all items in the Ordered.OfLong {@code other} to this list, inserting at the end of the iteration order.
+	 *
+	 * @param other          a non-null {@link Ordered.OfLong}
+	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfLong)} does
+	 */
+	public boolean addAll (Ordered.OfLong other) {
+		return addAll(size(), other, 0, other.size());
+	}
+
+	/**
+	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered.OfLong {@code other} to this list,
+	 * inserting at the end of the iteration order.
+	 *
+	 * @param other          a non-null {@link Ordered.OfLong}
+	 * @param offset         the first index in {@code other} to use
+	 * @param count          how many indices in {@code other} to use
+	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfLong)} does
+	 */
+	public boolean addAll (Ordered.OfLong other, int offset, int count) {
+		return addAll(size(), other, offset, count);
+	}
+
+	/**
+	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered.OfLong {@code other} to this list,
+	 * inserting starting at {@code insertionIndex} in the iteration order.
+	 *
+	 * @param insertionIndex where to insert into the iteration order
+	 * @param other          a non-null {@link Ordered.OfLong}
+	 * @param offset         the first index in {@code other} to use
+	 * @param count          how many indices in {@code other} to use
+	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfLong)} does
+	 */
+	public boolean addAll (int insertionIndex, Ordered.OfLong other, int offset, int count) {
+		boolean changed = false;
+		int end = Math.min(offset + count, other.size());
+		ensureCapacity(end - offset);
+		for (int i = offset; i < end; i++) {
+			insert(insertionIndex++, other.order().get(i));
+			changed = true;
+		}
+		return changed;
+	}
+
 	// Modified from libGDX
 	public boolean addAll (long... array) {
 		return addAll(array, 0, array.length);

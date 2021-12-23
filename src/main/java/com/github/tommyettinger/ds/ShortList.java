@@ -23,6 +23,7 @@ import com.github.tommyettinger.ds.support.util.ShortIterator;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import com.github.tommyettinger.ds.support.EnhancedRandom;
@@ -164,14 +165,58 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	// Modified from libGDX
-	public boolean addAll (ShortList array) {
-		return addAll(array.items, 0, array.size);
+	public boolean addAll (ShortList list) {
+		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (ShortList array, int offset, int length) {
-		if (offset + length > array.size) { throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size); }
-		return addAll(array.items, offset, length);
+	public boolean addAll (ShortList list, int offset, int count) {
+		if (offset + count > list.size) { throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size); }
+		return addAll(list.items, offset, count);
+	}
+
+	/**
+	 * Adds all items in the Ordered.OfShort {@code other} to this list, inserting at the end of the iteration order.
+	 *
+	 * @param other          a non-null {@link Ordered.OfShort}
+	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfShort)} does
+	 */
+	public boolean addAll (Ordered.OfShort other) {
+		return addAll(size(), other, 0, other.size());
+	}
+
+	/**
+	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered.OfShort {@code other} to this list,
+	 * inserting at the end of the iteration order.
+	 *
+	 * @param other          a non-null {@link Ordered.OfShort}
+	 * @param offset         the first index in {@code other} to use
+	 * @param count          how many indices in {@code other} to use
+	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfShort)} does
+	 */
+	public boolean addAll (Ordered.OfShort other, int offset, int count) {
+		return addAll(size(), other, offset, count);
+	}
+
+	/**
+	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered.OfShort {@code other} to this list,
+	 * inserting starting at {@code insertionIndex} in the iteration order.
+	 *
+	 * @param insertionIndex where to insert into the iteration order
+	 * @param other          a non-null {@link Ordered.OfShort}
+	 * @param offset         the first index in {@code other} to use
+	 * @param count          how many indices in {@code other} to use
+	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfShort)} does
+	 */
+	public boolean addAll (int insertionIndex, Ordered.OfShort other, int offset, int count) {
+		boolean changed = false;
+		int end = Math.min(offset + count, other.size());
+		ensureCapacity(end - offset);
+		for (int i = offset; i < end; i++) {
+			insert(insertionIndex++, other.order().get(i));
+			changed = true;
+		}
+		return changed;
 	}
 
 	// Modified from libGDX
