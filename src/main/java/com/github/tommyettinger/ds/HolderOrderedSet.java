@@ -140,10 +140,15 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Sets the key at the specfied index. Returns true if the key was not already in the set. If this set already contains the
-	 * key, the existing key's index is changed if needed and false is returned.
+	 * Sets the key at the specified index. Returns true if the key was not already in the set. If this set already contains the
+	 * key, the existing key's index is changed if needed and false is returned. Note, the order of the parameters matches the
+	 * order in {@link ObjectList} and the rest of the JDK, not OrderedSet in libGDX.
+	 *
+	 * @param index where in the iteration order to add the given key, or to move it if already present
+	 * @param key what T item to try to add, if not already present
+	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
-	public boolean add (T key, int index) {
+	public boolean add (int index, T key) {
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
 			if (oldIndex != index) { items.add(index, items.remove(oldIndex)); }
