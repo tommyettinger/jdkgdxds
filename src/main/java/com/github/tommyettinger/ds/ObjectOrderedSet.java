@@ -133,7 +133,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	/**
-	 * Adds up to {@code count} items, starting from {@code offset}, in the array {@code other} to this set,
+	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
 	 * inserting at the end of the iteration order.
 	 *
 	 * @param other          a non-null {@link Ordered} of {@code T}
@@ -146,7 +146,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	/**
-	 * Adds up to {@code count} items, starting from {@code offset}, in the array {@code other} to this set,
+	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
 	 * inserting starting at {@code insertionIndex} in the iteration order.
 	 *
 	 * @param insertionIndex where to insert into the iteration order

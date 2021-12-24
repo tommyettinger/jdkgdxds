@@ -256,7 +256,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
-	 * Adds up to {@code count} items, starting from {@code offset}, in the array {@code other} to this list,
+	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this list,
 	 * inserting at the end of the iteration order.
 	 *
 	 * @param other          a non-null {@link Ordered} of {@code T}
@@ -269,7 +269,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
-	 * Adds up to {@code count} items, starting from {@code offset}, in the array {@code other} to this list,
+	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this list,
 	 * inserting starting at {@code insertionIndex} in the iteration order.
 	 *
 	 * @param insertionIndex where to insert into the iteration order
