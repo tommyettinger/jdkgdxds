@@ -249,16 +249,32 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	}
 
 	/**
-	 * Adds entries from the iteration order of {@code map}, from start (inclusive) to end (exclusive).
-	 * @param map another map with the same type
-	 * @param start inclusive start index in the order of other
-	 * @param end exclusive end index in the order of other
+	 * Adds up to {@code count} entries, starting from {@code offset}, in the map {@code other} to this set,
+	 * inserting at the end of the iteration order.
+	 *
+	 * @param other          a non-null ordered map with the same type
+	 * @param offset         the first index in {@code other} to use
+	 * @param count          how many indices in {@code other} to use
 	 */
-	public void putAll (IntFloatOrderedMap map, int start, int end) {
-		start = Math.max(0, start);
-		end = Math.min(map.size(), end);
-		ensureCapacity(end - start);
-		for (int i = start; i < end; i++) { put(map.keyAt(i), map.getAt(i)); }
+	public void putAll (IntFloatOrderedMap other, int offset, int count) {
+		putAll(size, other, offset, count);
+	}
+
+	/**
+	 * Adds up to {@code count} entries, starting from {@code offset}, in the map {@code other} to this set,
+	 * inserting starting at {@code insertionIndex} in the iteration order.
+	 *
+	 * @param insertionIndex where to insert into the iteration order
+	 * @param other          a non-null ordered map with the same type
+	 * @param offset         the first index in {@code other} to use
+	 * @param count          how many indices in {@code other} to use
+	 */
+	public void putAll (int insertionIndex, IntFloatOrderedMap other, int offset, int count) {
+		int end = Math.min(offset + count, other.size());
+		ensureCapacity(end - offset);
+		for (int i = offset; i < end; i++) {
+			put(other.keyAt(i), other.getAt(i), insertionIndex++);
+		}
 	}
 
 	@Override

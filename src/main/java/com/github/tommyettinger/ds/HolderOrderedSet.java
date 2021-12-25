@@ -171,8 +171,8 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * inserting at the end of the iteration order.
 	 *
 	 * @param other          a non-null {@link Ordered} of {@code T}
-	 * @param offset         the first index in {@code a} to use
-	 * @param count          how many indices in {@code a} to use
+	 * @param offset         the first index in {@code other} to use
+	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
 	public boolean addAll (Ordered<T> other, int offset, int count) {
@@ -185,8 +185,8 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 *
 	 * @param insertionIndex where to insert into the iteration order
 	 * @param other          a non-null {@link Ordered} of {@code T}
-	 * @param offset         the first index in {@code a} to use
-	 * @param count          how many indices in {@code a} to use
+	 * @param offset         the first index in {@code other} to use
+	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
 	public boolean addAll (int insertionIndex, Ordered<T> other, int offset, int count) {

@@ -211,8 +211,8 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 * inserting at the end of the iteration order.
 	 *
 	 * @param other          a non-null ordered map with the same type and compatible generic types
-	 * @param offset         the first index in {@code a} to use
-	 * @param count          how many indices in {@code a} to use
+	 * @param offset         the first index in {@code other} to use
+	 * @param count          how many indices in {@code other} to use
 	 */
 	public void putAll (ObjectLongOrderedMap<? extends K> other, int offset, int count) {
 		putAll(size, other, offset, count);
@@ -224,8 +224,8 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 *
 	 * @param insertionIndex where to insert into the iteration order
 	 * @param other          a non-null ordered map with the same type and compatible generic types
-	 * @param offset         the first index in {@code a} to use
-	 * @param count          how many indices in {@code a} to use
+	 * @param offset         the first index in {@code other} to use
+	 * @param count          how many indices in {@code other} to use
 	 */
 	public void putAll (int insertionIndex, ObjectLongOrderedMap<? extends K> other, int offset, int count) {
 		int end = Math.min(offset + count, other.size());
