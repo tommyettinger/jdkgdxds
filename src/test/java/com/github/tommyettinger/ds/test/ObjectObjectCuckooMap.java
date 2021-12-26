@@ -24,7 +24,6 @@ import com.github.tommyettinger.ds.Utilities;
 import javax.annotation.Nullable;
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -38,8 +37,9 @@ import java.util.Objects;
  * This is based on the CuckooObjectMap from Kryo, which is based on the version in libGDX 1.9.10 and earlier, but fixes the issue
  * where those maps could produce an OutOfMemoryError. That case would occur when one of the earlier maps was given a maliciously
  * crafted set of about 46 Strings, a typical-usage but somewhat larger set of GridPoint2 or Vector2 keys, or any kind of key where
- * the hashCode() was implemented very poorly. This version reliably doesn't get OOMEs on small inputs, but does instead slow down
- * most operations by about a factor of 2-10 in those pathological cases. It normally has fairly fast iteration and containsKey()
+ * the hashCode() was implemented very poorly. This version reliably doesn't get OOMEs on small inputs, and shouldn't slow down
+ * drastically except in the most pathological cases. Although most of the code is similar to Kryo's version, this does not rely on
+ * a static random number generator, or any static mutable state. It normally has fairly fast iteration and containsKey()
  * calls, but has considerably slower put() than the standard libGDX and jdkgdxds maps (about half the rate of insertion). It
  * doesn't run much faster on any particular task relative to ObjectObjectMap, so it's only in the tests here.
  * <br>
@@ -87,6 +87,10 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 	 * its non-stash section.
 	 */
 	protected float loadFactor;
+	/**
+	 * Used to change the hash results for secondary, tertiary, and quaternary hashes as size increases.
+	 */
+	protected int hashShift;
 	/**
 	 * Used to limit hash codes to be at least 0 and less than the power-of-two {@link #capacity}; this is always one less
 	 * than a power of two.
@@ -138,6 +142,7 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 
 		threshold = (int)(capacity * loadFactor);
 		mask = capacity - 1;
+		hashShift = 31 - Integer.numberOfTrailingZeros(capacity);
 		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(capacity)) * 2);
 		pushIterations = Math.max(Math.min(capacity, 8), (int)Math.sqrt(capacity) / 8);
 
@@ -321,7 +326,7 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 		do {
 			random = random * 0x4F1BB ^ 0x7F4A7C15;
 			// Replace the key and value for one of the hashes.
-			switch ((random >>> 16) % n) {
+			switch ((random >>> 16) * n >>> 16) {
 			case 0:
 				evictedKey = key1;
 				evictedValue = valueTable[index1];
@@ -400,7 +405,8 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 	private void putStash (K key, V value) {
 		if (stashSize == stashCapacity) {
 			// Too many pushes occurred and the stash is full, increase the table size.
-			resizeStash(stashSize << 1);
+			stashCapacity += 4;
+			resize(capacity << 1);
 			put_internal(key, value);
 			return;
 		}
@@ -644,9 +650,10 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 		int oldEndIndex = capacity + stashSize;
 
 		capacity = newSize;
-		threshold = (int)(newSize * loadFactor);
+		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
-		pushIterations = Math.max(Math.min(newSize, 8), (int)Math.sqrt(newSize) / 8);
+		hashShift = 31 - Integer.numberOfTrailingZeros(newSize);
+		pushIterations = Math.max(Math.min(newSize, 8), (int) Math.sqrt(newSize) / 8);
 
 		// big table is when capacity >= 2^16
 		isBigTable = (capacity >>> 16) != 0;
@@ -654,8 +661,8 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 		K[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;
 
-		keyTable = (K[])new Object[newSize + stashCapacity];
-		valueTable = (V[])new Object[newSize + stashCapacity];
+		keyTable = (K[]) new Object[newSize + stashCapacity];
+		valueTable = (V[]) new Object[newSize + stashCapacity];
 
 		int oldSize = size;
 		size = 0;
@@ -668,13 +675,19 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 		}
 	}
 
-	private void resizeStash (int newStashSize) {
-		int oldStashSize = stashSize;
+	private int hash2 (int h) {
+		h *= PRIME2;
+		return (h ^ h >>> hashShift) & mask;
+	}
 
-		stashCapacity = Math.max(oldStashSize, newStashSize);
+	private int hash3 (int h) {
+		h *= PRIME3;
+		return (h ^ h >>> hashShift) & mask;
+	}
 
-		keyTable = Arrays.copyOf(keyTable, capacity + stashCapacity);
-		valueTable = Arrays.copyOf(valueTable, capacity + stashCapacity);
+	private int hash4 (int h) {
+		h *= PRIME4;
+		return (h ^ h >>> hashShift) & mask;
 	}
 
 	@Override
@@ -698,21 +711,6 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 		for (Map.Entry<? extends K, ? extends V> entry : map.entrySet())
 			put(entry.getKey(), entry.getValue());
 
-	}
-
-	private int hash2 (int h) {
-		h *= PRIME2;
-		return (h ^ h >>> 15) & mask;
-	}
-
-	private int hash3 (int h) {
-		h *= PRIME3;
-		return (h ^ h >>> 16) & mask;
-	}
-
-	private int hash4 (int h) {
-		h *= PRIME4;
-		return (h ^ h >>> 17) & mask;
 	}
 
 	public String toString () {
