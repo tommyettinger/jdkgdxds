@@ -15,6 +15,31 @@ public class CuckooTest {
 		}
 		System.out.println("Unexpectedly succeeded; finished CuckooObjectMap has size: " + map.size);
 	}
+	// Expected to fail with an OutOfMemoryError.
+	@Test(expected = OutOfMemoryError.class)
+	public void failingStringentCuckooTest(){
+		CuckooObjectMap<String, Object> map = new CuckooObjectMap<>();
+		// all have a hashCode() of -2140395045
+		String[] problems = {
+			"Haxvnr", "HaxvoS", "Haxvp4", "HaxwOr", "HaxwPS", "HaxwQ4", "Haxx0r", "Haxx1S",
+			"Haxx24", "HayWnr", "HayWoS", "HayWp4", "HayXOr", "HayXPS", "HayXQ4", "HayY0r",
+			"HayY1S", "HayY24", "Haz8nr", "Haz8oS", "Haz8p4", "Haz9Or", "Haz9PS", "Haz9Q4",
+			"HbYvnr", "HbYvoS", "HbYvp4", "HbYwOr", "HbYwPS", "HbYwQ4", "HbYx0r", "HbYx1S",
+			"HbYx24", "HbZWnr", "HbZWoS", "HbZWp4", "HbZXOr", "HbZXPS", "HbZXQ4", "HbZY0r",
+			"HbZY1S", "HbZY24", "IBxvnr", "IBxvoS", "IBxvp4", "IBxwOr", "IBxwPS", "IBxwQ4",
+			"IBxx0r", "IBxx1S", "IBxx24", "IByWnr", "IByWoS", "IByWp4", "IByXOr", "IByXPS",
+			"IByXQ4", "IByY0r", "IByY1S", "IByY24", "IBz8nr", "IBz8oS", "IBz8p4", "IBz9Or",
+			"IBz9PS", "IBz9Q4", "ICYvnr", "ICYvoS", "ICYvp4", "ICYwOr", "ICYwPS", "ICYwQ4",
+			"ICYx0r", "ICYx1S", "ICYx24", "ICZWnr", "ICZWoS", "ICZWp4", "ICZXOr", "ICZXPS",
+			"ICZXQ4", "ICZY0r", "ICZY1S", "ICZY24",		};
+		System.out.println("Trying to enter " + problems.length + " String keys into a CuckooObjectMap.");
+		for (int i = 0; i < problems.length; i++) {
+			System.out.println("Entered " + i + " keys successfully.");
+			map.put(problems[i], null);
+		}
+		System.out.println("Unexpectedly succeeded; finished CuckooObjectMap has size: " + map.size);
+	}
+
 	@Test
 	public void workingCuckooTest (){
 		ObjectObjectCuckooMap<String, Object> map = new ObjectObjectCuckooMap<>();
@@ -25,5 +50,76 @@ public class CuckooTest {
 			map.put(problems[i], null);
 		}
 		System.out.println("Succeeded; finished ObjectObjectCuckooMap has size: " + map.size);
+	}
+	@Test
+	public void workingStringentCuckooTest (){
+		ObjectObjectCuckooMap<String, Object> map = new ObjectObjectCuckooMap<>();
+		// all have a hashCode() of -2140395045
+		String[] problems = {
+			"Haxvnr", "HaxvoS", "Haxvp4", "HaxwOr", "HaxwPS", "HaxwQ4", "Haxx0r", "Haxx1S",
+			"Haxx24", "HayWnr", "HayWoS", "HayWp4", "HayXOr", "HayXPS", "HayXQ4", "HayY0r",
+			"HayY1S", "HayY24", "Haz8nr", "Haz8oS", "Haz8p4", "Haz9Or", "Haz9PS", "Haz9Q4",
+			"HbYvnr", "HbYvoS", "HbYvp4", "HbYwOr", "HbYwPS", "HbYwQ4", "HbYx0r", "HbYx1S",
+			"HbYx24", "HbZWnr", "HbZWoS", "HbZWp4", "HbZXOr", "HbZXPS", "HbZXQ4", "HbZY0r",
+			"HbZY1S", "HbZY24", "IBxvnr", "IBxvoS", "IBxvp4", "IBxwOr", "IBxwPS", "IBxwQ4",
+			"IBxx0r", "IBxx1S", "IBxx24", "IByWnr", "IByWoS", "IByWp4", "IByXOr", "IByXPS",
+			"IByXQ4", "IByY0r", "IByY1S", "IByY24", "IBz8nr", "IBz8oS", "IBz8p4", "IBz9Or",
+			"IBz9PS", "IBz9Q4", "ICYvnr", "ICYvoS", "ICYvp4", "ICYwOr", "ICYwPS", "ICYwQ4",
+			"ICYx0r", "ICYx1S", "ICYx24", "ICZWnr", "ICZWoS", "ICZWp4", "ICZXOr", "ICZXPS",
+			"ICZXQ4", "ICZY0r", "ICZY1S", "ICZY24",
+		};
+		System.out.println("Trying to enter " + problems.length + " String keys into an ObjectObjectCuckooMap.");
+		for (int i = 0; i < problems.length; i++) {
+			System.out.println("Entered " + i + " keys successfully.");
+			map.put(problems[i], null);
+		}
+		System.out.println("Succeeded; finished ObjectObjectCuckooMap has size: " + map.size);
+	}
+
+	/**
+	 * Generates 6-char Strings that all have the same hashCode().
+	 * @param args ignored
+	 */
+	public static void main(String[] args) {
+		int[] coeffs = {
+			31 * 31 * 31 * 31 * 31,
+			31 * 31 * 31 * 31,
+			31 * 31 * 31,
+			31 * 31,
+			31,
+			1};
+		char[] usable = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+		final int target = "Haxx0r".hashCode();
+		int count = 0;
+		for (int a = 0, aReset = 0; a < usable.length; a++) {
+			aReset = coeffs[0] * usable[a];
+			for (int b = 0, bReset = aReset; b < usable.length; b++) {
+				bReset = aReset + coeffs[1] * usable[b];
+				for (int c = 0, cReset = bReset; c < usable.length; c++) {
+					cReset = bReset + coeffs[2] * usable[c];
+					for (int d = 0, dReset = cReset; d < usable.length; d++) {
+						dReset = cReset + coeffs[3] * usable[d];
+						for (int e = 0, eReset = dReset; e < usable.length; e++) {
+							eReset = dReset + coeffs[4] * usable[e];
+							for (int f = 0, fReset = eReset; f < usable.length; f++) {
+								fReset = eReset + coeffs[5] * usable[f];
+								if (fReset == target) {
+									System.out.print('"');
+									System.out.print(usable[a]);
+									System.out.print(usable[b]);
+									System.out.print(usable[c]);
+									System.out.print(usable[d]);
+									System.out.print(usable[e]);
+									System.out.print(usable[f]);
+									System.out.println("\",");
+									count++;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		System.out.println("\nFound " + count + " colliding hashCodes.");
 	}
 }
