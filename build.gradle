@@ -37,8 +37,14 @@ if (JavaVersion.current().isJava8Compatible()) {
         }
     }
 }
-if (JavaVersion.current().isJava9Compatible()) {
+
+if(JavaVersion.current().isJava9Compatible()) {
     compileJava.targetCompatibility = 8
+    allprojects {
+        tasks.withType(JavaCompile) {
+            options.release.set(8)
+        }
+    }
 }
 
 idea.module.excludeDirs += [file("src/main/java/emu/")]
@@ -53,14 +59,6 @@ jar {
     archiveBaseName.set(projectName)
     manifest {
         attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
-    }
-}
-
-if(JavaVersion.current().isJava9Compatible()) {
-    allprojects {
-        tasks.withType(JavaCompile) {
-            options.release.set(8)
-        }
     }
 }
 
