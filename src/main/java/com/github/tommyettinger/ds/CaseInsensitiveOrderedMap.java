@@ -107,6 +107,17 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 		super(keys, values);
 	}
 
+	/**
+	 * Creates a new set by copying {@code count} items from the given ObjectObjectOrderedMap (or a subclass, such as
+	 * CaseInsensitiveOrderedMap), starting at {@code offset} in that Map, into this.
+	 * @param other another ObjectObjectOrderedMap of the same types (key must be CharSequence)
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public CaseInsensitiveOrderedMap (ObjectObjectOrderedMap<CharSequence, ? extends V> other, int offset, int count) {
+		this(count);
+		putAll(0, other, offset, count);
+	}
 
 	@Override
 	protected int place (Object item) {

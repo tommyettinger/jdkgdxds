@@ -109,6 +109,18 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	}
 
 	/**
+	 * Creates a new set by copying {@code count} items from the given ObjectObjectOrderedMap (or subclass, such as IdentityObjectOrderedMap),
+	 * starting at {@code offset} in that Map, into this.
+	 * @param other an ObjectObjectOrderedMap or other subclass, like IdentityObjectOrderedMap, of the same generic types
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public IdentityObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> other, int offset, int count) {
+		this(count);
+		putAll(0, other, offset, count);
+	}
+
+	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * This particular overload relies on the naturally-random nature of {@link System#identityHashCode(Object)}, and just
