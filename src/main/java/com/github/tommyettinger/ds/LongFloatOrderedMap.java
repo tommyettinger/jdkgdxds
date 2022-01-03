@@ -139,6 +139,18 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 		putAll(keys, values);
 	}
 
+	/**
+	 * Creates a new set by copying {@code count} items from the given LongFloatOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 * @param other another LongFloatOrderedMap
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public LongFloatOrderedMap (LongFloatOrderedMap other, int offset, int count) {
+		this(count);
+		putAll(0, other, offset, count);
+	}
+
 	@Override
 	public float put (long key, float value) {
 		if (key == 0) {
