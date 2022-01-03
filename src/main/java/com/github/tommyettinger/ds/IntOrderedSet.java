@@ -81,6 +81,19 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 		addAll(coll);
 	}
 
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this.
+	 * @param other another Ordered.OfInt
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public IntOrderedSet (Ordered.OfInt other, int offset, int count) {
+		this(count);
+		addAll(0, other, offset, count);
+	}
+
 	/**
 	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
 	 * @param array an array to draw items from

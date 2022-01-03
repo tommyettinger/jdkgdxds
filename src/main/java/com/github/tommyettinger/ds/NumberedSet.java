@@ -127,6 +127,18 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	}
 
 	/**
+	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this.
+	 * @param other another Ordered of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public NumberedSet (Ordered<T> other, int offset, int count) {
+		this(count);
+		addAll(0, other, offset, count);
+	}
+
+	/**
 	 * Returns an index &gt;= 0 and &lt;= the {@code mask} of this NumberedSet's {@link #map} for the specified {@code item}.
 	 * <br>
 	 * You can override this, which will affect the internal map that NumberedSet uses.

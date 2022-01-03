@@ -135,6 +135,19 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		addAll(items);
 	}
 
+	/**
+	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this, using {@code extractor} to get the keys that determine distinctness.
+	 * @param extractor a function that will be used to extract K keys from the T items in coll
+	 * @param other another Ordered of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public HolderOrderedSet (Function<T, K> extractor, Ordered<T> other, int offset, int count) {
+		this(extractor, count);
+		addAll(0, other, offset, count);
+	}
+
 	@Override
 	public boolean add (T key) {
 		return super.add(key) && items.add(key);
