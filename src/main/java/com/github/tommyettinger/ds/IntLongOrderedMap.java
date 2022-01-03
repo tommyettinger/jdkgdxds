@@ -138,6 +138,18 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 		putAll(keys, values);
 	}
 
+	/**
+	 * Creates a new set by copying {@code count} items from the given IntLongOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 * @param other another IntLongOrderedMap
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public IntLongOrderedMap (IntLongOrderedMap other, int offset, int count) {
+		this(count);
+		putAll(0, other, offset, count);
+	}
+
 	@Override
 	public long put (int key, long value) {
 		if (key == 0) {

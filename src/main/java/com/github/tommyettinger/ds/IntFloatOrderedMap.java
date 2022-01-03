@@ -138,6 +138,18 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 		putAll(keys, values);
 	}
 
+	/**
+	 * Creates a new set by copying {@code count} items from the given IntFloatOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 * @param other another IntFloatOrderedMap
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public IntFloatOrderedMap (IntFloatOrderedMap other, int offset, int count) {
+		this(count);
+		putAll(0, other, offset, count);
+	}
+
 	@Override
 	public float put (int key, float value) {
 		if (key == 0) {

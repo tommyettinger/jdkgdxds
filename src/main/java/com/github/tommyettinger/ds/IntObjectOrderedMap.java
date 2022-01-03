@@ -137,6 +137,17 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
+	/**
+	 * Creates a new set by copying {@code count} items from the given IntObjectOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 * @param other another IntObjectOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> other, int offset, int count) {
+		this(count);
+		putAll(0, other, offset, count);
+	}
 
 	@Override
 	public V put (int key, @Nullable V value) {
