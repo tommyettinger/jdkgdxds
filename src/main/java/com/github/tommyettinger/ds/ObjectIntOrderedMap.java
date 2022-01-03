@@ -136,6 +136,18 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 		putAll(keys, values);
 	}
 
+	/**
+	 * Creates a new set by copying {@code count} items from the given ObjectIntOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 * @param other another ObjectIntOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public ObjectIntOrderedMap (ObjectIntOrderedMap<? extends K> other, int offset, int count) {
+		this(count);
+		putAll(0, other, offset, count);
+	}
+
 	@Override
 	public int put (K key, int value) {
 		int i = locateKey(key);

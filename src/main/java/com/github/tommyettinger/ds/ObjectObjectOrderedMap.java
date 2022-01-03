@@ -132,6 +132,18 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		putAll(keys, values);
 	}
 
+	/**
+	 * Creates a new set by copying {@code count} items from the given ObjectObjectOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 * @param other another ObjectObjectOrderedMap of the same types
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public ObjectObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> other, int offset, int count) {
+		this(count);
+		putAll(0, other, offset, count);
+	}
+
 	@Override
 	@Nullable
 	public V put (K key, @Nullable V value) {

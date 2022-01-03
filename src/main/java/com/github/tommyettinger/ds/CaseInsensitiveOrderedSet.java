@@ -116,7 +116,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	public CaseInsensitiveOrderedSet (CharSequence[] array) {
 		super(array);
 	}
-	
+
 	/**
 	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.

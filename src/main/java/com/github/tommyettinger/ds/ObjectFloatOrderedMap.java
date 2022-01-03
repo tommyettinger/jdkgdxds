@@ -136,6 +136,18 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		putAll(keys, values);
 	}
 
+	/**
+	 * Creates a new set by copying {@code count} items from the given ObjectFloatOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 * @param other another ObjectFloatOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public ObjectFloatOrderedMap (ObjectFloatOrderedMap<? extends K> other, int offset, int count) {
+		this(count);
+		putAll(0, other, offset, count);
+	}
+
 	@Override
 	public float put (K key, float value) {
 		int i = locateKey(key);
