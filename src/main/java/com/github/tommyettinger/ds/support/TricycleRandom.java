@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.ds.support;
 
-import java.util.Random;
-
 /**
  * An unusual RNG that's extremely fast on HotSpot JDK 16 and higher, and still fairly fast on earlier JDKs. It has
  * three {@code long} states, which as far as I can tell can be initialized to any values without hitting any known

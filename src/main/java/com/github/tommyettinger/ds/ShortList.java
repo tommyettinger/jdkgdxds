@@ -24,7 +24,6 @@ import com.github.tommyettinger.ds.support.util.ShortIterator;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import com.github.tommyettinger.ds.support.EnhancedRandom;

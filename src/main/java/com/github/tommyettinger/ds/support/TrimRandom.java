@@ -23,10 +23,15 @@ package com.github.tommyettinger.ds.support;
  * as fast as {@link FourWheelRandom} on machines that can multiply {@code long} values efficiently, but is faster than
  * just about everything else (except {@link TricycleRandom} and {@link DistinctRandom} on Java 8 with HotSpot, or
  * DistinctRandom on any OpenJ9 version).
- * It can be considered stable, like the other EnhancedRandom implementations here. Testing performed should be sufficient,
- * but more can always be done; this passes at least 64TB of PractRand and 70TB of hwd without issues. The second test, hwd,
- * only checks for a specific type of quality issue, but also fails if the period is exhausted; I didn't run hwd as long
- * because mathematically, the period is at minimum 2 to the 64, which wouldn't be exhausted by hwd in years.
+ * <br>
+ * It shouldn't be considered stable, unlike the other EnhancedRandom implementations here. Testing performed should be
+ * sufficient, but more can always be done; this passes at least 64TB of PractRand and 2PB of hwd without issues. The
+ * second test, hwd, only checks for a specific type of quality issue, but also fails if the period is exhausted; I didn't
+ * run hwd as long as I sometimes have because mathematically, the period is at minimum 2 to the 64, which wouldn't be
+ * exhausted by hwd in years. The reason this isn't stable is that one other test (extinction/saturation likelihood)
+ * fails after over 200 PB have been analyzed, but shows strong signs that it will fail earlier. The test in question
+ * runs on the GPU using CUDA, so was able to generate far more numbers in the 2-day timeframe it took to fail than
+ * most CPU approaches could.
  * <br>
  * The algorithm used here has four states purely to exploit instruction-level parallelism; one state is a counter (this
  * gives the guaranteed minimum period of 2 to the 64), and the others combine the values of the four states across three
@@ -311,13 +316,7 @@ public class TrimRandom implements EnhancedRandom {
 
         TrimRandom that = (TrimRandom)o;
 
-        if (stateA != that.stateA)
-            return false;
-        if (stateB != that.stateB)
-            return false;
-        if (stateC != that.stateC)
-            return false;
-        return stateD == that.stateD;
+        return stateA == that.stateA && stateB == that.stateB && stateC == that.stateC && stateD == that.stateD;
     }
 
     public String toString() {
@@ -325,7 +324,7 @@ public class TrimRandom implements EnhancedRandom {
                 "stateA=" + stateA +
                 "L, stateB=" + stateB +
                 "L, stateC=" + stateC +
-                "L, stateC=" + stateD +
+                "L, stateD=" + stateD +
                 "L}";
     }
 }

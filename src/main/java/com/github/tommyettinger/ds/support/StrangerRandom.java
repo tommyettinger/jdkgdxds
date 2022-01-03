@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.ds.support;
 
-import java.util.Random;
-
 /**
  * A random number generator that acts as a counterpart to {@link FourWheelRandom} by guaranteeing a slightly longer period
  * and potentially being faster in some situations because it uses no multiplication. Like FourWheelRandom, this has four
@@ -347,7 +345,7 @@ public class StrangerRandom implements EnhancedRandom {
                 "stateA=" + stateA +
                 "L, stateB=" + stateB +
                 "L, stateC=" + stateC +
-                "L, stateC=" + stateD +
+                "L, stateD=" + stateD +
                 "L}";
     }
 }

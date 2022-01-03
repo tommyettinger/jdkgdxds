@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.ds.support;
 
-import java.util.Random;
-
 /**
  * A random number generator that is fairly fast and guarantees 4-dimensional equidistribution (with the exception of the
  * quartet with four zeroes in a row, every quartet of long results is produced exactly once over the period). It has a
@@ -311,7 +309,7 @@ public class Xoshiro256StarStarRandom implements EnhancedRandom {
                 "stateA=" + stateA +
                 "L, stateB=" + stateB +
                 "L, stateC=" + stateC +
-                "L, stateC=" + stateD +
+                "L, stateD=" + stateD +
                 "L}";
     }
 }
