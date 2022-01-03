@@ -8,6 +8,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.StrangerRandom;
 import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.tommyettinger.ds.support.TrimRandom;
 import org.junit.Assert;
@@ -68,6 +69,18 @@ public class EnhancedRandomTest {
 	@Test
 	public void testTrimPrevious() {
 		TrimRandom random = new TrimRandom(0L);
+		long n0 = random.nextLong();
+		long n1 = random.nextLong();
+		long n2 = random.nextLong();
+		long p1 = random.previousLong();
+		long p0 = random.previousLong();
+		Assert.assertEquals(n0, p0);
+		Assert.assertEquals(n1, p1);
+	}
+
+	@Test
+	public void testStrangerPrevious() {
+		StrangerRandom random = new StrangerRandom(0L);
 		long n0 = random.nextLong();
 		long n1 = random.nextLong();
 		long n2 = random.nextLong();

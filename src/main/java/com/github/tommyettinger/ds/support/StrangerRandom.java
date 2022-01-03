@@ -305,6 +305,29 @@ public class StrangerRandom implements EnhancedRandom {
     }
 
     @Override
+    public long previousLong() {
+        final long fa = this.stateA;
+        final long fb = this.stateB;
+        final long fc = this.stateC;
+        final long fd = this.stateD;
+        long t = fb ^ fb >>> 9;
+        t ^= t >>> 18;
+        t ^= t >>> 36;
+        long m = fa ^ fa << 7;
+        m ^= m << 14;
+        m ^= m << 28;
+        m ^= m << 56;
+        this.stateA = t;
+        this.stateB = m;
+        this.stateC = t - fd + 0xC6BC279692B5C323L;
+        this.stateD = Long.rotateRight(fc + m, 39);
+        t = m ^ m >>> 9;
+        t ^= t >>> 18;
+        t ^= t >>> 36;
+        return t - stateD + 0xC6BC279692B5C323L;
+    }
+
+    @Override
     public int next(int bits) {
         final long fa = this.stateA;
         final long fb = this.stateB;
