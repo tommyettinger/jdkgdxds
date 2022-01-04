@@ -120,6 +120,14 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
+	 * Copies the given Ordered.OfBoolean into a new BooleanList.
+	 * @param other another Ordered.OfBoolean
+	 */
+	public BooleanList (Ordered.OfBoolean other) {
+		this(other.order());
+	}
+
+	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 * @param other another Ordered.OfBoolean

@@ -121,6 +121,14 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
+	 * Copies the given Ordered.OfShort into a new ShortList.
+	 * @param other another Ordered.OfShort
+	 */
+	public ShortList (Ordered.OfShort other) {
+		this(other.order());
+	}
+
+	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 * @param other another Ordered.OfShort

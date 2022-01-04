@@ -120,6 +120,14 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
+	 * Copies the given Ordered.OfLong into a new LongList.
+	 * @param other another Ordered.OfLong
+	 */
+	public LongList (Ordered.OfLong other) {
+		this(other.order());
+	}
+
+	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 * @param other another Ordered.OfLong

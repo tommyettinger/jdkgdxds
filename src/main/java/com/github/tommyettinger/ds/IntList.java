@@ -119,6 +119,14 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
+	 * Copies the given Ordered.OfInt into a new IntList.
+	 * @param other another Ordered.OfInt
+	 */
+	public IntList (Ordered.OfInt other) {
+		this(other.order());
+	}
+
+	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 * @param other another Ordered.OfInt

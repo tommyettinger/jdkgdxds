@@ -120,6 +120,14 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	/**
+	 * Copies the given Ordered.OfDouble into a new DoubleList.
+	 * @param other another Ordered.OfDouble
+	 */
+	public DoubleList (Ordered.OfDouble other) {
+		this(other.order());
+	}
+
+	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 * @param other another Ordered.OfDouble

@@ -124,6 +124,14 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
+	 * Copies the given Ordered of the same type into a new ObjectList.
+	 * @param other another Ordered of the same type
+	 */
+	public ObjectList (Ordered<T> other) {
+		super(other.order());
+	}
+
+	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 * @param other another Ordered of the same type

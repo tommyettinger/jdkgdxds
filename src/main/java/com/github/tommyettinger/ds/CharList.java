@@ -119,7 +119,15 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		this(coll.size());
 		addAll(coll);
 	}
-	
+
+	/**
+	 * Copies the given Ordered.OfChar into a new CharList.
+	 * @param other another Ordered.OfChar
+	 */
+	public CharList (Ordered.OfChar other) {
+		this(other.order());
+	}
+
 	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.

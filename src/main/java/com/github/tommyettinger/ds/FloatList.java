@@ -121,6 +121,14 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
+	 * Copies the given Ordered.OfFloat into a new FloatList.
+	 * @param other another Ordered.OfFloat
+	 */
+	public FloatList (Ordered.OfFloat other) {
+		this(other.order());
+	}
+
+	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 * @param other another Ordered.OfFloat

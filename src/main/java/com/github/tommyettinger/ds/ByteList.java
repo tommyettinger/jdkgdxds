@@ -119,7 +119,15 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		this(coll.size());
 		addAll(coll);
 	}
-	
+
+	/**
+	 * Copies the given Ordered.OfByte into a new ByteList.
+	 * @param other another Ordered.OfByte
+	 */
+	public ByteList (Ordered.OfByte other) {
+		this(other.order());
+	}
+
 	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
