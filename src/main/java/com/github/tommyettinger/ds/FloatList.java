@@ -120,6 +120,18 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		addAll(coll);
 	}
 
+	/**
+	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this.
+	 * @param other another Ordered.OfFloat
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public FloatList (Ordered.OfFloat other, int offset, int count) {
+		this(count);
+		addAll(0, other, offset, count);
+	}
+
 	// Newly-added
 	@Override
 	public int size () {

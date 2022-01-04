@@ -123,6 +123,18 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		}
 	}
 
+	/**
+	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this.
+	 * @param other another Ordered of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public ObjectList (Ordered<T> other, int offset, int count) {
+		super(count);
+		addAll(0, other, offset, count);
+	}
+
 	@Override
 	public void add (int index, @Nullable T element) {
 		if (ordered)

@@ -119,6 +119,18 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		this(coll.size());
 		addAll(coll);
 	}
+	
+	/**
+	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this.
+	 * @param other another Ordered.OfByte
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count how many items to copy from other
+	 */
+	public ByteList (Ordered.OfByte other, int offset, int count) {
+		this(count);
+		addAll(0, other, offset, count);
+	}
 
 	// Newly-added
 	@Override
