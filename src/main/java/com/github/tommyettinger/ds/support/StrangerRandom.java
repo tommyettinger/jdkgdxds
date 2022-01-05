@@ -365,10 +365,10 @@ public class StrangerRandom implements EnhancedRandom {
 
     public String toString() {
         return "StrangerRandom{" +
-                "stateA=" + stateA +
-                "L, stateB=" + stateB +
-                "L, stateC=" + stateC +
-                "L, stateD=" + stateD +
+                   "stateA=0x" + Base.BASE16.unsigned(stateA) +
+                "L, stateB=0x" + Base.BASE16.unsigned(stateB) +
+                "L, stateC=0x" + Base.BASE16.unsigned(stateC) +
+                "L, stateD=0x" + Base.BASE16.unsigned(stateD) +
                 "L}";
     }
 }

@@ -208,6 +208,6 @@ public class DistinctRandom implements EnhancedRandom {
 
     @Override
     public String toString () {
-        return "DistinctRandom{" + "state=" + state + "L}";
+        return "DistinctRandom{state=0x" + Base.BASE16.unsigned(state) + "L}";
     }
 }

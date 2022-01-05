@@ -289,9 +289,9 @@ public class TricycleRandom implements EnhancedRandom {
 
     public String toString() {
         return "TricycleRandom{" +
-                "stateA=" + stateA +
-                "L, stateB=" + stateB +
-                "L, stateC=" + stateC +
+                   "stateA=0x" + Base.BASE16.unsigned(stateA) +
+                "L, stateB=0x" + Base.BASE16.unsigned(stateB) +
+                "L, stateC=0x" + Base.BASE16.unsigned(stateC) +
                 "L}";
     }
 }

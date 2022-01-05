@@ -1014,6 +1014,10 @@ public class LaserRandom extends Random implements EnhancedRandom {
 
 	@Override
 	public String toString () {
-		return "LaserRandom{" + "stateA=" + stateA + "L, stateB=" + stateB + "L}";
+		return
+			"LaserRandom{" +
+				"stateA=0x" + Base.BASE16.unsigned(stateA) +
+				"L, stateB=0x" + Base.BASE16.unsigned(stateB) +
+				"L}";
 	}
 }

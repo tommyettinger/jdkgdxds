@@ -41,8 +41,8 @@ public class WrapperRandom extends Random {
 
 	/**
 	 * Uses the given EnhancedRandom for all operations it can (everything but Streams), and seeds the inherited Random state
-	 * with the given rng's state 0.
-	 * @param rng
+	 * with the given EnhancedRandom's first state.
+	 * @param rng an EnhancedRandom that will be referenced directly (not copied)
 	 */
 	public WrapperRandom (@Nonnull EnhancedRandom rng) {
 		super(rng.getSelectedState(0));
@@ -52,8 +52,8 @@ public class WrapperRandom extends Random {
 	/**
 	 * Uses the given EnhancedRandom for all operations it can (everything but Streams), and seeds both that EnhancedRandom
 	 * and the inherited Random state with the given seed.
-	 * @param rng
-	 * @param seed
+	 * @param rng an EnhancedRandom that will be referenced directly (not copied) and will be seeded with {@code seed}
+	 * @param seed a long seed (which can be any long) that will be used with {@link EnhancedRandom#setSeed(long)}
 	 */
 	public WrapperRandom (@Nonnull EnhancedRandom rng, long seed) {
 		super(seed);
@@ -63,7 +63,7 @@ public class WrapperRandom extends Random {
 
 	/**
 	 * Creates a WrapperRandom around a {@link FourWheelRandom}, seeded with the given seed.
-	 * @param seed a long to be used as a seed.
+	 * @param seed a long to be used as a seed for a FourWheelRandom
 	 */
 	public WrapperRandom (long seed) {
 		super(seed);
