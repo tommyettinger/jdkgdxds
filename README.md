@@ -87,14 +87,22 @@ to hash and compare arrays, and will work as long as you don't edit any array ke
 potential uses for this extensibility, like the case-insensitive CharSequence comparison that `CaseInsensitiveMap` and related
 classes use, or some form of fuzzy equality for float or double keys.
 
+Most of the ordered data structures now allow `addAll()` or `putAll()` to specify a range with a starting index and count of how
+many items to copy from the data structure passed as a parameter (often some kind of `Ordered`). This also optionally takes a
+starting index to add the range at in the order. When constructing one of these ordered data structures with a copy constructor,
+you usually have the option to copy only a range of the data structure you are copying. Similarly, there's often a `removeRange()`
+method, but it isn't present as universally (and it takes a start and end index, rather than a start index and count). All of
+these are intended to be useful for imitating disjoint sets, and other ways of isolating part of a data structure. You might
+shuffle an `ObjectList`, then make two more `ObjectList`s by copying different ranges from the shuffled "deck," for example.
+
 ## How do I get it?
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.3'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.4'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.2.3:sources'` to its dependencies, and in its
+`implementation 'com.github.tommyettinger:jdkgdxds:0.2.4:sources'` to its dependencies, and in its
 `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />
