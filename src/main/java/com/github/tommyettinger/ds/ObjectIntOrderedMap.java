@@ -263,6 +263,14 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 		return super.remove(keys.removeAt(index));
 	}
 
+	/**
+	 * Removes the items between the specified start index, inclusive, and end index, exclusive.
+	 * Note that this takes different arguments than some other range-related methods; this needs
+	 * a start index and an end index, rather than a count of items. This matches the behavior in
+	 * the JDK collections.
+	 * @param start the first index to remove, inclusive
+	 * @param end the last index (after what should be removed), exclusive
+	 */
 	@Override
 	public void removeRange (int start, int end) {
 		start = Math.max(0, start);

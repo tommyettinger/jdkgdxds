@@ -184,7 +184,13 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
-	 * Removes the items between the specified indices, inclusive.
+	 * Removes the items between the specified start index, inclusive, and end index, exclusive.
+	 * Note that this takes different arguments than some other range-related methods; this needs
+	 * a start index and an end index, rather than a count of items. This matches the behavior in
+	 * the JDK collections. This is also different from removeRange() in libGDX' Array class
+	 * because it is exclusive on end, instead of how Array is inclusive on end.
+	 * @param start the first index to remove, inclusive
+	 * @param end the last index (after what should be removed), exclusive
 	 */
 	@Override
 	public void removeRange (int start, int end) {
