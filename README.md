@@ -74,7 +74,9 @@ FourWheelRandom do not allow skipping. There's also some other generators that y
 never produced). `com.github.tommyettinger.ds.support.StrangerRandom` is mostly useful if you anticipate running on unusual
 hardware, particularly some that doesn't support fast multiplication between `long`s (StrangerRandom doesn't use multiplication);
 it also has a good guaranteed minimum period length of 2 to the 65 minus 2, but is between DistinctRandom and FourWheelRandom in
-raw speed.
+raw speed. `com.github.tommyettinger.ds.support.TrimRandom` is still being adjusted, but currently is faster than StrangerRandom,
+also offers a high guaranteed minimum period (2 to the 64) with a likely higher maximum period, and generally does well in quality
+testing (it could do better in some ways, which is why it is being adjusted).
 
 You can extend essentially all classes in jdkgdxds, and it's meant to be friendlier to inherit from than the libGDX collections.
 The Object-keyed maps and sets have protected `place()` and `equate()` methods to allow changing the behavior of hashing (with
@@ -91,18 +93,19 @@ Most of the ordered data structures now allow `addAll()` or `putAll()` to specif
 many items to copy from the data structure passed as a parameter (often some kind of `Ordered`). This also optionally takes a
 starting index to add the range at in the order. When constructing one of these ordered data structures with a copy constructor,
 you usually have the option to copy only a range of the data structure you are copying. Similarly, there's often a `removeRange()`
-method, but it isn't present as universally (and it takes a start and end index, rather than a start index and count). All of
-these are intended to be useful for imitating disjoint sets, and other ways of isolating part of a data structure. You might
-shuffle an `ObjectList`, then make two more `ObjectList`s by copying different ranges from the shuffled "deck," for example.
+method, also present on all ordered types except deques (and it takes a start and end index, rather than a start index and count,
+which imitates the method by that name in the JDK, not the similar one in libGDX's Array class). All of these are intended to be
+useful for imitating disjoint sets, and other ways of isolating part of a data structure. You might shuffle an `ObjectList`, then
+make two more `ObjectList`s by copying different ranges from the shuffled "deck," for example.
 
 ## How do I get it?
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.4'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.5'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.2.4:sources'` to its dependencies, and in its
+`implementation 'com.github.tommyettinger:jdkgdxds:0.2.5:sources'` to its dependencies, and in its
 `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />
