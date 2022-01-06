@@ -11,6 +11,7 @@ import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.tommyettinger.ds.support.StrangerRandom;
 import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.tommyettinger.ds.support.TrimRandom;
+import com.github.tommyettinger.ds.support.WrapperRandom;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -151,5 +152,25 @@ public class EnhancedRandomTest {
 			if(PRINTING) System.out.println(bounded);
 			Assert.assertEquals(bounded, outer);
 		}
+	}
+
+	@Test
+	public void testWrapperRandom() {
+		WrapperRandom random = new WrapperRandom(new FourWheelRandom(123456789, 0xFA7BAB1E5L, 0xB0BAFE77L, 0x1234123412341234L));
+		FourWheelRandom fwr = new FourWheelRandom(123456789, 0xFA7BAB1E5L, 0xB0BAFE77L, 0x1234123412341234L);
+		random.nextLong();
+		fwr.nextLong();
+		Assert.assertEquals(random.nextLong(), fwr.nextLong());
+		random.rng = new FourWheelRandom(123L);
+		fwr.setSeed(123L);
+		random.nextLong();
+		fwr.nextLong();
+		Assert.assertEquals(random.nextLong(), fwr.nextLong());
+		random = new WrapperRandom(new FourWheelRandom(1234L), 12345L);
+		fwr.setSeed(12345L);
+		random.nextLong();
+		fwr.nextLong();
+		Assert.assertEquals(random.nextLong(), fwr.nextLong());
+
 	}
 }

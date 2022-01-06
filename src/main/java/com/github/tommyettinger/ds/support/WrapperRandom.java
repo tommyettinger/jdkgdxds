@@ -30,7 +30,7 @@ public class WrapperRandom extends Random {
 	 * The EnhancedRandom this uses for almost all of its methods (not Streams).
 	 */
 	@Nonnull
-	public final EnhancedRandom rng;
+	public EnhancedRandom rng;
 
 	/**
 	 * Creates a WrapperRandom around a {@link FourWheelRandom} with a random seed.
@@ -45,8 +45,9 @@ public class WrapperRandom extends Random {
 	 * @param rng an EnhancedRandom that will be referenced directly (not copied)
 	 */
 	public WrapperRandom (@Nonnull EnhancedRandom rng) {
-		super(rng.getSelectedState(0));
+		super();
 		this.rng = rng;
+		super.setSeed(rng.getSelectedState(0));
 	}
 
 	/**
@@ -56,9 +57,9 @@ public class WrapperRandom extends Random {
 	 * @param seed a long seed (which can be any long) that will be used with {@link EnhancedRandom#setSeed(long)}
 	 */
 	public WrapperRandom (@Nonnull EnhancedRandom rng, long seed) {
-		super(seed);
-		rng.setSeed(seed);
+		super();
 		this.rng = rng;
+		setSeed(seed);
 	}
 
 	/**
@@ -66,14 +67,16 @@ public class WrapperRandom extends Random {
 	 * @param seed a long to be used as a seed for a FourWheelRandom
 	 */
 	public WrapperRandom (long seed) {
-		super(seed);
+		super();
 		this.rng = new FourWheelRandom(seed);
+		setSeed(seed);
 	}
 
 	@Override
 	public void setSeed (long seed) {
 		super.setSeed(seed);
-		rng.setSeed(seed);
+		if(rng != null) // needed because superclass Random calls this during construction
+			rng.setSeed(seed);
 	}
 
 	@Override
