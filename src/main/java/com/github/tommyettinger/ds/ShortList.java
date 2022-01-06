@@ -503,16 +503,21 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
-	 * Removes the items between the specified indices, inclusive.
+	 * Removes the items between the specified start index, inclusive, and end index, exclusive.
+	 * Note that this takes different arguments than some other range-related methods; this needs
+	 * a start index and an end index, rather than a count of items. This matches the behavior in
+	 * the JDK collections.
+	 * @param start the first index to remove, inclusive
+	 * @param end the last index (after what should be removed), exclusive
 	 */
-	public void removeRange (int startIndex, int endIndex) {
+	public void removeRange (int start, int end) {
 		int n = size;
-		if (endIndex >= n) { throw new IndexOutOfBoundsException("end can't be >= size: " + endIndex + " >= " + size); }
-		if (startIndex > endIndex) { throw new IndexOutOfBoundsException("start can't be > end: " + startIndex + " > " + endIndex); }
-		int count = endIndex - startIndex + 1, lastIndex = n - count;
-		if (ordered) { System.arraycopy(items, startIndex + count, items, startIndex, n - (startIndex + count)); } else {
-			int i = Math.max(lastIndex, endIndex + 1);
-			System.arraycopy(items, i, items, startIndex, n - i);
+		if (end >= n) { throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size); }
+		if (start > end) { throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end); }
+		int count = end - start, lastIndex = n - count;
+		if (ordered) { System.arraycopy(items, start + count, items, start, n - (start + count)); } else {
+			int i = Math.max(lastIndex, end);
+			System.arraycopy(items, i, items, start, n - i);
 		}
 		size = n - count;
 	}
