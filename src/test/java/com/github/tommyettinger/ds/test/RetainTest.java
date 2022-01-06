@@ -1,5 +1,6 @@
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.IntOrderedSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
@@ -43,5 +44,18 @@ public class RetainTest {
 		Assert.assertFalse(set.contains("bar"));
 		Assert.assertFalse(set.contains("baz"));
 		Assert.assertTrue(set.contains("quux"));
+	}
+
+	@Test
+	public void testIntOrderedSetRemoveRange(){
+		IntOrderedSet set = IntOrderedSet.with(1, 111, 11111, 1111111);
+		Assert.assertEquals(set.size(), 4);
+		set.removeRange(1, 3);
+		Assert.assertEquals(set.size(), 2);
+		System.out.println(set);
+		Assert.assertTrue(set.contains(1));
+		Assert.assertFalse(set.contains(111));
+		Assert.assertFalse(set.contains(11111));
+		Assert.assertTrue(set.contains(1111111));
 	}
 }
