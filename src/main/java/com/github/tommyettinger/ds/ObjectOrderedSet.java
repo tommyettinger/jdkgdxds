@@ -137,14 +137,6 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		return true;
 	}
 
-	public boolean addAll (Ordered<T> set) {
-		ensureCapacity(set.size());
-		ObjectList<T> si = set.order();
-		int oldSize = size;
-		for (int i = 0, n = si.size(); i < n; i++) { add(si.get(i)); }
-		return size != oldSize;
-	}
-
 	/**
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
 	 * inserting at the end of the iteration order.

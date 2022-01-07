@@ -196,16 +196,6 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
-	 * Adds all items in the Ordered.OfByte {@code other} to this list, inserting at the end of the iteration order.
-	 *
-	 * @param other          a non-null {@link Ordered.OfByte}
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfByte)} does
-	 */
-	public boolean addAll (Ordered.OfByte other) {
-		return addAll(size(), other, 0, other.size());
-	}
-
-	/**
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered.OfByte {@code other} to this list,
 	 * inserting at the end of the iteration order.
 	 *

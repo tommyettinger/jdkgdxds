@@ -138,14 +138,6 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 		return true;
 	}
 
-	public boolean addAll (Ordered.OfInt other) {
-		IntList oo = other.order();
-		ensureCapacity(oo.size());
-		int oldSize = size;
-		for (int i = 0, n = oo.size(); i < n; i++) { add(oo.get(i)); }
-		return oldSize != size;
-	}
-
 	/**
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
 	 * inserting at the end of the iteration order.

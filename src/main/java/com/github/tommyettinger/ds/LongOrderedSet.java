@@ -137,14 +137,6 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		return true;
 	}
 
-	public boolean addAll (Ordered.OfLong other) {
-		LongList oo = other.order();
-		ensureCapacity(oo.size());
-		int oldSize = size;
-		for (int i = 0, n = oo.size(); i < n; i++) { add(oo.get(i)); }
-		return size != oldSize;
-	}
-
 	/**
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
 	 * inserting at the end of the iteration order.

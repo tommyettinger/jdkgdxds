@@ -196,16 +196,6 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
-	 * Adds all items in the Ordered.OfFloat {@code other} to this list, inserting at the end of the iteration order.
-	 *
-	 * @param other          a non-null {@link Ordered.OfFloat}
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfFloat)} does
-	 */
-	public boolean addAll (Ordered.OfFloat other) {
-		return addAll(size(), other, 0, other.size());
-	}
-
-	/**
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered.OfFloat {@code other} to this list,
 	 * inserting at the end of the iteration order.
 	 *

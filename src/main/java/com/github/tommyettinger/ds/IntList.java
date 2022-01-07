@@ -194,16 +194,6 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * Adds all items in the Ordered.OfInt {@code other} to this list, inserting at the end of the iteration order.
-	 *
-	 * @param other          a non-null {@link Ordered.OfInt}
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfInt)} does
-	 */
-	public boolean addAll (Ordered.OfInt other) {
-		return addAll(size(), other, 0, other.size());
-	}
-
-	/**
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered.OfInt {@code other} to this list,
 	 * inserting at the end of the iteration order.
 	 *

@@ -195,16 +195,6 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
-	 * Adds all items in the Ordered.OfBoolean {@code other} to this list, inserting at the end of the iteration order.
-	 *
-	 * @param other          a non-null {@link Ordered.OfBoolean}
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfBoolean)} does
-	 */
-	public boolean addAll (Ordered.OfBoolean other) {
-		return addAll(size(), other, 0, other.size());
-	}
-
-	/**
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered.OfBoolean {@code other} to this list,
 	 * inserting at the end of the iteration order.
 	 *
