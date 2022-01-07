@@ -201,7 +201,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param other          a non-null {@link Ordered.OfBoolean}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfBoolean)} does
+	 * @return true if this is modified by this call, as {@link #addAll(BooleanList)} does
 	 */
 	public boolean addAll (Ordered.OfBoolean other, int offset, int count) {
 		return addAll(size(), other, offset, count);
@@ -215,7 +215,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param other          a non-null {@link Ordered.OfBoolean}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfBoolean)} does
+	 * @return true if this is modified by this call, as {@link #addAll(BooleanList)} does
 	 */
 	public boolean addAll (int insertionIndex, Ordered.OfBoolean other, int offset, int count) {
 		boolean changed = false;

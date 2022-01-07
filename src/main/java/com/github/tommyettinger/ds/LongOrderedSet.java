@@ -144,7 +144,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param other          a non-null {@link Ordered.OfLong} of {@code T}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfLong)} does
+	 * @return true if this is modified by this call, as {@link #addAll(LongSet)} does
 	 */
 	public boolean addAll (Ordered.OfLong other, int offset, int count) {
 		return addAll(size, other, offset, count);
@@ -158,7 +158,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param other          a non-null {@link Ordered.OfLong}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfLong)} does
+	 * @return true if this is modified by this call, as {@link #addAll(LongSet)} does
 	 */
 	public boolean addAll (int insertionIndex, Ordered.OfLong other, int offset, int count) {
 		boolean changed = false;

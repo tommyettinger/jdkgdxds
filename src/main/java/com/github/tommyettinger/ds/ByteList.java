@@ -202,7 +202,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * @param other          a non-null {@link Ordered.OfByte}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfByte)} does
+	 * @return true if this is modified by this call, as {@link #addAll(ByteList)} does
 	 */
 	public boolean addAll (Ordered.OfByte other, int offset, int count) {
 		return addAll(size(), other, offset, count);
@@ -216,7 +216,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * @param other          a non-null {@link Ordered.OfByte}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfByte)} does
+	 * @return true if this is modified by this call, as {@link #addAll(ByteList)} does
 	 */
 	public boolean addAll (int insertionIndex, Ordered.OfByte other, int offset, int count) {
 		boolean changed = false;

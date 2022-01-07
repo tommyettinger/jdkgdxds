@@ -202,7 +202,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 * @param other          a non-null {@link Ordered.OfShort}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfShort)} does
+	 * @return true if this is modified by this call, as {@link #addAll(ShortList)} does
 	 */
 	public boolean addAll (Ordered.OfShort other, int offset, int count) {
 		return addAll(size(), other, offset, count);
@@ -216,7 +216,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 * @param other          a non-null {@link Ordered.OfShort}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfShort)} does
+	 * @return true if this is modified by this call, as {@link #addAll(ShortList)} does
 	 */
 	public boolean addAll (int insertionIndex, Ordered.OfShort other, int offset, int count) {
 		boolean changed = false;

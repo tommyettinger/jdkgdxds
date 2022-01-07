@@ -200,7 +200,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * @param other          a non-null {@link Ordered.OfInt}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfInt)} does
+	 * @return true if this is modified by this call, as {@link #addAll(IntList)} does
 	 */
 	public boolean addAll (Ordered.OfInt other, int offset, int count) {
 		return addAll(size(), other, offset, count);
@@ -214,7 +214,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * @param other          a non-null {@link Ordered.OfInt}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfInt)} does
+	 * @return true if this is modified by this call, as {@link #addAll(IntList)} does
 	 */
 	public boolean addAll (int insertionIndex, Ordered.OfInt other, int offset, int count) {
 		boolean changed = false;

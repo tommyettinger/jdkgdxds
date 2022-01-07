@@ -201,7 +201,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param other          a non-null {@link Ordered.OfDouble}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfDouble)} does
+	 * @return true if this is modified by this call, as {@link #addAll(DoubleList)} does
 	 */
 	public boolean addAll (Ordered.OfDouble other, int offset, int count) {
 		return addAll(size(), other, offset, count);
@@ -215,7 +215,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param other          a non-null {@link Ordered.OfDouble}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfDouble)} does
+	 * @return true if this is modified by this call, as {@link #addAll(DoubleList)} does
 	 */
 	public boolean addAll (int insertionIndex, Ordered.OfDouble other, int offset, int count) {
 		boolean changed = false;

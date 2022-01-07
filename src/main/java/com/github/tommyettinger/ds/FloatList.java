@@ -202,7 +202,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param other          a non-null {@link Ordered.OfFloat}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfFloat)} does
+	 * @return true if this is modified by this call, as {@link #addAll(FloatList)} does
 	 */
 	public boolean addAll (Ordered.OfFloat other, int offset, int count) {
 		return addAll(size(), other, offset, count);
@@ -216,7 +216,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param other          a non-null {@link Ordered.OfFloat}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfFloat)} does
+	 * @return true if this is modified by this call, as {@link #addAll(FloatList)} does
 	 */
 	public boolean addAll (int insertionIndex, Ordered.OfFloat other, int offset, int count) {
 		boolean changed = false;
