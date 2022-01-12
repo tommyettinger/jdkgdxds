@@ -282,6 +282,16 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	}
 
 	/**
+	 * Reduces the size of the map to the specified size. If the map is already smaller than the specified
+	 * size, no action is taken.
+	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
+	 */
+	@Override
+	public void truncate (int newSize) {
+		if (size > newSize) { removeRange(newSize, size); }
+	}
+
+	/**
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
 	 *

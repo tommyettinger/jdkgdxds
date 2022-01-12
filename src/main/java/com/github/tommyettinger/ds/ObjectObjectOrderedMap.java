@@ -426,6 +426,16 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	}
 
 	/**
+	 * Reduces the size of the map to the specified size. If the map is already smaller than the specified
+	 * size, no action is taken.
+	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
+	 */
+	@Override
+	public void truncate (int newSize) {
+		if (size > newSize) { removeRange(newSize, size); }
+	}
+
+	/**
 	 * Returns a {@link Set} view of the keys contained in this map.
 	 * The set is backed by the map, so changes to the map are
 	 * reflected in the set, and vice-versa.  If the map is modified
