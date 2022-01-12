@@ -471,7 +471,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 */
 	public void shrink (int maximumCapacity) {
 		if (maximumCapacity < 0) { throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity); }
-		int tableSize = tableSize(maximumCapacity, loadFactor);
+		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
 		if (keyTable.length > tableSize) { resize(tableSize); }
 	}
 
