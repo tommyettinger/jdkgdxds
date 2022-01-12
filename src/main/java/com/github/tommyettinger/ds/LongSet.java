@@ -454,8 +454,8 @@ public class LongSet implements PrimitiveCollection.OfLong {
 			--size;
 		}
 		for (int i = 0; i < keyTable.length && size > newSize; i++) {
-			if(keyTable[i] != 0L){
-				keyTable[i] = 0L;
+			if(keyTable[i] != 0){
+				keyTable[i] = 0;
 				--size;
 			}
 		}
