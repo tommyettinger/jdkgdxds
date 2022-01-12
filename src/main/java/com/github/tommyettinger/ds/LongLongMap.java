@@ -684,7 +684,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	}
 
 	/**
-	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
+	 * Reduces the size of the map to the specified size. If the map is already smaller than the specified
 	 * size, no action is taken. This indiscriminately removes items from the backing array until the
 	 * requested newSize is reached, or until the full backing array has had its elements removed.
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size

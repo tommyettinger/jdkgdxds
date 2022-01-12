@@ -669,6 +669,29 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	/**
+	 * Reduces the size of the map to the specified size. If the map is already smaller than the specified
+	 * size, no action is taken. This indiscriminately removes items from the backing array until the
+	 * requested newSize is reached, or until the full backing array has had its elements removed.
+	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
+	 */
+	public void truncate (int newSize) {
+		int[] keyTable = this.keyTable;
+		V[] valTable = this.valueTable;
+		if(hasZeroValue && size > newSize) {
+			hasZeroValue = false;
+			zeroValue = null;
+			--size;
+		}
+		for (int i = 0; i < keyTable.length && size > newSize; i++) {
+			if(keyTable[i] != 0){
+				keyTable[i] = 0;
+				valTable[i] = null;
+				--size;
+			}
+		}
+	}
+
+	/**
 	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
 	 * does not permit nested iteration. Iterate over {@link Entries#Entries(IntObjectMap)} if you
 	 * need nested or multithreaded iteration. You can remove an Entry from this IntObjectMap

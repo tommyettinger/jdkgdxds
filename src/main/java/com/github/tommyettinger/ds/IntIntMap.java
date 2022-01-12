@@ -56,7 +56,6 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  */
 public class IntIntMap implements Iterable<IntIntMap.Entry> {
 
-
 	protected int size;
 
 	protected int[] keyTable;
@@ -103,10 +102,10 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public IntIntMap (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
@@ -120,6 +119,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 
 	/**
 	 * Creates a new map identical to the specified map.
+	 *
 	 * @param map the map to copy
 	 */
 	public IntIntMap (IntIntMap map) {
@@ -205,7 +205,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	public int put (int key, int value) {
 		if (key == 0) {
 			int oldValue = defaultValue;
-			if (hasZeroValue) { oldValue = zeroValue; } else { size++; }
+			if (hasZeroValue) {oldValue = zeroValue;} else {size++;}
 			hasZeroValue = true;
 			zeroValue = value;
 			return oldValue;
@@ -219,7 +219,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) { resize(keyTable.length << 1); }
+		if (++size >= threshold) {resize(keyTable.length << 1);}
 		return defaultValue;
 	}
 
@@ -229,7 +229,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	public int putOrDefault (int key, int value, int defaultValue) {
 		if (key == 0) {
 			int oldValue = defaultValue;
-			if (hasZeroValue) { oldValue = zeroValue; } else { size++; }
+			if (hasZeroValue) {oldValue = zeroValue;} else {size++;}
 			hasZeroValue = true;
 			zeroValue = value;
 			return oldValue;
@@ -243,19 +243,20 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) { resize(keyTable.length << 1); }
+		if (++size >= threshold) {resize(keyTable.length << 1);}
 		return defaultValue;
 	}
 
 	/**
 	 * Puts every key-value pair in the given map into this, with the values from the given map
 	 * overwriting the previous values if two keys are identical.
+	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
 	public void putAll (IntIntMap map) {
 		ensureCapacity(map.size);
 		if (map.hasZeroValue) {
-			if (!hasZeroValue) { size++; }
+			if (!hasZeroValue) {size++;}
 			hasZeroValue = true;
 			zeroValue = map.zeroValue;
 		}
@@ -264,7 +265,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		int key;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
-			if (key != 0) { put(key, valueTable[i]); }
+			if (key != 0) {put(key, valueTable[i]);}
 		}
 	}
 
@@ -326,7 +327,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * @param key any {@code int}
 	 */
 	public int get (int key) {
-		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
+		if (key == 0) {return hasZeroValue ? zeroValue : defaultValue;}
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -341,7 +342,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
 	public int getOrDefault (int key, int defaultValue) {
-		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
+		if (key == 0) {return hasZeroValue ? zeroValue : defaultValue;}
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -377,7 +378,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = defaultValue + increment;
-		if (++size >= threshold) { resize(keyTable.length << 1); }
+		if (++size >= threshold) {resize(keyTable.length << 1);}
 		return defaultValue;
 	}
 
@@ -391,7 +392,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 			return defaultValue;
 		}
 		int i = locateKey(key);
-		if (i < 0) { return defaultValue; }
+		if (i < 0) {return defaultValue;}
 		int[] keyTable = this.keyTable;
 		int rem;
 		int[] valueTable = this.valueTable;
@@ -464,9 +465,9 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * instead.
 	 */
 	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) { throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity); }
+		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
 		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
-		if (keyTable.length > tableSize) { resize(tableSize); }
+		if (keyTable.length > tableSize) {resize(tableSize);}
 	}
 
 	/**
@@ -483,7 +484,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	}
 
 	public void clear () {
-		if (size == 0) { return; }
+		if (size == 0) {return;}
 		size = 0;
 		Arrays.fill(keyTable, 0);
 	}
@@ -493,17 +494,17 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * be an expensive operation.
 	 */
 	public boolean containsValue (int value) {
-		if (hasZeroValue && zeroValue == value) { return true; }
+		if (hasZeroValue && zeroValue == value) {return true;}
 		int[] valueTable = this.valueTable;
 		int[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && valueTable[i] == value) { return true; }
+			if (keyTable[i] != 0 && valueTable[i] == value) {return true;}
 		}
 		return false;
 	}
 
 	public boolean containsKey (int key) {
-		if (key == 0) { return hasZeroValue; }
+		if (key == 0) {return hasZeroValue;}
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -519,11 +520,11 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * every value, which may be an expensive operation.
 	 */
 	public int findKey (int value, int defaultKey) {
-		if (hasZeroValue && zeroValue == value) { return 0; }
+		if (hasZeroValue && zeroValue == value) {return 0;}
 		int[] valueTable = this.valueTable;
 		int[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && valueTable[i] == value) { return keyTable[i]; }
+			if (keyTable[i] != 0 && valueTable[i] == value) {return keyTable[i];}
 		}
 
 		return defaultKey;
@@ -535,7 +536,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) { resize(tableSize); }
+		if (keyTable.length < tableSize) {resize(tableSize);}
 	}
 
 	protected void resize (int newSize) {
@@ -553,7 +554,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				int key = oldKeyTable[i];
-				if (key != 0) { putResize(key, oldValueTable[i]); }
+				if (key != 0) {putResize(key, oldValueTable[i]);}
 			}
 		}
 	}
@@ -563,7 +564,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	}
 
 	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -588,18 +589,18 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 
 	@Override
 	public boolean equals (Object obj) {
-		if (obj == this) { return true; }
-		if (!(obj instanceof IntIntMap)) { return false; }
+		if (obj == this) {return true;}
+		if (!(obj instanceof IntIntMap)) {return false;}
 		IntIntMap other = (IntIntMap)obj;
-		if (other.size != size) { return false; }
-		if (other.hasZeroValue != hasZeroValue || other.zeroValue != zeroValue) { return false; }
+		if (other.size != size) {return false;}
+		if (other.hasZeroValue != hasZeroValue || other.zeroValue != zeroValue) {return false;}
 		int[] keyTable = this.keyTable;
 		int[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			int key = keyTable[i];
 			if (key != 0) {
 				int value = valueTable[i];
-				if (value != other.get(key)) { return false; }
+				if (value != other.get(key)) {return false;}
 			}
 		}
 		return true;
@@ -615,19 +616,19 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	}
 
 	protected String toString (String separator, boolean braces) {
-		if (size == 0) { return braces ? "{}" : ""; }
+		if (size == 0) {return braces ? "{}" : "";}
 		StringBuilder buffer = new StringBuilder(32);
-		if (braces) { buffer.append('{'); }
+		if (braces) {buffer.append('{');}
 		if (hasZeroValue) {
 			buffer.append("0=").append(zeroValue);
-			if (size > 1) { buffer.append(separator); }
+			if (size > 1) {buffer.append(separator);}
 		}
 		int[] keyTable = this.keyTable;
 		int[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			int key = keyTable[i];
-			if (key == 0) { continue; }
+			if (key == 0) {continue;}
 			buffer.append(key);
 			buffer.append('=');
 			int value = valueTable[i];
@@ -636,14 +637,14 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		}
 		while (i-- > 0) {
 			int key = keyTable[i];
-			if (key == 0) { continue; }
+			if (key == 0) {continue;}
 			buffer.append(separator);
 			buffer.append(key);
 			buffer.append('=');
 			int value = valueTable[i];
 			buffer.append(value);
 		}
-		if (braces) { buffer.append('}'); }
+		if (braces) {buffer.append('}');}
 		return buffer.toString();
 	}
 
@@ -656,8 +657,8 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach(IntIntConsumer action) {
-		for(Entry entry : entrySet()) {
+	public void forEach (IntIntConsumer action) {
+		for (Entry entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}
 	}
@@ -667,15 +668,37 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * function on that entry until all entries have been processed or the
 	 * function throws an exception.  Exceptions thrown by the function are
 	 * relayed to the caller.
+	 *
 	 * @param function the function to apply to each entry
 	 */
-	public void replaceAll(IntIntToIntBiFunction function){
+	public void replaceAll (IntIntToIntBiFunction function) {
 		for (Entry entry : entrySet()) {
 			entry.setValue(function.applyAsInt(entry.getKey(), entry.getValue()));
 		}
 	}
 
-	 /**
+	/**
+	 * Reduces the size of the map to the specified size. If the map is already smaller than the specified
+	 * size, no action is taken. This indiscriminately removes items from the backing array until the
+	 * requested newSize is reached, or until the full backing array has had its elements removed.
+	 *
+	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
+	 */
+	public void truncate (int newSize) {
+		int[] keyTable = this.keyTable;
+		if (hasZeroValue && size > newSize) {
+			hasZeroValue = false;
+			--size;
+		}
+		for (int i = 0; i < keyTable.length && size > newSize; i++) {
+			if (keyTable[i] != 0) {
+				keyTable[i] = 0;
+				--size;
+			}
+		}
+	}
+
+	/**
 	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
 	 * does not permit nested iteration. Iterate over {@link Entries#Entries(IntIntMap)} if you
 	 * need nested or multithreaded iteration. You can remove an Entry from this IntIntMap
@@ -833,12 +856,12 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 
 		@Override
 		public boolean equals (@Nullable Object o) {
-			if (this == o) { return true; }
-			if (o == null || getClass() != o.getClass()) { return false; }
+			if (this == o) {return true;}
+			if (o == null || getClass() != o.getClass()) {return false;}
 
 			Entry entry = (Entry)o;
 
-			if (key != entry.key) { return false; }
+			if (key != entry.key) {return false;}
 			return value == entry.value;
 		}
 
@@ -865,7 +888,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		public void reset () {
 			currentIndex = INDEX_ILLEGAL;
 			nextIndex = INDEX_ZERO;
-			if (map.hasZeroValue) { hasNext = true; } else { findNextIndex(); }
+			if (map.hasZeroValue) {hasNext = true;} else {findNextIndex();}
 		}
 
 		void findNextIndex () {
@@ -912,7 +935,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 					next = next + 1 & mask;
 				}
 				keyTable[i] = 0;
-				if (i != currentIndex) { --nextIndex; }
+				if (i != currentIndex) {--nextIndex;}
 			}
 			currentIndex = INDEX_ILLEGAL;
 			map.size--;
@@ -928,8 +951,8 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 
 		@Override
 		public int nextInt () {
-			if (!hasNext) { throw new NoSuchElementException(); }
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			int key = nextIndex == INDEX_ZERO ? 0 : map.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -941,13 +964,13 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		 */
 		public IntList toList () {
 			IntList list = new IntList(true, map.size);
-			while (hasNext) { list.add(next()); }
+			while (hasNext) {list.add(next());}
 			return list;
 		}
 
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return hasNext;
 		}
 
@@ -966,8 +989,8 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		 */
 		@Override
 		public int nextInt () {
-			if (!hasNext) { throw new NoSuchElementException(); }
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			int value = nextIndex == INDEX_ZERO ? map.zeroValue : map.valueTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -976,7 +999,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return hasNext;
 		}
 	}
@@ -998,8 +1021,8 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		 */
 		@Override
 		public Entry next () {
-			if (!hasNext) { throw new NoSuchElementException(); }
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			int[] keyTable = map.keyTable;
 			if (nextIndex == INDEX_ZERO) {
 				entry.key = 0;
@@ -1015,7 +1038,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return hasNext;
 		}
 	}
@@ -1127,7 +1150,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 
 	public int putIfAbsent (int key, int value) {
 		if (key == 0) {
-			if(hasZeroValue) {
+			if (hasZeroValue) {
 				return zeroValue;
 			}
 			return put(key, value);
@@ -1150,7 +1173,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 
 	public int replace (int key, int value) {
 		if (key == 0) {
-			if(hasZeroValue) {
+			if (hasZeroValue) {
 				int oldValue = zeroValue;
 				zeroValue = value;
 				return oldValue;
@@ -1166,17 +1189,17 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		return defaultValue;
 	}
 
-	public int computeIfAbsent(int key, IntUnaryOperator mappingFunction) {
+	public int computeIfAbsent (int key, IntUnaryOperator mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
 			int newValue = mappingFunction.applyAsInt(key);
 			put(key, newValue);
 			return newValue;
-		}
-		else return valueTable[i];
+		} else
+			return valueTable[i];
 	}
 
-	public boolean remove(int key, int value) {
+	public boolean remove (int key, int value) {
 		int i = locateKey(key);
 		if (i >= 0 && valueTable[i] == value) {
 			remove(key);
@@ -1185,7 +1208,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		return false;
 	}
 
-	public int merge(int key, int value, IntIntToIntBiFunction remappingFunction) {
+	public int merge (int key, int value, IntIntToIntBiFunction remappingFunction) {
 		int i = locateKey(key);
 		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
 		put(key, next);
@@ -1197,11 +1220,12 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
 	 * convert its Number key to a primitive int, regardless of which Number type was used.
-	 * @param key0 the first and only key; will be converted to a primitive int
+	 *
+	 * @param key0   the first and only key; will be converted to a primitive int
 	 * @param value0 the first and only value; will be converted to a primitive int
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static IntIntMap with(Number key0, Number value0) {
+	public static IntIntMap with (Number key0, Number value0) {
 		IntIntMap map = new IntIntMap(1);
 		map.put(key0.intValue(), value0.intValue());
 		return map;
@@ -1216,12 +1240,13 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * {@code int}s. It also needs all values to be a (boxed) Number, and converts them to
 	 * primitive {@code int}s. Any keys or values that aren't {@code Number}s have that
 	 * entry skipped.
-	 * @param key0 the first key; will be converted to a primitive int
+	 *
+	 * @param key0   the first key; will be converted to a primitive int
 	 * @param value0 the first value; will be converted to a primitive int
-	 * @param rest an array or varargs of Number elements
+	 * @param rest   an array or varargs of Number elements
 	 * @return a new map containing the given keys and values
 	 */
-	public static IntIntMap with(Number key0, Number value0, Number... rest){
+	public static IntIntMap with (Number key0, Number value0, Number... rest) {
 		IntIntMap map = new IntIntMap(1 + (rest.length >>> 1));
 		map.put(key0.intValue(), value0.intValue());
 		for (int i = 1; i < rest.length; i += 2) {
@@ -1235,11 +1260,12 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
 	 * when there's no "rest" of the keys or values. This variation requires both the key
 	 * and the value to be primitive {@code int}s.
-	 * @param key0 the first and only key; must not be boxed
+	 *
+	 * @param key0   the first and only key; must not be boxed
 	 * @param value0 the first and only value; must not be boxed
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static IntIntMap with(int key0, int value0) {
+	public static IntIntMap with (int key0, int value0) {
 		IntIntMap map = new IntIntMap(1);
 		map.put(key0, value0);
 		return map;
@@ -1252,12 +1278,13 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * {@link #IntIntMap(int[], int[])}, which takes all keys and then all values.
 	 * This needs all keys and all values to be primitive {@code int}s; if any are boxed,
 	 * then you'll actually be calling {@link #with(Number, Number, Number...)}.
-	 * @param key0 the first key; must not be boxed
+	 *
+	 * @param key0   the first key; must not be boxed
 	 * @param value0 the first value; must not be boxed
-	 * @param rest an array or varargs of primitive int elements
+	 * @param rest   an array or varargs of primitive int elements
 	 * @return a new map containing the given keys and values
 	 */
-	public static IntIntMap with(int key0, int value0, int... rest){
+	public static IntIntMap with (int key0, int value0, int... rest) {
 		IntIntMap map = new IntIntMap(1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {
