@@ -442,6 +442,26 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	}
 
 	/**
+	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
+	 * size, no action is taken. This indiscriminately removes items from the backing array until the
+	 * requested newSize is reached, or until the full backing array has had its elements removed.
+	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
+	 */
+	public void truncate (int newSize) {
+		long[] keyTable = this.keyTable;
+		if(hasZeroValue && size > newSize) {
+			hasZeroValue = false;
+			--size;
+		}
+		for (int i = 0; i < keyTable.length && size > newSize; i++) {
+			if(keyTable[i] != 0L){
+				keyTable[i] = 0L;
+				--size;
+			}
+		}
+	}
+
+	/**
 	 * Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
 	 * Use the {@link LongSetIterator} constructor for nested or multithreaded iteration.

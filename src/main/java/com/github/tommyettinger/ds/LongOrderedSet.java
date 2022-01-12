@@ -345,6 +345,16 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		return toString(", ");
 	}
 
+	/**
+	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
+	 * size, no action is taken.
+	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
+	 */
+	@Override
+	public void truncate (int newSize) {
+		if (size > newSize) { removeRange(newSize, size); }
+	}
+
 	public static class LongOrderedSetIterator extends LongSet.LongSetIterator {
 		private final LongList items;
 
