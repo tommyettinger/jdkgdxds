@@ -394,6 +394,15 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		return map.containsKey(key);
 	}
 
+	/**
+	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
+	 * size, no action is taken.
+	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
+	 */
+	public void truncate (int newSize) {
+		if (size() > newSize) { removeRange(newSize, size()); }
+	}
+
 	@Override
 	public Iterator<T> iterator () {
 		return map.order().iterator();

@@ -753,8 +753,7 @@ public interface EnhancedRandom {
 	 */
 	default float nextExclusiveFloat(){
 		final long bits = nextLong();
-		return BitConversion.intBitsToFloat(126 - Long.numberOfTrailingZeros(bits) << 23
-			| (int)(bits >>> 41));
+		return BitConversion.intBitsToFloat(126 - Long.numberOfTrailingZeros(bits) << 23 | (int)(bits >>> 41));
 	}
 
 	/**
