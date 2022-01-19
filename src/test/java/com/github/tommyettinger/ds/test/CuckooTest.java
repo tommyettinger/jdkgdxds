@@ -76,6 +76,45 @@ public class CuckooTest {
 		System.out.println("Succeeded; finished ObjectObjectCuckooMap has size: " + map.size);
 	}
 
+	private static class Killer {
+		int state;
+		public Killer(){
+			state = 0;
+		}
+		public Killer(int s){
+			state = s;
+		}
+
+		@Override
+		public boolean equals (Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+
+			Killer killer = (Killer)o;
+
+			return state == killer.state;
+		}
+
+		@Override
+		public int hashCode () {
+			return 0; // UH OH HERE WE GO
+		}
+	}
+
+	@Test
+	public void workingLethalCuckooTest (){
+		ObjectObjectCuckooMap<Killer, Object> map = new ObjectObjectCuckooMap<>();
+		int size = 256;
+		System.out.println("Trying to enter " + size + " String keys into an ObjectObjectCuckooMap.");
+		for (int i = 0; i < size; i++) {
+			System.out.println("Entered " + i + " keys successfully.");
+			map.put(new Killer(i), null);
+		}
+		System.out.println("Surprise! Succeeded; finished ObjectObjectCuckooMap has size: " + map.size);
+	}
+
 	/**
 	 * Generates 6-char Strings that all have the same hashCode().
 	 * @param args ignored
