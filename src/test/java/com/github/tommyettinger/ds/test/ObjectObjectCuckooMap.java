@@ -405,7 +405,7 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 	private void putStash (K key, V value) {
 		if (stashSize == stashCapacity) {
 			// Too many pushes occurred and the stash is full, increase the table size.
-			stashCapacity += 4;
+			stashCapacity <<= 1;
 			resize(capacity << 1);
 			put_internal(key, value);
 			return;
