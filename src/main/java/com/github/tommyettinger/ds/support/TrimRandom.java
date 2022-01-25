@@ -22,16 +22,18 @@ package com.github.tommyettinger.ds.support;
  * minimum period, and uses only add, bitwise-rotate, and XOR operations (no multiplication). This generator is not quite
  * as fast as {@link FourWheelRandom} on machines that can multiply {@code long} values efficiently, but is faster than
  * just about everything else (except {@link TricycleRandom} and {@link DistinctRandom} on Java 8 with HotSpot, or
- * DistinctRandom on any OpenJ9 version).
+ * DistinctRandom on any OpenJ9 version). If this algorithm is run on a GPU, on most hardware it will be significantly
+ * faster than FourWheelRandom (indeed, it was faster than any other algorithm I tested on a low-end GPU).
  * <br>
- * It shouldn't be considered stable, unlike the other EnhancedRandom implementations here. Testing performed should be
- * sufficient, but more can always be done; this passes at least 64TB of PractRand and 2PB of hwd without issues. The
- * second test, hwd, only checks for a specific type of quality issue, but also fails if the period is exhausted; I didn't
- * run hwd as long as I sometimes have because mathematically, the period is at minimum 2 to the 64, which wouldn't be
- * exhausted by hwd in years. The reason this isn't stable is that one other test (extinction/saturation likelihood)
- * fails after over 200 PB have been analyzed, but shows strong signs that it will fail earlier. The test in question
- * runs on the GPU using CUDA, so was able to generate far more numbers in the 2-day timeframe it took to fail than
- * most CPU approaches could.
+ * This can now be considered stable, like the other EnhancedRandom implementations here. Testing performed should be
+ * sufficient, but more can always be done; this passes at least 64TB of PractRand without issues, and has passed 1.25PB
+ * of hwd without issues (hwd tests can run for weeks, and this test is ongoing at the time of writing; a similar variant
+ * passes at least 2PB). The second test, hwd, only checks for a specific type of quality issue, but also fails if the
+ * period is exhausted; I didn't run hwd as long as I sometimes have because mathematically, the period is at minimum 2
+ * to the 64, which wouldn't be exhausted by hwd in years. One other test ("remortality," which measures how often the
+ * bitwise AND/bitwise OR of sequential numbers become all 0 bits or all 1 bits) showed "suspect" results for this after
+ * about 700 petabytes, but the generator recovered and passed after over one exabyte. The test in question runs on the
+ * GPU using CUDA, so was able to generate far more numbers in a timeframe of days than most CPU approaches could.
  * <br>
  * The algorithm used here has four states purely to exploit instruction-level parallelism; one state is a counter (this
  * gives the guaranteed minimum period of 2 to the 64), and the others combine the values of the four states across three
@@ -43,8 +45,8 @@ package com.github.tommyettinger.ds.support;
  * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
  * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
  * <br>
- * This implements all optional methods in EnhancedRandom except
- * {@link #skip(long)}; it does implement {@link #previousLong()} without using skip().
+ * This implements all optional methods in EnhancedRandom except {@link #skip(long)}; it does implement
+ * {@link #previousLong()} without using skip().
  * <br>
  * This is called TrimRandom because it uses a trimmed-down set of operations, purely "ARX" -- add, rotate, XOR.
  */
@@ -268,10 +270,10 @@ public class TrimRandom implements EnhancedRandom {
         final long fb = this.stateB;
         final long fc = this.stateC;
         final long fd = this.stateD;
-        this.stateA = Long.rotateLeft(fb + fc, 37);
-        this.stateB = Long.rotateLeft(fc ^ fd, 26);
+        this.stateA = Long.rotateLeft(fb + fc, 35);
+        this.stateB = Long.rotateLeft(fc ^ fd, 46);
         this.stateC = fa + fb;
-        this.stateD = fd + 0x9E3779B97F4A7C15L;
+        this.stateD = fd + 0x06A0F81D3D2E35EFL;
         return fc;
     }
 
@@ -280,13 +282,13 @@ public class TrimRandom implements EnhancedRandom {
         final long fa = stateA;
         final long fb = stateB;
         final long fc = stateC;
-        stateD -= 0x9E3779B97F4A7C15L;
-        long t = Long.rotateRight(fb, 26);
+        stateD -= 0x06A0F81D3D2E35EFL;
+        long t = Long.rotateRight(fb, 46);
         stateC = t ^ stateD;
-        t = Long.rotateRight(fa, 37);
+        t = Long.rotateRight(fa, 35);
         stateB = t - stateC;
         stateA = fc - stateB;
-        return Long.rotateRight(stateB, 26) ^ stateD - 0x9E3779B97F4A7C15L;
+        return Long.rotateRight(stateB, 46) ^ stateD - 0x06A0F81D3D2E35EFL;
     }
 
     @Override
@@ -295,10 +297,10 @@ public class TrimRandom implements EnhancedRandom {
         final long fb = this.stateB;
         final long fc = this.stateC;
         final long fd = this.stateD;
-        this.stateA = Long.rotateLeft(fb + fc, 37);
-        this.stateB = Long.rotateLeft(fc ^ fd, 26);
+        this.stateA = Long.rotateLeft(fb + fc, 35);
+        this.stateB = Long.rotateLeft(fc ^ fd, 46);
         this.stateC = fa + fb;
-        this.stateD = fd + 0x9E3779B97F4A7C15L;
+        this.stateD = fd + 0x06A0F81D3D2E35EFL;
         return (int)fc >>> (32 - bits);
     }
 

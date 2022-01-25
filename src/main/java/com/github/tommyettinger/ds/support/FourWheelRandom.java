@@ -24,11 +24,12 @@ package com.github.tommyettinger.ds.support;
  * but more can always be done; this passes at least 64TB of PractRand and 2PB of hwd without issues. The second test, hwd,
  * only checks for a specific type of quality issue, but also fails if the period is exhausted; going through 2 to the 52
  * bytes of data (taking over a week to do so) without exhausting the period should be a strong sign that it will have
- * enough period for most tasks. While this is known to fail one test (extinction/saturation likelihood), it takes 2
- * exabytes of data processed to reach a failure point, which is astronomically more than most apps will ever produce.
- * {@link StrangerRandom} is probably stronger, but not as fast; {@link TrimRandom} is currently weaker on the
- * extinction/saturation test, but because it isn't considered stable, it could change to a stronger set of constants.
- * TrimRandom is also not quite as fast as this class, but is close.
+ * enough period for most tasks. While this is known to fail one test ("remortality," a check for how long it takes for the
+ * bitwise AND/OR of sequential results to reach all 0 bits or all 1 bits), it takes 2 exabytes of data processed to reach
+ * a failure point, which is astronomically more than most apps will ever produce. {@link StrangerRandom} is probably
+ * stronger, but not as fast; {@link TrimRandom} is probably comparable to this class on the one test they both show
+ * weakness on (remortality, which TrimRandom also passes at the 1 exabyte mark and could potentially fail at or around the
+ * 2 exabyte mark). TrimRandom is also not quite as fast as this class, but is close.
  * <br>
  * The algorithm used here has four states purely to exploit instruction-level parallelism; it isn't trying to extend the
  * period of the generator beyond about 2 to the 64 (the expected bare minimum, though some cycles will likely be much
