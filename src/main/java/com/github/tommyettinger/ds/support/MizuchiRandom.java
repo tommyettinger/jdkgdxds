@@ -179,7 +179,7 @@ public class MizuchiRandom implements EnhancedRandom {
 
     @Override
     public long nextLong() {
-        long z = (stateA = stateA * 0x369DEA0F31A53F85L + stateB);
+        long z = (stateA = stateA * 0xF7C2EBC08F67F2B5L + stateB);
         z = (z ^ z >>> 23 ^ z >>> 47) * 0xAEF17502108EF2D9L;
         return (z ^ z >>> 25);
     }
@@ -194,7 +194,7 @@ public class MizuchiRandom implements EnhancedRandom {
 
     @Override
     public int next(int bits) {
-        long z = (stateA = stateA * 0x369DEA0F31A53F85L + stateB);
+        long z = (stateA = stateA * 0xF7C2EBC08F67F2B5L + stateB);
         z = (z ^ z >>> 23 ^ z >>> 47) * 0xAEF17502108EF2D9L;
         return (int)(z ^ z >>> 25) >>> (32 - bits);
     }
