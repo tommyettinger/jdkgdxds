@@ -281,10 +281,11 @@ public class FourWheelRandom implements EnhancedRandom {
         final long fa = this.stateA;
         final long fb = this.stateB;
         final long fc = this.stateC;
+        final long fd = this.stateD;
         this.stateD = 0x572B5EE77A54E3BDL * fa;
         this.stateA = fb - 0xC6BC279692B5C323L;
         this.stateB = Long.rotateRight(fc + this.stateD, 47);
-        this.stateC = this.stateD ^ this.stateB;
+        this.stateC = fd ^ this.stateB;
         return 0x572B5EE77A54E3BDL * this.stateA;
     }
 

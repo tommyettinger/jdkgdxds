@@ -27,21 +27,27 @@ public class EnhancedRandomTest {
 		long n0 = random.nextLong();
 		long n1 = random.nextLong();
 		long n2 = random.nextLong();
+		long n3 = random.nextLong();
+		long p2 = random.previousLong();
 		long p1 = random.previousLong();
 		long p0 = random.previousLong();
 		Assert.assertEquals(n0, p0);
 		Assert.assertEquals(n1, p1);
+		Assert.assertEquals(n2, p2);
 	}
 	@Test
 	public void testLaserPrevious() {
-		DistinctRandom random = new DistinctRandom(123L);
+		LaserRandom random = new LaserRandom(123L);
 		long n0 = random.nextLong();
 		long n1 = random.nextLong();
 		long n2 = random.nextLong();
+		long n3 = random.nextLong();
+		long p2 = random.previousLong();
 		long p1 = random.previousLong();
 		long p0 = random.previousLong();
 		Assert.assertEquals(n0, p0);
 		Assert.assertEquals(n1, p1);
+		Assert.assertEquals(n2, p2);
 	}
 	@Test
 	public void testTricyclePrevious() {
@@ -49,10 +55,13 @@ public class EnhancedRandomTest {
 		long n0 = random.nextLong();
 		long n1 = random.nextLong();
 		long n2 = random.nextLong();
+		long n3 = random.nextLong();
+		long p2 = random.previousLong();
 		long p1 = random.previousLong();
 		long p0 = random.previousLong();
 		Assert.assertEquals(n0, p0);
 		Assert.assertEquals(n1, p1);
+		Assert.assertEquals(n2, p2);
 	}
 
 	@Test
@@ -61,10 +70,13 @@ public class EnhancedRandomTest {
 		long n0 = random.nextLong();
 		long n1 = random.nextLong();
 		long n2 = random.nextLong();
+		long n3 = random.nextLong();
+		long p2 = random.previousLong();
 		long p1 = random.previousLong();
 		long p0 = random.previousLong();
 		Assert.assertEquals(n0, p0);
 		Assert.assertEquals(n1, p1);
+		Assert.assertEquals(n2, p2);
 	}
 
 	@Test
@@ -73,10 +85,13 @@ public class EnhancedRandomTest {
 		long n0 = random.nextLong();
 		long n1 = random.nextLong();
 		long n2 = random.nextLong();
+		long n3 = random.nextLong();
+		long p2 = random.previousLong();
 		long p1 = random.previousLong();
 		long p0 = random.previousLong();
 		Assert.assertEquals(n0, p0);
 		Assert.assertEquals(n1, p1);
+		Assert.assertEquals(n2, p2);
 	}
 
 	@Test
@@ -85,10 +100,13 @@ public class EnhancedRandomTest {
 		long n0 = random.nextLong();
 		long n1 = random.nextLong();
 		long n2 = random.nextLong();
+		long n3 = random.nextLong();
+		long p2 = random.previousLong();
 		long p1 = random.previousLong();
 		long p0 = random.previousLong();
 		Assert.assertEquals(n0, p0);
 		Assert.assertEquals(n1, p1);
+		Assert.assertEquals(n2, p2);
 	}
 
 	@Test
