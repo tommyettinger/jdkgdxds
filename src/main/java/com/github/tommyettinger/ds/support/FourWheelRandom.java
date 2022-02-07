@@ -28,7 +28,7 @@ package com.github.tommyettinger.ds.support;
  * bitwise AND/OR of sequential results to reach all 0 bits or all 1 bits), it takes 2 exabytes of data processed to reach
  * a failure point, which is astronomically more than most apps will ever produce. {@link StrangerRandom} is probably
  * stronger, but not as fast; {@link TrimRandom} is probably comparable to this class on the one test they both show
- * weakness on (remortality, which TrimRandom also passes at the 1 exabyte mark and could potentially fail at or around the
+ * weakness on (remortality, which TrimRandom also passes at the 1 exabyte mark but does not fail at the
  * 2 exabyte mark). TrimRandom is also not quite as fast as this class, but is close.
  * <br>
  * The algorithm used here has four states purely to exploit instruction-level parallelism; it isn't trying to extend the
@@ -38,7 +38,7 @@ package com.github.tommyettinger.ds.support;
  * that starts with stateD; this part is why 2 to the 64 is expected as the bare minimum period. State C and state D take
  * two of the other states and combine them; C rotates state B and subtracts state D, while D simply XORs states B and C.
  * This returns the state D that the previous step generated. This performs better than TricycleRandom simply because each
- * of the states can be updated in parallel (using ILP) and all of the updates depend on either one or two states, instead
+ * of the states can be updated in parallel (using ILP) and all the updates depend on either one or two states, instead
  * of one, two, or three with TricycleRandom.
  * <br>
  * It is strongly recommended that you seed this with {@link #setSeed(long)} instead of

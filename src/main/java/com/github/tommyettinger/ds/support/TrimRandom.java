@@ -26,13 +26,13 @@ package com.github.tommyettinger.ds.support;
  * faster than FourWheelRandom (indeed, it was faster than any other algorithm I tested on a low-end GPU).
  * <br>
  * This can now be considered stable, like the other EnhancedRandom implementations here. Testing performed should be
- * sufficient, but more can always be done; this passes at least 64TB of PractRand without issues, and has passed 1.25PB
- * of hwd without issues (hwd tests can run for weeks, and this test is ongoing at the time of writing; a similar variant
- * passes at least 2PB). The second test, hwd, only checks for a specific type of quality issue, but also fails if the
+ * sufficient, but more can always be done; this passes at least 64TB of PractRand without issues, and has passed 2PB
+ * of hwd without issues. The second test, hwd, only checks for a specific type of quality issue, but also fails if the
  * period is exhausted; I didn't run hwd as long as I sometimes have because mathematically, the period is at minimum 2
  * to the 64, which wouldn't be exhausted by hwd in years. One other test ("remortality," which measures how often the
  * bitwise AND/bitwise OR of sequential numbers become all 0 bits or all 1 bits) showed "suspect" results for this after
- * about 700 petabytes, but the generator recovered and passed after over one exabyte. The test in question runs on the
+ * about 700 petabytes, but the generator recovered and passed after over one exabyte. When tested with a different seed,
+ * it has (so far) passed 2 exabytes and counting without issue (over about 11 days). The test in question runs on the
  * GPU using CUDA, so was able to generate far more numbers in a timeframe of days than most CPU approaches could.
  * <br>
  * The algorithm used here has four states purely to exploit instruction-level parallelism; one state is a counter (this

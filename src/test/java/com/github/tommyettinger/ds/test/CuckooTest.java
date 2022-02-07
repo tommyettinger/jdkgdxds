@@ -106,7 +106,7 @@ public class CuckooTest {
 	@Test
 	public void workingLethalCuckooTest (){
 		ObjectObjectCuckooMap<Killer, Object> map = new ObjectObjectCuckooMap<>();
-		int size = 256;
+		int size = 500000;
 		System.out.println("Trying to enter " + size + " String keys into an ObjectObjectCuckooMap.");
 		for (int i = 0; i < size; i++) {
 			System.out.println("Entered " + i + " keys successfully.");
