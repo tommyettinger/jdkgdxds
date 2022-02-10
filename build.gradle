@@ -50,7 +50,7 @@ if(JavaVersion.current().isJava9Compatible()) {
 idea.module.excludeDirs += [file("src/main/java/emu/")]
 [compileJava, compileTestJava, javadoc]*.exclude("emu")
 
-javadoc.options.source("16")
+javadoc.options.source("17")
 javadoc.destinationDir = file("docs/apidocs")
 
 sourceSets.test.resources.srcDirs = [ file('src/test/resources').path ]
@@ -71,4 +71,5 @@ repositories {
 dependencies {
     api 'com.google.code.findbugs:jsr305:3.0.2'
     testImplementation "junit:junit:4.13.2"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.8.2"
 }
