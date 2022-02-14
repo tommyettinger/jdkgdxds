@@ -115,6 +115,24 @@ public class CuckooTest {
 		System.out.println("Surprise! Succeeded; finished ObjectObjectCuckooMap has size: " + map.size);
 	}
 
+	// Expected to fail with an OutOfMemoryError.
+	@Test(expected = OutOfMemoryError.class)
+	public void vectorCuckooTest(){
+		CuckooObjectMap<Vector2, Object> map = new CuckooObjectMap<>();
+		Vector2[] problems = new Vector2[1024];
+		for (int x = -16, i = 0; x < 16; x++) {
+			for (int y = -16; y < 16; y++) {
+				problems[i++] = new Vector2(x, y);
+			}
+		}
+		System.out.println("Trying to enter " + problems.length + " String keys into a CuckooObjectMap.");
+		for (int i = 0; i < problems.length; i++) {
+			System.out.println("Entered " + i + " keys successfully.");
+			map.put(problems[i], null);
+		}
+		System.out.println("Unexpectedly succeeded; finished CuckooObjectMap has size: " + map.size);
+	}
+
 	/**
 	 * Generates 6-char Strings that all have the same hashCode().
 	 * @param args ignored
