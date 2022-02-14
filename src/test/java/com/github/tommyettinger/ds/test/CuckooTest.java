@@ -1,5 +1,6 @@
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.ObjectObjectMap;
 import org.junit.Test;
 
 public class CuckooTest {
@@ -106,8 +107,8 @@ public class CuckooTest {
 	@Test
 	public void workingLethalCuckooTest (){
 		ObjectObjectCuckooMap<Killer, Object> map = new ObjectObjectCuckooMap<>();
-		int size = 5000;
-		System.out.println("Trying to enter " + size + " String keys into an ObjectObjectCuckooMap.");
+		int size = 100000;
+		System.out.println("Trying to enter " + size + " Killer keys into an ObjectObjectCuckooMap.");
 		for (int i = 0; i < size; i++) {
 			System.out.println("Entered " + i + " keys successfully.");
 			map.put(new Killer(i), null);
@@ -115,22 +116,79 @@ public class CuckooTest {
 		System.out.println("Surprise! Succeeded; finished ObjectObjectCuckooMap has size: " + map.size);
 	}
 
+	@Test
+	public void workingLethalLinearTest (){
+		ObjectObjectMap<Killer, Object> map = new ObjectObjectMap<>();
+		int size = 100000;
+		System.out.println("Trying to enter " + size + " Killer keys into an ObjectObjectMap.");
+		for (int i = 0; i < size; i++) {
+			System.out.println("Entered " + i + " keys successfully.");
+			map.put(new Killer(i), null);
+		}
+		System.out.println("Surprise! Succeeded; finished ObjectObjectMap has size: " + map.size());
+	}
+
 	// Expected to fail with an OutOfMemoryError.
 	@Test(expected = OutOfMemoryError.class)
 	public void vectorCuckooTest(){
 		CuckooObjectMap<Vector2, Object> map = new CuckooObjectMap<>();
-		Vector2[] problems = new Vector2[4096];
-		for (int x = -32, i = 0; x < 32; x++) {
-			for (int y = -32; y < 32; y++) {
+		final int LIMIT = 16, TOTAL = 1 << LIMIT, BOUND = 1 << (LIMIT - 2 >>> 1);
+		Vector2[] problems = new Vector2[TOTAL];
+		for (int x = -BOUND, i = 0; x < BOUND; x++) {
+			for (int y = -BOUND; y < BOUND; y++) {
 				problems[i++] = new Vector2(x, y);
 			}
 		}
-		System.out.println("Trying to enter " + problems.length + " String keys into a CuckooObjectMap.");
+//		Vector2[] problems = new Vector2[4096];
+//		for (int x = -32, i = 0; x < 32; x++) {
+//			for (int y = -32; y < 32; y++) {
+//				problems[i++] = new Vector2(x, y);
+//			}
+//		}
+		System.out.println("Trying to enter " + problems.length + " Vector2 keys into a CuckooObjectMap.");
 		for (int i = 0; i < problems.length; i++) {
 			System.out.println("Entered " + i + " keys successfully.");
 			map.put(problems[i], null);
 		}
 		System.out.println("Unexpectedly succeeded; finished CuckooObjectMap has size: " + map.size);
+	}
+
+	//3.46 seconds at LIMIT=16
+	@Test
+	public void vectorGoodCuckooTest(){
+		ObjectObjectCuckooMap<Vector2, Object> map = new ObjectObjectCuckooMap<>();
+		final int LIMIT = 16, TOTAL = 1 << LIMIT, BOUND = 1 << (LIMIT - 2 >>> 1);
+		Vector2[] problems = new Vector2[TOTAL];
+		for (int x = -BOUND, i = 0; x < BOUND; x++) {
+			for (int y = -BOUND; y < BOUND; y++) {
+				problems[i++] = new Vector2(x, y);
+			}
+		}
+		System.out.println("Trying to enter " + problems.length + " Vector2 keys into a ObjectObjectCuckooMap.");
+		for (int i = 0; i < problems.length; i++) {
+			System.out.println("Entered " + i + " keys successfully.");
+			map.put(problems[i], null);
+		}
+		System.out.println("Succeeded; finished ObjectObjectCuckooMap has size: " + map.size());
+	}
+
+	//6.969 seconds at LIMIT=16
+	@Test
+	public void vectorLinearTest(){
+		ObjectObjectMap<Vector2, Object> map = new ObjectObjectMap<>();
+		final int LIMIT = 16, TOTAL = 1 << LIMIT, BOUND = 1 << (LIMIT - 2 >>> 1);
+		Vector2[] problems = new Vector2[TOTAL];
+		for (int x = -BOUND, i = 0; x < BOUND; x++) {
+			for (int y = -BOUND; y < BOUND; y++) {
+				problems[i++] = new Vector2(x, y);
+			}
+		}
+		System.out.println("Trying to enter " + problems.length + " Vector2 keys into a ObjectObjectMap.");
+		for (int i = 0; i < problems.length; i++) {
+			System.out.println("Entered " + i + " keys successfully.");
+			map.put(problems[i], null);
+		}
+		System.out.println("Succeeded; finished ObjectObjectMap has size: " + map.size());
 	}
 
 	/**

@@ -187,7 +187,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 * <p>
 	 * The default implementation assumes the low-order bits of item.hashCode() are likely enough to avoid collisions,
-	 * and so just returns {@code item.hashCode() & mask}. This method can be overridden to customizing hashing. If you
+	 * and so just returns {@code item.hashCode() & mask}. This method can be overridden to customize hashing. If you
 	 * aren't confident that the hashCode() implementation used by item will have reasonable quality, you can override
 	 * this with something such as {@code return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);}. That "magic
 	 * number" is 2 to the 64, divided by the golden ratio; the golden ratio is used because of various properties it
