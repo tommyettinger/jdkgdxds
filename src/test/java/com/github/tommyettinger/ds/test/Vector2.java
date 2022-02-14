@@ -42,8 +42,17 @@ public class Vector2 {
 		int result = 1;
 		result = prime * result + Float.floatToIntBits(x);
 		result = prime * result + Float.floatToIntBits(y);
-		return result;
+		return (int)(result * 0x9E3779B97F4A7C15L >>> 32);
 	}
+//
+//	@Override
+//	public int hashCode () {
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result + Float.floatToIntBits(x);
+//		result = prime * result + Float.floatToIntBits(y);
+//		return result;
+//	}
 
 	@Override
 	public boolean equals (Object obj) {

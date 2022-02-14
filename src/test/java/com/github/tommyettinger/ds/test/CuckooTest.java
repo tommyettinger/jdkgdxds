@@ -119,9 +119,9 @@ public class CuckooTest {
 	@Test(expected = OutOfMemoryError.class)
 	public void vectorCuckooTest(){
 		CuckooObjectMap<Vector2, Object> map = new CuckooObjectMap<>();
-		Vector2[] problems = new Vector2[1024];
-		for (int x = -16, i = 0; x < 16; x++) {
-			for (int y = -16; y < 16; y++) {
+		Vector2[] problems = new Vector2[4096];
+		for (int x = -32, i = 0; x < 32; x++) {
+			for (int y = -32; y < 32; y++) {
 				problems[i++] = new Vector2(x, y);
 			}
 		}
