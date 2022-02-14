@@ -52,9 +52,12 @@ import java.util.Objects;
  */
 public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 	// primes for hash functions 2, 3, and 4; 20-bit for GWT reasons.
-	private static final int PRIME2 = 0xf48c5;
-	private static final int PRIME3 = 0x8aee1;
-	private static final int PRIME4 = 0xcb91d;
+//	private static final int PRIME2 = 0xf48c5;
+//	private static final int PRIME3 = 0x8aee1;
+//	private static final int PRIME4 = 0xcb91d;
+	private static final long PRIME2 = 0xDB4F0B9175AE2165L;
+	private static final long PRIME3 = 0xBBE0563303A4615FL;
+	private static final long PRIME4 = 0xA0F2EC75A1FE1575L;
 
 	/**
 	 * How many entries are present in this Map.
@@ -142,7 +145,7 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 
 		threshold = (int)(capacity * loadFactor);
 		mask = capacity - 1;
-		hashShift = 31 - Integer.numberOfTrailingZeros(capacity);
+		hashShift = 64 - Integer.numberOfTrailingZeros(capacity);
 		stashCapacity = Math.max(3, (int)Math.ceil(Math.log(capacity)) * 2);
 		pushIterations = Math.max(Math.min(capacity, 8), (int)Math.sqrt(capacity) / 8);
 
@@ -652,7 +655,7 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 		capacity = newSize;
 		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
-		hashShift = 31 - Integer.numberOfTrailingZeros(newSize);
+		hashShift = 64 - Integer.numberOfTrailingZeros(newSize);
 		pushIterations = Math.max(Math.min(newSize, 8), (int) Math.sqrt(newSize) / 8);
 
 		// big table is when capacity >= 2^16
@@ -676,18 +679,21 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 	}
 
 	private int hash2 (int h) {
-		h *= PRIME2;
-		return (h ^ h >>> hashShift) & mask;
+		return (int)(h * PRIME2 >>> hashShift);
+//		h *= PRIME2;
+//		return (h ^ h >>> hashShift) & mask;
 	}
 
 	private int hash3 (int h) {
-		h *= PRIME3;
-		return (h ^ h >>> hashShift) & mask;
+		return (int)(h * PRIME3 >>> hashShift);
+//		h *= PRIME3;
+//		return (h ^ h >>> hashShift) & mask;
 	}
 
 	private int hash4 (int h) {
-		h *= PRIME4;
-		return (h ^ h >>> hashShift) & mask;
+		return (int)(h * PRIME4 >>> hashShift);
+//		h *= PRIME4;
+//		return (h ^ h >>> hashShift) & mask;
 	}
 
 	@Override
