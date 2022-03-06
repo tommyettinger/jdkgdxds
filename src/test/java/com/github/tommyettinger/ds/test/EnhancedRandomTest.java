@@ -4,6 +4,7 @@ import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.tommyettinger.ds.support.MizuchiRandom;
+import com.github.tommyettinger.ds.support.RomuTrioRandom;
 import com.github.tommyettinger.ds.support.StrangerRandom;
 import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.tommyettinger.ds.support.TrimRandom;
@@ -164,6 +165,29 @@ public class EnhancedRandomTest {
 	public void testLaserBoundedInt() {
 		final boolean PRINTING = false;
 		LaserRandom random = new LaserRandom(123L);
+		int inner = -1879048192, outer = 1879048192;
+		for (int i = 0; i < 1024; i++) {
+			int bounded = random.nextInt(inner, outer);
+			if(PRINTING) System.out.println(bounded);
+			Assert.assertTrue(bounded >= inner && bounded < outer);
+		}
+		for (int i = 0; i < 1024; i++) {
+			int bounded = random.nextSignedInt(inner, outer);
+			if(PRINTING) System.out.println(bounded);
+			Assert.assertTrue(bounded >= inner && bounded < outer);
+		}
+		for (int i = 0; i < 1024; i++) {
+			int bounded = random.nextInt(outer, inner);
+			// this will look strange, but it prints outer 1024 times.
+			if(PRINTING) System.out.println(bounded);
+			Assert.assertEquals(bounded, outer);
+		}
+	}
+
+	@Test
+	public void testRomuTrioBoundedInt() {
+		final boolean PRINTING = false;
+		RomuTrioRandom random = new RomuTrioRandom(123L);
 		int inner = -1879048192, outer = 1879048192;
 		for (int i = 0; i < 1024; i++) {
 			int bounded = random.nextInt(inner, outer);

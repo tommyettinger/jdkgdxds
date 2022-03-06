@@ -18,62 +18,42 @@
 package com.github.tommyettinger.ds.support;
 
 /**
- * An unusual RNG that's extremely fast on HotSpot JDK 16 and higher, and still fairly fast on earlier JDKs. It has
- * three {@code long} states, which as far as I can tell can be initialized to any values without hitting any known
- * problems for initialization. These states, a, b, and c, are passed around so a is determined by the previous c, b is
- * determined by the previous a, b, and c, and c is determined by the previous b. This updates a with a multiplication,
- * b with two XOR operations, and c with a bitwise-left-rotate by 41 and then an addition with a constant. If you want
- * to alter this generator so results will be harder to reproduce, the simplest way is to change the constant added to
- * c -- it can be any substantially-large odd number, though preferably one with a {@link Long#bitCount(long)} of 32.
+ * A well-studied RNG that can be quite fast in some circumstances. This is a port of
+ * <a href="https://romu-random.org/">Romu-Random</a>'s RomuTrio generator to Java. It has
+ * three {@code long} states, which must never all be 0 but otherwise have no known restrictions.
  * <br>
- * Other useful traits of this generator are that it almost certainly has a longer period than you need for a game, and
- * that all values are permitted for the states (that we know of). It is possible that some initialization will put the
- * generator in a shorter-period subcycle, but the odds of this being a subcycle that's small enough to run out of
- * period during a game are effectively 0. It's also possible that the generator only has one cycle of length 2 to the
- * 192, though this doesn't seem at all likely. TricycleRandom implements all optional methods in EnhancedRandom except
- * {@link #skip(long)}; it does implement {@link #previousLong()} without using skip().
- * <br>
- * This is closely related to Mark Overton's <a href="https://www.romu-random.org/">Romu generators</a>, specifically
- * RomuTrio, but this gets a little faster than RomuTrio in some situations by using just one less rotation. Unlike
- * RomuTrio, there isn't a clear problematic state with a period of 1 (which happens when all of its states are 0).
- * This is often slightly slower than RomuTrio, but only by a tiny margin. This generator isn't an ARX generator any
- * more (a previous version was), but its performance isn't much different (like RomuTrio, the one multiplication this
- * uses pipelines very well, so it doesn't slow down the generator).
- * <br>
- * TricycleRandom passes 64TB of testing with PractRand, which uses a suite of tests to look for a variety of potential
- * problems. It has also passed a whopping 4 petabytes of testing with hwd, can test a much larger amount of data but
- * only runs a single test. The test hwd uses looks for long-range bit-dependencies, where one bit's state earlier in
- * the generated numbers determines the state of a future bit with a higher-than-reasonable likelihood. All the
- * generators here are considered stable.
+ * RomuTrioRandom implements all optional methods in EnhancedRandom except
+ * {@link #skip(long)} or {@link #previousLong()}.
  * <br>
  * It is strongly recommended that you seed this with {@link #setSeed(long)} instead of
  * {@link #setState(long, long, long)}, because if you give sequential seeds to both setSeed() and setState(), the
  * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
  * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
  */
-public class TricycleRandom implements EnhancedRandom {
+public class RomuTrioRandom implements EnhancedRandom {
 
     /**
-	 * The first state; can be any long. If this has just been set to some value, then the next call to
-     * {@link #nextLong()} will return that value as-is. Later calls will be more random.
+	 * The first state; can be any long unless all states are 0. If this has just been set to some value, then the
+     * next call to {@link #nextLong()} will return that value as-is. Later calls will be more random.
      */
     protected long stateA;
     /**
-	 * The second state; can be any long.
+	 * The second state; can be any long; can be any long unless all states are 0.
      */
     protected long stateB;
     /**
-     * The third state; can be any long.
+     * The third state; can be any long; can be any long unless all states are 0.
      */
     protected long stateC;
 
     /**
      * Creates a new TricycleRandom with a random state.
      */
-    public TricycleRandom () {
+    public RomuTrioRandom () {
         stateA = EnhancedRandom.seedFromMath();
         stateB = EnhancedRandom.seedFromMath();
         stateC = EnhancedRandom.seedFromMath();
+        if((stateA | stateB | stateC) == 0L) stateC = -1L;
     }
 
     /**
@@ -81,18 +61,19 @@ public class TricycleRandom implements EnhancedRandom {
      * The seed will be passed to {@link #setSeed(long)} to attempt to adequately distribute the seed randomly.
      * @param seed any {@code long} value
      */
-    public TricycleRandom (long seed) {
+    public RomuTrioRandom (long seed) {
         setSeed(seed);
     }
 
     /**
-     * Creates a new TricycleRandom with the given three states; all {@code long} values are permitted.
-     * These states will be used verbatim.
+     * Creates a new TricycleRandom with the given three states; all {@code long} values are permitted unless all
+     * three states are 0. In that case, it treats stateC as if it were -1. Otherwise, these states will be used verbatim.
      * @param stateA any {@code long} value
      * @param stateB any {@code long} value
      * @param stateC any {@code long} value
      */
-    public TricycleRandom (long stateA, long stateB, long stateC) {
+    public RomuTrioRandom (long stateA, long stateB, long stateC) {
+        if((stateA | stateB | stateC) == 0L) stateC = -1L;
         this.stateA = stateA;
         this.stateB = stateB;
         this.stateC = stateC;
@@ -207,11 +188,12 @@ public class TricycleRandom implements EnhancedRandom {
     }
 
     /**
-     * Sets the third part of the state.
+     * Sets the third part of the state; if all states would be 0, this instead assigns -1.
      * @param stateC can be any long
      */
     public void setStateC(long stateC) {
-        this.stateC = stateC;
+        if((stateA | stateB | stateC) == 0L) this.stateC = -1L;
+        else this.stateC = stateC;
     }
 
     /**
@@ -230,46 +212,34 @@ public class TricycleRandom implements EnhancedRandom {
         this.stateA = stateA;
         this.stateB = stateB;
         this.stateC = stateC;
+        if((stateA | stateB | stateC) == 0L) this.stateC = -1L;
     }
 
     @Override
     public long nextLong() {
         final long fa = stateA;
-        final long fb = stateB;
-        final long fc = stateC;
-        stateA = 0xD1342543DE82EF95L * fc;
-        stateB = fa ^ fb ^ fc;
-        stateC = (fb << 41 | fb >>> 23) + 0xC6BC279692B5C323L;
+        stateA = 0xD3833E804F4C574BL * stateC;
+        stateC -= stateB;
+        stateB -= fa;
+        stateB = (stateB << 12 | stateB >>> 52);
+        stateC = (stateC << 44 | stateC >>> 20);
         return fa;
-    }
-
-    @Override
-    public long previousLong() {
-        final long fa = stateA;
-        final long fb = stateB;
-        long fc = stateC - 0xC6BC279692B5C323L;
-        stateC = 0x572B5EE77A54E3BDL * fa;
-        stateB = (fc >>> 41 | fc << 23);
-        stateA = fb ^ stateB ^ stateC;
-        fc = stateC - 0xC6BC279692B5C323L;
-        return stateB ^ 0x572B5EE77A54E3BDL * stateA ^ (fc >>> 41 | fc << 23);
-
     }
 
     @Override
     public int next(int bits) {
         final long fa = stateA;
-        final long fb = stateB;
-        final long fc = stateC;
-        stateA = 0xD1342543DE82EF95L * fc;
-        stateB = fa ^ fb ^ fc;
-        stateC = (fb << 41 | fb >>> 23) + 0xC6BC279692B5C323L;
+        stateA = 0xD3833E804F4C574BL * stateC;
+        stateC -= stateB;
+        stateB -= fa;
+        stateB = (stateB << 12 | stateB >>> 52);
+        stateC = (stateC << 44 | stateC >>> 20);
         return (int)fa >>> (32 - bits);
     }
 
     @Override
-    public TricycleRandom copy() {
-        return new TricycleRandom(stateA, stateB, stateC);
+    public RomuTrioRandom copy() {
+        return new RomuTrioRandom(stateA, stateB, stateC);
     }
 
     @Override
@@ -279,7 +249,7 @@ public class TricycleRandom implements EnhancedRandom {
         if (o == null || getClass() != o.getClass())
             return false;
 
-        TricycleRandom that = (TricycleRandom)o;
+        RomuTrioRandom that = (RomuTrioRandom)o;
 
         if (stateA != that.stateA)
             return false;
@@ -289,7 +259,7 @@ public class TricycleRandom implements EnhancedRandom {
     }
 
     public String toString() {
-        return "TricycleRandom{" +
+        return "RomuTrioRandom{" +
                    "stateA=0x" + Base.BASE16.unsigned(stateA) +
                 "L, stateB=0x" + Base.BASE16.unsigned(stateB) +
                 "L, stateC=0x" + Base.BASE16.unsigned(stateC) +
