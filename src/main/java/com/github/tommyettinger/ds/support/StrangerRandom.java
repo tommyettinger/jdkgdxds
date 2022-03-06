@@ -293,23 +293,22 @@ public class StrangerRandom implements EnhancedRandom {
 
     @Override
     public long nextLong() {
-        final long fa = this.stateA;
-        final long fb = this.stateB;
-        final long fc = this.stateC;
-        final long fd = this.stateD;
-        this.stateA = fb ^ fb << 7;
-        this.stateB = fa ^ fa >>> 9;
-        this.stateC = Long.rotateLeft(fd, 39) - fb;
-        this.stateD = fa - fc + 0xC6BC279692B5C323L;
+        final long fa = stateA;
+        final long fb = stateB;
+        final long fc = stateC;
+        final long fd = stateD;
+        stateA = fb ^ fb << 7;
+        stateB = fa ^ fa >>> 9;
+        stateC = (fd << 39 | fd >>> 25) - fb;
+        stateD = fa - fc + 0xC6BC279692B5C323L;
         return fc;
     }
 
     @Override
     public long previousLong() {
-        final long fa = this.stateA;
-        final long fb = this.stateB;
-        final long fc = this.stateC;
-        final long fd = this.stateD;
+        final long fa = stateA;
+        final long fb = stateB;
+        final long fd = stateD;
         long t = fb ^ fb >>> 9;
         t ^= t >>> 18;
         t ^= t >>> 36;
@@ -317,10 +316,11 @@ public class StrangerRandom implements EnhancedRandom {
         m ^= m << 14;
         m ^= m << 28;
         m ^= m << 56;
-        this.stateA = t;
-        this.stateB = m;
-        this.stateC = t - fd + 0xC6BC279692B5C323L;
-        this.stateD = Long.rotateRight(fc + m, 39);
+        stateA = t;
+        final long fc = stateC + m;
+        stateB = m;
+        stateC = t - fd + 0xC6BC279692B5C323L;
+        stateD = (fc >>> 39 | fc << 25);
         t = m ^ m >>> 9;
         t ^= t >>> 18;
         t ^= t >>> 36;
@@ -329,14 +329,14 @@ public class StrangerRandom implements EnhancedRandom {
 
     @Override
     public int next(int bits) {
-        final long fa = this.stateA;
-        final long fb = this.stateB;
-        final long fc = this.stateC;
-        final long fd = this.stateD;
-        this.stateA = fb ^ fb << 7;
-        this.stateB = fa ^ fa >>> 9;
-        this.stateC = Long.rotateLeft(fd, 39) - fb;
-        this.stateD = fa - fc + 0xC6BC279692B5C323L;
+        final long fa = stateA;
+        final long fb = stateB;
+        final long fc = stateC;
+        final long fd = stateD;
+        stateA = fb ^ fb << 7;
+        stateB = fa ^ fa >>> 9;
+        stateC = (fd << 39 | fd >>> 25) - fb;
+        stateD = fa - fc + 0xC6BC279692B5C323L;
         return (int)fc >>> (32 - bits);
     }
 

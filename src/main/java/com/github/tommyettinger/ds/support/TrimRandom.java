@@ -32,7 +32,7 @@ package com.github.tommyettinger.ds.support;
  * to the 64, which wouldn't be exhausted by hwd in years. One other test ("remortality," which measures how often the
  * bitwise AND/bitwise OR of sequential numbers become all 0 bits or all 1 bits) showed "suspect" results for this after
  * about 700 petabytes, but the generator recovered and passed after over one exabyte. When tested with a different seed,
- * it has (so far) passed 2 exabytes and counting without issue (over about 11 days). The test in question runs on the
+ * it has passed over 4 exabytes before getting any suspect results (after 22 days). The test in question runs on the
  * GPU using CUDA, so was able to generate far more numbers in a timeframe of days than most CPU approaches could.
  * <br>
  * The algorithm used here has four states purely to exploit instruction-level parallelism; one state is a counter (this
@@ -266,14 +266,15 @@ public class TrimRandom implements EnhancedRandom {
 
     @Override
     public long nextLong() {
-        final long fa = this.stateA;
-        final long fb = this.stateB;
-        final long fc = this.stateC;
-        final long fd = this.stateD;
-        this.stateA = Long.rotateLeft(fb + fc, 35);
-        this.stateB = Long.rotateLeft(fc ^ fd, 46);
-        this.stateC = fa + fb;
-        this.stateD = fd + 0x06A0F81D3D2E35EFL;
+        final long fa = stateA;
+        final long fb = stateB;
+        final long fc = stateC;
+        final long fd = stateD;
+        final long bc = fb + fc, cd = fc ^ fd;
+        stateA = (bc << 35 | bc >>> 29);
+        stateB = (cd << 46 | cd >>> 18);
+        stateC = fa + fb;
+        stateD = fd + 0x06A0F81D3D2E35EFL;
         return fc;
     }
 
@@ -283,24 +284,25 @@ public class TrimRandom implements EnhancedRandom {
         final long fb = stateB;
         final long fc = stateC;
         stateD -= 0x06A0F81D3D2E35EFL;
-        long t = Long.rotateRight(fb, 46);
+        long t = (fb >>> 46 | fb << 18);
         stateC = t ^ stateD;
-        t = Long.rotateRight(fa, 35);
+        t = (fa >>> 35 | fa << 29);
         stateB = t - stateC;
         stateA = fc - stateB;
-        return Long.rotateRight(stateB, 46) ^ stateD - 0x06A0F81D3D2E35EFL;
+        return (stateB >>> 46 | stateB << 18) ^ stateD - 0x06A0F81D3D2E35EFL;
     }
 
     @Override
     public int next(int bits) {
-        final long fa = this.stateA;
-        final long fb = this.stateB;
-        final long fc = this.stateC;
-        final long fd = this.stateD;
-        this.stateA = Long.rotateLeft(fb + fc, 35);
-        this.stateB = Long.rotateLeft(fc ^ fd, 46);
-        this.stateC = fa + fb;
-        this.stateD = fd + 0x06A0F81D3D2E35EFL;
+        final long fa = stateA;
+        final long fb = stateB;
+        final long fc = stateC;
+        final long fd = stateD;
+        final long bc = fb + fc, cd = fc ^ fd;
+        stateA = (bc << 35 | bc >>> 29);
+        stateB = (cd << 46 | cd >>> 18);
+        stateC = fa + fb;
+        stateD = fd + 0x06A0F81D3D2E35EFL;
         return (int)fc >>> (32 - bits);
     }
 

@@ -372,4 +372,17 @@ public class BaseTest {
 		}
 	}
 
+	public static void main(String[] args){
+		for(Base b : BASES){
+			System.out.println(b.serializeToString());
+		}
+		System.out.println();
+		for (int i = 0; i < 100; i++) {
+			for(Base b : BASES){
+				System.out.print(b.unsigned(i));
+				System.out.print("    ");
+			}
+			System.out.println();
+		}
+	}
 }

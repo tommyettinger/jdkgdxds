@@ -265,40 +265,40 @@ public class FourWheelRandom implements EnhancedRandom {
 
     @Override
     public long nextLong() {
-        final long fa = this.stateA;
-        final long fb = this.stateB;
-        final long fc = this.stateC;
-        final long fd = this.stateD;
-        this.stateA = 0xD1342543DE82EF95L * fd;
-        this.stateB = fa + 0xC6BC279692B5C323L;
-        this.stateC = Long.rotateLeft(fb, 47) - fd;
-        this.stateD = fb ^ fc;
+        final long fa = stateA;
+        final long fb = stateB;
+        final long fc = stateC;
+        final long fd = stateD;
+        stateA = 0xD1342543DE82EF95L * fd;
+        stateB = fa + 0xC6BC279692B5C323L;
+        stateC = (fb << 47 | fb >>> 17) - fd;
+        stateD = fb ^ fc;
         return fd;
     }
 
     @Override
     public long previousLong() {
-        final long fa = this.stateA;
-        final long fb = this.stateB;
-        final long fc = this.stateC;
-        final long fd = this.stateD;
-        this.stateD = 0x572B5EE77A54E3BDL * fa;
-        this.stateA = fb - 0xC6BC279692B5C323L;
-        this.stateB = Long.rotateRight(fc + this.stateD, 47);
-        this.stateC = fd ^ this.stateB;
-        return 0x572B5EE77A54E3BDL * this.stateA;
+        final long fa = stateA;
+        final long fb = stateB;
+        final long fd = stateD;
+        stateD = 0x572B5EE77A54E3BDL * fa;
+        final long fc = stateC + stateD;
+        stateA = fb - 0xC6BC279692B5C323L;
+        stateB = (fc >>> 47 | fc << 17);
+        stateC = fd ^ stateB;
+        return 0x572B5EE77A54E3BDL * stateA;
     }
 
     @Override
     public int next(int bits) {
-        final long fa = this.stateA;
-        final long fb = this.stateB;
-        final long fc = this.stateC;
-        final long fd = this.stateD;
-        this.stateA = 0xD1342543DE82EF95L * fd;
-        this.stateB = fa + 0xC6BC279692B5C323L;
-        this.stateC = Long.rotateLeft(fb, 47) - fd;
-        this.stateD = fb ^ fc;
+        final long fa = stateA;
+        final long fb = stateB;
+        final long fc = stateC;
+        final long fd = stateD;
+        stateA = 0xD1342543DE82EF95L * fd;
+        stateB = fa + 0xC6BC279692B5C323L;
+        stateC = (fb << 47 | fb >>> 17) - fd;
+        stateD = fb ^ fc;
         return (int)fd >>> (32 - bits);
     }
 

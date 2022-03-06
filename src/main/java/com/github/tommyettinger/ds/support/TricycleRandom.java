@@ -234,35 +234,36 @@ public class TricycleRandom implements EnhancedRandom {
 
     @Override
     public long nextLong() {
-        final long fa = this.stateA;
-        final long fb = this.stateB;
-        final long fc = this.stateC;
-        this.stateA = 0xD1342543DE82EF95L * fc;
-        this.stateB = fa ^ fb ^ fc;
-        this.stateC = Long.rotateLeft(fb, 41) + 0xC6BC279692B5C323L;
+        final long fa = stateA;
+        final long fb = stateB;
+        final long fc = stateC;
+        stateA = 0xD1342543DE82EF95L * fc;
+        stateB = fa ^ fb ^ fc;
+        stateC = (fb << 41 | fb >>> 23) + 0xC6BC279692B5C323L;
         return fa;
     }
 
     @Override
     public long previousLong() {
-        final long fa = this.stateA;
-        final long fb = this.stateB;
-        final long fc = this.stateC;
-        this.stateC = 0x572B5EE77A54E3BDL * fa;
-        this.stateB = Long.rotateRight(fc - 0xC6BC279692B5C323L, 41);
-        this.stateA = fb ^ this.stateB ^ this.stateC;
-        return this.stateB ^ 0x572B5EE77A54E3BDL * this.stateA ^ Long.rotateRight(this.stateC - 0xC6BC279692B5C323L, 41);
+        final long fa = stateA;
+        final long fb = stateB;
+        long fc = stateC - 0xC6BC279692B5C323L;
+        stateC = 0x572B5EE77A54E3BDL * fa;
+        stateB = (fc >>> 41 | fc << 23);
+        stateA = fb ^ stateB ^ stateC;
+        fc = stateC - 0xC6BC279692B5C323L;
+        return stateB ^ 0x572B5EE77A54E3BDL * stateA ^ (fc >>> 41 | fc << 23);
 
     }
 
     @Override
     public int next(int bits) {
-        final long fa = this.stateA;
-        final long fb = this.stateB;
-        final long fc = this.stateC;
-        this.stateA = 0xD1342543DE82EF95L * fc;
-        this.stateB = fa ^ fb ^ fc;
-        this.stateC = Long.rotateLeft(fb, 41) + 0xC6BC279692B5C323L;
+        final long fa = stateA;
+        final long fb = stateB;
+        final long fc = stateC;
+        stateA = 0xD1342543DE82EF95L * fc;
+        stateB = fa ^ fb ^ fc;
+        stateC = (fb << 41 | fb >>> 23) + 0xC6BC279692B5C323L;
         return (int)fa >>> (32 - bits);
     }
 
