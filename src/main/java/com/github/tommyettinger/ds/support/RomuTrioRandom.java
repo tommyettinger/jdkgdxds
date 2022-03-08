@@ -29,6 +29,10 @@ package com.github.tommyettinger.ds.support;
  * {@link #setState(long, long, long)}, because if you give sequential seeds to both setSeed() and setState(), the
  * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
  * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
+ * <br>
+ * The implementation here uses the algorithm from <a href="https://romu-random.org/">Romu-Random</a>, but bases its
+ * implementation more closely on <a href="https://github.com/bgrainger/RomuRandom">this C# port</a>. The C# port by
+ * Bradley Grainger is Apache 2.0 licensed, like jdkgdxds.
  */
 public class RomuTrioRandom implements EnhancedRandom {
 

@@ -381,6 +381,11 @@ public class ChopRandom implements EnhancedRandom {
     }
 
     @Override
+    public float nextInclusiveFloat () {
+        return (0x1000001L * (nextInt() & 0xFFFFFFFFL) >> 32) * 0x1p-24f;
+    }
+
+    @Override
     public ChopRandom copy() {
         return new ChopRandom(stateA, stateB, stateC, stateD);
     }

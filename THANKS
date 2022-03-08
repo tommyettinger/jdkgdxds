@@ -44,3 +44,10 @@ thanks to Guy Steele in particular for providing only
 "slow generators" in Java 17, leaving room for third
 parties to provide "fast generators." We don't implement
 Java 17 random number generator interfaces for a reason.
+
+Thanks to Mark Overton for making the Romu generators freely
+available; this library provides RomuTrio as an option for
+an EnhancedRandom implementation. No code was directly taken
+from the Romu sources at https://romu-random.org/ , but a port
+by Bradley Grainger from https://github.com/bgrainger/RomuRandom
+was used as a basis. Thanks also to Bradley Grainger.

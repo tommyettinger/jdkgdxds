@@ -15,10 +15,7 @@
  *
  */
 
-package com.github.tommyettinger.ds.support.mu;
-
-import com.github.tommyettinger.ds.support.Base;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
+package com.github.tommyettinger.ds.support;
 
 public class ChopRandom implements EnhancedRandom {
 
