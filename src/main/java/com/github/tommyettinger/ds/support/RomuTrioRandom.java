@@ -47,7 +47,7 @@ public class RomuTrioRandom implements EnhancedRandom {
     protected long stateC;
 
     /**
-     * Creates a new TricycleRandom with a random state.
+     * Creates a new RomuTrioRandom with a random state.
      */
     public RomuTrioRandom () {
         stateA = EnhancedRandom.seedFromMath();
@@ -57,7 +57,7 @@ public class RomuTrioRandom implements EnhancedRandom {
     }
 
     /**
-     * Creates a new TricycleRandom with the given seed; all {@code long} values are permitted.
+     * Creates a new RomuTrioRandom with the given seed; all {@code long} values are permitted.
      * The seed will be passed to {@link #setSeed(long)} to attempt to adequately distribute the seed randomly.
      * @param seed any {@code long} value
      */
@@ -66,7 +66,7 @@ public class RomuTrioRandom implements EnhancedRandom {
     }
 
     /**
-     * Creates a new TricycleRandom with the given three states; all {@code long} values are permitted unless all
+     * Creates a new RomuTrioRandom with the given three states; all {@code long} values are permitted unless all
      * three states are 0. In that case, it treats stateC as if it were -1. Otherwise, these states will be used verbatim.
      * @param stateA any {@code long} value
      * @param stateB any {@code long} value
