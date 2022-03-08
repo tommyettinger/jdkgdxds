@@ -107,25 +107,25 @@ public class CuckooTest {
 	@Test
 	public void workingLethalCuckooTest (){
 		ObjectObjectCuckooMap<Killer, Object> map = new ObjectObjectCuckooMap<>();
-		int size = 100000;
+		int size = 0x8000;
 		System.out.println("Trying to enter " + size + " Killer keys into an ObjectObjectCuckooMap.");
 		for (int i = 0; i < size; i++) {
 			System.out.println("Entered " + i + " keys successfully.");
 			map.put(new Killer(i), null);
 		}
-		System.out.println("Surprise! Succeeded; finished ObjectObjectCuckooMap has size: " + map.size);
+		System.out.println("Yay! Succeeded; finished ObjectObjectCuckooMap has size: " + map.size);
 	}
 
 	@Test
 	public void workingLethalLinearTest (){
 		ObjectObjectMap<Killer, Object> map = new ObjectObjectMap<>();
-		int size = 100000;
+		int size = 0x8000;
 		System.out.println("Trying to enter " + size + " Killer keys into an ObjectObjectMap.");
 		for (int i = 0; i < size; i++) {
 			System.out.println("Entered " + i + " keys successfully.");
 			map.put(new Killer(i), null);
 		}
-		System.out.println("Surprise! Succeeded; finished ObjectObjectMap has size: " + map.size());
+		System.out.println("Yay! Succeeded; finished ObjectObjectMap has size: " + map.size());
 	}
 
 	// Expected to fail with an OutOfMemoryError.

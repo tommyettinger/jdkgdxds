@@ -271,8 +271,8 @@ public class ChopRandom implements EnhancedRandom {
         int gb = fc ^ fd; gb = (gb << 11 | gb >>> 21);
         final int gc = fa ^ fb + fc;
         final int gd = fd + 0xADB5B165;
-        stateA = gb ^ gc; stateA = (stateA << 26 | stateA >>>  6);
-        stateB = gc ^ gd; stateB = (stateB << 11 | stateB >>> 21);
+        int sa = gb ^ gc; stateA = (sa << 26 | sa >>>  6);
+        int sb = gc ^ gd; stateB = (sb << 11 | sb >>> 21);
         stateC = ga ^ gb + gc;
         stateD = gd + 0xADB5B165;
         return (long)fc << 32 ^ gc;
@@ -304,10 +304,8 @@ public class ChopRandom implements EnhancedRandom {
         final int fb = stateB;
         final int fc = stateC;
         final int fd = stateD;
-        stateA = fb ^ fc;
-        stateA = (stateA << 26 | stateA >>> 6);
-        stateB = fc ^ fd;
-        stateB = (stateB << 11 | stateB >>> 21);
+        final int sa = fb ^ fc; stateA = (sa << 26 | sa >>>  6);
+        final int sb = fc ^ fd; stateB = (sb << 11 | sb >>> 21);
         stateC = fa ^ fb + fc;
         stateD = fd + 0xADB5B165;
         return fc >>> (32 - bits);
@@ -319,10 +317,8 @@ public class ChopRandom implements EnhancedRandom {
         final int fb = stateB;
         final int fc = stateC;
         final int fd = stateD;
-        stateA = fb ^ fc;
-        stateA = (stateA << 26 | stateA >>> 6);
-        stateB = fc ^ fd;
-        stateB = (stateB << 11 | stateB >>> 21);
+        final int sa = fb ^ fc; stateA = (sa << 26 | sa >>>  6);
+        final int sb = fc ^ fd; stateB = (sb << 11 | sb >>> 21);
         stateC = fa ^ fb + fc;
         stateD = fd + 0xADB5B165;
         return fc;
