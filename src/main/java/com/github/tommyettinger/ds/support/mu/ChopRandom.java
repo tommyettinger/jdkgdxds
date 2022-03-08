@@ -15,37 +15,11 @@
  *
  */
 
-package com.github.tommyettinger.ds.support;
+package com.github.tommyettinger.ds.support.mu;
 
-/**
- * A random number generator that is optimized for performance on 32-bit machines and with Google Web Toolkit, this uses
- * only add, bitwise-rotate, and XOR operations (no multiplication). This generator is nearly identical to
- * {@link TrimRandom} in its structure, but uses smaller words (int instead of long), and has better avalanche properties.
- * <br>
- * The actual speed of this is going to vary wildly depending on the platform being benchmarked. It's hard to find a
- * faster high-quality way to generate long values on GWT (this is, surprisingly, faster than generators like
- * {@link FourWheelRandom} on GWT at generating either int or long values, while this is likely half the speed of
- * FourWheelRandom when generating long values on Java 17 HotSpot). ChopRandom has a guaranteed minimum period of 2 to
- * the 32, and is very likely to have a much longer period for almost all initial states.
- * <br>
- * This cannot be considered stable yet, and may change as tests run longer. It already passes 32TB of PractRand testing
- * without anomalies.
- * <br>
- * The algorithm used here has four states purely to exploit instruction-level parallelism; one state is a counter (this
- * gives the guaranteed minimum period of 2 to the 32), and the others combine the values of the four states across three
- * variables. There's a complex tangle of dependencies across the states, but it is possible to invert the generator
- * given a full 128-bit state; this is vital for its period and quality.
- * <br>
- * It is strongly recommended that you seed this with {@link #setSeed(long)} instead of
- * {@link #setState(long, long, long, long)}, because if you give sequential seeds to both setSeed() and setState(), the
- * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
- * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
- * <br>
- * This implements all optional methods in EnhancedRandom except {@link #skip(long)}; it does implement
- * {@link #previousLong()} without using skip().
- * <br>
- * This is called ChopRandom because it operates on half the bits as {@link TrimRandom} while otherwise being similar.
- */
+import com.github.tommyettinger.ds.support.Base;
+import com.github.tommyettinger.ds.support.EnhancedRandom;
+
 public class ChopRandom implements EnhancedRandom {
 
     /**
@@ -270,11 +244,11 @@ public class ChopRandom implements EnhancedRandom {
         int ga = fb ^ fc; ga = (ga << 26 | ga >>>  6);
         int gb = fc ^ fd; gb = (gb << 11 | gb >>> 21);
         final int gc = fa ^ fb + fc;
-        final int gd = fd + 0xADB5B165;
+        final int gd = fd + 0xADB5B165 | 0;
         stateA = gb ^ gc; stateA = (stateA << 26 | stateA >>>  6);
         stateB = gc ^ gd; stateB = (stateB << 11 | stateB >>> 21);
         stateC = ga ^ gb + gc;
-        stateD = gd + 0xADB5B165;
+        stateD = gd + 0xADB5B165 | 0;
         return (long)fc << 32 ^ gc;
     }
 
@@ -283,18 +257,18 @@ public class ChopRandom implements EnhancedRandom {
         final int fa = stateA;
         final int fb = stateB;
         final int fc = stateC;
-        stateD -= 0xADB5B165;
+        stateD = stateD - 0xADB5B165 | 0;
         int t = (fb >>> 11 | fb << 21);
         final int gc = t ^ stateD;
         t = (fa >>> 26 | fa << 6);
         final int gb = t ^ gc;
         final int ga = fc - gb;
-        int result = (gb >>> 11 | gb << 21) ^ (stateD -= 0xADB5B165);
+        int result = (gb >>> 11 | gb << 21) ^ (stateD = stateD - 0xADB5B165 | 0);
         t = (gb >>> 11 | gb << 21);
         stateC = t ^ stateD;
         t = (ga >>> 26 | ga << 6);
         stateB = t ^ stateC;
-        stateA = gc - stateB;
+        stateA = gc - stateB | 0;
         return (long)((stateB >>> 11 | stateB << 21) ^ stateD - 0xADB5B165) << 32 ^ result;
     }
 
@@ -309,7 +283,7 @@ public class ChopRandom implements EnhancedRandom {
         stateB = fc ^ fd;
         stateB = (stateB << 11 | stateB >>> 21);
         stateC = fa ^ fb + fc;
-        stateD = fd + 0xADB5B165;
+        stateD = fd + 0xADB5B165 | 0;
         return fc >>> (32 - bits);
     }
 
@@ -324,7 +298,7 @@ public class ChopRandom implements EnhancedRandom {
         stateB = fc ^ fd;
         stateB = (stateB << 11 | stateB >>> 21);
         stateC = fa ^ fb + fc;
-        stateD = fd + 0xADB5B165;
+        stateD = fd + 0xADB5B165 | 0;
         return fc;
     }
 
