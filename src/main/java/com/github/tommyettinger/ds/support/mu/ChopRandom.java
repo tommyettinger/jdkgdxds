@@ -563,6 +563,82 @@ public class ChopRandom implements EnhancedRandom {
     }
 
     @Override
+    public float nextFloat (float outerBound) {
+        final int fa = stateA;
+        final int fb = stateB;
+        final int fc = stateC;
+        final int fd = stateD;
+        stateA = fb ^ fc;
+        stateA = (stateA << 26 | stateA >>> 6);
+        stateB = fc ^ fd;
+        stateB = (stateB << 11 | stateB >>> 21);
+        stateC = fa ^ fb + fc;
+        stateD = fd + 0xADB5B165 | 0;
+        return (fc >>> 8) * 0x1p-24f * outerBound;
+
+    }
+
+    @Override
+    public float nextFloat (float innerBound, float outerBound) {
+        final int fa = stateA;
+        final int fb = stateB;
+        final int fc = stateC;
+        final int fd = stateD;
+        stateA = fb ^ fc;
+        stateA = (stateA << 26 | stateA >>> 6);
+        stateB = fc ^ fd;
+        stateB = (stateB << 11 | stateB >>> 21);
+        stateC = fa ^ fb + fc;
+        stateD = fd + 0xADB5B165 | 0;
+        return innerBound + (fc >>> 8) * 0x1p-24f * (outerBound - innerBound);
+    }
+
+    @Override
+    public float nextInclusiveFloat () {
+        final int fa = stateA;
+        final int fb = stateB;
+        final int fc = stateC;
+        final int fd = stateD;
+        stateA = fb ^ fc;
+        stateA = (stateA << 26 | stateA >>> 6);
+        stateB = fc ^ fd;
+        stateB = (stateB << 11 | stateB >>> 21);
+        stateC = fa ^ fb + fc;
+        stateD = fd + 0xADB5B165 | 0;
+        return (0x1000001L * (fc & 0xFFFFFFFFL) >> 32) * 0x1p-24f;
+    }
+
+    @Override
+    public float nextInclusiveFloat (float outerBound) {
+        final int fa = stateA;
+        final int fb = stateB;
+        final int fc = stateC;
+        final int fd = stateD;
+        stateA = fb ^ fc;
+        stateA = (stateA << 26 | stateA >>> 6);
+        stateB = fc ^ fd;
+        stateB = (stateB << 11 | stateB >>> 21);
+        stateC = fa ^ fb + fc;
+        stateD = fd + 0xADB5B165 | 0;
+        return (0x1000001L * (fc & 0xFFFFFFFFL) >> 32) * 0x1p-24f * outerBound;
+    }
+
+    @Override
+    public float nextInclusiveFloat (float innerBound, float outerBound) {
+        final int fa = stateA;
+        final int fb = stateB;
+        final int fc = stateC;
+        final int fd = stateD;
+        stateA = fb ^ fc;
+        stateA = (stateA << 26 | stateA >>> 6);
+        stateB = fc ^ fd;
+        stateB = (stateB << 11 | stateB >>> 21);
+        stateC = fa ^ fb + fc;
+        stateD = fd + 0xADB5B165 | 0;
+        return innerBound + (0x1000001L * (fc & 0xFFFFFFFFL) >> 32) * 0x1p-24f * (outerBound - innerBound);
+    }
+
+    @Override
     public ChopRandom copy() {
         return new ChopRandom(stateA, stateB, stateC, stateD);
     }
