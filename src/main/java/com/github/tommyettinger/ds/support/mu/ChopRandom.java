@@ -304,25 +304,75 @@ public class ChopRandom implements EnhancedRandom {
 
     @Override
     public int nextInt (int bound) {
-        return (int)(bound * (nextInt() & 0xFFFFFFFFL) >> 32) & ~(bound >> 31);
+        final int fa = stateA;
+        final int fb = stateB;
+        final int fc = stateC;
+        final int fd = stateD;
+        stateA = fb ^ fc;
+        stateA = (stateA << 26 | stateA >>> 6);
+        stateB = fc ^ fd;
+        stateB = (stateB << 11 | stateB >>> 21);
+        stateC = fa ^ fb + fc;
+        stateD = fd + 0xADB5B165 | 0;
+        return (int)(bound * (fc & 0xFFFFFFFFL) >> 32) & ~(bound >> 31);
     }
 
     @Override
     public int nextSignedInt (int outerBound) {
-        outerBound = (int)(outerBound * (nextInt() & 0xFFFFFFFFL) >> 32);
+        final int fa = stateA;
+        final int fb = stateB;
+        final int fc = stateC;
+        final int fd = stateD;
+        stateA = fb ^ fc;
+        stateA = (stateA << 26 | stateA >>> 6);
+        stateB = fc ^ fd;
+        stateB = (stateB << 11 | stateB >>> 21);
+        stateC = fa ^ fb + fc;
+        stateD = fd + 0xADB5B165 | 0;
+        outerBound = (int)(outerBound * (fc & 0xFFFFFFFFL) >> 32);
         return outerBound + (outerBound >>> 31);
     }
 
     @Override
     public void nextBytes (byte[] bytes) {
-        for (int i = 0; i < bytes.length; ) { for (int r = nextInt(), n = Math.min(bytes.length - i, 4); n-- > 0; r >>>= 8) { bytes[i++] = (byte)r; } }
+        for (int i = 0; i < bytes.length; ) {
+            final int fa = stateA;
+            final int fb = stateB;
+            int fc = stateC;
+            final int fd = stateD;
+            stateA = fb ^ fc;
+            stateA = (stateA << 26 | stateA >>> 6);
+            stateB = fc ^ fd;
+            stateB = (stateB << 11 | stateB >>> 21);
+            stateC = fa ^ fb + fc;
+            stateD = fd + 0xADB5B165 | 0;
+            for (int n = Math.min(bytes.length - i, 4); n-- > 0; fc >>>= 8) {
+                bytes[i++] = (byte)fc;
+            }
+        }
     }
 
     @Override
     public long nextLong (long inner, long outer) {
-        final long randLow = nextInt() & 0xFFFFFFFFL;
-        final long randHigh = nextInt() & 0xFFFFFFFFL;
+        int fa = stateA;
+        int fb = stateB;
+        int fc = stateC;
+        int fd = stateD;
+        int ga = fb ^ fc;
+        ga = (ga << 26 | ga >>> 6);
+        int gb = fc ^ fd;
+        gb = (gb << 11 | gb >>> 21);
+        int gc = fa ^ fb + fc;
+        int gd = fd + 0xADB5B165 | 0;
+        fa = gb ^ gc;
+        stateA = (fa << 26 | fa >>> 6);
+        fb = gc ^ gd;
+        stateB = (fb << 11 | fb >>> 21);
+        stateC = ga ^ gb + gc;
+        stateD = gd + 0xADB5B165 | 0;
         if(inner >= outer) return inner;
+        final long randLow = fc & 0xFFFFFFFFL;
+        final long randHigh = gc & 0xFFFFFFFFL;
         final long bound = outer - inner;
         final long boundLow = bound & 0xFFFFFFFFL;
         final long boundHigh = (bound >>> 32);
@@ -337,8 +387,24 @@ public class ChopRandom implements EnhancedRandom {
             inner = t + 1L;
         }
         final long bound = outer - inner;
-        final long randLow = nextInt() & 0xFFFFFFFFL;
-        final long randHigh = nextInt() & 0xFFFFFFFFL;
+        int fa = stateA;
+        int fb = stateB;
+        int fc = stateC;
+        int fd = stateD;
+        int ga = fb ^ fc;
+        ga = (ga << 26 | ga >>> 6);
+        int gb = fc ^ fd;
+        gb = (gb << 11 | gb >>> 21);
+        int gc = fa ^ fb + fc;
+        int gd = fd + 0xADB5B165 | 0;
+        fa = gb ^ gc;
+        stateA = (fa << 26 | fa >>> 6);
+        fb = gc ^ gd;
+        stateB = (fb << 11 | fb >>> 21);
+        stateC = ga ^ gb + gc;
+        stateD = gd + 0xADB5B165 | 0;
+        final long randLow = fc & 0xFFFFFFFFL;
+        final long randHigh = gc & 0xFFFFFFFFL;
         final long boundLow = bound & 0xFFFFFFFFL;
         final long boundHigh = (bound >>> 32);
         return inner + (randHigh * boundLow >>> 32) + (randLow * boundHigh >>> 32) + randHigh * boundHigh;
@@ -346,12 +412,32 @@ public class ChopRandom implements EnhancedRandom {
 
     @Override
     public boolean nextBoolean () {
-        return nextInt() < 0;
+        final int fa = stateA;
+        final int fb = stateB;
+        final int fc = stateC;
+        final int fd = stateD;
+        stateA = fb ^ fc;
+        stateA = (stateA << 26 | stateA >>> 6);
+        stateB = fc ^ fd;
+        stateB = (stateB << 11 | stateB >>> 21);
+        stateC = fa ^ fb + fc;
+        stateD = fd + 0xADB5B165 | 0;
+        return fc < 0;
     }
 
     @Override
     public float nextFloat () {
-        return (nextInt() >>> 8) * 0x1p-24f;
+        final int fa = stateA;
+        final int fb = stateB;
+        final int fc = stateC;
+        final int fd = stateD;
+        stateA = fb ^ fc;
+        stateA = (stateA << 26 | stateA >>> 6);
+        stateB = fc ^ fd;
+        stateB = (stateB << 11 | stateB >>> 21);
+        stateC = fa ^ fb + fc;
+        stateD = fd + 0xADB5B165 | 0;
+        return (fc >>> 8) * 0x1p-24f;
     }
 
     @Override
