@@ -329,6 +329,58 @@ public class ChopRandom implements EnhancedRandom {
     }
 
     @Override
+    public int nextInt (int bound) {
+        return (int)(bound * (nextInt() & 0xFFFFFFFFL) >> 32) & ~(bound >> 31);
+    }
+
+    @Override
+    public int nextSignedInt (int outerBound) {
+        outerBound = (int)(outerBound * (nextInt() & 0xFFFFFFFFL) >> 32);
+        return outerBound + (outerBound >>> 31);
+    }
+
+    @Override
+    public void nextBytes (byte[] bytes) {
+        for (int i = 0; i < bytes.length; ) { for (int r = nextInt(), n = Math.min(bytes.length - i, 4); n-- > 0; r >>>= 8) { bytes[i++] = (byte)r; } }
+    }
+
+    @Override
+    public long nextLong (long inner, long outer) {
+        final long randLow = nextInt() & 0xFFFFFFFFL;
+        final long randHigh = nextInt() & 0xFFFFFFFFL;
+        if(inner >= outer) return inner;
+        final long bound = outer - inner;
+        final long boundLow = bound & 0xFFFFFFFFL;
+        final long boundHigh = (bound >>> 32);
+        return inner + (randHigh * boundLow >>> 32) + (randLow * boundHigh >>> 32) + randHigh * boundHigh;
+    }
+
+    @Override
+    public long nextSignedLong (long inner, long outer) {
+        if(outer < inner) {
+            long t = outer;
+            outer = inner + 1L;
+            inner = t + 1L;
+        }
+        final long bound = outer - inner;
+        final long randLow = nextInt() & 0xFFFFFFFFL;
+        final long randHigh = nextInt() & 0xFFFFFFFFL;
+        final long boundLow = bound & 0xFFFFFFFFL;
+        final long boundHigh = (bound >>> 32);
+        return inner + (randHigh * boundLow >>> 32) + (randLow * boundHigh >>> 32) + randHigh * boundHigh;
+    }
+
+    @Override
+    public boolean nextBoolean () {
+        return nextInt() < 0;
+    }
+
+    @Override
+    public float nextFloat () {
+        return (nextInt() >>> 8) * 0x1p-24f;
+    }
+
+    @Override
     public ChopRandom copy() {
         return new ChopRandom(stateA, stateB, stateC, stateD);
     }
