@@ -253,22 +253,20 @@ public class ChopRandom implements EnhancedRandom {
 
     @Override
     public long previousLong() {
-        final int fa = stateA;
-        final int fb = stateB;
-        final int fc = stateC;
+        int fa = stateA;
+        int fb = stateB;
+        int fc = stateC;
         stateD = stateD - 0xADB5B165 | 0;
-        int t = (fb >>> 11 | fb << 21);
-        final int gc = t ^ stateD;
-        t = (fa >>> 26 | fa << 6);
-        final int gb = t ^ gc;
-        final int ga = fc - gb;
-        int result = (gb >>> 11 | gb << 21) ^ (stateD = stateD - 0xADB5B165 | 0);
-        t = (gb >>> 11 | gb << 21);
-        stateC = t ^ stateD;
-        t = (ga >>> 26 | ga << 6);
-        stateB = t ^ stateC;
-        stateA = gc - stateB | 0;
-        return (long)((stateB >>> 11 | stateB << 21) ^ stateD - 0xADB5B165) << 32 ^ result;
+        final int gc = (fb >>> 11 | fb << 21) ^ stateD;
+        final int gb = (fa >>> 26 | fa << 6) ^ gc;
+        final int ga = fc ^ gb + gc;
+        stateC = (gb >>> 11 | gb << 21) ^ (stateD = stateD - 0xADB5B165 | 0);
+        stateB = (ga >>> 26 | ga << 6) ^ stateC;
+        stateA = gc ^ stateB + stateC;
+
+        fc = ((stateB >>> 11 | stateB << 21) ^ stateD - 0xADB5B165);
+        fb = (stateA >>> 26 | stateA << 6) ^ fc;
+        return (long)((fb >>> 11 | fb << 21) ^ stateD - 0x5B6B62CA) << 32 ^ fc;
     }
 
     @Override

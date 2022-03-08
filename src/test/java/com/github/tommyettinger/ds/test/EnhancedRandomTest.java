@@ -1,5 +1,6 @@
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.support.ChopRandom;
 import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
@@ -79,6 +80,21 @@ public class EnhancedRandomTest {
 	@Test
 	public void testTrimPrevious() {
 		TrimRandom random = new TrimRandom(0L);
+		long n0 = random.nextLong();
+		long n1 = random.nextLong();
+		long n2 = random.nextLong();
+		long n3 = random.nextLong();
+		long p2 = random.previousLong();
+		long p1 = random.previousLong();
+		long p0 = random.previousLong();
+		Assert.assertEquals(n0, p0);
+		Assert.assertEquals(n1, p1);
+		Assert.assertEquals(n2, p2);
+	}
+
+	@Test
+	public void testChopPrevious() {
+		ChopRandom random = new ChopRandom(0L);
 		long n0 = random.nextLong();
 		long n1 = random.nextLong();
 		long n2 = random.nextLong();
