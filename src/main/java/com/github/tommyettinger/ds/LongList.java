@@ -17,15 +17,14 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
+import com.github.tommyettinger.ds.support.sort.LongComparators;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.sort.LongComparators;
-
 import java.util.function.LongUnaryOperator;
 
 /**
@@ -112,15 +111,17 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	/**
 	 * Creates a new list containing the items in the specified PrimitiveCollection, such as an {@link ObjectLongMap.Values}.
+	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public LongList(PrimitiveCollection.OfLong coll) {
+	public LongList (PrimitiveCollection.OfLong coll) {
 		this(coll.size());
 		addAll(coll);
 	}
 
 	/**
 	 * Copies the given Ordered.OfLong into a new LongList.
+	 *
 	 * @param other another Ordered.OfLong
 	 */
 	public LongList (Ordered.OfLong other) {
@@ -130,9 +131,10 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
-	 * @param other another Ordered.OfLong
+	 *
+	 * @param other  another Ordered.OfLong
 	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count how many items to copy from other
+	 * @param count  how many items to copy from other
 	 */
 	public LongList (Ordered.OfLong other, int offset, int count) {
 		this(count);
@@ -149,14 +151,14 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	@Override
 	public boolean add (long value) {
 		long[] items = this.items;
-		if (size == items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
+		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
 		items[size++] = value;
 		return true;
 	}
 
 	public void add (long value1, long value2) {
 		long[] items = this.items;
-		if (size + 1 >= items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
+		if (size + 1 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
 		items[size] = value1;
 		items[size + 1] = value2;
 		size += 2;
@@ -164,7 +166,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	public void add (long value1, long value2, long value3) {
 		long[] items = this.items;
-		if (size + 2 >= items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
+		if (size + 2 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
 		items[size] = value1;
 		items[size + 1] = value2;
 		items[size + 2] = value3;
@@ -190,7 +192,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	// Modified from libGDX
 	public boolean addAll (LongList array, int offset, int length) {
-		if (offset + length > array.size) { throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size); }
+		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
 		return addAll(array.items, offset, length);
 	}
 
@@ -198,9 +200,9 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered.OfLong {@code other} to this list,
 	 * inserting at the end of the iteration order.
 	 *
-	 * @param other          a non-null {@link Ordered.OfLong}
-	 * @param offset         the first index in {@code other} to use
-	 * @param count          how many indices in {@code other} to use
+	 * @param other  a non-null {@link Ordered.OfLong}
+	 * @param offset the first index in {@code other} to use
+	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(LongList)} does
 	 */
 	public boolean addAll (Ordered.OfLong other, int offset, int count) {
@@ -237,7 +239,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	public boolean addAll (long[] array, int offset, int length) {
 		long[] items = this.items;
 		int sizeNeeded = size + length;
-		if (sizeNeeded > items.length) { items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f))); }
+		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
 		System.arraycopy(array, offset, items, size, length);
 		size += length;
 		return true;
@@ -245,19 +247,19 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	//Kotlin-friendly operator
 	public long get (int index) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		return items[index];
 	}
 
 	//Kotlin-friendly operator
 	public void set (int index, long value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] = value;
 	}
 
 	// Modified from libGDX
 	public void plus (int index, long value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] += value;
 	}
 
@@ -273,13 +275,13 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	// Kotlin-friendly operator
 	public LongList plus (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { items[i] += value; }
+		for (int i = 0, n = size; i < n; i++) {items[i] += value;}
 		return this;
 	}
 
 	// Modified from libGDX
 	public void times (int index, long value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] *= value;
 	}
 
@@ -295,13 +297,13 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	// Kotlin-friendly operator
 	public LongList times (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { items[i] *= value; }
+		for (int i = 0, n = size; i < n; i++) {items[i] *= value;}
 		return this;
 	}
 
 	// Newly-added
 	public void minus (int index, long value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] -= value;
 	}
 
@@ -318,13 +320,13 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	// Kotlin-friendly operator
 	public LongList minus (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { items[i] -= value; }
+		for (int i = 0, n = size; i < n; i++) {items[i] -= value;}
 		return this;
 	}
 
 	// Newly-added
 	public void div (int index, long value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] /= value;
 	}
 
@@ -340,13 +342,13 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	// Kotlin-friendly operator
 	public LongList div (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { items[i] /= value; }
+		for (int i = 0, n = size; i < n; i++) {items[i] /= value;}
 		return this;
 	}
 
 	// Newly-added
 	public void rem (int index, long value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] %= value;
 	}
 
@@ -362,15 +364,15 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	// Kotlin-friendly operator
 	public LongList rem (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { items[i] %= value; }
+		for (int i = 0, n = size; i < n; i++) {items[i] %= value;}
 		return this;
 	}
 
 	public void insert (int index, long value) {
-		if (index > size) { throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size); }
+		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		long[] items = this.items;
-		if (size == items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
-		if (ordered) { System.arraycopy(items, index, items, index + 1, size - index); } else { items[size] = items[index]; }
+		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (ordered) {System.arraycopy(items, index, items, index + 1, size - index);} else {items[size] = items[index];}
 		size++;
 		items[index] = value;
 	}
@@ -380,9 +382,9 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * indices before the insertion.
 	 */
 	public void insertRange (int index, int count) {
-		if (index > size) { throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size); }
+		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		int sizeNeeded = size + count;
-		if (sizeNeeded > items.length) { items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f))); }
+		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
 	}
@@ -400,8 +402,8 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	@Override
 	public void swap (int first, int second) {
-		if (first >= size) { throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size); }
-		if (second >= size) { throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size); }
+		if (first >= size) {throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size);}
+		if (second >= size) {throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size);}
 		long[] items = this.items;
 		long firstValue = items[first];
 		items[first] = items[second];
@@ -412,7 +414,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	public boolean contains (long value) {
 		int i = size - 1;
 		long[] items = this.items;
-		while (i >= 0) { if (items[i--] == value) { return true; } }
+		while (i >= 0) {if (items[i--] == value) {return true;}}
 		return false;
 	}
 
@@ -427,30 +429,32 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		long[] others = other.items;
 		int otherSize = other.size;
 		for (int i = 0; i < otherSize; i++) {
-			if (!contains(others[i])) { return false; }
+			if (!contains(others[i])) {return false;}
 		}
 		return true;
 	}
 
 	/**
 	 * Returns the first index in this list that contains the specified value, or -1 if it is not present.
+	 *
 	 * @param value a long value to search for
 	 * @return the first index of the given value, or -1 if it is not present
 	 */
 	public int indexOf (long value) {
 		long[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { if (items[i] == value) { return i; } }
+		for (int i = 0, n = size; i < n; i++) {if (items[i] == value) {return i;}}
 		return -1;
 	}
 
 	/**
 	 * Returns the last index in this list that contains the specified value, or -1 if it is not present.
+	 *
 	 * @param value a long value to search for
 	 * @return the last index of the given value, or -1 if it is not present
 	 */
 	public int lastIndexOf (long value) {
 		long[] items = this.items;
-		for (int i = size - 1; i >= 0; i--) { if (items[i] == value) { return i; } }
+		for (int i = size - 1; i >= 0; i--) {if (items[i] == value) {return i;}}
 		return -1;
 	}
 
@@ -483,11 +487,11 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * @return the removed item
 	 */
 	public long removeAt (int index) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		long[] items = this.items;
 		long value = items[index];
 		size--;
-		if (ordered) { System.arraycopy(items, index + 1, items, index, size - index); } else { items[index] = items[size]; }
+		if (ordered) {System.arraycopy(items, index + 1, items, index, size - index);} else {items[index] = items[size];}
 		return value;
 	}
 
@@ -496,15 +500,16 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * Note that this takes different arguments than some other range-related methods; this needs
 	 * a start index and an end index, rather than a count of items. This matches the behavior in
 	 * the JDK collections.
+	 *
 	 * @param start the first index to remove, inclusive
-	 * @param end the last index (after what should be removed), exclusive
+	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	public void removeRange (int start, int end) {
 		int n = size;
-		if (end >= n) { throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size); }
-		if (start > end) { throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end); }
+		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
+		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
 		int count = end - start, lastIndex = n - count;
-		if (ordered) { System.arraycopy(items, start + count, items, start, n - (start + count)); } else {
+		if (ordered) {System.arraycopy(items, start + count, items, start, n - (start + count));} else {
 			int i = Math.max(lastIndex, end);
 			System.arraycopy(items, i, items, start, n - i);
 		}
@@ -559,9 +564,10 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	/**
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
+	 *
 	 * @param operator a LongUnaryOperator (an interface defined in the JDK)
 	 */
-	public void replaceAll(LongUnaryOperator operator) {
+	public void replaceAll (LongUnaryOperator operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsLong(items[i]);
 		}
@@ -569,34 +575,38 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	/**
 	 * Removes and returns the last item.
+	 *
 	 * @return the last item, removed from this
 	 */
 	public long pop () {
-		if (size == 0) { throw new IndexOutOfBoundsException("LongList is empty."); }
+		if (size == 0) {throw new IndexOutOfBoundsException("LongList is empty.");}
 		return items[--size];
 	}
 
 	/**
 	 * Returns the last item.
+	 *
 	 * @return the last item, without modifying this
 	 */
 	public long peek () {
-		if (size == 0) { throw new IndexOutOfBoundsException("LongList is empty."); }
+		if (size == 0) {throw new IndexOutOfBoundsException("LongList is empty.");}
 		return items[size - 1];
 	}
 
 	/**
 	 * Returns the first item.
+	 *
 	 * @return the first item, without modifying this
 	 */
 	// Modified from libGDX
 	public long first () {
-		if (size == 0) { throw new IndexOutOfBoundsException("LongList is empty."); }
+		if (size == 0) {throw new IndexOutOfBoundsException("LongList is empty.");}
 		return items[0];
 	}
 
 	/**
 	 * Returns true if the array has one or more items, or false otherwise.
+	 *
 	 * @return true if the array has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
@@ -605,6 +615,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	/**
 	 * Returns true if the array is empty.
+	 *
 	 * @return true if the array is empty, or false if it has any items
 	 */
 	@Override
@@ -628,7 +639,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
 	public long[] shrink () {
-		if (items.length != size) { resize(size); }
+		if (items.length != size) {resize(size);}
 		return items;
 	}
 
@@ -639,9 +650,9 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
 	public long[] ensureCapacity (int additionalCapacity) {
-		if (additionalCapacity < 0) { throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity); }
+		if (additionalCapacity < 0) {throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity);}
 		int sizeNeeded = size + additionalCapacity;
-		if (sizeNeeded > items.length) { resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f))); }
+		if (sizeNeeded > items.length) {resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
 		return items;
 	}
 
@@ -651,8 +662,8 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
 	public long[] setSize (int newSize) {
-		if (newSize < 0) { throw new IllegalArgumentException("newSize must be >= 0: " + newSize); }
-		if (newSize > items.length) { resize(Math.max(8, newSize)); }
+		if (newSize < 0) {throw new IllegalArgumentException("newSize must be >= 0: " + newSize);}
+		if (newSize > items.length) {resize(Math.max(8, newSize));}
 		size = newSize;
 		return items;
 	}
@@ -697,21 +708,23 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * taken.
 	 */
 	public void truncate (int newSize) {
-		if (size > newSize) { size = newSize; }
+		if (size > newSize) {size = newSize;}
 	}
 
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
+	 *
 	 * @param random a {@link EnhancedRandom} such as {@link com.github.tommyettinger.ds.support.LaserRandom} from this library
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	public long random (EnhancedRandom random) {
-		if (size == 0) { return 0; }
+		if (size == 0) {return 0;}
 		return items[random.nextInt(size)];
 	}
 
 	/**
 	 * Allocates a new long array with {@code size} elements and fills it with the items in this.
+	 *
 	 * @return a new long array with the same contents as this
 	 */
 	public long[] toArray () {
@@ -724,11 +737,12 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
 	 * into {@code array} and returns it; otherwise, it allocates a new long array that can fit all
 	 * of the items in this, and proceeds to copy into that and return that.
+	 *
 	 * @param array a long array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
 	 */
 	public long[] toArray (long[] array) {
-		if(array.length < size)
+		if (array.length < size)
 			array = new long[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
@@ -757,21 +771,21 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 */
 	@Override
 	public boolean equals (Object object) {
-		if (object == this) { return true; }
-		if (!ordered) { return false; }
-		if (!(object instanceof LongList)) { return false; }
+		if (object == this) {return true;}
+		if (!ordered) {return false;}
+		if (!(object instanceof LongList)) {return false;}
 		LongList array = (LongList)object;
-		if (!array.ordered) { return false; }
+		if (!array.ordered) {return false;}
 		int n = size;
-		if (n != array.size) { return false; }
+		if (n != array.size) {return false;}
 		long[] items1 = this.items, items2 = array.items;
-		for (int i = 0; i < n; i++) { if (items1[i] != items2[i]) { return false; } }
+		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
 		return true;
 	}
 
 	@Override
 	public String toString () {
-		if (size == 0) { return "[]"; }
+		if (size == 0) {return "[]";}
 		long[] items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('[');
@@ -785,7 +799,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	public String toString (String separator) {
-		if (size == 0) { return ""; }
+		if (size == 0) {return "";}
 		long[] items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append(items[0]);
@@ -840,15 +854,15 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		 */
 		@Override
 		public long nextLong () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			if (index >= list.size) { throw new NoSuchElementException(); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index >= list.size) {throw new NoSuchElementException();}
 			return list.get(index++);
 		}
 
 		@Override
 		public void remove () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			if (index >= list.size) { throw new NoSuchElementException(); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index >= list.size) {throw new NoSuchElementException();}
 			list.removeAt(index);
 		}
 
@@ -861,7 +875,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		 */
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return index < list.size;
 		}
 
@@ -870,7 +884,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		}
 	}
 
-	public static LongList with(long item) {
+	public static LongList with (long item) {
 		LongList list = new LongList(1);
 		list.add(item);
 		return list;

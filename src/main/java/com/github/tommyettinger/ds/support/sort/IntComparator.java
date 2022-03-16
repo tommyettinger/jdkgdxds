@@ -72,7 +72,7 @@ public interface IntComparator extends Comparator<Integer> {
 
 	@Override
 	default Comparator<Integer> thenComparing (Comparator<? super Integer> second) {
-		if (second instanceof IntComparator) { return thenComparing((IntComparator)second); }
+		if (second instanceof IntComparator) {return thenComparing((IntComparator)second);}
 		return Comparator.super.thenComparing(second);
 	}
 }

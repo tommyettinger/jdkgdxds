@@ -41,7 +41,6 @@ import java.util.Set;
  */
 public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
-
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
@@ -82,6 +81,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * Creates a new ordered set identical to the specified ordered set.
 	 * Typically this would take another CaseInsensitiveOrderedSet, but you can use an ObjectOrderedSet
 	 * or one of its other subclasses as well.
+	 *
 	 * @param set an ObjectOrderedSet or one of its subclasses, such as a CaseInsensitiveOrderedSet
 	 */
 	public CaseInsensitiveOrderedSet (ObjectOrderedSet<? extends CharSequence> set) {
@@ -120,9 +120,10 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	/**
 	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
-	 * @param other another Ordered of CharSequence
+	 *
+	 * @param other  another Ordered of CharSequence
 	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count how many items to copy from other
+	 * @param count  how many items to copy from other
 	 */
 	public CaseInsensitiveOrderedSet (Ordered<CharSequence> other, int offset, int count) {
 		this(count);
@@ -131,13 +132,14 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
 	@Override
 	protected int place (Object item) {
-		if(item instanceof CharSequence) return (int)Utilities.longHashCodeIgnoreCase((CharSequence)item) & mask;
+		if (item instanceof CharSequence)
+			return (int)Utilities.longHashCodeIgnoreCase((CharSequence)item) & mask;
 		return super.place(item);
 	}
 
 	@Override
 	protected boolean equate (Object left, @Nullable Object right) {
-		if((left instanceof CharSequence) && (right instanceof CharSequence)){
+		if ((left instanceof CharSequence) && (right instanceof CharSequence)) {
 			return Utilities.equalsIgnoreCase((CharSequence)left, (CharSequence)right);
 		}
 		return false;
@@ -149,18 +151,18 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 		CharSequence[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			CharSequence key = keyTable[i];
-			if (key != null) { h += Utilities.longHashCodeIgnoreCase(key); }
+			if (key != null) {h += Utilities.longHashCodeIgnoreCase(key);}
 		}
 		return h;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals (Object o) {
 		if (o == this)
 			return true;
 		if (!(o instanceof Set))
 			return false;
-		Set<?> s = (Set<?>) o;
+		Set<?> s = (Set<?>)o;
 		if (s.size() != size())
 			return false;
 		try {
@@ -170,7 +172,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 		}
 	}
 
-	public static CaseInsensitiveOrderedSet with(CharSequence item) {
+	public static CaseInsensitiveOrderedSet with (CharSequence item) {
 		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(1);
 		set.add(item);
 		return set;

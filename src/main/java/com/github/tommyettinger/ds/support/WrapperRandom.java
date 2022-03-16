@@ -29,8 +29,7 @@ public class WrapperRandom extends Random {
 	/**
 	 * The EnhancedRandom this uses for almost all of its methods (not Streams).
 	 */
-	@Nonnull
-	public EnhancedRandom rng;
+	@Nonnull public EnhancedRandom rng;
 
 	/**
 	 * Creates a WrapperRandom around a {@link FourWheelRandom} with a random seed.
@@ -42,6 +41,7 @@ public class WrapperRandom extends Random {
 	/**
 	 * Uses the given EnhancedRandom for all operations it can (everything but Streams), and seeds the inherited Random state
 	 * with the given EnhancedRandom's first state.
+	 *
 	 * @param rng an EnhancedRandom that will be referenced directly (not copied)
 	 */
 	public WrapperRandom (@Nonnull EnhancedRandom rng) {
@@ -53,7 +53,8 @@ public class WrapperRandom extends Random {
 	/**
 	 * Uses the given EnhancedRandom for all operations it can (everything but Streams), and seeds both that EnhancedRandom
 	 * and the inherited Random state with the given seed.
-	 * @param rng an EnhancedRandom that will be referenced directly (not copied) and will be seeded with {@code seed}
+	 *
+	 * @param rng  an EnhancedRandom that will be referenced directly (not copied) and will be seeded with {@code seed}
 	 * @param seed a long seed (which can be any long) that will be used with {@link EnhancedRandom#setSeed(long)}
 	 */
 	public WrapperRandom (@Nonnull EnhancedRandom rng, long seed) {
@@ -64,6 +65,7 @@ public class WrapperRandom extends Random {
 
 	/**
 	 * Creates a WrapperRandom around a {@link FourWheelRandom}, seeded with the given seed.
+	 *
 	 * @param seed a long to be used as a seed for a FourWheelRandom
 	 */
 	public WrapperRandom (long seed) {
@@ -75,7 +77,7 @@ public class WrapperRandom extends Random {
 	@Override
 	public void setSeed (long seed) {
 		super.setSeed(seed);
-		if(rng != null) // needed because superclass Random calls this during construction
+		if (rng != null) // needed because superclass Random calls this during construction
 			rng.setSeed(seed);
 	}
 

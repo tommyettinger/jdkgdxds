@@ -42,7 +42,6 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  */
 public class LongSet implements PrimitiveCollection.OfLong {
 
-
 	protected int size;
 
 	protected long[] keyTable;
@@ -94,10 +93,10 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	 * growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public LongSet (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
@@ -121,29 +120,32 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	/**
 	 * Creates a new set using all distinct items in the given PrimitiveCollection, such as a
 	 * {@link LongList} or {@link LongObjectMap.Keys}.
+	 *
 	 * @param coll a PrimitiveCollection that will be used in full, except for duplicate items
 	 */
-	public LongSet(PrimitiveCollection.OfLong coll) {
+	public LongSet (PrimitiveCollection.OfLong coll) {
 		this(coll.size());
 		addAll(coll);
 	}
 
 	/**
 	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
-	 * @param array an array to draw items from
+	 *
+	 * @param array  an array to draw items from
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public LongSet(long[] array, int offset, int length) {
+	public LongSet (long[] array, int offset, int length) {
 		this(length);
 		addAll(array, offset, length);
 	}
 
 	/**
 	 * Creates a new set containing all of the items in the given array.
+	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public LongSet(long[] array) {
+	public LongSet (long[] array) {
 		this(array, 0, array.length);
 	}
 
@@ -186,18 +188,19 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	@Override
 	public boolean add (long key) {
 		if (key == 0) {
-			if (hasZeroValue) { return false; }
+			if (hasZeroValue) {return false;}
 			hasZeroValue = true;
 			size++;
 			return true;
 		}
 		long[] keyTable = this.keyTable;
-		for (int i = place(key);; i = i + 1 & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			long other = keyTable[i];
-			if (key == other) return false; // Existing key was found.
+			if (key == other)
+				return false; // Existing key was found.
 			if (other == 0) {
 				keyTable[i] = key;
-				if (++size >= threshold) { resize(keyTable.length << 1); }
+				if (++size >= threshold) {resize(keyTable.length << 1);}
 				return true;
 			}
 		}
@@ -208,7 +211,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	}
 
 	public boolean addAll (LongList array, int offset, int length) {
-		if (offset + length > array.size) { throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size); }
+		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
 		return addAll(array.items, offset, length);
 	}
 
@@ -219,18 +222,18 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	public boolean addAll (long[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size;
-		for (int i = offset, n = i + length; i < n; i++) { add(array[i]); }
+		for (int i = offset, n = i + length; i < n; i++) {add(array[i]);}
 		return size != oldSize;
 	}
 
 	public boolean addAll (LongSet set) {
 		ensureCapacity(set.size);
 		int oldSize = size;
-		if (set.hasZeroValue) { add(0); }
+		if (set.hasZeroValue) {add(0);}
 		long[] keyTable = set.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			long key = keyTable[i];
-			if (key != 0) { add(key); }
+			if (key != 0) {add(key);}
 		}
 		return size != oldSize;
 	}
@@ -254,14 +257,14 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	@Override
 	public boolean remove (long key) {
 		if (key == 0) {
-			if (!hasZeroValue) { return false; }
+			if (!hasZeroValue) {return false;}
 			hasZeroValue = false;
 			size--;
 			return true;
 		}
 
 		int i = locateKey(key);
-		if (i < 0) { return false; }
+		if (i < 0) {return false;}
 		long[] keyTable = this.keyTable;
 		int mask = this.mask;
 		int next = i + 1 & mask;
@@ -299,9 +302,9 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	 * instead.
 	 */
 	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) { throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity); }
+		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
 		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
-		if (keyTable.length > tableSize) { resize(tableSize); }
+		if (keyTable.length > tableSize) {resize(tableSize);}
 	}
 
 	/**
@@ -320,7 +323,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 
 	@Override
 	public void clear () {
-		if (size == 0) { return; }
+		if (size == 0) {return;}
 		size = 0;
 		Arrays.fill(keyTable, 0);
 		hasZeroValue = false;
@@ -328,19 +331,21 @@ public class LongSet implements PrimitiveCollection.OfLong {
 
 	@Override
 	public boolean contains (long key) {
-		if (key == 0) { return hasZeroValue; }
+		if (key == 0) {return hasZeroValue;}
 		long[] keyTable = this.keyTable;
-		for (int i = place(key);; i = i + 1 & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			long other = keyTable[i];
-			if (key == other) return true;
-			if (other == 0) return false;
+			if (key == other)
+				return true;
+			if (other == 0)
+				return false;
 		}
 	}
 
 	public long first () {
-		if (hasZeroValue) { return 0; }
+		if (hasZeroValue) {return 0;}
 		long[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != 0) { return keyTable[i]; } }
+		for (int i = 0, n = keyTable.length; i < n; i++) {if (keyTable[i] != 0) {return keyTable[i];}}
 		throw new IllegalStateException("IntSet is empty.");
 	}
 
@@ -350,7 +355,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) { resize(tableSize); }
+		if (keyTable.length < tableSize) {resize(tableSize);}
 	}
 
 	@Override
@@ -371,7 +376,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				long key = oldKeyTable[i];
-				if (key != 0) { addResize(key); }
+				if (key != 0) {addResize(key);}
 			}
 		}
 	}
@@ -381,7 +386,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	}
 
 	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -395,18 +400,18 @@ public class LongSet implements PrimitiveCollection.OfLong {
 		long[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			long key = keyTable[i];
-			if (key != 0) { h += key; }
+			if (key != 0) {h += key;}
 		}
 		return (int)(h ^ h >>> 32);
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals (Object o) {
 		if (o == this)
 			return true;
 		if (!(o instanceof LongSet))
 			return false;
-		LongSet s = (LongSet) o;
+		LongSet s = (LongSet)o;
 		if (s.size() != size())
 			return false;
 		try {
@@ -418,22 +423,22 @@ public class LongSet implements PrimitiveCollection.OfLong {
 
 	@Override
 	public String toString () {
-		if (size == 0) { return "[]"; }
+		if (size == 0) {return "[]";}
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('[');
 		long[] keyTable = this.keyTable;
 		int i = keyTable.length;
-		if (hasZeroValue) { buffer.append("0"); } else {
+		if (hasZeroValue) {buffer.append("0");} else {
 			while (i-- > 0) {
 				long key = keyTable[i];
-				if (key == 0) { continue; }
+				if (key == 0) {continue;}
 				buffer.append(key);
 				break;
 			}
 		}
 		while (i-- > 0) {
 			long key = keyTable[i];
-			if (key == 0) { continue; }
+			if (key == 0) {continue;}
 			buffer.append(", ");
 			buffer.append(key);
 		}
@@ -445,16 +450,17 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
 	 * size, no action is taken. This indiscriminately removes items from the backing array until the
 	 * requested newSize is reached, or until the full backing array has had its elements removed.
+	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	public void truncate (int newSize) {
 		long[] keyTable = this.keyTable;
-		if(hasZeroValue && size > newSize) {
+		if (hasZeroValue && size > newSize) {
 			hasZeroValue = false;
 			--size;
 		}
 		for (int i = 0; i < keyTable.length && size > newSize; i++) {
-			if(keyTable[i] != 0){
+			if (keyTable[i] != 0) {
 				keyTable[i] = 0;
 				--size;
 			}
@@ -501,7 +507,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 		public void reset () {
 			currentIndex = INDEX_ILLEGAL;
 			nextIndex = INDEX_ZERO;
-			if (set.hasZeroValue) { hasNext = true; } else { findNextIndex(); }
+			if (set.hasZeroValue) {hasNext = true;} else {findNextIndex();}
 		}
 
 		void findNextIndex () {
@@ -524,7 +530,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 		 */
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return hasNext;
 		}
 
@@ -549,7 +555,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 					next = next + 1 & mask;
 				}
 				keyTable[i] = 0;
-				if (i != currentIndex) { --nextIndex; }
+				if (i != currentIndex) {--nextIndex;}
 			}
 			currentIndex = INDEX_ILLEGAL;
 			set.size--;
@@ -557,8 +563,8 @@ public class LongSet implements PrimitiveCollection.OfLong {
 
 		@Override
 		public long nextLong () {
-			if (!hasNext) { throw new NoSuchElementException(); }
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			long key = nextIndex == INDEX_ZERO ? 0 : set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -573,7 +579,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 			LongList list = new LongList(true, set.size);
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) { list.add(next()); }
+			while (hasNext) {list.add(next());}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
@@ -581,7 +587,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 		}
 	}
 
-	public static LongSet with(long item) {
+	public static LongSet with (long item) {
 		LongSet set = new LongSet(1);
 		set.add(item);
 		return set;

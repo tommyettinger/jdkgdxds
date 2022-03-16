@@ -36,7 +36,6 @@ public final class LongComparators {
 	 */
 	protected static class NaturalImplicitComparator implements LongComparator {
 
-
 		@Override
 		public final int compare (final long a, final long b) {
 			return Long.compare(a, b);
@@ -47,7 +46,6 @@ public final class LongComparators {
 			return OPPOSITE_COMPARATOR;
 		}
 
-
 	}
 
 	public static final LongComparator NATURAL_COMPARATOR = new NaturalImplicitComparator();
@@ -56,7 +54,6 @@ public final class LongComparators {
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
 	protected static class OppositeImplicitComparator implements LongComparator {
-
 
 		@Override
 		public final int compare (final long a, final long b) {
@@ -67,7 +64,6 @@ public final class LongComparators {
 		public LongComparator reversed () {
 			return NATURAL_COMPARATOR;
 		}
-
 
 	}
 
@@ -99,7 +95,7 @@ public final class LongComparators {
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
 	public static LongComparator oppositeComparator (final LongComparator c) {
-		if (c instanceof OppositeComparator) { return ((OppositeComparator)c).comparator; }
+		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
 		return new OppositeComparator(c);
 	}
 
@@ -111,7 +107,7 @@ public final class LongComparators {
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
 	public static LongComparator asLongComparator (final Comparator<? super Long> c) {
-		if (c instanceof LongComparator) { return (LongComparator)c; }
+		if (c instanceof LongComparator) {return (LongComparator)c;}
 		return new LongComparator() {
 			@Override
 			public int compare (long x, long y) {
@@ -132,7 +128,6 @@ public final class LongComparators {
 	 */
 	protected static class UnsignedComparator implements LongComparator {
 
-
 		@Override
 		public final int compare (final long a, final long b) {
 			return Long.compare(a + MIN_VALUE, b + MIN_VALUE);
@@ -143,7 +138,6 @@ public final class LongComparators {
 			return UNSIGNED_OPPOSITE_COMPARATOR;
 		}
 
-
 	}
 
 	public static final LongComparator UNSIGNED_COMPARATOR = new UnsignedComparator();
@@ -153,7 +147,6 @@ public final class LongComparators {
 	 * are unsigned.
 	 */
 	protected static class UnsignedOppositeComparator implements LongComparator {
-
 
 		@Override
 		public final int compare (final long a, final long b) {
@@ -183,9 +176,9 @@ public final class LongComparators {
 	 * the second.
 	 */
 	private static void inPlaceMerge (long[] items, final int from, int mid, final int to, final LongComparator comp) {
-		if (from >= mid || mid >= to) { return; }
+		if (from >= mid || mid >= to) {return;}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) { swap(items, from, mid); }
+			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
 			return;
 		}
 
@@ -206,13 +199,13 @@ public final class LongComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -226,10 +219,10 @@ public final class LongComparators {
 	 * comparison function.
 	 *
 	 * @param items the long array to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
@@ -254,10 +247,10 @@ public final class LongComparators {
 	 * function.
 	 *
 	 * @param items the long array to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
@@ -279,12 +272,14 @@ public final class LongComparators {
 	/**
 	 * Sorts all of {@code items} by simply calling {@link #sort(long[], int, int, LongComparator)},
 	 * setting {@code from} and {@code to} so the whole array is sorted.
+	 *
 	 * @param items the long array to be sorted
-	 * @param c a LongComparator to alter the sort order; if null, the natural order will be used
+	 * @param c     a LongComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(long[] items, final @Nullable LongComparator c) {
-			sort(items, 0, items.length, c);
+	public static void sort (long[] items, final @Nullable LongComparator c) {
+		sort(items, 0, items.length, c);
 	}
+
 	/**
 	 * Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort.
@@ -299,9 +294,9 @@ public final class LongComparators {
 	 * does not have the same guarantees regarding allocation.
 	 *
 	 * @param items the long array to be sorted
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to the index of the last element (exclusive) to be sorted.
-	 * @param c a LongComparator to alter the sort order; if null, the natural order will be used
+	 * @param from  the index of the first element (inclusive) to be sorted.
+	 * @param to    the index of the last element (exclusive) to be sorted.
+	 * @param c     a LongComparator to alter the sort order; if null, the natural order will be used
 	 */
 	public static void sort (long[] items, final int from, final int to, final @Nullable LongComparator c) {
 		if (to <= 0) {
@@ -310,7 +305,7 @@ public final class LongComparators {
 		if (from < 0 || from >= items.length || to > items.length) {
 			throw new UnsupportedOperationException("The given from/to range in LongComparators.sort() is invalid.");
 		}
-		if(c == null){
+		if (c == null) {
 			Arrays.sort(items, from, to);
 			return;
 		}
@@ -340,7 +335,7 @@ public final class LongComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) { return; }
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

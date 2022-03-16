@@ -72,7 +72,7 @@ public interface BooleanComparator extends Comparator<Boolean> {
 
 	@Override
 	default Comparator<Boolean> thenComparing (Comparator<? super Boolean> second) {
-		if (second instanceof BooleanComparator) { return thenComparing((BooleanComparator)second); }
+		if (second instanceof BooleanComparator) {return thenComparing((BooleanComparator)second);}
 		return Comparator.super.thenComparing(second);
 	}
 }

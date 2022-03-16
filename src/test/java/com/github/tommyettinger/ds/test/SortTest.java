@@ -5,10 +5,10 @@ import com.github.tommyettinger.ds.QuickSelect;
 import com.github.tommyettinger.ds.Select;
 import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.sort.NaturalTextComparator;
-import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.Comparator;
 
 public class SortTest {
@@ -40,18 +40,19 @@ public class SortTest {
 	@Test
 	public void testQuickSelect () {
 		// 20 words, a-t
-		String[] words = {"anteater", "bee", "cat", "dog", "elephant", "frog", "gibbon", "horse", "ibex", "jaguar", "koala", "lemur",
-			"mouse", "nuthatch", "okapi", "penguin", "quahog", "ram", "squirrel", "thrush", "unicorn"};
+		String[] words = {"anteater", "bee", "cat", "dog", "elephant", "frog", "gibbon", "horse", "ibex", "jaguar", "koala", "lemur", "mouse", "nuthatch", "okapi", "penguin", "quahog", "ram", "squirrel", "thrush"
+//			, "unicorn"
+		};
 		DistinctRandom random = new DistinctRandom(123456L);
 		random.shuffle(words);
-		Assert.assertEquals("cat", Select.select(words, String::compareTo, 3, 20));
-		Assert.assertEquals("anteater", Select.select(words, String::compareTo, 1, 20));
-		Assert.assertEquals("bee", Select.select(words, String::compareTo, 2, 20));
-		Assert.assertEquals("squirrel", Select.select(words, ((Comparator<String>)String::compareTo).reversed(), 3, 20));
+		Assert.assertEquals("cat", Select.select(words, Comparator.naturalOrder(), 3, 20));
+		Assert.assertEquals("anteater", Select.select(words, Comparator.naturalOrder(), 1, 20));
+		Assert.assertEquals("bee", Select.select(words, Comparator.naturalOrder(), 2, 20));
+		Assert.assertEquals("squirrel", Select.select(words, Collections.reverseOrder(), 2, 20));
 		random.shuffle(words);
-		QuickSelect.multiSelect(words, String::compareTo, 7);
+		QuickSelect.multiSelect(words, Comparator.naturalOrder(), 7);
 		for (int row = 0, i = 0; row < 3; row++) {
-			for (int col = 0; col < 7; col++) {
+			for (int col = 0; col < 7 && i < words.length; col++) {
 				System.out.print(words[i++] + ", ");
 			}
 			System.out.println();

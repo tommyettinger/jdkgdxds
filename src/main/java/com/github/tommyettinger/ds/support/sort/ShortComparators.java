@@ -34,7 +34,6 @@ public final class ShortComparators {
 	 */
 	protected static class NaturalImplicitComparator implements ShortComparator {
 
-
 		@Override
 		public final int compare (final short a, final short b) {
 			return Short.compare(a, b);
@@ -52,7 +51,6 @@ public final class ShortComparators {
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
 	protected static class OppositeImplicitComparator implements ShortComparator {
-
 
 		@Override
 		public final int compare (final short a, final short b) {
@@ -93,7 +91,7 @@ public final class ShortComparators {
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
 	public static ShortComparator oppositeComparator (final ShortComparator c) {
-		if (c instanceof OppositeComparator) { return ((OppositeComparator)c).comparator; }
+		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
 		return new OppositeComparator(c);
 	}
 
@@ -105,7 +103,7 @@ public final class ShortComparators {
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
 	public static ShortComparator asShortComparator (final Comparator<? super Short> c) {
-		if (c instanceof ShortComparator) { return (ShortComparator)c; }
+		if (c instanceof ShortComparator) {return (ShortComparator)c;}
 		return new ShortComparator() {
 			@Override
 			public int compare (short x, short y) {
@@ -126,7 +124,6 @@ public final class ShortComparators {
 	 */
 	protected static class UnsignedComparator implements ShortComparator {
 
-
 		@Override
 		public final int compare (final short a, final short b) {
 			return Integer.compare(a & 0xFFFF, b & 0xFFFF);
@@ -136,7 +133,6 @@ public final class ShortComparators {
 		public ShortComparator reversed () {
 			return UNSIGNED_OPPOSITE_COMPARATOR;
 		}
-
 
 	}
 
@@ -148,7 +144,6 @@ public final class ShortComparators {
 	 */
 	protected static class UnsignedOppositeComparator implements ShortComparator {
 
-
 		@Override
 		public final int compare (final short a, final short b) {
 			return Integer.compare(b & 0xFFFF, a & 0xFFFF);
@@ -159,11 +154,10 @@ public final class ShortComparators {
 			return UNSIGNED_COMPARATOR;
 		}
 
-
 	}
 
 	public static final ShortComparator UNSIGNED_OPPOSITE_COMPARATOR = new ShortComparators.UnsignedComparator();
-	
+
 	/// The remainder of the code is based on FastUtil.
 
 	private static void swap (short[] items, int first, int second) {
@@ -179,9 +173,9 @@ public final class ShortComparators {
 	 * the second.
 	 */
 	private static void inPlaceMerge (short[] items, final int from, int mid, final int to, final ShortComparator comp) {
-		if (from >= mid || mid >= to) { return; }
+		if (from >= mid || mid >= to) {return;}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) { swap(items, from, mid); }
+			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
 			return;
 		}
 
@@ -202,13 +196,13 @@ public final class ShortComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -222,10 +216,10 @@ public final class ShortComparators {
 	 * comparison function.
 	 *
 	 * @param items the short array to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
@@ -250,10 +244,10 @@ public final class ShortComparators {
 	 * function.
 	 *
 	 * @param items the short array to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
@@ -275,12 +269,14 @@ public final class ShortComparators {
 	/**
 	 * Sorts all of {@code items} by simply calling {@link #sort(short[], int, int, ShortComparator)},
 	 * setting {@code from} and {@code to} so the whole array is sorted.
+	 *
 	 * @param items the short array to be sorted
-	 * @param c a ShortComparator to alter the sort order; if null, the natural order will be used
+	 * @param c     a ShortComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(short[] items, final @Nullable ShortComparator c) {
+	public static void sort (short[] items, final @Nullable ShortComparator c) {
 		sort(items, 0, items.length, c);
 	}
+
 	/**
 	 * Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort.
@@ -295,9 +291,9 @@ public final class ShortComparators {
 	 * does not have the same guarantees regarding allocation.
 	 *
 	 * @param items the short array to be sorted
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to the index of the last element (exclusive) to be sorted.
-	 * @param c a ShortComparator to alter the sort order; if null, the natural order will be used
+	 * @param from  the index of the first element (inclusive) to be sorted.
+	 * @param to    the index of the last element (exclusive) to be sorted.
+	 * @param c     a ShortComparator to alter the sort order; if null, the natural order will be used
 	 */
 	public static void sort (short[] items, final int from, final int to, final @Nullable ShortComparator c) {
 		if (to <= 0) {
@@ -306,7 +302,7 @@ public final class ShortComparators {
 		if (from < 0 || from >= items.length || to > items.length) {
 			throw new UnsupportedOperationException("The given from/to range in ShortComparators.sort() is invalid.");
 		}
-		if(c == null){
+		if (c == null) {
 			Arrays.sort(items, from, to);
 			return;
 		}
@@ -336,7 +332,7 @@ public final class ShortComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) { return; }
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

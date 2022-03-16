@@ -18,7 +18,10 @@
 package com.github.tommyettinger.ds;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 
@@ -55,12 +58,13 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	public CaseInsensitiveMap (int initialCapacity) {
 		super(initialCapacity);
 	}
+
 	/**
 	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
 	 * growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public CaseInsensitiveMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
@@ -68,6 +72,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 
 	/**
 	 * Creates a new map identical to the specified map.
+	 *
 	 * @param map an ObjectObjectMap to copy, or a subclass such as this one
 	 */
 	public CaseInsensitiveMap (ObjectObjectMap<? extends CharSequence, ? extends V> map) {
@@ -76,6 +81,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 
 	/**
 	 * Creates a new map identical to the specified map.
+	 *
 	 * @param map a Map to copy; ObjectObjectMap and subclasses of it will be faster
 	 */
 	public CaseInsensitiveMap (Map<? extends CharSequence, ? extends V> map) {
@@ -92,6 +98,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	public CaseInsensitiveMap (CharSequence[] keys, V[] values) {
 		super(keys, values);
 	}
+
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
@@ -103,16 +110,16 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 		super(keys, values);
 	}
 
-
 	@Override
 	protected int place (Object item) {
-		if(item instanceof CharSequence) return (int)Utilities.longHashCodeIgnoreCase((CharSequence)item) & mask;
+		if (item instanceof CharSequence)
+			return (int)Utilities.longHashCodeIgnoreCase((CharSequence)item) & mask;
 		return super.place(item);
 	}
 
 	@Override
 	protected boolean equate (Object left, @Nullable Object right) {
-		if((left instanceof CharSequence) && (right instanceof CharSequence)){
+		if ((left instanceof CharSequence) && (right instanceof CharSequence)) {
 			return Utilities.equalsIgnoreCase((CharSequence)left, (CharSequence)right);
 		}
 		return false;
@@ -128,7 +135,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 			if (key != null) {
 				h ^= Utilities.longHashCodeIgnoreCase(key);
 				V value = valueTable[i];
-				if (value != null) { h ^= value.hashCode(); }
+				if (value != null) {h ^= value.hashCode();}
 			}
 		}
 		return h;
@@ -136,10 +143,10 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 
 	@Override
 	public boolean equals (Object obj) {
-		if (obj == this) { return true; }
-		if (!(obj instanceof CaseInsensitiveMap)) { return false; }
+		if (obj == this) {return true;}
+		if (!(obj instanceof CaseInsensitiveMap)) {return false;}
 		CaseInsensitiveMap other = (CaseInsensitiveMap)obj;
-		if (other.size != size) { return false; }
+		if (other.size != size) {return false;}
 		CharSequence[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -147,9 +154,9 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
-					if (other.getOrDefault(key, neverIdentical) != null) { return false; }
+					if (other.getOrDefault(key, neverIdentical) != null) {return false;}
 				} else {
-					if (!value.equals(other.get(key))) { return false; }
+					if (!value.equals(other.get(key))) {return false;}
 				}
 			}
 		}
@@ -177,12 +184,12 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	public static class Entry<V> extends ObjectObjectMap.Entry<CharSequence, V> {
 		@Override
 		public boolean equals (@Nullable Object o) {
-			if (this == o) { return true; }
-			if (o == null || getClass() != o.getClass()) { return false; }
+			if (this == o) {return true;}
+			if (o == null || getClass() != o.getClass()) {return false;}
 
 			Entry<?> entry = (Entry<?>)o;
 
-			if (key != null ? (entry.key == null || !Utilities.equalsIgnoreCase(key, entry.key)) : entry.key != null) { return false; }
+			if (key != null ? (entry.key == null || !Utilities.equalsIgnoreCase(key, entry.key)) : entry.key != null) {return false;}
 			return Objects.equals(value, entry.value);
 
 		}
@@ -237,16 +244,18 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
 	 * when there's no "rest" of the keys or values.
-	 * @param key0 the first and only key
+	 *
+	 * @param key0   the first and only key
 	 * @param value0 the first and only value
-	 * @param <V> the type of value0
+	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> CaseInsensitiveMap<V> with(CharSequence key0, V value0) {
+	public static <V> CaseInsensitiveMap<V> with (CharSequence key0, V value0) {
 		CaseInsensitiveMap<V> map = new CaseInsensitiveMap<>(1);
 		map.put(key0, value0);
 		return map;
 	}
+
 	/**
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
@@ -255,20 +264,21 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	 * This needs all keys to be {@code CharSequence}s (like String or StringBuilder) and all values to
 	 * have the same type, because it gets those types from the first value parameter. Any keys that
 	 * aren't CharSequences or values that don't have V as their type have that entry skipped.
-	 * @param key0 the first key; will be used to determine the type of all keys
+	 *
+	 * @param key0   the first key; will be used to determine the type of all keys
 	 * @param value0 the first value; will be used to determine the type of all values
-	 * @param rest an array or varargs of alternating K, V, K, V... elements
-	 * @param <V> the type of values, inferred from value0
+	 * @param rest   an array or varargs of alternating K, V, K, V... elements
+	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <V> CaseInsensitiveMap<V> with(CharSequence key0, V value0, Object... rest){
+	public static <V> CaseInsensitiveMap<V> with (CharSequence key0, V value0, Object... rest) {
 		CaseInsensitiveMap<V> map = new CaseInsensitiveMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
 				map.put((CharSequence)rest[i - 1], (V)rest[i]);
-			}catch (ClassCastException ignored){
+			} catch (ClassCastException ignored) {
 			}
 		}
 		return map;

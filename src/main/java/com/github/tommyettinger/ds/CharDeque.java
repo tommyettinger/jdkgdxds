@@ -39,17 +39,25 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 
 	protected char defaultValue = '\uffff';
 
-	/** Contains the values in the queue. Head and tail indices go in a circle around this array, wrapping at the end. */
+	/**
+	 * Contains the values in the queue. Head and tail indices go in a circle around this array, wrapping at the end.
+	 */
 	protected char[] values;
 
-	/** Index of first element. Logically smaller than tail. Unless empty, it points to a valid element inside queue. */
+	/**
+	 * Index of first element. Logically smaller than tail. Unless empty, it points to a valid element inside queue.
+	 */
 	protected int head = 0;
 
-	/** Index of last element. Logically bigger than head. Usually points to an empty position, but points to the head when full
-	 * (size == values.length). */
+	/**
+	 * Index of last element. Logically bigger than head. Usually points to an empty position, but points to the head when full
+	 * (size == values.length).
+	 */
 	protected int tail = 0;
 
-	/** Number of elements in the queue. */
+	/**
+	 * Number of elements in the queue.
+	 */
 	public int size = 0;
 
 	protected transient @Nullable CharDequeIterator iterator1;
@@ -58,12 +66,16 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 	protected transient @Nullable CharDequeIterator descendingIterator1;
 	protected transient @Nullable CharDequeIterator descendingIterator2;
 
-	/** Creates a new CharDeque which can hold 16 values without needing to resize backing array. */
+	/**
+	 * Creates a new CharDeque which can hold 16 values without needing to resize backing array.
+	 */
 	public CharDeque () {
 		this(16);
 	}
 
-	/** Creates a new CharDeque which can hold the specified number of values without needing to resize backing array. */
+	/**
+	 * Creates a new CharDeque which can hold the specified number of values without needing to resize backing array.
+	 */
 	public CharDeque (int initialSize) {
 		this.values = new char[initialSize];
 	}
@@ -71,6 +83,7 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 	/**
 	 * Creates a new CharDeque using all of the contents of the given PrimitiveCollection.OfChar, such as
 	 * a {@link CharList}.
+	 *
 	 * @param coll a PrimitiveCollection.OfChar that will be copied into this and used in full
 	 */
 	public CharDeque (PrimitiveCollection.OfChar coll) {
@@ -80,6 +93,7 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 
 	/**
 	 * Copies the given CharDeque exactly into this one. Individual values will be shallow-copied.
+	 *
 	 * @param deque another CharDeque to copy
 	 */
 	public CharDeque (CharDeque deque) {
@@ -92,6 +106,7 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 
 	/**
 	 * Creates a new CharDeque using all of the contents of the given array.
+	 *
 	 * @param a an array of long that will be copied into this and used in full
 	 */
 	public CharDeque (char[] a) {
@@ -102,9 +117,10 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 
 	/**
 	 * Creates a new CharDeque using {@code count} items from {@code a}, starting at {@code offset}.
-	 * @param a an array of long
+	 *
+	 * @param a      an array of long
 	 * @param offset where in {@code a} to start using items
-	 * @param count how many items to use from {@code a}
+	 * @param count  how many items to use from {@code a}
 	 */
 	public CharDeque (char[] a, int offset, int count) {
 		this.values = Arrays.copyOfRange(a, offset, offset + count);
@@ -120,9 +136,12 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		this.defaultValue = defaultValue;
 	}
 
-	/** Append given item to the tail (enqueue to tail). Unless backing array needs resizing, operates in O(1) time.
-	 * @see #addFirst(char) 
-	 * @param item a char to add to the tail */
+	/**
+	 * Append given item to the tail (enqueue to tail). Unless backing array needs resizing, operates in O(1) time.
+	 *
+	 * @param item a char to add to the tail
+	 * @see #addFirst(char)
+	 */
 	public void addLast (char item) {
 		char[] values = this.values;
 
@@ -138,9 +157,12 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		size++;
 	}
 
-	/** Prepend given item to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
+	/**
+	 * Prepend given item to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
+	 *
+	 * @param item a char to add to the head
 	 * @see #addLast(char)
-	 * @param item a char to add to the head */
+	 */
 	public void addFirst (char item) {
 		char[] values = this.values;
 
@@ -160,8 +182,10 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		this.size++;
 	}
 
-	/** Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
-	 * items to avoid multiple backing array resizes. */
+	/**
+	 * Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
+	 * items to avoid multiple backing array resizes.
+	 */
 	public void ensureCapacity (int additional) {
 		final int needed = size + additional;
 		if (values.length < needed) {
@@ -169,7 +193,9 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		}
 	}
 
-	/** Resize backing array. newSize must be bigger than current size. */
+	/**
+	 * Resize backing array. newSize must be bigger than current size.
+	 */
 	protected void resize (int newSize) {
 		final char[] values = this.values;
 		final int head = this.head;
@@ -190,9 +216,12 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		this.tail = size;
 	}
 
-	/** Remove the first item from the queue. (dequeue from head) Always O(1).
+	/**
+	 * Remove the first item from the queue. (dequeue from head) Always O(1).
+	 *
 	 * @return removed item
-	 * @throws NoSuchElementException when queue is empty */
+	 * @throws NoSuchElementException when queue is empty
+	 */
 	public char removeFirst () {
 		if (size == 0) {
 			// Underflow
@@ -211,10 +240,13 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		return result;
 	}
 
-	/** Remove the last item from the queue. (dequeue from tail) Always O(1).
-	 * @see #removeFirst()
+	/**
+	 * Remove the last item from the queue. (dequeue from tail) Always O(1).
+	 *
 	 * @return removed item
-	 * @throws NoSuchElementException when queue is empty */
+	 * @throws NoSuchElementException when queue is empty
+	 * @see #removeFirst()
+	 */
 	public char removeLast () {
 		if (size == 0) {
 			throw new NoSuchElementException("CharDeque is empty.");
@@ -651,18 +683,20 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 	@Override
 	public char[] toArray () {
 		char[] next = new char[size];
-		if(head < tail) {
+		if (head < tail) {
 			System.arraycopy(values, head, next, 0, tail - head);
-		}
-		else {
+		} else {
 			System.arraycopy(values, head, next, 0, size - head);
 			System.arraycopy(values, 0, next, size - head, tail);
 		}
 		return next;
 	}
 
-	/** Returns the index of first occurrence of value in the queue, or -1 if no such value exists.
-	 * @return An index of first occurrence of value in queue or -1 if no such value exists */
+	/**
+	 * Returns the index of first occurrence of value in the queue, or -1 if no such value exists.
+	 *
+	 * @return An index of first occurrence of value in queue or -1 if no such value exists
+	 */
 	public int indexOf (char value) {
 		if (size == 0)
 			return -1;
@@ -683,8 +717,11 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		return -1;
 	}
 
-	/** Returns the index of last occurrence of value in the queue, or -1 if no such value exists.
-	 * @return An index of last occurrence of value in queue or -1 if no such value exists */
+	/**
+	 * Returns the index of last occurrence of value in the queue, or -1 if no such value exists.
+	 *
+	 * @return An index of last occurrence of value in queue or -1 if no such value exists
+	 */
 	public int lastIndexOf (char value) {
 		if (size == 0)
 			return -1;
@@ -705,28 +742,40 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		return -1;
 	}
 
-	/** Removes the first instance of the specified value in the queue.
-	 * @return true if value was found and removed, false otherwise */
+	/**
+	 * Removes the first instance of the specified value in the queue.
+	 *
+	 * @return true if value was found and removed, false otherwise
+	 */
 	public boolean removeValue (char value) {
 		int index = indexOf(value);
-		if (index == -1) return false;
+		if (index == -1)
+			return false;
 		removeAt(index);
 		return true;
 	}
 
-	/** Removes the last instance of the specified value in the queue.
-	 * @return true if value was found and removed, false otherwise */
+	/**
+	 * Removes the last instance of the specified value in the queue.
+	 *
+	 * @return true if value was found and removed, false otherwise
+	 */
 	public boolean removeLastValue (char value) {
 		int index = lastIndexOf(value);
-		if (index == -1) return false;
+		if (index == -1)
+			return false;
 		removeAt(index);
 		return true;
 	}
 
-	/** Removes and returns the item at the specified index. */
+	/**
+	 * Removes and returns the item at the specified index.
+	 */
 	public char removeAt (int index) {
-		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index < 0)
+			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
+		if (index >= size)
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 
 		char[] values = this.values;
 		int head = this.head, tail = this.tail;
@@ -753,20 +802,27 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		return value;
 	}
 
-	/** Returns true if the queue has one or more items. */
+	/**
+	 * Returns true if the queue has one or more items.
+	 */
 	public boolean notEmpty () {
 		return size > 0;
 	}
 
-	/** Returns true if the queue is empty. */
+	/**
+	 * Returns true if the queue is empty.
+	 */
 	public boolean isEmpty () {
 		return size == 0;
 	}
 
-	/** Returns the first (head) item in the queue (without removing it).
+	/**
+	 * Returns the first (head) item in the queue (without removing it).
+	 *
+	 * @throws NoSuchElementException when queue is empty
 	 * @see #addFirst(char)
 	 * @see #removeFirst()
-	 * @throws NoSuchElementException when queue is empty */
+	 */
 	public char first () {
 		if (size == 0) {
 			// Underflow
@@ -775,10 +831,13 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		return values[head];
 	}
 
-	/** Returns the last (tail) item in the queue (without removing it).
+	/**
+	 * Returns the last (tail) item in the queue (without removing it).
+	 *
+	 * @throws NoSuchElementException when queue is empty
 	 * @see #addLast(char)
 	 * @see #removeLast()
-	 * @throws NoSuchElementException when queue is empty */
+	 */
 	public char last () {
 		if (size == 0) {
 			// Underflow
@@ -787,44 +846,60 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		final char[] values = this.values;
 		int tail = this.tail;
 		tail--;
-		if (tail == -1) tail = values.length - 1;
+		if (tail == -1)
+			tail = values.length - 1;
 		return values[tail];
 	}
 
-	/** Retrieves the value in queue without removing it. Indexing is from the front to back, zero based. Therefore get(0) is the
+	/**
+	 * Retrieves the value in queue without removing it. Indexing is from the front to back, zero based. Therefore get(0) is the
 	 * same as {@link #first()}.
-	 * @throws IndexOutOfBoundsException when the index is negative or >= size */
+	 *
+	 * @throws IndexOutOfBoundsException when the index is negative or >= size
+	 */
 	public char get (int index) {
-		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index < 0)
+			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
+		if (index >= size)
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		final char[] values = this.values;
 
 		int i = head + index;
-		if (i >= values.length) i -= values.length;
+		if (i >= values.length)
+			i -= values.length;
 		return values[i];
 	}
 
-	/** Sets an existing position in this deque to the given item. Indexing is from the front to back, zero based.
+	/**
+	 * Sets an existing position in this deque to the given item. Indexing is from the front to back, zero based.
+	 *
 	 * @param index the index to set
-	 * @param item what value should replace the contents of the specified index
+	 * @param item  what value should replace the contents of the specified index
 	 * @return the previous contents of the specified index
-	 * @throws IndexOutOfBoundsException when the index is negative or >= size */
+	 * @throws IndexOutOfBoundsException when the index is negative or >= size
+	 */
 	public char set (int index, char item) {
-		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index < 0)
+			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
+		if (index >= size)
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		final char[] values = this.values;
 
 		int i = head + index;
-		if (i >= values.length) i -= values.length;
+		if (i >= values.length)
+			i -= values.length;
 		char old = values[i];
 		values[i] = item;
 		return old;
 	}
 
-	/** Removes all values from this queue. Values in backing array are set to null to prevent memory leak, so this operates in
-	 * O(n). */
+	/**
+	 * Removes all values from this queue. Values in backing array are set to null to prevent memory leak, so this operates in
+	 * O(n).
+	 */
 	public void clear () {
-		if (size == 0) return;
+		if (size == 0)
+			return;
 		this.head = 0;
 		this.tail = 0;
 		this.size = 0;
@@ -900,7 +975,8 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 	}
 
 	public String toString (String separator) {
-		if (size == 0) return "";
+		if (size == 0)
+			return "";
 		final char[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
@@ -911,12 +987,14 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 			sb.append(separator).append(values[i]);
 		return sb.toString();
 	}
+
 	/**
 	 * Simply returns all of the char items in this as one String, with no delimiters.
+	 *
 	 * @return a String containing only the char items in this CharDeque
 	 */
-	public String toDenseString() {
-		if(head < tail)
+	public String toDenseString () {
+		if (head < tail)
 			return String.valueOf(values, head, size);
 		else
 			return String.valueOf(values, head, values.length - head) + String.valueOf(values, 0, tail);
@@ -935,20 +1013,24 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 			hash *= 421;
 			hash += value;
 			index++;
-			if (index == backingLength) index = 0;
+			if (index == backingLength)
+				index = 0;
 		}
 
 		return hash;
 	}
 
 	public boolean equals (Object o) {
-		if (this == o) return true;
-		if (!(o instanceof CharDeque)) return false;
+		if (this == o)
+			return true;
+		if (!(o instanceof CharDeque))
+			return false;
 
 		CharDeque q = (CharDeque)o;
 		final int size = this.size;
 
-		if (q.size != size) return false;
+		if (q.size != size)
+			return false;
 
 		final char[] myValues = this.values;
 		final int myBackingLength = myValues.length;
@@ -961,11 +1043,14 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 			char myValue = myValues[myIndex];
 			char itsValue = itsValues[itsIndex];
 
-			if (myValue != itsValue) return false;
+			if (myValue != itsValue)
+				return false;
 			myIndex++;
 			itsIndex++;
-			if (myIndex == myBackingLength) myIndex = 0;
-			if (itsIndex == itsBackingLength) itsIndex = 0;
+			if (myIndex == myBackingLength)
+				myIndex = 0;
+			if (itsIndex == itsBackingLength)
+				itsIndex = 0;
 		}
 		return true;
 	}
@@ -978,17 +1063,23 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 	 */
 	@Override
 	public void swap (int first, int second) {
-		if (first < 0) throw new IndexOutOfBoundsException("first index can't be < 0: " + first);
-		if (first >= size) throw new IndexOutOfBoundsException("first index can't be >= size: " + first + " >= " + size);
-		if (second < 0) throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
-		if (second >= size) throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
+		if (first < 0)
+			throw new IndexOutOfBoundsException("first index can't be < 0: " + first);
+		if (first >= size)
+			throw new IndexOutOfBoundsException("first index can't be >= size: " + first + " >= " + size);
+		if (second < 0)
+			throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
+		if (second >= size)
+			throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
 		final char[] values = this.values;
 
 		int f = head + first;
-		if (f >= values.length) f -= values.length;
+		if (f >= values.length)
+			f -= values.length;
 
 		int s = head + second;
-		if (s >= values.length) s -= values.length;
+		if (s >= values.length)
+			s -= values.length;
 
 		char fv = values[f];
 		values[f] = values[s];
@@ -1006,9 +1097,11 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		char fv;
 		for (int n = size >> 1, b = 0, t = size - 1; b <= n && b != t; b++, t--) {
 			f = head + b;
-			if(f >= len) f -= len;
+			if (f >= len)
+				f -= len;
 			s = head + t;
-			if(s >= len) s -= len;
+			if (s >= len)
+				s -= len;
 			fv = values[f];
 			values[f] = values[s];
 			values[s] = fv;
@@ -1022,8 +1115,8 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
 	 * the deque) to rearrange the internals before sorting.
 	 */
-	public void sort(){
-		if(head <= tail) {
+	public void sort () {
+		if (head <= tail) {
 			Arrays.sort(values, head, tail);
 		} else {
 			System.arraycopy(values, head, values, tail, values.length - head);
@@ -1040,8 +1133,8 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
 	 * the deque) to rearrange the internals before sorting.
 	 */
-	public void sort(@Nullable CharComparator c){
-		if(head <= tail) {
+	public void sort (@Nullable CharComparator c) {
+		if (head <= tail) {
 			CharComparators.sort(values, head, tail, c);
 		} else {
 			System.arraycopy(values, head, values, tail, values.length - head);
@@ -1051,8 +1144,8 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		}
 	}
 
-	public char random(EnhancedRandom random){
-		if(size <= 0) {
+	public char random (EnhancedRandom random) {
+		if (size <= 0) {
 			throw new NoSuchElementException("CharDeque is empty.");
 		}
 		return get(random.nextInt(size));
@@ -1070,7 +1163,7 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 
 		public CharDequeIterator (CharDeque deque, boolean descendingOrder) {
 			this.deque = deque;
-			if(this.descending = descendingOrder)
+			if (this.descending = descendingOrder)
 				index = this.deque.size - 1;
 		}
 
@@ -1082,7 +1175,8 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		}
 
 		public char nextChar () {
-			if (index >= deque.size || index < 0) throw new NoSuchElementException(String.valueOf(index));
+			if (index >= deque.size || index < 0)
+				throw new NoSuchElementException(String.valueOf(index));
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
@@ -1090,8 +1184,10 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		}
 
 		public void remove () {
-			if(descending) index++;
-			else index--;
+			if (descending)
+				index++;
+			else
+				index--;
 			deque.removeAt(index);
 		}
 
@@ -1104,13 +1200,13 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		}
 	}
 
-	public static CharDeque with(char item){
+	public static CharDeque with (char item) {
 		CharDeque deque = new CharDeque();
 		deque.add(item);
 		return deque;
 	}
-	
-	public static CharDeque with(char... items){
+
+	public static CharDeque with (char... items) {
 		return new CharDeque(items);
 	}
 }

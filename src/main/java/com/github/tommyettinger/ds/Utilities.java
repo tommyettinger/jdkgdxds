@@ -39,9 +39,10 @@ public class Utilities {
 	 * That means <b>not using the default load factor in this class</b>, and always using the
 	 * constructors that specify a load factor. Libraries are generally discouraged from setting the
 	 * default load factor; that decision should be left up to the application using the library.
+	 *
 	 * @param loadFactor a float that will be clamped between 0 (exclusive) and 1 (inclusive)
 	 */
-	public static void setDefaultLoadFactor(float loadFactor) {
+	public static void setDefaultLoadFactor (float loadFactor) {
 		defaultLoadFactor = Math.min(Math.max(loadFactor, FLOAT_ROUNDING_ERROR), 1f);
 	}
 
@@ -49,9 +50,10 @@ public class Utilities {
 	 * Gets the default load factor, meant to be used when no load factor is specified during the
 	 * construction of a data structure such as a map or set. The initial value for the default
 	 * load factor is 0.7.
+	 *
 	 * @return the default load factor, always between 0 (exclusive) and 1 (inclusive)
 	 */
-	public static float getDefaultLoadFactor() {
+	public static float getDefaultLoadFactor () {
 		return defaultLoadFactor;
 	}
 

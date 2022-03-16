@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.function.ByteUnaryOperator;
 import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparators;
@@ -26,7 +27,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
 
 /**
  * A resizable, ordered or unordered byte list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Byte.
@@ -113,6 +113,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	/**
 	 * Creates a new list containing the items in the specified PrimitiveCollection.OfByte. Only this class currently implements
 	 * that interface, but user code can as well.
+	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
 	public ByteList (OfByte coll) {
@@ -122,6 +123,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	/**
 	 * Copies the given Ordered.OfByte into a new ByteList.
+	 *
 	 * @param other another Ordered.OfByte
 	 */
 	public ByteList (Ordered.OfByte other) {
@@ -131,9 +133,10 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
-	 * @param other another Ordered.OfByte
+	 *
+	 * @param other  another Ordered.OfByte
 	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count how many items to copy from other
+	 * @param count  how many items to copy from other
 	 */
 	public ByteList (Ordered.OfByte other, int offset, int count) {
 		this(count);
@@ -150,14 +153,14 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	@Override
 	public boolean add (byte value) {
 		byte[] items = this.items;
-		if (size == items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
+		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
 		items[size++] = value;
 		return true;
 	}
 
 	public void add (byte value1, byte value2) {
 		byte[] items = this.items;
-		if (size + 1 >= items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
+		if (size + 1 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
 		items[size] = value1;
 		items[size + 1] = value2;
 		size += 2;
@@ -165,7 +168,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	public void add (byte value1, byte value2, byte value3) {
 		byte[] items = this.items;
-		if (size + 2 >= items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
+		if (size + 2 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
 		items[size] = value1;
 		items[size + 1] = value2;
 		items[size + 2] = value3;
@@ -191,7 +194,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	// Modified from libGDX
 	public boolean addAll (ByteList array, int offset, int length) {
-		if (offset + length > array.size) { throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size); }
+		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
 		return addAll(array.items, offset, length);
 	}
 
@@ -199,9 +202,9 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered.OfByte {@code other} to this list,
 	 * inserting at the end of the iteration order.
 	 *
-	 * @param other          a non-null {@link Ordered.OfByte}
-	 * @param offset         the first index in {@code other} to use
-	 * @param count          how many indices in {@code other} to use
+	 * @param other  a non-null {@link Ordered.OfByte}
+	 * @param offset the first index in {@code other} to use
+	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(ByteList)} does
 	 */
 	public boolean addAll (Ordered.OfByte other, int offset, int count) {
@@ -238,7 +241,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	public boolean addAll (byte[] array, int offset, int length) {
 		byte[] items = this.items;
 		int sizeNeeded = size + length;
-		if (sizeNeeded > items.length) { items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f))); }
+		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
 		System.arraycopy(array, offset, items, size, length);
 		size += length;
 		return true;
@@ -246,19 +249,19 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	//Kotlin-friendly operator
 	public byte get (int index) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		return items[index];
 	}
 
 	//Kotlin-friendly operator
 	public void set (int index, byte value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] = value;
 	}
 
 	// Modified from libGDX
 	public void plus (int index, byte value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] += value;
 	}
 
@@ -274,13 +277,13 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	// Kotlin-friendly operator
 	public ByteList plus (byte value) {
 		byte[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { items[i] += value; }
+		for (int i = 0, n = size; i < n; i++) {items[i] += value;}
 		return this;
 	}
 
 	// Modified from libGDX
 	public void times (int index, byte value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] *= value;
 	}
 
@@ -296,13 +299,13 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	// Kotlin-friendly operator
 	public ByteList times (byte value) {
 		byte[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { items[i] *= value; }
+		for (int i = 0, n = size; i < n; i++) {items[i] *= value;}
 		return this;
 	}
 
 	// Newly-added
 	public void minus (int index, byte value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] -= value;
 	}
 
@@ -319,13 +322,13 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	// Kotlin-friendly operator
 	public ByteList minus (byte value) {
 		byte[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { items[i] -= value; }
+		for (int i = 0, n = size; i < n; i++) {items[i] -= value;}
 		return this;
 	}
 
 	// Newly-added
 	public void div (int index, byte value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] /= value;
 	}
 
@@ -341,13 +344,13 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	// Kotlin-friendly operator
 	public ByteList div (byte value) {
 		byte[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { items[i] /= value; }
+		for (int i = 0, n = size; i < n; i++) {items[i] /= value;}
 		return this;
 	}
 
 	// Newly-added
 	public void rem (int index, byte value) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] %= value;
 	}
 
@@ -363,15 +366,15 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	// Kotlin-friendly operator
 	public ByteList rem (byte value) {
 		byte[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { items[i] %= value; }
+		for (int i = 0, n = size; i < n; i++) {items[i] %= value;}
 		return this;
 	}
 
 	public void insert (int index, byte value) {
-		if (index > size) { throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size); }
+		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		byte[] items = this.items;
-		if (size == items.length) { items = resize(Math.max(8, (int)(size * 1.75f))); }
-		if (ordered) { System.arraycopy(items, index, items, index + 1, size - index); } else { items[size] = items[index]; }
+		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (ordered) {System.arraycopy(items, index, items, index + 1, size - index);} else {items[size] = items[index];}
 		size++;
 		items[index] = value;
 	}
@@ -381,9 +384,9 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * indices before the insertion.
 	 */
 	public void insertRange (int index, int count) {
-		if (index > size) { throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size); }
+		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		int sizeNeeded = size + count;
-		if (sizeNeeded > items.length) { items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f))); }
+		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
 	}
@@ -401,8 +404,8 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	@Override
 	public void swap (int first, int second) {
-		if (first >= size) { throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size); }
-		if (second >= size) { throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size); }
+		if (first >= size) {throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size);}
+		if (second >= size) {throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size);}
 		byte[] items = this.items;
 		byte firstValue = items[first];
 		items[first] = items[second];
@@ -413,7 +416,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	public boolean contains (byte value) {
 		int i = size - 1;
 		byte[] items = this.items;
-		while (i >= 0) { if (items[i--] == value) { return true; } }
+		while (i >= 0) {if (items[i--] == value) {return true;}}
 		return false;
 	}
 
@@ -428,30 +431,32 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		byte[] others = other.items;
 		int otherSize = other.size;
 		for (int i = 0; i < otherSize; i++) {
-			if (!contains(others[i])) { return false; }
+			if (!contains(others[i])) {return false;}
 		}
 		return true;
 	}
 
 	/**
 	 * Returns the first index in this list that contains the specified value, or -1 if it is not present.
+	 *
 	 * @param value a byte value to search for
 	 * @return the first index of the given value, or -1 if it is not present
 	 */
 	public int indexOf (byte value) {
 		byte[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) { if (items[i] == value) { return i; } }
+		for (int i = 0, n = size; i < n; i++) {if (items[i] == value) {return i;}}
 		return -1;
 	}
 
 	/**
 	 * Returns the last index in this list that contains the specified value, or -1 if it is not present.
+	 *
 	 * @param value a byte value to search for
 	 * @return the last index of the given value, or -1 if it is not present
 	 */
 	public int lastIndexOf (byte value) {
 		byte[] items = this.items;
-		for (int i = size - 1; i >= 0; i--) { if (items[i] == value) { return i; } }
+		for (int i = size - 1; i >= 0; i--) {if (items[i] == value) {return i;}}
 		return -1;
 	}
 
@@ -484,11 +489,11 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * @return the removed item
 	 */
 	public byte removeAt (int index) {
-		if (index >= size) { throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size); }
+		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		byte[] items = this.items;
 		byte value = items[index];
 		size--;
-		if (ordered) { System.arraycopy(items, index + 1, items, index, size - index); } else { items[index] = items[size]; }
+		if (ordered) {System.arraycopy(items, index + 1, items, index, size - index);} else {items[index] = items[size];}
 		return value;
 	}
 
@@ -497,15 +502,16 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * Note that this takes different arguments than some other range-related methods; this needs
 	 * a start index and an end index, rather than a count of items. This matches the behavior in
 	 * the JDK collections.
+	 *
 	 * @param start the first index to remove, inclusive
-	 * @param end the last index (after what should be removed), exclusive
+	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	public void removeRange (int start, int end) {
 		int n = size;
-		if (end >= n) { throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size); }
-		if (start > end) { throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end); }
+		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
+		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
 		int count = end - start, lastIndex = n - count;
-		if (ordered) { System.arraycopy(items, start + count, items, start, n - (start + count)); } else {
+		if (ordered) {System.arraycopy(items, start + count, items, start, n - (start + count));} else {
 			int i = Math.max(lastIndex, end);
 			System.arraycopy(items, i, items, start, n - i);
 		}
@@ -560,9 +566,10 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	/**
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
+	 *
 	 * @param operator a ByteUnaryOperator (an interface defined in the JDK)
 	 */
-	public void replaceAll(ByteUnaryOperator operator) {
+	public void replaceAll (ByteUnaryOperator operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsByte(items[i]);
 		}
@@ -570,34 +577,38 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	/**
 	 * Removes and returns the last item.
+	 *
 	 * @return the last item, removed from this
 	 */
 	public byte pop () {
-		if (size == 0) { throw new IndexOutOfBoundsException("ByteList is empty."); }
+		if (size == 0) {throw new IndexOutOfBoundsException("ByteList is empty.");}
 		return items[--size];
 	}
 
 	/**
 	 * Returns the last item.
+	 *
 	 * @return the last item, without modifying this
 	 */
 	public byte peek () {
-		if (size == 0) { throw new IndexOutOfBoundsException("ByteList is empty."); }
+		if (size == 0) {throw new IndexOutOfBoundsException("ByteList is empty.");}
 		return items[size - 1];
 	}
 
 	/**
 	 * Returns the first item.
+	 *
 	 * @return the first item, without modifying this
 	 */
 	// Modified from libGDX
 	public byte first () {
-		if (size == 0) { throw new IndexOutOfBoundsException("ByteList is empty."); }
+		if (size == 0) {throw new IndexOutOfBoundsException("ByteList is empty.");}
 		return items[0];
 	}
 
 	/**
 	 * Returns true if the array has one or more items, or false otherwise.
+	 *
 	 * @return true if the array has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
@@ -606,6 +617,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	/**
 	 * Returns true if the array is empty.
+	 *
 	 * @return true if the array is empty, or false if it has any items
 	 */
 	@Override
@@ -629,7 +641,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
 	public byte[] shrink () {
-		if (items.length != size) { resize(size); }
+		if (items.length != size) {resize(size);}
 		return items;
 	}
 
@@ -640,9 +652,9 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
 	public byte[] ensureCapacity (int additionalCapacity) {
-		if (additionalCapacity < 0) { throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity); }
+		if (additionalCapacity < 0) {throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity);}
 		int sizeNeeded = size + additionalCapacity;
-		if (sizeNeeded > items.length) { resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f))); }
+		if (sizeNeeded > items.length) {resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
 		return items;
 	}
 
@@ -652,8 +664,8 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
 	public byte[] setSize (int newSize) {
-		if (newSize < 0) { throw new IllegalArgumentException("newSize must be >= 0: " + newSize); }
-		if (newSize > items.length) { resize(Math.max(8, newSize)); }
+		if (newSize < 0) {throw new IllegalArgumentException("newSize must be >= 0: " + newSize);}
+		if (newSize > items.length) {resize(Math.max(8, newSize));}
 		size = newSize;
 		return items;
 	}
@@ -698,21 +710,23 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * taken.
 	 */
 	public void truncate (int newSize) {
-		if (size > newSize) { size = newSize; }
+		if (size > newSize) {size = newSize;}
 	}
 
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
+	 *
 	 * @param random a {@link EnhancedRandom} such as {@link com.github.tommyettinger.ds.support.LaserRandom} from this library
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	public byte random (EnhancedRandom random) {
-		if (size == 0) { return 0; }
+		if (size == 0) {return 0;}
 		return items[random.nextInt(size)];
 	}
 
 	/**
 	 * Allocates a new byte array with {@code size} elements and fills it with the items in this.
+	 *
 	 * @return a new byte array with the same contents as this
 	 */
 	public byte[] toArray () {
@@ -725,11 +739,12 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
 	 * into {@code array} and returns it; otherwise, it allocates a new byte array that can fit all
 	 * of the items in this, and proceeds to copy into that and return that.
+	 *
 	 * @param array a byte array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
 	 */
 	public byte[] toArray (byte[] array) {
-		if(array.length < size)
+		if (array.length < size)
 			array = new byte[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
@@ -740,7 +755,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		byte[] items = this.items;
 		int h = 1;
 		if (ordered) {
-			for (int i = 0, n = size; i < n; i++) { h = h * 31 + items[i]; }
+			for (int i = 0, n = size; i < n; i++) {h = h * 31 + items[i];}
 		} else {
 			for (int i = 0, n = size; i < n; i++) {
 				h += items[i];
@@ -754,21 +769,21 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 */
 	@Override
 	public boolean equals (Object object) {
-		if (object == this) { return true; }
-		if (!ordered) { return false; }
-		if (!(object instanceof ByteList)) { return false; }
+		if (object == this) {return true;}
+		if (!ordered) {return false;}
+		if (!(object instanceof ByteList)) {return false;}
 		ByteList array = (ByteList)object;
-		if (!array.ordered) { return false; }
+		if (!array.ordered) {return false;}
 		int n = size;
-		if (n != array.size) { return false; }
+		if (n != array.size) {return false;}
 		byte[] items1 = this.items, items2 = array.items;
-		for (int i = 0; i < n; i++) { if (items1[i] != items2[i]) { return false; } }
+		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
 		return true;
 	}
 
 	@Override
 	public String toString () {
-		if (size == 0) { return "[]"; }
+		if (size == 0) {return "[]";}
 		byte[] items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('[');
@@ -782,7 +797,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	public String toString (String separator) {
-		if (size == 0) { return ""; }
+		if (size == 0) {return "";}
 		byte[] items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append(items[0]);
@@ -837,15 +852,15 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		 */
 		@Override
 		public byte nextByte () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			if (index >= list.size) { throw new NoSuchElementException(); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index >= list.size) {throw new NoSuchElementException();}
 			return list.get(index++);
 		}
 
 		@Override
 		public void remove () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			if (index >= list.size) { throw new NoSuchElementException(); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index >= list.size) {throw new NoSuchElementException();}
 			list.removeAt(index);
 		}
 
@@ -858,7 +873,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		 */
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return index < list.size;
 		}
 
@@ -867,7 +882,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		}
 	}
 
-	public static ByteList with(byte item) {
+	public static ByteList with (byte item) {
 		ByteList list = new ByteList(1);
 		list.add(item);
 		return list;

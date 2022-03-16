@@ -86,6 +86,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
 	 * This takes a CharSequence array, not a String array, though Strings can be put into a CharSequence array (along with
 	 * StringBuilders and similar CharSequences).
+	 *
 	 * @param array  an array to draw items from
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
@@ -98,6 +99,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 * Creates a new set containing all of the items in the given array.
 	 * This takes a CharSequence array, not a String array, though Strings can be put into a CharSequence array (along with
 	 * StringBuilders and similar CharSequences).
+	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
 	public CaseInsensitiveSet (CharSequence[] array) {
@@ -106,13 +108,14 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 
 	@Override
 	protected int place (Object item) {
-		if(item instanceof CharSequence) return (int)Utilities.longHashCodeIgnoreCase((CharSequence)item) & mask;
+		if (item instanceof CharSequence)
+			return (int)Utilities.longHashCodeIgnoreCase((CharSequence)item) & mask;
 		return super.place(item);
 	}
 
 	@Override
 	protected boolean equate (Object left, @Nullable Object right) {
-		if((left instanceof CharSequence) && (right instanceof CharSequence)){
+		if ((left instanceof CharSequence) && (right instanceof CharSequence)) {
 			return Utilities.equalsIgnoreCase((CharSequence)left, (CharSequence)right);
 		}
 		return false;
@@ -124,18 +127,18 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 		CharSequence[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			CharSequence key = keyTable[i];
-			if (key != null) { h += Utilities.longHashCodeIgnoreCase(key); }
+			if (key != null) {h += Utilities.longHashCodeIgnoreCase(key);}
 		}
 		return h;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals (Object o) {
 		if (o == this)
 			return true;
 		if (!(o instanceof Set))
 			return false;
-		Set<?> s = (Set<?>) o;
+		Set<?> s = (Set<?>)o;
 		if (s.size() != size())
 			return false;
 		try {
@@ -145,7 +148,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 		}
 	}
 
-	public static CaseInsensitiveSet with(CharSequence item) {
+	public static CaseInsensitiveSet with (CharSequence item) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(1);
 		set.add(item);
 		return set;

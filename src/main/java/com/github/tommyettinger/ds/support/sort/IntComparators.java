@@ -34,7 +34,6 @@ public final class IntComparators {
 	 */
 	protected static class NaturalImplicitComparator implements IntComparator {
 
-
 		@Override
 		public final int compare (final int a, final int b) {
 			return Integer.compare(a, b);
@@ -45,7 +44,6 @@ public final class IntComparators {
 			return OPPOSITE_COMPARATOR;
 		}
 
-
 	}
 
 	public static final IntComparator NATURAL_COMPARATOR = new NaturalImplicitComparator();
@@ -54,7 +52,6 @@ public final class IntComparators {
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
 	protected static class OppositeImplicitComparator implements IntComparator {
-
 
 		@Override
 		public final int compare (final int a, final int b) {
@@ -65,7 +62,6 @@ public final class IntComparators {
 		public IntComparator reversed () {
 			return NATURAL_COMPARATOR;
 		}
-
 
 	}
 
@@ -97,7 +93,7 @@ public final class IntComparators {
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
 	public static IntComparator oppositeComparator (final IntComparator c) {
-		if (c instanceof OppositeComparator) { return ((OppositeComparator)c).comparator; }
+		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
 		return new OppositeComparator(c);
 	}
 
@@ -109,7 +105,7 @@ public final class IntComparators {
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
 	public static IntComparator asIntComparator (final Comparator<? super Integer> c) {
-		if (c instanceof IntComparator) { return (IntComparator)c; }
+		if (c instanceof IntComparator) {return (IntComparator)c;}
 		return new IntComparator() {
 			@Override
 			public int compare (int x, int y) {
@@ -130,7 +126,6 @@ public final class IntComparators {
 	 */
 	protected static class UnsignedComparator implements IntComparator {
 
-
 		@Override
 		public final int compare (final int a, final int b) {
 			return Integer.compare(a + Integer.MIN_VALUE, b + Integer.MIN_VALUE);
@@ -140,7 +135,6 @@ public final class IntComparators {
 		public IntComparator reversed () {
 			return UNSIGNED_OPPOSITE_COMPARATOR;
 		}
-
 
 	}
 
@@ -152,7 +146,6 @@ public final class IntComparators {
 	 */
 	protected static class UnsignedOppositeComparator implements IntComparator {
 
-
 		@Override
 		public final int compare (final int a, final int b) {
 			return Integer.compare(b + Integer.MIN_VALUE, a + Integer.MIN_VALUE);
@@ -162,7 +155,6 @@ public final class IntComparators {
 		public IntComparator reversed () {
 			return UNSIGNED_COMPARATOR;
 		}
-
 
 	}
 
@@ -183,9 +175,9 @@ public final class IntComparators {
 	 * the second.
 	 */
 	private static void inPlaceMerge (int[] items, final int from, int mid, final int to, final IntComparator comp) {
-		if (from >= mid || mid >= to) { return; }
+		if (from >= mid || mid >= to) {return;}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) { swap(items, from, mid); }
+			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
 			return;
 		}
 
@@ -206,13 +198,13 @@ public final class IntComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -226,10 +218,10 @@ public final class IntComparators {
 	 * comparison function.
 	 *
 	 * @param items the int array to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
@@ -254,10 +246,10 @@ public final class IntComparators {
 	 * function.
 	 *
 	 * @param items the int array to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
@@ -279,12 +271,14 @@ public final class IntComparators {
 	/**
 	 * Sorts all of {@code items} by simply calling {@link #sort(int[], int, int, IntComparator)},
 	 * setting {@code from} and {@code to} so the whole array is sorted.
+	 *
 	 * @param items the int array to be sorted
-	 * @param c a IntComparator to alter the sort order; if null, the natural order will be used
+	 * @param c     a IntComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(int[] items, final @Nullable IntComparator c) {
+	public static void sort (int[] items, final @Nullable IntComparator c) {
 		sort(items, 0, items.length, c);
 	}
+
 	/**
 	 * Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort.
@@ -299,9 +293,9 @@ public final class IntComparators {
 	 * does not have the same guarantees regarding allocation.
 	 *
 	 * @param items the int array to be sorted
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to the index of the last element (exclusive) to be sorted.
-	 * @param c a IntComparator to alter the sort order; if null, the natural order will be used
+	 * @param from  the index of the first element (inclusive) to be sorted.
+	 * @param to    the index of the last element (exclusive) to be sorted.
+	 * @param c     a IntComparator to alter the sort order; if null, the natural order will be used
 	 */
 	public static void sort (int[] items, final int from, final int to, final @Nullable IntComparator c) {
 		if (to <= 0) {
@@ -310,7 +304,7 @@ public final class IntComparators {
 		if (from < 0 || from >= items.length || to > items.length) {
 			throw new UnsupportedOperationException("The given from/to range in IntComparators.sort() is invalid.");
 		}
-		if(c == null){
+		if (c == null) {
 			Arrays.sort(items, from, to);
 			return;
 		}
@@ -340,7 +334,7 @@ public final class IntComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) { return; }
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

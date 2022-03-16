@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.function;
 
 import java.util.function.BiConsumer;
@@ -33,11 +34,11 @@ import java.util.function.BiConsumer;
 @FunctionalInterface
 public interface FloatFloatConsumer {
 
-    /**
-     * Performs this operation on the given arguments.
-     *
-     * @param first the first input argument
-     * @param second the second input argument
-     */
-    void accept(float first, float second);
+	/**
+	 * Performs this operation on the given arguments.
+	 *
+	 * @param first  the first input argument
+	 * @param second the second input argument
+	 */
+	void accept (float first, float second);
 }

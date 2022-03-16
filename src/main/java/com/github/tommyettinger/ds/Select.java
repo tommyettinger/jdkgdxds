@@ -28,7 +28,8 @@ import com.github.tommyettinger.ds.support.sort.ShortComparator;
 
 import java.util.Comparator;
 
-/** This class is for selecting a ranked element (kth ordered statistic) from an unordered list in faster time than sorting the
+/**
+ * This class is for selecting a ranked element (kth ordered statistic) from an unordered list in faster time than sorting the
  * whole array. Typical applications include finding the nearest enemy unit(s), and other operations which are likely to run as
  * often as every x frames. Certain values of k will result in a partial sorting of the array.
  * <p>
@@ -39,6 +40,7 @@ import java.util.Comparator;
  * This class uses very minimal extra memory, as it makes no copies of the array. The underlying algorithms used are a naive
  * single-pass for k=min and k=max, and Hoare's quickselect for values in between.
  * </p>
+ *
  * @author Jon Renner
  * @author Tommy Ettinger (just made it carry no state)
  */
@@ -68,7 +70,9 @@ public class Select {
 		return idx;
 	}
 
-	/** Faster than quickselect for n = min */
+	/**
+	 * Faster than quickselect for n = min
+	 */
 	private static <T> int fastMin (T[] items, Comparator<T> comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -80,7 +84,9 @@ public class Select {
 		return lowestIdx;
 	}
 
-	/** Faster than quickselect for n = max */
+	/**
+	 * Faster than quickselect for n = max
+	 */
 	private static <T> int fastMax (T[] items, Comparator<T> comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -117,7 +123,9 @@ public class Select {
 		return idx;
 	}
 
-	/** Faster than quickselect for n = min */
+	/**
+	 * Faster than quickselect for n = min
+	 */
 	private static <T> int fastMin (ObjectList<T> items, Comparator<T> comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -129,7 +137,9 @@ public class Select {
 		return lowestIdx;
 	}
 
-	/** Faster than quickselect for n = max */
+	/**
+	 * Faster than quickselect for n = max
+	 */
 	private static <T> int fastMax (ObjectList<T> items, Comparator<T> comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -166,7 +176,9 @@ public class Select {
 		return idx;
 	}
 
-	/** Faster than quickselect for n = min */
+	/**
+	 * Faster than quickselect for n = min
+	 */
 	private static int fastMin (IntList items, IntComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -178,7 +190,9 @@ public class Select {
 		return lowestIdx;
 	}
 
-	/** Faster than quickselect for n = max */
+	/**
+	 * Faster than quickselect for n = max
+	 */
 	private static int fastMax (IntList items, IntComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -215,7 +229,9 @@ public class Select {
 		return idx;
 	}
 
-	/** Faster than quickselect for n = min */
+	/**
+	 * Faster than quickselect for n = min
+	 */
 	private static int fastMin (LongList items, LongComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -227,7 +243,9 @@ public class Select {
 		return lowestIdx;
 	}
 
-	/** Faster than quickselect for n = max */
+	/**
+	 * Faster than quickselect for n = max
+	 */
 	private static int fastMax (LongList items, LongComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -264,7 +282,9 @@ public class Select {
 		return idx;
 	}
 
-	/** Faster than quickselect for n = min */
+	/**
+	 * Faster than quickselect for n = min
+	 */
 	private static int fastMin (FloatList items, FloatComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -276,7 +296,9 @@ public class Select {
 		return lowestIdx;
 	}
 
-	/** Faster than quickselect for n = max */
+	/**
+	 * Faster than quickselect for n = max
+	 */
 	private static int fastMax (FloatList items, FloatComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -287,7 +309,6 @@ public class Select {
 		}
 		return highestIdx;
 	}
-
 
 	public static double select (DoubleList items, DoubleComparator comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
@@ -314,7 +335,9 @@ public class Select {
 		return idx;
 	}
 
-	/** Faster than quickselect for n = min */
+	/**
+	 * Faster than quickselect for n = min
+	 */
 	private static int fastMin (DoubleList items, DoubleComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -326,7 +349,9 @@ public class Select {
 		return lowestIdx;
 	}
 
-	/** Faster than quickselect for n = max */
+	/**
+	 * Faster than quickselect for n = max
+	 */
 	private static int fastMax (DoubleList items, DoubleComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -337,8 +362,6 @@ public class Select {
 		}
 		return highestIdx;
 	}
-
-
 
 	public static short select (ShortList items, ShortComparator comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
@@ -365,7 +388,9 @@ public class Select {
 		return idx;
 	}
 
-	/** Faster than quickselect for n = min */
+	/**
+	 * Faster than quickselect for n = min
+	 */
 	private static int fastMin (ShortList items, ShortComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -377,7 +402,9 @@ public class Select {
 		return lowestIdx;
 	}
 
-	/** Faster than quickselect for n = max */
+	/**
+	 * Faster than quickselect for n = max
+	 */
 	private static int fastMax (ShortList items, ShortComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -414,7 +441,9 @@ public class Select {
 		return idx;
 	}
 
-	/** Faster than quickselect for n = min */
+	/**
+	 * Faster than quickselect for n = min
+	 */
 	private static int fastMin (ByteList items, ByteComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -426,7 +455,9 @@ public class Select {
 		return lowestIdx;
 	}
 
-	/** Faster than quickselect for n = max */
+	/**
+	 * Faster than quickselect for n = max
+	 */
 	private static int fastMax (ByteList items, ByteComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -437,7 +468,6 @@ public class Select {
 		}
 		return highestIdx;
 	}
-
 
 	public static char select (CharList items, CharComparator comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
@@ -464,7 +494,9 @@ public class Select {
 		return idx;
 	}
 
-	/** Faster than quickselect for n = min */
+	/**
+	 * Faster than quickselect for n = min
+	 */
 	private static int fastMin (CharList items, CharComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -476,7 +508,9 @@ public class Select {
 		return lowestIdx;
 	}
 
-	/** Faster than quickselect for n = max */
+	/**
+	 * Faster than quickselect for n = max
+	 */
 	private static int fastMax (CharList items, CharComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -513,7 +547,9 @@ public class Select {
 		return idx;
 	}
 
-	/** Faster than quickselect for n = min */
+	/**
+	 * Faster than quickselect for n = min
+	 */
 	private static int fastMin (BooleanList items, BooleanComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
@@ -525,7 +561,9 @@ public class Select {
 		return lowestIdx;
 	}
 
-	/** Faster than quickselect for n = max */
+	/**
+	 * Faster than quickselect for n = max
+	 */
 	private static int fastMax (BooleanList items, BooleanComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {

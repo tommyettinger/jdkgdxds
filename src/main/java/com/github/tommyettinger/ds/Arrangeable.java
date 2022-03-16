@@ -17,10 +17,10 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 
 import java.util.Collection;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
 
 /**
  * Indicates that a type can have its contents change position, without specifying the type of contents.
@@ -32,7 +32,7 @@ public interface Arrangeable {
 	/**
 	 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 	 *
-	 * @param first the first position, must not be negative and must be less than {@link #size()}
+	 * @param first  the first position, must not be negative and must be less than {@link #size()}
 	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
 	void swap (int first, int second);
@@ -42,7 +42,7 @@ public interface Arrangeable {
 	 *
 	 * @param random any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
 	 */
-	default void shuffle (EnhancedRandom random){
+	default void shuffle (EnhancedRandom random) {
 		for (int i = size() - 1; i >= 0; i--) {
 			swap(i, random.nextInt(i + 1));
 		}

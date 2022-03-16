@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.function;
 
 import java.util.function.Function;
@@ -27,17 +28,16 @@ import java.util.function.Function;
  * whose functional method is {@link #apply(float)}.
  *
  * @param <R> the type of the result of the function
- *
  * @see Function
  */
 @FunctionalInterface
 public interface FloatFunction<R> {
 
-    /**
-     * Applies this function to the given argument.
-     *
-     * @param value the function argument
-     * @return the function result
-     */
-    R apply(float value);
+	/**
+	 * Applies this function to the given argument.
+	 *
+	 * @param value the function argument
+	 * @return the function result
+	 */
+	R apply (float value);
 }

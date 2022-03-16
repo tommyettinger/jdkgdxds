@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.function;
 
 import java.util.function.BinaryOperator;
@@ -31,12 +32,12 @@ import java.util.function.BinaryOperator;
  */
 @FunctionalInterface
 public interface FloatBinaryOperator {
-    /**
-     * Applies this operator to the given operands.
-     *
-     * @param left the first operand
-     * @param right the second operand
-     * @return the operator result
-     */
-    float applyAsFloat(float left, float right);
+	/**
+	 * Applies this operator to the given operands.
+	 *
+	 * @param left  the first operand
+	 * @param right the second operand
+	 * @return the operator result
+	 */
+	float applyAsFloat (float left, float right);
 }

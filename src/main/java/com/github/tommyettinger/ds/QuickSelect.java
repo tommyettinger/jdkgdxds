@@ -37,6 +37,7 @@ import java.util.Comparator;
  * Everything here is public so that it can be adapted for use in other codebases that may also use a select algorithm.
  * Not everything here is documented, so use at your own risk. Note that the {@code k} and {@code n} parameters are
  * always 1-based; using 0 for k or n is a bad idea.
+ *
  * @author Jon Renner
  * @author Tommy Ettinger (adapted the class to carry no state)
  */
@@ -118,26 +119,27 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the T elements to be partially sorted
-	 * @param comp a Comparator for the T elements
-	 * @param n the size of the partially-sorted sections to produce
-	 * @param <T> the type of elements of items
+	 * @param comp  a Comparator for the T elements
+	 * @param n     the size of the partially-sorted sections to produce
+	 * @param <T>   the type of elements of items
 	 */
-	public static <T> void multiSelect(T[] items, Comparator<T> comp, int n) {
+	public static <T> void multiSelect (T[] items, Comparator<T> comp, int n) {
 		multiSelect(items, comp, 0, items.length - 1, n);
 	}
+
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the T elements to be partially sorted
-	 * @param comp a Comparator for the T elements
-	 * @param left the lower index (inclusive)
+	 * @param comp  a Comparator for the T elements
+	 * @param left  the lower index (inclusive)
 	 * @param right the upper index (inclusive)
-	 * @param n the size of the partially-sorted sections to produce
-	 * @param <T> the type of elements of items
+	 * @param n     the size of the partially-sorted sections to produce
+	 * @param <T>   the type of elements of items
 	 */
-	public static <T> void multiSelect(T[] items, Comparator<T> comp, int left, int right, int n) {
+	public static <T> void multiSelect (T[] items, Comparator<T> comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.length];
 		stack[0] = left;
@@ -152,10 +154,10 @@ public class QuickSelect {
 				continue;
 			}
 
-			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
-			if(stackSize + 4 >= stack.length){
+			if (stackSize + 4 >= stack.length) {
 				stack = Arrays.copyOf(stack, stackSize + 4);
 			}
 			stack[stackSize++] = left;
@@ -236,11 +238,11 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the T elements to be partially sorted
-	 * @param comp a Comparator for the T elements
-	 * @param n the size of the partially-sorted sections to produce
-	 * @param <T> the type of elements of items
+	 * @param comp  a Comparator for the T elements
+	 * @param n     the size of the partially-sorted sections to produce
+	 * @param <T>   the type of elements of items
 	 */
-	public static <T> void multiSelect(ObjectList<T> items, Comparator<T> comp, int n) {
+	public static <T> void multiSelect (ObjectList<T> items, Comparator<T> comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -250,13 +252,13 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the T elements to be partially sorted
-	 * @param comp a Comparator for the T elements
-	 * @param left the lower index (inclusive)
+	 * @param comp  a Comparator for the T elements
+	 * @param left  the lower index (inclusive)
 	 * @param right the upper index (inclusive)
-	 * @param n the size of the partially-sorted sections to produce
-	 * @param <T> the type of elements of items
+	 * @param n     the size of the partially-sorted sections to produce
+	 * @param <T>   the type of elements of items
 	 */
-	public static <T> void multiSelect(ObjectList<T> items, Comparator<T> comp, int left, int right, int n) {
+	public static <T> void multiSelect (ObjectList<T> items, Comparator<T> comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -271,10 +273,10 @@ public class QuickSelect {
 				continue;
 			}
 
-			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
-			if(stackSize + 4 >= stack.length){
+			if (stackSize + 4 >= stack.length) {
 				stack = Arrays.copyOf(stack, stackSize + 4);
 			}
 			stack[stackSize++] = left;
@@ -358,10 +360,10 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the int elements to be partially sorted
-	 * @param comp an IntComparator for the int elements
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param comp  an IntComparator for the int elements
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(IntList items, IntComparator comp, int n) {
+	public static void multiSelect (IntList items, IntComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -371,12 +373,12 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the int elements to be partially sorted
-	 * @param comp an IntComparator for the int elements
-	 * @param left the lower index (inclusive)
+	 * @param comp  an IntComparator for the int elements
+	 * @param left  the lower index (inclusive)
 	 * @param right the upper index (inclusive)
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(IntList items, IntComparator comp, int left, int right, int n) {
+	public static void multiSelect (IntList items, IntComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -391,10 +393,10 @@ public class QuickSelect {
 				continue;
 			}
 
-			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
-			if(stackSize + 4 >= stack.length){
+			if (stackSize + 4 >= stack.length) {
 				stack = Arrays.copyOf(stack, stackSize + 4);
 			}
 			stack[stackSize++] = left;
@@ -476,10 +478,10 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the long elements to be partially sorted
-	 * @param comp a LongComparator for the long elements
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param comp  a LongComparator for the long elements
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(LongList items, LongComparator comp, int n) {
+	public static void multiSelect (LongList items, LongComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -489,12 +491,12 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the long elements to be partially sorted
-	 * @param comp a LongComparator for the long elements
-	 * @param left the lower index (inclusive)
+	 * @param comp  a LongComparator for the long elements
+	 * @param left  the lower index (inclusive)
 	 * @param right the upper index (inclusive)
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(LongList items, LongComparator comp, int left, int right, int n) {
+	public static void multiSelect (LongList items, LongComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -509,10 +511,10 @@ public class QuickSelect {
 				continue;
 			}
 
-			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
-			if(stackSize + 4 >= stack.length){
+			if (stackSize + 4 >= stack.length) {
 				stack = Arrays.copyOf(stack, stackSize + 4);
 			}
 			stack[stackSize++] = left;
@@ -594,10 +596,10 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the float elements to be partially sorted
-	 * @param comp a FloatComparator for the long elements
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param comp  a FloatComparator for the long elements
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(FloatList items, FloatComparator comp, int n) {
+	public static void multiSelect (FloatList items, FloatComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -607,12 +609,12 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the float elements to be partially sorted
-	 * @param comp a FloatComparator for the long elements
-	 * @param left the lower index (inclusive)
+	 * @param comp  a FloatComparator for the long elements
+	 * @param left  the lower index (inclusive)
 	 * @param right the upper index (inclusive)
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(FloatList items, FloatComparator comp, int left, int right, int n) {
+	public static void multiSelect (FloatList items, FloatComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -627,10 +629,10 @@ public class QuickSelect {
 				continue;
 			}
 
-			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
-			if(stackSize + 4 >= stack.length){
+			if (stackSize + 4 >= stack.length) {
 				stack = Arrays.copyOf(stack, stackSize + 4);
 			}
 			stack[stackSize++] = left;
@@ -712,10 +714,10 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the double elements to be partially sorted
-	 * @param comp a DoubleComparator for the double elements
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param comp  a DoubleComparator for the double elements
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(DoubleList items, DoubleComparator comp, int n) {
+	public static void multiSelect (DoubleList items, DoubleComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -725,12 +727,12 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the double elements to be partially sorted
-	 * @param comp a DoubleComparator for the double elements
-	 * @param left the lower index (inclusive)
+	 * @param comp  a DoubleComparator for the double elements
+	 * @param left  the lower index (inclusive)
 	 * @param right the upper index (inclusive)
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(DoubleList items, DoubleComparator comp, int left, int right, int n) {
+	public static void multiSelect (DoubleList items, DoubleComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -745,10 +747,10 @@ public class QuickSelect {
 				continue;
 			}
 
-			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
-			if(stackSize + 4 >= stack.length){
+			if (stackSize + 4 >= stack.length) {
 				stack = Arrays.copyOf(stack, stackSize + 4);
 			}
 			stack[stackSize++] = left;
@@ -757,7 +759,7 @@ public class QuickSelect {
 			stack[stackSize++] = right;
 		}
 	}
-	
+
 	// shorts
 	public static int select (ShortList items, ShortComparator comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
@@ -823,17 +825,17 @@ public class QuickSelect {
 			}
 		}
 	}
-	
+
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the short elements to be partially sorted
-	 * @param comp a ShortComparator for the short elements
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param comp  a ShortComparator for the short elements
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(ShortList items, ShortComparator comp, int n) {
+	public static void multiSelect (ShortList items, ShortComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -843,12 +845,12 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the short elements to be partially sorted
-	 * @param comp a ShortComparator for the short elements
-	 * @param left the lower index (inclusive)
+	 * @param comp  a ShortComparator for the short elements
+	 * @param left  the lower index (inclusive)
 	 * @param right the upper index (inclusive)
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(ShortList items, ShortComparator comp, int left, int right, int n) {
+	public static void multiSelect (ShortList items, ShortComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -863,10 +865,10 @@ public class QuickSelect {
 				continue;
 			}
 
-			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
-			if(stackSize + 4 >= stack.length){
+			if (stackSize + 4 >= stack.length) {
 				stack = Arrays.copyOf(stack, stackSize + 4);
 			}
 			stack[stackSize++] = left;
@@ -948,10 +950,10 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the byte elements to be partially sorted
-	 * @param comp a ByteComparator for the byte elements
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param comp  a ByteComparator for the byte elements
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(ByteList items, ByteComparator comp, int n) {
+	public static void multiSelect (ByteList items, ByteComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -961,12 +963,12 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the byte elements to be partially sorted
-	 * @param comp a ByteComparator for the byte elements
-	 * @param left the lower index (inclusive)
+	 * @param comp  a ByteComparator for the byte elements
+	 * @param left  the lower index (inclusive)
 	 * @param right the upper index (inclusive)
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(ByteList items, ByteComparator comp, int left, int right, int n) {
+	public static void multiSelect (ByteList items, ByteComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -981,10 +983,10 @@ public class QuickSelect {
 				continue;
 			}
 
-			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
-			if(stackSize + 4 >= stack.length){
+			if (stackSize + 4 >= stack.length) {
 				stack = Arrays.copyOf(stack, stackSize + 4);
 			}
 			stack[stackSize++] = left;
@@ -993,7 +995,7 @@ public class QuickSelect {
 			stack[stackSize++] = right;
 		}
 	}
-	
+
 	// chars
 	public static int select (CharList items, CharComparator comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
@@ -1066,10 +1068,10 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the char elements to be partially sorted
-	 * @param comp a CharComparator for the char elements
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param comp  a CharComparator for the char elements
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(CharList items, CharComparator comp, int n) {
+	public static void multiSelect (CharList items, CharComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -1079,12 +1081,12 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the char elements to be partially sorted
-	 * @param comp a CharComparator for the char elements
-	 * @param left the lower index (inclusive)
+	 * @param comp  a CharComparator for the char elements
+	 * @param left  the lower index (inclusive)
 	 * @param right the upper index (inclusive)
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(CharList items, CharComparator comp, int left, int right, int n) {
+	public static void multiSelect (CharList items, CharComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -1099,10 +1101,10 @@ public class QuickSelect {
 				continue;
 			}
 
-			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
-			if(stackSize + 4 >= stack.length){
+			if (stackSize + 4 >= stack.length) {
 				stack = Arrays.copyOf(stack, stackSize + 4);
 			}
 			stack[stackSize++] = left;
@@ -1111,7 +1113,7 @@ public class QuickSelect {
 			stack[stackSize++] = right;
 		}
 	}
-	
+
 	// booleans
 	public static int select (BooleanList items, BooleanComparator comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
@@ -1184,10 +1186,10 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the boolean elements to be partially sorted
-	 * @param comp a BooleanComparator for the boolean elements
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param comp  a BooleanComparator for the boolean elements
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(BooleanList items, BooleanComparator comp, int n) {
+	public static void multiSelect (BooleanList items, BooleanComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -1197,12 +1199,12 @@ public class QuickSelect {
 	 * with a binary divide & conquer approach.
 	 *
 	 * @param items the boolean elements to be partially sorted
-	 * @param comp a BooleanComparator for the boolean elements
-	 * @param left the lower index (inclusive)
+	 * @param comp  a BooleanComparator for the boolean elements
+	 * @param left  the lower index (inclusive)
 	 * @param right the upper index (inclusive)
-	 * @param n the size of the partially-sorted sections to produce
+	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect(BooleanList items, BooleanComparator comp, int left, int right, int n) {
+	public static void multiSelect (BooleanList items, BooleanComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -1217,10 +1219,10 @@ public class QuickSelect {
 				continue;
 			}
 
-			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
-			if(stackSize + 4 >= stack.length){
+			if (stackSize + 4 >= stack.length) {
 				stack = Arrays.copyOf(stack, stackSize + 4);
 			}
 			stack[stackSize++] = left;

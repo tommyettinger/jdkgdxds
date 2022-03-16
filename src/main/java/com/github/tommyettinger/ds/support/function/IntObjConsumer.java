@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.function;
 
 import javax.annotation.Nullable;
@@ -30,17 +31,16 @@ import java.util.function.BiConsumer;
  * whose functional method is {@link #accept(int, Object)}.
  *
  * @param <U> the type of the object argument to the operation
- *
  * @see BiConsumer
  */
 @FunctionalInterface
 public interface IntObjConsumer<U> {
 
-    /**
-     * Performs this operation on the given arguments.
-     *
-     * @param value the first input argument
-     * @param u the second input argument
-     */
-    void accept(int value, @Nullable U u);
+	/**
+	 * Performs this operation on the given arguments.
+	 *
+	 * @param value the first input argument
+	 * @param u     the second input argument
+	 */
+	void accept (int value, @Nullable U u);
 }

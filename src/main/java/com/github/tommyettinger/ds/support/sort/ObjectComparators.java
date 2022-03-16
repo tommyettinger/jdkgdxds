@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.sort;
 
 import javax.annotation.Nullable;
@@ -23,9 +24,10 @@ import java.util.List;
 public final class ObjectComparators {
 	private ObjectComparators () {
 	}
+
 	/// The remainder of the code is based on FastUtil.
 
-	private static<K> void swap (List<K> items, int first, int second) {
+	private static <K> void swap (List<K> items, int first, int second) {
 		K firstValue = items.get(first);
 		items.set(first, items.get(second));
 		items.set(second, firstValue);
@@ -38,9 +40,9 @@ public final class ObjectComparators {
 	 * the second.
 	 */
 	private static <K> void inPlaceMerge (List<K> items, final int from, int mid, final int to, final Comparator<? super K> comp) {
-		if (from >= mid || mid >= to) { return; }
+		if (from >= mid || mid >= to) {return;}
 		if (to - from == 2) {
-			if (comp.compare(items.get(mid), items.get(from)) < 0) { swap(items, from, mid); }
+			if (comp.compare(items.get(mid), items.get(from)) < 0) {swap(items, from, mid);}
 			return;
 		}
 
@@ -61,13 +63,13 @@ public final class ObjectComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -81,10 +83,10 @@ public final class ObjectComparators {
 	 * comparison function.
 	 *
 	 * @param items the List to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
@@ -109,10 +111,10 @@ public final class ObjectComparators {
 	 * function.
 	 *
 	 * @param items the List to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
@@ -134,12 +136,14 @@ public final class ObjectComparators {
 	/**
 	 * Sorts all of {@code items} by simply calling {@link #sort(List, int, int, Comparator)}
 	 * setting {@code from} and {@code to} so the whole array is sorted.
+	 *
 	 * @param items the List to be sorted
-	 * @param c a Comparator to alter the sort order; if null, the natural order will be used
+	 * @param c     a Comparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static <K> void sort(List<K> items, final @Nullable Comparator<? super K> c) {
+	public static <K> void sort (List<K> items, final @Nullable Comparator<? super K> c) {
 		sort(items, 0, items.size(), c);
 	}
+
 	/**
 	 * Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort.
@@ -151,9 +155,9 @@ public final class ObjectComparators {
 	 * used as a generic sorting algorithm.
 	 *
 	 * @param items the List to be sorted
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to the index of the last element (exclusive) to be sorted.
-	 * @param c a Comparator to alter the sort order; if null, the natural order will be used
+	 * @param from  the index of the first element (inclusive) to be sorted.
+	 * @param to    the index of the last element (exclusive) to be sorted.
+	 * @param c     a Comparator to alter the sort order; if null, the natural order will be used
 	 */
 	public static <K> void sort (List<K> items, final int from, final int to, final @Nullable Comparator<? super K> c) {
 		if (to <= 0) {
@@ -162,7 +166,7 @@ public final class ObjectComparators {
 		if (from < 0 || from >= items.size() || to > items.size()) {
 			throw new UnsupportedOperationException("The given from/to range in Comparators.sort() is invalid.");
 		}
-		if(c == null){
+		if (c == null) {
 			sort(items, from, to, (Comparator<K>)Comparator.naturalOrder());
 			return;
 		}
@@ -192,7 +196,7 @@ public final class ObjectComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items.get(mid - 1), items.get(mid)) <= 0) { return; }
+		if (c.compare(items.get(mid - 1), items.get(mid)) <= 0) {return;}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

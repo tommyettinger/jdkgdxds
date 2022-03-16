@@ -64,7 +64,7 @@ public interface FloatComparator extends Comparator<Float> {
 	 * @see Comparator#thenComparing(Comparator)
 	 */
 	default FloatComparator thenComparing (FloatComparator second) {
-		return(k1, k2) -> {
+		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
 		};
@@ -72,7 +72,7 @@ public interface FloatComparator extends Comparator<Float> {
 
 	@Override
 	default Comparator<Float> thenComparing (Comparator<? super Float> second) {
-		if (second instanceof FloatComparator) { return thenComparing((FloatComparator)second); }
+		if (second instanceof FloatComparator) {return thenComparing((FloatComparator)second);}
 		return Comparator.super.thenComparing(second);
 	}
 }

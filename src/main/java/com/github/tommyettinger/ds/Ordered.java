@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
 import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparator;
@@ -30,7 +31,6 @@ import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Comparator;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
 
 /**
  * Ensures that implementors allow access to the order of {@code T} items as an ObjectList.
@@ -54,7 +54,7 @@ public interface Ordered<T> extends Arrangeable {
 	/**
 	 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 	 *
-	 * @param first the first position, must not be negative and must be less than {@link #size()}
+	 * @param first  the first position, must not be negative and must be less than {@link #size()}
 	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
 	@Override
@@ -116,20 +116,23 @@ public interface Ordered<T> extends Arrangeable {
 	 * If the specified comparator is {@code null} then all elements in this
 	 * Ordered must implement the {@link Comparable} interface and the elements'
 	 * {@linkplain Comparable natural ordering} should be used.
+	 *
 	 * @param comparator used to sort the T items this contains; may be null if T implements Comparable
 	 */
-	default void sort(@Nullable Comparator<? super T> comparator) {
+	default void sort (@Nullable Comparator<? super T> comparator) {
 		order().sort(comparator);
 	}
 
 	/**
 	 * Selects the kth-lowest element from this Ordered according to Comparator ranking. This might partially sort the Ordered,
 	 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-	 * @see Select
+	 *
 	 * @param comparator used for comparison
-	 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-	 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-	 * @return the value of the kth lowest ranked object. */
+	 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+	 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+	 * @return the value of the kth lowest ranked object.
+	 * @see Select
+	 */
 	default T selectRanked (Comparator<T> comparator, int kthLowest) {
 		if (kthLowest < 1) {
 			throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -140,11 +143,13 @@ public interface Ordered<T> extends Arrangeable {
 	/**
 	 * Gets the index of the kth-lowest element from this Ordered according to Comparator ranking. This might partially sort the
 	 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-	 * @see Ordered#selectRanked(java.util.Comparator, int)
+	 *
 	 * @param comparator used for comparison
-	 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-	 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-	 * @return the index of the kth lowest ranked object. */
+	 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+	 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+	 * @return the index of the kth lowest ranked object.
+	 * @see Ordered#selectRanked(java.util.Comparator, int)
+	 */
 	default int selectRankedIndex (Comparator<T> comparator, int kthLowest) {
 		if (kthLowest < 1) {
 			throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -155,10 +160,11 @@ public interface Ordered<T> extends Arrangeable {
 	/**
 	 * Removes items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
 	 * and end, exclusive.
+	 *
 	 * @param start inclusive start of the range to remove from the ordering
-	 * @param end exclusive end of the range to remove from the ordering
+	 * @param end   exclusive end of the range to remove from the ordering
 	 */
-	default void removeRange(int start, int end){
+	default void removeRange (int start, int end) {
 		order().removeRange(start, end);
 	}
 
@@ -178,7 +184,7 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 		 *
-		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param first  the first position, must not be negative and must be less than {@link #size()}
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
@@ -233,20 +239,23 @@ public interface Ordered<T> extends Arrangeable {
 		 * <br>
 		 * If the specified comparator is {@code null} then the numeric elements'
 		 * natural ordering should be used.
+		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable IntComparator comparator) {
+		default void sort (@Nullable IntComparator comparator) {
 			order().sort(comparator);
 		}
 
 		/**
 		 * Selects the kth-lowest element from this Ordered according to IntComparator ranking. This might partially sort the Ordered,
 		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Select
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the value of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item.
+		 * @see Select
+		 */
 		default int selectRanked (IntComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -257,11 +266,13 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Gets the index of the kth-lowest element from this Ordered according to IntComparator ranking. This might partially sort the
 		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Ordered.OfInt#selectRanked(java.util.Comparator, int)
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the index of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the index of the kth lowest ranked item.
+		 * @see Ordered.OfInt#selectRanked(java.util.Comparator, int)
+		 */
 		default int selectRankedIndex (IntComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -272,10 +283,11 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Removes items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
 		 * and end, exclusive.
+		 *
 		 * @param start inclusive start of the range to remove from the ordering
-		 * @param end exclusive end of the range to remove from the ordering
+		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange(int start, int end){
+		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
 	}
@@ -296,7 +308,7 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 		 *
-		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param first  the first position, must not be negative and must be less than {@link #size()}
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
@@ -351,20 +363,23 @@ public interface Ordered<T> extends Arrangeable {
 		 * <br>
 		 * If the specified comparator is {@code null} then the numeric elements'
 		 * natural ordering should be used.
+		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable LongComparator comparator) {
+		default void sort (@Nullable LongComparator comparator) {
 			order().sort(comparator);
 		}
 
 		/**
 		 * Selects the kth-lowest element from this Ordered according to LongComparator ranking. This might partially sort the Ordered,
 		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Select
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the value of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item.
+		 * @see Select
+		 */
 		default long selectRanked (LongComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -375,11 +390,13 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Gets the index of the kth-lowest element from this Ordered according to LongComparator ranking. This might partially sort the
 		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Ordered.OfLong#selectRanked(LongComparator, int)
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the index of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the index of the kth lowest ranked item.
+		 * @see Ordered.OfLong#selectRanked(LongComparator, int)
+		 */
 		default int selectRankedIndex (LongComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -390,10 +407,11 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Removes items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
 		 * and end, exclusive.
+		 *
 		 * @param start inclusive start of the range to remove from the ordering
-		 * @param end exclusive end of the range to remove from the ordering
+		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange(int start, int end){
+		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
 	}
@@ -414,7 +432,7 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 		 *
-		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param first  the first position, must not be negative and must be less than {@link #size()}
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
@@ -461,6 +479,7 @@ public interface Ordered<T> extends Arrangeable {
 		default float random (EnhancedRandom rng) {
 			return order().random(rng);
 		}
+
 		/**
 		 * Sorts this Ordered according to the order induced by the specified
 		 * {@link FloatComparator}.  The sort is <i>stable</i>: this method must not
@@ -468,20 +487,23 @@ public interface Ordered<T> extends Arrangeable {
 		 * <br>
 		 * If the specified comparator is {@code null} then the numeric elements'
 		 * natural ordering should be used.
+		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable FloatComparator comparator) {
+		default void sort (@Nullable FloatComparator comparator) {
 			order().sort(comparator);
 		}
 
 		/**
 		 * Selects the kth-lowest element from this Ordered according to FloatComparator ranking. This might partially sort the Ordered,
 		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Select
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the value of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item.
+		 * @see Select
+		 */
 		default float selectRanked (FloatComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -492,11 +514,12 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Gets the index of the kth-lowest element from this Ordered according to FloatComparator ranking. This might partially sort the
 		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Ordered.OfFloat#selectRanked(FloatComparator, int)
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
 		 * @return the index of the kth lowest ranked item.
+		 * @see Ordered.OfFloat#selectRanked(FloatComparator, int)
 		 */
 		default int selectRankedIndex (FloatComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
@@ -508,14 +531,14 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Removes items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
 		 * and end, exclusive.
+		 *
 		 * @param start inclusive start of the range to remove from the ordering
-		 * @param end exclusive end of the range to remove from the ordering
+		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange(int start, int end){
+		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
 	}
-
 
 	/**
 	 * A primitive specialization of {@link Ordered} for collections of double values instead of objects.
@@ -533,7 +556,7 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 		 *
-		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param first  the first position, must not be negative and must be less than {@link #size()}
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
@@ -588,20 +611,23 @@ public interface Ordered<T> extends Arrangeable {
 		 * <br>
 		 * If the specified comparator is {@code null} then the numeric elements'
 		 * natural ordering should be used.
+		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable DoubleComparator comparator) {
+		default void sort (@Nullable DoubleComparator comparator) {
 			order().sort(comparator);
 		}
 
 		/**
 		 * Selects the kth-lowest element from this Ordered according to DoubleComparator ranking. This might partially sort the Ordered,
 		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Select
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the value of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item.
+		 * @see Select
+		 */
 		default double selectRanked (DoubleComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -612,11 +638,13 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Gets the index of the kth-lowest element from this Ordered according to DoubleComparator ranking. This might partially sort the
 		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Ordered.OfDouble#selectRanked(DoubleComparator, int)
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the index of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the index of the kth lowest ranked item.
+		 * @see Ordered.OfDouble#selectRanked(DoubleComparator, int)
+		 */
 		default int selectRankedIndex (DoubleComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -627,10 +655,11 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Removes items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
 		 * and end, exclusive.
+		 *
 		 * @param start inclusive start of the range to remove from the ordering
-		 * @param end exclusive end of the range to remove from the ordering
+		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange(int start, int end){
+		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
 	}
@@ -648,7 +677,7 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 		 *
-		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param first  the first position, must not be negative and must be less than {@link #size()}
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
@@ -703,20 +732,23 @@ public interface Ordered<T> extends Arrangeable {
 		 * <br>
 		 * If the specified comparator is {@code null} then the numeric elements'
 		 * natural ordering should be used.
+		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable ShortComparator comparator) {
+		default void sort (@Nullable ShortComparator comparator) {
 			order().sort(comparator);
 		}
 
 		/**
 		 * Selects the kth-lowest element from this Ordered according to ShortComparator ranking. This might partially sort the Ordered,
 		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Select
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the value of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item.
+		 * @see Select
+		 */
 		default short selectRanked (ShortComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -727,11 +759,13 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Gets the index of the kth-lowest element from this Ordered according to ShortComparator ranking. This might partially sort the
 		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Ordered.OfShort#selectRanked(ShortComparator, int)
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the index of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the index of the kth lowest ranked item.
+		 * @see Ordered.OfShort#selectRanked(ShortComparator, int)
+		 */
 		default int selectRankedIndex (ShortComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -742,10 +776,11 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Removes items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
 		 * and end, exclusive.
+		 *
 		 * @param start inclusive start of the range to remove from the ordering
-		 * @param end exclusive end of the range to remove from the ordering
+		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange(int start, int end){
+		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
 	}
@@ -763,7 +798,7 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 		 *
-		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param first  the first position, must not be negative and must be less than {@link #size()}
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
@@ -818,20 +853,23 @@ public interface Ordered<T> extends Arrangeable {
 		 * <br>
 		 * If the specified comparator is {@code null} then the numeric elements'
 		 * natural ordering should be used.
+		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable ByteComparator comparator) {
+		default void sort (@Nullable ByteComparator comparator) {
 			order().sort(comparator);
 		}
 
 		/**
 		 * Selects the kth-lowest element from this Ordered according to ByteComparator ranking. This might partially sort the Ordered,
 		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Select
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the value of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item.
+		 * @see Select
+		 */
 		default byte selectRanked (ByteComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -842,11 +880,13 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Gets the index of the kth-lowest element from this Ordered according to ByteComparator ranking. This might partially sort the
 		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Ordered.OfByte#selectRanked(ByteComparator, int)
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the index of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the index of the kth lowest ranked item.
+		 * @see Ordered.OfByte#selectRanked(ByteComparator, int)
+		 */
 		default int selectRankedIndex (ByteComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -857,10 +897,11 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Removes items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
 		 * and end, exclusive.
+		 *
 		 * @param start inclusive start of the range to remove from the ordering
-		 * @param end exclusive end of the range to remove from the ordering
+		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange(int start, int end){
+		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
 	}
@@ -878,7 +919,7 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 		 *
-		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param first  the first position, must not be negative and must be less than {@link #size()}
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
@@ -933,20 +974,23 @@ public interface Ordered<T> extends Arrangeable {
 		 * <br>
 		 * If the specified comparator is {@code null} then the numeric elements'
 		 * natural ordering should be used.
+		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable CharComparator comparator) {
+		default void sort (@Nullable CharComparator comparator) {
 			order().sort(comparator);
 		}
 
 		/**
 		 * Selects the kth-lowest element from this Ordered according to CharComparator ranking. This might partially sort the Ordered,
 		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Select
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the value of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item.
+		 * @see Select
+		 */
 		default char selectRanked (CharComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -957,11 +1001,13 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Gets the index of the kth-lowest element from this Ordered according to CharComparator ranking. This might partially sort the
 		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Ordered.OfChar#selectRanked(CharComparator, int)
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the index of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the index of the kth lowest ranked item.
+		 * @see Ordered.OfChar#selectRanked(CharComparator, int)
+		 */
 		default int selectRankedIndex (CharComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -972,10 +1018,11 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Removes items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
 		 * and end, exclusive.
+		 *
 		 * @param start inclusive start of the range to remove from the ordering
-		 * @param end exclusive end of the range to remove from the ordering
+		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange(int start, int end){
+		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
 	}
@@ -993,7 +1040,7 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
 		 *
-		 * @param first the first position, must not be negative and must be less than {@link #size()}
+		 * @param first  the first position, must not be negative and must be less than {@link #size()}
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
@@ -1048,20 +1095,23 @@ public interface Ordered<T> extends Arrangeable {
 		 * <br>
 		 * If the specified comparator is {@code null} then the numeric elements'
 		 * natural ordering should be used.
+		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable BooleanComparator comparator) {
+		default void sort (@Nullable BooleanComparator comparator) {
 			order().sort(comparator);
 		}
 
 		/**
 		 * Selects the kth-lowest element from this Ordered according to BooleanComparator ranking. This might partially sort the Ordered,
 		 * changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Select
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the value of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the value of the kth lowest ranked item.
+		 * @see Select
+		 */
 		default boolean selectRanked (BooleanComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -1072,11 +1122,13 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Gets the index of the kth-lowest element from this Ordered according to BooleanComparator ranking. This might partially sort the
 		 * Ordered, changing its order. The Ordered must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-		 * @see Ordered.OfBoolean#selectRanked(BooleanComparator, int)
+		 *
 		 * @param comparator used for comparison
-		 * @param kthLowest rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-		 *           value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
-		 * @return the index of the kth lowest ranked item. */
+		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
+		 * @return the index of the kth lowest ranked item.
+		 * @see Ordered.OfBoolean#selectRanked(BooleanComparator, int)
+		 */
 		default int selectRankedIndex (BooleanComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
@@ -1087,10 +1139,11 @@ public interface Ordered<T> extends Arrangeable {
 		/**
 		 * Removes items from the ordering (and potentially only the ordering, depending on implementation) between start, inclusive,
 		 * and end, exclusive.
+		 *
 		 * @param start inclusive start of the range to remove from the ordering
-		 * @param end exclusive end of the range to remove from the ordering
+		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange(int start, int end){
+		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
 	}

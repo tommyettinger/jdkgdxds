@@ -54,7 +54,7 @@ public interface CharIterator extends PrimitiveIterator<Character, CharConsumer>
 	 */
 	@Override
 	default void forEachRemaining (CharConsumer action) {
-		while (hasNext()) { action.accept(nextChar()); }
+		while (hasNext()) {action.accept(nextChar());}
 	}
 
 	/**

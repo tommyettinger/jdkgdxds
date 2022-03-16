@@ -50,7 +50,6 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  */
 public class ObjectSet<T> implements Iterable<T>, Set<T> {
 
-
 	protected int size;
 
 	protected T[] keyTable;
@@ -89,10 +88,10 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 * growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public ObjectSet (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
@@ -125,20 +124,22 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 
 	/**
 	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
-	 * @param array an array to draw items from
+	 *
+	 * @param array  an array to draw items from
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public ObjectSet(T[] array, int offset, int length) {
+	public ObjectSet (T[] array, int offset, int length) {
 		this(length);
 		addAll(array, offset, length);
 	}
 
 	/**
 	 * Creates a new set containing all of the items in the given array.
+	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public ObjectSet(T[] array) {
+	public ObjectSet (T[] array) {
 		this(array, 0, array.length);
 	}
 
@@ -169,6 +170,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 * that case. It is possible that a user could write an implementation of place() that is more
 	 * robust against malicious inputs; one such approach is optionally employed by .NET Core and
 	 * newer versions for the hashes of strings.
+	 *
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
@@ -184,26 +186,30 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 * returns {@code left.equals(right)}, but subclasses can override it to use reference equality, fuzzy equality, deep
 	 * array equality, or any other custom definition of equality. Usually, {@link #place(Object)} is also overridden if
 	 * this method is.
-	 * @param left must be non-null; typically a key being compared, but not necessarily
+	 *
+	 * @param left  must be non-null; typically a key being compared, but not necessarily
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate(Object left, @Nullable Object right){
+	protected boolean equate (Object left, @Nullable Object right) {
 		return left.equals(right);
 	}
 
 	/**
 	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This calls
 	 * {@link #equate(Object, Object)} to determine if two keys are equivalent.
+	 *
 	 * @param key a non-null K key
 	 * @return a negative index if the key was not found, or the non-negative index of the existing key if found
 	 */
 	protected int locateKey (Object key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key);; i = i + 1 & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
-			if (equate(key, other)) return i; // Same key was found.
-			if (other == null) return ~i; // Always negative; means empty space is available at i.
+			if (equate(key, other))
+				return i; // Same key was found.
+			if (other == null)
+				return ~i; // Always negative; means empty space is available at i.
 		}
 	}
 
@@ -214,12 +220,13 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	@Override
 	public boolean add (T key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key);; i = i + 1 & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
-			if (equate(key, other)) return false; // Existing key was found.
+			if (equate(key, other))
+				return false; // Existing key was found.
 			if (other == null) {
 				keyTable[i] = key;
-				if (++size >= threshold) { resize(keyTable.length << 1); }
+				if (++size >= threshold) {resize(keyTable.length << 1);}
 				return true;
 			}
 		}
@@ -228,7 +235,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	@Override
 	public boolean containsAll (Collection<?> c) {
 		for (Object o : c) {
-			if (!contains(o)) { return false; }
+			if (!contains(o)) {return false;}
 		}
 		return true;
 	}
@@ -238,7 +245,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		final int length = coll.size();
 		ensureCapacity(length);
 		int oldSize = size;
-		for (T t : coll) { add(t); }
+		for (T t : coll) {add(t);}
 		return oldSize != size;
 
 	}
@@ -247,7 +254,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	public boolean retainAll (Collection<?> c) {
 		boolean modified = false;
 		for (Object o : this) {
-			if (!c.contains(o)) { modified |= remove(o); }
+			if (!c.contains(o)) {modified |= remove(o);}
 		}
 		return modified;
 	}
@@ -268,7 +275,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	public boolean addAll (T[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size;
-		for (int i = offset, n = i + length; i < n; i++) { add(array[i]); }
+		for (int i = offset, n = i + length; i < n; i++) {add(array[i]);}
 		return oldSize != size;
 	}
 
@@ -278,7 +285,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		int oldSize = size;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null) { add(key); }
+			if (key != null) {add(key);}
 		}
 		return size != oldSize;
 	}
@@ -302,7 +309,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	@Override
 	public boolean remove (Object key) {
 		int i = locateKey(key);
-		if (i < 0) { return false; }
+		if (i < 0) {return false;}
 		T[] keyTable = this.keyTable;
 		int mask = this.mask, next = i + 1 & mask;
 		while ((key = keyTable[next]) != null) {
@@ -351,9 +358,9 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 * instead.
 	 */
 	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) { throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity); }
+		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
 		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
-		if (keyTable.length > tableSize) { resize(tableSize); }
+		if (keyTable.length > tableSize) {resize(tableSize);}
 	}
 
 	/**
@@ -377,7 +384,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 */
 	@Override
 	public void clear () {
-		if (size == 0) { return; }
+		if (size == 0) {return;}
 		size = 0;
 		Arrays.fill(keyTable, null);
 	}
@@ -385,26 +392,30 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	@Override
 	public boolean contains (Object key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key);; i = i + 1 & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
-			if (equate(key, other)) return true;
-			if (other == null) return false;
+			if (equate(key, other))
+				return true;
+			if (other == null)
+				return false;
 		}
 	}
 
 	@Nullable
 	public T get (T key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key);; i = i + 1 & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
-			if (equate(key, other)) return other;
-			if (other == null) return null;
+			if (equate(key, other))
+				return other;
+			if (other == null)
+				return null;
 		}
 	}
 
 	public T first () {
 		T[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != null) { return keyTable[i]; } }
+		for (int i = 0, n = keyTable.length; i < n; i++) {if (keyTable[i] != null) {return keyTable[i];}}
 		throw new IllegalStateException("ObjectSet is empty.");
 	}
 
@@ -416,7 +427,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) { resize(tableSize); }
+		if (keyTable.length < tableSize) {resize(tableSize);}
 	}
 
 	protected void resize (int newSize) {
@@ -431,7 +442,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				T key = oldKeyTable[i];
-				if (key != null) { addResize(key); }
+				if (key != null) {addResize(key);}
 			}
 		}
 	}
@@ -478,7 +489,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	}
 
 	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -492,18 +503,18 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null) { h += key.hashCode(); }
+			if (key != null) {h += key.hashCode();}
 		}
 		return h;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals (Object o) {
 		if (o == this)
 			return true;
 		if (!(o instanceof Set))
 			return false;
-		Set<?> s = (Set<?>) o;
+		Set<?> s = (Set<?>)o;
 		if (s.size() != size())
 			return false;
 		try {
@@ -519,19 +530,19 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	}
 
 	public String toString (String separator) {
-		if (size == 0) { return ""; }
+		if (size == 0) {return "";}
 		StringBuilder buffer = new StringBuilder(32);
 		T[] keyTable = this.keyTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null) { continue; }
+			if (key == null) {continue;}
 			buffer.append(key == this ? "(this)" : key);
 			break;
 		}
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null) { continue; }
+			if (key == null) {continue;}
 			buffer.append(separator);
 			buffer.append(key == this ? "(this)" : key);
 		}
@@ -542,12 +553,13 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
 	 * size, no action is taken. This indiscriminately removes items from the backing array until the
 	 * requested newSize is reached, or until the full backing array has had its elements removed.
+	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	public void truncate (int newSize) {
 		T[] keyTable = this.keyTable;
 		for (int i = 0; i < keyTable.length && size > newSize; i++) {
-			if(keyTable[i] != null){
+			if (keyTable[i] != null) {
 				keyTable[i] = null;
 				--size;
 			}
@@ -610,7 +622,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		@Override
 		public void remove () {
 			int i = currentIndex;
-			if (i < 0) { throw new IllegalStateException("next must be called before remove."); }
+			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
 			T[] keyTable = set.keyTable;
 			int mask = set.mask, next = i + 1 & mask;
 			T key;
@@ -624,20 +636,20 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 			}
 			keyTable[i] = null;
 			set.size--;
-			if (i != currentIndex) { --nextIndex; }
+			if (i != currentIndex) {--nextIndex;}
 			currentIndex = -1;
 		}
 
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return hasNext;
 		}
 
 		@Override
 		public T next () {
-			if (!hasNext) { throw new NoSuchElementException(); }
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			T key = set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -657,7 +669,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 			ObjectList<T> list = new ObjectList<>(set.size);
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) { list.add(next()); }
+			while (hasNext) {list.add(next());}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
@@ -665,7 +677,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		}
 	}
 
-	public static <T> ObjectSet<T> with(T item) {
+	public static <T> ObjectSet<T> with (T item) {
 		ObjectSet<T> set = new ObjectSet<>(1);
 		set.add(item);
 		return set;

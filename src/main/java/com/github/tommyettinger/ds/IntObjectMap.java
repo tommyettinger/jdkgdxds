@@ -61,7 +61,6 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  */
 public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
-
 	protected int size;
 
 	protected int[] keyTable;
@@ -108,10 +107,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public IntObjectMap (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
@@ -126,6 +125,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	/**
 	 * Creates a new map identical to the specified map.
 	 * This performs a shallow copy, so any references to values (as well as the default value) are shared with the old map.
+	 *
 	 * @param map the map to copy
 	 */
 	public IntObjectMap (IntObjectMap<? extends V> map) {
@@ -212,7 +212,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	public V put (int key, @Nullable V value) {
 		if (key == 0) {
 			V oldValue = defaultValue;
-			if (hasZeroValue) { oldValue = zeroValue; } else { size++; }
+			if (hasZeroValue) {oldValue = zeroValue;} else {size++;}
 			hasZeroValue = true;
 			zeroValue = value;
 			return oldValue;
@@ -226,7 +226,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) { resize(keyTable.length << 1); }
+		if (++size >= threshold) {resize(keyTable.length << 1);}
 		return defaultValue;
 	}
 
@@ -237,7 +237,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	public V putOrDefault (int key, @Nullable V value, @Nullable V defaultValue) {
 		if (key == 0) {
 			V oldValue = defaultValue;
-			if (hasZeroValue) { oldValue = zeroValue; } else { size++; }
+			if (hasZeroValue) {oldValue = zeroValue;} else {size++;}
 			hasZeroValue = true;
 			zeroValue = value;
 			return oldValue;
@@ -251,19 +251,20 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) { resize(keyTable.length << 1); }
+		if (++size >= threshold) {resize(keyTable.length << 1);}
 		return defaultValue;
 	}
 
 	/**
 	 * Puts every key-value pair in the given map into this, with the values from the given map
 	 * overwriting the previous values if two keys are identical.
+	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
 	public void putAll (IntObjectMap<? extends V> map) {
 		ensureCapacity(map.size);
 		if (map.hasZeroValue) {
-			if (!hasZeroValue) { size++; }
+			if (!hasZeroValue) {size++;}
 			hasZeroValue = true;
 			zeroValue = map.zeroValue;
 		}
@@ -272,7 +273,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		int key;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
-			if (key != 0) { put(key, valueTable[i]); }
+			if (key != 0) {put(key, valueTable[i]);}
 		}
 	}
 
@@ -335,7 +336,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 */
 	@Nullable
 	public V get (int key) {
-		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
+		if (key == 0) {return hasZeroValue ? zeroValue : defaultValue;}
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -351,7 +352,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 */
 	@Nullable
 	public V getOrDefault (int key, @Nullable V defaultValue) {
-		if (key == 0) { return hasZeroValue ? zeroValue : defaultValue; }
+		if (key == 0) {return hasZeroValue ? zeroValue : defaultValue;}
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -373,7 +374,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			return defaultValue;
 		}
 		int i = locateKey(key);
-		if (i < 0) { return defaultValue; }
+		if (i < 0) {return defaultValue;}
 		int[] keyTable = this.keyTable;
 		int rem;
 		V[] valueTable = this.valueTable;
@@ -448,9 +449,9 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * instead.
 	 */
 	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) { throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity); }
+		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
 		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
-		if (keyTable.length > tableSize) { resize(tableSize); }
+		if (keyTable.length > tableSize) {resize(tableSize);}
 	}
 
 	/**
@@ -467,7 +468,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	public void clear () {
-		if (size == 0) { return; }
+		if (size == 0) {return;}
 		size = 0;
 		Arrays.fill(keyTable, 0);
 	}
@@ -483,13 +484,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		V[] valueTable = this.valueTable;
 		int[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && Objects.equals(valueTable[i], value)) { return true; }
+			if (keyTable[i] != 0 && Objects.equals(valueTable[i], value)) {return true;}
 		}
 		return false;
 	}
 
 	public boolean containsKey (int key) {
-		if (key == 0) { return hasZeroValue; }
+		if (key == 0) {return hasZeroValue;}
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -505,11 +506,11 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * every value, which may be an expensive operation.
 	 */
 	public int findKey (@Nullable V value, int defaultKey) {
-		if (hasZeroValue && Objects.equals(zeroValue, value)) { return 0; }
+		if (hasZeroValue && Objects.equals(zeroValue, value)) {return 0;}
 		V[] valueTable = this.valueTable;
 		int[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && Objects.equals(valueTable[i], value)) { return keyTable[i]; }
+			if (keyTable[i] != 0 && Objects.equals(valueTable[i], value)) {return keyTable[i];}
 		}
 
 		return defaultKey;
@@ -521,7 +522,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) { resize(tableSize); }
+		if (keyTable.length < tableSize) {resize(tableSize);}
 	}
 
 	protected void resize (int newSize) {
@@ -539,7 +540,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				int key = oldKeyTable[i];
-				if (key != 0) { putResize(key, oldValueTable[i]); }
+				if (key != 0) {putResize(key, oldValueTable[i]);}
 			}
 		}
 	}
@@ -549,7 +550,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -577,11 +578,11 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 	@Override
 	public boolean equals (Object obj) {
-		if (obj == this) { return true; }
-		if (!(obj instanceof IntObjectMap)) { return false; }
+		if (obj == this) {return true;}
+		if (!(obj instanceof IntObjectMap)) {return false;}
 		IntObjectMap other = (IntObjectMap)obj;
-		if (other.size != size) { return false; }
-		if (other.hasZeroValue != hasZeroValue || !Objects.equals(other.zeroValue, zeroValue)) { return false; }
+		if (other.size != size) {return false;}
+		if (other.hasZeroValue != hasZeroValue || !Objects.equals(other.zeroValue, zeroValue)) {return false;}
 		int[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -589,9 +590,9 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			if (key != 0) {
 				V value = valueTable[i];
 				if (value == null) {
-					if (other.getOrDefault(key, neverIdentical) != null) { return false; }
+					if (other.getOrDefault(key, neverIdentical) != null) {return false;}
 				} else {
-					if (!value.equals(other.get(key))) { return false; }
+					if (!value.equals(other.get(key))) {return false;}
 				}
 			}
 		}
@@ -608,19 +609,19 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	protected String toString (String separator, boolean braces) {
-		if (size == 0) { return braces ? "{}" : ""; }
+		if (size == 0) {return braces ? "{}" : "";}
 		StringBuilder buffer = new StringBuilder(32);
-		if (braces) { buffer.append('{'); }
+		if (braces) {buffer.append('{');}
 		if (hasZeroValue) {
 			buffer.append("0=").append(zeroValue);
-			if (size > 1) { buffer.append(separator); }
+			if (size > 1) {buffer.append(separator);}
 		}
 		int[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			int key = keyTable[i];
-			if (key == 0) { continue; }
+			if (key == 0) {continue;}
 			buffer.append(key);
 			buffer.append('=');
 			V value = valueTable[i];
@@ -629,14 +630,14 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		}
 		while (i-- > 0) {
 			int key = keyTable[i];
-			if (key == 0) { continue; }
+			if (key == 0) {continue;}
 			buffer.append(separator);
 			buffer.append(key);
 			buffer.append('=');
 			V value = valueTable[i];
 			buffer.append(value);
 		}
-		if (braces) { buffer.append('}'); }
+		if (braces) {buffer.append('}');}
 		return buffer.toString();
 	}
 
@@ -649,8 +650,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach(IntObjConsumer<? super V> action) {
-		for(Entry<V> entry : entrySet()) {
+	public void forEach (IntObjConsumer<? super V> action) {
+		for (Entry<V> entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}
 	}
@@ -660,9 +661,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * function on that entry until all entries have been processed or the
 	 * function throws an exception.  Exceptions thrown by the function are
 	 * relayed to the caller.
+	 *
 	 * @param function the function to apply to each entry
 	 */
-	public void replaceAll(IntObjBiFunction<? super V, ? extends V> function){
+	public void replaceAll (IntObjBiFunction<? super V, ? extends V> function) {
 		for (Entry<V> entry : entrySet()) {
 			entry.setValue(function.apply(entry.getKey(), entry.getValue()));
 		}
@@ -672,18 +674,19 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * Reduces the size of the map to the specified size. If the map is already smaller than the specified
 	 * size, no action is taken. This indiscriminately removes items from the backing array until the
 	 * requested newSize is reached, or until the full backing array has had its elements removed.
+	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	public void truncate (int newSize) {
 		int[] keyTable = this.keyTable;
 		V[] valTable = this.valueTable;
-		if(hasZeroValue && size > newSize) {
+		if (hasZeroValue && size > newSize) {
 			hasZeroValue = false;
 			zeroValue = null;
 			--size;
 		}
 		for (int i = 0; i < keyTable.length && size > newSize; i++) {
-			if(keyTable[i] != 0){
+			if (keyTable[i] != 0) {
 				keyTable[i] = 0;
 				valTable[i] = null;
 				--size;
@@ -849,12 +852,12 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 		@Override
 		public boolean equals (@Nullable Object o) {
-			if (this == o) { return true; }
-			if (o == null || getClass() != o.getClass()) { return false; }
+			if (this == o) {return true;}
+			if (o == null || getClass() != o.getClass()) {return false;}
 
 			Entry entry = (Entry)o;
 
-			if (key != entry.key) { return false; }
+			if (key != entry.key) {return false;}
 			return Objects.equals(value, entry.value);
 		}
 
@@ -881,7 +884,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		public void reset () {
 			currentIndex = INDEX_ILLEGAL;
 			nextIndex = INDEX_ZERO;
-			if (map.hasZeroValue) { hasNext = true; } else { findNextIndex(); }
+			if (map.hasZeroValue) {hasNext = true;} else {findNextIndex();}
 		}
 
 		void findNextIndex () {
@@ -930,7 +933,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 				}
 				keyTable[i] = 0;
 				valueTable[i] = null;
-				if (i != currentIndex) { --nextIndex; }
+				if (i != currentIndex) {--nextIndex;}
 			}
 			currentIndex = INDEX_ILLEGAL;
 			map.size--;
@@ -946,8 +949,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 		@Override
 		public int nextInt () {
-			if (!hasNext) { throw new NoSuchElementException(); }
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			int key = nextIndex == INDEX_ZERO ? 0 : map.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -959,13 +962,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 */
 		public IntList toList () {
 			IntList list = new IntList(true, map.size);
-			while (hasNext) { list.add(next()); }
+			while (hasNext) {list.add(next());}
 			return list;
 		}
 
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return hasNext;
 		}
 	}
@@ -984,8 +987,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		@Override
 		@Nullable
 		public V next () {
-			if (!hasNext) { throw new NoSuchElementException(); }
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			V value = nextIndex == INDEX_ZERO ? map.zeroValue : map.valueTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -994,7 +997,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return hasNext;
 		}
 	}
@@ -1016,8 +1019,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 */
 		@Override
 		public Entry<V> next () {
-			if (!hasNext) { throw new NoSuchElementException(); }
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			int[] keyTable = map.keyTable;
 			if (nextIndex == INDEX_ZERO) {
 				entry.key = 0;
@@ -1033,7 +1036,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return hasNext;
 		}
 	}
@@ -1146,7 +1149,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	@Nullable
 	public V putIfAbsent (int key, V value) {
 		if (key == 0) {
-			if(hasZeroValue) {
+			if (hasZeroValue) {
 				return zeroValue;
 			}
 			return put(key, value);
@@ -1170,7 +1173,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	@Nullable
 	public V replace (int key, V value) {
 		if (key == 0) {
-			if(hasZeroValue) {
+			if (hasZeroValue) {
 				V oldValue = zeroValue;
 				zeroValue = value;
 				return oldValue;
@@ -1186,17 +1189,17 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		return defaultValue;
 	}
 
-	public V computeIfAbsent(int key, IntFunction<? extends V> mappingFunction) {
+	public V computeIfAbsent (int key, IntFunction<? extends V> mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
 			V newValue = mappingFunction.apply(key);
 			put(key, newValue);
 			return newValue;
-		}
-		else return valueTable[i];
+		} else
+			return valueTable[i];
 	}
 
-	public boolean remove(int key, Object value) {
+	public boolean remove (int key, Object value) {
 		int i = locateKey(key);
 		if (i >= 0 && Objects.equals(valueTable[i], value)) {
 			remove(key);
@@ -1206,10 +1209,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	@Nullable
-	public V merge(int key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+	public V merge (int key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		int i = locateKey(key);
 		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
-		if(next == null)
+		if (next == null)
 			remove(key);
 		else
 			put(key, next);
@@ -1221,12 +1224,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
 	 * convert its Number key to a primitive int, regardless of which Number type was used.
-	 * @param key0 the first and only key; will be converted to a primitive int
+	 *
+	 * @param key0   the first and only key; will be converted to a primitive int
 	 * @param value0 the first and only value
-	 * @param <V> the type of value0
+	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> IntObjectMap<V> with(Number key0, V value0) {
+	public static <V> IntObjectMap<V> with (Number key0, V value0) {
 		IntObjectMap<V> map = new IntObjectMap<>(1);
 		map.put(key0.intValue(), value0);
 		return map;
@@ -1241,20 +1245,21 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * {@code int}s. It also needs all values to have the same type, because it gets those
 	 * types from the first key parameter and first value parameter. Any keys that aren't
 	 * {@code Number}s or values that don't have V as their type have that entry skipped.
-	 * @param key0 the first key; will be converted to a primitive int
+	 *
+	 * @param key0   the first key; will be converted to a primitive int
 	 * @param value0 the first value; will be used to determine the type of all values
-	 * @param rest an array or varargs of alternating Number, V, Number, V... elements
-	 * @param <V> the type of values, inferred from value0
+	 * @param rest   an array or varargs of alternating Number, V, Number, V... elements
+	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <V> IntObjectMap<V> with(Number key0, V value0, Object... rest){
+	public static <V> IntObjectMap<V> with (Number key0, V value0, Object... rest) {
 		IntObjectMap<V> map = new IntObjectMap<>(1 + (rest.length >>> 1));
 		map.put(key0.intValue(), value0);
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
 				map.put(((Number)rest[i - 1]).intValue(), (V)rest[i]);
-			}catch (ClassCastException ignored){
+			} catch (ClassCastException ignored) {
 			}
 		}
 		return map;

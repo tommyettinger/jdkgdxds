@@ -64,7 +64,7 @@ public interface ShortComparator extends Comparator<Short> {
 	 * @see Comparator#thenComparing(Comparator)
 	 */
 	default ShortComparator thenComparing (ShortComparator second) {
-		return(k1, k2) -> {
+		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
 		};
@@ -72,7 +72,7 @@ public interface ShortComparator extends Comparator<Short> {
 
 	@Override
 	default Comparator<Short> thenComparing (Comparator<? super Short> second) {
-		if (second instanceof ShortComparator) { return thenComparing((ShortComparator)second); }
+		if (second instanceof ShortComparator) {return thenComparing((ShortComparator)second);}
 		return Comparator.super.thenComparing(second);
 	}
 }

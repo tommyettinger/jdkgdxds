@@ -54,7 +54,7 @@ public interface FloatIterator extends PrimitiveIterator<Float, FloatConsumer> {
 	 */
 	@Override
 	default void forEachRemaining (FloatConsumer action) {
-		while (hasNext()) { action.accept(nextFloat()); }
+		while (hasNext()) {action.accept(nextFloat());}
 	}
 
 	/**

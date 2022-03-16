@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.function;
 
 import java.util.function.BiFunction;
@@ -31,12 +32,12 @@ import java.util.function.BiFunction;
 @FunctionalInterface
 public interface FloatLongToLongBiFunction {
 
-    /**
-     * Applies this function to the given arguments.
-     *
-     * @param first the first function argument
-     * @param second the second function argument
-     * @return the function result
-     */
-    long applyAsLong(float first, long second);
+	/**
+	 * Applies this function to the given arguments.
+	 *
+	 * @param first  the first function argument
+	 * @param second the second function argument
+	 * @return the function result
+	 */
+	long applyAsLong (float first, long second);
 }

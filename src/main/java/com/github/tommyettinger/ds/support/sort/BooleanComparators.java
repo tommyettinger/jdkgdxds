@@ -32,7 +32,6 @@ public final class BooleanComparators {
 	 */
 	protected static class NaturalImplicitComparator implements BooleanComparator {
 
-
 		@Override
 		public final int compare (final boolean a, final boolean b) {
 			return Boolean.compare(a, b);
@@ -50,7 +49,6 @@ public final class BooleanComparators {
 	 * A type-specific comparator mimicking the opposite of the natural order (the opposite being true then false).
 	 */
 	protected static class OppositeImplicitComparator implements BooleanComparator {
-
 
 		@Override
 		public final int compare (final boolean a, final boolean b) {
@@ -91,7 +89,7 @@ public final class BooleanComparators {
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
 	public static BooleanComparator oppositeComparator (final BooleanComparator c) {
-		if (c instanceof OppositeComparator) { return ((OppositeComparator)c).comparator; }
+		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
 		return new OppositeComparator(c);
 	}
 
@@ -103,7 +101,7 @@ public final class BooleanComparators {
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
 	public static BooleanComparator asBooleanComparator (final Comparator<? super Boolean> c) {
-		if (c instanceof BooleanComparator) { return (BooleanComparator)c; }
+		if (c instanceof BooleanComparator) {return (BooleanComparator)c;}
 		return new BooleanComparator() {
 			@Override
 			public int compare (boolean x, boolean y) {

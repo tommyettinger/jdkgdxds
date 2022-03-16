@@ -37,7 +37,7 @@ import java.util.Set;
  */
 public class NumberedSet<T> implements Set<T>, Ordered<T> {
 
-	protected class InternalMap extends ObjectIntOrderedMap<T>{
+	protected class InternalMap extends ObjectIntOrderedMap<T> {
 		public InternalMap () {
 			super();
 		}
@@ -65,6 +65,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		public InternalMap (Collection<? extends T> keys, PrimitiveCollection.OfInt values) {
 			super(keys, values);
 		}
+
 		@Override
 		protected int place (Object item) {
 			return NumberedSet.this.place(item);
@@ -129,9 +130,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	/**
 	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
-	 * @param other another Ordered of the same type
+	 *
+	 * @param other  another Ordered of the same type
 	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count how many items to copy from other
+	 * @param count  how many items to copy from other
 	 */
 	public NumberedSet (Ordered<T> other, int offset, int count) {
 		this(count);
@@ -162,6 +164,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	 * that case. It is possible that a user could write an implementation of place() that is more
 	 * robust against malicious inputs; one such approach is optionally employed by .NET Core and
 	 * newer versions for the hashes of strings.
+	 *
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@code map.mask} (both inclusive)
 	 */
@@ -179,14 +182,14 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	 * this method is.
 	 * <br>
 	 * You can override this, which will affect the internal map that NumberedSet uses.
-	 * @param left must be non-null; typically a key being compared, but not necessarily
+	 *
+	 * @param left  must be non-null; typically a key being compared, but not necessarily
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate(Object left, @Nullable Object right){
+	protected boolean equate (Object left, @Nullable Object right) {
 		return left.equals(right);
 	}
-
 
 	@Override
 	public ObjectList<T> order () {
@@ -253,9 +256,9 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
 	 * inserting at the end of the iteration order.
 	 *
-	 * @param other          a non-null {@link Ordered} of {@code T}
-	 * @param offset         the first index in {@code other} to use
-	 * @param count          how many indices in {@code other} to use
+	 * @param other  a non-null {@link Ordered} of {@code T}
+	 * @param offset the first index in {@code other} to use
+	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
 	public boolean addAll (Ordered<T> other, int offset, int count) {
@@ -290,7 +293,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	public boolean addAll (T[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size();
-		for (int i = offset, n = i + length; i < n; i++) { add(array[i]); }
+		for (int i = offset, n = i + length; i < n; i++) {add(array[i]);}
 		return oldSize != size();
 	}
 
@@ -330,6 +333,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 
 	/**
 	 * Removes and returns the item at the given index in this set's order.
+	 *
 	 * @param index the index of the item to remove
 	 * @return the removed item
 	 */
@@ -411,10 +415,11 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	/**
 	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
 	 * size, no action is taken.
+	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	public void truncate (int newSize) {
-		if (size() > newSize) { removeRange(newSize, size()); }
+		if (size() > newSize) {removeRange(newSize, size());}
 	}
 
 	@Override
@@ -435,8 +440,9 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	 * Note that this takes different arguments than some other range-related methods; this needs
 	 * a start index and an end index, rather than a count of items. This matches the behavior in
 	 * the JDK collections.
+	 *
 	 * @param start the first index to remove, inclusive
-	 * @param end the last index (after what should be removed), exclusive
+	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
 	public void removeRange (int start, int end) {
@@ -466,7 +472,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	 * order in {@link ObjectList} and the rest of the JDK, not OrderedSet in libGDX.
 	 *
 	 * @param index where in the iteration order to add the given key, or to move it if already present
-	 * @param key what T item to try to add, if not already present
+	 * @param key   what T item to try to add, if not already present
 	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
 	public boolean add (int index, T key) {
@@ -483,7 +489,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		renumber(index);
 		return true;
 	}
-
 
 	public void resize (int newSize) {
 		map.resize(newSize);
@@ -509,7 +514,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		map.setLoadFactor(loadFactor);
 	}
 
-	public T first() {
+	public T first () {
 		if (size() == 0)
 			throw new IllegalStateException("Cannot get the first() item of an empty NumberedSet.");
 		return map.keyAt(0);
@@ -529,7 +534,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		return map.toString();
 	}
 
-	public static <T> NumberedSet<T> with(T item) {
+	public static <T> NumberedSet<T> with (T item) {
 		NumberedSet<T> set = new NumberedSet<>(1);
 		set.add(item);
 		return set;

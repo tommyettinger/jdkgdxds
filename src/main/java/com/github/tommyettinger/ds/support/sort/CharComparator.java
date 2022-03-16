@@ -72,7 +72,7 @@ public interface CharComparator extends Comparator<Character> {
 
 	@Override
 	default Comparator<Character> thenComparing (Comparator<? super Character> second) {
-		if (second instanceof CharComparator) { return thenComparing((CharComparator)second); }
+		if (second instanceof CharComparator) {return thenComparing((CharComparator)second);}
 		return Comparator.super.thenComparing(second);
 	}
 }

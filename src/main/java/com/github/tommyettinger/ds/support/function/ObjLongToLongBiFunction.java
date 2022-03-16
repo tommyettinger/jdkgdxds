@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.function;
 
 import java.util.function.BiFunction;
@@ -27,18 +28,17 @@ import java.util.function.BiFunction;
  * whose functional method is {@link #applyAsLong(Object, long)}.
  *
  * @param <T> the type of the object argument to the function
- *
  * @see BiFunction
  */
 @FunctionalInterface
 public interface ObjLongToLongBiFunction<T> {
 
-    /**
-     * Applies this function to the given arguments.
-     *
-     * @param first the first function argument
-     * @param second the second function argument
-     * @return the function result
-     */
-    long applyAsLong(T first, long second);
+	/**
+	 * Applies this function to the given arguments.
+	 *
+	 * @param first  the first function argument
+	 * @param second the second function argument
+	 * @return the function result
+	 */
+	long applyAsLong (T first, long second);
 }

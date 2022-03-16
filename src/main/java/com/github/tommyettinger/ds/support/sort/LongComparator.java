@@ -72,7 +72,7 @@ public interface LongComparator extends Comparator<Long> {
 
 	@Override
 	default Comparator<Long> thenComparing (Comparator<? super Long> second) {
-		if (second instanceof LongComparator) { return thenComparing((LongComparator)second); }
+		if (second instanceof LongComparator) {return thenComparing((LongComparator)second);}
 		return Comparator.super.thenComparing(second);
 	}
 }

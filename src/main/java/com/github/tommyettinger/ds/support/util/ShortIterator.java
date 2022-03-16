@@ -54,7 +54,7 @@ public interface ShortIterator extends PrimitiveIterator<Short, ShortConsumer> {
 	 */
 	@Override
 	default void forEachRemaining (ShortConsumer action) {
-		while (hasNext()) { action.accept(nextShort()); }
+		while (hasNext()) {action.accept(nextShort());}
 	}
 
 	/**

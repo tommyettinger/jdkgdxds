@@ -39,17 +39,25 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	protected long defaultValue = -1;
 
-	/** Contains the values in the queue. Head and tail indices go in a circle around this array, wrapping at the end. */
+	/**
+	 * Contains the values in the queue. Head and tail indices go in a circle around this array, wrapping at the end.
+	 */
 	protected long[] values;
 
-	/** Index of first element. Logically smaller than tail. Unless empty, it points to a valid element inside queue. */
+	/**
+	 * Index of first element. Logically smaller than tail. Unless empty, it points to a valid element inside queue.
+	 */
 	protected int head = 0;
 
-	/** Index of last element. Logically bigger than head. Usually points to an empty position, but points to the head when full
-	 * (size == values.length). */
+	/**
+	 * Index of last element. Logically bigger than head. Usually points to an empty position, but points to the head when full
+	 * (size == values.length).
+	 */
 	protected int tail = 0;
 
-	/** Number of elements in the queue. */
+	/**
+	 * Number of elements in the queue.
+	 */
 	public int size = 0;
 
 	protected transient @Nullable LongDequeIterator iterator1;
@@ -58,12 +66,16 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	protected transient @Nullable LongDequeIterator descendingIterator1;
 	protected transient @Nullable LongDequeIterator descendingIterator2;
 
-	/** Creates a new LongDeque which can hold 16 values without needing to resize backing array. */
+	/**
+	 * Creates a new LongDeque which can hold 16 values without needing to resize backing array.
+	 */
 	public LongDeque () {
 		this(16);
 	}
 
-	/** Creates a new LongDeque which can hold the specified number of values without needing to resize backing array. */
+	/**
+	 * Creates a new LongDeque which can hold the specified number of values without needing to resize backing array.
+	 */
 	public LongDeque (int initialSize) {
 		this.values = new long[initialSize];
 	}
@@ -71,6 +83,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	/**
 	 * Creates a new LongDeque using all of the contents of the given PrimitiveCollection.OfLong, such as
 	 * a {@link LongList} or {@link LongSet}.
+	 *
 	 * @param coll a PrimitiveCollection.OfLong that will be copied into this and used in full
 	 */
 	public LongDeque (PrimitiveCollection.OfLong coll) {
@@ -80,6 +93,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	/**
 	 * Copies the given LongDeque exactly into this one. Individual values will be shallow-copied.
+	 *
 	 * @param deque another LongDeque to copy
 	 */
 	public LongDeque (LongDeque deque) {
@@ -92,6 +106,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	/**
 	 * Creates a new LongDeque using all of the contents of the given array.
+	 *
 	 * @param a an array of long that will be copied into this and used in full
 	 */
 	public LongDeque (long[] a) {
@@ -102,9 +117,10 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 	/**
 	 * Creates a new LongDeque using {@code count} items from {@code a}, starting at {@code offset}.
-	 * @param a an array of long
+	 *
+	 * @param a      an array of long
 	 * @param offset where in {@code a} to start using items
-	 * @param count how many items to use from {@code a}
+	 * @param count  how many items to use from {@code a}
 	 */
 	public LongDeque (long[] a, int offset, int count) {
 		this.values = Arrays.copyOfRange(a, offset, offset + count);
@@ -120,9 +136,12 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		this.defaultValue = defaultValue;
 	}
 
-	/** Append given item to the tail (enqueue to tail). Unless backing array needs resizing, operates in O(1) time.
-	 * @see #addFirst(long) 
-	 * @param item a long to add to the tail */
+	/**
+	 * Append given item to the tail (enqueue to tail). Unless backing array needs resizing, operates in O(1) time.
+	 *
+	 * @param item a long to add to the tail
+	 * @see #addFirst(long)
+	 */
 	public void addLast (long item) {
 		long[] values = this.values;
 
@@ -138,9 +157,12 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		size++;
 	}
 
-	/** Prepend given item to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
+	/**
+	 * Prepend given item to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
+	 *
+	 * @param item a long to add to the head
 	 * @see #addLast(long)
-	 * @param item a long to add to the head */
+	 */
 	public void addFirst (long item) {
 		long[] values = this.values;
 
@@ -160,8 +182,10 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		this.size++;
 	}
 
-	/** Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
-	 * items to avoid multiple backing array resizes. */
+	/**
+	 * Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
+	 * items to avoid multiple backing array resizes.
+	 */
 	public void ensureCapacity (int additional) {
 		final int needed = size + additional;
 		if (values.length < needed) {
@@ -169,7 +193,9 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		}
 	}
 
-	/** Resize backing array. newSize must be bigger than current size. */
+	/**
+	 * Resize backing array. newSize must be bigger than current size.
+	 */
 	protected void resize (int newSize) {
 		final long[] values = this.values;
 		final int head = this.head;
@@ -190,9 +216,12 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		this.tail = size;
 	}
 
-	/** Remove the first item from the queue. (dequeue from head) Always O(1).
+	/**
+	 * Remove the first item from the queue. (dequeue from head) Always O(1).
+	 *
 	 * @return removed object
-	 * @throws NoSuchElementException when queue is empty */
+	 * @throws NoSuchElementException when queue is empty
+	 */
 	public long removeFirst () {
 		if (size == 0) {
 			// Underflow
@@ -211,10 +240,13 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		return result;
 	}
 
-	/** Remove the last item from the queue. (dequeue from tail) Always O(1).
-	 * @see #removeFirst()
+	/**
+	 * Remove the last item from the queue. (dequeue from tail) Always O(1).
+	 *
 	 * @return removed item
-	 * @throws NoSuchElementException when queue is empty */
+	 * @throws NoSuchElementException when queue is empty
+	 * @see #removeFirst()
+	 */
 	public long removeLast () {
 		if (size == 0) {
 			throw new NoSuchElementException("LongDeque is empty.");
@@ -651,18 +683,20 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	@Override
 	public long[] toArray () {
 		long[] next = new long[size];
-		if(head < tail) {
+		if (head < tail) {
 			System.arraycopy(values, head, next, 0, tail - head);
-		}
-		else {
+		} else {
 			System.arraycopy(values, head, next, 0, size - head);
 			System.arraycopy(values, 0, next, size - head, tail);
 		}
 		return next;
 	}
 
-	/** Returns the index of first occurrence of value in the queue, or -1 if no such value exists.
-	 * @return An index of first occurrence of value in queue or -1 if no such value exists */
+	/**
+	 * Returns the index of first occurrence of value in the queue, or -1 if no such value exists.
+	 *
+	 * @return An index of first occurrence of value in queue or -1 if no such value exists
+	 */
 	public int indexOf (long value) {
 		if (size == 0)
 			return -1;
@@ -683,8 +717,11 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		return -1;
 	}
 
-	/** Returns the index of last occurrence of value in the queue, or -1 if no such value exists.
-	 * @return An index of last occurrence of value in queue or -1 if no such value exists */
+	/**
+	 * Returns the index of last occurrence of value in the queue, or -1 if no such value exists.
+	 *
+	 * @return An index of last occurrence of value in queue or -1 if no such value exists
+	 */
 	public int lastIndexOf (long value) {
 		if (size == 0)
 			return -1;
@@ -705,28 +742,40 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		return -1;
 	}
 
-	/** Removes the first instance of the specified value in the queue.
-	 * @return true if value was found and removed, false otherwise */
+	/**
+	 * Removes the first instance of the specified value in the queue.
+	 *
+	 * @return true if value was found and removed, false otherwise
+	 */
 	public boolean removeValue (long value) {
 		int index = indexOf(value);
-		if (index == -1) return false;
+		if (index == -1)
+			return false;
 		removeAt(index);
 		return true;
 	}
 
-	/** Removes the last instance of the specified value in the queue.
-	 * @return true if value was found and removed, false otherwise */
+	/**
+	 * Removes the last instance of the specified value in the queue.
+	 *
+	 * @return true if value was found and removed, false otherwise
+	 */
 	public boolean removeLastValue (long value) {
 		int index = lastIndexOf(value);
-		if (index == -1) return false;
+		if (index == -1)
+			return false;
 		removeAt(index);
 		return true;
 	}
 
-	/** Removes and returns the item at the specified index. */
+	/**
+	 * Removes and returns the item at the specified index.
+	 */
 	public long removeAt (int index) {
-		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index < 0)
+			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
+		if (index >= size)
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 
 		long[] values = this.values;
 		int head = this.head, tail = this.tail;
@@ -753,20 +802,27 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		return value;
 	}
 
-	/** Returns true if the queue has one or more items. */
+	/**
+	 * Returns true if the queue has one or more items.
+	 */
 	public boolean notEmpty () {
 		return size > 0;
 	}
 
-	/** Returns true if the queue is empty. */
+	/**
+	 * Returns true if the queue is empty.
+	 */
 	public boolean isEmpty () {
 		return size == 0;
 	}
 
-	/** Returns the first (head) item in the queue (without removing it).
+	/**
+	 * Returns the first (head) item in the queue (without removing it).
+	 *
+	 * @throws NoSuchElementException when queue is empty
 	 * @see #addFirst(long)
 	 * @see #removeFirst()
-	 * @throws NoSuchElementException when queue is empty */
+	 */
 	public long first () {
 		if (size == 0) {
 			// Underflow
@@ -775,10 +831,13 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		return values[head];
 	}
 
-	/** Returns the last (tail) item in the queue (without removing it).
+	/**
+	 * Returns the last (tail) item in the queue (without removing it).
+	 *
+	 * @throws NoSuchElementException when queue is empty
 	 * @see #addLast(long)
 	 * @see #removeLast()
-	 * @throws NoSuchElementException when queue is empty */
+	 */
 	public long last () {
 		if (size == 0) {
 			// Underflow
@@ -787,44 +846,60 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		final long[] values = this.values;
 		int tail = this.tail;
 		tail--;
-		if (tail == -1) tail = values.length - 1;
+		if (tail == -1)
+			tail = values.length - 1;
 		return values[tail];
 	}
 
-	/** Retrieves the value in queue without removing it. Indexing is from the front to back, zero based. Therefore get(0) is the
+	/**
+	 * Retrieves the value in queue without removing it. Indexing is from the front to back, zero based. Therefore get(0) is the
 	 * same as {@link #first()}.
-	 * @throws IndexOutOfBoundsException when the index is negative or >= size */
+	 *
+	 * @throws IndexOutOfBoundsException when the index is negative or >= size
+	 */
 	public long get (int index) {
-		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index < 0)
+			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
+		if (index >= size)
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		final long[] values = this.values;
 
 		int i = head + index;
-		if (i >= values.length) i -= values.length;
+		if (i >= values.length)
+			i -= values.length;
 		return values[i];
 	}
 
-	/** Sets an existing position in this deque to the given item. Indexing is from the front to back, zero based.
+	/**
+	 * Sets an existing position in this deque to the given item. Indexing is from the front to back, zero based.
+	 *
 	 * @param index the index to set
-	 * @param item what value should replace the contents of the specified index
+	 * @param item  what value should replace the contents of the specified index
 	 * @return the previous contents of the specified index
-	 * @throws IndexOutOfBoundsException when the index is negative or >= size */
+	 * @throws IndexOutOfBoundsException when the index is negative or >= size
+	 */
 	public long set (int index, long item) {
-		if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);
-		if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index < 0)
+			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
+		if (index >= size)
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 		final long[] values = this.values;
 
 		int i = head + index;
-		if (i >= values.length) i -= values.length;
+		if (i >= values.length)
+			i -= values.length;
 		long old = values[i];
 		values[i] = item;
 		return old;
 	}
 
-	/** Removes all values from this queue. Values in backing array are set to null to prevent memory leak, so this operates in
-	 * O(n). */
+	/**
+	 * Removes all values from this queue. Values in backing array are set to null to prevent memory leak, so this operates in
+	 * O(n).
+	 */
 	public void clear () {
-		if (size == 0) return;
+		if (size == 0)
+			return;
 		this.head = 0;
 		this.tail = 0;
 		this.size = 0;
@@ -900,7 +975,8 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	}
 
 	public String toString (String separator) {
-		if (size == 0) return "";
+		if (size == 0)
+			return "";
 		final long[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
@@ -925,20 +1001,24 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 			hash *= 421;
 			hash += value ^ value >>> 32;
 			index++;
-			if (index == backingLength) index = 0;
+			if (index == backingLength)
+				index = 0;
 		}
 
 		return hash;
 	}
 
 	public boolean equals (Object o) {
-		if (this == o) return true;
-		if (!(o instanceof LongDeque)) return false;
+		if (this == o)
+			return true;
+		if (!(o instanceof LongDeque))
+			return false;
 
 		LongDeque q = (LongDeque)o;
 		final int size = this.size;
 
-		if (q.size != size) return false;
+		if (q.size != size)
+			return false;
 
 		final long[] myValues = this.values;
 		final int myBackingLength = myValues.length;
@@ -951,11 +1031,14 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 			long myValue = myValues[myIndex];
 			long itsValue = itsValues[itsIndex];
 
-			if (myValue != itsValue) return false;
+			if (myValue != itsValue)
+				return false;
 			myIndex++;
 			itsIndex++;
-			if (myIndex == myBackingLength) myIndex = 0;
-			if (itsIndex == itsBackingLength) itsIndex = 0;
+			if (myIndex == myBackingLength)
+				myIndex = 0;
+			if (itsIndex == itsBackingLength)
+				itsIndex = 0;
 		}
 		return true;
 	}
@@ -968,17 +1051,23 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 */
 	@Override
 	public void swap (int first, int second) {
-		if (first < 0) throw new IndexOutOfBoundsException("first index can't be < 0: " + first);
-		if (first >= size) throw new IndexOutOfBoundsException("first index can't be >= size: " + first + " >= " + size);
-		if (second < 0) throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
-		if (second >= size) throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
+		if (first < 0)
+			throw new IndexOutOfBoundsException("first index can't be < 0: " + first);
+		if (first >= size)
+			throw new IndexOutOfBoundsException("first index can't be >= size: " + first + " >= " + size);
+		if (second < 0)
+			throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
+		if (second >= size)
+			throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
 		final long[] values = this.values;
 
 		int f = head + first;
-		if (f >= values.length) f -= values.length;
+		if (f >= values.length)
+			f -= values.length;
 
 		int s = head + second;
-		if (s >= values.length) s -= values.length;
+		if (s >= values.length)
+			s -= values.length;
 
 		long fv = values[f];
 		values[f] = values[s];
@@ -996,9 +1085,11 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		long fv;
 		for (int n = size >> 1, b = 0, t = size - 1; b <= n && b != t; b++, t--) {
 			f = head + b;
-			if(f >= len) f -= len;
+			if (f >= len)
+				f -= len;
 			s = head + t;
-			if(s >= len) s -= len;
+			if (s >= len)
+				s -= len;
 			fv = values[f];
 			values[f] = values[s];
 			values[s] = fv;
@@ -1012,8 +1103,8 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
 	 * the deque) to rearrange the internals before sorting.
 	 */
-	public void sort(){
-		if(head <= tail) {
+	public void sort () {
+		if (head <= tail) {
 			Arrays.sort(values, head, tail);
 		} else {
 			System.arraycopy(values, head, values, tail, values.length - head);
@@ -1030,8 +1121,8 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
 	 * the deque) to rearrange the internals before sorting.
 	 */
-	public void sort(@Nullable LongComparator c){
-		if(head <= tail) {
+	public void sort (@Nullable LongComparator c) {
+		if (head <= tail) {
 			LongComparators.sort(values, head, tail, c);
 		} else {
 			System.arraycopy(values, head, values, tail, values.length - head);
@@ -1041,8 +1132,8 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		}
 	}
 
-	public long random(EnhancedRandom random){
-		if(size <= 0) {
+	public long random (EnhancedRandom random) {
+		if (size <= 0) {
 			throw new NoSuchElementException("LongDeque is empty.");
 		}
 		return get(random.nextInt(size));
@@ -1060,7 +1151,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 
 		public LongDequeIterator (LongDeque deque, boolean descendingOrder) {
 			this.deque = deque;
-			if(this.descending = descendingOrder)
+			if (this.descending = descendingOrder)
 				index = this.deque.size - 1;
 		}
 
@@ -1072,7 +1163,8 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		}
 
 		public long nextLong () {
-			if (index >= deque.size || index < 0) throw new NoSuchElementException(String.valueOf(index));
+			if (index >= deque.size || index < 0)
+				throw new NoSuchElementException(String.valueOf(index));
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
@@ -1080,8 +1172,10 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		}
 
 		public void remove () {
-			if(descending) index++;
-			else index--;
+			if (descending)
+				index++;
+			else
+				index--;
 			deque.removeAt(index);
 		}
 
@@ -1094,13 +1188,13 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		}
 	}
 
-	public static LongDeque with(long item){
+	public static LongDeque with (long item) {
 		LongDeque deque = new LongDeque();
 		deque.add(item);
 		return deque;
 	}
 
-	public static LongDeque with(long... items){
+	public static LongDeque with (long... items) {
 		return new LongDeque(items);
 	}
 }

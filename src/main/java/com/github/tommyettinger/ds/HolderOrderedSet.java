@@ -72,6 +72,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
 	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 */
 	public HolderOrderedSet (Function<T, K> extractor) {
@@ -82,7 +83,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	/**
 	 * Creates a new set with a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
-	 * @param extractor a function that will be used to extract K keys from the T items put into this
+	 * @param extractor       a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public HolderOrderedSet (Function<T, K> extractor, int initialCapacity) {
@@ -94,9 +95,9 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
 	 * growing the backing table.
 	 *
-	 * @param extractor a function that will be used to extract K keys from the T items put into this
+	 * @param extractor       a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public HolderOrderedSet (Function<T, K> extractor, int initialCapacity, float loadFactor) {
 		super(extractor, initialCapacity, loadFactor);
@@ -138,10 +139,11 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	/**
 	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this, using {@code extractor} to get the keys that determine distinctness.
+	 *
 	 * @param extractor a function that will be used to extract K keys from the T items in coll
-	 * @param other another Ordered of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count how many items to copy from other
+	 * @param other     another Ordered of the same type
+	 * @param offset    the first index in other's ordering to draw an item from
+	 * @param count     how many items to copy from other
 	 */
 	public HolderOrderedSet (Function<T, K> extractor, Ordered<T> other, int offset, int count) {
 		this(extractor, count);
@@ -159,13 +161,13 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * order in {@link ObjectList} and the rest of the JDK, not OrderedSet in libGDX.
 	 *
 	 * @param index where in the iteration order to add the given key, or to move it if already present
-	 * @param key what T item to try to add, if not already present
+	 * @param key   what T item to try to add, if not already present
 	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
 	public boolean add (int index, T key) {
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
-			if (oldIndex != index) { items.add(index, items.remove(oldIndex)); }
+			if (oldIndex != index) {items.add(index, items.remove(oldIndex));}
 			return false;
 		}
 		items.add(index, key);
@@ -176,7 +178,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		ensureCapacity(set.size);
 		ObjectList<T> si = set.items;
 		int oldSize = size;
-		for (int i = 0, n = si.size(); i < n; i++) { add(si.get(i)); }
+		for (int i = 0, n = si.size(); i < n; i++) {add(si.get(i));}
 		return size != oldSize;
 	}
 
@@ -184,9 +186,9 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
 	 * inserting at the end of the iteration order.
 	 *
-	 * @param other          a non-null {@link Ordered} of {@code T}
-	 * @param offset         the first index in {@code other} to use
-	 * @param count          how many indices in {@code other} to use
+	 * @param other  a non-null {@link Ordered} of {@code T}
+	 * @param offset the first index in {@code other} to use
+	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
 	public boolean addAll (Ordered<T> other, int offset, int count) {
@@ -227,6 +229,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Removes and returns the item at the given index in this set's order.
+	 *
 	 * @param index the index of the item to remove
 	 * @return the removed item
 	 */
@@ -239,12 +242,14 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Gets the first item in the order.
-	 * @throws IllegalStateException if this is empty.
+	 *
 	 * @return the first item in this set's order
+	 * @throws IllegalStateException if this is empty.
 	 */
 	@Override
 	public T first () {
-		if(size == 0) throw new IllegalStateException("HolderOrderedSet is empty.");
+		if (size == 0)
+			throw new IllegalStateException("HolderOrderedSet is empty.");
 		return items.get(0);
 	}
 
@@ -257,7 +262,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	@Override
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) { resize(tableSize); }
+		if (keyTable.length < tableSize) {resize(tableSize);}
 		items.ensureCapacity(additionalCapacity);
 	}
 
@@ -272,8 +277,8 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
 	public boolean alter (T before, T after) {
-		if (contains(after)) { return false; }
-		if (!super.remove(before)) { return false; }
+		if (contains(after)) {return false;}
+		if (!super.remove(before)) {return false;}
 		super.add(after);
 		items.set(items.indexOf(before), after);
 		return true;
@@ -289,7 +294,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
 	public boolean alterAt (int index, T after) {
-		if (index < 0 || index >= size || contains(after)) { return false; }
+		if (index < 0 || index >= size || contains(after)) {return false;}
 		super.remove(items.get(index));
 		super.add(after);
 		items.set(index, after);
@@ -353,8 +358,9 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * Note that this takes different arguments than some other range-related methods; this needs
 	 * a start index and an end index, rather than a count of items. This matches the behavior in
 	 * the JDK collections.
+	 *
 	 * @param start the first index to remove, inclusive
-	 * @param end the last index (after what should be removed), exclusive
+	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
 	public void removeRange (int start, int end) {
@@ -369,11 +375,12 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	/**
 	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
 	 * size, no action is taken.
+	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	@Override
 	public void truncate (int newSize) {
-		if (size > newSize) { removeRange(newSize, size); }
+		if (size > newSize) {removeRange(newSize, size);}
 	}
 
 	/**
@@ -403,7 +410,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	@Override
 	public String toString (String separator) {
-		if (size == 0) { return "{}"; }
+		if (size == 0) {return "{}";}
 		ObjectList<T> items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('{');
@@ -437,8 +444,8 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 		@Override
 		public T next () {
-			if (!hasNext) { throw new NoSuchElementException(); }
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			T key = items.get(nextIndex);
 			nextIndex++;
 			hasNext = nextIndex < set.size;
@@ -447,7 +454,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 		@Override
 		public void remove () {
-			if (nextIndex < 0) { throw new IllegalStateException("next must be called before remove."); }
+			if (nextIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
 			nextIndex--;
 			set.remove(items.get(nextIndex));
 		}

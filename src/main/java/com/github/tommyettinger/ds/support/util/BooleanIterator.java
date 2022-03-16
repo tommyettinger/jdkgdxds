@@ -54,7 +54,7 @@ public interface BooleanIterator extends PrimitiveIterator<Boolean, BooleanConsu
 	 */
 	@Override
 	default void forEachRemaining (BooleanConsumer action) {
-		while (hasNext()) { action.accept(nextBoolean()); }
+		while (hasNext()) {action.accept(nextBoolean());}
 	}
 
 	/**

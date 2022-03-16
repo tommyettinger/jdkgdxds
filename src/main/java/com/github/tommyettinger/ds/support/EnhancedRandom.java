@@ -35,10 +35,11 @@ public interface EnhancedRandom {
 	/**
 	 * Uses {@link Math#random()} to hastily put together a not-especially-uniform {@code long} value,
 	 * meant only to produce a seed when no seed was specified (the "I don't care" seed).
+	 *
 	 * @return a kind-of-uniform {@code long} value
 	 */
-	static long seedFromMath(){
-		return (long) ((Math.random() - 0.5) * 0x1p52) ^ (long) ((Math.random() - 0.5) * 0x1p64);
+	static long seedFromMath () {
+		return (long)((Math.random() - 0.5) * 0x1p52) ^ (long)((Math.random() - 0.5) * 0x1p64);
 	}
 
 	/**
@@ -66,11 +67,13 @@ public interface EnhancedRandom {
 	 * generator that permits setting two different {@code long} values, like
 	 * {@link LaserRandom}, should return {@code 2}. Much larger values are
 	 * possible for types like the Mersenne Twister or some CMWC generators.
+	 *
 	 * @return the non-negative number of selections possible for state variables
 	 */
-	default int getStateCount() {
+	default int getStateCount () {
 		return 0;
 	}
+
 	/**
 	 * Gets a selected state value from this EnhancedRandom. The number of possible selections
 	 * is up to the implementing class, and is accessible via {@link #getStateCount()}, but
@@ -79,10 +82,11 @@ public interface EnhancedRandom {
 	 * implementation throws an UnsupportedOperationException, and implementors only have to
 	 * allow reading the state if they choose to implement this differently. If this method
 	 * is intended to be used, {@link #getStateCount()} must also be implemented.
+	 *
 	 * @param selection used to select which state variable to get; generally non-negative
 	 * @return the exact value of the selected state
 	 */
-	default long getSelectedState(int selection) {
+	default long getSelectedState (int selection) {
 		throw new UnsupportedOperationException("getSelectedState() not supported.");
 	}
 
@@ -96,10 +100,11 @@ public interface EnhancedRandom {
 	 * should be implemented when {@link #getSelectedState(int)} is and the state is allowed
 	 * to be set by users. Having accurate ways to get and set the full state of a random
 	 * number generator makes it much easier to serialize and deserialize that class.
+	 *
 	 * @param selection used to select which state variable to set; generally non-negative
-	 * @param value the exact value to use for the selected state, if valid
+	 * @param value     the exact value to use for the selected state, if valid
 	 */
-	default void setSelectedState(int selection, long value) {
+	default void setSelectedState (int selection, long value) {
 		setSeed(value);
 	}
 
@@ -108,9 +113,10 @@ public interface EnhancedRandom {
 	 * 1, then this should set the whole state to the given value using
 	 * {@link #setSelectedState(int, long)}. If getStateCount() is more than 1, then all
 	 * states will be set in the same way (using setSelectedState(), all to {@code state}).
+	 *
 	 * @param state the long value to use for each state variable
 	 */
-	default void setState(long state) {
+	default void setState (long state) {
 		for (int i = getStateCount() - 1; i >= 0; i--) {
 			setSelectedState(i, state);
 		}
@@ -123,10 +129,11 @@ public interface EnhancedRandom {
 	 * variable to stateA. If there are two state variables, the first is set to stateA,
 	 * and the second to stateB. If there are more, it reuses stateA, then stateB, then
 	 * stateA, and so on until all variables are set.
+	 *
 	 * @param stateA the long value to use for states at index 0, 2, 4, 6...
 	 * @param stateB the long value to use for states at index 1, 3, 5, 7...
 	 */
-	default void setState(long stateA, long stateB) {
+	default void setState (long stateA, long stateB) {
 		final int c = getStateCount();
 		for (int i = 0; i < c; i += 2) {
 			setSelectedState(i, stateA);
@@ -145,11 +152,12 @@ public interface EnhancedRandom {
 	 * first is set to stateA, the second to stateB, and the third to stateC. If there
 	 * are more, it reuses stateA, then stateB, then stateC, then stateA, and so on
 	 * until all variables are set.
+	 *
 	 * @param stateA the long value to use for states at index 0, 3, 6, 9...
 	 * @param stateB the long value to use for states at index 1, 4, 7, 10...
 	 * @param stateC the long value to use for states at index 2, 5, 8, 11...
 	 */
-	default void setState(long stateA, long stateB, long stateC) {
+	default void setState (long stateA, long stateB, long stateC) {
 		final int c = getStateCount();
 		for (int i = 0; i < c; i += 3) {
 			setSelectedState(i, stateA);
@@ -173,12 +181,13 @@ public interface EnhancedRandom {
 	 * stateB, the third to stateC, and the fourth to stateD. If there are more, it
 	 * reuses stateA, then stateB, then stateC, then stateD, then stateA, and so on
 	 * until all variables are set.
+	 *
 	 * @param stateA the long value to use for states at index 0, 4, 8, 12...
 	 * @param stateB the long value to use for states at index 1, 5, 9, 13...
 	 * @param stateC the long value to use for states at index 2, 6, 10, 14...
 	 * @param stateD the long value to use for states at index 3, 7, 11, 15...
 	 */
-	default void setState(long stateA, long stateB, long stateC, long stateD) {
+	default void setState (long stateA, long stateB, long stateC, long stateD) {
 		final int c = getStateCount();
 		for (int i = 0; i < c; i += 4) {
 			setSelectedState(i, stateA);
@@ -200,6 +209,7 @@ public interface EnhancedRandom {
 	 * generators with any {@link #getStateCount()}, but may allocate an array if states is
 	 * used as a varargs (you can pass an existing array without needing to allocate). This
 	 * uses {@link #setSelectedState(int, long)} to change the states.
+	 *
 	 * @param states an array or varargs of long values to use as states
 	 */
 	default void setState (@Nonnull long... states) {
@@ -250,7 +260,7 @@ public interface EnhancedRandom {
 	 * @throws NullPointerException if the byte array is null
 	 */
 	default void nextBytes (byte[] bytes) {
-		for (int i = 0; i < bytes.length; ) { for (long r = nextLong(), n = Math.min(bytes.length - i, 8); n-- > 0; r >>>= 8) { bytes[i++] = (byte)r; } }
+		for (int i = 0; i < bytes.length; ) {for (long r = nextLong(), n = Math.min(bytes.length - i, 8); n-- > 0; r >>>= 8) {bytes[i++] = (byte)r;}}
 	}
 
 	/**
@@ -303,9 +313,9 @@ public interface EnhancedRandom {
 	 * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
 	 * for outer bound 0). This method is slightly slower than {@link #nextInt(int)}.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param outerBound the outer exclusive bound; may be any int value, allowing negative
 	 * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	default int nextSignedInt (int outerBound) {
 		outerBound = (int)(outerBound * (nextLong() & 0xFFFFFFFFL) >> 32);
@@ -326,10 +336,10 @@ public interface EnhancedRandom {
 	 * can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
 	 * here, this simply returns innerBound.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
 	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	default int nextInt (int innerBound, int outerBound) {
 		return (int)nextLong(innerBound, outerBound);
@@ -346,10 +356,10 @@ public interface EnhancedRandom {
 	 * positive numbers, and since that range is larger than the largest possible int,
 	 * this has to use {@link #nextSignedLong(long, long)}.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
 	 * @param outerBound the exclusive outer bound; may be any int, allowing negative
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	default int nextSignedInt (int innerBound, int outerBound) {
 		return (int)nextSignedLong(innerBound, outerBound);
@@ -391,11 +401,11 @@ public interface EnhancedRandom {
 	 * don't use this for a real-money gambling purpose. The bias isn't especially
 	 * significant, though.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
 	 * @return the next pseudorandom, uniformly distributed {@code long}
 	 * value between zero (inclusive) and {@code bound} (exclusive)
 	 * from this random number generator's sequence
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	default long nextLong (long bound) {
 		return nextLong(0L, bound);
@@ -416,9 +426,9 @@ public interface EnhancedRandom {
 	 * method should be about as fast as {@link #nextLong(long)} , unlike the speed
 	 * difference between {@link #nextInt(int)} and {@link #nextSignedInt(int)}.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param outerBound the outer exclusive bound; may be any long value, allowing negative
 	 * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	default long nextSignedLong (long outerBound) {
 		return nextSignedLong(0L, outerBound);
@@ -433,14 +443,15 @@ public interface EnhancedRandom {
 	 * <br> For any case where outerBound might be valid but less than innerBound, you
 	 * can use {@link #nextSignedLong(long, long)}.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param inner the inclusive inner bound; may be any long, allowing negative
 	 * @param outer the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	default long nextLong (long inner, long outer) {
 		final long rand = nextLong();
-		if(inner >= outer) return inner;
+		if (inner >= outer)
+			return inner;
 		final long bound = outer - inner;
 		final long randLow = rand & 0xFFFFFFFFL;
 		final long boundLow = bound & 0xFFFFFFFFL;
@@ -455,14 +466,14 @@ public interface EnhancedRandom {
 	 * (exclusive). This is meant for cases where either bound may be negative,
 	 * especially if the bounds are unknown or may be user-specified.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param inner the inclusive inner bound; may be any long, allowing negative
 	 * @param outer the exclusive outer bound; may be any long, allowing negative
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	default long nextSignedLong (long inner, long outer) {
 		final long rand = nextLong();
-		if(outer < inner) {
+		if (outer < inner) {
 			long t = outer;
 			outer = inner + 1L;
 			inner = t + 1L;
@@ -529,6 +540,7 @@ public interface EnhancedRandom {
 	 * Gets a pseudo-random float between 0 (inclusive) and {@code outerBound} (exclusive).
 	 * The outerBound may be positive or negative.
 	 * Exactly the same as {@code nextFloat() * outerBound}.
+	 *
 	 * @param outerBound the exclusive outer bound
 	 * @return a float between 0 (inclusive) and {@code outerBound} (exclusive)
 	 */
@@ -540,6 +552,7 @@ public interface EnhancedRandom {
 	 * Gets a pseudo-random float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
 	 * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
 	 * inclusive and which is exclusive.
+	 *
 	 * @param innerBound the inclusive inner bound; may be negative
 	 * @param outerBound the exclusive outer bound; may be negative
 	 * @return a float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
@@ -576,6 +589,7 @@ public interface EnhancedRandom {
 	 * Gets a pseudo-random double between 0 (inclusive) and {@code outerBound} (exclusive).
 	 * The outerBound may be positive or negative.
 	 * Exactly the same as {@code nextDouble() * outerBound}.
+	 *
 	 * @param outerBound the exclusive outer bound
 	 * @return a double between 0 (inclusive) and {@code outerBound} (exclusive)
 	 */
@@ -587,6 +601,7 @@ public interface EnhancedRandom {
 	 * Gets a pseudo-random double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
 	 * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
 	 * inclusive and which is exclusive.
+	 *
 	 * @param innerBound the inclusive inner bound; may be negative
 	 * @param outerBound the exclusive outer bound; may be negative
 	 * @return a double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
@@ -600,19 +615,21 @@ public interface EnhancedRandom {
 	 * It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
 	 * can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
 	 * subtly-different results.
+	 *
 	 * @return a double between 0.0, inclusive, and 1.0, inclusive
 	 */
-	default double nextInclusiveDouble() {
+	default double nextInclusiveDouble () {
 		return nextLong(0x20000000000001L) * 0x1p-53;
 	}
 
 	/**
 	 * Just like {@link #nextDouble(double)}, but this is inclusive on both 0.0 and {@code outerBound}.
 	 * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
+	 *
 	 * @param outerBound the outer inclusive bound; may be positive or negative
 	 * @return a double between 0.0, inclusive, and {@code outerBound}, inclusive
 	 */
-	default double nextInclusiveDouble(double outerBound) {
+	default double nextInclusiveDouble (double outerBound) {
 		return nextInclusiveDouble() * outerBound;
 	}
 
@@ -620,11 +637,12 @@ public interface EnhancedRandom {
 	 * Just like {@link #nextDouble(double, double)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
 	 * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
 	 * return it at all because of floating-point imprecision when innerBound is a larger number.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer inclusive bound; may be positive or negative
 	 * @return a double between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
 	 */
-	default double nextInclusiveDouble(double innerBound, double outerBound) {
+	default double nextInclusiveDouble (double innerBound, double outerBound) {
 		return innerBound + nextInclusiveDouble() * (outerBound - innerBound);
 	}
 
@@ -634,19 +652,21 @@ public interface EnhancedRandom {
 	 * has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
 	 * it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
 	 * likely to accomplish that in the same time, or at all, depending on the generator.
+	 *
 	 * @return a float between 0.0, inclusive, and 1.0, inclusive
 	 */
-	default float nextInclusiveFloat() {
+	default float nextInclusiveFloat () {
 		return nextInt(0x1000001) * 0x1p-24f;
 	}
 
 	/**
 	 * Just like {@link #nextFloat(float)}, but this is inclusive on both 0.0 and {@code outerBound}.
 	 * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
+	 *
 	 * @param outerBound the outer inclusive bound; may be positive or negative
 	 * @return a float between 0.0, inclusive, and {@code outerBound}, inclusive
 	 */
-	default float nextInclusiveFloat(float outerBound) {
+	default float nextInclusiveFloat (float outerBound) {
 		return nextInclusiveFloat() * outerBound;
 	}
 
@@ -654,11 +674,12 @@ public interface EnhancedRandom {
 	 * Just like {@link #nextFloat(float, float)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
 	 * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
 	 * it at all because of floating-point imprecision when innerBound is a larger number.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer inclusive bound; may be positive or negative
 	 * @return a float between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
 	 */
-	default float nextInclusiveFloat(float innerBound, float outerBound) {
+	default float nextInclusiveFloat (float innerBound, float outerBound) {
 		return innerBound + nextInclusiveFloat() * (outerBound - innerBound);
 	}
 
@@ -685,9 +706,10 @@ public interface EnhancedRandom {
 	 * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
 	 * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
 	 * {@link #nextExclusiveDoubleEquidistant()}, this method performs better on at least HotSpot JVMs.
+	 *
 	 * @return a random uniform double between 0 and 1 (both exclusive)
 	 */
-	default double nextExclusiveDouble (){
+	default double nextExclusiveDouble () {
 		final long bits = nextLong();
 		return BitConversion.longBitsToDouble(1022L - Long.numberOfTrailingZeros(bits) << 52 | bits >>> 12);
 	}
@@ -703,9 +725,10 @@ public interface EnhancedRandom {
 	 * The default implementation simply uses {@link #nextLong(long)} to get a uniformly-chosen long between 1 and
 	 * (2 to the 53) - 1, both inclusive, and multiplies it by (2 to the -53). Using larger values than (2 to the
 	 * 53) would cause issues with the double math.
+	 *
 	 * @return a random uniform double between 0 and 1 (both exclusive)
 	 */
-	default double nextExclusiveDoubleEquidistant (){
+	default double nextExclusiveDoubleEquidistant () {
 		return (nextLong(0x1FFFFFFFFFFFFFL) + 1L) * 0x1p-53;
 	}
 
@@ -713,10 +736,11 @@ public interface EnhancedRandom {
 	 * Just like {@link #nextDouble(double)}, but this is exclusive on both 0.0 and {@code outerBound}.
 	 * Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
 	 * double values, and it may also be better able to produce very small doubles when {@code outerBound} is large.
+	 *
 	 * @param outerBound the outer exclusive bound; may be positive or negative
 	 * @return a double between 0.0, exclusive, and {@code outerBound}, exclusive
 	 */
-	default double nextExclusiveDouble(double outerBound) {
+	default double nextExclusiveDouble (double outerBound) {
 		return nextExclusiveDouble() * outerBound;
 	}
 
@@ -724,11 +748,12 @@ public interface EnhancedRandom {
 	 * Just like {@link #nextDouble(double, double)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
 	 * Like {@link #nextExclusiveDouble()}, which this uses,, this may have better bit-distribution of double values,
 	 * and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
+	 *
 	 * @param innerBound the inner exclusive bound; may be positive or negative
 	 * @param outerBound the outer exclusive bound; may be positive or negative
 	 * @return a double between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
 	 */
-	default double nextExclusiveDouble(double innerBound, double outerBound) {
+	default double nextExclusiveDouble (double innerBound, double outerBound) {
 		return innerBound + nextExclusiveDouble() * (outerBound - innerBound);
 	}
 
@@ -749,9 +774,10 @@ public interface EnhancedRandom {
 	 * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
 	 * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
 	 * {@link #nextExclusiveFloatEquidistant()}, this method performs better on at least HotSpot JVMs.
+	 *
 	 * @return a random uniform float between 0 and 1 (both exclusive)
 	 */
-	default float nextExclusiveFloat(){
+	default float nextExclusiveFloat () {
 		final long bits = nextLong();
 		return BitConversion.intBitsToFloat(126 - Long.numberOfTrailingZeros(bits) << 23 | (int)(bits >>> 41));
 	}
@@ -767,9 +793,10 @@ public interface EnhancedRandom {
 	 * The default implementation simply uses {@link #nextInt(int)} to get a uniformly-chosen int between 1 and
 	 * (2 to the 24) - 1, both inclusive, and multiplies it by (2 to the -24). Using larger values than (2 to the
 	 * 24) would cause issues with the float math.
+	 *
 	 * @return a random uniform float between 0 and 1 (both exclusive)
 	 */
-	default float nextExclusiveFloatEquidistant (){
+	default float nextExclusiveFloatEquidistant () {
 		return (nextInt(0xFFFFFF) + 1) * 0x1p-24f;
 	}
 
@@ -777,10 +804,11 @@ public interface EnhancedRandom {
 	 * Just like {@link #nextFloat(float)}, but this is exclusive on both 0.0 and {@code outerBound}.
 	 * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
 	 * it may also be better able to produce very small floats when {@code outerBound} is large.
+	 *
 	 * @param outerBound the outer exclusive bound; may be positive or negative
 	 * @return a float between 0.0, exclusive, and {@code outerBound}, exclusive
 	 */
-	default float nextExclusiveFloat(float outerBound) {
+	default float nextExclusiveFloat (float outerBound) {
 		return nextExclusiveFloat() * outerBound;
 	}
 
@@ -788,11 +816,12 @@ public interface EnhancedRandom {
 	 * Just like {@link #nextFloat(float, float)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
 	 * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
 	 * it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
+	 *
 	 * @param innerBound the inner exclusive bound; may be positive or negative
 	 * @param outerBound the outer exclusive bound; may be positive or negative
 	 * @return a float between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
 	 */
-	default float nextExclusiveFloat(float innerBound, float outerBound) {
+	default float nextExclusiveFloat (float innerBound, float outerBound) {
 		return innerBound + nextExclusiveFloat() * (outerBound - innerBound);
 	}
 
@@ -867,6 +896,7 @@ public interface EnhancedRandom {
 	 *
 	 * <p>The default implementation calls {@link #skip(long)} with -1L, and if skip() has not been implemented
 	 * differently, then it will throw an UnsupportedOperationException.
+	 *
 	 * @return the previous number this would have produced with {@link #nextLong()}
 	 */
 	default long previousLong () {
@@ -878,6 +908,7 @@ public interface EnhancedRandom {
 	 * called on this object and its copy (in the same order), the same outputs will be produced. This is not
 	 * guaranteed to copy the inherited state of any parent class, so if you call methods that are
 	 * only implemented by a superclass (like {@link java.util.Random}) and not this one, the results may differ.
+	 *
 	 * @return a deep copy of this EnhancedRandom.
 	 */
 	EnhancedRandom copy ();
@@ -899,15 +930,16 @@ public interface EnhancedRandom {
 	 * is 1, but don't count on it). If other's class doesn't implement {@link #getStateCount()}, then this method
 	 * sets the entire state of this object to -1L; if this class doesn't implement getStateCount(), then this
 	 * method does nothing.
+	 *
 	 * @param other another EnhancedRandom, typically with the same class as this one, to copy its state into this
 	 */
-	default void setWith(EnhancedRandom other){
+	default void setWith (EnhancedRandom other) {
 		final int myCount = getStateCount(), otherCount = other.getStateCount();
 		int i = 0;
 		for (; i < myCount && i < otherCount; i++) {
 			setSelectedState(i, other.getSelectedState(i));
 		}
-		for(; i < myCount; i++){
+		for (; i < myCount; i++) {
 			setSelectedState(i, -1L);
 		}
 	}
@@ -948,18 +980,15 @@ public interface EnhancedRandom {
 	static double probit (final double d) {
 		if (d <= 0 || d >= 1) {
 			return Math.copySign(38.5, d - 0.5);
-		}
-		else if (d < 0.02425) {
+		} else if (d < 0.02425) {
 			final double q = Math.sqrt(-2.0 * Math.log(d));
 			return (((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
 				(((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
-		}
-		else if (0.97575 < d) {
+		} else if (0.97575 < d) {
 			final double q = Math.sqrt(-2.0 * Math.log(1 - d));
 			return -(((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
 				(((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
-		}
-		else {
+		} else {
 			final double q = d - 0.5;
 			final double r = q * q;
 			return (((((-3.969683028665376e+01 * r + 2.209460984245205e+02) * r + -2.759285104469687e+02) * r + 1.383577518672690e+02) * r + -3.066479806614716e+01) * r + 2.506628277459239e+00) * q / (
@@ -973,11 +1002,12 @@ public interface EnhancedRandom {
 	 * Both of the arguments should implement {@link #getSelectedState(int)}, or this
 	 * will throw an UnsupportedOperationException. This can be useful for comparing
 	 * EnhancedRandom classes that do not implement equals(), for whatever reason.
-	 * @param left an EnhancedRandom to compare for equality
+	 *
+	 * @param left  an EnhancedRandom to compare for equality
 	 * @param right another EnhancedRandom to compare for equality
 	 * @return true if the two EnhancedRandom objects have the same class and state, or false otherwise
 	 */
-	static boolean areEqual(EnhancedRandom left, EnhancedRandom right){
+	static boolean areEqual (EnhancedRandom left, EnhancedRandom right) {
 		if (left == right)
 			return true;
 		if (left.getClass() != right.getClass())
@@ -985,7 +1015,7 @@ public interface EnhancedRandom {
 
 		final int count = left.getStateCount();
 		for (int i = 0; i < count; i++) {
-			if(left.getSelectedState(i) != right.getSelectedState(i))
+			if (left.getSelectedState(i) != right.getSelectedState(i))
 				return false;
 		}
 		return true;
@@ -1056,7 +1086,7 @@ public interface EnhancedRandom {
 	default float nextTriangular (float min, float max, float mode) {
 		float u = nextFloat();
 		float d = max - min;
-		if (u <= (mode - min) / d) { return min + (float)Math.sqrt(u * d * (mode - min)); }
+		if (u <= (mode - min) / d) {return min + (float)Math.sqrt(u * d * (mode - min));}
 		return max - (float)Math.sqrt((1 - u) * d * (max - mode));
 	}
 
@@ -1064,12 +1094,13 @@ public interface EnhancedRandom {
 	 * Returns the minimum result of {@code trials} calls to {@link #nextSignedInt(int, int)} using the given {@code innerBound}
 	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
 	 * The higher trials is, the lower the average value this returns.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @param trials how many random numbers to acquire and compare
+	 * @param trials     how many random numbers to acquire and compare
 	 * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
 	 */
-	default int minIntOf(int innerBound, int outerBound, int trials) {
+	default int minIntOf (int innerBound, int outerBound, int trials) {
 		int v = nextSignedInt(innerBound, outerBound);
 		for (int i = 1; i < trials; i++) {
 			v = Math.min(v, nextSignedInt(innerBound, outerBound));
@@ -1081,12 +1112,13 @@ public interface EnhancedRandom {
 	 * Returns the maximum result of {@code trials} calls to {@link #nextSignedInt(int, int)} using the given {@code innerBound}
 	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
 	 * The higher trials is, the higher the average value this returns.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @param trials how many random numbers to acquire and compare
+	 * @param trials     how many random numbers to acquire and compare
 	 * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
 	 */
-	default int maxIntOf(int innerBound, int outerBound, int trials) {
+	default int maxIntOf (int innerBound, int outerBound, int trials) {
 		int v = nextSignedInt(innerBound, outerBound);
 		for (int i = 1; i < trials; i++) {
 			v = Math.max(v, nextSignedInt(innerBound, outerBound));
@@ -1098,12 +1130,13 @@ public interface EnhancedRandom {
 	 * Returns the minimum result of {@code trials} calls to {@link #nextSignedLong(long, long)} using the given {@code innerBound}
 	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
 	 * The higher trials is, the lower the average value this returns.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @param trials how many random numbers to acquire and compare
+	 * @param trials     how many random numbers to acquire and compare
 	 * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
 	 */
-	default long minLongOf(long innerBound, long outerBound, int trials) {
+	default long minLongOf (long innerBound, long outerBound, int trials) {
 		long v = nextSignedLong(innerBound, outerBound);
 		for (int i = 1; i < trials; i++) {
 			v = Math.min(v, nextSignedLong(innerBound, outerBound));
@@ -1115,12 +1148,13 @@ public interface EnhancedRandom {
 	 * Returns the maximum result of {@code trials} calls to {@link #nextSignedLong(long, long)} using the given {@code innerBound}
 	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
 	 * The higher trials is, the higher the average value this returns.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @param trials how many random numbers to acquire and compare
+	 * @param trials     how many random numbers to acquire and compare
 	 * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
 	 */
-	default long maxLongOf(long innerBound, long outerBound, int trials) {
+	default long maxLongOf (long innerBound, long outerBound, int trials) {
 		long v = nextSignedLong(innerBound, outerBound);
 		for (int i = 1; i < trials; i++) {
 			v = Math.max(v, nextSignedLong(innerBound, outerBound));
@@ -1132,12 +1166,13 @@ public interface EnhancedRandom {
 	 * Returns the minimum result of {@code trials} calls to {@link #nextDouble(double, double)} using the given {@code innerBound}
 	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
 	 * The higher trials is, the lower the average value this returns.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @param trials how many random numbers to acquire and compare
+	 * @param trials     how many random numbers to acquire and compare
 	 * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
 	 */
-	default double minDoubleOf(double innerBound, double outerBound, int trials) {
+	default double minDoubleOf (double innerBound, double outerBound, int trials) {
 		double v = nextDouble(innerBound, outerBound);
 		for (int i = 1; i < trials; i++) {
 			v = Math.min(v, nextDouble(innerBound, outerBound));
@@ -1149,12 +1184,13 @@ public interface EnhancedRandom {
 	 * Returns the maximum result of {@code trials} calls to {@link #nextDouble(double, double)} using the given {@code innerBound}
 	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
 	 * The higher trials is, the higher the average value this returns.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @param trials how many random numbers to acquire and compare
+	 * @param trials     how many random numbers to acquire and compare
 	 * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
 	 */
-	default double maxDoubleOf(double innerBound, double outerBound, int trials) {
+	default double maxDoubleOf (double innerBound, double outerBound, int trials) {
 		double v = nextDouble(innerBound, outerBound);
 		for (int i = 1; i < trials; i++) {
 			v = Math.max(v, nextDouble(innerBound, outerBound));
@@ -1166,12 +1202,13 @@ public interface EnhancedRandom {
 	 * Returns the minimum result of {@code trials} calls to {@link #nextFloat(float, float)} using the given {@code innerBound}
 	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
 	 * The higher trials is, the lower the average value this returns.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @param trials how many random numbers to acquire and compare
+	 * @param trials     how many random numbers to acquire and compare
 	 * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
 	 */
-	default float minFloatOf(float innerBound, float outerBound, int trials) {
+	default float minFloatOf (float innerBound, float outerBound, int trials) {
 		float v = nextFloat(innerBound, outerBound);
 		for (int i = 1; i < trials; i++) {
 			v = Math.min(v, nextFloat(innerBound, outerBound));
@@ -1183,12 +1220,13 @@ public interface EnhancedRandom {
 	 * Returns the maximum result of {@code trials} calls to {@link #nextFloat(float, float)} using the given {@code innerBound}
 	 * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
 	 * The higher trials is, the higher the average value this returns.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @param trials how many random numbers to acquire and compare
+	 * @param trials     how many random numbers to acquire and compare
 	 * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
 	 */
-	default float maxFloatOf(float innerBound, float outerBound, int trials) {
+	default float maxFloatOf (float innerBound, float outerBound, int trials) {
 		float v = nextFloat(innerBound, outerBound);
 		for (int i = 1; i < trials; i++) {
 			v = Math.max(v, nextFloat(innerBound, outerBound));
@@ -1198,10 +1236,11 @@ public interface EnhancedRandom {
 
 	/**
 	 * Gets a randomly-selected item from the given array, which must be non-null and non-empty
+	 *
 	 * @param array a non-null, non-empty array of {@code T} items
-	 * @param <T> any reference type
+	 * @param <T>   any reference type
 	 * @return a random item from {@code array}
-	 * @throws NullPointerException if array is null
+	 * @throws NullPointerException      if array is null
 	 * @throws IndexOutOfBoundsException if array is empty
 	 */
 	default <T> T randomElement (T[] array) {
@@ -1211,8 +1250,9 @@ public interface EnhancedRandom {
 	/**
 	 * Gets a randomly selected item from the given Ordered, such as an ObjectList or ObjectOrderedSet.
 	 * If the Ordered is empty, this throws an IndexOutOfBoundsException.
+	 *
 	 * @param ordered a non-empty implementation of Ordered, such as ObjectList
-	 * @param <T> the type of items
+	 * @param <T>     the type of items
 	 * @return a randomly-selected item from ordered
 	 */
 	default <T> T randomElement (Ordered<T> ordered) {
@@ -1223,6 +1263,7 @@ public interface EnhancedRandom {
 	/**
 	 * Gets a randomly selected item from the given Ordered.OfInt, such as an IntList or IntOrderedSet.
 	 * If the Ordered.OfInt is empty, this throws an IndexOutOfBoundsException.
+	 *
 	 * @param ordered a non-empty implementation of Ordered.OfInt, such as IntList
 	 * @return a randomly-selected item from ordered
 	 */
@@ -1234,6 +1275,7 @@ public interface EnhancedRandom {
 	/**
 	 * Gets a randomly selected item from the given Ordered.OfLong, such as a LongList or LongOrderedSet.
 	 * If the Ordered.OfLong is empty, this throws an IndexOutOfBoundsException.
+	 *
 	 * @param ordered a non-empty implementation of Ordered.OfLong, such as LongList
 	 * @return a randomly-selected item from ordered
 	 */
@@ -1245,6 +1287,7 @@ public interface EnhancedRandom {
 	/**
 	 * Gets a randomly selected item from the given Ordered.OfFloat, such as a FloatList or FloatOrderedSet.
 	 * If the Ordered.OfFloat is empty, this throws an IndexOutOfBoundsException.
+	 *
 	 * @param ordered a non-empty implementation of Ordered.OfFloat, such as FloatList
 	 * @return a randomly-selected item from ordered
 	 */
@@ -1265,7 +1308,7 @@ public interface EnhancedRandom {
 	/**
 	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
 	 *
-	 * @param items an int array; must be non-null
+	 * @param items  an int array; must be non-null
 	 * @param offset the index of the first element of the array that can be shuffled
 	 * @param length the length of the section to shuffle
 	 */
@@ -1292,7 +1335,7 @@ public interface EnhancedRandom {
 	/**
 	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
 	 *
-	 * @param items a long array; must be non-null
+	 * @param items  a long array; must be non-null
 	 * @param offset the index of the first element of the array that can be shuffled
 	 * @param length the length of the section to shuffle
 	 */
@@ -1319,7 +1362,7 @@ public interface EnhancedRandom {
 	/**
 	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
 	 *
-	 * @param items a float array; must be non-null
+	 * @param items  a float array; must be non-null
 	 * @param offset the index of the first element of the array that can be shuffled
 	 * @param length the length of the section to shuffle
 	 */
@@ -1346,7 +1389,7 @@ public interface EnhancedRandom {
 	/**
 	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
 	 *
-	 * @param items a char array; must be non-null
+	 * @param items  a char array; must be non-null
 	 * @param offset the index of the first element of the array that can be shuffled
 	 * @param length the length of the section to shuffle
 	 */
@@ -1373,7 +1416,7 @@ public interface EnhancedRandom {
 	/**
 	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
 	 *
-	 * @param items a double array; must be non-null
+	 * @param items  a double array; must be non-null
 	 * @param offset the index of the first element of the array that can be shuffled
 	 * @param length the length of the section to shuffle
 	 */
@@ -1400,7 +1443,7 @@ public interface EnhancedRandom {
 	/**
 	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
 	 *
-	 * @param items a short array; must be non-null
+	 * @param items  a short array; must be non-null
 	 * @param offset the index of the first element of the array that can be shuffled
 	 * @param length the length of the section to shuffle
 	 */
@@ -1427,7 +1470,7 @@ public interface EnhancedRandom {
 	/**
 	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
 	 *
-	 * @param items a boolean array; must be non-null
+	 * @param items  a boolean array; must be non-null
 	 * @param offset the index of the first element of the array that can be shuffled
 	 * @param length the length of the section to shuffle
 	 */
@@ -1454,7 +1497,7 @@ public interface EnhancedRandom {
 	/**
 	 * Shuffles a section of the given array in-place pseudo-randomly, using this to determine how to shuffle.
 	 *
-	 * @param items an array of some reference type; must be non-null but may contain null items
+	 * @param items  an array of some reference type; must be non-null but may contain null items
 	 * @param offset the index of the first element of the array that can be shuffled
 	 * @param length the length of the section to shuffle
 	 */
@@ -1471,33 +1514,37 @@ public interface EnhancedRandom {
 
 	/**
 	 * Shuffles the given Ordered.OfLong in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param ordered an Ordered.OfLong, such as a LongList
 	 */
-	default void shuffle (Ordered.OfLong ordered){
+	default void shuffle (Ordered.OfLong ordered) {
 		shuffle(ordered.order().items, 0, ordered.size());
 	}
 
 	/**
 	 * Shuffles the given Ordered.OfInt in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param ordered an Ordered.OfInt, such as an IntList
 	 */
-	default void shuffle (Ordered.OfInt ordered){
+	default void shuffle (Ordered.OfInt ordered) {
 		shuffle(ordered.order().items, 0, ordered.size());
 	}
 
 	/**
 	 * Shuffles the given Ordered.OfFloat in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param ordered an Ordered.OfFloat, such as a FloatList
 	 */
-	default void shuffle (Ordered.OfFloat ordered){
+	default void shuffle (Ordered.OfFloat ordered) {
 		shuffle(ordered.order().items, 0, ordered.size());
 	}
 
 	/**
 	 * Shuffles the given Ordered in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param ordered an Ordered, such as an ObjectList or ObjectOrderedSet
 	 */
-	default <T> void shuffle (Ordered<T> ordered){
+	default <T> void shuffle (Ordered<T> ordered) {
 		ObjectList<T> order = ordered.order();
 		for (int i = order.size() - 1; i > 0; i--) {
 			order.set(i, order.set(nextInt(i + 1), order.get(i)));
@@ -1506,9 +1553,10 @@ public interface EnhancedRandom {
 
 	/**
 	 * Shuffles the given Arrangeable in-place pseudo-randomly, using this to determine how to shuffle.
+	 *
 	 * @param arrangeable an Arrangeable, such as an ObjectList, IntOrderedSet, or LongFloatOrderedMap
 	 */
-	default void shuffle (Arrangeable arrangeable){
+	default void shuffle (Arrangeable arrangeable) {
 		for (int i = arrangeable.size() - 1; i > 0; i--) {
 			arrangeable.swap(i, nextInt(i + 1));
 		}

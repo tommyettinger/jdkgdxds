@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.function;
 
 import javax.annotation.Nullable;
@@ -34,12 +35,12 @@ import java.util.function.BiFunction;
 @FunctionalInterface
 public interface LongObjBiFunction<U, R> {
 
-    /**
-     * Applies this function to the given arguments.
-     *
-     * @param first the first function argument
-     * @param second the second function argument
-     * @return the function result
-     */
-    R apply(long first, @Nullable U second);
+	/**
+	 * Applies this function to the given arguments.
+	 *
+	 * @param first  the first function argument
+	 * @param second the second function argument
+	 * @return the function result
+	 */
+	R apply (long first, @Nullable U second);
 }

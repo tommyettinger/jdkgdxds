@@ -42,7 +42,6 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  */
 public class IntSet implements PrimitiveCollection.OfInt {
 
-
 	protected int size;
 
 	protected int[] keyTable;
@@ -94,10 +93,10 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	 * growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public IntSet (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
@@ -117,32 +116,36 @@ public class IntSet implements PrimitiveCollection.OfInt {
 		size = set.size;
 		hasZeroValue = set.hasZeroValue;
 	}
+
 	/**
 	 * Creates a new set using all distinct items in the given PrimitiveCollection, such as a
 	 * {@link IntList} or {@link IntObjectMap.Keys}.
+	 *
 	 * @param coll a PrimitiveCollection that will be used in full, except for duplicate items
 	 */
-	public IntSet(PrimitiveCollection.OfInt coll) {
+	public IntSet (PrimitiveCollection.OfInt coll) {
 		this(coll.size());
 		addAll(coll);
 	}
 
 	/**
 	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
-	 * @param array an array to draw items from
+	 *
+	 * @param array  an array to draw items from
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public IntSet(int[] array, int offset, int length) {
+	public IntSet (int[] array, int offset, int length) {
 		this(length);
 		addAll(array, offset, length);
 	}
 
 	/**
 	 * Creates a new set containing all of the items in the given array.
+	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public IntSet(int[] array) {
+	public IntSet (int[] array) {
 		this(array, 0, array.length);
 	}
 
@@ -179,18 +182,19 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	@Override
 	public boolean add (int key) {
 		if (key == 0) {
-			if (hasZeroValue) { return false; }
+			if (hasZeroValue) {return false;}
 			hasZeroValue = true;
 			size++;
 			return true;
 		}
 		int[] keyTable = this.keyTable;
-		for (int i = place(key);; i = i + 1 & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
-			if (key == other) return false; // Existing key was found.
+			if (key == other)
+				return false; // Existing key was found.
 			if (other == 0) {
 				keyTable[i] = key;
-				if (++size >= threshold) { resize(keyTable.length << 1); }
+				if (++size >= threshold) {resize(keyTable.length << 1);}
 				return true;
 			}
 		}
@@ -201,7 +205,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	}
 
 	public boolean addAll (IntList array, int offset, int length) {
-		if (offset + length > array.size) { throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size); }
+		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
 		return addAll(array.items, offset, length);
 	}
 
@@ -212,18 +216,18 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	public boolean addAll (int[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size;
-		for (int i = offset, n = i + length; i < n; i++) { add(array[i]); }
+		for (int i = offset, n = i + length; i < n; i++) {add(array[i]);}
 		return size != oldSize;
 	}
 
 	public boolean addAll (IntSet set) {
 		ensureCapacity(set.size);
 		int oldSize = size;
-		if (set.hasZeroValue) { add(0); }
+		if (set.hasZeroValue) {add(0);}
 		int[] keyTable = set.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			int key = keyTable[i];
-			if (key != 0) { add(key); }
+			if (key != 0) {add(key);}
 		}
 		return size != oldSize;
 	}
@@ -247,14 +251,14 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	@Override
 	public boolean remove (int key) {
 		if (key == 0) {
-			if (!hasZeroValue) { return false; }
+			if (!hasZeroValue) {return false;}
 			hasZeroValue = false;
 			size--;
 			return true;
 		}
 
 		int i = locateKey(key);
-		if (i < 0) { return false; }
+		if (i < 0) {return false;}
 		int[] keyTable = this.keyTable;
 		int mask = this.mask, next = i + 1 & mask;
 		while ((key = keyTable[next]) != 0) {
@@ -291,9 +295,9 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	 * instead.
 	 */
 	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) { throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity); }
+		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
 		int tableSize = tableSize(maximumCapacity, loadFactor);
-		if (keyTable.length > tableSize) { resize(tableSize); }
+		if (keyTable.length > tableSize) {resize(tableSize);}
 	}
 
 	/**
@@ -312,7 +316,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 
 	@Override
 	public void clear () {
-		if (size == 0) { return; }
+		if (size == 0) {return;}
 		size = 0;
 		Arrays.fill(keyTable, 0);
 		hasZeroValue = false;
@@ -320,19 +324,21 @@ public class IntSet implements PrimitiveCollection.OfInt {
 
 	@Override
 	public boolean contains (int key) {
-		if (key == 0) { return hasZeroValue; }
+		if (key == 0) {return hasZeroValue;}
 		int[] keyTable = this.keyTable;
-		for (int i = place(key);; i = i + 1 & mask) {
+		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
-			if (key == other) return true;
-			if (other == 0) return false;
+			if (key == other)
+				return true;
+			if (other == 0)
+				return false;
 		}
 	}
 
 	public int first () {
-		if (hasZeroValue) { return 0; }
+		if (hasZeroValue) {return 0;}
 		int[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) { if (keyTable[i] != 0) { return keyTable[i]; } }
+		for (int i = 0, n = keyTable.length; i < n; i++) {if (keyTable[i] != 0) {return keyTable[i];}}
 		throw new IllegalStateException("IntSet is empty.");
 	}
 
@@ -342,7 +348,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) { resize(tableSize); }
+		if (keyTable.length < tableSize) {resize(tableSize);}
 	}
 
 	protected void resize (int newSize) {
@@ -358,7 +364,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				int key = oldKeyTable[i];
-				if (key != 0) { addResize(key); }
+				if (key != 0) {addResize(key);}
 			}
 		}
 	}
@@ -368,7 +374,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	}
 
 	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -382,18 +388,18 @@ public class IntSet implements PrimitiveCollection.OfInt {
 		int[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			int key = keyTable[i];
-			if (key != 0) { h += key; }
+			if (key != 0) {h += key;}
 		}
 		return h;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals (Object o) {
 		if (o == this)
 			return true;
 		if (!(o instanceof IntSet))
 			return false;
-		IntSet s = (IntSet) o;
+		IntSet s = (IntSet)o;
 		if (s.size() != size())
 			return false;
 		try {
@@ -405,22 +411,22 @@ public class IntSet implements PrimitiveCollection.OfInt {
 
 	@Override
 	public String toString () {
-		if (size == 0) { return "[]"; }
+		if (size == 0) {return "[]";}
 		java.lang.StringBuilder buffer = new java.lang.StringBuilder(32);
 		buffer.append('[');
 		int[] keyTable = this.keyTable;
 		int i = keyTable.length;
-		if (hasZeroValue) { buffer.append("0"); } else {
+		if (hasZeroValue) {buffer.append("0");} else {
 			while (i-- > 0) {
 				int key = keyTable[i];
-				if (key == 0) { continue; }
+				if (key == 0) {continue;}
 				buffer.append(key);
 				break;
 			}
 		}
 		while (i-- > 0) {
 			int key = keyTable[i];
-			if (key == 0) { continue; }
+			if (key == 0) {continue;}
 			buffer.append(", ");
 			buffer.append(key);
 		}
@@ -432,16 +438,17 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
 	 * size, no action is taken. This indiscriminately removes items from the backing array until the
 	 * requested newSize is reached, or until the full backing array has had its elements removed.
+	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	public void truncate (int newSize) {
 		int[] keyTable = this.keyTable;
-		if(hasZeroValue && size > newSize) {
+		if (hasZeroValue && size > newSize) {
 			hasZeroValue = false;
 			--size;
 		}
 		for (int i = 0; i < keyTable.length && size > newSize; i++) {
-			if(keyTable[i] != 0){
+			if (keyTable[i] != 0) {
 				keyTable[i] = 0;
 				--size;
 			}
@@ -493,7 +500,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 		public void reset () {
 			currentIndex = INDEX_ILLEGAL;
 			nextIndex = INDEX_ZERO;
-			if (set.hasZeroValue) { hasNext = true; } else { findNextIndex(); }
+			if (set.hasZeroValue) {hasNext = true;} else {findNextIndex();}
 		}
 
 		void findNextIndex () {
@@ -516,7 +523,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 		 */
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return hasNext;
 		}
 
@@ -539,7 +546,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 					next = next + 1 & mask;
 				}
 				keyTable[i] = 0;
-				if (i != currentIndex) { --nextIndex; }
+				if (i != currentIndex) {--nextIndex;}
 			}
 			currentIndex = INDEX_ILLEGAL;
 			set.size--;
@@ -547,8 +554,8 @@ public class IntSet implements PrimitiveCollection.OfInt {
 
 		@Override
 		public int nextInt () {
-			if (!hasNext) { throw new NoSuchElementException(); }
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			int key = nextIndex == INDEX_ZERO ? 0 : set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -563,7 +570,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 			IntList list = new IntList(true, set.size);
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) { list.add(next()); }
+			while (hasNext) {list.add(next());}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
@@ -571,7 +578,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 		}
 	}
 
-	public static IntSet with(int item) {
+	public static IntSet with (int item) {
 		IntSet set = new IntSet(1);
 		set.add(item);
 		return set;

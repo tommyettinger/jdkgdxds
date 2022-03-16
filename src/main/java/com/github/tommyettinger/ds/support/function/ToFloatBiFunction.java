@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.function;
 
 import javax.annotation.Nullable;
@@ -29,18 +30,17 @@ import java.util.function.BiFunction;
  *
  * @param <T> the type of the first argument to the function
  * @param <U> the type of the second argument to the function
- *
  * @see BiFunction
  */
 @FunctionalInterface
 public interface ToFloatBiFunction<T, U> {
 
-    /**
-     * Applies this function to the given arguments.
-     *
-     * @param t the first function argument
-     * @param u the second function argument
-     * @return the function result
-     */
-    float applyAsFloat(T t, @Nullable U u);
+	/**
+	 * Applies this function to the given arguments.
+	 *
+	 * @param t the first function argument
+	 * @param u the second function argument
+	 * @return the function result
+	 */
+	float applyAsFloat (T t, @Nullable U u);
 }

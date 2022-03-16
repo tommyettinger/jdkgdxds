@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.function;
 
 import java.util.function.Function;
@@ -26,17 +27,16 @@ import java.util.function.Function;
  * whose functional method is {@link #applyAsFloat(Object)}.
  *
  * @param <T> the type of the input to the function
- *
  * @see Function
  */
 @FunctionalInterface
 public interface ToFloatFunction<T> {
 
-    /**
-     * Applies this function to the given argument.
-     *
-     * @param value the function argument
-     * @return the function result
-     */
-    float applyAsFloat(T value);
+	/**
+	 * Applies this function to the given argument.
+	 *
+	 * @param value the function argument
+	 * @return the function result
+	 */
+	float applyAsFloat (T value);
 }

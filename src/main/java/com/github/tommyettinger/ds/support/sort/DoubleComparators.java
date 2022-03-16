@@ -34,7 +34,6 @@ public final class DoubleComparators {
 	 */
 	protected static class NaturalImplicitComparator implements DoubleComparator {
 
-
 		@Override
 		public final int compare (final double a, final double b) {
 			return Double.compare(a, b);
@@ -52,7 +51,6 @@ public final class DoubleComparators {
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
 	protected static class OppositeImplicitComparator implements DoubleComparator {
-
 
 		@Override
 		public final int compare (final double a, final double b) {
@@ -93,7 +91,7 @@ public final class DoubleComparators {
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
 	public static DoubleComparator oppositeComparator (final DoubleComparator c) {
-		if (c instanceof OppositeComparator) { return ((OppositeComparator)c).comparator; }
+		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
 		return new OppositeComparator(c);
 	}
 
@@ -105,7 +103,7 @@ public final class DoubleComparators {
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
 	public static DoubleComparator asDoubleComparator (final Comparator<? super Double> c) {
-		if (c instanceof DoubleComparator) { return (DoubleComparator)c; }
+		if (c instanceof DoubleComparator) {return (DoubleComparator)c;}
 		return new DoubleComparator() {
 			@Override
 			public int compare (double x, double y) {
@@ -185,9 +183,9 @@ public final class DoubleComparators {
 	 * the second.
 	 */
 	private static void inPlaceMerge (double[] items, final int from, int mid, final int to, final DoubleComparator comp) {
-		if (from >= mid || mid >= to) { return; }
+		if (from >= mid || mid >= to) {return;}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) { swap(items, from, mid); }
+			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
 			return;
 		}
 
@@ -208,13 +206,13 @@ public final class DoubleComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -228,10 +226,10 @@ public final class DoubleComparators {
 	 * comparison function.
 	 *
 	 * @param items the double array to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
@@ -256,10 +254,10 @@ public final class DoubleComparators {
 	 * function.
 	 *
 	 * @param items the double array to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
@@ -281,12 +279,14 @@ public final class DoubleComparators {
 	/**
 	 * Sorts all of {@code items} by simply calling {@link #sort(double[], int, int, DoubleComparator)},
 	 * setting {@code from} and {@code to} so the whole array is sorted.
+	 *
 	 * @param items the double array to be sorted
-	 * @param c a DoubleComparator to alter the sort order; if null, the natural order will be used
+	 * @param c     a DoubleComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(double[] items, final @Nullable DoubleComparator c) {
+	public static void sort (double[] items, final @Nullable DoubleComparator c) {
 		sort(items, 0, items.length, c);
 	}
+
 	/**
 	 * Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort.
@@ -301,9 +301,9 @@ public final class DoubleComparators {
 	 * does not have the same guarantees regarding allocation.
 	 *
 	 * @param items the double array to be sorted
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to the index of the last element (exclusive) to be sorted.
-	 * @param c a DoubleComparator to alter the sort order; if null, the natural order will be used
+	 * @param from  the index of the first element (inclusive) to be sorted.
+	 * @param to    the index of the last element (exclusive) to be sorted.
+	 * @param c     a DoubleComparator to alter the sort order; if null, the natural order will be used
 	 */
 	public static void sort (double[] items, final int from, final int to, final @Nullable DoubleComparator c) {
 		if (to <= 0) {
@@ -312,7 +312,7 @@ public final class DoubleComparators {
 		if (from < 0 || from >= items.length || to > items.length) {
 			throw new UnsupportedOperationException("The given from/to range in DoubleComparators.sort() is invalid.");
 		}
-		if(c == null){
+		if (c == null) {
 			Arrays.sort(items, from, to);
 			return;
 		}
@@ -342,7 +342,7 @@ public final class DoubleComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) { return; }
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

@@ -18,7 +18,11 @@
 package com.github.tommyettinger.ds;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.function.Function;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
@@ -39,7 +43,6 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Tommy Ettinger
  */
 public class HolderSet<T, K> implements Iterable<T>, Set<T> {
-
 
 	protected int size;
 
@@ -79,6 +82,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
 	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 */
 	public HolderSet (Function<T, K> extractor) {
@@ -88,7 +92,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	/**
 	 * Creates a new set with a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
-	 * @param extractor a function that will be used to extract K keys from the T items put into this
+	 * @param extractor       a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public HolderSet (Function<T, K> extractor, int initialCapacity) {
@@ -99,9 +103,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
 	 * growing the backing table.
 	 *
-	 * @param extractor a function that will be used to extract K keys from the T items put into this
+	 * @param extractor       a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public HolderSet (Function<T, K> extractor, int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) {
@@ -207,6 +211,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * that case. It is possible that a user could write an implementation of place() that is more
 	 * robust against malicious inputs; one such approach is optionally employed by .NET Core and
 	 * newer versions for the hashes of strings.
+	 *
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
@@ -216,18 +221,18 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 //		return item.hashCode() & mask;
 	}
 
-
 	/**
 	 * Compares the objects left and right, which should be K keys (not T items), for equality, returning true if they are considered
 	 * equal. This is used by the rest of this class to determine whether two keys are considered equal. Normally, this
 	 * returns {@code left.equals(right)}, but subclasses can override it to use reference equality, fuzzy equality, deep
 	 * array equality, or any other custom definition of equality. Usually, {@link #place(Object)} is also overridden if
 	 * this method is.
-	 * @param left must be non-null; typically a K key being compared, but not necessarily
+	 *
+	 * @param left  must be non-null; typically a K key being compared, but not necessarily
 	 * @param right may be null; typically a K key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate(Object left, @Nullable Object right){
+	protected boolean equate (Object left, @Nullable Object right) {
 		return left.equals(right);
 	}
 
@@ -235,6 +240,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * Returns the index of the key if already present, else {@code ~index} for the next empty index. This calls
 	 * {@link #equate(Object, Object)} to determine if two keys are equivalent. This expects key to be a K
 	 * object, not a T item, and will extract keys from existing items to compare against.
+	 *
 	 * @param key a non-null Object that should probably be a K
 	 */
 	protected int locateKey (Object key) {
@@ -245,8 +251,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 				return ~i; // Always negative; means empty space is available at i.
 			}
 			assert extractor != null;
-			if (equate(key, extractor.apply(other)))
-			{
+			if (equate(key, extractor.apply(other))) {
 				return i; // Same key was found.
 			}
 		}
@@ -489,8 +494,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	/**
 	 * Gets the (arbitrarily-chosen) first item in this HolderSet. Which item is "first" can change
 	 * when this resizes, and you can't rely on the order of items in an unordered set like this.
-	 * @throws IllegalStateException if this HolderSet is empty
+	 *
 	 * @return the "first" item in this HolderSet; really an arbitrary item in this
+	 * @throws IllegalStateException if this HolderSet is empty
 	 */
 	public T first () {
 		T[] keyTable = this.keyTable;
@@ -576,7 +582,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	}
 
 	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) { throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor); }
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -650,12 +656,13 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
 	 * size, no action is taken. This indiscriminately removes items from the backing array until the
 	 * requested newSize is reached, or until the full backing array has had its elements removed.
+	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	public void truncate (int newSize) {
 		T[] keyTable = this.keyTable;
 		for (int i = 0; i < keyTable.length && size > newSize; i++) {
-			if(keyTable[i] != null){
+			if (keyTable[i] != null) {
 				keyTable[i] = null;
 				--size;
 			}
@@ -743,7 +750,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return hasNext;
 		}
 

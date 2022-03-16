@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.function;
 
 import java.util.function.Function;
@@ -31,11 +32,11 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface FloatToLongFunction {
 
-    /**
-     * Applies this function to the given argument.
-     *
-     * @param value the function argument
-     * @return the function result
-     */
-    long applyAsLong(float value);
+	/**
+	 * Applies this function to the given argument.
+	 *
+	 * @param value the function argument
+	 * @return the function result
+	 */
+	long applyAsLong (float value);
 }

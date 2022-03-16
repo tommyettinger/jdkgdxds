@@ -34,7 +34,6 @@ public final class FloatComparators {
 	 */
 	protected static class NaturalImplicitComparator implements FloatComparator {
 
-
 		@Override
 		public final int compare (final float a, final float b) {
 			return Float.compare(a, b);
@@ -52,7 +51,6 @@ public final class FloatComparators {
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
 	protected static class OppositeImplicitComparator implements FloatComparator {
-
 
 		@Override
 		public final int compare (final float a, final float b) {
@@ -93,7 +91,7 @@ public final class FloatComparators {
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
 	public static FloatComparator oppositeComparator (final FloatComparator c) {
-		if (c instanceof OppositeComparator) { return ((OppositeComparator)c).comparator; }
+		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
 		return new OppositeComparator(c);
 	}
 
@@ -105,7 +103,7 @@ public final class FloatComparators {
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
 	public static FloatComparator asFloatComparator (final Comparator<? super Float> c) {
-		if (c instanceof FloatComparator) { return (FloatComparator)c; }
+		if (c instanceof FloatComparator) {return (FloatComparator)c;}
 		return new FloatComparator() {
 			@Override
 			public int compare (float x, float y) {
@@ -185,9 +183,9 @@ public final class FloatComparators {
 	 * the second.
 	 */
 	private static void inPlaceMerge (float[] items, final int from, int mid, final int to, final FloatComparator comp) {
-		if (from >= mid || mid >= to) { return; }
+		if (from >= mid || mid >= to) {return;}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) { swap(items, from, mid); }
+			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
 			return;
 		}
 
@@ -208,13 +206,13 @@ public final class FloatComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) { swap(items, first1++, last1); }
+			while (first1 < --last1) {swap(items, first1++, last1);}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -228,10 +226,10 @@ public final class FloatComparators {
 	 * comparison function.
 	 *
 	 * @param items the float array to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
@@ -256,10 +254,10 @@ public final class FloatComparators {
 	 * function.
 	 *
 	 * @param items the float array to be sorted
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
+	 * @param from  the index of the first element (inclusive) to be included in the binary search.
+	 * @param to    the index of the last element (exclusive) to be included in the binary search.
+	 * @param pos   the position of the element to be searched for.
+	 * @param comp  the comparison function.
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
@@ -281,12 +279,14 @@ public final class FloatComparators {
 	/**
 	 * Sorts all of {@code items} by simply calling {@link #sort(float[], int, int, FloatComparator)},
 	 * setting {@code from} and {@code to} so the whole array is sorted.
+	 *
 	 * @param items the float array to be sorted
-	 * @param c a FloatComparator to alter the sort order; if null, the natural order will be used
+	 * @param c     a FloatComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(float[] items, final @Nullable FloatComparator c) {
+	public static void sort (float[] items, final @Nullable FloatComparator c) {
 		sort(items, 0, items.length, c);
 	}
+
 	/**
 	 * Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort.
@@ -301,9 +301,9 @@ public final class FloatComparators {
 	 * does not have the same guarantees regarding allocation.
 	 *
 	 * @param items the float array to be sorted
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to the index of the last element (exclusive) to be sorted.
-	 * @param c a FloatComparator to alter the sort order; if null, the natural order will be used
+	 * @param from  the index of the first element (inclusive) to be sorted.
+	 * @param to    the index of the last element (exclusive) to be sorted.
+	 * @param c     a FloatComparator to alter the sort order; if null, the natural order will be used
 	 */
 	public static void sort (float[] items, final int from, final int to, final @Nullable FloatComparator c) {
 		if (to <= 0) {
@@ -312,7 +312,7 @@ public final class FloatComparators {
 		if (from < 0 || from >= items.length || to > items.length) {
 			throw new UnsupportedOperationException("The given from/to range in FloatComparators.sort() is invalid.");
 		}
-		if(c == null){
+		if (c == null) {
 			Arrays.sort(items, from, to);
 			return;
 		}
@@ -342,7 +342,7 @@ public final class FloatComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) { return; }
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

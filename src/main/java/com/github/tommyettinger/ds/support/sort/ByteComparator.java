@@ -72,7 +72,7 @@ public interface ByteComparator extends Comparator<Byte> {
 
 	@Override
 	default Comparator<Byte> thenComparing (Comparator<? super Byte> second) {
-		if (second instanceof ByteComparator) { return thenComparing((ByteComparator)second); }
+		if (second instanceof ByteComparator) {return thenComparing((ByteComparator)second);}
 		return Comparator.super.thenComparing(second);
 	}
 }

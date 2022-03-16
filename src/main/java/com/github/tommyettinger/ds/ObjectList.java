@@ -17,7 +17,9 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -27,8 +29,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 
 /**
  * A resizable, ordered list of {@code T} items, typically objects (they can also be arrays).
@@ -126,9 +126,10 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	/**
 	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
-	 * @param other another Ordered of the same type
+	 *
+	 * @param other  another Ordered of the same type
 	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count how many items to copy from other
+	 * @param count  how many items to copy from other
 	 */
 	public ObjectList (Ordered<T> other, int offset, int count) {
 		super(count);
@@ -189,8 +190,9 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * a start index and an end index, rather than a count of items. This matches the behavior in
 	 * the JDK collections. This is also different from removeRange() in libGDX' Array class
 	 * because it is exclusive on end, instead of how Array is inclusive on end.
+	 *
 	 * @param start the first index to remove, inclusive
-	 * @param end the last index (after what should be removed), exclusive
+	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
 	public void removeRange (int start, int end) {
@@ -235,7 +237,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	public boolean duplicateRange (int index, int count) {
-		if (index + count >= size()) { throw new IllegalStateException("Sum of index and count is too large: " + (index + count) + " must not be >= " + size()); }
+		if (index + count >= size()) {throw new IllegalStateException("Sum of index and count is too large: " + (index + count) + " must not be >= " + size());}
 		addAll(index, subList(index, index + count));
 		return count > 0;
 	}
@@ -248,7 +250,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 */
 	public boolean containsAny (Collection<? extends T> values) {
 		for (T v : values) {
-			if (contains(v)) { return true; }
+			if (contains(v)) {return true;}
 		}
 		return false;
 	}
@@ -278,9 +280,9 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this list,
 	 * inserting at the end of the iteration order.
 	 *
-	 * @param other          a non-null {@link Ordered} of {@code T}
-	 * @param offset         the first index in {@code other} to use
-	 * @param count          how many indices in {@code other} to use
+	 * @param other  a non-null {@link Ordered} of {@code T}
+	 * @param offset the first index in {@code other} to use
+	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
 	public boolean addAll (Ordered<T> other, int offset, int count) {
@@ -313,7 +315,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 */
 	public T pop () {
 		int n = size();
-		if (n == 0) { throw new IllegalStateException("ObjectList is empty."); }
+		if (n == 0) {throw new IllegalStateException("ObjectList is empty.");}
 		return remove(n - 1);
 	}
 
@@ -322,7 +324,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 */
 	public T peek () {
 		int n = size();
-		if (n == 0) { throw new IllegalStateException("ObjectList is empty."); }
+		if (n == 0) {throw new IllegalStateException("ObjectList is empty.");}
 		return get(n - 1);
 	}
 
@@ -330,7 +332,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * Returns the first item.
 	 */
 	public T first () {
-		if (size() == 0) { throw new IllegalStateException("ObjectList is empty."); }
+		if (size() == 0) {throw new IllegalStateException("ObjectList is empty.");}
 		return get(0);
 	}
 
@@ -359,16 +361,16 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * Uses == for comparison of each item.
 	 */
 	public boolean equalsIdentity (Object object) {
-		if (object == this) { return true; }
+		if (object == this) {return true;}
 		if (!ordered)
 			return false;
-		if (!(object instanceof ObjectList)) { return false; }
+		if (!(object instanceof ObjectList)) {return false;}
 		ObjectList list = (ObjectList)object;
 		if (!list.ordered)
 			return false;
 		int n = size();
-		if (n != list.size()) { return false; }
-		for (int i = 0; i < n; i++) { if (get(i) != list.get(i)) { return false; } }
+		if (n != list.size()) {return false;}
+		for (int i = 0; i < n; i++) {if (get(i) != list.get(i)) {return false;}}
 		return true;
 	}
 
@@ -378,7 +380,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 			return true;
 		if (!ordered)
 			return false;
-		if (!(o instanceof ObjectList)) { return false; }
+		if (!(o instanceof ObjectList)) {return false;}
 		if (!((ObjectList)o).ordered)
 			return false;
 		return super.equals(o);
@@ -398,7 +400,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	@Override
 	public String toString () {
 		int n = size();
-		if (n == 0) { return "[]"; }
+		if (n == 0) {return "[]";}
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('[');
 		buffer.append(get(0));
@@ -412,7 +414,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 
 	public String toString (String separator) {
 		int n = size();
-		if (n == 0) { return ""; }
+		if (n == 0) {return "";}
 		StringBuilder builder = new StringBuilder(32);
 		builder.append(get(0));
 		for (int i = 1; i < n; i++) {
@@ -424,7 +426,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 
 	public StringBuilder builderAppend (StringBuilder builder, String separator) {
 		int n = size();
-		if (n == 0) { return builder; }
+		if (n == 0) {return builder;}
 		builder.append(get(0));
 		for (int i = 1; i < n; i++) {
 			builder.append(separator);
@@ -542,8 +544,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 */
 		@Override
 		public T next () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			if (index >= list.size()) { throw new NoSuchElementException(); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index >= list.size()) {throw new NoSuchElementException();}
 			return list.get(index++);
 		}
 
@@ -556,7 +558,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 */
 		@Override
 		public boolean hasNext () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return index < list.size();
 		}
 
@@ -571,7 +573,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 */
 		@Override
 		public boolean hasPrevious () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -589,8 +591,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 */
 		@Override
 		public T previous () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			if (index <= 0 || list.isEmpty()) { throw new NoSuchElementException(); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index <= 0 || list.isEmpty()) {throw new NoSuchElementException();}
 			return list.get(--index);
 		}
 
@@ -638,8 +640,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 */
 		@Override
 		public void remove () {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			if (index >= list.size()) { throw new NoSuchElementException(); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index >= list.size()) {throw new NoSuchElementException();}
 			list.removeAt(index);
 		}
 
@@ -665,8 +667,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 */
 		@Override
 		public void set (T t) {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			if (index >= list.size()) { throw new NoSuchElementException(); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index >= list.size()) {throw new NoSuchElementException();}
 			list.set(index, t);
 		}
 
@@ -692,8 +694,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 */
 		@Override
 		public void add (T t) {
-			if (!valid) { throw new RuntimeException("#iterator() cannot be used nested."); }
-			if (index >= list.size()) { throw new NoSuchElementException(); }
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index >= list.size()) {throw new NoSuchElementException();}
 			list.insert(index++, t);
 
 		}
@@ -733,7 +735,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	/**
 	 * Switches the ordering of positions {@code a} and {@code b}, without changing any items beyond that.
 	 *
-	 * @param first the first position
+	 * @param first  the first position
 	 * @param second the second position
 	 */
 	@Override
@@ -766,7 +768,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	@Override
 	public T random (EnhancedRandom random) {
 		int n = size();
-		if (n == 0) { throw new IllegalStateException("ObjectList is empty."); }
+		if (n == 0) {throw new IllegalStateException("ObjectList is empty.");}
 		return get(random.nextInt(n));
 	}
 
@@ -775,7 +777,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * size, no action is taken.
 	 */
 	public void truncate (int newSize) {
-		if (size() > newSize) { removeRange(newSize, size()); }
+		if (size() > newSize) {removeRange(newSize, size());}
 	}
 
 	@Override
@@ -796,13 +798,14 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * natural order of its elements, and {@code T} must implement {@link Comparable}.
 	 * <br>
 	 * This is implemented explicitly and not annotated with Override because of Android limitations.
+	 *
 	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
 	 */
 	public void sort (@Nullable Comparator<? super T> c) {
 		ObjectComparators.sort(this, c);
 	}
 
-	public static <T> ObjectList<T> with(T item) {
+	public static <T> ObjectList<T> with (T item) {
 		ObjectList<T> list = new ObjectList<>(1);
 		list.add(item);
 		return list;

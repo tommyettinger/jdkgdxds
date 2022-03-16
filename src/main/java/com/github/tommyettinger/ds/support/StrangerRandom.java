@@ -51,324 +51,335 @@ package com.github.tommyettinger.ds.support;
  */
 public class StrangerRandom implements EnhancedRandom {
 
-    /**
-     * The first state; can be any long except 0
-     */
-    protected long stateA;
-    /**
+	/**
+	 * The first state; can be any long except 0
+	 */
+	protected long stateA;
+	/**
 	 * The second state; can be any long except 0, and should be a significant distance from stateA in the xorshift sequence.
-     */
-    protected long stateB;
-    /**
-     * The third state; can be any long. If this has just been set to some value, then the next call to
-     * {@link #nextLong()} will return that value as-is. Later calls will be more random.
-     */
-    protected long stateC;
-    /**
-     * The fourth state; can be any long.
-     */
-    protected long stateD;
+	 */
+	protected long stateB;
+	/**
+	 * The third state; can be any long. If this has just been set to some value, then the next call to
+	 * {@link #nextLong()} will return that value as-is. Later calls will be more random.
+	 */
+	protected long stateC;
+	/**
+	 * The fourth state; can be any long.
+	 */
+	protected long stateD;
 
-    /**
-     * Jumps {@code state} ahead by 0x9E3779B97F4A7C15 steps of the generator StrangerRandom uses for its stateA
-     * and stateB. When used how it is here, it ensures stateB is 11.4 quintillion steps ahead of stateA in their
-     * shared sequence, or 7 quintillion behind if you look at it another way. It would typically take years of
-     * continuously running this generator at 100GB/s to have stateA become any state that stateB has already been.
-     * Users only need this function if setting stateB by-hand; in that case, {@code state} should be their stateA.
-     * <br>
-     * Massive credit to Spencer Fleming for writing essentially all of this function over several days.
-     * @param state the initial state of a 7-9 xorshift generator
-     * @return state jumped ahead 0x9E3779B97F4A7C15 times (unsigned)
-     */
-    public static long jump(long state){
-        final long poly = 0x5556837749D9A17FL;
-        long val = 0L, b = 1L;
-        for (int i = 0; i < 63; i++, b <<= 1) {
-            if((poly & b) != 0L) val ^= state;
-            state ^= state << 7;
-            state ^= state >>> 9;
-        }
-        return val;
-    }
+	/**
+	 * Jumps {@code state} ahead by 0x9E3779B97F4A7C15 steps of the generator StrangerRandom uses for its stateA
+	 * and stateB. When used how it is here, it ensures stateB is 11.4 quintillion steps ahead of stateA in their
+	 * shared sequence, or 7 quintillion behind if you look at it another way. It would typically take years of
+	 * continuously running this generator at 100GB/s to have stateA become any state that stateB has already been.
+	 * Users only need this function if setting stateB by-hand; in that case, {@code state} should be their stateA.
+	 * <br>
+	 * Massive credit to Spencer Fleming for writing essentially all of this function over several days.
+	 *
+	 * @param state the initial state of a 7-9 xorshift generator
+	 * @return state jumped ahead 0x9E3779B97F4A7C15 times (unsigned)
+	 */
+	public static long jump (long state) {
+		final long poly = 0x5556837749D9A17FL;
+		long val = 0L, b = 1L;
+		for (int i = 0; i < 63; i++, b <<= 1) {
+			if ((poly & b) != 0L)
+				val ^= state;
+			state ^= state << 7;
+			state ^= state >>> 9;
+		}
+		return val;
+	}
 
-    /**
-     * Creates a new StrangerRandom with a random state.
-     */
-    public StrangerRandom () {
-        stateA = EnhancedRandom.seedFromMath();
-        if(stateA == 0L) stateA = 0xD3833E804F4C574BL;
-        stateB = jump(stateA);
-        stateC = EnhancedRandom.seedFromMath();
-        stateD = EnhancedRandom.seedFromMath();
-    }
+	/**
+	 * Creates a new StrangerRandom with a random state.
+	 */
+	public StrangerRandom () {
+		stateA = EnhancedRandom.seedFromMath();
+		if (stateA == 0L)
+			stateA = 0xD3833E804F4C574BL;
+		stateB = jump(stateA);
+		stateC = EnhancedRandom.seedFromMath();
+		stateD = EnhancedRandom.seedFromMath();
+	}
 
-    /**
-     * Creates a new StrangerRandom with the given seed; all {@code long} values are permitted.
-     * The seed will be passed to {@link #setSeed(long)} to attempt to adequately distribute the seed randomly.
-     * @param seed any {@code long} value
-     */
-    public StrangerRandom (long seed) {
-        setSeed(seed);
-    }
+	/**
+	 * Creates a new StrangerRandom with the given seed; all {@code long} values are permitted.
+	 * The seed will be passed to {@link #setSeed(long)} to attempt to adequately distribute the seed randomly.
+	 *
+	 * @param seed any {@code long} value
+	 */
+	public StrangerRandom (long seed) {
+		setSeed(seed);
+	}
 
-    /**
-     * Creates a new StrangerRandom with the given four states; all {@code long} values are permitted.
-     * These states will be used verbatim, unless stateA or stateB is 0. If stateA is given 0, it instead
-     * uses {@code 0xD3833E804F4C574BL}; if stateB is given 0, it instead uses {@code 0x790B300BF9FE738FL}.
-     * @param stateA any {@code long} value
-     * @param stateB any {@code long} value
-     * @param stateC any {@code long} value
-     * @param stateD any {@code long} value
-     */
-    public StrangerRandom (long stateA, long stateB, long stateC, long stateD) {
-        this.stateA = (stateA == 0L) ? 0xD3833E804F4C574BL : stateA;
-        this.stateB = (stateB == 0L) ? 0x790B300BF9FE738FL : stateB;
-        this.stateC = stateC;
-        this.stateD = stateD;
-    }
+	/**
+	 * Creates a new StrangerRandom with the given four states; all {@code long} values are permitted.
+	 * These states will be used verbatim, unless stateA or stateB is 0. If stateA is given 0, it instead
+	 * uses {@code 0xD3833E804F4C574BL}; if stateB is given 0, it instead uses {@code 0x790B300BF9FE738FL}.
+	 *
+	 * @param stateA any {@code long} value
+	 * @param stateB any {@code long} value
+	 * @param stateC any {@code long} value
+	 * @param stateD any {@code long} value
+	 */
+	public StrangerRandom (long stateA, long stateB, long stateC, long stateD) {
+		this.stateA = (stateA == 0L) ? 0xD3833E804F4C574BL : stateA;
+		this.stateB = (stateB == 0L) ? 0x790B300BF9FE738FL : stateB;
+		this.stateC = stateC;
+		this.stateD = stateD;
+	}
 
-    /**
-     * This generator has 4 {@code long} states, so this returns 4.
-     * @return 4 (four)
-     */
-    @Override
-    public int getStateCount() {
-        return 4;
-    }
+	/**
+	 * This generator has 4 {@code long} states, so this returns 4.
+	 *
+	 * @return 4 (four)
+	 */
+	@Override
+	public int getStateCount () {
+		return 4;
+	}
 
-    /**
-     * Gets the state determined by {@code selection}, as-is. The value for selection should be
-     * between 0 and 3, inclusive; if it is any other value this gets state D as if 3 was given.
-     * @param selection used to select which state variable to get; generally 0, 1, 2, or 3
-     * @return the value of the selected state
-     */
-    @Override
-    public long getSelectedState(int selection) {
-        switch (selection) {
-            case 0:
-                return stateA;
-            case 1:
-                return stateB;
-            case 2:
-                return stateC;
-            default:
-                return stateD;
-        }
-    }
+	/**
+	 * Gets the state determined by {@code selection}, as-is. The value for selection should be
+	 * between 0 and 3, inclusive; if it is any other value this gets state D as if 3 was given.
+	 *
+	 * @param selection used to select which state variable to get; generally 0, 1, 2, or 3
+	 * @return the value of the selected state
+	 */
+	@Override
+	public long getSelectedState (int selection) {
+		switch (selection) {
+		case 0:
+			return stateA;
+		case 1:
+			return stateB;
+		case 2:
+			return stateC;
+		default:
+			return stateD;
+		}
+	}
 
-    /**
-     * Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
-     * Selections 0, 1, 2, and 3 refer to states A, B, C, and D,  and if the selection is anything
-     * else, this treats it as 3 and sets stateD.
-     * @param selection used to select which state variable to set; generally 0, 1, 2, or 3
-     * @param value the exact value to use for the selected state, if valid
-     */
-    @Override
-    public void setSelectedState(int selection, long value) {
-        switch (selection) {
-        case 0:
-            stateA = value == 0L ? 0xD3833E804F4C574BL : value;
-            break;
-        case 1:
-            stateB = value == 0L ? 0x790B300BF9FE738FL : value;
-            break;
-        case 2:
-            stateC = value;
-            break;
-        default:
-            stateD = value;
-            break;
-        }
-    }
+	/**
+	 * Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
+	 * Selections 0, 1, 2, and 3 refer to states A, B, C, and D,  and if the selection is anything
+	 * else, this treats it as 3 and sets stateD.
+	 *
+	 * @param selection used to select which state variable to set; generally 0, 1, 2, or 3
+	 * @param value     the exact value to use for the selected state, if valid
+	 */
+	@Override
+	public void setSelectedState (int selection, long value) {
+		switch (selection) {
+		case 0:
+			stateA = value == 0L ? 0xD3833E804F4C574BL : value;
+			break;
+		case 1:
+			stateB = value == 0L ? 0x790B300BF9FE738FL : value;
+			break;
+		case 2:
+			stateC = value;
+			break;
+		default:
+			stateD = value;
+			break;
+		}
+	}
 
-    /**
-     * This initializes all 4 states of the generator to random values based on the given seed.
-     * (2 to the 64) possible initial generator states can be produced here, all with a different
-     * first value returned by {@link #nextLong()} (because {@code stateC} is guaranteed to be
-     * different for every different {@code seed}). This ensures stateB is a sufficient distance
-     * from stateA in their shared sequence, and also does some randomizing on the seed before it
-     * assigns the result to stateC. This isn't an instantaneously-fast method to call like some
-     * versions of setSeed(), but it shouldn't be too slow unless it is called before every
-     * generated number (even then, it might be fine).
-     * @param seed the initial seed; may be any long
-     */
-    @Override
-    public void setSeed(long seed) {
-        stateA = seed ^ 0xFA346CBFD5890825L;
-        if(stateA == 0L) stateA = 0xD3833E804F4C574BL;
-        stateB = jump(stateA);
-        stateC = jump(stateB - seed);
-        stateD = jump(stateC + 0xC6BC279692B5C323L);
-    }
+	/**
+	 * This initializes all 4 states of the generator to random values based on the given seed.
+	 * (2 to the 64) possible initial generator states can be produced here, all with a different
+	 * first value returned by {@link #nextLong()} (because {@code stateC} is guaranteed to be
+	 * different for every different {@code seed}). This ensures stateB is a sufficient distance
+	 * from stateA in their shared sequence, and also does some randomizing on the seed before it
+	 * assigns the result to stateC. This isn't an instantaneously-fast method to call like some
+	 * versions of setSeed(), but it shouldn't be too slow unless it is called before every
+	 * generated number (even then, it might be fine).
+	 *
+	 * @param seed the initial seed; may be any long
+	 */
+	@Override
+	public void setSeed (long seed) {
+		stateA = seed ^ 0xFA346CBFD5890825L;
+		if (stateA == 0L)
+			stateA = 0xD3833E804F4C574BL;
+		stateB = jump(stateA);
+		stateC = jump(stateB - seed);
+		stateD = jump(stateC + 0xC6BC279692B5C323L);
+	}
 
-    public long getStateA() {
-        return stateA;
-    }
+	public long getStateA () {
+		return stateA;
+	}
 
-    /**
-     * Sets the first part of the state.
-     * @param stateA can be any long except 0; this treats 0 as 0xD3833E804F4C574BL
-     */
-    public void setStateA(long stateA) {
-        this.stateA = (stateA == 0L) ? 0xD3833E804F4C574BL : stateA;
-    }
+	/**
+	 * Sets the first part of the state.
+	 *
+	 * @param stateA can be any long except 0; this treats 0 as 0xD3833E804F4C574BL
+	 */
+	public void setStateA (long stateA) {
+		this.stateA = (stateA == 0L) ? 0xD3833E804F4C574BL : stateA;
+	}
 
-    public long getStateB() {
-        return stateB;
-    }
+	public long getStateB () {
+		return stateB;
+	}
 
-    /**
-     * Sets the second part of the state.
-     * @param stateB can be any long except 0; this treats 0 as 0x790B300BF9FE738FL
-     */
-    public void setStateB(long stateB) {
-        this.stateB = (stateB == 0L) ? 0x790B300BF9FE738FL : stateB;
-    }
+	/**
+	 * Sets the second part of the state.
+	 *
+	 * @param stateB can be any long except 0; this treats 0 as 0x790B300BF9FE738FL
+	 */
+	public void setStateB (long stateB) {
+		this.stateB = (stateB == 0L) ? 0x790B300BF9FE738FL : stateB;
+	}
 
-    public long getStateC() {
-        return stateC;
-    }
+	public long getStateC () {
+		return stateC;
+	}
 
-    /**
-     * Sets the third part of the state. Note that if you call {@link #nextLong()}
-     * immediately after this, it will return the given {@code stateC} as-is, so you
-     * may want to call some random generation methods (such as nextLong()) and discard
-     * the results after setting the state.
-     * @param stateC can be any long
-     */
-    public void setStateC(long stateC) {
-        this.stateC = stateC;
-    }
+	/**
+	 * Sets the third part of the state. Note that if you call {@link #nextLong()}
+	 * immediately after this, it will return the given {@code stateC} as-is, so you
+	 * may want to call some random generation methods (such as nextLong()) and discard
+	 * the results after setting the state.
+	 *
+	 * @param stateC can be any long
+	 */
+	public void setStateC (long stateC) {
+		this.stateC = stateC;
+	}
 
-    public long getStateD() {
-        return stateD;
-    }
+	public long getStateD () {
+		return stateD;
+	}
 
-    /**
-     * Sets the fourth part of the state.
-     * @param stateD can be any long
-     */
-    public void setStateD(long stateD) {
-        this.stateD = stateD;
-    }
+	/**
+	 * Sets the fourth part of the state.
+	 *
+	 * @param stateD can be any long
+	 */
+	public void setStateD (long stateD) {
+		this.stateD = stateD;
+	}
 
-    /**
-     * Sets the state completely to the given four state variables, unless stateA or stateB are 0.
-     * This is the same as calling {@link #setStateA(long)}, {@link #setStateB(long)},
-     * {@link #setStateC(long)}, and {@link #setStateD(long)} as a group. You may want
-     * to call {@link #nextLong()} a few times after setting the states like this, unless
-     * the value for stateC (in particular) is already adequately random; the first call
-     * to {@link #nextLong()}, if it is made immediately after calling this, will return {@code stateC} as-is.
-     * @param stateA the first state; can be any long; can be any long except 0
-     * @param stateB the second state; can be any long; can be any long except 0
-     * @param stateC the third state; this will be returned as-is if the next call is to {@link #nextLong()}
-     * @param stateD the fourth state; can be any long
-     */
-    @Override
-    public void setState(long stateA, long stateB, long stateC, long stateD) {
-        this.stateA = (stateA == 0L) ? 0xD3833E804F4C574BL : stateA;
-        this.stateB = (stateB == 0L) ? 0x790B300BF9FE738FL : stateB;
-        this.stateC = stateC;
-        this.stateD = stateD;
-    }
+	/**
+	 * Sets the state completely to the given four state variables, unless stateA or stateB are 0.
+	 * This is the same as calling {@link #setStateA(long)}, {@link #setStateB(long)},
+	 * {@link #setStateC(long)}, and {@link #setStateD(long)} as a group. You may want
+	 * to call {@link #nextLong()} a few times after setting the states like this, unless
+	 * the value for stateC (in particular) is already adequately random; the first call
+	 * to {@link #nextLong()}, if it is made immediately after calling this, will return {@code stateC} as-is.
+	 *
+	 * @param stateA the first state; can be any long; can be any long except 0
+	 * @param stateB the second state; can be any long; can be any long except 0
+	 * @param stateC the third state; this will be returned as-is if the next call is to {@link #nextLong()}
+	 * @param stateD the fourth state; can be any long
+	 */
+	@Override
+	public void setState (long stateA, long stateB, long stateC, long stateD) {
+		this.stateA = (stateA == 0L) ? 0xD3833E804F4C574BL : stateA;
+		this.stateB = (stateB == 0L) ? 0x790B300BF9FE738FL : stateB;
+		this.stateC = stateC;
+		this.stateD = stateD;
+	}
 
-    /**
-     * Sets the state with three variables, ensuring that the result has states A and B
-     * sufficiently separated from each other, while keeping states C and D as given.
-     * Note that this does not take a stateB parameter, and instead obtains it by jumping
-     * stateA ahead by about 11.4 quintillion steps using {@link #jump(long)}. If stateA is
-     * given as 0, this uses 0xD3833E804F4C574BL instead for stateA and 0x790B300BF9FE738FL
-     * for stateB. States C and D can each be any long.
-     * @param stateA the long value to use for stateA and also used to get stateB; can be any long except 0
-     * @param stateC the long value to use for stateC; this will be returned as-is if the next call is to {@link #nextLong()}
-     * @param stateD the long value to use for stateD; can be any long
-     */
-    @Override
-    public void setState (long stateA, long stateC, long stateD) {
-        this.stateA = (stateA == 0L) ? 0xD3833E804F4C574BL : stateA;
-        this.stateB = jump(this.stateA);
-        this.stateC = stateC;
-        this.stateD = stateD;
-    }
+	/**
+	 * Sets the state with three variables, ensuring that the result has states A and B
+	 * sufficiently separated from each other, while keeping states C and D as given.
+	 * Note that this does not take a stateB parameter, and instead obtains it by jumping
+	 * stateA ahead by about 11.4 quintillion steps using {@link #jump(long)}. If stateA is
+	 * given as 0, this uses 0xD3833E804F4C574BL instead for stateA and 0x790B300BF9FE738FL
+	 * for stateB. States C and D can each be any long.
+	 *
+	 * @param stateA the long value to use for stateA and also used to get stateB; can be any long except 0
+	 * @param stateC the long value to use for stateC; this will be returned as-is if the next call is to {@link #nextLong()}
+	 * @param stateD the long value to use for stateD; can be any long
+	 */
+	@Override
+	public void setState (long stateA, long stateC, long stateD) {
+		this.stateA = (stateA == 0L) ? 0xD3833E804F4C574BL : stateA;
+		this.stateB = jump(this.stateA);
+		this.stateC = stateC;
+		this.stateD = stateD;
+	}
 
-    @Override
-    public long nextLong() {
-        final long fa = stateA;
-        final long fb = stateB;
-        final long fc = stateC;
-        final long fd = stateD;
-        stateA = fb ^ fb << 7;
-        stateB = fa ^ fa >>> 9;
-        stateC = (fd << 39 | fd >>> 25) - fb;
-        stateD = fa - fc + 0xC6BC279692B5C323L;
-        return fc;
-    }
+	@Override
+	public long nextLong () {
+		final long fa = stateA;
+		final long fb = stateB;
+		final long fc = stateC;
+		final long fd = stateD;
+		stateA = fb ^ fb << 7;
+		stateB = fa ^ fa >>> 9;
+		stateC = (fd << 39 | fd >>> 25) - fb;
+		stateD = fa - fc + 0xC6BC279692B5C323L;
+		return fc;
+	}
 
-    @Override
-    public long previousLong() {
-        final long fa = stateA;
-        final long fb = stateB;
-        final long fd = stateD;
-        long t = fb ^ fb >>> 9;
-        t ^= t >>> 18;
-        t ^= t >>> 36;
-        long m = fa ^ fa << 7;
-        m ^= m << 14;
-        m ^= m << 28;
-        m ^= m << 56;
-        stateA = t;
-        final long fc = stateC + m;
-        stateB = m;
-        stateC = t - fd + 0xC6BC279692B5C323L;
-        stateD = (fc >>> 39 | fc << 25);
-        t = m ^ m >>> 9;
-        t ^= t >>> 18;
-        t ^= t >>> 36;
-        return t - stateD + 0xC6BC279692B5C323L;
-    }
+	@Override
+	public long previousLong () {
+		final long fa = stateA;
+		final long fb = stateB;
+		final long fd = stateD;
+		long t = fb ^ fb >>> 9;
+		t ^= t >>> 18;
+		t ^= t >>> 36;
+		long m = fa ^ fa << 7;
+		m ^= m << 14;
+		m ^= m << 28;
+		m ^= m << 56;
+		stateA = t;
+		final long fc = stateC + m;
+		stateB = m;
+		stateC = t - fd + 0xC6BC279692B5C323L;
+		stateD = (fc >>> 39 | fc << 25);
+		t = m ^ m >>> 9;
+		t ^= t >>> 18;
+		t ^= t >>> 36;
+		return t - stateD + 0xC6BC279692B5C323L;
+	}
 
-    @Override
-    public int next(int bits) {
-        final long fa = stateA;
-        final long fb = stateB;
-        final long fc = stateC;
-        final long fd = stateD;
-        stateA = fb ^ fb << 7;
-        stateB = fa ^ fa >>> 9;
-        stateC = (fd << 39 | fd >>> 25) - fb;
-        stateD = fa - fc + 0xC6BC279692B5C323L;
-        return (int)fc >>> (32 - bits);
-    }
+	@Override
+	public int next (int bits) {
+		final long fa = stateA;
+		final long fb = stateB;
+		final long fc = stateC;
+		final long fd = stateD;
+		stateA = fb ^ fb << 7;
+		stateB = fa ^ fa >>> 9;
+		stateC = (fd << 39 | fd >>> 25) - fb;
+		stateD = fa - fc + 0xC6BC279692B5C323L;
+		return (int)fc >>> (32 - bits);
+	}
 
-    @Override
-    public StrangerRandom copy() {
-        return new StrangerRandom(stateA, stateB, stateC, stateD);
-    }
+	@Override
+	public StrangerRandom copy () {
+		return new StrangerRandom(stateA, stateB, stateC, stateD);
+	}
 
-    @Override
-    public boolean equals (Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+	@Override
+	public boolean equals (Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
-        StrangerRandom that = (StrangerRandom)o;
+		StrangerRandom that = (StrangerRandom)o;
 
-        if (stateA != that.stateA)
-            return false;
-        if (stateB != that.stateB)
-            return false;
-        if (stateC != that.stateC)
-            return false;
-        return stateD == that.stateD;
-    }
+		if (stateA != that.stateA)
+			return false;
+		if (stateB != that.stateB)
+			return false;
+		if (stateC != that.stateC)
+			return false;
+		return stateD == that.stateD;
+	}
 
-    public String toString() {
-        return "StrangerRandom{" +
-                   "stateA=0x" + Base.BASE16.unsigned(stateA) +
-                "L, stateB=0x" + Base.BASE16.unsigned(stateB) +
-                "L, stateC=0x" + Base.BASE16.unsigned(stateC) +
-                "L, stateD=0x" + Base.BASE16.unsigned(stateD) +
-                "L}";
-    }
+	public String toString () {
+		return "StrangerRandom{" + "stateA=0x" + Base.BASE16.unsigned(stateA) + "L, stateB=0x" + Base.BASE16.unsigned(stateB) + "L, stateC=0x" + Base.BASE16.unsigned(stateC) + "L, stateD=0x" + Base.BASE16.unsigned(stateD) + "L}";
+	}
 }

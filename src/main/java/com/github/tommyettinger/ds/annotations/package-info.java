@@ -21,4 +21,5 @@
  * non-nullable by default. Specific fields can still be specified as nullable with
  * {@link javax.annotation.Nullable}.
  */
+
 package com.github.tommyettinger.ds.annotations;

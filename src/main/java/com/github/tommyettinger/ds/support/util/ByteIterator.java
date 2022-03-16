@@ -54,7 +54,7 @@ public interface ByteIterator extends PrimitiveIterator<Byte, ByteConsumer> {
 	 */
 	@Override
 	default void forEachRemaining (ByteConsumer action) {
-		while (hasNext()) { action.accept(nextByte()); }
+		while (hasNext()) {action.accept(nextByte());}
 	}
 
 	/**

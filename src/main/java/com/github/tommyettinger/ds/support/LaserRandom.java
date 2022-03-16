@@ -154,11 +154,13 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * The second state (selection {@code 1}) is always an odd number, and if
 	 * anything tries to set an even number to that state, the actual state used
 	 * will be one greater.
+	 *
 	 * @return 2 (two)
 	 */
-	public int getStateCount() {
+	public int getStateCount () {
 		return 2;
 	}
+
 	/**
 	 * Get the "A" part of the internal state as a long.
 	 *
@@ -231,7 +233,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @param value     the exact value to use for the selected state, if valid
 	 */
 	public void setSelectedState (int selection, long value) {
-		if((selection & 1) == 0)
+		if ((selection & 1) == 0)
 			stateA = value;
 		else
 			stateB = value | 1L;
@@ -293,7 +295,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * @throws NullPointerException if the byte array is null
 	 */
 	public void nextBytes (byte[] bytes) {
-		for (int i = 0; i < bytes.length; ) { for (long r = nextLong(), n = Math.min(bytes.length - i, 8); n-- > 0; r >>>= 8) { bytes[i++] = (byte)r; } }
+		for (int i = 0; i < bytes.length; ) {for (long r = nextLong(), n = Math.min(bytes.length - i, 8); n-- > 0; r >>>= 8) {bytes[i++] = (byte)r;}}
 	}
 
 	/**
@@ -350,9 +352,9 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
 	 * for outer bound 0). This method is slightly slower than {@link #nextInt(int)}.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param outerBound the outer exclusive bound; may be any int value, allowing negative
 	 * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	public int nextSignedInt (int outerBound) {
 		final long s = stateA += 0xC6BC279692B5C323L;
@@ -372,10 +374,10 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * <br> For any case where outerBound might be valid but less than innerBound, you
 	 * can use {@link #nextSignedInt(int, int)}.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
 	 * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	public int nextInt (int innerBound, int outerBound) {
 		return (int)nextLong(innerBound, outerBound);
@@ -390,10 +392,10 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * {@link #nextSignedLong(long, long)} and casts it to int (because the range
 	 * between innerBound and outerBound can be greater than the largest int).
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param innerBound the inclusive inner bound; may be any int, allowing negative
 	 * @param outerBound the exclusive outer bound; may be any int, allowing negative
 	 * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	public int nextSignedInt (int innerBound, int outerBound) {
 		return (int)nextSignedLong(innerBound, outerBound);
@@ -438,11 +440,11 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * don't use this for a real-money gambling purpose. The bias isn't especially
 	 * significant, though.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
 	 * @return the next pseudorandom, uniformly distributed {@code long}
 	 * value between zero (inclusive) and {@code bound} (exclusive)
 	 * from this random number generator's sequence
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	public long nextLong (long bound) {
 		return nextLong(0L, bound);
@@ -463,9 +465,9 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * method should be about as fast as {@link #nextLong(long)} , unlike the speed
 	 * difference between {@link #nextInt(int)} and {@link #nextSignedInt(int)}.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param outerBound the outer exclusive bound; may be any long value, allowing negative
 	 * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	public long nextSignedLong (long outerBound) {
 		return nextSignedLong(0L, outerBound);
@@ -480,14 +482,15 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * <br> For any case where outerBound might be valid but less than innerBound, you
 	 * can use {@link #nextSignedLong(long, long)}.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param inner the inclusive inner bound; may be any long, allowing negative
 	 * @param outer the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	public long nextLong (long inner, long outer) {
 		final long rand = nextLong();
-		if(inner >= outer) return inner;
+		if (inner >= outer)
+			return inner;
 		final long bound = outer - inner;
 		final long randLow = rand & 0xFFFFFFFFL;
 		final long boundLow = bound & 0xFFFFFFFFL;
@@ -502,14 +505,14 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * (exclusive). This is meant for cases where either bound may be negative,
 	 * especially if the bounds are unknown or may be user-specified.
 	 *
-	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 * @param inner the inclusive inner bound; may be any long, allowing negative
 	 * @param outer the exclusive outer bound; may be any long, allowing negative
 	 * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
+	 * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
 	 */
 	public long nextSignedLong (long inner, long outer) {
 		final long rand = nextLong();
-		if(outer < inner) {
+		if (outer < inner) {
 			long t = outer;
 			outer = inner + 1L;
 			inner = t + 1L;
@@ -572,6 +575,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * Gets a pseudo-random float between 0 (inclusive) and {@code outerBound} (exclusive).
 	 * The outerBound may be positive or negative.
 	 * Exactly the same as {@code nextFloat() * outerBound}.
+	 *
 	 * @param outerBound the exclusive outer bound
 	 * @return a float between 0 (inclusive) and {@code outerBound} (exclusive)
 	 */
@@ -583,6 +587,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * Gets a pseudo-random float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
 	 * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
 	 * inclusive and which is exclusive.
+	 *
 	 * @param innerBound the inclusive inner bound; may be negative
 	 * @param outerBound the exclusive outer bound; may be negative
 	 * @return a float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
@@ -621,6 +626,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * Gets a pseudo-random double between 0 (inclusive) and {@code outerBound} (exclusive).
 	 * The outerBound may be positive or negative.
 	 * Exactly the same as {@code nextDouble() * outerBound}.
+	 *
 	 * @param outerBound the exclusive outer bound
 	 * @return a double between 0 (inclusive) and {@code outerBound} (exclusive)
 	 */
@@ -632,6 +638,7 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * Gets a pseudo-random double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
 	 * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
 	 * inclusive and which is exclusive.
+	 *
 	 * @param innerBound the inclusive inner bound; may be negative
 	 * @param outerBound the exclusive outer bound; may be negative
 	 * @return a double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
@@ -645,19 +652,21 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
 	 * can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
 	 * subtly-different results.
+	 *
 	 * @return a double between 0.0, inclusive, and 1.0, inclusive
 	 */
-	public double nextInclusiveDouble() {
+	public double nextInclusiveDouble () {
 		return nextLong(0x20000000000001L) * 0x1p-53;
 	}
 
 	/**
 	 * Just like {@link #nextDouble(double)}, but this is inclusive on both 0.0 and {@code outerBound}.
 	 * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
+	 *
 	 * @param outerBound the outer inclusive bound; may be positive or negative
 	 * @return a double between 0.0, inclusive, and {@code outerBound}, inclusive
 	 */
-	public double nextInclusiveDouble(double outerBound) {
+	public double nextInclusiveDouble (double outerBound) {
 		return nextInclusiveDouble() * outerBound;
 	}
 
@@ -665,11 +674,12 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * Just like {@link #nextDouble(double, double)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
 	 * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
 	 * return it at all because of floating-point imprecision when innerBound is a larger number.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer inclusive bound; may be positive or negative
 	 * @return a double between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
 	 */
-	public double nextInclusiveDouble(double innerBound, double outerBound) {
+	public double nextInclusiveDouble (double innerBound, double outerBound) {
 		return innerBound + nextInclusiveDouble() * (outerBound - innerBound);
 	}
 
@@ -679,19 +689,21 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
 	 * it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
 	 * likely to accomplish that in the same time, or at all, depending on the generator.
+	 *
 	 * @return a float between 0.0, inclusive, and 1.0, inclusive
 	 */
-	public float nextInclusiveFloat() {
+	public float nextInclusiveFloat () {
 		return nextInt(0x1000001) * 0x1p-24f;
 	}
 
 	/**
 	 * Just like {@link #nextFloat(float)}, but this is inclusive on both 0.0 and {@code outerBound}.
 	 * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
+	 *
 	 * @param outerBound the outer inclusive bound; may be positive or negative
 	 * @return a float between 0.0, inclusive, and {@code outerBound}, inclusive
 	 */
-	public float nextInclusiveFloat(float outerBound) {
+	public float nextInclusiveFloat (float outerBound) {
 		return nextInclusiveFloat() * outerBound;
 	}
 
@@ -699,11 +711,12 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	 * Just like {@link #nextFloat(float, float)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
 	 * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
 	 * it at all because of floating-point imprecision when innerBound is a larger number.
+	 *
 	 * @param innerBound the inner inclusive bound; may be positive or negative
 	 * @param outerBound the outer inclusive bound; may be positive or negative
 	 * @return a float between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
 	 */
-	public float nextInclusiveFloat(float innerBound, float outerBound) {
+	public float nextInclusiveFloat (float innerBound, float outerBound) {
 		return innerBound + nextInclusiveFloat() * (outerBound - innerBound);
 	}
 
@@ -775,16 +788,18 @@ public class LaserRandom extends Random implements EnhancedRandom {
 		return z ^ z >>> 26 ^ z >>> 6;
 	}
 
-	public long previousLong (){
+	public long previousLong () {
 		final long s = stateA -= 0xC6BC279692B5C323L;
 		final long z = (s ^ s >>> 31) * (stateB -= 0x9E3779B97F4A7C16L);
 		return z ^ z >>> 26 ^ z >>> 6;
 	}
+
 	/**
 	 * Creates a new {@code LaserRandom} with identical states to this one, so if the same LaserRandom methods are
 	 * called on this object and its copy (in the same order), the same outputs will be produced. This is not
 	 * guaranteed to copy the inherited state of the {@link Random} parent class, so if you call methods that are
 	 * only implemented by Random and not LaserRandom, the results may differ.
+	 *
 	 * @return a deep copy of this LaserRandom.
 	 */
 	public LaserRandom copy () {
@@ -870,16 +885,17 @@ public class LaserRandom extends Random implements EnhancedRandom {
 	public float nextTriangular (float min, float max, float mode) {
 		float u = nextFloat();
 		float d = max - min;
-		if (u <= (mode - min) / d) { return min + (float)Math.sqrt(u * d * (mode - min)); }
+		if (u <= (mode - min) / d) {return min + (float)Math.sqrt(u * d * (mode - min));}
 		return max - (float)Math.sqrt((1 - u) * d * (max - mode));
 	}
 
 	/**
 	 * Gets a randomly-selected item from the given array, which must be non-null and non-empty
+	 *
 	 * @param array a non-null, non-empty array of {@code T} items
-	 * @param <T> any reference type
+	 * @param <T>   any reference type
 	 * @return a random item from {@code array}
-	 * @throws NullPointerException if array is null
+	 * @throws NullPointerException      if array is null
 	 * @throws IndexOutOfBoundsException if array is empty
 	 */
 	public <T> T randomElement (T[] array) {
@@ -1014,10 +1030,6 @@ public class LaserRandom extends Random implements EnhancedRandom {
 
 	@Override
 	public String toString () {
-		return
-			"LaserRandom{" +
-				"stateA=0x" + Base.BASE16.unsigned(stateA) +
-				"L, stateB=0x" + Base.BASE16.unsigned(stateB) +
-				"L}";
+		return "LaserRandom{" + "stateA=0x" + Base.BASE16.unsigned(stateA) + "L, stateB=0x" + Base.BASE16.unsigned(stateB) + "L}";
 	}
 }

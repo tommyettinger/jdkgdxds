@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package com.github.tommyettinger.ds.support.function;
 
 import java.util.function.BiConsumer;
@@ -29,17 +30,16 @@ import java.util.function.BiConsumer;
  * whose functional method is {@link #accept(Object, float)}.
  *
  * @param <T> the type of the object argument to the operation
- *
  * @see BiConsumer
  */
 @FunctionalInterface
 public interface ObjFloatConsumer<T> {
 
-    /**
-     * Performs this operation on the given arguments.
-     *
-     * @param t the first input argument
-     * @param value the second input argument
-     */
-    void accept(T t, float value);
+	/**
+	 * Performs this operation on the given arguments.
+	 *
+	 * @param t     the first input argument
+	 * @param value the second input argument
+	 */
+	void accept (T t, float value);
 }
