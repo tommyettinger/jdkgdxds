@@ -17,12 +17,41 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
+import com.github.tommyettinger.ds.support.function.ToFloatFunction;
+
 import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
 
 public final class ObjectComparators {
 	private ObjectComparators () {
+	}
+
+	/**
+	 * Accepts a function that extracts a {@code float} sort key from a type
+	 * {@code T}, and returns a {@code Comparator<T>} that compares by that
+	 * sort key.
+	 * <br>
+	 * This is in ObjectComparators and not in FloatComparators because there
+	 * are similar methods in Comparator, such as
+	 * {@link Comparator#comparingDouble(ToDoubleFunction)}.
+	 * <br>
+	 * The returned comparator is not serializable, by design. This library
+	 * intentionally avoids the java.io.Serializable ecosystem because of the
+	 * serious security issues it near-constantly accrues.
+	 *
+	 * @param <T>          the type of element to be compared
+	 * @param keyExtractor the function used to extract the float sort key
+	 * @return a comparator that compares by an extracted key
+	 * @throws NullPointerException if the argument is null
+	 * @see Comparator#comparing(Function)
+	 */
+	public static <T> Comparator<T> comparingFloat (ToFloatFunction<? super T> keyExtractor) {
+		Objects.requireNonNull(keyExtractor);
+		return (c1, c2) -> Float.compare(keyExtractor.applyAsFloat(c1), keyExtractor.applyAsFloat(c2));
 	}
 
 	/// The remainder of the code is based on FastUtil.
