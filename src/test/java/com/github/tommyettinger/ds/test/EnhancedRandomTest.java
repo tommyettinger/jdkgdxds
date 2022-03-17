@@ -10,6 +10,7 @@ import com.github.tommyettinger.ds.support.StrangerRandom;
 import com.github.tommyettinger.ds.support.TricycleRandom;
 import com.github.tommyettinger.ds.support.TrimRandom;
 import com.github.tommyettinger.ds.support.WrapperRandom;
+import com.github.tommyettinger.ds.support.Xoshiro256StarStarRandom;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -125,6 +126,21 @@ public class EnhancedRandomTest {
 	@Test
 	public void testStrangerPrevious() {
 		StrangerRandom random = new StrangerRandom(0L);
+		long n0 = random.nextLong();
+		long n1 = random.nextLong();
+		long n2 = random.nextLong();
+		long n3 = random.nextLong();
+		long p2 = random.previousLong();
+		long p1 = random.previousLong();
+		long p0 = random.previousLong();
+		Assert.assertEquals(n0, p0);
+		Assert.assertEquals(n1, p1);
+		Assert.assertEquals(n2, p2);
+	}
+
+	@Test
+	public void testXoshiro256StarStarPrevious() {
+		Xoshiro256StarStarRandom random = new Xoshiro256StarStarRandom(0L);
 		long n0 = random.nextLong();
 		long n1 = random.nextLong();
 		long n2 = random.nextLong();

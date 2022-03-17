@@ -40,9 +40,8 @@ public class SortTest {
 	@Test
 	public void testQuickSelect () {
 		// 20 words, a-t
-		String[] words = {"anteater", "bee", "cat", "dog", "elephant", "frog", "gibbon", "horse", "ibex", "jaguar", "koala", "lemur", "mouse", "nuthatch", "okapi", "penguin", "quahog", "ram", "squirrel", "thrush"
+		String[] words = {"anteater", "bee", "cat", "dog", "elephant", "frog", "gibbon", "horse", "ibex", "jaguar", "koala", "lemur", "mouse", "nuthatch", "okapi", "penguin", "quahog", "ram", "squirrel", "thrush"};
 //			, "unicorn"
-		};
 		DistinctRandom random = new DistinctRandom(123456L);
 		random.shuffle(words);
 		Assert.assertEquals("cat", Select.select(words, Comparator.naturalOrder(), 3, 20));

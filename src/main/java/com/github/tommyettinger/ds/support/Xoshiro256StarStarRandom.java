@@ -36,7 +36,8 @@ package com.github.tommyettinger.ds.support;
  *     <li>You need a regular structure to the generated numbers, with guarantees about that structure.</li>
  * </ul>
  * <br>
- * This implements all optional methods in EnhancedRandom except {@link #skip(long)} and {@link #previousLong()}
+ * This implements all optional methods in EnhancedRandom except {@link #skip(long)}; it does implement
+ * {@link #previousLong()} without using skip().
  * <br>
  * Xoshiro256** was written in 2018 by David Blackman and Sebastiano Vigna. You can consult their paper for technical details:
  * <a href="https://vigna.di.unimi.it/ftp/papers/ScrambledLinear.pdf">PDF link here</a>.
@@ -295,6 +296,24 @@ public class Xoshiro256StarStarRandom implements EnhancedRandom {
 		stateC ^= t;
 		stateD = (stateD << 45 | stateD >>> 19);
 		return (int)(result >>> 64 - bits);
+	}
+
+	@Override
+	public long previousLong () {
+		stateD = (stateD << 19 | stateD >>> 45); // stateD has d ^ b
+		stateA ^= stateD; // StateA has a
+		stateC ^= stateB; // StateC has b ^ b << 17;
+		stateC ^= stateC << 17;
+		stateC ^= stateC << 34; // StateC has b
+		long oc = stateB ^= stateA; // StateB has b ^ c
+		stateC ^= stateB; // StateC has c;
+		stateB ^= stateC; // StateB has b;
+		stateD ^= stateB; // _d has d;
+
+		oc ^= oc << 17;
+		oc ^= oc << 34;
+		oc *= 5L;
+		return (oc << 7 | oc >>> 57) * 9L;
 	}
 
 	@Override

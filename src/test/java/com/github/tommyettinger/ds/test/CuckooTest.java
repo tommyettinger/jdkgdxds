@@ -1,8 +1,10 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class CuckooTest {
 	// Expected to fail with an OutOfMemoryError.
 	@Test(expected = OutOfMemoryError.class)
