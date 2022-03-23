@@ -467,6 +467,16 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	}
 
 	/**
+	 * If the given item {@code t} is present, this returns its index without modifying the NumberedSet; otherwise, it
+	 * adds t to the end of the collection and returns the index for it there.
+	 * @param t an item to get the index of, adding it if not present
+	 * @return the index of {@code t} in this Arrangement
+	 */
+	public int addOrIndex(final T t){
+		return map.putIfAbsent(t, size());
+	}
+
+	/**
 	 * Sets the key at the specified index. Returns true if the key was not already in the set. If this set already contains the
 	 * key, the existing key's index is changed if needed and false is returned. Note, the order of the parameters matches the
 	 * order in {@link ObjectList} and the rest of the JDK, not OrderedSet in libGDX.
