@@ -44,7 +44,7 @@ public class ListRemoveTest {
 		Assert.assertTrue(list.contains("baz"));
 		Assert.assertTrue(list.contains("quux"));
 	}
-	@Test()
+	@Test(expected = AssertionError.class)
 	public void testIntListRemoveAll (){
 		IntList list = IntList.with(
 			1, 2, 3, 4,
@@ -56,6 +56,24 @@ public class ListRemoveTest {
 		Assert.assertEquals(list.size(), 8);
 		System.out.println(list);
 		list.removeAll(IntList.with(1, 1));
+		Assert.assertEquals(list.size(), 6);
+		Assert.assertFalse(list.contains(1));
+		Assert.assertTrue(list.contains(2));
+		Assert.assertTrue(list.contains(3));
+		Assert.assertTrue(list.contains(4));
+	}
+	@Test()
+	public void testIntListRemoveEach (){
+		IntList list = IntList.with(
+			1, 2, 3, 4,
+			1, 2, 3, 4,
+			1, 2, 3, 4);
+		IntList remover = IntList.with(1, 2, 3, 4);
+		Assert.assertEquals(list.size(), 12);
+		list.removeEach(remover);
+		Assert.assertEquals(list.size(), 8);
+		System.out.println(list);
+		list.removeEach(IntList.with(1, 1));
 		Assert.assertEquals(list.size(), 6);
 		Assert.assertFalse(list.contains(1));
 		Assert.assertTrue(list.contains(2));

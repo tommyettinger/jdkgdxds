@@ -518,19 +518,44 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * Removes from this array all of elements contained in the specified array.
-	 * Note that if a value is present more than once in this IntList, only one of those occurrences
-	 * will be removed for each occurrence of that value in {@code array}. If {@code array} has the same
-	 * contents as this IntList or has additional items, then removing all of {@code array} will clear this.
+	 * Removes from this IntList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @return true if this array was modified.
+	 * @param c a primitive collection of int items to remove fully, such as another IntList or an IntSet
+	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (IntList array) {
+	public boolean removeAll (PrimitiveCollection.OfInt c) {
 		int size = this.size;
 		int startSize = size;
 		int[] items = this.items;
-		for (int i = 0, n = array.size; i < n; i++) {
-			int item = array.get(i);
+		PrimitiveIterator.OfInt it = c.iterator();
+		for (int i = 0, n = c.size(); i < n; i++) {
+			int item = it.nextInt();
+			for (int ii = 0; ii < size; ii++) {
+				if (item == items[ii]) {
+					removeAt(ii--);
+					size--;
+				}
+			}
+		}
+		return size != startSize;
+	}
+
+	/**
+	 * Removes from this IntList element-wise occurrences of elements contained in the specified collection.
+	 * Note that if a value is present more than once in this IntList, only one of those occurrences
+	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
+	 * contents as this IntList or has additional items, then removing each of {@code c} will clear this.
+	 *
+	 * @param c a primitive collection of int items to remove one-by-one, such as another IntList or an IntSet
+	 * @return true if this list was modified.
+	 */
+	public boolean removeEach (PrimitiveCollection.OfInt c) {
+		int size = this.size;
+		int startSize = size;
+		int[] items = this.items;
+		PrimitiveIterator.OfInt it = c.iterator();
+		for (int i = 0, n = c.size(); i < n; i++) {
+			int item = it.nextInt();
 			for (int ii = 0; ii < size; ii++) {
 				if (item == items[ii]) {
 					removeAt(ii);

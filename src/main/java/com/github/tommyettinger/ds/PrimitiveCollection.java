@@ -87,12 +87,19 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 
 		default boolean removeAll (OfInt other) {
-			PrimitiveIterator.OfInt it = other.iterator();
-			boolean changed = false;
+			PrimitiveIterator.OfInt it = other.iterator(), me;
+			int originalSize = size();
 			while (it.hasNext()) {
-				changed |= remove(it.nextInt());
+				int item = it.nextInt();
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextInt() == item)
+					{
+						me.remove();
+					}
+				}
 			}
-			return changed;
+			return originalSize != size();
 		}
 
 		default boolean containsAll (OfInt other) {
