@@ -271,7 +271,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return changed;
 		}
 
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
+		 *
+		 * @param other a primitive collection of long items to remove fully, such as a LongList or a LongSet
+		 * @return true if this collection was modified.
+		 */
 		default boolean removeAll (OfLong other) {
+			PrimitiveIterator.OfLong it = other.iterator(), me;
+			int originalSize = size();
+			while (it.hasNext()) {
+				long item = it.nextLong();
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextLong() == item)
+					{
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+		 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+		 *
+		 * @param other a primitive collection of long items to remove one-by-one, such as a LongList or a LongSet
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (OfLong other) {
 			PrimitiveIterator.OfLong it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
@@ -425,7 +456,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return changed;
 		}
 
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
+		 *
+		 * @param other a primitive collection of float items to remove fully, such as a FloatList or a FloatDeque
+		 * @return true if this collection was modified.
+		 */
 		default boolean removeAll (OfFloat other) {
+			FloatIterator it = other.iterator(), me;
+			int originalSize = size();
+			while (it.hasNext()) {
+				float item = it.nextFloat();
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextFloat() == item)
+					{
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+		 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+		 *
+		 * @param other a primitive collection of float items to remove one-by-one, such as a FloatList or a FloatDeque
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (OfFloat other) {
 			FloatIterator it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
@@ -579,7 +641,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return changed;
 		}
 
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
+		 *
+		 * @param other a primitive collection of double items to remove fully, such as a DoubleList or a DoubleDeque
+		 * @return true if this collection was modified.
+		 */
 		default boolean removeAll (OfDouble other) {
+			PrimitiveIterator.OfDouble it = other.iterator(), me;
+			int originalSize = size();
+			while (it.hasNext()) {
+				double item = it.nextDouble();
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextDouble() == item)
+					{
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+		 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+		 *
+		 * @param other a primitive collection of double items to remove one-by-one, such as a DoubleList or a DoubleSet
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (OfDouble other) {
 			PrimitiveIterator.OfDouble it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
@@ -733,7 +826,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return changed;
 		}
 
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
+		 *
+		 * @param other a primitive collection of short items to remove fully, such as a ShortList or a ShortDeque
+		 * @return true if this collection was modified.
+		 */
 		default boolean removeAll (OfShort other) {
+			ShortIterator it = other.iterator(), me;
+			int originalSize = size();
+			while (it.hasNext()) {
+				short item = it.nextShort();
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextShort() == item)
+					{
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+		 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+		 *
+		 * @param other a primitive collection of short items to remove one-by-one, such as a ShortList or a ShortDeque
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (OfShort other) {
 			ShortIterator it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
@@ -887,7 +1011,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return changed;
 		}
 
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
+		 *
+		 * @param other a primitive collection of byte items to remove fully, such as a ByteList or a ByteDeque
+		 * @return true if this collection was modified.
+		 */
 		default boolean removeAll (OfByte other) {
+			ByteIterator it = other.iterator(), me;
+			int originalSize = size();
+			while (it.hasNext()) {
+				byte item = it.nextByte();
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextByte() == item)
+					{
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+		 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+		 *
+		 * @param other a primitive collection of byte items to remove one-by-one, such as a ByteList or a ByteDeque
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (OfByte other) {
 			ByteIterator it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
@@ -1041,7 +1196,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return changed;
 		}
 
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
+		 *
+		 * @param other a primitive collection of char items to remove fully, such as a CharList or a CharDeque
+		 * @return true if this collection was modified.
+		 */
 		default boolean removeAll (OfChar other) {
+			CharIterator it = other.iterator(), me;
+			int originalSize = size();
+			while (it.hasNext()) {
+				char item = it.nextChar();
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextChar() == item)
+					{
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+		 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+		 *
+		 * @param other a primitive collection of char items to remove one-by-one, such as a CharList or a CharDeque
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (OfChar other) {
 			CharIterator it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
@@ -1195,7 +1381,38 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return changed;
 		}
 
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
+		 *
+		 * @param other a primitive collection of boolean items to remove fully, such as a BooleanList or a BooleanDeque
+		 * @return true if this collection was modified.
+		 */
 		default boolean removeAll (OfBoolean other) {
+			BooleanIterator it = other.iterator(), me;
+			int originalSize = size();
+			while (it.hasNext()) {
+				boolean item = it.nextBoolean();
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextBoolean() == item)
+					{
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+		 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+		 *
+		 * @param other a primitive collection of boolean items to remove one-by-one, such as a BooleanList or a BooleanDeque
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (OfBoolean other) {
 			BooleanIterator it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
