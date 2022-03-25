@@ -26,14 +26,13 @@ package com.github.tommyettinger.ds.support;
  * faster than FourWheelRandom (indeed, it was faster than any other algorithm I tested on a low-end GPU).
  * <br>
  * This can now be considered stable, like the other EnhancedRandom implementations here. Testing performed should be
- * sufficient, but more can always be done; this passes at least 64TB of PractRand without issues, and has passed 2PB
- * of hwd without issues. The second test, hwd, only checks for a specific type of quality issue, but also fails if the
- * period is exhausted; I didn't run hwd as long as I sometimes have because mathematically, the period is at minimum 2
- * to the 64, which wouldn't be exhausted by hwd in years. One other test ("remortality," which measures how often the
- * bitwise AND/bitwise OR of sequential numbers become all 0 bits or all 1 bits) showed "suspect" results for this after
- * about 700 petabytes, but the generator recovered and passed after over one exabyte. When tested with a different seed,
- * it has passed over 4 exabytes before getting any suspect results (after 22 days). The test in question runs on the
- * GPU using CUDA, so was able to generate far more numbers in a timeframe of days than most CPU approaches could.
+ * sufficient, but more can always be done; this passes at least 64TB of PractRand without issues, and passes a much more
+ * rigorous single test ("remortality," which measures how often the bitwise AND/bitwise OR of sequential numbers become
+ * all 0 bits or all 1 bits) through over 150 PB. The test in question runs on the GPU using CUDA, so was able to generate
+ * far more numbers in a timeframe of days than most CPU approaches could. Earlier versions of remortality incorrectly
+ * measured byte length and reported a higher size, so reports of 1 exabyte by earlier versions are roughly equivalent to
+ * 150 petabytes now. This is still a tremendous amount of data. This was changed a few times; when the algorithm could be
+ * strengthened, I took the chance to do so.
  * <br>
  * The algorithm used here has four states purely to exploit instruction-level parallelism; one state is a counter (this
  * gives the guaranteed minimum period of 2 to the 64), and the others combine the values of the four states across three
@@ -173,32 +172,13 @@ public class TrimRandom implements EnhancedRandom {
 	 */
 	@Override
 	public void setSeed (long seed) {
-		long x = (seed += 0x9E3779B97F4A7C15L);
-		x ^= x >>> 27;
-		x *= 0x3C79AC492BA7B653L;
-		x ^= x >>> 33;
-		x *= 0x1C69B3F74AC4AE35L;
-		stateA = x ^ x >>> 27;
-		x = (seed += 0x9E3779B97F4A7C15L);
-		x ^= x >>> 27;
-		x *= 0x3C79AC492BA7B653L;
-		x ^= x >>> 33;
-		x *= 0x1C69B3F74AC4AE35L;
-		stateB = x ^ x >>> 27;
-		x = (seed += 0x9E3779B97F4A7C15L);
-		x ^= x >>> 27;
-		x *= 0x3C79AC492BA7B653L;
-		x ^= x >>> 33;
-		x *= 0x1C69B3F74AC4AE35L;
-		stateC = x ^ x >>> 27;
-		x = (seed + 0x9E3779B97F4A7C15L);
-		x ^= x >>> 27;
-		x *= 0x3C79AC492BA7B653L;
-		x ^= x >>> 33;
-		x *= 0x1C69B3F74AC4AE35L;
-		stateD = x ^ x >>> 27;
+		stateA = seed ^ 0xC6BC279692B5C323L;
+		stateB = ~seed;
+		stateC = seed ^ ~0xC6BC279692B5C323L;
+		stateD = seed;
 	}
-
+	{
+}
 	public long getStateA () {
 		return stateA;
 	}
@@ -281,11 +261,12 @@ public class TrimRandom implements EnhancedRandom {
 		final long fb = stateB;
 		final long fc = stateC;
 		final long fd = stateD;
-		final long bc = fb + fc, cd = fc ^ fd;
-		stateA = (bc << 35 | bc >>> 29);
-		stateB = (cd << 46 | cd >>> 18);
-		stateC = fa + fb;
-		stateD = fd + 0x06A0F81D3D2E35EFL;
+		final long bc = fb ^ fc;
+		final long cd = fc ^ fd;
+		stateA = (bc << 57 | bc >>> 7);
+		stateB = (cd << 18 | cd >>> 46);
+		stateC = fa + bc;
+		stateD = fd + 0xDE916ABCC965815BL;
 		return fc;
 	}
 
@@ -294,13 +275,13 @@ public class TrimRandom implements EnhancedRandom {
 		final long fa = stateA;
 		final long fb = stateB;
 		final long fc = stateC;
-		stateD -= 0x06A0F81D3D2E35EFL;
-		long t = (fb >>> 46 | fb << 18);
+		stateD -= 0xDE916ABCC965815BL;
+		long t = (fb >>> 18 | fb << 46);
 		stateC = t ^ stateD;
-		t = (fa >>> 35 | fa << 29);
-		stateB = t - stateC;
-		stateA = fc - stateB;
-		return (stateB >>> 46 | stateB << 18) ^ stateD - 0x06A0F81D3D2E35EFL;
+		t = (fa >>> 57 | fa << 7);
+		stateB = t ^ stateC;
+		stateA = fc - t;
+		return (stateB >>> 18 | stateB << 46) ^ stateD - 0xDE916ABCC965815BL;
 	}
 
 	@Override
@@ -309,11 +290,12 @@ public class TrimRandom implements EnhancedRandom {
 		final long fb = stateB;
 		final long fc = stateC;
 		final long fd = stateD;
-		final long bc = fb + fc, cd = fc ^ fd;
-		stateA = (bc << 35 | bc >>> 29);
-		stateB = (cd << 46 | cd >>> 18);
-		stateC = fa + fb;
-		stateD = fd + 0x06A0F81D3D2E35EFL;
+		final long bc = fb ^ fc;
+		final long cd = fc ^ fd;
+		stateA = (bc << 57 | bc >>> 7);
+		stateB = (cd << 18 | cd >>> 46);
+		stateC = fa + bc;
+		stateD = fd + 0xDE916ABCC965815BL;
 		return (int)fc >>> (32 - bits);
 	}
 

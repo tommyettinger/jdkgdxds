@@ -22,9 +22,9 @@ package com.github.tommyettinger.ds.support;
  * and potentially being faster in some situations because it uses no multiplication. Like FourWheelRandom, this has four
  * {@code long} states, and is quite fast on desktop platforms (FourWheelRandom is about 25% faster, but both are very good).
  * It can be considered stable, like the other EnhancedRandom implementations here. I've tested this more than any other
- * generator I've written; it passes 64TB of PractRand, 5PB of hwd, and an absolutely massive amount of another test, extsat,
- * run on a GPU using CUDA. This last test is still a work in progress, so the exact amount of data tested may not be
- * accurate, but it appears to be over 2 exabytes after over 500 hours.
+ * generator I've written; it passes 64TB of PractRand, 5PB of hwd, and an absolutely massive amount of another test, remortality,
+ * run on a GPU using CUDA. This last test was run while it was still a work in progress, but this class passed over 300PB after
+ * over 500 hours.
  * <br>
  * The reason this has undergone so much testing is that it is built on top of some of the weakest random number generators
  * out there -- two interleaved 64-bit two-step xorshift generators, and some simple chaotic generators that incorporate the
