@@ -21,7 +21,6 @@ import com.github.tommyettinger.ds.support.EnhancedRandom;
 import com.github.tommyettinger.ds.support.function.ShortUnaryOperator;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
-import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 
 import javax.annotation.Nullable;
@@ -522,7 +521,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	/**
 	 * Removes from this ShortList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @param c a primitive collection of int items to remove fully, such as another ShortList or a ShortSet
+	 * @param c a primitive collection of int items to remove fully, such as another ShortList or a ShortDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeAll (PrimitiveCollection.OfShort c) {
@@ -548,7 +547,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
 	 * contents as this ShortList or has additional items, then removing each of {@code c} will clear this.
 	 *
-	 * @param c a primitive collection of int items to remove one-by-one, such as another ShortList or a ShortSet
+	 * @param c a primitive collection of int items to remove one-by-one, such as another ShortList or a ShortDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeEach (PrimitiveCollection.OfShort c) {

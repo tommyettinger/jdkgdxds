@@ -521,7 +521,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	/**
 	 * Removes from this FloatList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @param c a primitive collection of int items to remove fully, such as another FloatList or a FloatSet
+	 * @param c a primitive collection of int items to remove fully, such as another FloatList or a FloatDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeAll (PrimitiveCollection.OfFloat c) {
@@ -547,7 +547,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
 	 * contents as this FloatList or has additional items, then removing each of {@code c} will clear this.
 	 *
-	 * @param c a primitive collection of int items to remove one-by-one, such as another FloatList or a FloatSet
+	 * @param c a primitive collection of int items to remove one-by-one, such as another FloatList or a FloatDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeEach (PrimitiveCollection.OfFloat c) {

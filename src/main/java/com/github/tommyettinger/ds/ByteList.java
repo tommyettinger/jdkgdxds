@@ -519,19 +519,44 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
-	 * Removes from this array all of elements contained in the specified array.
-	 * Note that if a value is present more than once in this ByteList, only one of those occurrences
-	 * will be removed for each occurrence of that value in {@code array}. If {@code array} has the same
-	 * contents as this ByteList or has additional items, then removing all of {@code array} will clear this.
+	 * Removes from this ByteList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @return true if this array was modified.
+	 * @param c a primitive collection of int items to remove fully, such as another ByteList or a ByteDeque
+	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (ByteList array) {
+	public boolean removeAll (PrimitiveCollection.OfByte c) {
 		int size = this.size;
 		int startSize = size;
 		byte[] items = this.items;
-		for (int i = 0, n = array.size; i < n; i++) {
-			byte item = array.get(i);
+		ByteIterator it = c.iterator();
+		for (int i = 0, n = c.size(); i < n; i++) {
+			byte item = it.nextByte();
+			for (int ii = 0; ii < size; ii++) {
+				if (item == items[ii]) {
+					removeAt(ii--);
+					size--;
+				}
+			}
+		}
+		return size != startSize;
+	}
+
+	/**
+	 * Removes from this ByteList element-wise occurrences of elements contained in the specified collection.
+	 * Note that if a value is present more than once in this ByteList, only one of those occurrences
+	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
+	 * contents as this ByteList or has additional items, then removing each of {@code c} will clear this.
+	 *
+	 * @param c a primitive collection of int items to remove one-by-one, such as another ByteList or a ByteDeque
+	 * @return true if this list was modified.
+	 */
+	public boolean removeEach (PrimitiveCollection.OfByte c) {
+		int size = this.size;
+		int startSize = size;
+		byte[] items = this.items;
+		ByteIterator it = c.iterator();
+		for (int i = 0, n = c.size(); i < n; i++) {
+			byte item = it.nextByte();
 			for (int ii = 0; ii < size; ii++) {
 				if (item == items[ii]) {
 					removeAt(ii);
@@ -738,7 +763,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	/**
 	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
 	 * into {@code array} and returns it; otherwise, it allocates a new byte array that can fit all
-	 * of the items in this, and proceeds to copy into that and return that.
+	 * the items in this, and proceeds to copy into that and return that.
 	 *
 	 * @param array a byte array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
