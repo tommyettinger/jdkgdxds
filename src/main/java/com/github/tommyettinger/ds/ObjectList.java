@@ -200,6 +200,28 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
+	 * Removes from this ObjectList element-wise occurrences of elements contained in the specified Iterable.
+	 * Note that if a value is present more than once in this ObjectList, only one of those occurrences
+	 * will be removed for each occurrence of that value in {@code able}. If {@code able} has the same
+	 * contents as this ObjectList or has additional items, then removing each of {@code able} will clear this.
+	 * <br>
+	 * This matches the behavior of the libGDX {@code Array.removeAll(Array)} method in libGDX 1.10.0 and earlier.
+	 * The method {@link #removeAll(Collection)} here matches the behavior of the JDK
+	 * {@link java.util.List#removeAll(Collection)} method.
+	 *
+	 * @param able an Iterable of T items to remove one-by-one, such as another ObjectList or an ObjectSet
+	 * @return true if this list was modified.
+	 */
+	public boolean removeEach (Iterable<T> able) {
+		Iterator<T> it = able.iterator();
+		boolean changed = false;
+		while (it.hasNext()) {
+			changed |= remove(it.next());
+		}
+		return changed;
+	}
+
+	/**
 	 * Adds each item in the array {@code a} to this ObjectList, appending to the end.
 	 *
 	 * @param a a non-null array of {@code T}

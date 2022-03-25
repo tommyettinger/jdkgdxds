@@ -86,6 +86,12 @@ public interface PrimitiveCollection<T, T_CONS> {
 			return changed;
 		}
 
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
+		 *
+		 * @param other a primitive collection of int items to remove fully, such as an IntList or an IntSet
+		 * @return true if this collection was modified.
+		 */
 		default boolean removeAll (OfInt other) {
 			PrimitiveIterator.OfInt it = other.iterator(), me;
 			int originalSize = size();
@@ -100,6 +106,24 @@ public interface PrimitiveCollection<T, T_CONS> {
 				}
 			}
 			return originalSize != size();
+		}
+
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+		 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+		 *
+		 * @param other a primitive collection of int items to remove one-by-one, such as an IntList or an IntSet
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (OfInt other) {
+			PrimitiveIterator.OfInt it = other.iterator();
+			boolean changed = false;
+			while (it.hasNext()) {
+				changed |= remove(it.nextInt());
+			}
+			return changed;
 		}
 
 		default boolean containsAll (OfInt other) {
