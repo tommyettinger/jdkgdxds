@@ -519,19 +519,44 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
-	 * Removes from this array all of elements contained in the specified array.
-	 * Note that if a value is present more than once in this FloatList, only one of those occurrences
-	 * will be removed for each occurrence of that value in {@code array}. If {@code array} has the same
-	 * contents as this FloatList or has additional items, then removing all of {@code array} will clear this.
+	 * Removes from this FloatList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @return true if this array was modified.
+	 * @param c a primitive collection of int items to remove fully, such as another FloatList or a FloatSet
+	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (FloatList array) {
+	public boolean removeAll (PrimitiveCollection.OfFloat c) {
 		int size = this.size;
 		int startSize = size;
 		float[] items = this.items;
-		for (int i = 0, n = array.size; i < n; i++) {
-			float item = array.get(i);
+		FloatIterator it = c.iterator();
+		for (int i = 0, n = c.size(); i < n; i++) {
+			float item = it.nextFloat();
+			for (int ii = 0; ii < size; ii++) {
+				if (item == items[ii]) {
+					removeAt(ii--);
+					size--;
+				}
+			}
+		}
+		return size != startSize;
+	}
+
+	/**
+	 * Removes from this FloatList element-wise occurrences of elements contained in the specified collection.
+	 * Note that if a value is present more than once in this FloatList, only one of those occurrences
+	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
+	 * contents as this FloatList or has additional items, then removing each of {@code c} will clear this.
+	 *
+	 * @param c a primitive collection of int items to remove one-by-one, such as another FloatList or a FloatSet
+	 * @return true if this list was modified.
+	 */
+	public boolean removeEach (PrimitiveCollection.OfFloat c) {
+		int size = this.size;
+		int startSize = size;
+		float[] items = this.items;
+		FloatIterator it = c.iterator();
+		for (int i = 0, n = c.size(); i < n; i++) {
+			float item = it.nextFloat();
 			for (int ii = 0; ii < size; ii++) {
 				if (item == items[ii]) {
 					removeAt(ii);
