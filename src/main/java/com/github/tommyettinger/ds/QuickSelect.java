@@ -116,7 +116,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the T elements to be partially sorted
 	 * @param comp  a Comparator for the T elements
@@ -130,7 +130,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the T elements to be partially sorted
 	 * @param comp  a Comparator for the T elements
@@ -235,7 +235,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the T elements to be partially sorted
 	 * @param comp  a Comparator for the T elements
@@ -249,7 +249,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the T elements to be partially sorted
 	 * @param comp  a Comparator for the T elements
@@ -357,7 +357,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the int elements to be partially sorted
 	 * @param comp  an IntComparator for the int elements
@@ -370,7 +370,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the int elements to be partially sorted
 	 * @param comp  an IntComparator for the int elements
@@ -475,7 +475,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the long elements to be partially sorted
 	 * @param comp  a LongComparator for the long elements
@@ -488,7 +488,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the long elements to be partially sorted
 	 * @param comp  a LongComparator for the long elements
@@ -593,7 +593,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the float elements to be partially sorted
 	 * @param comp  a FloatComparator for the long elements
@@ -606,7 +606,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the float elements to be partially sorted
 	 * @param comp  a FloatComparator for the long elements
@@ -711,7 +711,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the double elements to be partially sorted
 	 * @param comp  a DoubleComparator for the double elements
@@ -724,7 +724,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the double elements to be partially sorted
 	 * @param comp  a DoubleComparator for the double elements
@@ -829,7 +829,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the short elements to be partially sorted
 	 * @param comp  a ShortComparator for the short elements
@@ -842,7 +842,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the short elements to be partially sorted
 	 * @param comp  a ShortComparator for the short elements
@@ -947,7 +947,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the byte elements to be partially sorted
 	 * @param comp  a ByteComparator for the byte elements
@@ -960,7 +960,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the byte elements to be partially sorted
 	 * @param comp  a ByteComparator for the byte elements
@@ -1065,7 +1065,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the char elements to be partially sorted
 	 * @param comp  a CharComparator for the char elements
@@ -1078,7 +1078,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the char elements to be partially sorted
 	 * @param comp  a CharComparator for the char elements
@@ -1183,7 +1183,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the boolean elements to be partially sorted
 	 * @param comp  a BooleanComparator for the boolean elements
@@ -1196,7 +1196,7 @@ public class QuickSelect {
 	/**
 	 * Sorts an array so that items come in groups of n unsorted items, with
 	 * groups sorted between each other. This combines a selection algorithm
-	 * with a binary divide & conquer approach.
+	 * with a binary divide and conquer approach.
 	 *
 	 * @param items the boolean elements to be partially sorted
 	 * @param comp  a BooleanComparator for the boolean elements

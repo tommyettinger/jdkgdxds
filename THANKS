@@ -51,3 +51,7 @@ an EnhancedRandom implementation. No code was directly taken
 from the Romu sources at https://romu-random.org/ , but a port
 by Bradley Grainger from https://github.com/bgrainger/RomuRandom
 was used as a basis. Thanks also to Bradley Grainger.
+
+Thanks to the libGDX Discord and all of the libGDX contributors!
+This applies in particular to the changes in 0.2.8, involving
+the removeAll() method.

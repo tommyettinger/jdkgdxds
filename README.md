@@ -74,9 +74,11 @@ FourWheelRandom do not allow skipping. There's also some other generators that y
 never produced). `com.github.tommyettinger.ds.support.StrangerRandom` is mostly useful if you anticipate running on unusual
 hardware, particularly some that doesn't support fast multiplication between `long`s (StrangerRandom doesn't use multiplication);
 it also has a good guaranteed minimum period length of 2 to the 65 minus 2, but is between DistinctRandom and FourWheelRandom in
-raw speed. `com.github.tommyettinger.ds.support.TrimRandom` is still being adjusted, but currently is faster than StrangerRandom,
-also offers a high guaranteed minimum period (2 to the 64) with a likely higher maximum period, and generally does well in quality
-testing (it could do better in some ways, which is why it is being adjusted).
+raw speed. `com.github.tommyettinger.ds.support.TrimRandom` has very high quality, currently is faster than StrangerRandom, and
+also offers a high guaranteed minimum period (2 to the 64) with a likely higher maximum period; it doesn't use multiplication
+either. `com.github.tommyettinger.ds.support.MizuchiRandom` is a simple PCG-style generator, using a linear congruential generator
+as a base and hashing the LCG's output before it returns it; Mizuchi has streams, like LaserRandom, but they are less correlated
+with each other than in LaserRandom.
 
 You can extend essentially all classes in jdkgdxds, and it's meant to be friendlier to inherit from than the libGDX collections.
 The Object-keyed maps and sets have protected `place()` and `equate()` methods to allow changing the behavior of hashing (with
@@ -98,14 +100,20 @@ which imitates the method by that name in the JDK, not the similar one in libGDX
 useful for imitating disjoint sets, and other ways of isolating part of a data structure. You might shuffle an `ObjectList`, then
 make two more distinct `ObjectList`s by copying different ranges from the shuffled "deck," for example.
 
+An oddity in libGDX's Array classes (such as IntArray, FloatArray, and of course Array) is that their removeAll() method doesn't
+act like removeAll() in the JDK List interface. In `List.removeAll(Collection)`, when the Collection `c` contains an item even
+once, every occurrence of that item is removed from the `List`. In libGDX, if an item appears once in the parameter, it is removed
+once from the Array; similarly, if it appears twice, it is removed twice. Here, we have the List behavior for removeAll(), but
+also keep the Array behavior in `removeEach()`.
+
 ## How do I get it?
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.7'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.8'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.2.7:sources'` to its dependencies, and in its
+`implementation 'com.github.tommyettinger:jdkgdxds:0.2.8:sources'` to its dependencies, and in its
 `GdxDefinition.gwt.xml` (in the HTML module), add
 ```xml
 <inherits name="jdkgdxds" />
