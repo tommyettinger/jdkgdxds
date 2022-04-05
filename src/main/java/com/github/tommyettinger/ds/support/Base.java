@@ -76,7 +76,7 @@ public class Base {
 	 * encoded number is stored in libGDX's "minimal JSON" format, it will often need quoting, which of the other bases,
 	 * only {@link #BASE64} requires sometimes.
 	 */
-	public static final Base BASE86 = new Base("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()[]{}<>.?;|_=", false, ' ', '+', '-');
+	public static final Base BASE86 = new Base("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'~!@#$%^&*()[]{}<>.?;|_=", false, ' ', '+', '-');
 
 	/**
 	 * All Base instances this knows about from its own constants.
