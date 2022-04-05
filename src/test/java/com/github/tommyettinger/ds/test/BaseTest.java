@@ -121,8 +121,8 @@ public class BaseTest {
 		for(Base b : BASES){
 			Assert.assertArrayEquals(b.longSplit(b.join(" ", inputs), " "), inputs);
 			Assert.assertArrayEquals(b.longSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
-			Assert.assertArrayEquals(b.longSplit2D(b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
-			Assert.assertArrayEquals(b.longSplit2D(" " + b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
+			Assert.assertArrayEquals(b.longSplit2D(b.appendJoined2D(new StringBuilder(), "`", ",", inputs2D).toString(), "`", ","), inputs2D);
+			Assert.assertArrayEquals(b.longSplit2D(" " + b.appendJoined2D(new StringBuilder(), "`", ",", inputs2D), "`", ",", 1, Integer.MAX_VALUE), inputs2D);
 
 			if(b.base > 10 && b.base <= 36)
 			{
@@ -158,8 +158,8 @@ public class BaseTest {
 		for(Base b : BASES){
 			Assert.assertArrayEquals(b.intSplit(b.join(" ", inputs), " "), inputs);
 			Assert.assertArrayEquals(b.intSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
-			Assert.assertArrayEquals(b.intSplit2D(b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
-			Assert.assertArrayEquals(b.intSplit2D(" " + b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
+			Assert.assertArrayEquals(b.intSplit2D(b.appendJoined2D(new StringBuilder(), "`", ",", inputs2D).toString(), "`", ","), inputs2D);
+			Assert.assertArrayEquals(b.intSplit2D(" " + b.appendJoined2D(new StringBuilder(), "`", ",", inputs2D), "`", ",", 1, Integer.MAX_VALUE), inputs2D);
 		}
 	}
 
@@ -187,8 +187,8 @@ public class BaseTest {
 		for(Base b : BASES){
 			Assert.assertArrayEquals(b.shortSplit(b.join(" ", inputs), " "), inputs);
 			Assert.assertArrayEquals(b.shortSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
-			Assert.assertArrayEquals(b.shortSplit2D(b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
-			Assert.assertArrayEquals(b.shortSplit2D(" " + b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
+			Assert.assertArrayEquals(b.shortSplit2D(b.appendJoined2D(new StringBuilder(), "`", ",", inputs2D).toString(), "`", ","), inputs2D);
+			Assert.assertArrayEquals(b.shortSplit2D(" " + b.appendJoined2D(new StringBuilder(), "`", ",", inputs2D), "`", ",", 1, Integer.MAX_VALUE), inputs2D);
 		}
 	}
 
@@ -216,8 +216,8 @@ public class BaseTest {
 		for(Base b : BASES){
 			Assert.assertArrayEquals(b.charSplit(b.join(" ", inputs), " "), inputs);
 			Assert.assertArrayEquals(b.charSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
-			Assert.assertArrayEquals(b.charSplit2D(b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
-			Assert.assertArrayEquals(b.charSplit2D(" " + b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
+			Assert.assertArrayEquals(b.charSplit2D(b.appendJoined2D(new StringBuilder(), "`", ",", inputs2D).toString(), "`", ","), inputs2D);
+			Assert.assertArrayEquals(b.charSplit2D(" " + b.appendJoined2D(new StringBuilder(), "`", ",", inputs2D), "`", ",", 1, Integer.MAX_VALUE), inputs2D);
 		}
 	}
 
@@ -245,8 +245,8 @@ public class BaseTest {
 		for(Base b : BASES){
 			Assert.assertArrayEquals(b.byteSplit(b.join(" ", inputs), " "), inputs);
 			Assert.assertArrayEquals(b.byteSplit(" " + b.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs);
-			Assert.assertArrayEquals(b.byteSplit2D(b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
-			Assert.assertArrayEquals(b.byteSplit2D(" " + b.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
+			Assert.assertArrayEquals(b.byteSplit2D(b.appendJoined2D(new StringBuilder(), "`", ",", inputs2D).toString(), "`", ","), inputs2D);
+			Assert.assertArrayEquals(b.byteSplit2D(" " + b.appendJoined2D(new StringBuilder(), "`", ",", inputs2D), "`", ",", 1, Integer.MAX_VALUE), inputs2D);
 		}
 	}
 
@@ -341,8 +341,8 @@ public class BaseTest {
 			Assert.assertTrue(Double.isNaN(enc.readDouble(enc.unsigned(Double.NaN))));
 			Assert.assertArrayEquals(enc.doubleSplit(enc.join(" ", inputs), " "), inputs, 0.00001);
 			Assert.assertArrayEquals(enc.doubleSplit(" " + enc.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs, 0.00001);
-			Assert.assertArrayEquals(enc.doubleSplit2D(enc.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
-			Assert.assertArrayEquals(enc.doubleSplit2D(" " + enc.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
+			Assert.assertArrayEquals(enc.doubleSplit2D(enc.appendJoined2D(new StringBuilder(), "`", ",", inputs2D).toString(), "`", ","), inputs2D);
+			Assert.assertArrayEquals(enc.doubleSplit2D(" " + enc.appendJoined2D(new StringBuilder(), "`", ",", inputs2D), "`", ",", 1, Integer.MAX_VALUE), inputs2D);
 		}
 	}
 
@@ -368,8 +368,8 @@ public class BaseTest {
 			Assert.assertTrue(Float.isNaN(enc.readFloat(enc.unsigned(Float.NaN))));
 			Assert.assertArrayEquals(enc.floatSplit(enc.join(" ", inputs), " "), inputs, 0.00001f);
 			Assert.assertArrayEquals(enc.floatSplit(" " + enc.join(" ", inputs), " ", 1, Integer.MAX_VALUE), inputs, 0.00001f);
-			Assert.assertArrayEquals(enc.floatSplit2D(enc.appendJoined2D(new StringBuilder(), ";", ",", inputs2D).toString(), ";", ","), inputs2D);
-			Assert.assertArrayEquals(enc.floatSplit2D(" " + enc.appendJoined2D(new StringBuilder(), ";", ",", inputs2D), ";", ",", 1, Integer.MAX_VALUE), inputs2D);
+			Assert.assertArrayEquals(enc.floatSplit2D(enc.appendJoined2D(new StringBuilder(), "`", ",", inputs2D).toString(), "`", ","), inputs2D);
+			Assert.assertArrayEquals(enc.floatSplit2D(" " + enc.appendJoined2D(new StringBuilder(), "`", ",", inputs2D), "`", ",", 1, Integer.MAX_VALUE), inputs2D);
 		}
 	}
 
