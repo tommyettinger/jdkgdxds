@@ -27,7 +27,12 @@ import java.util.List;
  * decimal ({@link #BASE10}, 0 through 9), hexadecimal ({@link #BASE16}, 0-9 then A-F), and the even larger
  * hexatrigesimal ({@link #BASE36}, 0 through 9 then A-Z). Of special note are the two different approaches to encoding
  * base-64 data: {@link #BASE64} is the standard format, and {@link #URI_SAFE} is the different format used when
- * encoding data for a URI (typically meant for the Internet). Each of these base systems provides a way to write bytes,
+ * encoding data for a URI (typically meant for the Internet). The newest is {@link #BASE86}, which is also the largest
+ * base, and uses 0-9, A-Z, a-z, and then many punctuation characters. Even more bases can be created with
+ * {@link #scrambledBase(EnhancedRandom)}, which when called creates a base-72 Base with randomized choices for digits;
+ * this could be useful for obfuscating plain-text saved data so the average player can't read it.
+ * <br>
+ * Each of these base systems provides a way to write bytes,
  * shorts, ints, and longs as variable-character-count signed numbers or as fixed-character-count unsigned numbers,
  * using {@link #signed(long)} and {@link #unsigned(long)} respectively. There is only one reading method for each size
  * of number, but it is capable of reading both the signed and unsigned results, and never throws an Exception (it just
@@ -64,12 +69,20 @@ public class Base {
 	 * 0-9, then + and - (case-sensitive). This uses * in place of + to indicate a positive sign, and ~ in place of - .
 	 */
 	public static final Base URI_SAFE = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-", false, '$', '*', '~');
+	/**
+	 * The largest base here, this uses digits 0-9 first, then A-Z, then a-z, them many punctuation characters:
+	 * {@code `~!@#$%^&*()[]{}<>.?;|_=} . This uses + to indicate a positive sign, and - for negative.
+	 * This can encode a 32-bit number with 5 chars (unsigned); none of the other bases can. As a drawback, if a BASE86
+	 * encoded number is stored in libGDX's "minimal JSON" format, it will often need quoting, which of the other bases,
+	 * only {@link #BASE64} requires sometimes.
+	 */
+	public static final Base BASE86 = new Base("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()[]{}<>.?;|_=", false, ' ', '+', '-');
 
 	/**
 	 * All Base instances this knows about from its own constants.
 	 * We use Arrays.asList() here to ensure the returned List is immutable.
 	 */
-	private static final List<Base> BASES = Arrays.asList(BASE2, BASE8, BASE10, BASE16, BASE36, BASE64, URI_SAFE);
+	private static final List<Base> BASES = Arrays.asList(BASE2, BASE8, BASE10, BASE16, BASE36, BASE64, URI_SAFE, BASE86);
 
 	/**
 	 * Returns an immutable List of the Base instances this knows about from the start. Mostly useful for testing.

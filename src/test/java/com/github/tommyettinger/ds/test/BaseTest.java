@@ -4,13 +4,14 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.Base;
 import com.github.tommyettinger.ds.support.DistinctRandom;
 import com.github.tommyettinger.ds.support.FourWheelRandom;
+import com.github.tommyettinger.ds.support.TrimRandom;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class BaseTest {
 
 	public static final ObjectList<Base> BASES = ObjectList.with(Base.BASE2, Base.BASE8, Base.BASE10, Base.BASE16,
-		Base.BASE36, Base.BASE64, Base.URI_SAFE, Base.scrambledBase(new DistinctRandom(123L)), Base.scrambledBase(new FourWheelRandom(1234L)));
+		Base.BASE36, Base.BASE64, Base.URI_SAFE, Base.BASE86, Base.scrambledBase(new DistinctRandom(123L)), Base.scrambledBase(new FourWheelRandom(1234L)));
 	@Test
 	public void testUnsignedInt() {
 		int[] inputs = {0x00000000, 0x00000001, 0xFFFFFFFF, 0x7FFFFFFF, 0x80000000, 0x12345678, 0x89ABCDEF};
@@ -372,6 +373,22 @@ public class BaseTest {
 		}
 	}
 
+	@Test
+	public void testScramble() {
+		TrimRandom random = new TrimRandom(); // unseeded, expected to have different results between runs, but always pass.
+		for (int i = 0; i < 1024; i++) {
+			Base base = Base.scrambledBase(random);
+			System.out.println(base.negativeSign + "  :  " + base.serializeToString());
+			for (int j = 0; j < 512; j++) {
+				long n = random.nextLong();
+				String signed = base.signed(n);
+				if(signed.charAt(0) == base.negativeSign && signed.indexOf(base.negativeSign, 1) >= 0)
+					System.out.println("has both: " + signed);
+				Assert.assertEquals(n, base.readLong(signed));
+			}
+		}
+	}
+
 	public static void main(String[] args){
 		for(Base b : BASES){
 			System.out.println(b.serializeToString());
@@ -383,6 +400,10 @@ public class BaseTest {
 				System.out.print("    ");
 			}
 			System.out.println();
+		}
+		System.out.println();
+		for(Base b : BASES){
+			System.out.println(b.base + ": " + b.signed(4.89684f));
 		}
 	}
 }
