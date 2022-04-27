@@ -172,11 +172,20 @@ public class TrimRandom implements EnhancedRandom {
 	 * This initializes all 4 states of the generator to random values based on the given seed.
 	 * (2 to the 64) possible initial generator states can be produced here, all with a different
 	 * first value returned by {@link #nextLong()}.
-	 *
+	 * <br>
+	 * This uses MX3 by Jon Maiga to mix {@code seed}, then only does a little distribution of the
+	 * mixed long so that 128 of 256 bits are always set across the four states. Because this uses
+	 * MX3, it uses long multiplication; this is the only part of TrimRandom that does so.
 	 * @param seed the initial seed; may be any long
 	 */
-	@Override
-	public void setSeed (long seed) {
+	public void setSeed(long seed) {
+		seed ^= seed >>> 32;
+		seed *= 0xbea225f9eb34556dL;
+		seed ^= seed >>> 29;
+		seed *= 0xbea225f9eb34556dL;
+		seed ^= seed >>> 32;
+		seed *= 0xbea225f9eb34556dL;
+		seed ^= seed >>> 29;
 		stateA = seed ^ 0xC6BC279692B5C323L;
 		stateB = ~seed;
 		stateC = seed ^ ~0xC6BC279692B5C323L;
