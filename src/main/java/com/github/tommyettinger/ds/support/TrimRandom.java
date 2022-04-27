@@ -31,8 +31,14 @@ package com.github.tommyettinger.ds.support;
  * all 0 bits or all 1 bits) through over 150 PB. The test in question runs on the GPU using CUDA, so was able to generate
  * far more numbers in a timeframe of days than most CPU approaches could. Earlier versions of remortality incorrectly
  * measured byte length and reported a higher size, so reports of 1 exabyte by earlier versions are roughly equivalent to
- * 150 petabytes now. This is still a tremendous amount of data. This was changed a few times; when the algorithm could be
- * strengthened, I took the chance to do so.
+ * 150 petabytes now. This is still a tremendous amount of data.
+ * <br>
+ * This was changed a few times; when the algorithm could be strengthened, I took the chance to do so. The most recent
+ * change made the first number returned a little more robust; where before it was always the incoming value of
+ * {@code stateC} (which would change for the next returned number, but not the current one), now it is the outgoing
+ * value of {@code stateC}, which is slightly-less obviously-related to one state only. The first result of
+ * {@link #nextLong()} incorporates states A, B, and C, but not D; the second and later results will incorporate
+ * {@code stateD}. This doesn't seem to have any performance penalty, and may actually improve performance in some cases.
  * <br>
  * The algorithm used here has four states purely to exploit instruction-level parallelism; one state is a counter (this
  * gives the guaranteed minimum period of 2 to the 64), and the others combine the values of the four states across three
@@ -165,8 +171,7 @@ public class TrimRandom implements EnhancedRandom {
 	/**
 	 * This initializes all 4 states of the generator to random values based on the given seed.
 	 * (2 to the 64) possible initial generator states can be produced here, all with a different
-	 * first value returned by {@link #nextLong()} (because {@code stateC} is guaranteed to be
-	 * different for every different {@code seed}).
+	 * first value returned by {@link #nextLong()}.
 	 *
 	 * @param seed the initial seed; may be any long
 	 */
@@ -177,8 +182,7 @@ public class TrimRandom implements EnhancedRandom {
 		stateC = seed ^ ~0xC6BC279692B5C323L;
 		stateD = seed;
 	}
-	{
-}
+
 	public long getStateA () {
 		return stateA;
 	}
@@ -210,10 +214,7 @@ public class TrimRandom implements EnhancedRandom {
 	}
 
 	/**
-	 * Sets the third part of the state. Note that if you call {@link #nextLong()}
-	 * immediately after this, it will return the given {@code stateC} as-is, so you
-	 * may want to call some random generation methods (such as nextLong()) and discard
-	 * the results after setting the state.
+	 * Sets the third part of the state.
 	 *
 	 * @param stateC can be any long
 	 */
@@ -237,14 +238,11 @@ public class TrimRandom implements EnhancedRandom {
 	/**
 	 * Sets the state completely to the given four state variables.
 	 * This is the same as calling {@link #setStateA(long)}, {@link #setStateB(long)},
-	 * {@link #setStateC(long)}, and {@link #setStateD(long)} as a group. You may want
-	 * to call {@link #nextLong()} a few times after setting the states like this, unless
-	 * the value for stateC (in particular) is already adequately random; the first call
-	 * to {@link #nextLong()}, if it is made immediately after calling this, will return {@code stateC} as-is.
+	 * {@link #setStateC(long)}, and {@link #setStateD(long)} as a group.
 	 *
 	 * @param stateA the first state; can be any long
 	 * @param stateB the second state; can be any long
-	 * @param stateC the third state; this will be returned as-is if the next call is to {@link #nextLong()}
+	 * @param stateC the third state; can be any long
 	 * @param stateD the fourth state; can be any long
 	 */
 	@Override
@@ -267,7 +265,7 @@ public class TrimRandom implements EnhancedRandom {
 		stateB = (cd << 18 | cd >>> 46);
 		stateC = fa + bc;
 		stateD = fd + 0xDE916ABCC965815BL;
-		return fc;
+		return stateC;
 	}
 
 	@Override
@@ -281,7 +279,7 @@ public class TrimRandom implements EnhancedRandom {
 		t = (fa >>> 57 | fa << 7);
 		stateB = t ^ stateC;
 		stateA = fc - t;
-		return (stateB >>> 18 | stateB << 46) ^ stateD - 0xDE916ABCC965815BL;
+		return stateC;
 	}
 
 	@Override
@@ -296,7 +294,7 @@ public class TrimRandom implements EnhancedRandom {
 		stateB = (cd << 18 | cd >>> 46);
 		stateC = fa + bc;
 		stateD = fd + 0xDE916ABCC965815BL;
-		return (int)fc >>> (32 - bits);
+		return (int)stateC >>> (32 - bits);
 	}
 
 	@Override

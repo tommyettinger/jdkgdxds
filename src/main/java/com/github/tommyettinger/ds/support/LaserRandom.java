@@ -21,7 +21,8 @@ import java.util.Random;
 
 /**
  * A faster and much-higher-quality substitute for {@link Random}. This allows many different random number
- * streams that don't overlap, and offers a more substantial API for commonly-used functions.
+ * streams that don't overlap, and offers a more substantial API for commonly-used functions. This is not a
+ * cryptographic random number generator, and should not be used in place of one.
  * <br>
  * This fills in much of the functionality of MathUtils in libGDX, though with all code as instance methods
  * instead of static methods, and some things renamed (randomTriangular() became {@link #nextTriangular()},
@@ -30,7 +31,7 @@ import java.util.Random;
  * go back one step, you can get and set the exact state with {@link #getStateA()}, {@link #getStateB()},
  * {@link #setStateA(long)}, {@link #setStateB(long)}, and {@link #setState(long, long)} (which is useful
  * if you want to save a LaserRandom and reload it later), and there's bounded int and long generators which
- * can use a negative number as their exclusive outer bound ({@link #nextSignedInt(int)} and
+ * can use a negative number for their exclusive outer bound ({@link #nextSignedInt(int)} and
  * {@link #nextSignedLong(long)}, plus overloads that take an inner bound). There's float and double
  * generators that are inclusive on both ends ({@link #nextInclusiveFloat()}, and
  * {@link #nextInclusiveDouble()}. There's {@link #nextGaussian()}, which is implemented differently from
@@ -75,8 +76,8 @@ import java.util.Random;
  * constants and tested after that multiplication (see M.E. O'Neill's dissection of xoshiro256**
  * <a href="https://www.pcg-random.org/posts/a-quick-look-at-xoshiro256.html">here</a>). Xoshiro256**, like
  * LaserRandom, can't be reliably initialized using nearby values for its state variables, and does much
- * better if you use its {@link Xoshiro256StarStarRandom#setSeed(long)} method. We do implement Xoshiro256**
- * here, because it provides 4-dimensional equidistribution, and that is hard to find.
+ * better if you use its setSeed(long) method. We do implement Xoshiro256** here, because it provides
+ * 4-dimensional equidistribution, and that is hard to find.
  * <br>
  * You can copy this class independently of the library it's part of; it's meant as a general replacement for
  * Random and also RandomXS128. LaserRandom is generally faster than RandomXS128, and can be over 3x faster
@@ -1028,8 +1029,13 @@ public class LaserRandom extends Random implements EnhancedRandom {
 		return stateB == that.stateB;
 	}
 
+	/**
+	 * This String conversion uses base-10 numbers for the states, unlike all other EnhancedRandom implementations, which use base-16.
+	 * This is done here to avoid a dependency on Base, allowing this class to be copied more easily.
+	 * @return a String description of this LaserRandom and its two states
+	 */
 	@Override
 	public String toString () {
-		return "LaserRandom{" + "stateA=0x" + Base.BASE16.unsigned(stateA) + "L, stateB=0x" + Base.BASE16.unsigned(stateB) + "L}";
+		return "LaserRandom{" + "stateA=" + stateA + "L, stateB=" + stateB + "L}";
 	}
 }
