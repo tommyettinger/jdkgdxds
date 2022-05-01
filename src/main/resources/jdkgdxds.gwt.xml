@@ -12,4 +12,5 @@
     <inherits name="com.google.gwt.typedarrays.TypedArrays"/>
     <super-source path="emu" />
     <source path="com/github/tommyettinger/ds" />
+    <source path="com/github/tommyettinger/random" />
 </module>

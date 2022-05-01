@@ -15,14 +15,9 @@
  *
  */
 
-package com.github.tommyettinger.ds.support;
+package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.ds.Arrangeable;
-import com.github.tommyettinger.ds.FloatList;
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.LongList;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.Ordered;
+import com.github.tommyettinger.ds.support.BitConversion;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -65,7 +60,7 @@ public abstract class AbstractRandom extends Random {
 	 * {@link #getSelectedState(int)} or {@link #setSelectedState(int, long)}.
 	 * This defaults to returning 0, making no state variable available for
 	 * reading or writing. An implementation that has only one {@code long}
-	 * state, like a SplitMix64 generator, should return {@code 1}. A
+	 * state, like {@link DistinctRandom} generator, should return {@code 1}. A
 	 * generator that permits setting two different {@code long} values, like
 	 * {@link LaserRandom}, should return {@code 2}. Much larger values are
 	 * possible for types like the Mersenne Twister or some CMWC generators.
