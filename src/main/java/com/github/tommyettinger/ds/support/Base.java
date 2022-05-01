@@ -61,17 +61,18 @@ public class Base {
 	public static final Base BASE36 = new Base("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	/**
 	 * One of two base-64 schemes available here, this is the more-standard one, using the digits A-Z, then a-z, then
-	 * 0-9, then + and / (case-sensitive). This uses * in place of + to indicate a positive sign, and ~ in place of - .
+	 * 0-9, then + and / (case-sensitive). This uses * in place of + to indicate a positive sign, and - for negative.
+	 * Because this can use the / character, it sometimes needs quoting when used with libGDX's "minimal JSON" format.
 	 */
-	public static final Base BASE64 = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", false, '=', '*', '~');
+	public static final Base BASE64 = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", false, '=', '*', '-');
 	/**
 	 * One of two base-64 schemes available here, this is meant for URI-encoding, using the digits A-Z, then a-z, then
-	 * 0-9, then + and - (case-sensitive). This uses * in place of + to indicate a positive sign, and ~ in place of - .
+	 * 0-9, then + and - (case-sensitive). This uses * in place of + to indicate a positive sign, and ! in place of - .
 	 */
-	public static final Base URI_SAFE = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-", false, '$', '*', '~');
+	public static final Base URI_SAFE = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-", false, '$', '*', '!');
 	/**
 	 * The largest base here, this uses digits 0-9 first, then A-Z, then a-z, them many punctuation characters:
-	 * {@code `~!@#$%^&*()[]{}<>.?;|_=} . This uses + to indicate a positive sign, and - for negative.
+	 * <code>`~!@#$%^&amp;*()[]{}&lt;&gt;.?;|_=</code>  . This uses + to indicate a positive sign, and - for negative.
 	 * This can encode a 32-bit number with 5 chars (unsigned); none of the other bases can. As a drawback, if a BASE86
 	 * encoded number is stored in libGDX's "minimal JSON" format, it will often need quoting, which of the other bases,
 	 * only {@link #BASE64} requires sometimes.
@@ -202,18 +203,18 @@ public class Base {
 	 * Returns a seemingly-gibberish Base that uses a radix of 72 and a randomly-ordered set of characters to represent
 	 * the different digit values. This is randomized by an EnhancedRandom, so if the parameter is seeded identically
 	 * (and is the same implementation), then an equivalent Base will be produced. This randomly chooses 72 digits from
-	 * a large set, <code>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&amp;*-|=+</code>, and
+	 * a large set, <code>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?!@#$%^&amp;*-|=+</code>, and
 	 * sets the positive and negative signs to two different chars left over. The padding char is always space, ' '.
 	 *
 	 * @param random an EnhancedRandom used to shuffle the possible digits
 	 * @return a new Base with 72 random digits, as well as a random positive and negative sign
 	 */
 	public static Base scrambledBase (@Nonnull EnhancedRandom random) {
-		char[] options = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*-|=+".toCharArray();
+		char[] options = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?!@#$%^&*-|=+".toCharArray();
 		random.shuffle(options);
 		char plus = options[options.length - 2], minus = options[options.length - 1];
 
-		Base base = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*-", false, ' ', plus, minus);
+		Base base = new Base("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?!@#$%^&*-", false, ' ', plus, minus);
 
 		System.arraycopy(options, 0, base.toEncoded, 0, 72);
 		Arrays.fill(base.fromEncoded, -1);
