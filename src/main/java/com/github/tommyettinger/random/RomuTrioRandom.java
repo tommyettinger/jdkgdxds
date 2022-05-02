@@ -24,7 +24,7 @@ import com.github.tommyettinger.ds.support.Base;
  * <a href="https://romu-random.org/">Romu-Random</a>'s RomuTrio generator to Java. It has
  * three {@code long} states, which must never all be 0 but otherwise have no known restrictions.
  * <br>
- * RomuTrioRandom implements all optional methods in AbstractRandom except
+ * RomuTrioRandom implements all optional methods in EnhancedRandom except
  * {@link #skip(long)} or {@link #previousLong()}.
  * <br>
  * It is strongly recommended that you seed this with {@link #setSeed(long)} instead of
@@ -36,7 +36,7 @@ import com.github.tommyettinger.ds.support.Base;
  * implementation more closely on <a href="https://github.com/bgrainger/RomuRandom">this C# port</a>. The C# port by
  * Bradley Grainger is Apache 2.0 licensed, like jdkgdxds.
  */
-public class RomuTrioRandom extends AbstractRandom {
+public class RomuTrioRandom extends EnhancedRandom {
 
 	/**
 	 * The first state; can be any long unless all states are 0. If this has just been set to some value, then the
@@ -56,9 +56,9 @@ public class RomuTrioRandom extends AbstractRandom {
 	 * Creates a new RomuTrioRandom with a random state.
 	 */
 	public RomuTrioRandom () {
-		stateA = AbstractRandom.seedFromMath();
-		stateB = AbstractRandom.seedFromMath();
-		stateC = AbstractRandom.seedFromMath();
+		stateA = EnhancedRandom.seedFromMath();
+		stateB = EnhancedRandom.seedFromMath();
+		stateC = EnhancedRandom.seedFromMath();
 		if ((stateA | stateB | stateC) == 0L)
 			stateC = -1L;
 	}

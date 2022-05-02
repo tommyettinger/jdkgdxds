@@ -27,7 +27,7 @@ import java.util.Random;
  * A superset of the functionality in {@link java.util.Random}, meant for random number generators
  * that would be too bare-bones with just Random's methods.
  */
-public abstract class AbstractRandom extends Random {
+public abstract class EnhancedRandom extends Random {
 
 	/**
 	 * Uses {@link Math#random()} to hastily put together a not-especially-uniform {@code long} value,
@@ -72,7 +72,7 @@ public abstract class AbstractRandom extends Random {
 	}
 
 	/**
-	 * Gets a selected state value from this AbstractRandom. The number of possible selections
+	 * Gets a selected state value from this EnhancedRandom. The number of possible selections
 	 * is up to the implementing class, and is accessible via {@link #getStateCount()}, but
 	 * negative values for {@code selection} are typically not tolerated. This should return
 	 * the exact value of the selected state, assuming it is implemented. The default
@@ -853,7 +853,7 @@ public abstract class AbstractRandom extends Random {
 	 * {@code 1.0} from this random number generator's sequence
 	 */
 	public double nextGaussian () {
-		//// here, we want to only request one long from this AbstractRandom.
+		//// here, we want to only request one long from this EnhancedRandom.
 		//// because the bitCount() doesn't really care about the numerical value of its argument, only its Hamming weight,
 		//// we use the random long un-scrambled, and get the bit count of that.
 		//// for the later steps, we multiply the random long by a specific constant and get the difference of its halves.
@@ -870,7 +870,7 @@ public abstract class AbstractRandom extends Random {
 	}
 
 	/**
-	 * Optional; advances or rolls back the {@code AbstractRandom}' state without actually generating each number.
+	 * Optional; advances or rolls back the {@code EnhancedRandom}' state without actually generating each number.
 	 * Skips forward or backward a number of steps specified by advance, where a step is equal to one call to
 	 * {@link #nextLong()}, and returns the random number produced at that step. Negative numbers can be used to
 	 * step backward, or 0 can be given to get the most-recently-generated long from {@link #nextLong()}.
@@ -901,17 +901,17 @@ public abstract class AbstractRandom extends Random {
 	}
 
 	/**
-	 * Creates a new AbstractRandom with identical states to this one, so if the same AbstractRandom methods are
+	 * Creates a new EnhancedRandom with identical states to this one, so if the same EnhancedRandom methods are
 	 * called on this object and its copy (in the same order), the same outputs will be produced. This is not
 	 * guaranteed to copy the inherited state of any parent class, so if you call methods that are
 	 * only implemented by a superclass (like {@link java.util.Random}) and not this one, the results may differ.
 	 *
-	 * @return a deep copy of this AbstractRandom.
+	 * @return a deep copy of this EnhancedRandom.
 	 */
-	public abstract AbstractRandom copy ();
+	public abstract EnhancedRandom copy ();
 
 	/**
-	 * Similar to {@link #copy()}, but fills this AbstractRandom with the state of another AbstractRandom, usually
+	 * Similar to {@link #copy()}, but fills this EnhancedRandom with the state of another EnhancedRandom, usually
 	 * (but not necessarily) one of the same type. If this class has the same {@link #getStateCount()} as other's
 	 * class, then this method copies the full state of other into this object. Otherwise, if this class has a
 	 * larger state count than other's class, then all of other's state is copied into the same selections in this
@@ -928,9 +928,9 @@ public abstract class AbstractRandom extends Random {
 	 * sets the entire state of this object to -1L; if this class doesn't implement getStateCount(), then this
 	 * method does nothing.
 	 *
-	 * @param other another AbstractRandom, typically with the same class as this one, to copy its state into this
+	 * @param other another EnhancedRandom, typically with the same class as this one, to copy its state into this
 	 */
-	public void setWith (AbstractRandom other) {
+	public void setWith (EnhancedRandom other) {
 		final int myCount = getStateCount(), otherCount = other.getStateCount();
 		int i = 0;
 		for (; i < myCount && i < otherCount; i++) {
@@ -994,17 +994,17 @@ public abstract class AbstractRandom extends Random {
 	}
 
 	/**
-	 * Given two AbstractRandom objects that could have the same or different classes,
+	 * Given two EnhancedRandom objects that could have the same or different classes,
 	 * this returns true if they have the same class and same state, or false otherwise.
 	 * Both of the arguments should implement {@link #getSelectedState(int)}, or this
 	 * will throw an UnsupportedOperationException. This can be useful for comparing
-	 * AbstractRandom classes that do not implement equals(), for whatever reason.
+	 * EnhancedRandom classes that do not implement equals(), for whatever reason.
 	 *
-	 * @param left  an AbstractRandom to compare for equality
-	 * @param right another AbstractRandom to compare for equality
-	 * @return true if the two AbstractRandom objects have the same class and state, or false otherwise
+	 * @param left  an EnhancedRandom to compare for equality
+	 * @param right another EnhancedRandom to compare for equality
+	 * @return true if the two EnhancedRandom objects have the same class and state, or false otherwise
 	 */
-	public static boolean areEqual (AbstractRandom left, AbstractRandom right) {
+	public static boolean areEqual (EnhancedRandom left, EnhancedRandom right) {
 		if (left == right)
 			return true;
 		if (left.getClass() != right.getClass())

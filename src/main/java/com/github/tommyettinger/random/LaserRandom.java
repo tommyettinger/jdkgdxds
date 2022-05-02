@@ -36,7 +36,7 @@ import java.util.Random;
  * generators that are inclusive on both ends ({@link #nextInclusiveFloat()}, and
  * {@link #nextInclusiveDouble()}. There's {@link #nextGaussian()}, which is implemented differently from
  * java.util.Random and always advances the state once. This implements all optional methods in
- * AbstractRandom, and implements almost all AbstractRandom methods explicitly, which allows LaserRandom to
+ * EnhancedRandom, and implements almost all EnhancedRandom methods explicitly, which allows LaserRandom to
  * be copied more easily without depending on jdkgdxds (see below).
  * <br>
  * Every method defined in this class advances the state by the same amount unless otherwise documented (only
@@ -82,17 +82,17 @@ import java.util.Random;
  * You can copy this class independently of the library it's part of; it's meant as a general replacement for
  * Random and also RandomXS128. LaserRandom is generally faster than RandomXS128, and can be over 3x faster
  * when running on OpenJ9 (generating over 3 billion random long values per second). If you copy this, the
- * only step you probably need to do is to remove {@code extends AbstractRandom} from the class, since
- * almost all of AbstractRandom consists of either default methods that this implements explicitly, or to
+ * only step you probably need to do is to remove {@code extends EnhancedRandom} from the class, since
+ * almost all of EnhancedRandom consists of either default methods that this implements explicitly, or to
  * provide a common interface for pseudo-random number generators on the JVM. This class avoids using the
- * Override annotation specifically because copying the class and removing the AbstractRandom implementation
+ * Override annotation specifically because copying the class and removing the EnhancedRandom implementation
  * would cause compile errors if Override annotations were present. If you do keep this class implementing
- * AbstractRandom, then that permits some extra methods to come in via default implementations, like
+ * EnhancedRandom, then that permits some extra methods to come in via default implementations, like
  * nextExclusiveFloat() (which uses the BitConversion class here in jdkgdxds), minIntOf(), maxLongOf(), etc.
  * <br>
  * You may want to compare this class with TricycleRandom and FourWheelRandom in the same package; both of
  * those have a larger state size (and should usually have a larger period), are usually faster, and also
- * implement all of AbstractRandom (except for {@link #skip(long)}), but they do even less randomizing for
+ * implement all of EnhancedRandom (except for {@link #skip(long)}), but they do even less randomizing for
  * the first result they return, so if the seeding has a pattern, then the start of their sequences will
  * have patterns. These patterns are less obvious but do persist in LaserRandom, and don't persist in
  * TricycleRandom or FourWheelRandom over a long run. All generators here do well when using
@@ -102,7 +102,7 @@ import java.util.Random;
  *
  * @author Tommy Ettinger
  */
-public class LaserRandom extends AbstractRandom {
+public class LaserRandom extends EnhancedRandom {
 	/**
 	 * Can be any long value.
 	 */
@@ -1027,7 +1027,7 @@ public class LaserRandom extends AbstractRandom {
 	}
 
 	/**
-	 * This String conversion uses base-10 numbers for the states, unlike all other AbstractRandom implementations, which use base-16.
+	 * This String conversion uses base-10 numbers for the states, unlike all other EnhancedRandom implementations, which use base-16.
 	 * This is done here to avoid a dependency on Base, allowing this class to be copied more easily.
 	 * @return a String description of this LaserRandom and its two states
 	 */

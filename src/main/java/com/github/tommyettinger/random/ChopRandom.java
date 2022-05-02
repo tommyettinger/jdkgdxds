@@ -43,12 +43,12 @@ import com.github.tommyettinger.ds.support.Base;
  * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
  * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
  * <br>
- * This implements all optional methods in AbstractRandom except {@link #skip(long)}; it does implement
+ * This implements all optional methods in EnhancedRandom except {@link #skip(long)}; it does implement
  * {@link #previousLong()} without using skip().
  * <br>
  * This is called ChopRandom because it operates on half the bits as {@link TrimRandom} while otherwise being similar.
  */
-public class ChopRandom extends AbstractRandom {
+public class ChopRandom extends EnhancedRandom {
 
 	/**
 	 * The first state; can be any int.
@@ -72,7 +72,7 @@ public class ChopRandom extends AbstractRandom {
 	 * Creates a new ChopRandom with a random state.
 	 */
 	public ChopRandom () {
-		this((int)AbstractRandom.seedFromMath(), (int)AbstractRandom.seedFromMath(), (int)AbstractRandom.seedFromMath(), (int)AbstractRandom.seedFromMath());
+		this((int)EnhancedRandom.seedFromMath(), (int)EnhancedRandom.seedFromMath(), (int)EnhancedRandom.seedFromMath(), (int)EnhancedRandom.seedFromMath());
 	}
 
 	/**

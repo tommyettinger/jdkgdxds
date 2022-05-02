@@ -27,7 +27,7 @@ import com.github.tommyettinger.ds.support.Base;
  * DistinctRandom on any OpenJ9 version). If this algorithm is run on a GPU, on most hardware it will be significantly
  * faster than FourWheelRandom (indeed, it was faster than any other algorithm I tested on a low-end GPU).
  * <br>
- * This can now be considered stable, like the other AbstractRandom subclasses here. Testing performed should be
+ * This can now be considered stable, like the other EnhancedRandom subclasses here. Testing performed should be
  * sufficient, but more can always be done; this passes at least 64TB of PractRand without issues, and passes a much more
  * rigorous single test ("remortality," which measures how often the bitwise AND/bitwise OR of sequential numbers become
  * all 0 bits or all 1 bits) through over 150 PB. The test in question runs on the GPU using CUDA, so was able to generate
@@ -52,12 +52,12 @@ import com.github.tommyettinger.ds.support.Base;
  * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
  * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
  * <br>
- * This implements all optional methods in AbstractRandom except {@link #skip(long)}; it does implement
+ * This implements all optional methods in EnhancedRandom except {@link #skip(long)}; it does implement
  * {@link #previousLong()} without using skip().
  * <br>
  * This is called TrimRandom because it uses a trimmed-down set of operations, purely "ARX" -- add, rotate, XOR.
  */
-public class TrimRandom extends AbstractRandom {
+public class TrimRandom extends EnhancedRandom {
 
 	/**
 	 * The first state; can be any long.
@@ -81,10 +81,10 @@ public class TrimRandom extends AbstractRandom {
 	 * Creates a new TrimRandom with a random state.
 	 */
 	public TrimRandom () {
-		stateA = AbstractRandom.seedFromMath();
-		stateB = AbstractRandom.seedFromMath();
-		stateC = AbstractRandom.seedFromMath();
-		stateD = AbstractRandom.seedFromMath();
+		stateA = EnhancedRandom.seedFromMath();
+		stateB = EnhancedRandom.seedFromMath();
+		stateC = EnhancedRandom.seedFromMath();
+		stateD = EnhancedRandom.seedFromMath();
 	}
 
 	/**

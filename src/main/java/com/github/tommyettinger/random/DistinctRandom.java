@@ -42,7 +42,7 @@ import java.util.Random;
  * permitted for that state, and that you can {@link #skip(long)} the state forwards or backwards in constant time.
  * It is also quite fast, though not as fast as {@link TricycleRandom} or {@link FourWheelRandom} on Java 16 or newer.
  * <br>
- * This class is an {@link AbstractRandom} from jdkgdxds and is also a JDK {@link Random} as a result.
+ * This class is an {@link EnhancedRandom} from jdkgdxds and is also a JDK {@link Random} as a result.
  * It can often be used as a substitute for {@link LaserRandom}. LaserRandom has comparable speed, and supports many
  * streams, but if you want just one {@code long} of state, DistinctRandom is a better fit. For higher speed on Java
  * 16 or higher, HotSpot, you can use {@link TricycleRandom} or {@link FourWheelRandom} (FourWheelRandom is preferred
@@ -55,10 +55,10 @@ import java.util.Random;
  * by multiplying by 5 and 9); having multiple large multiplications tends to mix bits very thoroughly as long as there
  * are some xorshifts or rotations between the multiplications.
  * <br>
- * This implements all methods from {@link AbstractRandom}, including the optional {@link #skip(long)} and
+ * This implements all methods from {@link EnhancedRandom}, including the optional {@link #skip(long)} and
  * {@link #previousLong()} methods.
  */
-public class DistinctRandom extends AbstractRandom {
+public class DistinctRandom extends EnhancedRandom {
 
 	/**
 	 * The only state variable; can be any {@code long}.
@@ -69,7 +69,7 @@ public class DistinctRandom extends AbstractRandom {
 	 * Creates a new DistinctRandom with a random state.
 	 */
 	public DistinctRandom () {
-		this(AbstractRandom.seedFromMath());
+		this(EnhancedRandom.seedFromMath());
 	}
 
 	/**

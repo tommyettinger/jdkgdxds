@@ -27,7 +27,7 @@ import com.github.tommyettinger.ds.support.Base;
  * feeds the resulting value to a small, simple unary hash to get a more-random result.
  * <br>
  * This always has a period of 2 to the 64, and there are 2 to the 63 possible sequences that result from changing the
- * stream value. MizuchiRandom implements all optional methods in AbstractRandom except
+ * stream value. MizuchiRandom implements all optional methods in EnhancedRandom except
  * {@link #skip(long)}; it does implement {@link #previousLong()} without using skip().
  * <br>
  * MizuchiRandom passes 64TB of testing with PractRand, which uses a suite of tests to look for a variety of potential
@@ -44,7 +44,7 @@ import com.github.tommyettinger.ds.support.Base;
  * This generator is not especially fast here compared to LaserRandom, especially on OpenJ9, nor is it fast compared to
  * FourWheelRandom on HotSpot JDKs, but it does maintain its quality well.
  */
-public class MizuchiRandom extends AbstractRandom {
+public class MizuchiRandom extends EnhancedRandom {
 
 	/**
 	 * The first state, also called the changing state; can be any long.
@@ -59,8 +59,8 @@ public class MizuchiRandom extends AbstractRandom {
 	 * Creates a new MizuchiRandom with a random state.
 	 */
 	public MizuchiRandom () {
-		stateA = AbstractRandom.seedFromMath();
-		stateB = AbstractRandom.seedFromMath() | 1L;
+		stateA = EnhancedRandom.seedFromMath();
+		stateB = EnhancedRandom.seedFromMath() | 1L;
 	}
 
 	/**

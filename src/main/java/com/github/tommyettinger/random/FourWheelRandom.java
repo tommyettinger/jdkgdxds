@@ -22,7 +22,7 @@ import com.github.tommyettinger.ds.support.Base;
 /**
  * A random number generator that is extremely fast on Java 16, and has a very large probable period.
  * This generator is measurably faster than {@link TricycleRandom} on Java 16 but slightly slower than it on Java 8.
- * It can be considered stable, like the other AbstractRandom implementations here. Testing performed should be sufficient,
+ * It can be considered stable, like the other EnhancedRandom implementations here. Testing performed should be sufficient,
  * but more can always be done; this passes at least 64TB of PractRand and 2PB of hwd without issues. The second test, hwd,
  * only checks for a specific type of quality issue, but also fails if the period is exhausted; going through 2 to the 52
  * bytes of data (taking over a week to do so) without exhausting the period should be a strong sign that it will have
@@ -46,10 +46,10 @@ import com.github.tommyettinger.ds.support.Base;
  * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
  * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
  * <br>
- * This implements all optional methods in AbstractRandom except
+ * This implements all optional methods in EnhancedRandom except
  * {@link #skip(long)}; it does implement {@link #previousLong()} without using skip().
  */
-public class FourWheelRandom extends AbstractRandom {
+public class FourWheelRandom extends EnhancedRandom {
 
 	/**
 	 * The first state; can be any long.
@@ -73,10 +73,10 @@ public class FourWheelRandom extends AbstractRandom {
 	 * Creates a new FourWheelRandom with a random state.
 	 */
 	public FourWheelRandom () {
-		stateA = AbstractRandom.seedFromMath();
-		stateB = AbstractRandom.seedFromMath();
-		stateC = AbstractRandom.seedFromMath();
-		stateD = AbstractRandom.seedFromMath();
+		stateA = EnhancedRandom.seedFromMath();
+		stateB = EnhancedRandom.seedFromMath();
+		stateC = EnhancedRandom.seedFromMath();
+		stateD = EnhancedRandom.seedFromMath();
 	}
 
 	/**

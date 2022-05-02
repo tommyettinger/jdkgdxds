@@ -23,7 +23,7 @@ import com.github.tommyettinger.ds.support.Base;
  * A random number generator that is fairly fast and guarantees 4-dimensional equidistribution (with the exception of the
  * quartet with four zeroes in a row, every quartet of long results is produced exactly once over the period). It has a
  * period of (2 to the 256) - 1, which would take millennia to exhaust on current-generation hardware (at least).
- * It can be considered stable, like the other AbstractRandom implementations here. This passes heavy testing, but isn't a
+ * It can be considered stable, like the other EnhancedRandom implementations here. This passes heavy testing, but isn't a
  * cryptographic generator, and it does have known issues when its output is multiplied by certain specific constants (any
  * of a lot) and tests are then run. The only invalid state is the one with 0 in each state variable, and this won't ever
  * occur in the normal period of that contains all other states. You should generally seed this with {@link #setSeed(long)},
@@ -38,13 +38,13 @@ import com.github.tommyettinger.ds.support.Base;
  *     <li>You need a regular structure to the generated numbers, with guarantees about that structure.</li>
  * </ul>
  * <br>
- * This implements all optional methods in AbstractRandom except {@link #skip(long)}; it does implement
+ * This implements all optional methods in EnhancedRandom except {@link #skip(long)}; it does implement
  * {@link #previousLong()} without using skip().
  * <br>
  * Xoshiro256** was written in 2018 by David Blackman and Sebastiano Vigna. You can consult their paper for technical details:
  * <a href="https://vigna.di.unimi.it/ftp/papers/ScrambledLinear.pdf">PDF link here</a>.
  */
-public class Xoshiro256StarStarRandom extends AbstractRandom {
+public class Xoshiro256StarStarRandom extends EnhancedRandom {
 
 	/**
 	 * The first state; can be any long, as long as all states are not 0.
@@ -69,10 +69,10 @@ public class Xoshiro256StarStarRandom extends AbstractRandom {
 	 * Creates a new FourWheelRandom with a random state.
 	 */
 	public Xoshiro256StarStarRandom () {
-		stateA = AbstractRandom.seedFromMath();
-		stateB = AbstractRandom.seedFromMath();
-		stateC = AbstractRandom.seedFromMath();
-		stateD = AbstractRandom.seedFromMath();
+		stateA = EnhancedRandom.seedFromMath();
+		stateB = EnhancedRandom.seedFromMath();
+		stateC = EnhancedRandom.seedFromMath();
+		stateD = EnhancedRandom.seedFromMath();
 		if ((stateA | stateB | stateC | stateD) == 0L)
 			stateD = 0x9E3779B97F4A7C15L;
 	}

@@ -32,7 +32,7 @@ import com.github.tommyettinger.ds.support.Base;
  * that all values are permitted for the states (that we know of). It is possible that some initialization will put the
  * generator in a shorter-period subcycle, but the odds of this being a subcycle that's small enough to run out of
  * period during a game are effectively 0. It's also possible that the generator only has one cycle of length 2 to the
- * 192, though this doesn't seem at all likely. TricycleRandom implements all optional methods in AbstractRandom except
+ * 192, though this doesn't seem at all likely. TricycleRandom implements all optional methods in EnhancedRandom except
  * {@link #skip(long)}; it does implement {@link #previousLong()} without using skip().
  * <br>
  * This is closely related to Mark Overton's <a href="https://www.romu-random.org/">Romu generators</a>, specifically
@@ -53,7 +53,7 @@ import com.github.tommyettinger.ds.support.Base;
  * former will start off random, while the latter will start off repeating the seed sequence. After about 20-40 random
  * numbers generated, any correlation between similarly seeded generators will probably be completely gone, though.
  */
-public class TricycleRandom extends AbstractRandom {
+public class TricycleRandom extends EnhancedRandom {
 
 	/**
 	 * The first state; can be any long. If this has just been set to some value, then the next call to
@@ -73,9 +73,9 @@ public class TricycleRandom extends AbstractRandom {
 	 * Creates a new TricycleRandom with a random state.
 	 */
 	public TricycleRandom () {
-		stateA = AbstractRandom.seedFromMath();
-		stateB = AbstractRandom.seedFromMath();
-		stateC = AbstractRandom.seedFromMath();
+		stateA = EnhancedRandom.seedFromMath();
+		stateB = EnhancedRandom.seedFromMath();
+		stateC = EnhancedRandom.seedFromMath();
 	}
 
 	/**
