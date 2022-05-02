@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.digital.Base;
-
 /**
  * A relatively-simple RNG that's similar to {@link LaserRandom} with less correlation between similar initial states,
  * but without the ability to {@link #skip(long)}. It has two {@code long} states, one of which changes with every
@@ -230,6 +228,6 @@ public class MizuchiRandom extends EnhancedRandom {
 	}
 
 	public String toString () {
-		return "MizuchiRandom{" + "stateA=0x" + Base.BASE16.unsigned(stateA) + "L, stateB=0x" + Base.BASE16.unsigned(stateB) + "L}";
+		return "MizuchiRandom{" + "stateA=" + (stateA) + "L, stateB=" + (stateB) + "L}";
 	}
 }

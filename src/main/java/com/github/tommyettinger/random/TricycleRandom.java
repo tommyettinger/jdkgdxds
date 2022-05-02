@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.digital.Base;
-
 /**
  * An unusual RNG that's extremely fast on HotSpot JDK 16 and higher, and still fairly fast on earlier JDKs. It has
  * three {@code long} states, which as far as I can tell can be initialized to any values without hitting any known
@@ -301,6 +299,6 @@ public class TricycleRandom extends EnhancedRandom {
 	}
 
 	public String toString () {
-		return "TricycleRandom{" + "stateA=0x" + Base.BASE16.unsigned(stateA) + "L, stateB=0x" + Base.BASE16.unsigned(stateB) + "L, stateC=0x" + Base.BASE16.unsigned(stateC) + "L}";
+		return "TricycleRandom{" + "stateA=" + (stateA) + "L, stateB=" + (stateB) + "L, stateC=" + (stateC) + "L}";
 	}
 }

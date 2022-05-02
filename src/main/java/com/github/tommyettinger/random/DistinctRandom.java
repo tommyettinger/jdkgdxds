@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.digital.Base;
-
 import java.util.Random;
 
 /**
@@ -217,6 +215,6 @@ public class DistinctRandom extends EnhancedRandom {
 
 	@Override
 	public String toString () {
-		return "DistinctRandom{state=0x" + Base.BASE16.unsigned(state) + "L}";
+		return "DistinctRandom{state=" + (state) + "L}";
 	}
 }

@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.digital.Base;
-
 /**
  * A random number generator that acts as a counterpart to {@link FourWheelRandom} by guaranteeing a slightly longer period
  * and potentially being faster in some situations because it uses no multiplication. Like FourWheelRandom, this has four
@@ -382,6 +380,6 @@ public class StrangerRandom extends EnhancedRandom {
 	}
 
 	public String toString () {
-		return "StrangerRandom{" + "stateA=0x" + Base.BASE16.unsigned(stateA) + "L, stateB=0x" + Base.BASE16.unsigned(stateB) + "L, stateC=0x" + Base.BASE16.unsigned(stateC) + "L, stateD=0x" + Base.BASE16.unsigned(stateD) + "L}";
+		return "StrangerRandom{" + "stateA=" + (stateA) + "L, stateB=" + (stateB) + "L, stateC=" + (stateC) + "L, stateD=" + (stateD) + "L}";
 	}
 }

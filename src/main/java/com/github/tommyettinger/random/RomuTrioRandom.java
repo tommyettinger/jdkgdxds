@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.digital.Base;
-
 /**
  * A well-studied RNG that can be quite fast in some circumstances. This is a port of
  * <a href="https://romu-random.org/">Romu-Random</a>'s RomuTrio generator to Java. It has
@@ -280,6 +278,6 @@ public class RomuTrioRandom extends EnhancedRandom {
 	}
 
 	public String toString () {
-		return "RomuTrioRandom{" + "stateA=0x" + Base.BASE16.unsigned(stateA) + "L, stateB=0x" + Base.BASE16.unsigned(stateB) + "L, stateC=0x" + Base.BASE16.unsigned(stateC) + "L}";
+		return "RomuTrioRandom{" + "stateA=" + (stateA) + "L, stateB=" + (stateB) + "L, stateC=" + (stateC) + "L}";
 	}
 }

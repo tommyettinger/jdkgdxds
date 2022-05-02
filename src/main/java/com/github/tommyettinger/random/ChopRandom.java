@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.digital.Base;
-
 /**
  * A random number generator that is optimized for performance on 32-bit machines and with Google Web Toolkit, this uses
  * only add, bitwise-rotate, and XOR operations (no multiplication). This generator is nearly identical to
@@ -416,6 +414,6 @@ public class ChopRandom extends EnhancedRandom {
 	}
 
 	public String toString () {
-		return "ChopRandom{" + "stateA=0x" + Base.BASE16.unsigned(stateA) + ", stateB=0x" + Base.BASE16.unsigned(stateB) + ", stateC=0x" + Base.BASE16.unsigned(stateC) + ", stateD=0x" + Base.BASE16.unsigned(stateD) + "}";
+		return "ChopRandom{" + "stateA=" + (stateA) + ", stateB=" + (stateB) + ", stateC=" + (stateC) + ", stateD=" + (stateD) + "}";
 	}
 }

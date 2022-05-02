@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.digital.Base;
-
 /**
  * A random number generator that is fairly fast and guarantees 4-dimensional equidistribution (with the exception of the
  * quartet with four zeroes in a row, every quartet of long results is produced exactly once over the period). It has a
@@ -342,6 +340,6 @@ public class Xoshiro256StarStarRandom extends EnhancedRandom {
 	}
 
 	public String toString () {
-		return "Xoshiro256StarStarRandom{" + "stateA=0x" + Base.BASE16.unsigned(stateA) + "L, stateB=0x" + Base.BASE16.unsigned(stateB) + "L, stateC=0x" + Base.BASE16.unsigned(stateC) + "L, stateD=0x" + Base.BASE16.unsigned(stateD) + "L}";
+		return "Xoshiro256StarStarRandom{" + "stateA=" + (stateA) + "L, stateB=" + (stateB) + "L, stateC=" + (stateC) + "L, stateD=" + (stateD) + "L}";
 	}
 }

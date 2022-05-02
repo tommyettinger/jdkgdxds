@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.digital.Base;
-
 /**
  * A random number generator that is extremely fast on Java 16, and has a very large probable period.
  * This generator is measurably faster than {@link TricycleRandom} on Java 16 but slightly slower than it on Java 8.
@@ -337,6 +335,6 @@ public class FourWheelRandom extends EnhancedRandom {
 	}
 
 	public String toString () {
-		return "FourWheelRandom{" + "stateA=0x" + Base.BASE16.unsigned(stateA) + "L, stateB=0x" + Base.BASE16.unsigned(stateB) + "L, stateC=0x" + Base.BASE16.unsigned(stateC) + "L, stateD=0x" + Base.BASE16.unsigned(stateD) + "L}";
+		return "FourWheelRandom{" + "stateA=" + (stateA) + "L, stateB=" + (stateB) + "L, stateC=" + (stateC) + "L, stateD=" + (stateD) + "L}";
 	}
 }

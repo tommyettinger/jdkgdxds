@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.digital.Base;
-
 /**
  * A random number generator that is very fast on Java 16+, has both a very large probable period and a large guaranteed
  * minimum period, and uses only add, bitwise-rotate, and XOR operations (no multiplication). This generator is not quite
@@ -326,6 +324,6 @@ public class TrimRandom extends EnhancedRandom {
 	}
 
 	public String toString () {
-		return "TrimRandom{" + "stateA=0x" + Base.BASE16.unsigned(stateA) + "L, stateB=0x" + Base.BASE16.unsigned(stateB) + "L, stateC=0x" + Base.BASE16.unsigned(stateC) + "L, stateD=0x" + Base.BASE16.unsigned(stateD) + "L}";
+		return "TrimRandom{" + "stateA=" + (stateA) + "L, stateB=" + (stateB) + "L, stateC=" + (stateC) + "L, stateD=" + (stateD) + "L}";
 	}
 }
