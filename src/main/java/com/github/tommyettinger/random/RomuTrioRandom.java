@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.ds.support.Base;
+import com.github.tommyettinger.digital.Base;
 
 /**
  * A well-studied RNG that can be quite fast in some circumstances. This is a port of

@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.ds.support.Base;
+import com.github.tommyettinger.digital.Base;
 
 /**
  * A random number generator that is very fast on Java 16+, has both a very large probable period and a large guaranteed

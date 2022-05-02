@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.ds.support.Base;
+import com.github.tommyettinger.digital.Base;
 
 /**
  * An unusual RNG that's extremely fast on HotSpot JDK 16 and higher, and still fairly fast on earlier JDKs. It has

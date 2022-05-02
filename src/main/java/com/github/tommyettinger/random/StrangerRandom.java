@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.ds.support.Base;
+import com.github.tommyettinger.digital.Base;
 
 /**
  * A random number generator that acts as a counterpart to {@link FourWheelRandom} by guaranteeing a slightly longer period

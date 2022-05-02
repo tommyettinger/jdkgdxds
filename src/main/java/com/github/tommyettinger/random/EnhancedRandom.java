@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.random;
 
-import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.digital.BitConversion;
 
 import javax.annotation.Nonnull;
 import java.util.List;
