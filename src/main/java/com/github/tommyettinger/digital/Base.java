@@ -17,7 +17,6 @@
 
 package com.github.tommyettinger.digital;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -39,6 +38,7 @@ import java.util.Random;
  * of number, but it is capable of reading both the signed and unsigned results, and never throws an Exception (it just
  * returns 0 if no number could be read).
  */
+@SuppressWarnings("ShiftOutOfRange")
 public class Base {
 	/**
 	 * Binary, using the digits 0 and 1.
@@ -156,7 +156,7 @@ public class Base {
 	 *
 	 * @param digits a String with two or more ASCII characters, all unique; none can be ' ', '+', or '-'
 	 */
-	public Base (@Nonnull String digits) {
+	public Base (String digits) {
 		this(digits, true, ' ', '+', '-');
 	}
 
@@ -175,7 +175,7 @@ public class Base {
 	 * @param positiveSign    typically '+'
 	 * @param negativeSign    typically '-'
 	 */
-	public Base (@Nonnull String digits, boolean caseInsensitive, char padding, char positiveSign, char negativeSign) {
+	public Base (String digits, boolean caseInsensitive, char padding, char positiveSign, char negativeSign) {
 		paddingChar = padding;
 		this.caseInsensitive = caseInsensitive;
 		this.positiveSign = positiveSign;
@@ -210,7 +210,7 @@ public class Base {
 	 * @param random a Random used to shuffle the possible digits
 	 * @return a new Base with 72 random digits, as well as a random positive and negative sign
 	 */
-	public static Base scrambledBase (@Nonnull Random random) {
+	public static Base scrambledBase (Random random) {
 		char[] options = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?!@#$%^&*-|=+".toCharArray();
 		// Apply Fisher-Yates shuffle to the options.
 		for (int i = options.length - 1; i > 0; i--) {
@@ -253,7 +253,7 @@ public class Base {
 	 * @param data a String that was almost always produced by {@link #serializeToString()}
 	 * @return the Base that {@code data} stores
 	 */
-	public static Base deserializeFromString (@Nonnull String data) {
+	public static Base deserializeFromString (String data) {
 		int len;
 		if ((len = data.length()) >= 5) {
 			return new Base(data.substring(0, len - 4), data.charAt(len - 4) != '0', data.charAt(len - 3), data.charAt(len - 2), data.charAt(len - 1));
@@ -268,7 +268,6 @@ public class Base {
 	 * @param number any long
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String unsigned (long number) {
 		final int len = length8Byte - 1;
 		final int halfBase = base >>> 1;
@@ -288,8 +287,7 @@ public class Base {
 	 * @param number  any long
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendUnsigned (@Nonnull StringBuilder builder, long number) {
+	public StringBuilder appendUnsigned (StringBuilder builder, long number) {
 		final int len = length8Byte - 1;
 		final int halfBase = base >>> 1;
 		for (int i = 0; i <= len; i++) {
@@ -307,7 +305,6 @@ public class Base {
 	 * @param number any long
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String signed (long number) {
 		int run = length8Byte;
 		final long sign = number >> -1;
@@ -334,8 +331,7 @@ public class Base {
 	 * @param number  any long
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendSigned (@Nonnull StringBuilder builder, long number) {
+	public StringBuilder appendSigned (StringBuilder builder, long number) {
 		int run = length8Byte;
 		final long sign = number >> -1;
 		// number is made negative because 0x8000000000000000L and -(0x8000000000000000L) are both negative.
@@ -488,7 +484,6 @@ public class Base {
 	 * @param number any int
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String unsigned (int number) {
 		final int len = length4Byte - 1;
 		final int halfBase = base >>> 1;
@@ -508,8 +503,7 @@ public class Base {
 	 * @param number  any int
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendUnsigned (@Nonnull StringBuilder builder, int number) {
+	public StringBuilder appendUnsigned (StringBuilder builder, int number) {
 		final int len = length4Byte - 1;
 		final int halfBase = base >>> 1;
 		for (int i = 0; i <= len; i++) {
@@ -527,7 +521,6 @@ public class Base {
 	 * @param number any int
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String signed (int number) {
 		int run = length8Byte;
 		final int sign = number >> -1;
@@ -554,8 +547,7 @@ public class Base {
 	 * @param number  any int
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendSigned (@Nonnull StringBuilder builder, int number) {
+	public StringBuilder appendSigned (StringBuilder builder, int number) {
 		int run = length8Byte;
 		final int sign = number >> -1;
 		// number is made negative because 0x80000000 and -(0x80000000) are both negative.
@@ -708,7 +700,6 @@ public class Base {
 	 * @param number any short
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String unsigned (short number) {
 		final int len = length2Byte - 1;
 		final int halfBase = base >>> 1;
@@ -728,8 +719,7 @@ public class Base {
 	 * @param number  any short
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendUnsigned (@Nonnull StringBuilder builder, short number) {
+	public StringBuilder appendUnsigned (StringBuilder builder, short number) {
 		final int len = length2Byte - 1;
 		final int halfBase = base >>> 1;
 		for (int i = 0; i <= len; i++) {
@@ -747,7 +737,6 @@ public class Base {
 	 * @param number any short
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String signed (short number) {
 		int run = length8Byte;
 		final int sign = number >> -1;
@@ -774,8 +763,7 @@ public class Base {
 	 * @param number  any short
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendSigned (@Nonnull StringBuilder builder, short number) {
+	public StringBuilder appendSigned (StringBuilder builder, short number) {
 		int run = length8Byte;
 		final int sign = number >> -1;
 		// number is made negative because 0x80000000 and -(0x80000000) are both negative.
@@ -928,7 +916,6 @@ public class Base {
 	 * @param number any byte
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String unsigned (byte number) {
 		final int len = length1Byte - 1;
 		final int halfBase = base >>> 1;
@@ -948,8 +935,7 @@ public class Base {
 	 * @param number  any byte
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendUnsigned (@Nonnull StringBuilder builder, byte number) {
+	public StringBuilder appendUnsigned (StringBuilder builder, byte number) {
 		final int len = length1Byte - 1;
 		final int halfBase = base >>> 1;
 		for (int i = 0; i <= len; i++) {
@@ -967,7 +953,6 @@ public class Base {
 	 * @param number any byte
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String signed (byte number) {
 		int run = length8Byte;
 		final int sign = number >> -1;
@@ -994,8 +979,7 @@ public class Base {
 	 * @param number  any byte
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendSigned (@Nonnull StringBuilder builder, byte number) {
+	public StringBuilder appendSigned (StringBuilder builder, byte number) {
 		int run = length8Byte;
 		final int sign = number >> -1;
 		// number is made negative because 0x80000000 and -(0x80000000) are both negative.
@@ -1148,7 +1132,6 @@ public class Base {
 	 * @param number any double
 	 * @return a new String containing the bits of {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String unsigned (double number) {
 		return unsigned(BitConversion.doubleToRawLongBits(number));
 	}
@@ -1161,8 +1144,7 @@ public class Base {
 	 * @param number  any double
 	 * @return {@code builder}, with the bits of {@code number} appended in the radix this specifies
 	 */
-	@Nonnull
-	public StringBuilder appendUnsigned (@Nonnull StringBuilder builder, double number) {
+	public StringBuilder appendUnsigned (StringBuilder builder, double number) {
 		return appendUnsigned(builder, BitConversion.doubleToRawLongBits(number));
 	}
 
@@ -1173,7 +1155,6 @@ public class Base {
 	 * @param number any double
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String signed (double number) {
 		return signed(BitConversion.doubleToRawLongBits(number));
 	}
@@ -1187,8 +1168,7 @@ public class Base {
 	 * @param number  any double
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendSigned (@Nonnull StringBuilder builder, double number) {
+	public StringBuilder appendSigned (StringBuilder builder, double number) {
 		return appendSigned(builder, BitConversion.doubleToRawLongBits(number));
 	}
 
@@ -1257,7 +1237,6 @@ public class Base {
 	 * @param number any float
 	 * @return a new String containing the bits of {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String unsigned (float number) {
 		return unsigned(BitConversion.floatToRawIntBits(number));
 	}
@@ -1270,8 +1249,7 @@ public class Base {
 	 * @param number  any float
 	 * @return {@code builder}, with the bits of {@code number} appended in the radix this specifies
 	 */
-	@Nonnull
-	public StringBuilder appendUnsigned (@Nonnull StringBuilder builder, float number) {
+	public StringBuilder appendUnsigned (StringBuilder builder, float number) {
 		return appendUnsigned(builder, BitConversion.floatToRawIntBits(number));
 	}
 
@@ -1282,7 +1260,6 @@ public class Base {
 	 * @param number any float
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String signed (float number) {
 		return signed(BitConversion.floatToRawIntBits(number));
 	}
@@ -1296,8 +1273,7 @@ public class Base {
 	 * @param number  any float
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendSigned (@Nonnull StringBuilder builder, float number) {
+	public StringBuilder appendSigned (StringBuilder builder, float number) {
 		return appendSigned(builder, BitConversion.floatToRawIntBits(number));
 	}
 
@@ -1366,7 +1342,6 @@ public class Base {
 	 * @param number any char
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String unsigned (char number) {
 		final int len = length2Byte - 1;
 		for (int i = 0; i <= len; i++) {
@@ -1385,8 +1360,7 @@ public class Base {
 	 * @param number  any char
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendUnsigned (@Nonnull StringBuilder builder, char number) {
+	public StringBuilder appendUnsigned (StringBuilder builder, char number) {
 		final int len = length2Byte - 1;
 		for (int i = 0; i <= len; i++) {
 			int quotient = number / base;
@@ -1403,7 +1377,6 @@ public class Base {
 	 * @param number any char
 	 * @return a new String containing {@code number} in the radix this specifies.
 	 */
-	@Nonnull
 	public String signed (char number) {
 		int run = length8Byte;
 		for (; ; run--) {
@@ -1423,8 +1396,7 @@ public class Base {
 	 * @param number  any char
 	 * @return {@code builder}, with the encoded {@code number} appended
 	 */
-	@Nonnull
-	public StringBuilder appendSigned (@Nonnull StringBuilder builder, char number) {
+	public StringBuilder appendSigned (StringBuilder builder, char number) {
 		int run = length8Byte;
 		for (; ; run--) {
 			progress[run] = toEncoded[number % base];
