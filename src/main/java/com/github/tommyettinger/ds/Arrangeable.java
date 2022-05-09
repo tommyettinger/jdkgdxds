@@ -60,4 +60,67 @@ public interface Arrangeable {
 	 * @return the number of elements in this Arrangeable
 	 */
 	int size ();
+
+	/**
+	 * Rearranges this Arrangeable using the given {@link EnhancedRandom} to shuffle it, then tries to restore the prior
+	 * state of the EnhancedRandom so it can be used to reorder other Arrangeables. The attempt to restore state can
+	 * fail if {@link EnhancedRandom#getStateCount()} returns 0, meaning the state is not accessible for that
+	 * EnhancedRandom implementation, so this just shuffles without restoring the state afterwards in that case. If
+	 * {@link EnhancedRandom#getStateCount()} is 5 or less, this will not allocate, but if it is 6 or more, then this
+	 * has to allocate a temporary array. The rearrangement is done in-place.
+	 *
+	 * @param random a non-null EnhancedRandom, ideally one where {@link EnhancedRandom#getStateCount()} is between 1 and 5, inclusive
+	 */
+	default void rearrange (EnhancedRandom random) {
+		final int c = random.getStateCount();
+		switch (c) {
+		case 0: {
+			random.shuffle(this);
+			break;
+		}
+		case 1: {
+			long s0 = random.getSelectedState(0);
+			random.shuffle(this);
+			random.setState(s0);
+			break;
+		}
+		case 2: {
+			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1);
+			random.shuffle(this);
+			random.setState(s0, s1);
+			break;
+		}
+		case 3: {
+			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1), s2 = random.getSelectedState(2);
+			random.shuffle(this);
+			random.setState(s0, s1, s2);
+			break;
+		}
+		case 4: {
+			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1), s2 = random.getSelectedState(2), s3 = random.getSelectedState(3);
+			random.shuffle(this);
+			random.setState(s0, s1, s2, s3);
+			break;
+		}
+		case 5: {
+			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1), s2 = random.getSelectedState(2), s3 = random.getSelectedState(3), s4 = random.getSelectedState(4);
+			random.shuffle(this);
+			random.setSelectedState(0, s0);
+			random.setSelectedState(1, s1);
+			random.setSelectedState(2, s2);
+			random.setSelectedState(3, s3);
+			random.setSelectedState(4, s4);
+			break;
+		}
+		default: {
+			final long[] states = new long[c];
+			for (int i = 0; i < c; i++) {
+				states[i] = random.getSelectedState(i);
+			}
+			random.shuffle(this);
+			random.setState(states);
+		}
+		}
+	}
+
 }
