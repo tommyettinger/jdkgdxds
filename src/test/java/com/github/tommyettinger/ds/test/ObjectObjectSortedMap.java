@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.support.DistinctRandom;
-
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
@@ -27,7 +25,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
 

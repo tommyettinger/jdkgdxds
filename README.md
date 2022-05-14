@@ -55,30 +55,7 @@ There's also a close relative of libGDX's `BinaryHeap` class, but the one here i
 
 The library includes expanded interfaces for these to implement, like the aforementioned `Ordered` interface,
 `PrimitiveCollection` to complement Java 8's `PrimitiveIterator`, some `float`-based versions of primitive specializations where
-the JDK only offers `int`, `long`, and `double`, and primitive `Comparator`s (which are Java 8 `FunctionalInterface`s). Lastly,
-because there are some randomized methods here and `java.util.SplittableRandom` isn't available everywhere, alternative
-high-quality and very-fast random number generators are here, such as `com.github.tommyettinger.ds.support.LaserRandom`,
-`com.github.tommyettinger.ds.support.TricycleRandom`, `com.github.tommyettinger.ds.support.DistinctRandom`, and
-`com.github.tommyettinger.ds.support.FourWheelRandom`. These implement `com.github.tommyettinger.ds.support.EnhancedRandom`, an
-interface that allows external code to match the API used by these random number generators; EnhancedRandom is mostly default
-methods. These generators used to extend `java.util.Random` for compatibility, but API changes in Random in Java 17 made calls to
-many methods fail at runtime (!), so now only LaserRandom extends Random. LaserRandom has a good balance of features, speed,
-and quality, but other generators here make different tradeoffs. TricycleRandom and FourWheelRandom can be significantly faster
-but don't always produce very-random numbers right at the start of usage; FourWheelRandom is the fastest generator here on Java 16
-with HotSpot. DistinctRandom is very similar to JDK 8's SplittableRandom, without the splitting, and will produce every possible
-`long` with its `nextLong()` method before it ever repeats a returned value. Both DistinctRandom and LaserRandom support the
-`skip()` method, which allows skipping ahead or behind in the sequence of generated numbers, but TricycleRandom and
-FourWheelRandom do not allow skipping. There's also some other generators that you might want for other reasons.
-`com.github.tommyettinger.ds.support.Xoshiro256StarStarRandom` isn't particularly fast, but is four-dimensionally equidistributed
-(this means every sequence of four `long` values will be produced with equal likelihood, except the four-zeroes sequence, which is
-never produced). `com.github.tommyettinger.ds.support.StrangerRandom` is mostly useful if you anticipate running on unusual
-hardware, particularly some that doesn't support fast multiplication between `long`s (StrangerRandom doesn't use multiplication);
-it also has a good guaranteed minimum period length of 2 to the 65 minus 2, but is between DistinctRandom and FourWheelRandom in
-raw speed. `com.github.tommyettinger.ds.support.TrimRandom` has very high quality, currently is faster than StrangerRandom, and
-also offers a high guaranteed minimum period (2 to the 64) with a likely higher maximum period; it doesn't use multiplication
-either. `com.github.tommyettinger.ds.support.MizuchiRandom` is a simple PCG-style generator, using a linear congruential generator
-as a base and hashing the LCG's output before it returns it; Mizuchi has streams, like LaserRandom, but they are less correlated
-with each other than in LaserRandom.
+the JDK only offers `int`, `long`, and `double`, and primitive `Comparator`s (which are Java 8 `FunctionalInterface`s).
 
 You can extend essentially all classes in jdkgdxds, and it's meant to be friendlier to inherit from than the libGDX collections.
 The Object-keyed maps and sets have protected `place()` and `equate()` methods to allow changing the behavior of hashing (with

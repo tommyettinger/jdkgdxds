@@ -65,15 +65,10 @@ public interface Ordered<T> extends Arrangeable {
 
 	/**
 	 * Pseudo-randomly shuffles the order of this Ordered in-place.
-	 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
-	 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
-	 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
-	 * items (though it would take millions of years to do so, and would require changing the stream every few
-	 * years), while {@link java.util.Random} can only produce all shuffles for up to 16 items. The RandomXS128
-	 * class in libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33),
-	 * but is somewhat slower and is not ideal in terms of statistical bias.
+	 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
+	 * Ordered with the same {@link #size()}.
 	 *
-	 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+	 * @param rng any {@link EnhancedRandom} implementation
 	 */
 	@Override
 	default void shuffle (EnhancedRandom rng) {
@@ -194,15 +189,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
-		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
-		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
-		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
-		 * items (though it would take millions of years to do so, and would require changing the stream every few
-		 * years), while {@link java.util.Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
-		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
-		 * somewhat slower and is not ideal in terms of statistical bias.
-		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
+		 * Ordered with the same {@link #size()}.
+		 * 
+		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
 		default void shuffle (EnhancedRandom rng) {
@@ -318,15 +308,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
-		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
-		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
-		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
-		 * items (though it would take millions of years to do so, and would require changing the stream every few
-		 * years), while {@link java.util.Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
-		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
-		 * somewhat slower and is not ideal in terms of statistical bias.
-		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
+		 * Ordered with the same {@link #size()}.
+		 * 
+		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
 		default void shuffle (EnhancedRandom rng) {
@@ -442,15 +427,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
-		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
-		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
-		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
-		 * items (though it would take millions of years to do so, and would require changing the stream every few
-		 * years), while {@link java.util.Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
-		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
-		 * somewhat slower and is not ideal in terms of statistical bias.
-		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
+		 * Ordered with the same {@link #size()}.
+		 * 
+		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
 		default void shuffle (EnhancedRandom rng) {
@@ -566,15 +546,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
-		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
-		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
-		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
-		 * items (though it would take millions of years to do so, and would require changing the stream every few
-		 * years), while {@link java.util.Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
-		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
-		 * somewhat slower and is not ideal in terms of statistical bias.
-		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
+		 * Ordered with the same {@link #size()}.
+		 * 
+		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
 		default void shuffle (EnhancedRandom rng) {
@@ -687,15 +662,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
-		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
-		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
-		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
-		 * items (though it would take millions of years to do so, and would require changing the stream every few
-		 * years), while {@link java.util.Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
-		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
-		 * somewhat slower and is not ideal in terms of statistical bias.
-		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
+		 * Ordered with the same {@link #size()}.
+		 * 
+		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
 		default void shuffle (EnhancedRandom rng) {
@@ -808,15 +778,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
-		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
-		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
-		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
-		 * items (though it would take millions of years to do so, and would require changing the stream every few
-		 * years), while {@link java.util.Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
-		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
-		 * somewhat slower and is not ideal in terms of statistical bias.
-		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
+		 * Ordered with the same {@link #size()}.
+		 * 
+		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
 		default void shuffle (EnhancedRandom rng) {
@@ -929,15 +894,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
-		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
-		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
-		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
-		 * items (though it would take millions of years to do so, and would require changing the stream every few
-		 * years), while {@link java.util.Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
-		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
-		 * somewhat slower and is not ideal in terms of statistical bias.
-		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
+		 * Ordered with the same {@link #size()}.
+		 * 
+		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
 		default void shuffle (EnhancedRandom rng) {
@@ -1050,15 +1010,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
-		 * You can seed {@code rng}, the random number generator, with an identical seed (or in {@link LaserRandom}'s
-		 * case, an identical pair of seeds) to reproduce a shuffle on two Ordered with the same {@link #size()}.
-		 * Using {@link LaserRandom} is recommended because it has the potential to produce all shuffles for up to 33
-		 * items (though it would take millions of years to do so, and would require changing the stream every few
-		 * years), while {@link java.util.Random} can only produce all shuffles for up to 16 items. The RandomXS128 class in
-		 * libGDX technically can produce more possible shuffles than LaserRandom (34 items instead of 33), but is
-		 * somewhat slower and is not ideal in terms of statistical bias.
-		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
+		 * Ordered with the same {@link #size()}.
+		 * 
+		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
 		default void shuffle (EnhancedRandom rng) {

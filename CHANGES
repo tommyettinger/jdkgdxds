@@ -1,3 +1,9 @@
+[0.3.0]
+- [LOTS OF BREAKING CHANGES] The core math code in BitConversion is now part of its own small math utility library, `digital`. It is a dependency.
+- [LOTS OF BREAKING CHANGES] EnhancedRandom is now an abstract class, and has moved to the dependency `juniper`. All generators have also moved.
+
+[0.2.8]
+
 [0.2.3]
 - [BREAKING CHANGE] EnhancedRandom.nextInt(int, int) and nextSignedInt(int, int) were still broken when outerBound was less than innerBound; this has been fixed, but these methods will return different values now.
 - Fix the iterators for int- and long-keyed maps; there was a name-shadowing issue that made iteration stop immediately in some non-empty maps.

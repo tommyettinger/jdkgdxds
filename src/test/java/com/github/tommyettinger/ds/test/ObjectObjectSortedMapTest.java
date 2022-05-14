@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
-import com.github.tommyettinger.ds.support.TrimRandom;
+import com.github.tommyettinger.random.TrimRandom;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

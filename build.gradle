@@ -47,8 +47,9 @@ if(JavaVersion.current().isJava9Compatible()) {
     }
 }
 
-idea.module.excludeDirs += [file("src/main/java/emu/")]
-[compileJava, compileTestJava, javadoc]*.exclude("emu")
+//// These next two lines aren't needed because we don't super-source code any more here.
+//idea.module.excludeDirs += [file("src/main/java/emu/")]
+//[compileJava, compileTestJava, javadoc]*.exclude("emu")
 
 javadoc.options.source("17")
 javadoc.destinationDir = file("docs/apidocs")

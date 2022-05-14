@@ -649,7 +649,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	/**
 	 * Returns a random item from the array, or false if the array is empty.
 	 *
-	 * @param random a {@link EnhancedRandom} such as {@link com.github.tommyettinger.ds.support.LaserRandom} from this library
+	 * @param random a {@link EnhancedRandom} such as {@link com.github.tommyettinger.random.LaserRandom} from this library
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	public boolean random (EnhancedRandom random) {

@@ -3,7 +3,7 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.QuickSelect;
 import com.github.tommyettinger.ds.Select;
-import com.github.tommyettinger.ds.support.DistinctRandom;
+import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.ds.support.sort.NaturalTextComparator;
 import org.junit.Assert;
 import org.junit.Test;

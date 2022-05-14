@@ -640,7 +640,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
 	 *
-	 * @param random a {@link EnhancedRandom} such as {@link com.github.tommyettinger.ds.support.LaserRandom} from this library
+	 * @param random a {@link EnhancedRandom} such as {@link com.github.tommyettinger.random.LaserRandom} from this library
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	public char random (EnhancedRandom random) {
