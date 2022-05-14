@@ -83,6 +83,12 @@ once, every occurrence of that item is removed from the `List`. In libGDX, if an
 once from the Array; similarly, if it appears twice, it is removed twice. Here, we have the List behavior for removeAll(), but
 also keep the Array behavior in `removeEach()`.
 
+Here, we rely on some shared common functionality in two other libraries (by the same author).
+[Digital](https://github.com/tommyettinger/digital) has core math code, including the BitConversion and Base classes that were
+here earlier. [Juniper](https://github.com/tommyettinger/juniper) has the random number generators that also used to be here.
+Having these as external libraries allows someone's LibraryA that really only needs the core math from digital to only use that,
+but for projects that need both jdkgdxds and LibraryA, the shared dependency won't be duplicated.
+
 ## How do I get it?
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
