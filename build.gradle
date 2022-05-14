@@ -69,6 +69,8 @@ repositories {
 }
 
 dependencies {
+    api "com.github.tommyettinger:digital:$digitalVersion"
+    api "com.github.tommyettinger:juniper:$juniperVersion"
     api 'com.google.code.findbugs:jsr305:3.0.2'
     testImplementation "junit:junit:4.13.2"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.8.2"

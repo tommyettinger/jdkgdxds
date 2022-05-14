@@ -17,8 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.EnhancedRandom;
-import com.github.tommyettinger.ds.support.LaserRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.LaserRandom;
 
 import java.util.Collection;
 
@@ -75,36 +75,48 @@ public interface Arrangeable {
 		final int c = random.getStateCount();
 		switch (c) {
 		case 0: {
-			random.shuffle(this);
+			for (int i = size() - 1; i > 0; i--) {
+				swap(i, random.nextInt(i + 1));
+			}
 			break;
 		}
 		case 1: {
 			long s0 = random.getSelectedState(0);
-			random.shuffle(this);
+			for (int i = size() - 1; i > 0; i--) {
+				swap(i, random.nextInt(i + 1));
+			}
 			random.setState(s0);
 			break;
 		}
 		case 2: {
 			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1);
-			random.shuffle(this);
+			for (int i = size() - 1; i > 0; i--) {
+				swap(i, random.nextInt(i + 1));
+			}
 			random.setState(s0, s1);
 			break;
 		}
 		case 3: {
 			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1), s2 = random.getSelectedState(2);
-			random.shuffle(this);
+			for (int i = size() - 1; i > 0; i--) {
+				swap(i, random.nextInt(i + 1));
+			}
 			random.setState(s0, s1, s2);
 			break;
 		}
 		case 4: {
 			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1), s2 = random.getSelectedState(2), s3 = random.getSelectedState(3);
-			random.shuffle(this);
+			for (int i = size() - 1; i > 0; i--) {
+				swap(i, random.nextInt(i + 1));
+			}
 			random.setState(s0, s1, s2, s3);
 			break;
 		}
 		case 5: {
 			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1), s2 = random.getSelectedState(2), s3 = random.getSelectedState(3), s4 = random.getSelectedState(4);
-			random.shuffle(this);
+			for (int i = size() - 1; i > 0; i--) {
+				swap(i, random.nextInt(i + 1));
+			}
 			random.setSelectedState(0, s0);
 			random.setSelectedState(1, s1);
 			random.setSelectedState(2, s2);
@@ -117,7 +129,9 @@ public interface Arrangeable {
 			for (int i = 0; i < c; i++) {
 				states[i] = random.getSelectedState(i);
 			}
-			random.shuffle(this);
+			for (int i = size() - 1; i > 0; i--) {
+				swap(i, random.nextInt(i + 1));
+			}
 			random.setState(states);
 		}
 		}

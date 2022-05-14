@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.BitConversion;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.ds.support.function.ObjFloatConsumer;
 import com.github.tommyettinger.ds.support.function.ObjFloatToFloatBiFunction;
