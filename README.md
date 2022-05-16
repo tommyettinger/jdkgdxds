@@ -95,24 +95,40 @@ You have two options: Maven Central for stable-ish releases, or JitPack to selec
 
 Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.8'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
-cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add
-`implementation 'com.github.tommyettinger:jdkgdxds:0.2.8:sources'` to its dependencies, and in its
-`GdxDefinition.gwt.xml` (in the HTML module), add
-```xml
+cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add:
+```
+implementation 'com.github.tommyettinger:digital:0.0.2:sources'
+implementation 'com.github.tommyettinger:juniper:0.0.1:sources'
+implementation 'com.github.tommyettinger:jdkgdxds:0.2.8:sources'
+```
+to its
+dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
+```
+<inherits name="digital" />
+<inherits name="juniper" />
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines.
+in with the other `inherits` lines. The dependencies (and `inherits` lines) on digital and juniper are not necessary for jdkgdxds
+0.2.8, but are necessary starting in 0.3.0 (and pre-release commits).
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/8de0c52050).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/1beaad5645).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:8de0c52050'` or `api 'com.github.tommyettinger:jdkgdxds:8de0c52050'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:1beaad5645'` or `api 'com.github.tommyettinger:jdkgdxds:1beaad5645'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
-project). If you have an HTML module, add `implementation 'com.github.tommyettinger:jdkgdxds:8de0c52050:sources'` to its
+project). If you have an HTML module, add:
+```
+implementation 'com.github.tommyettinger:digital:0.0.2:sources'
+implementation 'com.github.tommyettinger:juniper:0.0.1:sources'
+implementation 'com.github.tommyettinger:jdkgdxds:1beaad5645:sources'
+```
+to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
-```xml
+```
+<inherits name="digital" />
+<inherits name="juniper" />
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. `8de0c52050` is an example of a recent commit, and can be
+in with the other `inherits` lines. `1beaad5645` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
