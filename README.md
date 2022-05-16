@@ -112,16 +112,16 @@ in with the other `inherits` lines. The dependencies (and `inherits` lines) on d
 0.2.8, but are necessary starting in 0.3.0 (and pre-release commits).
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/1beaad5645).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/b539a103cc).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:1beaad5645'` or `api 'com.github.tommyettinger:jdkgdxds:1beaad5645'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:b539a103cc'` or `api 'com.github.tommyettinger:jdkgdxds:b539a103cc'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
 implementation 'com.github.tommyettinger:digital:0.0.2:sources'
 implementation 'com.github.tommyettinger:juniper:0.0.1:sources'
-implementation 'com.github.tommyettinger:jdkgdxds:1beaad5645:sources'
+implementation 'com.github.tommyettinger:jdkgdxds:b539a103cc:sources'
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -130,5 +130,5 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="juniper" />
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. `1beaad5645` is an example of a recent commit, and can be
+in with the other `inherits` lines. `b539a103cc` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
