@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
+import static com.github.tommyettinger.digital.Hasher.*;
+
 /**
  * Utility code shared by various data structures in this package.
  *
@@ -135,52 +137,15 @@ public class Utilities {
 	}
 
 	/**
-	 * Big constant 0, used by {@link #longHashCodeIgnoreCase(CharSequence)}.
-	 */
-	protected static final long b0 = 0xA0761D6478BD642FL;
-	/**
-	 * Big constant 1, used by {@link #longHashCodeIgnoreCase(CharSequence)}.
-	 */
-	protected static final long b1 = 0xE7037ED1A0B428DBL;
-	/**
-	 * Big constant 2, used by {@link #longHashCodeIgnoreCase(CharSequence)}.
-	 */
-	protected static final long b2 = 0x8EBC6AF09C88C6E3L;
-	/**
-	 * Big constant 3, used by {@link #longHashCodeIgnoreCase(CharSequence)}.
-	 */
-	protected static final long b3 = 0x589965CC75374CC3L;
-	/**
-	 * Big constant 4, used by {@link #longHashCodeIgnoreCase(CharSequence)}.
-	 */
-	protected static final long b4 = 0x1D8E4E27C47D124FL;
-
-	/**
-	 * Part of the hashing function used by {@link #longHashCodeIgnoreCase(CharSequence)}.
-	 * <br>
-	 * Takes two arguments that are technically longs, and should be very different, and uses them to get a result
-	 * that is technically a long and mixes the bits of the inputs. The arguments and result are only technically
-	 * longs because their lower 32 bits matter much more than their upper 32, and giving just any long won't work.
-	 * <br>
-	 * This is very similar to wyhash's mum function, but doesn't use 128-bit math because it expects that its
-	 * arguments are only relevant in their lower 32 bits (allowing their product to fit in 64 bits).
-	 *
-	 * @param a a long that should probably only hold an int's worth of data
-	 * @param b a long that should probably only hold an int's worth of data
-	 * @return a sort-of randomized output dependent on both inputs
-	 */
-	protected static long mum (final long a, final long b) {
-		final long n = a * b;
-		return n - (n >>> 32);
-	}
-
-	/**
 	 * Gets a 64-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
 	 * Uses Water hash, which is a variant on <a href="https://github.com/vnmakarov/mum-hash">mum-hash</a> and
 	 * <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a>. This gets the hash as if all cased letters have been
 	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
 	 * Unicode except Georgian. Typically place() methods in Sets and Maps here that want case-insensitive hashing
 	 * would use this with {@code (int)(longHashCodeIgnoreCase(text) >>> shift)}.
+	 * <br>
+	 * This is very similar to the {@link com.github.tommyettinger.digital.Hasher#hash64(CharSequence)} method, and shares
+	 * the same constants and mum() method with Hasher.
 	 *
 	 * @param item a non-null CharSequence; often be a String, but this has no trouble with a StringBuilder
 	 * @return a long hashCode; quality should be similarly good across any bits
