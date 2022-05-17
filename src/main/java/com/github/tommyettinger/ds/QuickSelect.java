@@ -41,7 +41,11 @@ import java.util.Comparator;
  * @author Jon Renner
  * @author Tommy Ettinger (adapted the class to carry no state)
  */
-public class QuickSelect {
+public final class QuickSelect {
+	/**
+	 * Not instantiable.
+	 */
+	private QuickSelect() {}
 	public static <T> int select (T[] items, Comparator<? super T> comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}

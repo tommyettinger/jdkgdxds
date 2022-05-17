@@ -135,6 +135,10 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 in with the other `inherits` lines. `9d6f549623` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
 
+There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to
+transfer libGDX data structures to and from jdkgdxds data structures, and more importantly, to store any[*] jdkgdxds classes using
+libGDX's `Json` class. [*]Any, only because IdentityMap and IdentityOrderedMap don't make sense to serialize.
+
 ## Updating to 1.0.1
 
 The 1.0.1 release is a more significant set of breaking changes, but thankfully, most of the changes have been very easy to adjust
@@ -150,16 +154,16 @@ imported:
 
   - `com.github.tommyettinger.ds.support.BitConversion` changes to `com.github.tommyettinger.digital.BitConversion`
   - `com.github.tommyettinger.ds.support.Base` changes to `com.github.tommyettinger.digital.Base`
-  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.ChopRandom`
-  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.DistinctRandom`
-  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.FourWheelRandom`
-  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.LaserRandom`
-  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.MizuchiRandom`
-  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.RomuTrioRandom`
-  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.StrangerRandom`
-  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.TricycleRandom`
-  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.TrimRandom`
-  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.Xoshiro256StarStarRandom`
+  - `com.github.tommyettinger.ds.support.ChopRandom` changes to `com.github.tommyettinger.random.ChopRandom`
+  - `com.github.tommyettinger.ds.support.DistinctRandom` changes to `com.github.tommyettinger.random.DistinctRandom`
+  - `com.github.tommyettinger.ds.support.FourWheelRandom` changes to `com.github.tommyettinger.random.FourWheelRandom`
+  - `com.github.tommyettinger.ds.support.LaserRandom` changes to `com.github.tommyettinger.random.LaserRandom`
+  - `com.github.tommyettinger.ds.support.MizuchiRandom` changes to `com.github.tommyettinger.random.MizuchiRandom`
+  - `com.github.tommyettinger.ds.support.RomuTrioRandom` changes to `com.github.tommyettinger.random.RomuTrioRandom`
+  - `com.github.tommyettinger.ds.support.StrangerRandom` changes to `com.github.tommyettinger.random.StrangerRandom`
+  - `com.github.tommyettinger.ds.support.TricycleRandom` changes to `com.github.tommyettinger.random.TricycleRandom`
+  - `com.github.tommyettinger.ds.support.TrimRandom` changes to `com.github.tommyettinger.random.TrimRandom`
+  - `com.github.tommyettinger.ds.support.Xoshiro256StarStarRandom` changes to `com.github.tommyettinger.random.Xoshiro256StarStarRandom`
   - `com.github.tommyettinger.ds.support.EnhancedRandom` is slightly more complicated, but it changes to `com.github.tommyettinger.random.EnhancedRandom`
 
 `EnhancedRandom` is now an abstract class, instead of a default-method-heavy interface, which makes it a little less flexible, but
