@@ -93,13 +93,13 @@ but for projects that need both jdkgdxds and LibraryA, the shared dependency won
 
 You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:0.2.8'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.0'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add:
 ```
 implementation 'com.github.tommyettinger:digital:0.0.2:sources'
-implementation 'com.github.tommyettinger:juniper:0.0.1:sources'
-implementation 'com.github.tommyettinger:jdkgdxds:0.2.8:sources'
+implementation 'com.github.tommyettinger:juniper:0.0.2:sources'
+implementation 'com.github.tommyettinger:jdkgdxds:1.0.0:sources'
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -109,19 +109,21 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="jdkgdxds" />
 ```
 in with the other `inherits` lines. The dependencies (and `inherits` lines) on digital and juniper are not necessary for jdkgdxds
-0.2.8, but are necessary starting in 0.3.0 (and pre-release commits).
+0.2.8, but are necessary starting in 1.0.0 and later. The versions are expected to increase somewhat for both digital and juniper
+as bugs are found and fixed, but a low version number isn't a bad thing for those two libraries -- they were both mostly drawn
+from code in this library, and were tested significantly here. 
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/b539a103cc).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/9d6f549623).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:b539a103cc'` or `api 'com.github.tommyettinger:jdkgdxds:b539a103cc'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:9d6f549623'` or `api 'com.github.tommyettinger:jdkgdxds:9d6f549623'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
 implementation 'com.github.tommyettinger:digital:0.0.2:sources'
-implementation 'com.github.tommyettinger:juniper:0.0.1:sources'
-implementation 'com.github.tommyettinger:jdkgdxds:b539a103cc:sources'
+implementation 'com.github.tommyettinger:juniper:0.0.2:sources'
+implementation 'com.github.tommyettinger:jdkgdxds:9d6f549623:sources'
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -130,5 +132,40 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="juniper" />
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. `b539a103cc` is an example of a recent commit, and can be
+in with the other `inherits` lines. `9d6f549623` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
+
+## Updating to 1.0.0
+
+The 1.0.0 release is a more significant set of breaking changes, but thankfully, most of the changes have been very easy to adjust
+to in practice. First, the core math utilities in `BitConversion` and `Base` were moved into the
+[digital](https://github.com/tommyettinger/digital) library. Then, the random number generators that were here were moved to the
+[juniper](https://github.com/tommyettinger/juniper) library. There are various new additions to both of these small libraries to
+make them more useful as shared libraries for other libraries to depend on. While `digital` has common math and trigonometry
+methods now, the random number generators in `juniper` can serialize themselves to Strings without needing external code, and
+deserialize any of the serialized forms back to the appropriate generator using `Deserializer`.
+
+To update to 1.0.0, most of the changes are package-related, and often only need changing import statements. Code that previously
+imported:
+
+  - `com.github.tommyettinger.ds.support.BitConversion` changes to `com.github.tommyettinger.digital.BitConversion`
+  - `com.github.tommyettinger.ds.support.Base` changes to `com.github.tommyettinger.digital.Base`
+  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.ChopRandom`
+  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.DistinctRandom`
+  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.FourWheelRandom`
+  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.LaserRandom`
+  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.MizuchiRandom`
+  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.RomuTrioRandom`
+  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.StrangerRandom`
+  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.TricycleRandom`
+  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.TrimRandom`
+  - `com.github.tommyettinger.ds.support.EnhancedRandom` changes to `com.github.tommyettinger.random.Xoshiro256StarStarRandom`
+  - `com.github.tommyettinger.ds.support.EnhancedRandom` is slightly more complicated, but it changes to `com.github.tommyettinger.random.EnhancedRandom`
+
+`EnhancedRandom` is now an abstract class, instead of a default-method-heavy interface, which makes it a little less flexible, but
+allows it to work smoothly on Java 17 and much earlier Java versions. Extending the new `EnhancedRandom` only needs the new
+`getTag()` method implemented, and maybe changes to `copy()`, `equals()` or `toString()` could be used as well.
+
+If you are migrating other code to `digital`'s new math functions, you may need to rename some called methods -- the `sin_()`,
+`cos_()`, and similar trigonometric methods that worked with turns instead of radians now explicitly are called `sinTurns()` and
+`cosTurns()`.

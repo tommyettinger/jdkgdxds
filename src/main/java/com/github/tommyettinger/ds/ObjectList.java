@@ -771,7 +771,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * You can use any {@link EnhancedRandom} implementation for {@code rng};
 	 * {@link LaserRandom} is generally a good choice.
 	 *
-	 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+	 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
 	 */
 	@Override
 	public void shuffle (EnhancedRandom rng) {

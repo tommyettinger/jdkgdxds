@@ -91,7 +91,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * item type for Lists and Sets. The random number generator {@code rng} should probably be a
 	 * {@link LaserRandom}, because it implements a fast {@link LaserRandom#nextInt(int)} method.
 	 *
-	 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+	 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
 	 * @return a random T value from this Ordered
 	 */
 	default T random (EnhancedRandom rng) {
@@ -215,7 +215,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * be well-served by a {@link LaserRandom}, because it implements a fast
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
 		 * @return a random int value from this Ordered.OfInt
 		 */
 		default int random (EnhancedRandom rng) {
@@ -334,7 +334,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * be well-served by a {@link LaserRandom}, because it implements a fast
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
 		 * @return a random long value from this Ordered.OfLong
 		 */
 		default long random (EnhancedRandom rng) {
@@ -453,7 +453,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * be well-served by a {@link LaserRandom}, because it implements a fast
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
 		 * @return a random float value from this Ordered.OfFloat
 		 */
 		default float random (EnhancedRandom rng) {
@@ -572,7 +572,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * be well-served by a {@link LaserRandom}, because it implements a fast
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
 		 * @return a random double value from this Ordered.OfDouble
 		 */
 		default double random (EnhancedRandom rng) {
@@ -688,7 +688,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * be well-served by a {@link LaserRandom}, because it implements a fast
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
 		 * @return a random short value from this Ordered.OfShort
 		 */
 		default short random (EnhancedRandom rng) {
@@ -804,7 +804,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * be well-served by a {@link LaserRandom}, because it implements a fast
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
 		 * @return a random byte value from this Ordered.OfByte
 		 */
 		default byte random (EnhancedRandom rng) {
@@ -920,7 +920,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * be well-served by a {@link LaserRandom}, because it implements a fast
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
 		 * @return a random char value from this Ordered.OfChar
 		 */
 		default char random (EnhancedRandom rng) {
@@ -1036,7 +1036,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * be well-served by a {@link LaserRandom}, because it implements a fast
 		 * {@link LaserRandom#nextInt(int)} method.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in this library
+		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
 		 * @return a random boolean value from this Ordered.OfBoolean
 		 */
 		default boolean random (EnhancedRandom rng) {

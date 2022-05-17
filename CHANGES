@@ -1,8 +1,11 @@
-[0.3.0]
-- [LOTS OF BREAKING CHANGES] The core math code in BitConversion is now part of its own small math utility library, `digital`. It is a dependency.
-- [LOTS OF BREAKING CHANGES] EnhancedRandom is now an abstract class, and has moved to the dependency `juniper`. All generators have also moved.
+[1.0.0]
+- [SMALL BREAKING CHANGES] The core math code in BitConversion is now part of its own small math utility library, `digital`. It is a dependency.
+- [SMALL BREAKING CHANGES] EnhancedRandom is now an abstract class, and has moved to the dependency `juniper`. All generators have also moved.
+- [BREAKING CHANGE] The shuffle() method in EnhancedRandom that took an Arrangeable has been moved to Arrangeable, taking an EnhancedRandom.
 
 [0.2.8]
+- New truncate() method on maps and sets allows removing items aggressively to fit a desired smaller size.
+- The shrink() method in maps and sets now does extra checks to prevent a failure state with many more items than the load factor allows.
 
 [0.2.3]
 - [BREAKING CHANGE] EnhancedRandom.nextInt(int, int) and nextSignedInt(int, int) were still broken when outerBound was less than innerBound; this has been fixed, but these methods will return different values now.

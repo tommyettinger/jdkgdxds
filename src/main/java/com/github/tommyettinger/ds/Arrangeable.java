@@ -40,7 +40,7 @@ public interface Arrangeable {
 	/**
 	 * Pseudo-randomly shuffles the order of this Arrangeable in-place.
 	 *
-	 * @param random any {@link EnhancedRandom} implementation; e.g. you can use {@link LaserRandom} in this library
+	 * @param random any {@link EnhancedRandom} implementation; e.g. you can use {@link LaserRandom} in juniper
 	 */
 	default void shuffle (EnhancedRandom random) {
 		for (int i = size() - 1; i >= 0; i--) {
