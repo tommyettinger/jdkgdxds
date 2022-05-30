@@ -60,9 +60,22 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	protected K[] keyTable;
 	protected V[] valueTable;
 
+	/**
+	 * Between 0f (exclusive) and 1f (inclusive, if you're careful), this determines how full the backing tables
+	 * can get before this increases their size. Larger values use less memory but make the data structure slower.
+	 */
 	protected float loadFactor;
+
+	/**
+	 * Precalculated value of {@code (int)(keyTable.length * loadFactor)}, used to determine when to resize.
+	 */
 	protected int threshold;
 
+	/**
+	 * Used by {@link #place(Object)} typically, this should always equal {@code Long.numberOfLeadingZeros(mask)}.
+	 * For a table that could hold 2 items (with 1 bit indices), this would be {@code 64 - 1 == 63}. For a table that
+	 * could hold 256 items (with 8 bit indices), this would be {@code 64 - 8 == 56}.
+	 */
 	protected int shift;
 
 	/**
@@ -612,7 +625,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		// multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
 		// Pseudorandom Number Generators
 		hashMultiplier *= 0xF1357AEA2E62A9C5L;
-		// ensures hashMultiplier is never too small, and is always odd.
+		// ensures hashMultiplier is never too small, and is always odd
 		hashMultiplier |= 0x0000010000000001L;
 
 		K[] oldKeyTable = keyTable;
