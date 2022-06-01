@@ -83,7 +83,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	/**
 	 * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
 	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectObjectOrderedMap}.
+	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectLongOrderedMap}.
 	 */
 	protected long hashMultiplier = 0x9E3779B97F4A7C15L;
 

@@ -54,10 +54,30 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 
 	protected T[] keyTable;
 
+	/**
+	 * Between 0f (exclusive) and 1f (inclusive, if you're careful), this determines how full the backing table
+	 * can get before this increases its size. Larger values use less memory but make the data structure slower.
+	 */
 	protected float loadFactor;
+
+	/**
+	 * Precalculated value of {@code (int)(keyTable.length * loadFactor)}, used to determine when to resize.
+	 */
 	protected int threshold;
 
+	/**
+	 * Used by {@link #place(Object)} typically, this should always equal {@code Long.numberOfLeadingZeros(mask)}.
+	 * For a table that could hold 2 items (with 1 bit indices), this would be {@code 64 - 1 == 63}. For a table that
+	 * could hold 256 items (with 8 bit indices), this would be {@code 64 - 8 == 56}.
+	 */
 	protected int shift;
+
+	/**
+	 * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
+	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
+	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectOrderedSet}.
+	 */
+	protected long hashMultiplier = 0x9E3779B97F4A7C15L;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
@@ -143,39 +163,40 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		this(array, 0, array.length);
 	}
 
-	//// another option for place() to use:
-//		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
-
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}, mixed.
 	 * <p>
-	 * The default behavior uses Fibonacci hashing; it simply gets the {@link Object#hashCode()}
-	 * of {@code item}, multiplies it by a specific long constant related to the golden ratio,
-	 * and makes an unsigned right shift by {@link #shift} before casting to int and returning.
+	 * The default behavior uses a basic hash mixing family; it simply gets the
+	 * {@link Object#hashCode()} of {@code item}, multiplies it by the current
+	 * {@link #hashMultiplier}, and makes an unsigned right shift by {@link #shift} before
+	 * casting to int and returning. Because the hashMultiplier changes every time the backing
+	 * table resizes, if a problematic sequence of keys piles up with many collisions, that won't
+	 * continue to cause problems when the next resize changes the hashMultiplier again. This
+	 * doesn't have much way of preventing trouble from hashCode() implementations that always
+	 * or very frequently return 0, but nothing really can handle that well.
+	 * <br>
 	 * This can be overridden to hash {@code item} differently, though all implementors must
 	 * ensure this returns results in the range of 0 to {@link #mask}, inclusive. If nothing
 	 * else is changed, then unsigned-right-shifting an int or long by {@link #shift} will also
-	 * restrict results to the correct range.
-	 * <br>
-	 * This method can be overridden to customize hashing. You should usually override this method
+	 * restrict results to the correct range. You should usually override this method
 	 * if you also override {@link #equate(Object, Object)}, because two equal values should have
 	 * the same hash. If you are confident that the hashCode() implementation used by item will
 	 * have reasonable quality, you can override this with a simpler implementation, such as
 	 * {@code return item.hashCode() & mask;}. This simpler version is not used by default, even
-	 * though it can be slightly faster, because the default Fibonacci hashing provides much
+	 * though it can be slightly faster, because the default hashing family provides much
 	 * better resilience against high collision rates when they occur accidentally. If collision
 	 * rates are high on the low bits of many hashes, then the simpler version tends to be
-	 * significantly slower than Fibonacci hashing. Neither version provides stronger defenses
+	 * significantly slower than the hashing family. Neither version provides stronger defenses
 	 * against maliciously-chosen items, but linear probing naturally won't fail entirely even in
 	 * that case. It is possible that a user could write an implementation of place() that is more
 	 * robust against malicious inputs; one such approach is optionally employed by .NET Core and
-	 * newer versions for the hashes of strings.
+	 * newer versions for the hashes of strings. That approach is similar to the current one here.
 	 *
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (Object item) {
-		return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+		return (int)(item.hashCode() * hashMultiplier >>> shift);
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
 	}
@@ -435,6 +456,13 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
+
+		// multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
+		// Pseudorandom Number Generators
+		hashMultiplier *= 0xF1357AEA2E62A9C5L;
+		// ensures hashMultiplier is never too small, and is always odd
+		hashMultiplier |= 0x0000010000000001L;
+
 		T[] oldKeyTable = keyTable;
 
 		keyTable = (T[])new Object[newSize];
