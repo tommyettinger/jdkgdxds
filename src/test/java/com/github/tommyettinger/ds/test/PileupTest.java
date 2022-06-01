@@ -5,12 +5,12 @@ import com.github.tommyettinger.ds.ObjectSet;
 import org.junit.Test;
 
 public class PileupTest {
-    public static final int LEN = 2000000;
+    public static final int LEN = 10000000;
 
     @Test
     public void testObjectSetOld() {
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, 0.75f) {
+        ObjectSet set = new ObjectSet(51, 0.8f) {
             long collisionTotal = 0;
             int longestPileup = 0;
 
@@ -48,19 +48,26 @@ public class PileupTest {
                         if (key != null) {addResize(key);}
                     }
                 }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier));
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
             }
         };
-        for (int i = 0; i < LEN; i++) {
-            set.add(new Vector2(Integer.rotateRight(i & 0x55555555, 1), Integer.rotateRight(i & 0xAAAAAAAA, 2)));
+        int limit = (int)(Math.sqrt(LEN));
+        for (int x = -limit; x < limit; x+=2) {
+            for (int y = -limit; y < limit; y+=2) {
+                set.add(new Vector2(x, y));
+            }
         }
+//        for (int i = 0; i < LEN; i++) {
+//            set.add(new Vector2(Integer.rotateRight(i & 0x55555555, 1), Integer.rotateRight(i & 0xAAAAAAAA, 2)));
+//        }
         System.out.println(System.nanoTime() - start);
     }
     @Test
     public void testObjectSetNew() {
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, 0.75f) {
+        ObjectSet set = new ObjectSet(51, 0.8f) {
             long collisionTotal = 0;
             int longestPileup = 0;
 
@@ -104,13 +111,20 @@ public class PileupTest {
                         if (key != null) {addResize(key);}
                     }
                 }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier));
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
             }
         };
-        for (int i = 0; i < LEN; i++) {
-            set.add(new Vector2(Integer.rotateRight(i & 0x55555555, 1), Integer.rotateRight(i & 0xAAAAAAAA, 2)));
+        int limit = (int)(Math.sqrt(LEN));
+        for (int x = -limit; x < limit; x+=2) {
+            for (int y = -limit; y < limit; y+=2) {
+                set.add(new Vector2(x, y));
+            }
         }
+//        for (int i = 0; i < LEN; i++) {
+//            set.add(new Vector2(Integer.rotateRight(i & 0x55555555, 1), Integer.rotateRight(i & 0xAAAAAAAA, 2)));
+//        }
         System.out.println(System.nanoTime() - start);
     }
 }
