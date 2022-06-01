@@ -5,7 +5,25 @@ import com.github.tommyettinger.ds.ObjectSet;
 import org.junit.Test;
 
 public class PileupTest {
-    public static final int LEN = 10000000;
+    public static final int LEN = 2000000;
+    public static String[] generateUniqueWords(int size) {
+        final int numLetters = 3;
+        ObjectSet<String> set = new ObjectSet<>(size, 0.8f);
+        char[] maker = new char[numLetters];
+        for (int i = 0; set.size() < size; ) {
+            for (int x = 0; x < 26 && set.size() < size; x++) {
+                maker[0] = (char) ('a' + x);
+                for (int y = 0; y < 26 && set.size() < size; y++) {
+                    maker[1] = (char) ('a' + y);
+                    for (int z = 0; z < 26 && set.size() < size; z++) {
+                        maker[2] = (char) ('a' + z);
+                        set.add(String.valueOf(maker) + (i++));
+                    }
+                }
+            }
+        }
+        return set.toArray(new String[0]);
+    }
 
     @Test
     public void testObjectSetOld() {
@@ -53,15 +71,16 @@ public class PileupTest {
                 System.out.println("longest pileup: " + longestPileup);
             }
         };
-        int limit = (int)(Math.sqrt(LEN));
-        for (int x = -limit; x < limit; x+=2) {
-            for (int y = -limit; y < limit; y+=2) {
-                set.add(new Vector2(x, y));
-            }
-        }
-//        for (int i = 0; i < LEN; i++) {
-//            set.add(new Vector2(Integer.rotateRight(i & 0x55555555, 1), Integer.rotateRight(i & 0xAAAAAAAA, 2)));
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
 //        }
+        String[] words = generateUniqueWords(LEN);
+        for (int i = 0; i < LEN; i++) {
+            set.add(words[i]);
+        }
         System.out.println(System.nanoTime() - start);
     }
     @Test
@@ -116,15 +135,16 @@ public class PileupTest {
                 System.out.println("longest pileup: " + longestPileup);
             }
         };
-        int limit = (int)(Math.sqrt(LEN));
-        for (int x = -limit; x < limit; x+=2) {
-            for (int y = -limit; y < limit; y+=2) {
-                set.add(new Vector2(x, y));
-            }
-        }
-//        for (int i = 0; i < LEN; i++) {
-//            set.add(new Vector2(Integer.rotateRight(i & 0x55555555, 1), Integer.rotateRight(i & 0xAAAAAAAA, 2)));
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
 //        }
+        String[] words = generateUniqueWords(LEN);
+        for (int i = 0; i < LEN; i++) {
+            set.add(words[i]);
+        }
         System.out.println(System.nanoTime() - start);
     }
 }
