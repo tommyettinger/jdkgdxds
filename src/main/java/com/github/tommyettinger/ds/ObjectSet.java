@@ -312,9 +312,9 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	}
 
 	/**
-	 * Skips checks for existing keys, doesn't increment size.
+	 * Like {@link #add(Object)}, but skips checks for existing keys, and doesn't increment size.
 	 */
-	private void addResize (T key) {
+	protected void addResize (T key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {
