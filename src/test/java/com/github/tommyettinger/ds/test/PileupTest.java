@@ -8,7 +8,7 @@ import org.junit.Test;
 import javax.annotation.Nonnull;
 
 public class PileupTest {
-    public static final int LEN = 200000;
+    public static final int LEN = 2000000;
     public static String[] generateUniqueWords(int size) {
         final int numLetters = 3;
         ObjectSet<String> set = new ObjectSet<>(size, 0.8f);
@@ -116,9 +116,10 @@ public class PileupTest {
 
                 // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
                 // Pseudorandom Number Generators
-                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
                 // ensures hashMultiplier is never too small, and is always odd
-                hashMultiplier |= 0x0000010000000001L;
+//                hashMultiplier |= 0x0000010000000001L;
+                hashMultiplier += 0x765428AE8CEAB1D8L;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -313,7 +314,10 @@ public class PileupTest {
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;
                 // ensures hashMultiplier is never too small, and is always odd
 //                hashMultiplier |= 0x0000010000000001L;
-                hashMultiplier += 0x20008L;
+
+                // we add a constant from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
+                // Pseudorandom Number Generators, times -8 to keep the bottom 3 bits the same every time.
+                hashMultiplier += 0x765428AE8CEAB1D8L;
 
                 Object[] oldKeyTable = keyTable;
 

@@ -571,11 +571,9 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-		// multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
-		// Pseudorandom Number Generators
-		hashMultiplier *= 0xF1357AEA2E62A9C5L;
-		// ensures hashMultiplier is never too small, and is always odd
-		hashMultiplier |= 0x0000010000000001L;
+		// we add a constant from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
+		// Pseudorandom Number Generators, times -8 to keep the bottom 3 bits the same every time.
+		hashMultiplier += 0x765428AE8CEAB1D8L;
 
 		K[] oldKeyTable = keyTable;
 		int[] oldValueTable = valueTable;
