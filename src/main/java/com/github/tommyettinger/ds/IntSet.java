@@ -47,20 +47,35 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	protected int[] keyTable;
 	protected boolean hasZeroValue;
 
+	/**
+	 * Between 0f (exclusive) and 1f (inclusive, if you're careful), this determines how full the backing table
+	 * can get before this increases their size. Larger values use less memory but make the data structure slower.
+	 */
 	protected float loadFactor;
+
+	/**
+	 * Precalculated value of {@code (int)(keyTable.length * loadFactor)}, used to determine when to resize.
+	 */
 	protected int threshold;
 
 	/**
 	 * Used by {@link #place(int)} to bit shift the upper bits of a {@code long} into a usable range (&gt;= 0 and &lt;=
 	 * {@link #mask}). The shift can be negative, which is convenient to match the number of bits in mask: if mask is a 7-bit
 	 * number, a shift of -7 shifts the upper 7 bits into the lowest 7 positions. This class sets the shift &gt; 32 and &lt; 64,
-	 * which if used with an int will still move the upper bits of an int to the lower bits due to Java's implicit modulus on
+	 * which when used with an int will still move the upper bits of an int to the lower bits due to Java's implicit modulus on
 	 * shifts.
 	 * <p>
 	 * {@link #mask} can also be used to mask the low bits of a number, which may be faster for some hashcodes, if
 	 * {@link #place(int)} is overridden.
 	 */
 	protected int shift;
+
+	/**
+	 * Used by {@link #place(int)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
+	 * This only needs to be serialized if the full key table is serialized, or if the iteration order should be
+	 * the same before and after serialization. Iteration order is better handled by using {@link IntOrderedSet}.
+	 */
+	protected long hashMultiplier = 0x9E3779B97F4A7C15L;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
@@ -151,11 +166,13 @@ public class IntSet implements PrimitiveCollection.OfInt {
 
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
+	 * Defaults to using {@link #hashMultiplier}, which changes every time the data structure resizes.
 	 *
-	 * @param item any int; it is often mixed so similar inputs still have different outputs
+	 * @param item any int; it is usually mixed or masked here
+	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (int item) {
-		return (int)(item * 0x9E3779B97F4A7C15L >>> shift);
+		return (int)(item * hashMultiplier >>> shift);
 	}
 
 	/**
@@ -356,6 +373,10 @@ public class IntSet implements PrimitiveCollection.OfInt {
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
+
+		// we add a constant from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
+		// Pseudorandom Number Generators, times -8 to keep the bottom 3 bits the same every time.
+		hashMultiplier += 0x765428AE8CEAB1D8L;
 
 		int[] oldKeyTable = keyTable;
 

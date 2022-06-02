@@ -72,7 +72,8 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
-	 * minus 1.
+	 * minus 1. If {@link #place(long)} is overridden, this can be used instead of {@link #shift} to isolate usable bits of a
+	 * hash.
 	 */
 	protected int mask;
 	@Nullable protected transient Entries entries1;

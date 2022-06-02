@@ -3,12 +3,13 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.IdentityObjectMap;
 import com.github.tommyettinger.ds.ObjectSet;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.annotation.Nonnull;
 
 public class PileupTest {
-    public static final int LEN = 2000000;
+    public static final int LEN = 200000;
     public static String[] generateUniqueWords(int size) {
         final int numLetters = 3;
         ObjectSet<String> set = new ObjectSet<>(size, 0.8f);
@@ -28,6 +29,7 @@ public class PileupTest {
         return set.toArray(new String[0]);
     }
 
+    @Ignore
     @Test
     public void testObjectSetOld() {
         long start = System.nanoTime();
@@ -224,7 +226,7 @@ public class PileupTest {
     @Test
     public void testBadStringSetOld() {
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, 0.7f) {
+        ObjectSet set = new ObjectSet(51, 0.8f) {
             long collisionTotal = 0;
             int longestPileup = 0;
 
@@ -284,7 +286,7 @@ public class PileupTest {
     @Test
     public void testBadStringSetNew() {
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, 0.7f) {
+        ObjectSet set = new ObjectSet(51, 0.8f) {
             long collisionTotal = 0;
             int longestPileup = 0;
 
