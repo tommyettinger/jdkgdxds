@@ -149,6 +149,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
 		defaultValue = map.defaultValue;
+		hashMultiplier = map.hashMultiplier;
+
 	}
 
 	/**
@@ -573,9 +575,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-		// we add a constant from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
-		// Pseudorandom Number Generators, times -8 to keep the bottom 3 bits the same every time.
-		hashMultiplier += 0x765428AE8CEAB1D8L;
+		// we multiply by a number with similar structure to the golden ratio (we started with 2 to the 64 times the golden ratio).
+		hashMultiplier *= 0x59E3779B97F4A7C1L;
 
 		K[] oldKeyTable = keyTable;
 		long[] oldValueTable = valueTable;

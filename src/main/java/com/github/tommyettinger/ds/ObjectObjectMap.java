@@ -87,7 +87,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
-	 * minus 1.
+	 * minus 1. If {@link #place(Object)} is overridden, this can be used instead of {@link #shift} to isolate usable bits of a
+	 * hash.
 	 */
 	protected int mask;
 	@Nullable protected transient Entries<K, V> entries1;
@@ -146,6 +147,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
 		valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
 		size = map.size;
+		hashMultiplier = map.hashMultiplier;
 	}
 
 	/**
@@ -622,9 +624,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-		// we add a constant from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
-		// Pseudorandom Number Generators, times -8 to keep the bottom 3 bits the same every time.
-		hashMultiplier += 0x765428AE8CEAB1D8L;
+		// we multiply by a number with similar structure to the golden ratio (we started with 2 to the 64 times the golden ratio).
+		hashMultiplier *= 0x59E3779B97F4A7C1L;
 
 		K[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;

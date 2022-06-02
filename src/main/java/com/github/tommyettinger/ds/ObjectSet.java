@@ -133,6 +133,8 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		shift = set.shift;
 		keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
 		size = set.size;
+		hashMultiplier = set.hashMultiplier;
+
 	}
 
 	/**
@@ -458,9 +460,8 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-		// we add a constant from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
-		// Pseudorandom Number Generators, times -8 to keep the bottom 3 bits the same every time.
-		hashMultiplier += 0x765428AE8CEAB1D8L;
+		// we multiply by a number with similar structure to the golden ratio (we started with 2 to the 64 times the golden ratio).
+		hashMultiplier *= 0x59E3779B97F4A7C1L;
 
 		T[] oldKeyTable = keyTable;
 

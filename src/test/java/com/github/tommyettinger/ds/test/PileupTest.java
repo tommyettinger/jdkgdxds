@@ -121,7 +121,9 @@ public class PileupTest {
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;
                 // ensures hashMultiplier is never too small, and is always odd
 //                hashMultiplier |= 0x0000010000000001L;
-                hashMultiplier += 0x765428AE8CEAB1D8L;
+
+                // we multiply by a number with similar structure to the golden ratio (we started with 2 to the 64 times the golden ratio).
+                hashMultiplier *= 0x59E3779B97F4A7C1L;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -268,6 +270,14 @@ public class PileupTest {
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
             }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                super.clear();
+            }
         };
 //        final int limit = (int)(Math.sqrt(LEN));
 //        for (int x = -limit; x < limit; x+=2) {
@@ -280,6 +290,7 @@ public class PileupTest {
             set.add(words[i]);
         }
         System.out.println(System.nanoTime() - start);
+        set.clear();
     }
 
     // takes 11830103300 ns
@@ -319,7 +330,12 @@ public class PileupTest {
 
                 // we add a constant from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
                 // Pseudorandom Number Generators, times -8 to keep the bottom 3 bits the same every time.
-                hashMultiplier += 0x765428AE8CEAB1D8L;
+                //361274435
+//                hashMultiplier += 0x765428AE8CEAB1D8L;
+                //211888218
+
+                // we multiply by a number with similar structure to the golden ratio (we started with 2 to the 64 times the golden ratio).
+                hashMultiplier *= 0x59E3779B97F4A7C1L;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -338,6 +354,14 @@ public class PileupTest {
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
             }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                super.clear();
+            }
         };
 //        final int limit = (int)(Math.sqrt(LEN));
 //        for (int x = -limit; x < limit; x+=2) {
@@ -350,5 +374,6 @@ public class PileupTest {
             set.add(words[i]);
         }
         System.out.println(System.nanoTime() - start);
+        set.clear();
     }
 }
