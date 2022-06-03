@@ -137,7 +137,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 */
 	@Override
 	protected int place (Object item) {
-		return (System.identityHashCode(item) & mask);
+		return (System.identityHashCode(item) + (int)(hashMultiplier >>> 32) & mask);
 	}
 
 	@Override
