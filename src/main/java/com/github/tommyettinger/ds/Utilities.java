@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Hasher;
+
 import static com.github.tommyettinger.digital.Hasher.*;
 
 /**
@@ -144,7 +146,7 @@ public class Utilities {
 	 * Unicode except Georgian. Typically place() methods in Sets and Maps here that want case-insensitive hashing
 	 * would use this with {@code (int)(longHashCodeIgnoreCase(text) >>> shift)}.
 	 * <br>
-	 * This is very similar to the {@link com.github.tommyettinger.digital.Hasher#hash64(CharSequence)} method, and shares
+	 * This is very similar to the {@link Hasher#hash64(CharSequence)} method, and shares
 	 * the same constants and mum() method with Hasher.
 	 *
 	 * @param item a non-null CharSequence; often be a String, but this has no trouble with a StringBuilder
@@ -152,6 +154,44 @@ public class Utilities {
 	 */
 	public static long longHashCodeIgnoreCase (final CharSequence item) {
 		long seed = 9069147967908697017L;
+		final int len = item.length();
+		for (int i = 3; i < len; i += 4) {
+			seed = mum(mum(Character.toUpperCase(item.charAt(i - 3)) ^ b1, Character.toUpperCase(item.charAt(i - 2)) ^ b2) + seed, mum(Character.toUpperCase(item.charAt(i - 1)) ^ b3, Character.toUpperCase(item.charAt(i)) ^ b4));
+		}
+		switch (len & 3) {
+		case 0:
+			seed = mum(b1 ^ seed, b4 + seed);
+			break;
+		case 1:
+			seed = mum(seed ^ b3, b4 ^ Character.toUpperCase(item.charAt(len - 1)));
+			break;
+		case 2:
+			seed = mum(seed ^ Character.toUpperCase(item.charAt(len - 2)), b3 ^ Character.toUpperCase(item.charAt(len - 1)));
+			break;
+		case 3:
+			seed = mum(seed ^ Character.toUpperCase(item.charAt(len - 3)) ^ (long)Character.toUpperCase(item.charAt(len - 2)) << 16, b1 ^ Character.toUpperCase(item.charAt(len - 1)));
+			break;
+		}
+		seed = (seed ^ seed << 16) * (len ^ b0);
+		return seed - (seed >>> 31) + (seed << 33);
+	}
+
+	/**
+	 * Gets a 64-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
+	 * Uses Water hash, which is a variant on <a href="https://github.com/vnmakarov/mum-hash">mum-hash</a> and
+	 * <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a>. This gets the hash as if all cased letters have been
+	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
+	 * Unicode except Georgian. Typically place() methods in Sets and Maps here that want case-insensitive hashing
+	 * would use this with {@code (int)(longHashCodeIgnoreCase(text) >>> shift)}.
+	 * <br>
+	 * This is very similar to the {@link Hasher#hash64(CharSequence)} method, and shares
+	 * the same constants and mum() method with Hasher.
+	 *
+	 * @param item a non-null CharSequence; often be a String, but this has no trouble with a StringBuilder
+	 * @param seed any long; must be the same between calls if two equivalent values for {@code item} must be the same
+	 * @return a long hashCode; quality should be similarly good across any bits
+	 */
+	public static long longHashCodeIgnoreCase (final CharSequence item, long seed) {
 		final int len = item.length();
 		for (int i = 3; i < len; i += 4) {
 			seed = mum(mum(Character.toUpperCase(item.charAt(i - 3)) ^ b1, Character.toUpperCase(item.charAt(i - 2)) ^ b2) + seed, mum(Character.toUpperCase(item.charAt(i - 1)) ^ b3, Character.toUpperCase(item.charAt(i)) ^ b4));
