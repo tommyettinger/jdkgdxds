@@ -160,7 +160,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		valueTable[i] = value;
 		keys.add(key);
 		if (++size >= threshold) {resize(keyTable.length << 1);}
-		return null;
+		return defaultValue;
 	}
 
 	/**
@@ -188,7 +188,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		valueTable[i] = value;
 		keys.insert(index, key);
 		if (++size >= threshold) {resize(keyTable.length << 1);}
-		return null;
+		return defaultValue;
 	}
 
 	@Nullable

@@ -99,6 +99,12 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	@Nullable protected transient Keys<K, V> keys2;
 
 	/**
+	 * Returned by {@link #get(Object)} when no value exists for the given key, as well as some other methods to indicate that
+	 * no value in the Map could be returned.
+	 */
+	@Nullable public V defaultValue = null;
+
+	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public ObjectObjectMap () {
@@ -147,6 +153,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
 		valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
 		size = map.size;
+		defaultValue = map.defaultValue;
 		hashMultiplier = map.hashMultiplier;
 	}
 
@@ -278,7 +285,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	/**
-	 * Returns the old value associated with the specified key, or null.
+	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
 	@Override
 	@Nullable
@@ -293,7 +300,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		keyTable[i] = key;
 		valueTable[i] = value;
 		if (++size >= threshold) {resize(keyTable.length << 1);}
-		return null;
+		return defaultValue;
 	}
 
 	@Nullable
@@ -383,9 +390,9 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	/**
-	 * Returns the value for the specified key, or null if the key is not in the map.
-	 * Note that null is also a valid value that can be assigned to a legitimate key, so
-	 * checking that the result of this method is null does not guarantee that the
+	 * Returns the value for the specified key, or {@link #defaultValue} if the key is not in the map.
+	 * Note that {@link #defaultValue} is often null, which is also a valid value that can be assigned to a
+	 * legitimate key. Checking that the result of this method is null does not guarantee that the
 	 * {@code key} is not present.
 	 *
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
@@ -399,7 +406,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			if (equate(key, other))
 				return valueTable[i];
 			if (other == null)
-				return null;
+				return defaultValue;
 		}
 	}
 
@@ -423,7 +430,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	@Nullable
 	public V remove (Object key) {
 		int i = locateKey(key);
-		if (i < 0) {return null;}
+		if (i < 0) {return defaultValue;}
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		K rem;
@@ -445,7 +452,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	/**
-	 * Copies all of the mappings from the specified map to this map
+	 * Copies all the mappings from the specified map to this map
 	 * (optional operation).  The effect of this call is equivalent to that
 	 * of calling {@link #put(Object, Object) put(k, v)} on this map once
 	 * for each mapping from key {@code k} to value {@code v} in the
@@ -497,6 +504,28 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	@Override
 	public boolean isEmpty () {
 		return size == 0;
+	}
+
+	/**
+	 * Gets the default value, a {@code V} which is returned by {@link #get(Object)} if the key is not found.
+	 * If not changed, the default value is null.
+	 *
+	 * @return the current default value
+	 */
+	@Nullable
+	public V getDefaultValue () {
+		return defaultValue;
+	}
+
+	/**
+	 * Sets the default value, a {@code V} which is returned by {@link #get(Object)} if the key is not found.
+	 * If not changed, the default value is null. Note that {@link #getOrDefault(Object, Object)} is also available,
+	 * which allows specifying a "not-found" value per-call.
+	 *
+	 * @param defaultValue may be any V object or null; should usually be one that doesn't occur as a typical value
+	 */
+	public void setDefaultValue (@Nullable V defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 
 	/**
@@ -764,6 +793,17 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 				--size;
 			}
 		}
+	}
+
+	@Override
+	public V replace (K key, V value) {
+		int i = locateKey(key);
+		if (i >= 0) {
+			V oldValue = valueTable[i];
+			valueTable[i] = value;
+			return oldValue;
+		}
+		return defaultValue;
 	}
 
 	/**
