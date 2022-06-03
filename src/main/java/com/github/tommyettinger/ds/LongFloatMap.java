@@ -65,13 +65,38 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	protected float[] valueTable;
 	protected boolean hasZeroValue;
 	protected float zeroValue;
+	/**
+	 * Between 0f (exclusive) and 1f (inclusive, if you're careful), this determines how full the backing tables
+	 * can get before this increases their size. Larger values use less memory but make the data structure slower.
+	 */
 	protected float loadFactor;
+
+	/**
+	 * Precalculated value of {@code (int)(keyTable.length * loadFactor)}, used to determine when to resize.
+	 */
 	protected int threshold;
 
+	/**
+	 * Used by {@link #place(long)} to bit shift the upper bits of a {@code long} into a usable range (&gt;= 0 and &lt;=
+	 * {@link #mask}). The shift can be negative, which is convenient to match the number of bits in mask: if mask is a 7-bit
+	 * number, a shift of -7 shifts the upper 7 bits into the lowest 7 positions. This class sets the shift &gt; 32 and &lt; 64,
+	 * which when used with an int will still move the upper bits of an int to the lower bits due to Java's implicit modulus on
+	 * shifts.
+	 * <p>
+	 * {@link #mask} can also be used to mask the low bits of a number, which may be faster for some hashcodes, if
+	 * {@link #place(long)} is overridden.
+	 */
 	protected int shift;
 
 	/**
-	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+	 * Used by {@link #place(long)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
+	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
+	 * the same before and after serialization. Iteration order is better handled by using {@link LongFloatOrderedMap}.
+	 */
+	protected long hashMultiplier = 0x9E3779B97F4A7C15L;
+
+	/**
+	 * A bitmask used to confine hashcodes to the size of the tables. Must be all 1 bits in its low positions, ie a power of two
 	 * minus 1. If {@link #place(long)} is overridden, this can be used instead of {@link #shift} to isolate usable bits of a
 	 * hash.
 	 */
@@ -134,6 +159,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		defaultValue = map.defaultValue;
 		zeroValue = map.zeroValue;
 		hasZeroValue = map.hasZeroValue;
+		hashMultiplier = map.hashMultiplier;
 	}
 
 	/**
@@ -178,15 +204,13 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
-	 * <br>
-	 * The implementation used here XORs the lowest bits with the highest bits, ignoring bits
-	 * between them. You may want to override this if you know your items have the most variety
-	 * in their bit-16-to-48 range.
+	 * Defaults to using {@link #hashMultiplier}, which changes every time the data structure resizes.
 	 *
-	 * @param item any long; it is often mixed so similar inputs still have different outputs
+	 * @param item any long; it is usually mixed or masked here
+	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (long item) {
-		return (int)((item ^ item >>> 32) * 0x9E3779B97F4A7C15L >>> shift);
+		return (int)((item ^ item >>> 32) * hashMultiplier >>> shift);
 	}
 
 	/**
@@ -597,6 +621,9 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
+
+		// we multiply by a number with similar structure to the golden ratio (we started with 2 to the 64 times the golden ratio).
+		hashMultiplier *= 0x59E3779B97F4A7C1L;
 
 		long[] oldKeyTable = keyTable;
 		float[] oldValueTable = valueTable;
