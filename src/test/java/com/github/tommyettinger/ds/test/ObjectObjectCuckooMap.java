@@ -267,7 +267,7 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 	}
 
 	/** Skips checks for existing keys. */
-	private void putResize (K key, V value) {
+	protected void putResize (K key, V value) {
 		// Check for empty buckets.
 		int hashCode = key.hashCode();
 		int index1 = hashCode & mask;

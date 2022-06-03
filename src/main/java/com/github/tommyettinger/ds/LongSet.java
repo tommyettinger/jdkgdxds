@@ -255,7 +255,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	/**
 	 * Skips checks for existing keys, doesn't increment size, doesn't need to handle key 0.
 	 */
-	private void addResize (long key) {
+	protected void addResize (long key) {
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {

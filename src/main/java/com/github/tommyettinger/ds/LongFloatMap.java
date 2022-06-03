@@ -344,7 +344,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	private void putResize (long key, float value) {
+	protected void putResize (long key, float value) {
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {

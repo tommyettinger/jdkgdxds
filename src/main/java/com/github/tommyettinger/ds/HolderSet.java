@@ -388,7 +388,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	private void addResize (T key) {
+	protected void addResize (T key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {

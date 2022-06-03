@@ -354,7 +354,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	private void putResize (long key, @Nullable V value) {
+	protected void putResize (long key, @Nullable V value) {
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {

@@ -378,7 +378,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	private void putResize (K key, @Nullable V value) {
+	protected void putResize (K key, @Nullable V value) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {

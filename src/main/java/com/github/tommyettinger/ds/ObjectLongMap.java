@@ -362,7 +362,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	private void putResize (K key, long value) {
+	protected void putResize (K key, long value) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {

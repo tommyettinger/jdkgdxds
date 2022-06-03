@@ -342,7 +342,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	private void putResize (long key, int value) {
+	protected void putResize (long key, int value) {
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {

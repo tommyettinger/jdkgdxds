@@ -340,7 +340,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	private void putResize (int key, int value) {
+	protected void putResize (int key, int value) {
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {

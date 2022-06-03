@@ -253,7 +253,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	/**
 	 * Skips checks for existing keys, doesn't increment size, doesn't need to handle key 0.
 	 */
-	private void addResize (int key) {
+	protected void addResize (int key) {
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
