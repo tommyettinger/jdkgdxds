@@ -26,7 +26,13 @@ import static com.github.tommyettinger.digital.Hasher.*;
  *
  * @author Tommy Ettinger
  */
-public class Utilities {
+public final class Utilities {
+	/**
+	 * Not instantiable.
+	 */
+	private Utilities () {
+	}
+
 	private static float defaultLoadFactor = 0.7f;
 
 	/**

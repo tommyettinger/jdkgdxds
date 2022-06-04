@@ -17,11 +17,11 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.ds.support.function.ShortUnaryOperator;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
+import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;

@@ -49,10 +49,9 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
  * {@link #locateKey(long)} can be overridden to change how equality is calculated.
  * <p>
- * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are rehashed using Fibonacci
- * hashing, instead of the more common power-of-two masto better distribute poor hashCodes (see <a href=
- * "https://probablydance.com/2018/06/16/fibonacci-hashing-the-optimization-that-the-world-forgot-or-a-better-alternative-to-integer-modulo/">Malte
- * Skarupke's blog post</a>). Linear probing continues to work even when all hashCodes collide, just more slowly.
+ * This implementation uses linear probing with the backward shift algorithm for removal.
+ * It tries different hashes from a simple family, with the hash changing on resize.
+ * Linear probing continues to work even when all hashCodes collide, just more slowly.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger

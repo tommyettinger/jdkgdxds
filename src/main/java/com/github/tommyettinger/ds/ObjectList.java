@@ -17,9 +17,9 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.LaserRandom;
-import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

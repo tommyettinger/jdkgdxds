@@ -18,11 +18,11 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.ds.support.function.FloatUnaryOperator;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
+import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;

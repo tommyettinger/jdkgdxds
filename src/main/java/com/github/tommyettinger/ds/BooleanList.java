@@ -17,11 +17,11 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.ds.support.function.BooleanUnaryOperator;
 import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.BooleanComparators;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
+import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.NoSuchElementException;

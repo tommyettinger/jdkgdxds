@@ -1036,8 +1036,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @see #addFirst(Object)
 	 * @see #removeFirst()
 	 */
-	public @Nullable
-	T first () {
+	public @Nullable T first () {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("ObjectDeque is empty.");
@@ -1052,8 +1051,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @see #addLast(Object)
 	 * @see #removeLast()
 	 */
-	public @Nullable
-	T last () {
+	public @Nullable T last () {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("ObjectDeque is empty.");
@@ -1072,8 +1070,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 *
 	 * @throws IndexOutOfBoundsException when the index is negative or >= size
 	 */
-	public @Nullable
-	T get (int index) {
+	public @Nullable T get (int index) {
 		if (index < 0)
 			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size)
@@ -1094,8 +1091,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @return the previous contents of the specified index
 	 * @throws IndexOutOfBoundsException when the index is negative or >= size
 	 */
-	public @Nullable
-	T set (int index, @Nullable T item) {
+	public @Nullable T set (int index, @Nullable T item) {
 		if (index < 0)
 			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size)
@@ -1431,8 +1427,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 			return descending ? index >= 0 : index < deque.size;
 		}
 
-		public @Nullable
-		T next () {
+		public @Nullable T next () {
 			if (index >= deque.size || index < 0)
 				throw new NoSuchElementException(String.valueOf(index));
 			if (!valid) {

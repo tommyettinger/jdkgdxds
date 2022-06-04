@@ -45,7 +45,9 @@ public final class QuickSelect {
 	/**
 	 * Not instantiable.
 	 */
-	private QuickSelect() {}
+	private QuickSelect () {
+	}
+
 	public static <T> int select (T[] items, Comparator<? super T> comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}

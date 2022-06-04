@@ -49,8 +49,9 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
  * {@link #equate(Object, Object)} can be overridden to change how equality is calculated.
  * <p>
- * This implementation uses linear probing with the backward shift algorithm for removal. Hashcodes are not rehashed by default, but
- * user code can subclass this and change the {@link #place(Object)} method if rehashing or an alternate hash is optimal. Linear
+ * This implementation uses linear probing with the backward shift algorithm for removal.
+ * It tries different hashes from a simple family, with the hash changing on resize.
+ * Linear
  * probing continues to work even when all hashCodes collide; it just works more slowly in that case.
  *
  * @author Nathan Sweet

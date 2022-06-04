@@ -473,10 +473,11 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	/**
 	 * If the given item {@code t} is present, this returns its index without modifying the NumberedSet; otherwise, it
 	 * adds t to the end of the collection and returns the index for it there.
+	 *
 	 * @param t an item to get the index of, adding it if not present
 	 * @return the index of {@code t} in this Arrangement
 	 */
-	public int addOrIndex(final T t){
+	public int addOrIndex (final T t) {
 		return map.putIfAbsent(t, size());
 	}
 

@@ -17,10 +17,10 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
+import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;

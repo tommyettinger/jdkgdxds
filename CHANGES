@@ -1,7 +1,13 @@
-[1.0.0]
+[1.0.2]
+- No more Fibonacci hashing; now we use a simple random hash family that changes hash function on resize.
+
+[1.0.1]
 - [SMALL BREAKING CHANGES] The core math code in BitConversion is now part of its own small math utility library, `digital`. It is a dependency.
 - [SMALL BREAKING CHANGES] EnhancedRandom is now an abstract class, and has moved to the dependency `juniper`. All generators have also moved.
 - [BREAKING CHANGE] The shuffle() method in EnhancedRandom that took an Arrangeable has been moved to Arrangeable, taking an EnhancedRandom.
+
+[1.0.0]
+- See 1.0.1 .
 
 [0.2.8]
 - New truncate() method on maps and sets allows removing items aggressively to fit a desired smaller size.

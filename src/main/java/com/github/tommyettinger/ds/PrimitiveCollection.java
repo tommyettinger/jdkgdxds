@@ -99,8 +99,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 				int item = it.nextInt();
 				me = iterator();
 				while (me.hasNext()) {
-					if (me.nextInt() == item)
-					{
+					if (me.nextInt() == item) {
 						me.remove();
 					}
 				}
@@ -284,8 +283,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 				long item = it.nextLong();
 				me = iterator();
 				while (me.hasNext()) {
-					if (me.nextLong() == item)
-					{
+					if (me.nextLong() == item) {
 						me.remove();
 					}
 				}
@@ -469,8 +467,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 				float item = it.nextFloat();
 				me = iterator();
 				while (me.hasNext()) {
-					if (me.nextFloat() == item)
-					{
+					if (me.nextFloat() == item) {
 						me.remove();
 					}
 				}
@@ -654,8 +651,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 				double item = it.nextDouble();
 				me = iterator();
 				while (me.hasNext()) {
-					if (me.nextDouble() == item)
-					{
+					if (me.nextDouble() == item) {
 						me.remove();
 					}
 				}
@@ -839,8 +835,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 				short item = it.nextShort();
 				me = iterator();
 				while (me.hasNext()) {
-					if (me.nextShort() == item)
-					{
+					if (me.nextShort() == item) {
 						me.remove();
 					}
 				}
@@ -1024,8 +1019,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 				byte item = it.nextByte();
 				me = iterator();
 				while (me.hasNext()) {
-					if (me.nextByte() == item)
-					{
+					if (me.nextByte() == item) {
 						me.remove();
 					}
 				}
@@ -1209,8 +1203,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 				char item = it.nextChar();
 				me = iterator();
 				while (me.hasNext()) {
-					if (me.nextChar() == item)
-					{
+					if (me.nextChar() == item) {
 						me.remove();
 					}
 				}
@@ -1394,8 +1387,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 				boolean item = it.nextBoolean();
 				me = iterator();
 				while (me.hasNext()) {
-					if (me.nextBoolean() == item)
-					{
+					if (me.nextBoolean() == item) {
 						me.remove();
 					}
 				}

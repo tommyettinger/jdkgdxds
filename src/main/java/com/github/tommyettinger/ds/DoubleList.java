@@ -18,9 +18,9 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
+import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;

@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparator;
@@ -27,6 +25,8 @@ import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.LaserRandom;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -191,7 +191,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
-		 * 
+		 *
 		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
@@ -310,7 +310,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
-		 * 
+		 *
 		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
@@ -429,7 +429,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
-		 * 
+		 *
 		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
@@ -548,7 +548,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
-		 * 
+		 *
 		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
@@ -664,7 +664,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
-		 * 
+		 *
 		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
@@ -780,7 +780,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
-		 * 
+		 *
 		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
@@ -896,7 +896,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
-		 * 
+		 *
 		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
@@ -1012,7 +1012,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Pseudo-randomly shuffles the order of this Ordered in-place.
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
-		 * 
+		 *
 		 * @param rng any {@link EnhancedRandom} implementation
 		 */
 		@Override
