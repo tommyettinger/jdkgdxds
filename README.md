@@ -89,17 +89,27 @@ here earlier. [Juniper](https://github.com/tommyettinger/juniper) has the random
 Having these as external libraries allows someone's LibraryA that really only needs the core math from digital to only use that,
 but for projects that need both jdkgdxds and LibraryA, the shared dependency won't be duplicated.
 
+Versions of jdkgdxds before 1.0.2 used "Fibonacci hashing" to mix `hashCode()` results. This involved multiplying the hash by a
+specific constant (2 to the 64, divided by the golden ratio) and shifting the resulting bits so only an upper portion was used
+(its size depended on the size of the backing table or tables). This works well in most situations, but a few were found where it
+had catastrophically bad performance. The easiest case to reproduce was much like [this bug in Rust's standard library](https://accidentallyquadratic.tumblr.com/post/153545455987/rust-hash-iteration-reinsertion),
+relating to reinserting already-partially-colliding keys in a large map or set. Starting in 1.0.2, we take a different route to
+mixing `hashCode()` results -- instead of multiplying by a specific constant every time, we change the constant every time we need
+to resize the backing tables. Everything else is the same. This simple change allows one test, inserting 2 million
+specifically-chosen Strings, to complete in under 2 seconds, when without the change, it wouldn't complete given 77 minutes (a
+speedup of over 3 orders of magnitude).
+
 ## How do I get it?
 
-You have two options: Maven Central for stable-ish releases, or JitPack to select a commit of your choice to build.
+You have two options: Maven Central for stable releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.1'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.2'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add:
 ```
 implementation 'com.github.tommyettinger:digital:0.0.2:sources'
 implementation 'com.github.tommyettinger:juniper:0.0.2:sources'
-implementation 'com.github.tommyettinger:jdkgdxds:1.0.1:sources'
+implementation 'com.github.tommyettinger:jdkgdxds:1.0.2:sources'
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -109,7 +119,7 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="jdkgdxds" />
 ```
 in with the other `inherits` lines. The dependencies (and `inherits` lines) on digital and juniper are not necessary for jdkgdxds
-0.2.8, but are necessary starting in 1.0.1 and later. The versions are expected to increase somewhat for both digital and juniper
+0.2.8, but are necessary starting in 1.0.2 and later. The versions are expected to increase somewhat for both digital and juniper
 as bugs are found and fixed, but a low version number isn't a bad thing for those two libraries -- they were both mostly drawn
 from code in this library, and were tested significantly here. 
 
