@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
-import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -1132,7 +1131,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		}
 	}
 
-	public long random (EnhancedRandom random) {
+	public long random (java.util.Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("LongDeque is empty.");
 		}

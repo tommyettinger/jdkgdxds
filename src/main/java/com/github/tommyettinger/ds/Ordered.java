@@ -25,19 +25,19 @@ import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
-import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.TrimRandom;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Random;
 
 /**
  * Ensures that implementors allow access to the order of {@code T} items as an ObjectList.
  * This is meant to allow different (typically insertion-ordered) data structures to all have their order
  * manipulated by the same methods. This interface extends {@link Arrangeable}, which itself is compatible
  * both with primitive-backed collections like {@link IntList} and generic ones like the implementations of
- * Ordered. This has default implementations of {@link Arrangeable#swap(int, int)} and {@link Arrangeable#shuffle(EnhancedRandom)}.
+ * Ordered. This has default implementations of {@link Arrangeable#swap(int, int)} and {@link Arrangeable#shuffle(Random)}.
  *
  * @author Tommy Ettinger
  */
@@ -68,10 +68,10 @@ public interface Ordered<T> extends Arrangeable {
 	 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 	 * Ordered with the same {@link #size()}.
 	 *
-	 * @param rng any {@link EnhancedRandom} implementation
+	 * @param rng any {@link Random} class, such as one from juniper
 	 */
 	@Override
-	default void shuffle (EnhancedRandom rng) {
+	default void shuffle (Random rng) {
 		ObjectList<T> order = order();
 		for (int i = order.size() - 1; i >= 0; i--) {
 			order.set(i, order.set(rng.nextInt(i + 1), order.get(i)));
@@ -88,13 +88,16 @@ public interface Ordered<T> extends Arrangeable {
 
 	/**
 	 * Gets a random T value from this Ordered, where T is typically the key type for Maps and the
-	 * item type for Lists and Sets. The random number generator {@code rng} should probably be a
-	 * {@link LaserRandom}, because it implements a fast {@link LaserRandom#nextInt(int)} method.
+	 * item type for Lists and Sets.
+	 * The random number generator {@code rng} should probably be one from juniper, such as
+	 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
+	 * <br>
+	 * This should throw an {@link IllegalStateException} if the Ordered is empty.
 	 *
-	 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
+	 * @param rng any {@link Random} class; you can use any Random from in juniper
 	 * @return a random T value from this Ordered
 	 */
-	default T random (EnhancedRandom rng) {
+	default T random (Random rng) {
 		return order().random(rng);
 	}
 
@@ -192,10 +195,10 @@ public interface Ordered<T> extends Arrangeable {
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation
+		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (EnhancedRandom rng) {
+		default void shuffle (Random rng) {
 			IntList order = order();
 			for (int i = order.size() - 1; i >= 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -211,14 +214,17 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random int value from this Ordered. The random number generator {@code rng} would
-		 * be well-served by a {@link LaserRandom}, because it implements a fast
-		 * {@link LaserRandom#nextInt(int)} method.
+		 * Gets a random int value from this Ordered.
+		 * The random number generator {@code rng} should probably be one from juniper, such as
+		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
+		 * <br>
+		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
+		 * @param rng any {@link Random} class; you can use any Random from in juniper
+
 		 * @return a random int value from this Ordered.OfInt
 		 */
-		default int random (EnhancedRandom rng) {
+		default int random (Random rng) {
 			return order().random(rng);
 		}
 
@@ -311,10 +317,10 @@ public interface Ordered<T> extends Arrangeable {
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation
+		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (EnhancedRandom rng) {
+		default void shuffle (Random rng) {
 			LongList order = order();
 			for (int i = order.size() - 1; i >= 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -330,14 +336,17 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random long value from this Ordered. The random number generator {@code rng} would
-		 * be well-served by a {@link LaserRandom}, because it implements a fast
-		 * {@link LaserRandom#nextInt(int)} method.
+		 * Gets a random long value from this Ordered.
+		 * The random number generator {@code rng} should probably be one from juniper, such as
+		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
+		 * <br>
+		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
+		 * @param rng any {@link Random} class; you can use any Random from in juniper
+
 		 * @return a random long value from this Ordered.OfLong
 		 */
-		default long random (EnhancedRandom rng) {
+		default long random (Random rng) {
 			return order().random(rng);
 		}
 
@@ -430,10 +439,10 @@ public interface Ordered<T> extends Arrangeable {
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation
+		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (EnhancedRandom rng) {
+		default void shuffle (Random rng) {
 			FloatList order = order();
 			for (int i = order.size() - 1; i >= 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -449,14 +458,17 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random float value from this Ordered. The random number generator {@code rng} would
-		 * be well-served by a {@link LaserRandom}, because it implements a fast
-		 * {@link LaserRandom#nextInt(int)} method.
+		 * Gets a random float value from this Ordered.
+		 * The random number generator {@code rng} should probably be one from juniper, such as
+		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
+		 * <br>
+		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
+		 * @param rng any {@link Random} class; you can use any Random from in juniper
+
 		 * @return a random float value from this Ordered.OfFloat
 		 */
-		default float random (EnhancedRandom rng) {
+		default float random (Random rng) {
 			return order().random(rng);
 		}
 
@@ -549,10 +561,10 @@ public interface Ordered<T> extends Arrangeable {
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation
+		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (EnhancedRandom rng) {
+		default void shuffle (Random rng) {
 			DoubleList order = order();
 			for (int i = order.size() - 1; i >= 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -568,14 +580,17 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random double value from this Ordered. The random number generator {@code rng} would
-		 * be well-served by a {@link LaserRandom}, because it implements a fast
-		 * {@link LaserRandom#nextInt(int)} method.
+		 * Gets a random double value from this Ordered.
+		 * The random number generator {@code rng} should probably be one from juniper, such as
+		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
+		 * <br>
+		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
+		 * @param rng any {@link Random} class; you can use any Random from in juniper
+
 		 * @return a random double value from this Ordered.OfDouble
 		 */
-		default double random (EnhancedRandom rng) {
+		default double random (Random rng) {
 			return order().random(rng);
 		}
 
@@ -665,10 +680,10 @@ public interface Ordered<T> extends Arrangeable {
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation
+		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (EnhancedRandom rng) {
+		default void shuffle (Random rng) {
 			ShortList order = order();
 			for (int i = order.size() - 1; i >= 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -684,14 +699,17 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random short value from this Ordered. The random number generator {@code rng} would
-		 * be well-served by a {@link LaserRandom}, because it implements a fast
-		 * {@link LaserRandom#nextInt(int)} method.
+		 * Gets a random short value from this Ordered.
+		 * The random number generator {@code rng} should probably be one from juniper, such as
+		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
+		 * <br>
+		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
+		 * @param rng any {@link Random} class; you can use any Random from in juniper
+
 		 * @return a random short value from this Ordered.OfShort
 		 */
-		default short random (EnhancedRandom rng) {
+		default short random (Random rng) {
 			return order().random(rng);
 		}
 
@@ -781,10 +799,10 @@ public interface Ordered<T> extends Arrangeable {
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation
+		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (EnhancedRandom rng) {
+		default void shuffle (Random rng) {
 			ByteList order = order();
 			for (int i = order.size() - 1; i >= 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -800,14 +818,17 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random byte value from this Ordered. The random number generator {@code rng} would
-		 * be well-served by a {@link LaserRandom}, because it implements a fast
-		 * {@link LaserRandom#nextInt(int)} method.
+		 * Gets a random byte value from this Ordered.
+		 * The random number generator {@code rng} should probably be one from juniper, such as
+		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
+		 * <br>
+		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
+		 * @param rng any {@link Random} class; you can use any Random from in juniper
+
 		 * @return a random byte value from this Ordered.OfByte
 		 */
-		default byte random (EnhancedRandom rng) {
+		default byte random (Random rng) {
 			return order().random(rng);
 		}
 
@@ -897,10 +918,10 @@ public interface Ordered<T> extends Arrangeable {
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation
+		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (EnhancedRandom rng) {
+		default void shuffle (Random rng) {
 			CharList order = order();
 			for (int i = order.size() - 1; i >= 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -916,14 +937,17 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random char value from this Ordered. The random number generator {@code rng} would
-		 * be well-served by a {@link LaserRandom}, because it implements a fast
-		 * {@link LaserRandom#nextInt(int)} method.
+		 * Gets a random char value from this Ordered.
+		 * The random number generator {@code rng} should probably be one from juniper, such as
+		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
+		 * <br>
+		 * This should return {@code (char)(0)} if the Ordered is empty.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
+		 * @param rng any {@link Random} class; you can use any Random from in juniper
+
 		 * @return a random char value from this Ordered.OfChar
 		 */
-		default char random (EnhancedRandom rng) {
+		default char random (Random rng) {
 			return order().random(rng);
 		}
 
@@ -1013,10 +1037,10 @@ public interface Ordered<T> extends Arrangeable {
 		 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 		 * Ordered with the same {@link #size()}.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation
+		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (EnhancedRandom rng) {
+		default void shuffle (Random rng) {
 			BooleanList order = order();
 			for (int i = order.size() - 1; i >= 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -1032,14 +1056,17 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random boolean value from this Ordered. The random number generator {@code rng} would
-		 * be well-served by a {@link LaserRandom}, because it implements a fast
-		 * {@link LaserRandom#nextInt(int)} method.
+		 * Gets a random boolean value from this Ordered.
+		 * The random number generator {@code rng} should probably be one from juniper, such as
+		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
+		 * <br>
+		 * This should return false if the Ordered is empty.
 		 *
-		 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
+		 * @param rng any {@link Random} class; you can use any Random from in juniper
+
 		 * @return a random boolean value from this Ordered.OfBoolean
 		 */
-		default boolean random (EnhancedRandom rng) {
+		default boolean random (Random rng) {
 			return order().random(rng);
 		}
 

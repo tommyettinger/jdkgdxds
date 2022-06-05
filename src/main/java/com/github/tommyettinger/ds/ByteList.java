@@ -21,12 +21,12 @@ import com.github.tommyettinger.ds.support.function.ByteUnaryOperator;
 import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
-import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
+import java.util.Random;
 
 /**
  * A resizable, ordered or unordered byte list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Byte.
@@ -720,7 +720,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	// Modified from libGDX
 	@Override
-	public void shuffle (EnhancedRandom random) {
+	public void shuffle (Random random) {
 		byte[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) {
 			int ii = random.nextInt(i + 1);
@@ -741,10 +741,10 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
 	 *
-	 * @param random a {@link EnhancedRandom} such as {@link com.github.tommyettinger.random.LaserRandom} from this library
+	 * @param random a {@link Random} or a subclass, such as {@link com.github.tommyettinger.random.TrimRandom} (or any from juniper)
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
-	public byte random (EnhancedRandom random) {
+	public byte random (Random random) {
 		if (size == 0) {return 0;}
 		return items[random.nextInt(size)];
 	}

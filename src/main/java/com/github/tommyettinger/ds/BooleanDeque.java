@@ -18,7 +18,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
-import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -33,7 +32,7 @@ import java.util.NoSuchElementException;
  * Unlike most Deque implementations in the JDK, you can get and set items anywhere in the deque in constant time with {@link #get(int)}
  * and {@link #set(int, boolean)}. Unlike the other primitive Deques in jdkgdxds, a BooleanDeque is not sortable. This is primarily due
  * to how {@link Arrays#sort(int[], int, int)} does not implement a sort for boolean arrays, either. You can still reverse one with
- * {@link #reverse()} or shuffle one with {@link #shuffle(EnhancedRandom)}.
+ * {@link #reverse()} or shuffle one with {@link Arrangeable#shuffle(java.util.Random)}.
  */
 public class BooleanDeque implements PrimitiveCollection.OfBoolean, Arrangeable {
 
@@ -1096,7 +1095,7 @@ public class BooleanDeque implements PrimitiveCollection.OfBoolean, Arrangeable 
 		}
 	}
 
-	public boolean random (EnhancedRandom random) {
+	public boolean random (java.util.Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("BooleanDeque is empty.");
 		}

@@ -18,9 +18,10 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.TrimRandom;
 
 import java.util.Collection;
+import java.util.Random;
 
 /**
  * Indicates that a type can have its contents change position, without specifying the type of contents.
@@ -40,9 +41,9 @@ public interface Arrangeable {
 	/**
 	 * Pseudo-randomly shuffles the order of this Arrangeable in-place.
 	 *
-	 * @param random any {@link EnhancedRandom} implementation; e.g. you can use {@link LaserRandom} in juniper
+	 * @param random any {@link Random} object; e.g. you can use {@link TrimRandom} in juniper
 	 */
-	default void shuffle (EnhancedRandom random) {
+	default void shuffle (Random random) {
 		for (int i = size() - 1; i >= 0; i--) {
 			swap(i, random.nextInt(i + 1));
 		}
@@ -63,11 +64,13 @@ public interface Arrangeable {
 
 	/**
 	 * Rearranges this Arrangeable using the given {@link EnhancedRandom} to shuffle it, then tries to restore the prior
-	 * state of the EnhancedRandom so it can be used to reorder other Arrangeables. The attempt to restore state can
+	 * state of the EnhancedRandom, so it can be used to reorder other Arrangeables. The attempt to restore state can
 	 * fail if {@link EnhancedRandom#getStateCount()} returns 0, meaning the state is not accessible for that
 	 * EnhancedRandom implementation, so this just shuffles without restoring the state afterwards in that case. If
 	 * {@link EnhancedRandom#getStateCount()} is 5 or less, this will not allocate, but if it is 6 or more, then this
 	 * has to allocate a temporary array. The rearrangement is done in-place.
+	 * <br>
+	 * This takes an EnhancedRandom and not a Random because it needs to read the state of the generator.
 	 *
 	 * @param random a non-null EnhancedRandom, ideally one where {@link EnhancedRandom#getStateCount()} is between 1 and 5, inclusive
 	 */

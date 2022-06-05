@@ -20,7 +20,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
-import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -1132,7 +1131,7 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 		}
 	}
 
-	public byte random (EnhancedRandom random) {
+	public byte random (java.util.Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("ByteDeque is empty.");
 		}

@@ -17,8 +17,6 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.random.EnhancedRandom;
-
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,6 +24,7 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 /**
  * A resizable, insertion-ordered double-ended queue of objects with efficient add and remove at the beginning and end. Values in the
@@ -1397,7 +1396,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	}
 
 	@Nullable
-	public T random (EnhancedRandom random) {
+	public T random (Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}

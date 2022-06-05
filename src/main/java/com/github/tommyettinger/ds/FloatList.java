@@ -22,12 +22,12 @@ import com.github.tommyettinger.ds.support.function.FloatUnaryOperator;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
-import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
+import java.util.Random;
 
 /**
  * A resizable, ordered or unordered float list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Float.
@@ -720,7 +720,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	// Modified from libGDX
 	@Override
-	public void shuffle (EnhancedRandom random) {
+	public void shuffle (Random random) {
 		float[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) {
 			int ii = random.nextInt(i + 1);
@@ -741,10 +741,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
 	 *
-	 * @param random a {@link EnhancedRandom} such as {@link com.github.tommyettinger.random.LaserRandom} from this library
+	 * @param random a {@link Random} or a subclass, such as {@link com.github.tommyettinger.random.TrimRandom} (or any from juniper)
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
-	public float random (EnhancedRandom random) {
+	public float random (Random random) {
 		if (size == 0) {return 0;}
 		return items[random.nextInt(size)];
 	}

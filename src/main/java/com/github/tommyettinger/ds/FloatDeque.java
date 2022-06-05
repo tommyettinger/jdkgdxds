@@ -21,7 +21,6 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
-import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -1133,7 +1132,7 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		}
 	}
 
-	public float random (EnhancedRandom random) {
+	public float random (java.util.Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("FloatDeque is empty.");
 		}

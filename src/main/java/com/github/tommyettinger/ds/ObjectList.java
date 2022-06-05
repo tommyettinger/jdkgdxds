@@ -19,7 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.TrimRandom;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 /**
  * A resizable, ordered list of {@code T} items, typically objects (they can also be arrays).
@@ -768,13 +769,13 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 
 	/**
 	 * Pseudo-randomly shuffles the order of this Ordered in-place.
-	 * You can use any {@link EnhancedRandom} implementation for {@code rng};
-	 * {@link LaserRandom} is generally a good choice.
+	 * You can use any {@link Random} class for {@code rng};
+	 * {@link TrimRandom} is generally a good choice.
 	 *
-	 * @param rng any {@link EnhancedRandom} implementation; you can use {@link LaserRandom} in juniper
+	 * @param rng any {@link EnhancedRandom} implementation; you can use {@link TrimRandom} (or any from junipe)
 	 */
 	@Override
-	public void shuffle (EnhancedRandom rng) {
+	public void shuffle (Random rng) {
 		for (int i = size() - 1; i >= 0; i--) {
 			set(i, set(rng.nextInt(i + 1), get(i)));
 		}
@@ -784,12 +785,12 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * Returns a {@code T} item from anywhere in this ObjectList, chosen pseudo-randomly using {@code random}.
 	 * If this ObjectList is empty, throws an {@link IllegalStateException}.
 	 *
-	 * @param random a {@link EnhancedRandom} or a subclass, such as {@link LaserRandom} (recommended)
+	 * @param random a {@link Random} or a subclass, such as {@link TrimRandom} (or any from juniper)
 	 * @return a pseudo-randomly selected item from this ObjectLists
 	 */
 	@Override
-	public T random (EnhancedRandom random) {
-		int n = size();
+	public T random (Random random) {
+		final int n = size();
 		if (n == 0) {throw new IllegalStateException("ObjectList is empty.");}
 		return get(random.nextInt(n));
 	}

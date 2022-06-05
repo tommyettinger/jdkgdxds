@@ -19,12 +19,13 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
-import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.TrimRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
+import java.util.Random;
 import java.util.function.LongUnaryOperator;
 
 /**
@@ -718,7 +719,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	// Modified from libGDX
 	@Override
-	public void shuffle (EnhancedRandom random) {
+	public void shuffle (Random random) {
 		long[] items = this.items;
 		for (int i = size - 1; i >= 0; i--) {
 			int ii = random.nextInt(i + 1);
@@ -739,10 +740,10 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
 	 *
-	 * @param random a {@link EnhancedRandom} such as {@link com.github.tommyettinger.random.LaserRandom} from this library
+	 * @param random a {@link Random} or a subclass, such as {@link TrimRandom} (or any from juniper)
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
-	public long random (EnhancedRandom random) {
+	public long random (Random random) {
 		if (size == 0) {return 0;}
 		return items[random.nextInt(size)];
 	}

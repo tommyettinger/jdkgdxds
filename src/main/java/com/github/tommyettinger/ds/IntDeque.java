@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
-import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -1132,7 +1131,7 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 		}
 	}
 
-	public int random (EnhancedRandom random) {
+	public int random (java.util.Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("IntDeque is empty.");
 		}

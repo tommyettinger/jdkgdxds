@@ -20,7 +20,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
-import com.github.tommyettinger.random.EnhancedRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -1133,7 +1132,7 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 		}
 	}
 
-	public double random (EnhancedRandom random) {
+	public double random (java.util.Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("DoubleDeque is empty.");
 		}
