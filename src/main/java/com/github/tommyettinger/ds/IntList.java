@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
-import com.github.tommyettinger.random.TrimRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -741,7 +740,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
 	 *
-	 * @param random a {@link Random} or a subclass, such as {@link TrimRandom} (or any from juniper)
+	 * @param random a {@link Random} or a subclass
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	// Modified from libGDX

@@ -25,7 +25,6 @@ import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
-import com.github.tommyettinger.random.TrimRandom;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -89,12 +88,10 @@ public interface Ordered<T> extends Arrangeable {
 	/**
 	 * Gets a random T value from this Ordered, where T is typically the key type for Maps and the
 	 * item type for Lists and Sets.
-	 * The random number generator {@code rng} should probably be one from juniper, such as
-	 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
 	 * <br>
 	 * This should throw an {@link IllegalStateException} if the Ordered is empty.
 	 *
-	 * @param rng any {@link Random} class; you can use any Random from in juniper
+	 * @param rng any {@link Random} class
 	 * @return a random T value from this Ordered
 	 */
 	default T random (Random rng) {
@@ -200,7 +197,7 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void shuffle (Random rng) {
 			IntList order = order();
-			for (int i = order.size() - 1; i >= 0; i--) {
+			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
 			}
 		}
@@ -215,13 +212,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Gets a random int value from this Ordered.
-		 * The random number generator {@code rng} should probably be one from juniper, such as
-		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link Random} class; you can use any Random from in juniper
-
+		 * @param rng any {@link Random} class
 		 * @return a random int value from this Ordered.OfInt
 		 */
 		default int random (Random rng) {
@@ -322,7 +316,7 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void shuffle (Random rng) {
 			LongList order = order();
-			for (int i = order.size() - 1; i >= 0; i--) {
+			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
 			}
 		}
@@ -337,13 +331,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Gets a random long value from this Ordered.
-		 * The random number generator {@code rng} should probably be one from juniper, such as
-		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link Random} class; you can use any Random from in juniper
-
+		 * @param rng any {@link Random} class
 		 * @return a random long value from this Ordered.OfLong
 		 */
 		default long random (Random rng) {
@@ -444,7 +435,7 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void shuffle (Random rng) {
 			FloatList order = order();
-			for (int i = order.size() - 1; i >= 0; i--) {
+			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
 			}
 		}
@@ -459,13 +450,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Gets a random float value from this Ordered.
-		 * The random number generator {@code rng} should probably be one from juniper, such as
-		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link Random} class; you can use any Random from in juniper
-
+		 * @param rng any {@link Random} class
 		 * @return a random float value from this Ordered.OfFloat
 		 */
 		default float random (Random rng) {
@@ -566,7 +554,7 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void shuffle (Random rng) {
 			DoubleList order = order();
-			for (int i = order.size() - 1; i >= 0; i--) {
+			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
 			}
 		}
@@ -581,13 +569,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Gets a random double value from this Ordered.
-		 * The random number generator {@code rng} should probably be one from juniper, such as
-		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link Random} class; you can use any Random from in juniper
-
+		 * @param rng any {@link Random} class
 		 * @return a random double value from this Ordered.OfDouble
 		 */
 		default double random (Random rng) {
@@ -685,7 +670,7 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void shuffle (Random rng) {
 			ShortList order = order();
-			for (int i = order.size() - 1; i >= 0; i--) {
+			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
 			}
 		}
@@ -700,13 +685,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Gets a random short value from this Ordered.
-		 * The random number generator {@code rng} should probably be one from juniper, such as
-		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link Random} class; you can use any Random from in juniper
-
+		 * @param rng any {@link Random} class
 		 * @return a random short value from this Ordered.OfShort
 		 */
 		default short random (Random rng) {
@@ -804,7 +786,7 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void shuffle (Random rng) {
 			ByteList order = order();
-			for (int i = order.size() - 1; i >= 0; i--) {
+			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
 			}
 		}
@@ -819,13 +801,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Gets a random byte value from this Ordered.
-		 * The random number generator {@code rng} should probably be one from juniper, such as
-		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
-		 * @param rng any {@link Random} class; you can use any Random from in juniper
-
+		 * @param rng any {@link Random} class
 		 * @return a random byte value from this Ordered.OfByte
 		 */
 		default byte random (Random rng) {
@@ -923,7 +902,7 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void shuffle (Random rng) {
 			CharList order = order();
-			for (int i = order.size() - 1; i >= 0; i--) {
+			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
 			}
 		}
@@ -938,13 +917,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Gets a random char value from this Ordered.
-		 * The random number generator {@code rng} should probably be one from juniper, such as
-		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
 		 * <br>
 		 * This should return {@code (char)(0)} if the Ordered is empty.
 		 *
-		 * @param rng any {@link Random} class; you can use any Random from in juniper
-
+		 * @param rng any {@link Random} class
 		 * @return a random char value from this Ordered.OfChar
 		 */
 		default char random (Random rng) {
@@ -1042,7 +1018,7 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void shuffle (Random rng) {
 			BooleanList order = order();
-			for (int i = order.size() - 1; i >= 0; i--) {
+			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
 			}
 		}
@@ -1057,13 +1033,10 @@ public interface Ordered<T> extends Arrangeable {
 
 		/**
 		 * Gets a random boolean value from this Ordered.
-		 * The random number generator {@code rng} should probably be one from juniper, such as
-		 * {@link TrimRandom}, because all of those have fast {@link Random#nextInt(int)} implementations.
 		 * <br>
 		 * This should return false if the Ordered is empty.
 		 *
-		 * @param rng any {@link Random} class; you can use any Random from in juniper
-
+		 * @param rng any {@link Random} class
 		 * @return a random boolean value from this Ordered.OfBoolean
 		 */
 		default boolean random (Random rng) {

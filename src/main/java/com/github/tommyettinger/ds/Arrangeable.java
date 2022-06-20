@@ -18,7 +18,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.random.EnhancedRandom;
 
 import java.util.Collection;
 import java.util.Random;

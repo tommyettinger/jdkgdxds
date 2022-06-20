@@ -18,8 +18,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
-import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.TrimRandom;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -770,9 +768,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	/**
 	 * Pseudo-randomly shuffles the order of this Ordered in-place.
 	 * You can use any {@link Random} class for {@code rng};
-	 * {@link TrimRandom} is generally a good choice.
 	 *
-	 * @param rng any {@link EnhancedRandom} implementation; you can use {@link TrimRandom} (or any from junipe)
+	 * @param rng any {@link Random} class
 	 */
 	@Override
 	public void shuffle (Random rng) {
@@ -785,7 +782,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * Returns a {@code T} item from anywhere in this ObjectList, chosen pseudo-randomly using {@code random}.
 	 * If this ObjectList is empty, throws an {@link IllegalStateException}.
 	 *
-	 * @param random a {@link Random} or a subclass, such as {@link TrimRandom} (or any from juniper)
+	 * @param random a {@link Random} or a subclass
 	 * @return a pseudo-randomly selected item from this ObjectLists
 	 */
 	@Override
