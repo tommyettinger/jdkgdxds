@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.random.EnhancedRandom;
 
 import java.util.Collection;
@@ -60,81 +61,25 @@ public interface Arrangeable {
 	int size ();
 
 	/**
-	 * Rearranges this Arrangeable using the given {@link EnhancedRandom} to shuffle it, then tries to restore the prior
-	 * state of the EnhancedRandom, so it can be used to reorder other Arrangeables. The attempt to restore state can
-	 * fail if {@link EnhancedRandom#getStateCount()} returns 0, meaning the state is not accessible for that
-	 * EnhancedRandom implementation, so this just shuffles without restoring the state afterwards in that case. If
-	 * {@link EnhancedRandom#getStateCount()} is 5 or less, this will not allocate, but if it is 6 or more, then this
-	 * has to allocate a temporary array. The rearrangement is done in-place.
+	 * Rearranges this Arrangeable using the given seed to shuffle it. The rearrangement is done in-place.
+	 * You can reuse the seed on different calls to rearrange with Arrangeables of the same size, which will
+	 * perform the same reordering steps on each Arrangeable (so if the first item in one Arrangeable became
+	 * the fifth item after a call to rearrange(), reusing the seed in another same-size Arrangeable would
+	 * also move its first item to become its fifth item).
 	 * <br>
-	 * This takes an EnhancedRandom and not a Random because it needs to read the state of the generator.
+	 * If you don't need to reuse a seed, you should consider {@link #shuffle(Random)}, which can be faster
+	 * than this with a good enough Random subclass (likely not with {@link Random}).
+	 * <br>
+	 * This uses {@link Hasher#randomize2Bounded(long, int)} to randomize the swap positions. If you want to
+	 * use a stronger randomization method, such as {@link Hasher#randomize3Bounded(long, int)}, use a faster
+	 * one, such as {@link Hasher#randomize1Bounded(long, int)}, or just to inline this method manually, the
+	 * code used here fits in one line:
+	 * <br>
+	 * {@code for (int i = size() - 1; i > 0; i--) swap(i, Hasher.randomize2Bounded(++seed, i + 1));}
 	 *
-	 * @param random a non-null EnhancedRandom, ideally one where {@link EnhancedRandom#getStateCount()} is between 1 and 5, inclusive
+	 * @param seed a (typically random) long seed to determine the shuffled order
 	 */
-	default void rearrange (EnhancedRandom random) {
-		final int c = random.getStateCount();
-		switch (c) {
-		case 0: {
-			for (int i = size() - 1; i > 0; i--) {
-				swap(i, random.nextInt(i + 1));
-			}
-			break;
-		}
-		case 1: {
-			long s0 = random.getSelectedState(0);
-			for (int i = size() - 1; i > 0; i--) {
-				swap(i, random.nextInt(i + 1));
-			}
-			random.setState(s0);
-			break;
-		}
-		case 2: {
-			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1);
-			for (int i = size() - 1; i > 0; i--) {
-				swap(i, random.nextInt(i + 1));
-			}
-			random.setState(s0, s1);
-			break;
-		}
-		case 3: {
-			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1), s2 = random.getSelectedState(2);
-			for (int i = size() - 1; i > 0; i--) {
-				swap(i, random.nextInt(i + 1));
-			}
-			random.setState(s0, s1, s2);
-			break;
-		}
-		case 4: {
-			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1), s2 = random.getSelectedState(2), s3 = random.getSelectedState(3);
-			for (int i = size() - 1; i > 0; i--) {
-				swap(i, random.nextInt(i + 1));
-			}
-			random.setState(s0, s1, s2, s3);
-			break;
-		}
-		case 5: {
-			long s0 = random.getSelectedState(0), s1 = random.getSelectedState(1), s2 = random.getSelectedState(2), s3 = random.getSelectedState(3), s4 = random.getSelectedState(4);
-			for (int i = size() - 1; i > 0; i--) {
-				swap(i, random.nextInt(i + 1));
-			}
-			random.setSelectedState(0, s0);
-			random.setSelectedState(1, s1);
-			random.setSelectedState(2, s2);
-			random.setSelectedState(3, s3);
-			random.setSelectedState(4, s4);
-			break;
-		}
-		default: {
-			final long[] states = new long[c];
-			for (int i = 0; i < c; i++) {
-				states[i] = random.getSelectedState(i);
-			}
-			for (int i = size() - 1; i > 0; i--) {
-				swap(i, random.nextInt(i + 1));
-			}
-			random.setState(states);
-		}
-		}
+	default void rearrange (long seed) {
+		for (int i = size() - 1; i > 0; i--) swap(i, Hasher.randomize2Bounded(++seed, i + 1));
 	}
-
 }
