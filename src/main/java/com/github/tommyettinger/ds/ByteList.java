@@ -722,7 +722,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	@Override
 	public void shuffle (Random random) {
 		byte[] items = this.items;
-		for (int i = size - 1; i >= 0; i--) {
+		for (int i = size - 1; i > 0; i--) {
 			int ii = random.nextInt(i + 1);
 			byte temp = items[i];
 			items[i] = items[ii];
@@ -741,7 +741,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
 	 *
-	 * @param random a {@link Random} or a subclass, such as {@link com.github.tommyettinger.random.TrimRandom} (or any from juniper)
+	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	public byte random (Random random) {

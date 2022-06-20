@@ -722,7 +722,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	@Override
 	public void shuffle (Random random) {
 		int[] items = this.items;
-		for (int i = size - 1; i >= 0; i--) {
+		for (int i = size - 1; i > 0; i--) {
 			int ii = random.nextInt(i + 1);
 			int temp = items[i];
 			items[i] = items[ii];

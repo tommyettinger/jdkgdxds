@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
-import com.github.tommyettinger.random.TrimRandom;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -721,7 +720,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	@Override
 	public void shuffle (Random random) {
 		long[] items = this.items;
-		for (int i = size - 1; i >= 0; i--) {
+		for (int i = size - 1; i > 0; i--) {
 			int ii = random.nextInt(i + 1);
 			long temp = items[i];
 			items[i] = items[ii];
@@ -740,7 +739,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	/**
 	 * Returns a random item from the array, or zero if the array is empty.
 	 *
-	 * @param random a {@link Random} or a subclass, such as {@link TrimRandom} (or any from juniper)
+	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	public long random (Random random) {

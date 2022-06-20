@@ -630,7 +630,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	@Override
 	public void shuffle (Random random) {
 		boolean[] items = this.items;
-		for (int i = size - 1; i >= 0; i--) {
+		for (int i = size - 1; i > 0; i--) {
 			int ii = random.nextInt(i + 1);
 			boolean temp = items[i];
 			items[i] = items[ii];
@@ -649,7 +649,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	/**
 	 * Returns a random item from the array, or false if the array is empty.
 	 *
-	 * @param random a {@link Random} or a subclass, such as {@link com.github.tommyettinger.random.TrimRandom} (or any from juniper)
+	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	public boolean random (Random random) {

@@ -776,7 +776,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 */
 	@Override
 	public void shuffle (Random rng) {
-		for (int i = size() - 1; i >= 0; i--) {
+		for (int i = size() - 1; i > 0; i--) {
 			set(i, set(rng.nextInt(i + 1), get(i)));
 		}
 	}

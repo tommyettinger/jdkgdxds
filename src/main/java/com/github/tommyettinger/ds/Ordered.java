@@ -73,7 +73,7 @@ public interface Ordered<T> extends Arrangeable {
 	@Override
 	default void shuffle (Random rng) {
 		ObjectList<T> order = order();
-		for (int i = order.size() - 1; i >= 0; i--) {
+		for (int i = order.size() - 1; i > 0; i--) {
 			order.set(i, order.set(rng.nextInt(i + 1), order.get(i)));
 		}
 	}

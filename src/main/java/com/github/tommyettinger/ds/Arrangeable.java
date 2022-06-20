@@ -18,7 +18,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.TrimRandom;
 
 import java.util.Collection;
 import java.util.Random;
@@ -41,12 +40,10 @@ public interface Arrangeable {
 	/**
 	 * Pseudo-randomly shuffles the order of this Arrangeable in-place.
 	 *
-	 * @param random any {@link Random} object; e.g. you can use {@link TrimRandom} in juniper
+	 * @param random any {@link Random} object; e.g. you can use any in juniper
 	 */
 	default void shuffle (Random random) {
-		for (int i = size() - 1; i >= 0; i--) {
-			swap(i, random.nextInt(i + 1));
-		}
+		for (int i = size() - 1; i > 0; i--) swap(i, random.nextInt(i + 1));
 	}
 
 	/**
