@@ -122,9 +122,9 @@ public class PileupTest {
                 // ensures hashMultiplier is never too small, and is always odd
 //                hashMultiplier |= 0x0000010000000001L;
 
-                // we modify the hash multiplier by adding size twice (keeping the result odd), then multiply by a number
-                // that Vigna and Steele considered optimal for a 64-bit MCG random number generator.
-                hashMultiplier = (hashMultiplier + size + size) * 0xF1357AEA2E62A9C5L;
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -170,11 +170,13 @@ public class PileupTest {
         @Override
         public int hashCode () {
 //            return text.charAt(0);
-            int h = 0;
-            for (int i = 0, n = text.length(); i < n; i++) {
-                h = h * 107 + text.charAt(i);
-            }
-            return h;
+//            return text.charAt(0) * text.charAt(1);
+//            int h = 1;
+//            for (int i = 0, n = text.length(); i < n; i++) {
+//                h = h * 127 + text.charAt(i);
+//            }
+//            return h;
+            return text.hashCode();
         }
 
         @Override
@@ -339,12 +341,13 @@ public class PileupTest {
                 //361274435
 //                hashMultiplier += 0xC3910C8D016B07D6L;//0x765428AE8CEAB1D8L;
                 //211888218
-                // we modify the hash multiplier by adding size twice (keeping the result odd), then multiply by a number
-                // that Vigna and Steele considered optimal for a 64-bit MCG random number generator.
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;//0x59E3779B97F4A7C1L;
 //                hashMultiplier *= MathTools.GOLDEN_LONGS[size & 1023];
-                hashMultiplier = (hashMultiplier + size + size) * 0xF1357AEA2E62A9C5L;
-                
+//                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
                 Object[] oldKeyTable = keyTable;
 
                 keyTable = new Object[newSize];
