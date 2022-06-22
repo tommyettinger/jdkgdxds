@@ -122,8 +122,9 @@ public class PileupTest {
                 // ensures hashMultiplier is never too small, and is always odd
 //                hashMultiplier |= 0x0000010000000001L;
 
-                // we multiply by a number with similar structure to the golden ratio (we started with 2 to the 64 times the golden ratio).
-                hashMultiplier *= 0x59E3779B97F4A7C1L;
+                // we modify the hash multiplier by adding size twice (keeping the result odd), then multiply by a number
+                // that Vigna and Steele considered optimal for a 64-bit MCG random number generator.
+                hashMultiplier = (hashMultiplier + size + size) * 0xF1357AEA2E62A9C5L;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -168,7 +169,12 @@ public class PileupTest {
 
         @Override
         public int hashCode () {
-            return text.charAt(0);
+//            return text.charAt(0);
+            int h = 0;
+            for (int i = 0, n = text.length(); i < n; i++) {
+                h = h * 107 + text.charAt(i);
+            }
+            return h;
         }
 
         @Override
@@ -331,12 +337,14 @@ public class PileupTest {
                 // we add a constant from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
                 // Pseudorandom Number Generators, times -8 to keep the bottom 3 bits the same every time.
                 //361274435
-//                hashMultiplier += 0x765428AE8CEAB1D8L;
+//                hashMultiplier += 0xC3910C8D016B07D6L;//0x765428AE8CEAB1D8L;
                 //211888218
-
-                // we multiply by a number with similar structure to the golden ratio (we started with 2 to the 64 times the golden ratio).
-                hashMultiplier *= 0x59E3779B97F4A7C1L;
-
+                // we modify the hash multiplier by adding size twice (keeping the result odd), then multiply by a number
+                // that Vigna and Steele considered optimal for a 64-bit MCG random number generator.
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;//0x59E3779B97F4A7C1L;
+//                hashMultiplier *= MathTools.GOLDEN_LONGS[size & 1023];
+                hashMultiplier = (hashMultiplier + size + size) * 0xF1357AEA2E62A9C5L;
+                
                 Object[] oldKeyTable = keyTable;
 
                 keyTable = new Object[newSize];
