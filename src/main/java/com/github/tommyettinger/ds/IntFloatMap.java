@@ -620,8 +620,9 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-		// we multiply by a number with similar structure to the golden ratio (we started with 2 to the 64 times the golden ratio).
-		hashMultiplier *= 0x59E3779B97F4A7C1L;
+		// we modify the hash multiplier by adding size twice (keeping the result odd), then multiply by a number
+		// that Vigna and Steele considered optimal for a 64-bit MCG random number generator.
+		hashMultiplier = (hashMultiplier + size + size) * 0xF1357AEA2E62A9C5L;
 
 		int[] oldKeyTable = keyTable;
 		float[] oldValueTable = valueTable;
