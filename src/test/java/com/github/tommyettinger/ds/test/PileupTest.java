@@ -1,7 +1,7 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.ds.IdentityObjectMap;
+import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.ObjectSet;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -9,19 +9,27 @@ import org.junit.Test;
 import javax.annotation.Nonnull;
 
 public class PileupTest {
-    public static final int LEN = 200000;
+    public static final int LEN = 500000;
     public static String[] generateUniqueWords(int size) {
-        final int numLetters = 3;
-        ObjectSet<String> set = new ObjectSet<>(size, 0.8f);
+        final int numLetters = 4;
+        ObjectSet<String> set = new ObjectSet<String>(size, 0.8f){
+            @Override
+            protected int place (Object item) {
+                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+            }
+        };
         char[] maker = new char[numLetters];
         for (int i = 0; set.size() < size; ) {
-            for (int x = 0; x < 26 && set.size() < size; x++) {
-                maker[0] = (char) ('a' + x);
-                for (int y = 0; y < 26 && set.size() < size; y++) {
-                    maker[1] = (char) ('a' + y);
-                    for (int z = 0; z < 26 && set.size() < size; z++) {
-                        maker[2] = (char) ('a' + z);
-                        set.add(String.valueOf(maker) + (i++));
+            for (int w = 0; w < 26 && set.size() < size; w++) {
+                maker[0] = (char)('a' + w);
+                for (int x = 0; x < 26 && set.size() < size; x++) {
+                    maker[1] = (char)('a' + x);
+                    for (int y = 0; y < 26 && set.size() < size; y++) {
+                        maker[2] = (char)('a' + y);
+                        for (int z = 0; z < 26 && set.size() < size; z++) {
+                            maker[3] = (char)('a' + z);
+                            set.add(String.valueOf(maker) + (i++));
+                        }
                     }
                 }
             }
@@ -33,9 +41,14 @@ public class PileupTest {
     @Test
     public void testObjectSetOld() {
         long start = System.nanoTime();
+        // replicates old ObjectSet behavior, with added logging
         ObjectSet set = new ObjectSet(51, 0.8f) {
             long collisionTotal = 0;
             int longestPileup = 0;
+            @Override
+            protected int place (Object item) {
+                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+            }
 
             @Override
             protected void addResize (Object key) {
@@ -71,9 +84,17 @@ public class PileupTest {
                         if (key != null) {addResize(key);}
                     }
                 }
-                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier));
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                super.clear();
             }
         };
 //        final int limit = (int)(Math.sqrt(LEN));
@@ -87,6 +108,7 @@ public class PileupTest {
             set.add(words[i]);
         }
         System.out.println(System.nanoTime() - start);
+        set.clear();
     }
     @Test
     public void testObjectSetNew() {
@@ -139,9 +161,17 @@ public class PileupTest {
                         if (key != null) {addResize(key);}
                     }
                 }
-                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier));
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                super.clear();
             }
         };
 //        final int limit = (int)(Math.sqrt(LEN));
@@ -155,6 +185,7 @@ public class PileupTest {
             set.add(words[i]);
         }
         System.out.println(System.nanoTime() - start);
+        set.clear();
     }
 
     private static class BadString implements CharSequence {
@@ -215,7 +246,12 @@ public class PileupTest {
     }
     public static BadString[] generateUniqueBad(int size) {
         final int numLetters = 3;
-        IdentityObjectMap<BadString, Object> set = new IdentityObjectMap<>(size, 0.8f);
+        ObjectObjectMap<BadString, Object> set = new ObjectObjectMap<BadString, Object>(size, 0.5f){
+            @Override
+            protected int place (@Nonnull Object item) {
+                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift);
+            }
+        };
         char[] maker = new char[numLetters];
         for (int i = 0; set.size() < size; ) {
             for (int x = 0; x < 26 && set.size() < size; x++) {
@@ -232,13 +268,17 @@ public class PileupTest {
         return set.keySet().toArray(new BadString[0]);
     }
 
-    //takes 12794336100
     @Test
     public void testBadStringSetOld() {
         long start = System.nanoTime();
+        // replicates old ObjectSet behavior, with added logging
         ObjectSet set = new ObjectSet(51, 0.8f) {
             long collisionTotal = 0;
             int longestPileup = 0;
+            @Override
+            protected int place (Object item) {
+                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+            }
 
             @Override
             protected void addResize (Object key) {
@@ -301,7 +341,6 @@ public class PileupTest {
         set.clear();
     }
 
-    // takes 11830103300 ns
     @Test
     public void testBadStringSetNew() {
         long start = System.nanoTime();
