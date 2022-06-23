@@ -1,3 +1,7 @@
+[1.0.3]
+- [BREAKING CHANGE] jdkgdxds no longer depends on juniper. The one case where we still used it was in Arrangeable.rearrange(EnhancedRandom), which now takes a long seed instead.
+- The simple random hash family now incorporates the current size of the map or set at the time of a resize.
+
 [1.0.2]
 - No more Fibonacci hashing; now we use a simple random hash family that changes hash function on resize.
 

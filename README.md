@@ -103,61 +103,60 @@ speedup of over 3 orders of magnitude).
 
 You have two options: Maven Central for stable releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.2'` (you can use `implementation` instead
+Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.3'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add:
 ```
-implementation 'com.github.tommyettinger:digital:0.0.2:sources'
-implementation 'com.github.tommyettinger:juniper:0.0.2:sources'
-implementation 'com.github.tommyettinger:jdkgdxds:1.0.2:sources'
+implementation "com.github.tommyettinger:digital:0.0.3:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.0.3:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 ```
 <inherits name="digital" />
-<inherits name="juniper" />
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. The dependencies (and `inherits` lines) on digital and juniper are not necessary for jdkgdxds
-0.2.8, but are necessary starting in 1.0.2 and later. The versions are expected to increase somewhat for both digital and juniper
-as bugs are found and fixed, but a low version number isn't a bad thing for those two libraries -- they were both mostly drawn
+in with the other `inherits` lines. The dependency (and `inherits` line) on digital is not necessary for jdkgdxds
+0.2.8, but is necessary starting in 1.0.3 and later. Versions 1.0.1 and 1.0.2 also depended on
+[juniper](https://github.com/tommyettinger/juniper) 0.0.2 . The version is expected to increase somewhat for digital as bugs are
+found and fixed, but a low version number isn't a bad thing for that library -- both digital and juniper were both mostly drawn
 from code in this library, and were tested significantly here. 
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/9d6f549623).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/d0c385905f).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:9d6f549623'` or `api 'com.github.tommyettinger:jdkgdxds:9d6f549623'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:d0c385905f'` or `api 'com.github.tommyettinger:jdkgdxds:d0c385905f'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
-implementation 'com.github.tommyettinger:digital:0.0.2:sources'
-implementation 'com.github.tommyettinger:juniper:0.0.2:sources'
-implementation 'com.github.tommyettinger:jdkgdxds:9d6f549623:sources'
+implementation "com.github.tommyettinger:digital:0.0.3:sources"
+implementation "com.github.tommyettinger:jdkgdxds:d0c385905f:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 ```
 <inherits name="digital" />
-<inherits name="juniper" />
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. `9d6f549623` is an example of a recent commit, and can be
+in with the other `inherits` lines. `d0c385905f` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
 
 There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to
-transfer libGDX data structures to and from jdkgdxds data structures, and more importantly, to store any[*] jdkgdxds classes using
-libGDX's `Json` class. [*]Any, only because IdentityMap and IdentityOrderedMap don't make sense to serialize.
+transfer libGDX data structures to and from jdkgdxds data structures, and more importantly, to store any`*` jdkgdxds classes using
+libGDX's `Json` class. `*`Any, only because IdentityMap and IdentityOrderedMap don't make sense to serialize.
 
 ## Updating to 1.0.1
 
 The 1.0.1 release is a more significant set of breaking changes, but thankfully, most of the changes have been very easy to adjust
 to in practice. First, the core math utilities in `BitConversion` and `Base` were moved into the
 [digital](https://github.com/tommyettinger/digital) library. Then, the random number generators that were here were moved to the
-[juniper](https://github.com/tommyettinger/juniper) library. There are various new additions to both of these small libraries to
-make them more useful as shared libraries for other libraries to depend on. While `digital` has common math and trigonometry
-methods now, the random number generators in `juniper` can serialize themselves to Strings without needing external code, and
-deserialize any of the serialized forms back to the appropriate generator using `Deserializer`.
+[juniper](https://github.com/tommyettinger/juniper) library. Because of changes in juniper, jdkgdxds can now just use its
+generators as `java.util.Random` subclasses, so juniper is simply an optional, but recommended, dependency starting in jdkgdxds
+1.0.3 . There are various new additions to both of these small libraries to make them more useful as shared libraries for other
+libraries to depend on. While `digital` has common math and trigonometry methods now, the random number generators in `juniper`
+can serialize themselves to Strings without needing external code, and deserialize any of the serialized forms back to the
+appropriate generator using `Deserializer`.
 
 To update to 1.0.1, most of the changes are package-related, and often only need changing import statements. Code that previously
 imported:
