@@ -17,8 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.IntIntToIntBiFunction;
-import com.github.tommyettinger.ds.support.function.ObjIntToIntBiFunction;
+import com.github.tommyettinger.function.ObjIntToIntBiFunction;
 
 import javax.annotation.Nullable;
 import java.util.AbstractSet;
@@ -28,6 +27,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.IntBinaryOperator;
 import java.util.function.ObjIntConsumer;
 import java.util.function.ToIntFunction;
 
@@ -1169,7 +1169,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		return false;
 	}
 
-	public int merge (K key, int value, IntIntToIntBiFunction remappingFunction) {
+	public int merge (K key, int value, IntBinaryOperator remappingFunction) {
 		int i = locateKey(key);
 		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
 		put(key, next);

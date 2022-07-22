@@ -18,7 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.function.FloatUnaryOperator;
+import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
@@ -592,9 +592,9 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a FloatUnaryOperator (an interface defined in this library)
+	 * @param operator a FloatToFloatFunction (a functional interface defined here)
 	 */
-	public void replaceAll (FloatUnaryOperator operator) {
+	public void replaceAll (FloatToFloatFunction operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsFloat(items[i]);
 		}

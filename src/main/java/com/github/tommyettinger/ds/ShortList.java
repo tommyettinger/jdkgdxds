@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.ShortUnaryOperator;
+import com.github.tommyettinger.function.ShortUnaryOperator;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
@@ -592,7 +592,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a ShortUnaryOperator (an interface defined in the JDK)
+	 * @param operator a ShortUnaryOperator (a functional interface defined here)
 	 */
 	public void replaceAll (ShortUnaryOperator operator) {
 		for (int i = 0, n = size; i < n; i++) {

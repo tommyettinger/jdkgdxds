@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds.support.util;
 
-import com.github.tommyettinger.ds.support.function.FloatConsumer;
+import com.github.tommyettinger.function.FloatConsumer;
 
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;

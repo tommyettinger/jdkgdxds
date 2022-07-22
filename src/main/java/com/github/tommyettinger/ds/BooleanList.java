@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.BooleanUnaryOperator;
+import com.github.tommyettinger.function.BooleanPredicate;
 import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.BooleanComparators;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
@@ -500,11 +500,11 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a BooleanUnaryOperator (an interface defined in the JDK)
+	 * @param operator a BooleanPredicate (a functional interface defined here)
 	 */
-	public void replaceAll (BooleanUnaryOperator operator) {
+	public void replaceAll (BooleanPredicate operator) {
 		for (int i = 0, n = size; i < n; i++) {
-			items[i] = operator.applyAsBoolean(items[i]);
+			items[i] = operator.test(items[i]);
 		}
 	}
 

@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds.support.util;
 
-import com.github.tommyettinger.ds.support.function.ShortConsumer;
+import com.github.tommyettinger.function.ShortConsumer;
 
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;

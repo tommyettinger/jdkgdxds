@@ -17,16 +17,16 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.BooleanConsumer;
-import com.github.tommyettinger.ds.support.function.BooleanPredicate;
-import com.github.tommyettinger.ds.support.function.ByteConsumer;
-import com.github.tommyettinger.ds.support.function.BytePredicate;
-import com.github.tommyettinger.ds.support.function.CharConsumer;
-import com.github.tommyettinger.ds.support.function.CharPredicate;
-import com.github.tommyettinger.ds.support.function.FloatConsumer;
-import com.github.tommyettinger.ds.support.function.FloatPredicate;
-import com.github.tommyettinger.ds.support.function.ShortConsumer;
-import com.github.tommyettinger.ds.support.function.ShortPredicate;
+import com.github.tommyettinger.function.BooleanConsumer;
+import com.github.tommyettinger.function.BooleanPredicate;
+import com.github.tommyettinger.function.ByteConsumer;
+import com.github.tommyettinger.function.BytePredicate;
+import com.github.tommyettinger.function.CharConsumer;
+import com.github.tommyettinger.function.CharPredicate;
+import com.github.tommyettinger.function.FloatConsumer;
+import com.github.tommyettinger.function.FloatPredicate;
+import com.github.tommyettinger.function.ShortConsumer;
+import com.github.tommyettinger.function.ShortPredicate;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
 import com.github.tommyettinger.ds.support.util.CharIterator;

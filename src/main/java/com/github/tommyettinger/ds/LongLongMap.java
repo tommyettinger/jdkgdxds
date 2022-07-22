@@ -17,8 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.LongLongConsumer;
-import com.github.tommyettinger.ds.support.function.LongLongToLongBiFunction;
+import com.github.tommyettinger.function.LongLongConsumer;
 
 import javax.annotation.Nullable;
 import java.util.AbstractSet;
@@ -27,6 +26,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.LongBinaryOperator;
 import java.util.function.LongUnaryOperator;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
@@ -707,7 +707,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 *
 	 * @param function the function to apply to each entry
 	 */
-	public void replaceAll (LongLongToLongBiFunction function) {
+	public void replaceAll (LongBinaryOperator function) {
 		for (Entry entry : entrySet()) {
 			entry.setValue(function.applyAsLong(entry.getKey(), entry.getValue()));
 		}
@@ -1239,7 +1239,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		return false;
 	}
 
-	public long merge (long key, long value, LongLongToLongBiFunction remappingFunction) {
+	public long merge (long key, long value, LongBinaryOperator remappingFunction) {
 		int i = locateKey(key);
 		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
 		put(key, next);

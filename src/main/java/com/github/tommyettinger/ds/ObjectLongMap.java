@@ -17,8 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.LongLongToLongBiFunction;
-import com.github.tommyettinger.ds.support.function.ObjLongToLongBiFunction;
+import com.github.tommyettinger.function.ObjLongToLongBiFunction;
 
 import javax.annotation.Nullable;
 import java.util.AbstractSet;
@@ -28,6 +27,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.LongBinaryOperator;
 import java.util.function.ObjLongConsumer;
 import java.util.function.ToLongFunction;
 
@@ -1172,7 +1172,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		return false;
 	}
 
-	public long merge (K key, long value, LongLongToLongBiFunction remappingFunction) {
+	public long merge (K key, long value, LongBinaryOperator remappingFunction) {
 		int i = locateKey(key);
 		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
 		put(key, next);

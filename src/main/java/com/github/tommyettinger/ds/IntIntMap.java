@@ -17,8 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.IntIntConsumer;
-import com.github.tommyettinger.ds.support.function.IntIntToIntBiFunction;
+import com.github.tommyettinger.function.IntIntConsumer;
 
 import javax.annotation.Nullable;
 import java.util.AbstractSet;
@@ -27,6 +26,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.IntBinaryOperator;
 import java.util.function.IntUnaryOperator;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
@@ -704,7 +704,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 *
 	 * @param function the function to apply to each entry
 	 */
-	public void replaceAll (IntIntToIntBiFunction function) {
+	public void replaceAll (IntBinaryOperator function) {
 		for (Entry entry : entrySet()) {
 			entry.setValue(function.applyAsInt(entry.getKey(), entry.getValue()));
 		}
@@ -1241,7 +1241,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		return false;
 	}
 
-	public int merge (int key, int value, IntIntToIntBiFunction remappingFunction) {
+	public int merge (int key, int value, IntBinaryOperator remappingFunction) {
 		int i = locateKey(key);
 		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
 		put(key, next);

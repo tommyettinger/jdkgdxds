@@ -17,8 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.LongObjBiFunction;
-import com.github.tommyettinger.ds.support.function.LongObjConsumer;
+import com.github.tommyettinger.function.LongObjBiFunction;
+import com.github.tommyettinger.function.LongObjConsumer;
 
 import javax.annotation.Nullable;
 import java.util.AbstractCollection;

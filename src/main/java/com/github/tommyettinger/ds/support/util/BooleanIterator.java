@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds.support.util;
 
-import com.github.tommyettinger.ds.support.function.BooleanConsumer;
+import com.github.tommyettinger.function.BooleanConsumer;
 
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;

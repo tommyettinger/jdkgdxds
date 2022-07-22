@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.ByteUnaryOperator;
+import com.github.tommyettinger.function.ByteToByteFunction;
 import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
@@ -592,9 +592,9 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a ByteUnaryOperator (an interface defined in the JDK)
+	 * @param operator a ByteToByteFunction (a functional interface defined here)
 	 */
-	public void replaceAll (ByteUnaryOperator operator) {
+	public void replaceAll (ByteToByteFunction operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsByte(items[i]);
 		}

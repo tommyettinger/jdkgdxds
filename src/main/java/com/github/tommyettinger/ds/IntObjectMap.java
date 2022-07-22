@@ -17,8 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.IntObjBiFunction;
-import com.github.tommyettinger.ds.support.function.IntObjConsumer;
+import com.github.tommyettinger.function.IntObjBiFunction;
+import com.github.tommyettinger.function.IntObjConsumer;
 
 import javax.annotation.Nullable;
 import java.util.AbstractCollection;

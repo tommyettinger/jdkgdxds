@@ -590,7 +590,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a LongUnaryOperator (an interface defined in the JDK)
+	 * @param operator a LongUnaryOperator (a functional interface defined in the JDK)
 	 */
 	public void replaceAll (LongUnaryOperator operator) {
 		for (int i = 0, n = size; i < n; i++) {

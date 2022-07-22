@@ -9,7 +9,7 @@ import org.junit.Test;
 import javax.annotation.Nonnull;
 
 public class PileupTest {
-    public static final int LEN = 500000;
+    public static final int LEN = 1500000;
     public static String[] generateUniqueWords(int size) {
         final int numLetters = 4;
         ObjectSet<String> set = new ObjectSet<String>(size, 0.8f){
@@ -37,7 +37,7 @@ public class PileupTest {
         return set.toArray(new String[0]);
     }
 
-    @Ignore
+//    @Ignore
     @Test
     public void testObjectSetOld() {
         long start = System.nanoTime();

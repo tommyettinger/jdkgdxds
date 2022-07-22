@@ -591,7 +591,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a DoubleUnaryOperator (an interface defined in the JDK)
+	 * @param operator a DoubleUnaryOperator (a functional interface defined in the JDK)
 	 */
 	public void replaceAll (DoubleUnaryOperator operator) {
 		for (int i = 0, n = size; i < n; i++) {

@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.CharUnaryOperator;
+import com.github.tommyettinger.function.CharToCharFunction;
 import com.github.tommyettinger.ds.support.sort.CharComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparators;
 import com.github.tommyettinger.ds.support.util.CharIterator;
@@ -491,9 +491,9 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a CharUnaryOperator (an interface defined in the JDK)
+	 * @param operator a CharToCharFunction (a functional interface defined here)
 	 */
-	public void replaceAll (CharUnaryOperator operator) {
+	public void replaceAll (CharToCharFunction operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsChar(items[i]);
 		}

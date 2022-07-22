@@ -591,7 +591,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator an IntUnaryOperator (an interface defined in the JDK)
+	 * @param operator an IntUnaryOperator (a functional interface defined in the JDK)
 	 */
 	public void replaceAll (IntUnaryOperator operator) {
 		for (int i = 0, n = size; i < n; i++) {

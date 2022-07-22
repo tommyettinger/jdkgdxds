@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
-import com.github.tommyettinger.ds.support.function.ToFloatFunction;
+import com.github.tommyettinger.function.ToFloatFunction;
 
 import javax.annotation.Nullable;
 import java.util.Comparator;

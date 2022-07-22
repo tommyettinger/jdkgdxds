@@ -18,10 +18,11 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.function.FloatFloatToFloatBiFunction;
-import com.github.tommyettinger.ds.support.function.ObjFloatConsumer;
-import com.github.tommyettinger.ds.support.function.ObjFloatToFloatBiFunction;
-import com.github.tommyettinger.ds.support.function.ToFloatFunction;
+import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
+import com.github.tommyettinger.function.FloatToFloatFunction;
+import com.github.tommyettinger.function.ObjFloatConsumer;
+import com.github.tommyettinger.function.ObjFloatToFloatBiFunction;
+import com.github.tommyettinger.function.ToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;

@@ -17,9 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.function.IntIntToIntBiFunction;
-import com.github.tommyettinger.ds.support.function.LongIntConsumer;
-import com.github.tommyettinger.ds.support.function.LongIntToIntBiFunction;
+import com.github.tommyettinger.function.LongIntConsumer;
+import com.github.tommyettinger.function.LongIntToIntBiFunction;
 
 import javax.annotation.Nullable;
 import java.util.AbstractSet;
@@ -28,6 +27,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Set;
+import java.util.function.IntBinaryOperator;
 import java.util.function.LongToIntFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
@@ -1239,7 +1239,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		return false;
 	}
 
-	public int merge (long key, int value, IntIntToIntBiFunction remappingFunction) {
+	public int merge (long key, int value, IntBinaryOperator remappingFunction) {
 		int i = locateKey(key);
 		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
 		put(key, next);
