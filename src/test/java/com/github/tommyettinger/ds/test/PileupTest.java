@@ -9,10 +9,10 @@ import org.junit.Test;
 import javax.annotation.Nonnull;
 
 public class PileupTest {
-    public static final int LEN = 1500000;
+    public static final int LEN = 500000;
     public static String[] generateUniqueWords(int size) {
         final int numLetters = 4;
-        ObjectSet<String> set = new ObjectSet<String>(size, 0.8f){
+        ObjectSet<String> set = new ObjectSet<String>(size, 0.6f){
             @Override
             protected int place (Object item) {
                 return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
@@ -42,7 +42,7 @@ public class PileupTest {
     public void testObjectSetOld() {
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging
-        ObjectSet set = new ObjectSet(51, 0.8f) {
+        ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
             int longestPileup = 0;
             @Override
@@ -51,7 +51,7 @@ public class PileupTest {
             }
 
             @Override
-            protected void addResize (Object key) {
+            protected void addResize (@Nonnull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
@@ -113,12 +113,12 @@ public class PileupTest {
     @Test
     public void testObjectSetNew() {
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, 0.8f) {
+        ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
             int longestPileup = 0;
 
             @Override
-            protected void addResize (Object key) {
+            protected void addResize (@Nonnull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
@@ -272,7 +272,7 @@ public class PileupTest {
     public void testBadStringSetOld() {
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging
-        ObjectSet set = new ObjectSet(51, 0.8f) {
+        ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
             int longestPileup = 0;
             @Override
@@ -281,7 +281,7 @@ public class PileupTest {
             }
 
             @Override
-            protected void addResize (Object key) {
+            protected void addResize (@Nonnull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
@@ -344,12 +344,12 @@ public class PileupTest {
     @Test
     public void testBadStringSetNew() {
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, 0.8f) {
+        ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
             int longestPileup = 0;
 
             @Override
-            protected void addResize (Object key) {
+            protected void addResize (@Nonnull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {

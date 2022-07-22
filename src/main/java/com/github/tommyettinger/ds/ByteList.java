@@ -592,7 +592,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a ByteToByteFunction (a functional interface defined here)
+	 * @param operator a ByteToByteFunction (a functional interface defined in funderby)
 	 */
 	public void replaceAll (ByteToByteFunction operator) {
 		for (int i = 0, n = size; i < n; i++) {

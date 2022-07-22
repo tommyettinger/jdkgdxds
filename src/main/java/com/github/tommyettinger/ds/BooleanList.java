@@ -500,7 +500,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a BooleanPredicate (a functional interface defined here)
+	 * @param operator a BooleanPredicate (a functional interface defined in funderby)
 	 */
 	public void replaceAll (BooleanPredicate operator) {
 		for (int i = 0, n = size; i < n; i++) {
