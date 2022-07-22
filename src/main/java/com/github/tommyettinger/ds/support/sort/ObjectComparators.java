@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
-import com.github.tommyettinger.function.ToFloatFunction;
+import com.github.tommyettinger.function.ObjToFloatFunction;
 
 import javax.annotation.Nullable;
 import java.util.Comparator;
@@ -49,7 +49,7 @@ public final class ObjectComparators {
 	 * @throws NullPointerException if the argument is null
 	 * @see Comparator#comparing(Function)
 	 */
-	public static <T> Comparator<T> comparingFloat (ToFloatFunction<? super T> keyExtractor) {
+	public static <T> Comparator<T> comparingFloat (ObjToFloatFunction<? super T> keyExtractor) {
 		Objects.requireNonNull(keyExtractor);
 		return (c1, c2) -> Float.compare(keyExtractor.applyAsFloat(c1), keyExtractor.applyAsFloat(c2));
 	}

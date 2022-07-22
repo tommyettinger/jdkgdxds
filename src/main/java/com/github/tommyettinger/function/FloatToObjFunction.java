@@ -31,7 +31,7 @@ import java.util.function.Function;
  * @see Function
  */
 @FunctionalInterface
-public interface FloatFunction<R> {
+public interface FloatToObjFunction<R> {
 
 	/**
 	 * Applies this function to the given argument.

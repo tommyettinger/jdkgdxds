@@ -19,10 +19,9 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
-import com.github.tommyettinger.function.FloatToFloatFunction;
-import com.github.tommyettinger.function.ObjFloatConsumer;
+import com.github.tommyettinger.function.ObjFloatBiConsumer;
 import com.github.tommyettinger.function.ObjFloatToFloatBiFunction;
-import com.github.tommyettinger.function.ToFloatFunction;
+import com.github.tommyettinger.function.ObjToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import javax.annotation.Nullable;
@@ -727,7 +726,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (ObjFloatConsumer<? super K> action) {
+	public void forEach (ObjFloatBiConsumer<? super K> action) {
 		for (Entry<K> entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}
@@ -1192,7 +1191,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		return defaultValue;
 	}
 
-	public float computeIfAbsent (K key, ToFloatFunction<? super K> mappingFunction) {
+	public float computeIfAbsent (K key, ObjToFloatFunction<? super K> mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
 			float newValue = mappingFunction.applyAsFloat(key);

@@ -17,28 +17,30 @@
 
 package com.github.tommyettinger.function;
 
+import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 
 /**
- * Represents an operation that accepts a {@code long}-valued and a
- * {@code long}-valued argument, and returns no result.  This is the
- * {@code (long, long)} specialization of {@link BiConsumer}.
- * Unlike most other functional interfaces, {@code LongLongConsumer} is
+ * Represents an operation that accepts a {@code int}-valued and an
+ * object-valued argument, and returns no result.  This is the
+ * {@code (int, reference)} specialization of {@link BiConsumer}.
+ * Unlike most other functional interfaces, {@code IntObjBiConsumer} is
  * expected to operate via side-effects.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #accept(long, long)}.
+ * whose functional method is {@link #accept(int, Object)}.
  *
+ * @param <U> the type of the object argument to the operation
  * @see BiConsumer
  */
 @FunctionalInterface
-public interface LongLongConsumer {
+public interface IntObjBiConsumer<U> {
 
 	/**
 	 * Performs this operation on the given arguments.
 	 *
-	 * @param first  the first input argument
-	 * @param second the second input argument
+	 * @param value the first input argument
+	 * @param u     the second input argument
 	 */
-	void accept (long first, long second);
+	void accept (int value, @Nullable U u);
 }

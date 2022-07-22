@@ -17,30 +17,26 @@
 
 package com.github.tommyettinger.function;
 
-import javax.annotation.Nullable;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
- * Represents a function that accepts a {@code float} argument and an Object
- * argument, and produces an Object result.  This is the {@code (float, reference)},
- * {@code reference}-producing primitive specialization for {@link BiFunction}.
+ * Represents a function that produces a float-valued result.  This is the
+ * {@code float}-producing primitive specialization for {@link Function}.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #apply(float, Object)}.
+ * whose functional method is {@link #applyAsFloat(Object)}.
  *
- * @param <U> the type of the object argument to the function
- * @param <R> the type of the result of the function
- * @see BiFunction
+ * @param <T> the type of the input to the function
+ * @see Function
  */
 @FunctionalInterface
-public interface FloatObjBiFunction<U, R> {
+public interface ObjToFloatFunction<T> {
 
 	/**
-	 * Applies this function to the given arguments.
+	 * Applies this function to the given argument.
 	 *
-	 * @param first  the first function argument
-	 * @param second the second function argument
+	 * @param value the function argument
 	 * @return the function result
 	 */
-	R apply (float first, @Nullable U second);
+	float applyAsFloat (T value);
 }

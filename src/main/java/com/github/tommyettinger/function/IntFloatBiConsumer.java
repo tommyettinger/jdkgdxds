@@ -17,30 +17,28 @@
 
 package com.github.tommyettinger.function;
 
-import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 
 /**
- * Represents an operation that accepts a {@code int}-valued and an
- * object-valued argument, and returns no result.  This is the
- * {@code (int, reference)} specialization of {@link BiConsumer}.
- * Unlike most other functional interfaces, {@code IntObjConsumer} is
+ * Represents an operation that accepts an {@code int}-valued and a
+ * {@code float}-valued argument, and returns no result.  This is the
+ * {@code (int, float)} specialization of {@link BiConsumer}.
+ * Unlike most other functional interfaces, {@code IntFloatBiConsumer} is
  * expected to operate via side-effects.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #accept(int, Object)}.
+ * whose functional method is {@link #accept(int, float)}.
  *
- * @param <U> the type of the object argument to the operation
  * @see BiConsumer
  */
 @FunctionalInterface
-public interface IntObjConsumer<U> {
+public interface IntFloatBiConsumer {
 
 	/**
 	 * Performs this operation on the given arguments.
 	 *
-	 * @param value the first input argument
-	 * @param u     the second input argument
+	 * @param first  the first input argument
+	 * @param second the second input argument
 	 */
-	void accept (int value, @Nullable U u);
+	void accept (int first, float second);
 }

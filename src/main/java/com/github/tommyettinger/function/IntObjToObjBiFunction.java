@@ -21,19 +21,19 @@ import javax.annotation.Nullable;
 import java.util.function.BiFunction;
 
 /**
- * Represents a function that accepts a {@code long} argument and an Object
- * argument, and produces an Object result.  This is the {@code (long, reference)},
+ * Represents a function that accepts a {@code int} argument and an Object
+ * argument, and produces an Object result.  This is the {@code (int, reference)},
  * {@code reference}-producing primitive specialization for {@link BiFunction}.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #apply(long, Object)}.
+ * whose functional method is {@link #apply(int, Object)}.
  *
  * @param <U> the type of the object argument to the function
  * @param <R> the type of the result of the function
  * @see BiFunction
  */
 @FunctionalInterface
-public interface LongObjBiFunction<U, R> {
+public interface IntObjToObjBiFunction<U, R> {
 
 	/**
 	 * Applies this function to the given arguments.
@@ -42,5 +42,5 @@ public interface LongObjBiFunction<U, R> {
 	 * @param second the second function argument
 	 * @return the function result
 	 */
-	R apply (long first, @Nullable U second);
+	R apply (int first, @Nullable U second);
 }

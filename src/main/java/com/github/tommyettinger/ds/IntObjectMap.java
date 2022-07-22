@@ -17,8 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.function.IntObjBiFunction;
-import com.github.tommyettinger.function.IntObjConsumer;
+import com.github.tommyettinger.function.IntObjBiConsumer;
+import com.github.tommyettinger.function.IntObjToObjBiFunction;
 
 import javax.annotation.Nullable;
 import java.util.AbstractCollection;
@@ -683,7 +683,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (IntObjConsumer<? super V> action) {
+	public void forEach (IntObjBiConsumer<? super V> action) {
 		for (Entry<V> entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}
@@ -697,7 +697,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param function the function to apply to each entry
 	 */
-	public void replaceAll (IntObjBiFunction<? super V, ? extends V> function) {
+	public void replaceAll (IntObjToObjBiFunction<? super V, ? extends V> function) {
 		for (Entry<V> entry : entrySet()) {
 			entry.setValue(function.apply(entry.getKey(), entry.getValue()));
 		}

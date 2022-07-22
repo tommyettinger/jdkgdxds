@@ -17,8 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.function.LongObjBiFunction;
-import com.github.tommyettinger.function.LongObjConsumer;
+import com.github.tommyettinger.function.LongObjBiConsumer;
+import com.github.tommyettinger.function.LongObjToObjBiFunction;
 
 import javax.annotation.Nullable;
 import java.util.AbstractCollection;
@@ -689,7 +689,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (LongObjConsumer<? super V> action) {
+	public void forEach (LongObjBiConsumer<? super V> action) {
 		for (Entry<V> entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}
@@ -703,7 +703,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 *
 	 * @param function the function to apply to each entry
 	 */
-	public void replaceAll (LongObjBiFunction<? super V, ? extends V> function) {
+	public void replaceAll (LongObjToObjBiFunction<? super V, ? extends V> function) {
 		for (Entry<V> entry : entrySet()) {
 			entry.setValue(function.apply(entry.getKey(), entry.getValue()));
 		}

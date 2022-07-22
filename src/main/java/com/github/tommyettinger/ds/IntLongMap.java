@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.function.IntLongConsumer;
+import com.github.tommyettinger.function.IntLongBiConsumer;
 import com.github.tommyettinger.function.IntLongToLongBiFunction;
 
 import javax.annotation.Nullable;
@@ -678,7 +678,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (IntLongConsumer action) {
+	public void forEach (IntLongBiConsumer action) {
 		for (Entry entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}

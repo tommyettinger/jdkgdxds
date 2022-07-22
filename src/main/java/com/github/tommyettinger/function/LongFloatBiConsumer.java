@@ -20,26 +20,25 @@ package com.github.tommyettinger.function;
 import java.util.function.BiConsumer;
 
 /**
- * Represents an operation that accepts an object-valued and a
+ * Represents an operation that accepts a {@code long}-valued and a
  * {@code float}-valued argument, and returns no result.  This is the
- * {@code (reference, float)} specialization of {@link BiConsumer}.
- * Unlike most other functional interfaces, {@code ObjFloatConsumer} is
+ * {@code (long, float)} specialization of {@link BiConsumer}.
+ * Unlike most other functional interfaces, {@code LongFloatBiConsumer} is
  * expected to operate via side-effects.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #accept(Object, float)}.
+ * whose functional method is {@link #accept(long, float)}.
  *
- * @param <T> the type of the object argument to the operation
  * @see BiConsumer
  */
 @FunctionalInterface
-public interface ObjFloatConsumer<T> {
+public interface LongFloatBiConsumer {
 
 	/**
 	 * Performs this operation on the given arguments.
 	 *
-	 * @param t     the first input argument
-	 * @param value the second input argument
+	 * @param first  the first input argument
+	 * @param second the second input argument
 	 */
-	void accept (T t, float value);
+	void accept (long first, float second);
 }

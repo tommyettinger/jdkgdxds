@@ -20,19 +20,19 @@ package com.github.tommyettinger.function;
 import java.util.function.BiConsumer;
 
 /**
- * Represents an operation that accepts an {@code int}-valued and a
- * {@code long}-valued argument, and returns no result.  This is the
- * {@code (int, long)} specialization of {@link BiConsumer}.
- * Unlike most other functional interfaces, {@code IntLongConsumer} is
+ * Represents an operation that accepts an {@code int}-valued and an
+ * {@code int}-valued argument, and returns no result.  This is the
+ * {@code (int, int)} specialization of {@link BiConsumer}.
+ * Unlike most other functional interfaces, {@code IntIntBiConsumer} is
  * expected to operate via side-effects.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #accept(int, long)}.
+ * whose functional method is {@link #accept(int, int)}.
  *
  * @see BiConsumer
  */
 @FunctionalInterface
-public interface IntLongConsumer {
+public interface IntIntBiConsumer {
 
 	/**
 	 * Performs this operation on the given arguments.
@@ -40,5 +40,5 @@ public interface IntLongConsumer {
 	 * @param first  the first input argument
 	 * @param second the second input argument
 	 */
-	void accept (int first, long second);
+	void accept (int first, int second);
 }

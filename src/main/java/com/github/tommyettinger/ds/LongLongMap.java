@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.function.LongLongConsumer;
+import com.github.tommyettinger.function.LongLongBiConsumer;
 
 import javax.annotation.Nullable;
 import java.util.AbstractSet;
@@ -693,7 +693,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (LongLongConsumer action) {
+	public void forEach (LongLongBiConsumer action) {
 		for (Entry entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}

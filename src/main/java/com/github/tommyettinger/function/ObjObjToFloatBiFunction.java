@@ -21,26 +21,26 @@ import javax.annotation.Nullable;
 import java.util.function.BiFunction;
 
 /**
- * Represents a function that accepts a {@code int} argument and an Object
- * argument, and produces an Object result.  This is the {@code (int, reference)},
- * {@code reference}-producing primitive specialization for {@link BiFunction}.
+ * Represents a function that accepts two arguments and produces a float-valued
+ * result.  This is the {@code float}-producing primitive specialization for
+ * {@link BiFunction}.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #apply(int, Object)}.
+ * whose functional method is {@link #applyAsFloat(Object, Object)}.
  *
- * @param <U> the type of the object argument to the function
- * @param <R> the type of the result of the function
+ * @param <T> the type of the first argument to the function
+ * @param <U> the type of the second argument to the function
  * @see BiFunction
  */
 @FunctionalInterface
-public interface IntObjBiFunction<U, R> {
+public interface ObjObjToFloatBiFunction<T, U> {
 
 	/**
 	 * Applies this function to the given arguments.
 	 *
-	 * @param first  the first function argument
-	 * @param second the second function argument
+	 * @param t the first function argument
+	 * @param u the second function argument
 	 * @return the function result
 	 */
-	R apply (int first, @Nullable U second);
+	float applyAsFloat (T t, @Nullable U u);
 }

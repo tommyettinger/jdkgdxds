@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022 See AUTHORS file.
+ * Copyright (c) 2013-2022 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,28 @@
 
 package com.github.tommyettinger.function;
 
-import java.util.function.Function;
+import java.util.function.BiConsumer;
 
 /**
- * Represents a function that produces a float-valued result.  This is the
- * {@code float}-producing primitive specialization for {@link Function}.
+ * Represents an operation that accepts an {@code int}-valued and a
+ * {@code long}-valued argument, and returns no result.  This is the
+ * {@code (int, long)} specialization of {@link BiConsumer}.
+ * Unlike most other functional interfaces, {@code IntLongBiConsumer} is
+ * expected to operate via side-effects.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #applyAsFloat(Object)}.
+ * whose functional method is {@link #accept(int, long)}.
  *
- * @param <T> the type of the input to the function
- * @see Function
+ * @see BiConsumer
  */
 @FunctionalInterface
-public interface ToFloatFunction<T> {
+public interface IntLongBiConsumer {
 
 	/**
-	 * Applies this function to the given argument.
+	 * Performs this operation on the given arguments.
 	 *
-	 * @param value the function argument
-	 * @return the function result
+	 * @param first  the first input argument
+	 * @param second the second input argument
 	 */
-	float applyAsFloat (T value);
+	void accept (int first, long second);
 }

@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.function.IntIntConsumer;
+import com.github.tommyettinger.function.IntIntBiConsumer;
 
 import javax.annotation.Nullable;
 import java.util.AbstractSet;
@@ -690,7 +690,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (IntIntConsumer action) {
+	public void forEach (IntIntBiConsumer action) {
 		for (Entry entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}

@@ -19,8 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
-import com.github.tommyettinger.function.FloatToFloatFunction;
-import com.github.tommyettinger.function.LongFloatConsumer;
+import com.github.tommyettinger.function.LongFloatBiConsumer;
 import com.github.tommyettinger.function.LongFloatToFloatBiFunction;
 import com.github.tommyettinger.function.LongToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
@@ -738,7 +737,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (LongFloatConsumer action) {
+	public void forEach (LongFloatBiConsumer action) {
 		for (Entry entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}

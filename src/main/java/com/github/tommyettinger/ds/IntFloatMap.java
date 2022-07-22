@@ -19,8 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
-import com.github.tommyettinger.function.FloatToFloatFunction;
-import com.github.tommyettinger.function.IntFloatConsumer;
+import com.github.tommyettinger.function.IntFloatBiConsumer;
 import com.github.tommyettinger.function.IntFloatToFloatBiFunction;
 import com.github.tommyettinger.function.IntToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
@@ -737,7 +736,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (IntFloatConsumer action) {
+	public void forEach (IntFloatBiConsumer action) {
 		for (Entry entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}
