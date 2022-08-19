@@ -103,13 +103,13 @@ speedup of over 3 orders of magnitude).
 
 You have two options: Maven Central for stable releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the Gradle dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.3'` (you can use `implementation` instead
+Maven Central uses the Gradle dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.4'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.1:sources"
 implementation "com.github.tommyettinger:digital:0.1.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.0.3:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.0.4:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -122,7 +122,7 @@ in with the other `inherits` lines. The dependency (and `inherits` line) on digi
 0.2.8, but is necessary starting in 1.0.3 and later. The dependency and `inherits` line for funderby is new in 1.0.4 .
 Versions 1.0.1 and 1.0.2 also depended on [juniper](https://github.com/tommyettinger/juniper) 0.0.2 ; if you intend to use the
 randomized algorithms here (like shuffles), then depending on Juniper might be a good idea, though it is still optional. The
-version is expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing for
+versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing for
 that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
 The version for funderby is expected to stay at or around 0.0.1, since it is a relatively small library and is probably complete.
 
