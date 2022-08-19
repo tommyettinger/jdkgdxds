@@ -11,6 +11,7 @@
     <inherits name='com.google.gwt.core.Core'/>
     <inherits name="com.google.gwt.typedarrays.TypedArrays"/>
     <super-source path="emu" />
-    <source path="com/github/tommyettinger/digital" />
+    <inherits name="funderby"/>
+    <inherits name="digital"/>
     <source path="com/github/tommyettinger/ds" />
 </module>

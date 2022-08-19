@@ -103,24 +103,28 @@ speedup of over 3 orders of magnitude).
 
 You have two options: Maven Central for stable releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.3'` (you can use `implementation` instead
+Maven Central uses the Gradle dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.3'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add:
 ```
-implementation "com.github.tommyettinger:digital:0.0.3:sources"
+implementation "com.github.tommyettinger:funderby:0.0.1:sources"
+implementation "com.github.tommyettinger:digital:0.1.0:sources"
 implementation "com.github.tommyettinger:jdkgdxds:1.0.3:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 ```
+<inherits name="funderby" />
 <inherits name="digital" />
 <inherits name="jdkgdxds" />
 ```
 in with the other `inherits` lines. The dependency (and `inherits` line) on digital is not necessary for jdkgdxds
-0.2.8, but is necessary starting in 1.0.3 and later. Versions 1.0.1 and 1.0.2 also depended on
-[juniper](https://github.com/tommyettinger/juniper) 0.0.2 . The version is expected to increase somewhat for digital as bugs are
-found and fixed, but a low version number isn't a bad thing for that library -- both digital and juniper were both mostly drawn
-from code in this library, and were tested significantly here. 
+0.2.8, but is necessary starting in 1.0.3 and later. The dependency and `inherits` line for funderby is new in 1.0.4 .
+Versions 1.0.1 and 1.0.2 also depended on [juniper](https://github.com/tommyettinger/juniper) 0.0.2 ; if you intend to use the
+randomized algorithms here (like shuffles), then depending on Juniper might be a good idea, though it is still optional. The
+version is expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing for
+that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
+The version for funderby is expected to stay at or around 0.0.1, since it is a relatively small library and is probably complete.
 
 You can build specific, typically brand-new commits on JitPack.
 [JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/d0c385905f).
@@ -130,12 +134,14 @@ To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `re
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
-implementation "com.github.tommyettinger:digital:0.0.3:sources"
+implementation "com.github.tommyettinger:funderby:0.0.1:sources"
+implementation "com.github.tommyettinger:digital:0.1.0:sources"
 implementation "com.github.tommyettinger:jdkgdxds:d0c385905f:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 ```
+<inherits name="funderby" />
 <inherits name="digital" />
 <inherits name="jdkgdxds" />
 ```
@@ -144,7 +150,9 @@ replaced with other commits shown on JitPack.
 
 There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to
 transfer libGDX data structures to and from jdkgdxds data structures, and more importantly, to store any`*` jdkgdxds classes using
-libGDX's `Json` class. `*`Any, only because IdentityMap and IdentityOrderedMap don't make sense to serialize.
+libGDX's `Json` class. `*`Any, only because `IdentityMap` and `IdentityOrderedMap` don't make sense to serialize, while
+`HolderSet` and `HolderOrderedSet` can't be serialized easily because their behavior depends on a `Function`. For historical
+reasons, jdkgdxds-interop also can serialize classes from digital and juniper.
 
 ## Updating to 1.0.1
 
@@ -185,3 +193,12 @@ If you are migrating other code to `digital`'s new math functions, you may need 
 
 There was a 1.0.0 release, but it mistakenly shadowed the `digital` code, without super-sourcing `BitConversion` for GWT support.
 So, the first 1.x release is 1.0.1.
+
+## Updating to 1.0.4
+
+Likely less significant than the 1.0.1 update, 1.0.4 still "removed" some classes, though they were only moved to the funderby
+library. The `com.github.tommyettinger.ds.support.function` package is now `com.github.tommyettinger.function`, and has many more
+functional interfaces, but if they were being provided as lambdas, no difference will be noticeable. There are quite a lot more
+interfaces in funderby than there ever were in jdkgdxds, which may help in uncommon situations that use primitives in lambdas
+(so as if you need a `ByteLongPredicate`, you'll be ready). Some classes may have had their names changed; you can consult
+[funderby's README.md](https://github.com/tommyettinger/funderby#what-is-it) for the naming conventions. 
