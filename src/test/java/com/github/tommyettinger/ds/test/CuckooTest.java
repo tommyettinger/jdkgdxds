@@ -4,7 +4,9 @@ import com.github.tommyettinger.ds.ObjectObjectMap;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
+import java.util.HashMap;
+
+//@Ignore
 public class CuckooTest {
 	// Expected to fail with an OutOfMemoryError.
 	@Test(expected = OutOfMemoryError.class)
@@ -155,9 +157,11 @@ public class CuckooTest {
 		System.out.println("Unexpectedly succeeded; finished CuckooObjectMap has size: " + map.size);
 	}
 
-	//3.46 seconds at LIMIT=16
+	//1504 ms at LIMIT=16
+	//At LIMIT=20, OutOfMemoryError trying to enter 1048576 Vector2 keys into an ObjectObjectCuckooMap.
 	@Test
 	public void vectorGoodCuckooTest(){
+		final long startTime = System.nanoTime();
 		ObjectObjectCuckooMap<Vector2, Object> map = new ObjectObjectCuckooMap<>();
 		final int LIMIT = 16, TOTAL = 1 << LIMIT, BOUND = 1 << (LIMIT - 2 >>> 1);
 		Vector2[] problems = new Vector2[TOTAL];
@@ -166,17 +170,20 @@ public class CuckooTest {
 				problems[i++] = new Vector2(x, y);
 			}
 		}
-		System.out.println("Trying to enter " + problems.length + " Vector2 keys into a ObjectObjectCuckooMap.");
+		System.out.println("Trying to enter " + problems.length + " Vector2 keys into an ObjectObjectCuckooMap.");
 		for (int i = 0; i < problems.length; i++) {
-			System.out.println("Entered " + i + " keys successfully.");
+//			System.out.println("Entered " + i + " keys successfully.");
 			map.put(problems[i], null);
 		}
-		System.out.println("Succeeded; finished ObjectObjectCuckooMap has size: " + map.size());
+		System.out.println("Succeeded in " + Math.round((System.nanoTime() - startTime) * 1E-6) +
+			" ms; finished ObjectObjectCuckooMap has size: " + map.size());
 	}
 
-	//6.969 seconds at LIMIT=16
+	//19 ms at LIMIT=16
+	//335 ms at LIMIT=20
 	@Test
 	public void vectorLinearTest(){
+		final long startTime = System.nanoTime();
 		ObjectObjectMap<Vector2, Object> map = new ObjectObjectMap<>();
 		final int LIMIT = 16, TOTAL = 1 << LIMIT, BOUND = 1 << (LIMIT - 2 >>> 1);
 		Vector2[] problems = new Vector2[TOTAL];
@@ -185,12 +192,73 @@ public class CuckooTest {
 				problems[i++] = new Vector2(x, y);
 			}
 		}
-		System.out.println("Trying to enter " + problems.length + " Vector2 keys into a ObjectObjectMap.");
+		System.out.println("Trying to enter " + problems.length + " Vector2 keys into an ObjectObjectMap.");
 		for (int i = 0; i < problems.length; i++) {
-			System.out.println("Entered " + i + " keys successfully.");
+//			System.out.println("Entered " + i + " keys successfully.");
 			map.put(problems[i], null);
 		}
-		System.out.println("Succeeded; finished ObjectObjectMap has size: " + map.size());
+		System.out.println("Succeeded in " + Math.round((System.nanoTime() - startTime) * 1E-6) +
+			" ms; finished ObjectObjectMap has size: " + map.size());
+	}
+
+	@Test
+	public void vectorHashMapTest(){
+		final long startTime = System.nanoTime();
+		HashMap<Vector2, Object> map = new HashMap<>();
+		final int LIMIT = 20, TOTAL = 1 << LIMIT, BOUND = 1 << (LIMIT - 2 >>> 1);
+		Vector2[] problems = new Vector2[TOTAL];
+		for (int x = -BOUND, i = 0; x < BOUND; x++) {
+			for (int y = -BOUND; y < BOUND; y++) {
+				problems[i++] = new Vector2(x, y);
+			}
+		}
+		System.out.println("Trying to enter " + problems.length + " Vector2 keys into a HashMap.");
+		for (int i = 0; i < problems.length; i++) {
+//			System.out.println("Entered " + i + " keys successfully.");
+			map.put(problems[i], null);
+		}
+		System.out.println("Succeeded in " + Math.round((System.nanoTime() - startTime) * 1E-6) +
+			" ms; finished HashMap has size: " + map.size());
+	}
+
+	//681 ms at LIMIT=22
+	//1555 ms at LIMIT=23
+	@Test
+	public void identityLinearTest(){
+		final long startTime = System.nanoTime();
+		final int LIMIT = 22, TOTAL = 1 << LIMIT;
+		ObjectObjectMap<Object, Object> map = new ObjectObjectMap<>(TOTAL);
+		Object[] problems = new Object[TOTAL];
+		for (int x = 0, i = 0; x < TOTAL; x++) {
+			problems[i++] = new Object();
+		}
+		System.out.println("Trying to enter " + problems.length + " Object keys into an ObjectObjectMap.");
+		for (int i = 0; i < problems.length; i++) {
+//			System.out.println("Entered " + i + " keys successfully.");
+			map.put(problems[i], null);
+		}
+		System.out.println("Succeeded in " + Math.round((System.nanoTime() - startTime) * 1E-6) +
+			" ms; finished ObjectObjectMap has size: " + map.size());
+	}
+
+	//1435 ms at LIMIT=22
+	//3002 ms at LIMIT=23
+	@Test
+	public void identityHashMapTest(){
+		final long startTime = System.nanoTime();
+		final int LIMIT = 22, TOTAL = 1 << LIMIT;
+		HashMap<Object, Object> map = new HashMap<>(TOTAL);
+		Object[] problems = new Object[TOTAL];
+		for (int x = 0, i = 0; x < TOTAL; x++) {
+			problems[i++] = new Object();
+		}
+		System.out.println("Trying to enter " + problems.length + " Object keys into an HashMap.");
+		for (int i = 0; i < problems.length; i++) {
+//			System.out.println("Entered " + i + " keys successfully.");
+			map.put(problems[i], null);
+		}
+		System.out.println("Succeeded in " + Math.round((System.nanoTime() - startTime) * 1E-6) +
+			" ms; finished HashMap has size: " + map.size());
 	}
 
 	/**
