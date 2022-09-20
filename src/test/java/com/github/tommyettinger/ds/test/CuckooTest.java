@@ -1,10 +1,11 @@
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.IdentityObjectMap;
 import com.github.tommyettinger.ds.ObjectObjectMap;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 
 //@Ignore
 public class CuckooTest {
@@ -224,7 +225,7 @@ public class CuckooTest {
 	//681 ms at LIMIT=22
 	//1555 ms at LIMIT=23
 	@Test
-	public void identityLinearTest(){
+	public void blankLinearTest (){
 		final long startTime = System.nanoTime();
 		final int LIMIT = 22, TOTAL = 1 << LIMIT;
 		ObjectObjectMap<Object, Object> map = new ObjectObjectMap<>(TOTAL);
@@ -244,7 +245,7 @@ public class CuckooTest {
 	//1435 ms at LIMIT=22
 	//3002 ms at LIMIT=23
 	@Test
-	public void identityHashMapTest(){
+	public void blankHashMapTest (){
 		final long startTime = System.nanoTime();
 		final int LIMIT = 22, TOTAL = 1 << LIMIT;
 		HashMap<Object, Object> map = new HashMap<>(TOTAL);
@@ -259,6 +260,46 @@ public class CuckooTest {
 		}
 		System.out.println("Succeeded in " + Math.round((System.nanoTime() - startTime) * 1E-6) +
 			" ms; finished HashMap has size: " + map.size());
+	}
+
+	//630 ms at LIMIT=22
+	//1314 ms at LIMIT=23
+	@Test
+	public void blankIdentityTest (){
+		final long startTime = System.nanoTime();
+		final int LIMIT = 23, TOTAL = 1 << LIMIT;
+		IdentityObjectMap<Object, Object> map = new IdentityObjectMap<>(TOTAL);
+		Object[] problems = new Object[TOTAL];
+		for (int x = 0, i = 0; x < TOTAL; x++) {
+			problems[i++] = new Object();
+		}
+		System.out.println("Trying to enter " + problems.length + " Object keys into an IdentityObjectMap.");
+		for (int i = 0; i < problems.length; i++) {
+//			System.out.println("Entered " + i + " keys successfully.");
+			map.put(problems[i], null);
+		}
+		System.out.println("Succeeded in " + Math.round((System.nanoTime() - startTime) * 1E-6) +
+			" ms; finished IdentityObjectMap has size: " + map.size());
+	}
+
+	//681 ms at LIMIT=22
+	//1401 ms at LIMIT=23
+	@Test
+	public void blankIdentityHashMapTest (){
+		final long startTime = System.nanoTime();
+		final int LIMIT = 23, TOTAL = 1 << LIMIT;
+		IdentityHashMap<Object, Object> map = new IdentityHashMap<>(TOTAL);
+		Object[] problems = new Object[TOTAL];
+		for (int x = 0, i = 0; x < TOTAL; x++) {
+			problems[i++] = new Object();
+		}
+		System.out.println("Trying to enter " + problems.length + " Object keys into an IdentityHashMap.");
+		for (int i = 0; i < problems.length; i++) {
+//			System.out.println("Entered " + i + " keys successfully.");
+			map.put(problems[i], null);
+		}
+		System.out.println("Succeeded in " + Math.round((System.nanoTime() - startTime) * 1E-6) +
+			" ms; finished IdentityHashMap has size: " + map.size());
 	}
 
 	/**

@@ -22,15 +22,15 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * A variant on {@link ObjectObjectOrderedMap} that compares keys by identity (using {@code ==}) instead of equality (using
- * {@code equals()}). It also hashes with {@link System#identityHashCode(Object)} instead of calling the {@code hashCode()} of a key.
- * This can be useful in some cases where keys may have invalid {@link Object#equals(Object)} and/or {@link Object#hashCode()}
- * implementations, or if keys could be very large (making a hashCode() that uses all the items in the key slow). Oddly,
- * {@link System#identityHashCode(Object)} tends to be slower than the hashCode() for most small keys, because an explicitly-written
- * hashCode() typically doesn't need to do anything concurrently, but identityHashCode() needs to (concurrently) modify an internal JVM
- * variable that ensures the results are unique, which requires the JVM to do lots of extra work whenever identityHashCode() is called
- * (but it doesn't depend on the quantity of variables in the key, so identityHashCode() gets relatively faster for larger keys). The
- * equals() method also tends to slow down for large keys, relative to the constant-time {@code ==} this uses.
+ * A variant on {@link ObjectObjectOrderedMap} that compares keys by identity (using {@code ==}) instead of equality (using equals()}).
+ * It also hashes with {@link System#identityHashCode(Object)} instead of calling the {@code hashCode()} of a key. This can be useful in
+ * some cases where keys may have invalid {@link Object#equals(Object)} and/or {@link Object#hashCode()} implementations, or if keys could
+ * be very large (making a hashCode() that uses all the items in the key slow). Oddly, {@link System#identityHashCode(Object)} tends to
+ * be slower than the hashCode() for most small keys, because an explicitly-written hashCode() typically doesn't need to do anything
+ * concurrently, but identityHashCode() needs to (concurrently) modify an internal JVM variable that ensures the results are unique, and
+ * that requires the JVM to do lots of extra work whenever identityHashCode() is called. Despite that, identityHashCode() doesn't depend
+ * on the quantity of variables in the key, so identityHashCode() gets relatively faster for larger keys. The equals() method used by
+ * ObjectObjectOrderedMap also tends to slow down for large keys, relative to the constant-time {@code ==} this uses.
  * <br>
  * Note that the {@link #entrySet()}, {@link #keySet()} and individual Entry items this
  * produces are those of an {@link ObjectObjectOrderedMap}, and so do not compare by identity.
@@ -137,7 +137,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 */
 	@Override
 	protected int place (Object item) {
-		return (System.identityHashCode(item) + (int)(hashMultiplier >>> 32) & mask);
+		return (System.identityHashCode(item) & mask);
 	}
 
 	@Override

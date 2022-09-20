@@ -27,10 +27,10 @@ import java.util.Map;
  * some cases where keys may have invalid {@link Object#equals(Object)} and/or {@link Object#hashCode()} implementations, or if keys could
  * be very large (making a hashCode() that uses all the items in the key slow). Oddly, {@link System#identityHashCode(Object)} tends to
  * be slower than the hashCode() for most small keys, because an explicitly-written hashCode() typically doesn't need to do anything
- * concurrently, but identityHashCode() needs to (concurrently) modify an internal JVM variable that ensures the results are unique, which
- * requires the JVM to do lots of extra work whenever identityHashCode() is called (but it doesn't depend on the quantity of variables in
- * the key, so identityHashCode() gets relatively faster for larger keys). The equals() method also tends to slow down for large keys,
- * relative to the constant-time {@code ==} this uses.
+ * concurrently, but identityHashCode() needs to (concurrently) modify an internal JVM variable that ensures the results are unique, and
+ * that requires the JVM to do lots of extra work whenever identityHashCode() is called. Despite that, identityHashCode() doesn't depend
+ * on the quantity of variables in the key, so identityHashCode() gets relatively faster for larger keys. The equals() method used by
+ * ObjectObjectMap also tends to slow down for large keys, relative to the constant-time {@code ==} this uses.
  * <br>
  * Note that the {@link #entrySet()}, {@link #keySet()} and individual Entry items this produces are those of an {@link ObjectObjectMap},
  * and so do not compare by identity.
@@ -115,7 +115,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 */
 	@Override
 	protected int place (Object item) {
-		return (System.identityHashCode(item) + (int)(hashMultiplier >>> 32) & mask);
+		return (System.identityHashCode(item) & mask);
 	}
 
 	@Override
