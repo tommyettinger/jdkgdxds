@@ -87,7 +87,11 @@ public final class Utilities {
 		return tableSize;
 	}
 
-	static final Object neverIdentical = new Object();
+	/**
+	 * A placeholder Object that should never be reference-equivalent to any Object used as a key or value. This is only public
+	 * so data structures can use it for comparisons; never put it into a data structure.
+	 */
+	public static final Object neverIdentical = new Object();
 
 	/**
 	 * A float that is meant to be used as the smallest reasonable tolerance for methods like {@link #isEqual(float, float, float)}.
