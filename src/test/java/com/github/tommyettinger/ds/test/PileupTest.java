@@ -188,6 +188,168 @@ public class PileupTest {
         set.clear();
     }
 
+    @Test
+    public void testObjectQuadSet() {
+        long start = System.nanoTime();
+        ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
+            long collisionTotal = 0;
+            int longestPileup = 0;
+
+            @Override
+            protected void addResize (@Nonnull Object key) {
+                Object[] keyTable = this.keyTable;
+                for (int i = place(key), dist = 0; ; i = i + dist * dist & mask) {
+                    if (keyTable[i] == null) {
+                        keyTable[i] = key;
+                        return;
+                    } else {
+                        collisionTotal++;
+                        longestPileup = Math.max(longestPileup, ++dist);
+                    }
+                }
+            }
+
+            @Override
+            protected void resize (int newSize) {
+                int oldCapacity = keyTable.length;
+                threshold = (int)(newSize * loadFactor);
+                mask = newSize - 1;
+                shift = Long.numberOfLeadingZeros(mask);
+
+                // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
+                // Pseudorandom Number Generators
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+                // ensures hashMultiplier is never too small, and is always odd
+//                hashMultiplier |= 0x0000010000000001L;
+
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+                Object[] oldKeyTable = keyTable;
+
+                keyTable = new Object[newSize];
+
+                collisionTotal = 0;
+                longestPileup = 0;
+
+                if (size > 0) {
+                    for (int i = 0; i < oldCapacity; i++) {
+                        Object key = oldKeyTable[i];
+                        if (key != null) {addResize(key);}
+                    }
+                }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                super.clear();
+            }
+        };
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
+//        }
+        String[] words = generateUniqueWords(LEN);
+        for (int i = 0; i < LEN; i++) {
+            set.add(words[i]);
+        }
+        System.out.println(System.nanoTime() - start);
+        set.clear();
+    }
+
+    @Test
+    public void testObjectQuadSetSimplePlace() {
+        long start = System.nanoTime();
+        ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
+            long collisionTotal = 0;
+            int longestPileup = 0;
+
+            @Override
+            protected int place (Object item) {
+                final int h = item.hashCode();
+                return (h >>> shift) ^ (h & mask);
+            }
+
+            @Override
+            protected void addResize (@Nonnull Object key) {
+                Object[] keyTable = this.keyTable;
+                for (int i = place(key), dist = 0; ; i = i + dist * dist & mask) {
+                    if (keyTable[i] == null) {
+                        keyTable[i] = key;
+                        return;
+                    } else {
+                        collisionTotal++;
+                        longestPileup = Math.max(longestPileup, ++dist);
+                    }
+                }
+            }
+
+            @Override
+            protected void resize (int newSize) {
+                int oldCapacity = keyTable.length;
+                threshold = (int)(newSize * loadFactor);
+                mask = newSize - 1;
+                shift = Long.numberOfLeadingZeros(mask);
+
+                // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
+                // Pseudorandom Number Generators
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+                // ensures hashMultiplier is never too small, and is always odd
+//                hashMultiplier |= 0x0000010000000001L;
+
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+                Object[] oldKeyTable = keyTable;
+
+                keyTable = new Object[newSize];
+
+                collisionTotal = 0;
+                longestPileup = 0;
+
+                if (size > 0) {
+                    for (int i = 0; i < oldCapacity; i++) {
+                        Object key = oldKeyTable[i];
+                        if (key != null) {addResize(key);}
+                    }
+                }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                super.clear();
+            }
+        };
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
+//        }
+        String[] words = generateUniqueWords(LEN);
+        for (int i = 0; i < LEN; i++) {
+            set.add(words[i]);
+        }
+        System.out.println(System.nanoTime() - start);
+        set.clear();
+    }
+
     private static class BadString implements CharSequence {
         public CharSequence text;
         public BadString () {
