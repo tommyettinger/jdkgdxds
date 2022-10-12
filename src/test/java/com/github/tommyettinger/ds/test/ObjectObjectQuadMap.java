@@ -279,7 +279,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 */
 	protected int locateKey (Object key) {
 		K[] keyTable = this.keyTable;
-		for (int i = place(key), dist = 0; ; i = i + ++dist * dist & mask) {
+		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			K other = keyTable[i];
 			if (equate(key, other))
 				return i; // Same key was found.
@@ -384,7 +384,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 */
 	protected void putResize (K key, @Nullable V value) {
 		K[] keyTable = this.keyTable;
-		for (int i = place(key), dist = 0; ; i = i + ++dist * dist & mask) {
+		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
 				valueTable[i] = value;
@@ -405,7 +405,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	@Nullable
 	public V get (Object key) {
 		K[] keyTable = this.keyTable;
-		for (int i = place(key), dist = 0; ; i = i + ++dist * dist & mask) {
+		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			K other = keyTable[i];
 			if (equate(key, other))
 				return valueTable[i];
@@ -421,7 +421,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	@Nullable
 	public V getOrDefault (Object key, @Nullable V defaultValue) {
 		K[] keyTable = this.keyTable;
-		for (int i = place(key), dist = 0; ; i = i + ++dist * dist & mask) {
+		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			K other = keyTable[i];
 			if (equate(key, other))
 				return valueTable[i];
@@ -587,7 +587,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	@Override
 	public boolean containsKey (Object key) {
 		K[] keyTable = this.keyTable;
-		for (int i = place(key), dist = 0; ; i = i + ++dist * dist & mask) {
+		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			K other = keyTable[i];
 			if (equate(key, other))
 				return true;

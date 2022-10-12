@@ -90,6 +90,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * hash.
 	 */
 	protected int mask;
+
 	@Nullable protected transient ObjectSetIterator<T> iterator1;
 	@Nullable protected transient ObjectSetIterator<T> iterator2;
 
@@ -233,7 +234,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 */
 	protected int locateKey (Object key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key), dist = 0; ; i = i + ++dist * dist & mask) {
+		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			T other = keyTable[i];
 			if (equate(key, other))
 				return i; // Same key was found.
@@ -249,7 +250,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	@Override
 	public boolean add (T key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key), dist = 0; ; i = i + ++dist * dist & mask) {
+		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			T other = keyTable[i];
 			if (equate(key, other))
 				return false; // Existing key was found.
@@ -324,7 +325,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 */
 	protected void addResize (T key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key), dist = 0; ; i = i + ++dist * dist & mask) {
+		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
 				return;
@@ -421,7 +422,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	@Override
 	public boolean contains (Object key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key), dist = 0; ; i = i + ++dist * dist & mask) {
+		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			T other = keyTable[i];
 			if (equate(key, other))
 				return true;
@@ -433,7 +434,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	@Nullable
 	public T get (T key) {
 		T[] keyTable = this.keyTable;
-		for (int i = place(key), dist = 0; ; i = i + ++dist * dist & mask) {
+		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			T other = keyTable[i];
 			if (equate(key, other))
 				return other;
