@@ -272,11 +272,11 @@ public class PileupTest {
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
             int longestPileup = 0;
+            int hm = 0x13C6ED;
 
             @Override
             protected int place (Object item) {
-                final int h = item.hashCode();
-                return (h >>> shift) ^ (h & mask);
+                return item.hashCode() * hm & mask;
             }
 
             @Override
@@ -310,6 +310,7 @@ public class PileupTest {
                 // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
                 hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
+                hm = (hm + size + size ^ 0xC79E7B18) * 0x13C6EB & 0x1FFFFF; //0x11357B 0x13C6EB
                 Object[] oldKeyTable = keyTable;
 
                 keyTable = new Object[newSize];
@@ -323,14 +324,14 @@ public class PileupTest {
                         if (key != null) {addResize(key);}
                     }
                 }
-                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hm) + " with new size " + newSize);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
             }
 
             @Override
             public void clear () {
-                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hm) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
                 super.clear();
