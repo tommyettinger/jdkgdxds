@@ -37,7 +37,7 @@ public class PileupTest {
         return set.toArray(new String[0]);
     }
 
-//    @Ignore
+    @Ignore // this test takes much longer to run than the others here (over a minute; everything else is under a second).
     @Test
     public void testObjectSetOld() {
         long start = System.nanoTime();
@@ -216,15 +216,9 @@ public class PileupTest {
                 mask = newSize - 1;
                 shift = Long.numberOfLeadingZeros(mask);
 
-                // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
-                // Pseudorandom Number Generators
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-                // ensures hashMultiplier is never too small, and is always odd
-//                hashMultiplier |= 0x0000010000000001L;
-
-                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
-                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+                // we modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
+                // we incorporate the size in here (times 2, so it doesn't make the multiplier even) to randomize things more.
+                hashMultiplier = (hashMultiplier + size + size ^ 0xC79E7B18) * 0x13C6EB & 0x1FFFFF;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -619,15 +613,9 @@ public class PileupTest {
                 mask = newSize - 1;
                 shift = Long.numberOfLeadingZeros(mask);
 
-                // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
-                // Pseudorandom Number Generators
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-                // ensures hashMultiplier is never too small, and is always odd
-//                hashMultiplier |= 0x0000010000000001L;
-
-                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
-                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+                // we modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
+                // we incorporate the size in here (times 2, so it doesn't make the multiplier even) to randomize things more.
+                hashMultiplier = (hashMultiplier + size + size ^ 0xC79E7B18) * 0x13C6EB & 0x1FFFFF;
 
                 Object[] oldKeyTable = keyTable;
 

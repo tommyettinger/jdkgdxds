@@ -87,7 +87,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
 	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectObjectOrderedMap}.
 	 */
-	protected long hashMultiplier = 0x9E3779B97F4A7C15L;
+	protected int hashMultiplier = 0x13C6ED;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
@@ -250,7 +250,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (Object item) {
-		return (int)(item.hashCode() * hashMultiplier >>> shift);
+		return (item.hashCode() * hashMultiplier & mask);
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
 	}
@@ -657,9 +657,9 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-		// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
-		// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-		hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+		// we modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
+		// we incorporate the size in here (times 2, so it doesn't make the multiplier even) to randomize things more.
+		hashMultiplier = (hashMultiplier + size + size ^ 0xC79E7B18) * 0x13C6EB & 0x1FFFFF;
 
 		K[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;
