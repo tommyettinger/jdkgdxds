@@ -1096,4 +1096,93 @@ public class PileupTest {
         set.clear();
     }
 
+
+    @Test
+    public void testVector2SetExhaustive() {
+        final Vector2[] words = generateVectorSpiral(LEN);
+
+        for (int a = 1; a < 32; a++) {
+            for (int b = a + 1; b < 32; b++) {
+                final int hashShiftA = a, hashShiftB = b;
+                ObjectSet set = new ObjectSet(51, 0.6f) {
+                    long collisionTotal = 0;
+                    int longestPileup = 0;
+
+                    @Override
+                    protected int place (Object item) {
+                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
+                        return (h ^ h >>> hashShiftA ^ h >>> hashShiftB) & mask;
+                    }
+
+                    @Override
+                    protected void addResize (@Nonnull Object key) {
+                        Object[] keyTable = this.keyTable;
+                        for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                            if (keyTable[i] == null) {
+                                keyTable[i] = key;
+                                return;
+                            } else {
+                                collisionTotal++;
+                                longestPileup = Math.max(longestPileup, ++p);
+                            }
+                        }
+                    }
+
+                    @Override
+                    protected void resize (int newSize) {
+                        int oldCapacity = keyTable.length;
+                        threshold = (int)(newSize * loadFactor);
+                        mask = newSize - 1;
+                        shift = Long.numberOfLeadingZeros(mask);
+
+                        hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+                        Object[] oldKeyTable = keyTable;
+
+                        keyTable = new Object[newSize];
+
+                        collisionTotal = 0;
+                        longestPileup = 0;
+
+                        if (size > 0) {
+                            for (int i = 0; i < oldCapacity; i++) {
+                                Object key = oldKeyTable[i];
+                                if (key != null) {addResize(key);}
+                            }
+                        }
+                        if(collisionTotal > 1850000L) throw new RuntimeException();
+//                        System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+//                        System.out.println("total collisions: " + collisionTotal);
+//                        System.out.println("longest pileup: " + longestPileup);
+                    }
+
+                    @Override
+                    public void clear () {
+                        if(collisionTotal < 1800000L || longestPileup < 45) {
+                            System.out.println("shifts: a " + hashShiftA + ", b " + hashShiftB);
+                            System.out.println("total collisions: " + collisionTotal);
+                            System.out.println("longest pileup: " + longestPileup);
+                        }
+                        super.clear();
+                    }
+                };
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
+//        }
+                try {
+                    for (int i = 0; i < LEN; i++) {
+                        set.add(words[i]);
+                    }
+                }catch (RuntimeException ignored){
+                    continue;
+                }
+//        System.out.println(System.nanoTime() - start);
+                set.clear();
+            }
+        }
+    }
+
 }
