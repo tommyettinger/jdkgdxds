@@ -63,7 +63,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		it = data.listIterator();
-		WhiskerRandom random = new WhiskerRandom(1234567890L);
+		WhiskerRandom random = new WhiskerRandom(12345678901L);
 		while (it.hasNext()) {
 			String item = it.next();
 			if(random.nextBoolean()) {
@@ -87,6 +87,16 @@ public class IteratorTest {
 				System.out.println("Not removing " + item);
 		}
 		Assert.assertEquals(data.size(), counter);
+		System.out.println("\n Going forwards now...\n");
+		while (it.hasNext()) {
+			String item = it.next();
+			if(random.nextBoolean()) {
+				System.out.println("Changing " + item);
+				it.set(item.toUpperCase());
+			} else
+				System.out.println("Not changing " + item);
+		}
+		Assert.assertEquals("[BETA, eta, THETA, IOTA, KAPPA, tau, CHI]", data.toString());
 	}
 
 	/**
@@ -109,7 +119,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		it = data.listIterator();
-		WhiskerRandom random = new WhiskerRandom(1234567890L);
+		WhiskerRandom random = new WhiskerRandom(12345678901L);
 		while (it.hasNext()) {
 			String item = it.next();
 			if(random.nextBoolean()) {
@@ -131,6 +141,17 @@ public class IteratorTest {
 				System.out.println("Not removing " + item);
 		}
 		Assert.assertEquals(data.size(), counter);
+		Assert.assertEquals(data.size(), counter);
+		System.out.println("\n Going forwards now...\n");
+		while (it.hasNext()) {
+			String item = it.next();
+			if(random.nextBoolean()) {
+				System.out.println("Changing " + item);
+				it.set(item.toUpperCase());
+			} else
+				System.out.println("Not changing " + item);
+		}
+		Assert.assertEquals("[BETA, eta, THETA, IOTA, KAPPA, tau, CHI]", data.toString());
 	}
 
 	@Test
