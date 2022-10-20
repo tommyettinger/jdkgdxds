@@ -6,10 +6,13 @@ import com.github.tommyettinger.ds.support.util.ByteIterator;
 import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
+import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.PrimitiveIterator;
 
@@ -53,12 +56,81 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		Iterator<String> it = data.iterator();
+		ListIterator<String> it = data.listIterator();
 		while (it.hasNext()) {
 			String item = it.next();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
+		it = data.listIterator();
+		WhiskerRandom random = new WhiskerRandom(1234567890L);
+		while (it.hasNext()) {
+			String item = it.next();
+			if(random.nextBoolean()) {
+				System.out.println("Removing " + item);
+				it.remove();
+				--counter;
+			} else
+				System.out.println("Not removing " + item);
+		}
+		Assert.assertEquals(data.size(), counter);
+		System.out.println("\n Going backwards now...\n");
+		while (it.hasPrevious()) {
+			String item = it.previous();
+			if(random.nextBoolean()) {
+				System.out.println("Removing " + item);
+				System.out.println("Before: " + data);
+				it.remove();
+				System.out.println("After: " + data);
+				--counter;
+			} else
+				System.out.println("Not removing " + item);
+		}
+		Assert.assertEquals(data.size(), counter);
+	}
+
+	/**
+	 * We just use this to verify the behavior of a correct List implementation and its iterators.
+	 */
+	@Test
+	public void testArrayListIterator() {
+		ArrayList<String> data = new ArrayList<>(ObjectList.with(strings));
+		int counter = 0, size = data.size();
+		for(String item : data){
+			Assert.assertNotNull(item);
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		counter = 0;
+		ListIterator<String> it = data.listIterator();
+		while (it.hasNext()) {
+			String item = it.next();
+			++counter;
+		}
+		Assert.assertEquals(size, counter);
+		it = data.listIterator();
+		WhiskerRandom random = new WhiskerRandom(1234567890L);
+		while (it.hasNext()) {
+			String item = it.next();
+			if(random.nextBoolean()) {
+				System.out.println("Removing " + item);
+				it.remove();
+				--counter;
+			} else
+				System.out.println("Not removing " + item);
+		}
+		Assert.assertEquals(data.size(), counter);
+		System.out.println("\n Going backwards now...\n");
+		while (it.hasPrevious()) {
+			String item = it.previous();
+			if(random.nextBoolean()) {
+				System.out.println("Removing " + item);
+				it.remove();
+				--counter;
+			} else
+				System.out.println("Not removing " + item);
+		}
+		Assert.assertEquals(data.size(), counter);
 	}
 
 	@Test

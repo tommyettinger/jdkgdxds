@@ -542,7 +542,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	public static class ObjectListIterator<T> implements Iterable<T>, ListIterator<T> {
-		protected int index = 0;
+		protected int index = -1;
 		protected ObjectList<T> list;
 		protected boolean valid = true;
 
@@ -554,7 +554,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("ObjectListIterator does not satisfy index >= 0 && index < list.size()");
 			this.list = list;
-			this.index = index;
+			this.index = index - 1;
 		}
 
 		/**
@@ -567,7 +567,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		public T next () {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index >= list.size()) {throw new NoSuchElementException();}
-			return list.get(index++);
+			return list.get(++index);
 		}
 
 		/**
@@ -580,7 +580,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		@Override
 		public boolean hasNext () {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			return index < list.size();
+			return index + 1 < list.size();
 		}
 
 		/**
@@ -628,7 +628,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 */
 		@Override
 		public int nextIndex () {
-			return index;
+			return index + 1;
 		}
 
 		/**
@@ -663,7 +663,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		public void remove () {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index >= list.size()) {throw new NoSuchElementException();}
-			list.removeAt(index);
+			list.removeAt(index--);
 		}
 
 		/**
@@ -722,13 +722,13 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		}
 
 		public void reset () {
-			index = 0;
+			index = -1;
 		}
 
 		public void reset (int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("ObjectListIterator does not satisfy index >= 0 && index < list.size()");
-			this.index = index;
+			this.index = index - 1;
 		}
 
 		/**
