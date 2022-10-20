@@ -267,16 +267,17 @@ public class PileupTest {
             long collisionTotal = 0;
             int longestPileup = 0;
 
-//            @Override
-//            protected int place (Object item) {
+            @Override
+            protected int place (Object item) {
 //                return (item.hashCode() * hashMultiplier >>> shift); // what we're using now
-////                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift); // actually does very poorly here
-////                return (item.hashCode() * (0x1827F5) >>> shift); // not as good as...
-////                return (item.hashCode() * (0x13C6ED) >>> shift); // ... this one, for some reason
-////                return (item.hashCode() & mask); // only good if the hashCode is already a high-quality random number
-////                final int h = item.hashCode();
-////                return (h ^ h >>> 11 ^ h >>> 21) & mask; // eh, maybe? a few more collisions than ideal
-//            }
+//                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift); // actually does very poorly here
+                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // does extremely well???
+//                return (item.hashCode() * (0x1827F5) >>> shift); // not as good as...
+//                return (item.hashCode() * (0x13C6ED) >>> shift); // ... this one, for some reason
+//                return (item.hashCode() & mask); // only good if the hashCode is already a high-quality random number
+//                final int h = item.hashCode();
+//                return (h ^ h >>> 11 ^ h >>> 21) & mask; // eh, maybe? a few more collisions than ideal
+            }
 
             @Override
             protected void addResize (@Nonnull Object key) {
@@ -422,6 +423,97 @@ public class PileupTest {
 //                set.add(new Vector2(x, y));
 //            }
 //        }
+
+        String[] words = generateUniqueWords(LEN);
+        for (int i = 0; i < LEN; i++) {
+            set.add(words[i]);
+        }
+        System.out.println(System.nanoTime() - start);
+        set.clear();
+    }
+
+    @Test
+    public void testObjectSetIntPlace() {
+        long start = System.nanoTime();
+        ObjectSet set = new ObjectSet(51, 0.6f) {
+            long collisionTotal = 0;
+            int longestPileup = 0;
+            int hm = 0x13C6ED;
+
+            @Override
+            protected int place (Object item) {
+                return item.hashCode() * hm >>> shift;
+            }
+
+            @Override
+            protected void addResize (@Nonnull Object key) {
+                Object[] keyTable = this.keyTable;
+                for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                    if (keyTable[i] == null) {
+                        keyTable[i] = key;
+                        return;
+                    } else {
+                        collisionTotal++;
+                        longestPileup = Math.max(longestPileup, ++p);
+                    }
+                }
+            }
+
+            @Override
+            protected void resize (int newSize) {
+                int oldCapacity = keyTable.length;
+                threshold = (int)(newSize * loadFactor);
+                mask = newSize - 1;
+                shift = Long.numberOfLeadingZeros(mask);
+
+                // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
+                // Pseudorandom Number Generators
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+                // ensures hashMultiplier is never too small, and is always odd
+//                hashMultiplier |= 0x0000010000000001L;
+
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
+                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
+                // hex digit 5 or D -- this makes it a valid power-of-two-modulus MCG multiplier, which might help a bit. We also always
+                // set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
+                hm = ((hm + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
+                Object[] oldKeyTable = keyTable;
+
+                keyTable = new Object[newSize];
+
+                collisionTotal = 0;
+                longestPileup = 0;
+
+                if (size > 0) {
+                    for (int i = 0; i < oldCapacity; i++) {
+                        Object key = oldKeyTable[i];
+                        if (key != null) {addResize(key);}
+                    }
+                }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hm) + " with new size " + newSize);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hm) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                super.clear();
+            }
+        };
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
+//        }
+
         String[] words = generateUniqueWords(LEN);
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
