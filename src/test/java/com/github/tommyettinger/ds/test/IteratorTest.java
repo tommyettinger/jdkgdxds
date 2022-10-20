@@ -90,13 +90,16 @@ public class IteratorTest {
 		System.out.println("\n Going forwards now...\n");
 		while (it.hasNext()) {
 			String item = it.next();
-			if(random.nextBoolean()) {
+			if (random.nextBoolean()) {
 				System.out.println("Changing " + item);
 				it.set(item.toUpperCase());
-			} else
-				System.out.println("Not changing " + item);
+			} else {
+				System.out.println("Adding :)");
+				it.add(":)");
+			}
 		}
-		Assert.assertEquals("[BETA, eta, THETA, IOTA, KAPPA, tau, CHI]", data.toString());
+		System.out.println(data);
+		Assert.assertEquals("[BETA, eta, :), THETA, IOTA, KAPPA, tau, :), CHI]", data.toString());
 	}
 
 	/**
@@ -145,13 +148,16 @@ public class IteratorTest {
 		System.out.println("\n Going forwards now...\n");
 		while (it.hasNext()) {
 			String item = it.next();
-			if(random.nextBoolean()) {
+			if (random.nextBoolean()) {
 				System.out.println("Changing " + item);
 				it.set(item.toUpperCase());
-			} else
-				System.out.println("Not changing " + item);
+			} else {
+				System.out.println("Adding :)");
+				it.add(":)");
+			}
 		}
-		Assert.assertEquals("[BETA, eta, THETA, IOTA, KAPPA, tau, CHI]", data.toString());
+		System.out.println(data);
+		Assert.assertEquals("[BETA, eta, :), THETA, IOTA, KAPPA, tau, :), CHI]", data.toString());
 	}
 
 	@Test
