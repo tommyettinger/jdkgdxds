@@ -870,10 +870,23 @@ public class PileupTest {
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
             int longestPileup = 0;
+
+            int hashAddend = 0xD1B54A32;
             @Override
             protected int place (Object item) {
-                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift);
-//                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+//                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // total collisions: 2695641,    longest pileup: 41
+//                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift); // total collisions: 5949677,    longest pileup: 65
+//                return (item.hashCode() & mask);                               // total collisions: 2783028662, longest pileup: 25751
+                final int h = item.hashCode() + hashAddend;
+//                return (h ^ h >>> 12 ^ h >>> 22) & mask;                       // total collisions: 1786887, longest pileup: 35
+                return (h ^ h >>> 10 ^ h >>> 18) & mask;                       // total collisions: 1779695, longest pileup: 62
+//                return (h ^ h >>> 12 ^ h >>> 23) & mask;                       // total collisions: 1799252, longest pileup: 43
+//                return (h ^ h >>> 13 ^ h >>> 14) & mask;                       // total collisions: 1805792, longest pileup: 27 (slow?)
+//                return (h ^ h >>> 11 ^ h >>> 21) & mask;                       // total collisions: 3691850, longest pileup: 101
+//                return (h ^ h >>> 11 ^ h >>> 23) & mask;                       // total collisions: 1849222, longest pileup: 59
+//                return (h ^ h >>> 9 ^ h >>> 25) & mask;                        // total collisions: 2027066, longest pileup: 36
+//                return (h & mask) ^ (h * (0x1A36A9) >>> shift);                // total collisions: 1847298, longest pileup: 47
+//                return (h & mask) ^ (h >>> shift);                             // total collisions: 1998198, longest pileup: 61
             }
 
             @Override
@@ -896,6 +909,8 @@ public class PileupTest {
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
                 shift = Long.numberOfLeadingZeros(mask);
+
+                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -981,7 +996,10 @@ public class PileupTest {
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;//0x59E3779B97F4A7C1L;
 //                hashMultiplier *= MathTools.GOLDEN_LONGS[size & 1023];
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+                // was using this in many tests
                 hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+//                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xE19B01AA9D42C631L) * 0xF1357AEA2E62A9C5L); // | 0x8000000000000000L; // + 0xC13FA9A902A6328EL
 
                 Object[] oldKeyTable = keyTable;
 
