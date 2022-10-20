@@ -842,5 +842,98 @@ public class PileupTest {
         System.out.println(System.nanoTime() - start);
         set.clear();
     }
+    /**
+     * Thanks to Jonathan M, <a href="https://stackoverflow.com/a/20591835">on Stack Overflow</a>.
+     * @param size
+     * @return
+     */
+    public static Vector2[] generateVectorSpiral(int size) {
+        Vector2[] result = new Vector2[size];
+        for (int root = 0, index = 0; ; ++root) {
+            for (int limit = index + root + root; index <= limit;) {
+                final int sign = -(root & 1);
+                final int big = (root * (root + 1)) - index << 1;
+                final int y = ((root + 1 >> 1) + sign ^ sign) + ((sign ^ sign + Math.min(big, 0)) >> 1);
+                final int x = ((root + 1 >> 1) + sign ^ sign) - ((sign ^ sign + Math.max(big, 0)) >> 1);
+                result[index] = new Vector2(x, y);
+                if(++index >= size) return result;
+            }
+        }
+    }
+
+
+    @Test
+    public void testVector2SetOld() {
+        final Vector2[] words = generateVectorSpiral(LEN);
+        long start = System.nanoTime();
+        // replicates old ObjectSet behavior, with added logging
+        ObjectSet set = new ObjectSet(51, 0.6f) {
+            long collisionTotal = 0;
+            int longestPileup = 0;
+            @Override
+            protected int place (Object item) {
+                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift);
+//                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+            }
+
+            @Override
+            protected void addResize (@Nonnull Object key) {
+                Object[] keyTable = this.keyTable;
+                for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                    if (keyTable[i] == null) {
+                        keyTable[i] = key;
+                        return;
+                    } else {
+                        collisionTotal++;
+                        longestPileup = Math.max(longestPileup, ++p);
+                    }
+                }
+            }
+
+            @Override
+            protected void resize (int newSize) {
+                int oldCapacity = keyTable.length;
+                threshold = (int)(newSize * loadFactor);
+                mask = newSize - 1;
+                shift = Long.numberOfLeadingZeros(mask);
+
+                Object[] oldKeyTable = keyTable;
+
+                keyTable = new Object[newSize];
+
+                collisionTotal = 0;
+                longestPileup = 0;
+
+                if (size > 0) {
+                    for (int i = 0; i < oldCapacity; i++) {
+                        Object key = oldKeyTable[i];
+                        if (key != null) {addResize(key);}
+                    }
+                }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                super.clear();
+            }
+        };
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
+//        }
+        for (int i = 0; i < LEN; i++) {
+            set.add(words[i]);
+        }
+        System.out.println(System.nanoTime() - start);
+        set.clear();
+    }
 
 }
