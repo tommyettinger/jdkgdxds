@@ -105,7 +105,12 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.4'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
-cases; if it can't be found, you may need the repository `mavenCentral()` . If you have an HTML module, add:
+cases; if it can't be found, you may need the repository `mavenCentral()` . Jdkgdxds has dependencies on `digital` (which provides
+common math code meant for use by multiple projects) and `funderby` (Java 8 functional interfaces for primitive types). You can
+increase the version for the `digital` dependency to (at the time of writing) from 0.1.0, to 0.1.4, if you change it everywhere
+and add the core dependency `api "com.github.tommyettinger:digital:0.1.4"` . Funderby hasn't changed since its initial release.
+
+If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.1:sources"
 implementation "com.github.tommyettinger:digital:0.1.0:sources"
@@ -118,12 +123,28 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="digital" />
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. The dependency (and `inherits` line) on digital is not necessary for jdkgdxds
+in with the other `inherits` lines.
+
+If you have an Android module, you may need to ensure that multi-dex and desugaring are enabled. Projects generated with
+gdx-liftoff that target Java 8 or higher have this already, but projects made with gdx-setup or manually do not. Add:
+```
+android.defaultConfig.multiDexEnabled true
+android.compileOptions.coreLibraryDesugaringEnabled true
+dependencies {
+	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+}
+```
+to whatever module uses an `android` or `com.android.application` plugin. The `desugar_jdk_libs` version should only be updated if
+you have checked for compatibility with your Android Gradle Plugin version; see [Android docs](https://developer.android.com/studio/write/java8-support#library-desugaring-versions).
+You may need to set the `minSdkVersion` to a higher value, depending on where it is already; 19 is known to work, and 16 probably
+works.
+
+The dependency (and `inherits` line) on digital is not necessary for jdkgdxds
 0.2.8, but is necessary starting in 1.0.3 and later. The dependency and `inherits` line for funderby is new in 1.0.4 .
 Versions 1.0.1 and 1.0.2 also depended on [juniper](https://github.com/tommyettinger/juniper) 0.0.2 ; if you intend to use the
-randomized algorithms here (like shuffles), then depending on Juniper might be a good idea, though it is still optional. The
-versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing for
-that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
+randomized algorithms here (like shuffles), then depending on Juniper might be a good idea, though it is still optional.
+The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
+for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
 The version for funderby is expected to stay at or around 0.0.1, since it is a relatively small library and is probably complete.
 
 You can build specific, typically brand-new commits on JitPack.
@@ -153,6 +174,10 @@ transfer libGDX data structures to and from jdkgdxds data structures, and more i
 libGDX's `Json` class. `*`Any, only because `IdentityMap` and `IdentityOrderedMap` don't make sense to serialize, while
 `HolderSet` and `HolderOrderedSet` can't be serialized easily because their behavior depends on a `Function`. For historical
 reasons, jdkgdxds-interop also can serialize classes from digital and juniper.
+
+Another optional dependency, [kryo-more](https://github.com/tommyettinger/kryo-more), allows serializing jdkgdxds data structures
+efficiently on non-GWT platforms (using Kryo 5.x for binary serialization). The dependency you would probably use for it is
+`implementation "com.github.tommyettinger:kryo-jdkgdxds:1.0.4.0"` .
 
 ## Updating to 1.0.1
 
