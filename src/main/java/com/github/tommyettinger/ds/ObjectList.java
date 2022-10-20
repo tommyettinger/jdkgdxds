@@ -662,7 +662,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		@Override
 		public void remove () {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index >= list.size()) {throw new NoSuchElementException();}
+			if (latest >= list.size()) {throw new NoSuchElementException();}
 			list.removeAt(latest);
 			index = latest;
 			latest = -1;
@@ -718,7 +718,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		@Override
 		public void add (T t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index >= list.size()) {throw new NoSuchElementException();}
+			if (index > list.size()) {throw new NoSuchElementException();}
 			list.insert(index++, t);
 			latest = -1;
 

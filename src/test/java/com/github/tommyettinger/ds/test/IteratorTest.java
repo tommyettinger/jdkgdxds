@@ -90,7 +90,7 @@ public class IteratorTest {
 		System.out.println("\n Going forwards now...\n");
 		while (it.hasNext()) {
 			String item = it.next();
-			if (random.nextBoolean()) {
+			if (!random.nextBoolean()) {
 				System.out.println("Changing " + item);
 				it.set(item.toUpperCase());
 			} else {
@@ -99,7 +99,18 @@ public class IteratorTest {
 			}
 		}
 		System.out.println(data);
-		Assert.assertEquals("[BETA, eta, :), THETA, IOTA, KAPPA, tau, :), CHI]", data.toString());
+		Assert.assertEquals("[beta, :), ETA, theta, :), iota, :), kappa, :), TAU, chi, :)]", data.toString());
+		data.clear();
+		data.add("aaa");
+		data.add("bbb");
+		data.add("ccc");
+		it = data.listIterator();
+		while (it.hasNext()) {
+			String item = it.next();
+			if("ccc".equals(item))
+				it.remove();
+		}
+		System.out.println(data);
 	}
 
 	/**
@@ -144,11 +155,10 @@ public class IteratorTest {
 				System.out.println("Not removing " + item);
 		}
 		Assert.assertEquals(data.size(), counter);
-		Assert.assertEquals(data.size(), counter);
 		System.out.println("\n Going forwards now...\n");
 		while (it.hasNext()) {
 			String item = it.next();
-			if (random.nextBoolean()) {
+			if (!random.nextBoolean()) {
 				System.out.println("Changing " + item);
 				it.set(item.toUpperCase());
 			} else {
@@ -157,7 +167,18 @@ public class IteratorTest {
 			}
 		}
 		System.out.println(data);
-		Assert.assertEquals("[BETA, eta, :), THETA, IOTA, KAPPA, tau, :), CHI]", data.toString());
+		Assert.assertEquals("[beta, :), ETA, theta, :), iota, :), kappa, :), TAU, chi, :)]", data.toString());
+		data.clear();
+		data.add("aaa");
+		data.add("bbb");
+		data.add("ccc");
+		it = data.listIterator();
+		while (it.hasNext()) {
+			String item = it.next();
+			if("ccc".equals(item))
+				it.remove();
+		}
+		System.out.println(data);
 	}
 
 	@Test
