@@ -37,17 +37,23 @@ public class PileupTest {
         return set.toArray(new String[0]);
     }
 
-    @Ignore // this test takes much longer to run than the others here (over a minute; everything else is under a second).
+//    @Ignore // this test used to take much longer to run than the others here (over a minute; everything else is under a second).
     @Test
     public void testObjectSetOld() {
+        final String[] words = generateUniqueWords(LEN);
         long start = System.nanoTime();
-        // replicates old ObjectSet behavior, with added logging
+        // replicates old ObjectSet behavior, with added logging and the constant in place() changed
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
             int longestPileup = 0;
+//            @Override
+//            protected int place (Object item) {
+//                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+//            }
+
             @Override
             protected int place (Object item) {
-                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // does extremely well???
             }
 
             @Override
@@ -103,7 +109,6 @@ public class PileupTest {
 //                set.add(new Vector2(x, y));
 //            }
 //        }
-        String[] words = generateUniqueWords(LEN);
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
@@ -112,6 +117,7 @@ public class PileupTest {
     }
     @Test
     public void testObjectSetNew() {
+        final String[] words = generateUniqueWords(LEN);
         long start = System.nanoTime();
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -180,7 +186,6 @@ public class PileupTest {
 //                set.add(new Vector2(x, y));
 //            }
 //        }
-        String[] words = generateUniqueWords(LEN);
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
@@ -190,6 +195,7 @@ public class PileupTest {
 
     @Test
     public void testObjectQuadSet() {
+        final String[] words = generateUniqueWords(LEN);
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -252,7 +258,6 @@ public class PileupTest {
 //                set.add(new Vector2(x, y));
 //            }
 //        }
-        String[] words = generateUniqueWords(LEN);
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
@@ -262,6 +267,7 @@ public class PileupTest {
 
     @Test
     public void testObjectQuadSetExperimental() {
+        final String[] words = generateUniqueWords(LEN);
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -269,15 +275,16 @@ public class PileupTest {
 
             @Override
             protected int place (Object item) {
+                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // does extremely well???
+            }
 //                return (item.hashCode() * hashMultiplier >>> shift); // what we're using now
 //                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift); // actually does very poorly here
-                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // does extremely well???
 //                return (item.hashCode() * (0x1827F5) >>> shift); // not as good as...
 //                return (item.hashCode() * (0x13C6ED) >>> shift); // ... this one, for some reason
 //                return (item.hashCode() & mask); // only good if the hashCode is already a high-quality random number
 //                final int h = item.hashCode();
 //                return (h ^ h >>> 11 ^ h >>> 21) & mask; // eh, maybe? a few more collisions than ideal
-            }
+//            }
 
             @Override
             protected void addResize (@Nonnull Object key) {
@@ -338,7 +345,6 @@ public class PileupTest {
 //                set.add(new Vector2(x, y));
 //            }
 //        }
-        String[] words = generateUniqueWords(LEN);
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
@@ -348,6 +354,7 @@ public class PileupTest {
 
     @Test
     public void testObjectQuadSetSimplePlace() {
+        final String[] words = generateUniqueWords(LEN);
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -424,7 +431,6 @@ public class PileupTest {
 //            }
 //        }
 
-        String[] words = generateUniqueWords(LEN);
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
@@ -434,6 +440,7 @@ public class PileupTest {
 
     @Test
     public void testObjectSetIntPlace() {
+        final String[] words = generateUniqueWords(LEN);
         long start = System.nanoTime();
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -514,7 +521,6 @@ public class PileupTest {
 //            }
 //        }
 
-        String[] words = generateUniqueWords(LEN);
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
@@ -583,7 +589,7 @@ public class PileupTest {
         ObjectObjectMap<BadString, Object> set = new ObjectObjectMap<BadString, Object>(size, 0.5f){
             @Override
             protected int place (@Nonnull Object item) {
-                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift);
+                return (int)(item.hashCode() * 0xABCDEF0987654321L >>> shift);
             }
         };
         char[] maker = new char[numLetters];
@@ -604,6 +610,7 @@ public class PileupTest {
 
     @Test
     public void testBadStringSetOld() {
+        final BadString[] words = generateUniqueBad(LEN);
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging
         ObjectSet set = new ObjectSet(51, 0.6f) {
@@ -611,7 +618,8 @@ public class PileupTest {
             int longestPileup = 0;
             @Override
             protected int place (Object item) {
-                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // if this long constant is the same as the one used
+                // by place() in generateUniqueBad's map, then this slows down massively.
             }
 
             @Override
@@ -667,7 +675,6 @@ public class PileupTest {
 //                set.add(new Vector2(x, y));
 //            }
 //        }
-        BadString[] words = generateUniqueBad(LEN);
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
@@ -677,6 +684,7 @@ public class PileupTest {
 
     @Test
     public void testBadStringSetNew() {
+        final BadString[] words = generateUniqueBad(LEN);
         long start = System.nanoTime();
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -753,7 +761,6 @@ public class PileupTest {
 //                set.add(new Vector2(x, y));
 //            }
 //        }
-        BadString[] words = generateUniqueBad(LEN);
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
@@ -764,6 +771,7 @@ public class PileupTest {
 
     @Test
     public void testBadStringQuadSet() {
+        final BadString[] words = generateUniqueBad(LEN);
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -790,9 +798,11 @@ public class PileupTest {
                 mask = newSize - 1;
                 shift = Long.numberOfLeadingZeros(mask);
 
-                // we modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
-                // we incorporate the size in here (times 2, so it doesn't make the multiplier even) to randomize things more.
-                hashMultiplier = (hashMultiplier + size + size ^ 0xC79E7B18) * 0x13C6EB & 0x1FFFFF;
+                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
+                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
+                // hex digit 5 or D -- this makes it a valid power-of-two-modulus MCG multiplier, which might help a bit. We also always
+                // set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
+                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -826,7 +836,6 @@ public class PileupTest {
 //                set.add(new Vector2(x, y));
 //            }
 //        }
-        BadString[] words = generateUniqueBad(LEN);
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
