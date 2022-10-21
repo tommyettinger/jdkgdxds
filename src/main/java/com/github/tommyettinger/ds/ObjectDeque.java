@@ -466,6 +466,15 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		return oldSize != size;
 	}
 
+	/**
+	 * Inserts the specified element into this deque at the specified index.
+	 * Unlike {@link #offerFirst(Object)} and {@link #offerLast(Object)}, this does not run in expected constant time unless
+	 * the index is less than or equal to 0 (where it acts like offerFirst()) or greater than or equal to {@link #size()}
+	 * (where it acts like offerLast()).
+	 * @param index the index in the deque's insertion order to insert the item
+	 * @param t a T item to insert; may be null
+	 * @return true if this deque was modified
+	 */
 	public boolean add (int index, @Nullable T t) {
 		int oldSize = size;
 		if(index <= 0)
@@ -520,27 +529,27 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		return add(index, element);
 	}
 
-		/**
-		 * Inserts the specified element into the queue represented by this deque
-		 * (in other words, at the tail of this deque) if it is possible to do so
-		 * immediately without violating capacity restrictions, returning
-		 * {@code true} upon success and {@code false} if no space is currently
-		 * available.  When using a capacity-restricted deque, this method is
-		 * generally preferable to the {@link #add} method, which can fail to
-		 * insert an element only by throwing an exception.
-		 *
-		 * <p>This method is equivalent to {@link #offerLast}.
-		 *
-		 * @param t the element to add
-		 * @return {@code true} if the element was added to this deque, else
-		 * {@code false}
-		 * @throws ClassCastException       if the class of the specified element
-		 *                                  prevents it from being added to this deque
-		 * @throws NullPointerException     if the specified element is null and this
-		 *                                  deque does not permit null elements
-		 * @throws IllegalArgumentException if some property of the specified
-		 *                                  element prevents it from being added to this deque
-		 */
+	/**
+	 * Inserts the specified element into the queue represented by this deque
+	 * (in other words, at the tail of this deque) if it is possible to do so
+	 * immediately without violating capacity restrictions, returning
+	 * {@code true} upon success and {@code false} if no space is currently
+	 * available.  When using a capacity-restricted deque, this method is
+	 * generally preferable to the {@link #add} method, which can fail to
+	 * insert an element only by throwing an exception.
+	 *
+	 * <p>This method is equivalent to {@link #offerLast}.
+	 *
+	 * @param t the element to add
+	 * @return {@code true} if the element was added to this deque, else
+	 * {@code false}
+	 * @throws ClassCastException       if the class of the specified element
+	 *                                  prevents it from being added to this deque
+	 * @throws NullPointerException     if the specified element is null and this
+	 *                                  deque does not permit null elements
+	 * @throws IllegalArgumentException if some property of the specified
+	 *                                  element prevents it from being added to this deque
+	 */
 	@Override
 	public boolean offer (@Nullable T t) {
 		int oldSize = size;
