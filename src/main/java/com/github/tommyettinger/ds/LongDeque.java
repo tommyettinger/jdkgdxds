@@ -457,6 +457,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		addLast(t);
 		return oldSize != size;
 	}
+
 	/**
 	 * Inserts the specified element into this deque at the specified index.
 	 * Unlike {@link #offerFirst(long)} and {@link #offerLast(long)}, this does not run in expected constant time unless
