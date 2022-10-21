@@ -463,6 +463,50 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		return oldSize != size;
 	}
 
+	public boolean add (int index, @Nullable T t) {
+		int oldSize = size;
+		if(index <= 0)
+			addFirst(t);
+		else if(index >= oldSize)
+			addLast(t);
+		else {
+			T[] values = this.values;
+
+			if (size == values.length) {
+				resize(values.length << 1);
+				values = this.values;
+			}
+
+			if(head < tail) {
+				System.arraycopy(values, head + index, values, head + index + 1, tail - head - index);
+				values[head + index] = t;
+				tail++;
+				if (tail == values.length) {
+					tail = 0;
+				}
+			} else {
+				if (head + index < values.length) {
+					// backward shift
+					System.arraycopy(values, head, values, head - 1, index);
+					values[head - 1 + index] = t;
+					head--;
+					// don't need to check for head being negative, because head is always > tail
+				}
+				else {
+					// forward shift
+					index -= values.length - 1;
+					System.arraycopy(values, head + index, values, head + index + 1, tail - head - index);
+					values[head + index] = t;
+					tail++;
+					// again, don't need to check for tail going around, because the head is in the way and doesn't need to move
+				}
+			}
+			size++;
+
+		}
+		return oldSize != size;
+	}
+
 	/**
 	 * Inserts the specified element into the queue represented by this deque
 	 * (in other words, at the tail of this deque) if it is possible to do so
