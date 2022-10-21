@@ -457,6 +457,68 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		addLast(t);
 		return oldSize != size;
 	}
+	/**
+	 * Inserts the specified element into this deque at the specified index.
+	 * Unlike {@link #offerFirst(long)} and {@link #offerLast(long)}, this does not run in expected constant time unless
+	 * the index is less than or equal to 0 (where it acts like offerFirst()) or greater than or equal to {@link #size()}
+	 * (where it acts like offerLast()).
+	 * @param index the index in the deque's insertion order to insert the item
+	 * @param t a long item to insert; may be null
+	 * @return true if this deque was modified
+	 */
+	public boolean add (int index, long t) {
+		int oldSize = size;
+		if(index <= 0)
+			addFirst(t);
+		else if(index >= oldSize)
+			addLast(t);
+		else {
+			long[] values = this.values;
+
+			if (size == values.length) {
+				resize(values.length << 1);
+				values = this.values;
+			}
+
+			if(head < tail) {
+				System.arraycopy(values, head + index, values, head + index + 1, tail - head - index);
+				values[head + index] = t;
+				tail++;
+				if (tail == values.length) {
+					tail = 0;
+				}
+			} else {
+				if (head + index < values.length) {
+					// backward shift
+					System.arraycopy(values, head, values, head - 1, index);
+					values[head - 1 + index] = t;
+					head--;
+					// don't need to check for head being negative, because head is always > tail
+				}
+				else {
+					// forward shift
+					index -= values.length - 1;
+					System.arraycopy(values, head + index, values, head + index + 1, tail - head - index);
+					values[head + index] = t;
+					tail++;
+					// again, don't need to check for tail going around, because the head is in the way and doesn't need to move
+				}
+			}
+			size++;
+
+		}
+		return oldSize != size;
+	}
+
+	/**
+	 * This is an alias for {@link #add(int, long)} to improve compatibility with primitive lists.
+	 *
+	 * @param index   index at which the specified element is to be inserted
+	 * @param element element to be inserted
+	 */
+	public boolean insert (int index, long element) {
+		return add(index, element);
+	}
 
 	/**
 	 * Inserts the specified element into the queue represented by this deque
