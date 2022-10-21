@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -78,7 +79,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	}
 
 	/**
-	 * Creates a new ObjectDeque using all of the contents of the given Collection.
+	 * Creates a new ObjectDeque using all the contents of the given Collection.
 	 *
 	 * @param coll a Collection of T that will be copied into this and used in full
 	 */
@@ -165,7 +166,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		values[head] = object;
 
 		this.head = head;
-		this.size++;
+		size++;
 	}
 
 	/**
@@ -272,7 +273,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 *                                  element prevents it from being added to this deque
 	 */
 	@Override
-	public boolean offerFirst (T t) {
+	public boolean offerFirst (@Nullable T t) {
 		int oldSize = size;
 		addFirst(t);
 		return oldSize != size;
@@ -295,7 +296,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 *                                  element prevents it from being added to this deque
 	 */
 	@Override
-	public boolean offerLast (T t) {
+	public boolean offerLast (@Nullable T t) {
 		int oldSize = size;
 		addLast(t);
 		return oldSize != size;
@@ -335,6 +336,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @throws NoSuchElementException if this deque is empty
 	 */
 	@Override
+	@Nullable
 	public T getFirst () {
 		return first();
 	}
@@ -348,6 +350,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @throws NoSuchElementException if this deque is empty
 	 */
 	@Override
+	@Nullable
 	public T getLast () {
 		return last();
 	}
@@ -408,7 +411,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
-	public boolean removeFirstOccurrence (Object o) {
+	public boolean removeFirstOccurrence (@Nullable Object o) {
 		return removeValue(o, false);
 	}
 
@@ -430,7 +433,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
-	public boolean removeLastOccurrence (Object o) {
+	public boolean removeLastOccurrence (@Nullable Object o) {
 		return removeLastValue(o, false);
 	}
 
@@ -457,7 +460,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 *                                  element prevents it from being added to this deque
 	 */
 	@Override
-	public boolean add (T t) {
+	public boolean add (@Nullable T t) {
 		int oldSize = size;
 		addLast(t);
 		return oldSize != size;
@@ -508,28 +511,38 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	}
 
 	/**
-	 * Inserts the specified element into the queue represented by this deque
-	 * (in other words, at the tail of this deque) if it is possible to do so
-	 * immediately without violating capacity restrictions, returning
-	 * {@code true} upon success and {@code false} if no space is currently
-	 * available.  When using a capacity-restricted deque, this method is
-	 * generally preferable to the {@link #add} method, which can fail to
-	 * insert an element only by throwing an exception.
+	 * This is an alias for {@link #add(int, Object)} to improve compatibility with primitive lists.
 	 *
-	 * <p>This method is equivalent to {@link #offerLast}.
-	 *
-	 * @param t the element to add
-	 * @return {@code true} if the element was added to this deque, else
-	 * {@code false}
-	 * @throws ClassCastException       if the class of the specified element
-	 *                                  prevents it from being added to this deque
-	 * @throws NullPointerException     if the specified element is null and this
-	 *                                  deque does not permit null elements
-	 * @throws IllegalArgumentException if some property of the specified
-	 *                                  element prevents it from being added to this deque
+	 * @param index   index at which the specified element is to be inserted
+	 * @param element element to be inserted
 	 */
+	public boolean insert (int index, @Nullable T element) {
+		return add(index, element);
+	}
+
+		/**
+		 * Inserts the specified element into the queue represented by this deque
+		 * (in other words, at the tail of this deque) if it is possible to do so
+		 * immediately without violating capacity restrictions, returning
+		 * {@code true} upon success and {@code false} if no space is currently
+		 * available.  When using a capacity-restricted deque, this method is
+		 * generally preferable to the {@link #add} method, which can fail to
+		 * insert an element only by throwing an exception.
+		 *
+		 * <p>This method is equivalent to {@link #offerLast}.
+		 *
+		 * @param t the element to add
+		 * @return {@code true} if the element was added to this deque, else
+		 * {@code false}
+		 * @throws ClassCastException       if the class of the specified element
+		 *                                  prevents it from being added to this deque
+		 * @throws NullPointerException     if the specified element is null and this
+		 *                                  deque does not permit null elements
+		 * @throws IllegalArgumentException if some property of the specified
+		 *                                  element prevents it from being added to this deque
+		 */
 	@Override
-	public boolean offer (T t) {
+	public boolean offer (@Nullable T t) {
 		int oldSize = size;
 		addLast(t);
 		return oldSize != size;
@@ -653,7 +666,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 *                                  element prevents it from being added to this deque
 	 */
 	@Override
-	public void push (T t) {
+	public void push (@Nullable T t) {
 		addFirst(t);
 	}
 
@@ -693,7 +706,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
-	public boolean remove (Object o) {
+	public boolean remove (@Nullable Object o) {
 		return removeFirstOccurrence(o);
 	}
 
@@ -712,7 +725,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
-	public boolean contains (Object o) {
+	public boolean contains (@Nullable Object o) {
 		return indexOf(o, false) != -1;
 	}
 

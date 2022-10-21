@@ -157,6 +157,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	@Override
+	@Nullable
 	public T remove (int index) {
 		if (ordered)
 			return super.remove(index);
@@ -173,6 +174,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * @param index must be non-negative and less than {@link #size()}
 	 * @return the previously-held item at the given index
 	 */
+	@Nullable
 	public T removeAt (int index) {
 		if (ordered)
 			return super.remove(index);
@@ -334,6 +336,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	/**
 	 * Removes and returns the last item.
 	 */
+	@Nullable
 	public T pop () {
 		int n = size();
 		if (n == 0) {throw new IllegalStateException("ObjectList is empty.");}
@@ -343,6 +346,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	/**
 	 * Returns the last item.
 	 */
+	@Nullable
 	public T peek () {
 		int n = size();
 		if (n == 0) {throw new IllegalStateException("ObjectList is empty.");}
@@ -352,6 +356,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	/**
 	 * Returns the first item.
 	 */
+	@Nullable
 	public T first () {
 		if (size() == 0) {throw new IllegalStateException("ObjectList is empty.");}
 		return get(0);
@@ -541,6 +546,10 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		return iterator2;
 	}
 
+	/**
+	 * An {@link Iterator} and {@link ListIterator} over the elements of an ObjectList, while also an {@link Iterable}.
+	 * @param <T> the generic type for the ObjectList this iterates over
+	 */
 	public static class ObjectListIterator<T> implements Iterable<T>, ListIterator<T> {
 		protected int index, latest = -1;
 		protected ObjectList<T> list;
@@ -564,6 +573,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
+		@Nullable
 		public T next () {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index >= list.size()) {throw new NoSuchElementException();}
@@ -611,6 +621,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 *                                element
 		 */
 		@Override
+		@Nullable
 		public T previous () {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index <= 0 || list.isEmpty()) {throw new NoSuchElementException();}
@@ -662,7 +673,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		@Override
 		public void remove () {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest >= list.size()) {throw new NoSuchElementException();}
+			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
 			list.removeAt(latest);
 			index = latest;
 			latest = -1;
@@ -689,7 +700,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void set (T t) {
+		public void set (@Nullable T t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
 			list.set(latest, t);
@@ -716,16 +727,16 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 *                                       prevents it from being added to this list
 		 */
 		@Override
-		public void add (T t) {
+		public void add (@Nullable T t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
 			list.insert(index++, t);
 			latest = -1;
-
 		}
 
 		public void reset () {
 			index = 0;
+			latest = -1;
 		}
 
 		public void reset (int index) {
