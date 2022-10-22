@@ -1201,6 +1201,7 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		}
 		return get(random.nextInt(size));
 	}
+
 	/**
 	 * A {@link FloatIterator}, plus similar methods to a {@link ListIterator}, over the elements of an FloatDeque.
 	 * Use {@link #nextFloat()} in preference to {@link #next()} to avoid allocating Float objects.

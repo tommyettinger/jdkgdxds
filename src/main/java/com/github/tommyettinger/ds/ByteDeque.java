@@ -24,6 +24,7 @@ import com.github.tommyettinger.ds.support.util.ByteIterator;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -1200,51 +1201,210 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 		return get(random.nextInt(size));
 	}
 
+	/**
+	 * A {@link ByteIterator}, plus similar methods to a {@link ListIterator}, over the elements of an ByteDeque.
+	 * Use {@link #nextByte()} in preference to {@link #next()} to avoid allocating Byte objects.
+	 */
 	public static class ByteDequeIterator implements ByteIterator {
-		private final ByteDeque deque;
-		private final boolean descending;
-		int index;
-		boolean valid = true;
+		protected int index, latest = -1;
+		protected ByteDeque deque;
+		protected boolean valid = true;
+		private final int direction;
 
 		public ByteDequeIterator (ByteDeque deque) {
 			this(deque, false);
 		}
-
 		public ByteDequeIterator (ByteDeque deque, boolean descendingOrder) {
 			this.deque = deque;
-			if (this.descending = descendingOrder)
-				index = this.deque.size - 1;
+			direction = descendingOrder ? -1 : 1;
 		}
 
-		public boolean hasNext () {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
-			return descending ? index >= 0 : index < deque.size;
+		public ByteDequeIterator (ByteDeque deque, int index, boolean descendingOrder) {
+			if (index < 0 || index >= deque.size())
+				throw new IndexOutOfBoundsException("ByteDequeIterator does not satisfy index >= 0 && index < deque.size()");
+			this.deque = deque;
+			this.index = index;
+			direction = descendingOrder ? -1 : 1;
 		}
 
+		/**
+		 * Returns the next {@code byte} element in the iteration.
+		 *
+		 * @return the next {@code byte} element in the iteration
+		 * @throws NoSuchElementException if the iteration has no more elements
+		 */
 		public byte nextByte () {
-			if (index >= deque.size || index < 0)
-				throw new NoSuchElementException(String.valueOf(index));
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
-			return deque.get(descending ? index-- : index++);
+			if (!hasNext()) {throw new NoSuchElementException();}
+			latest = index;
+			index += direction;
+			return deque.get(latest);
 		}
 
+		/**
+		 * Returns {@code true} if the iteration has more elements.
+		 * (In other words, returns {@code true} if {@link #nextByte} would
+		 * return an element rather than throwing an exception.)
+		 *
+		 * @return {@code true} if the iteration has more elements
+		 */
+		@Override
+		public boolean hasNext () {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			return direction == 1 ? index < deque.size() : index > 0 && deque.notEmpty();
+		}
+
+		/**
+		 * Returns {@code true} if this list iterator has more elements when
+		 * traversing the list in the reverse direction.  (In other words,
+		 * returns {@code true} if {@link #previousByte} would return an element
+		 * rather than throwing an exception.)
+		 *
+		 * @return {@code true} if the list iterator has more elements when
+		 * traversing the list in the reverse direction
+		 */
+		public boolean hasPrevious () {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			return direction == -1 ? index < deque.size() : index > 0 && deque.notEmpty();
+		}
+
+		/**
+		 * Returns the previous element in the list and moves the cursor
+		 * position backwards.  This method may be called repeatedly to
+		 * iterate through the list backwards, or intermixed with calls to
+		 * {@link #nextByte} to go back and forth.  (Note that alternating calls
+		 * to {@code next} and {@code previous} will return the same
+		 * element repeatedly.)
+		 *
+		 * @return the previous element in the list
+		 * @throws NoSuchElementException if the iteration has no previous
+		 *                                element
+		 */
+		public byte previousByte () {
+			if (!hasPrevious()) {throw new NoSuchElementException();}
+			return deque.get(latest = (index -= direction));
+		}
+
+		/**
+		 * Returns the index of the element that would be returned by a
+		 * subsequent call to {@link #nextByte}. (Returns list size if the list
+		 * iterator is at the end of the list.)
+		 *
+		 * @return the index of the element that would be returned by a
+		 * subsequent call to {@code next}, or list size if the list
+		 * iterator is at the end of the list
+		 */
+		public int nextIndex () {
+			return index;
+		}
+
+		/**
+		 * Returns the index of the element that would be returned by a
+		 * subsequent call to {@link #previousByte}. (Returns -1 if the list
+		 * iterator is at the beginning of the list.)
+		 *
+		 * @return the index of the element that would be returned by a
+		 * subsequent call to {@code previous}, or -1 if the list
+		 * iterator is at the beginning of the list
+		 */
+		public int previousIndex () {
+			return index - 1;
+		}
+
+		/**
+		 * Removes from the list the last element that was returned by {@link
+		 * #nextByte} or {@link #previousByte} (optional operation).  This call can
+		 * only be made once per call to {@code next} or {@code previous}.
+		 * It can be made only if {@link #add} has not been
+		 * called after the last call to {@code next} or {@code previous}.
+		 *
+		 * @throws UnsupportedOperationException if the {@code remove}
+		 *                                       operation is not supported by this list iterator
+		 * @throws IllegalStateException         if neither {@code next} nor
+		 *                                       {@code previous} have been called, or {@code remove} or
+		 *                                       {@code add} have been called after the last call to
+		 *                                       {@code next} or {@code previous}
+		 */
+		@Override
 		public void remove () {
-			if (descending)
-				index++;
-			else
-				index--;
-			deque.removeAt(index);
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (latest == -1 || latest >= deque.size()) {throw new NoSuchElementException();}
+			deque.removeAt(latest);
+			index = latest;
+			latest = -1;
+		}
+
+		/**
+		 * Replaces the last element returned by {@link #nextByte} or
+		 * {@link #previousByte} with the specified element (optional operation).
+		 * This call can be made only if neither {@link #remove} nor {@link
+		 * #add} have been called after the last call to {@code next} or
+		 * {@code previous}.
+		 *
+		 * @param t the element with which to replace the last element returned by
+		 *          {@code next} or {@code previous}
+		 * @throws UnsupportedOperationException if the {@code set} operation
+		 *                                       is not supported by this list iterator
+		 * @throws ClassCastException            if the class of the specified element
+		 *                                       prevents it from being added to this list
+		 * @throws IllegalArgumentException      if some aspect of the specified
+		 *                                       element prevents it from being added to this list
+		 * @throws IllegalStateException         if neither {@code next} nor
+		 *                                       {@code previous} have been called, or {@code remove} or
+		 *                                       {@code add} have been called after the last call to
+		 *                                       {@code next} or {@code previous}
+		 */
+		public void set (byte t) {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (latest == -1 || latest >= deque.size()) {throw new NoSuchElementException();}
+			deque.set(latest, t);
+		}
+
+		/**
+		 * Inserts the specified element into the list (optional operation).
+		 * The element is inserted immediately before the element that
+		 * would be returned by {@link #nextByte}, if any, and after the element
+		 * that would be returned by {@link #previousByte}, if any.  (If the
+		 * list contains no elements, the new element becomes the sole element
+		 * on the list.)  The new element is inserted before the implicit
+		 * cursor: a subsequent call to {@code next} would be unaffected, and a
+		 * subsequent call to {@code previous} would return the new element.
+		 * (This call increases by one the value that would be returned by a
+		 * call to {@code nextIndex} or {@code previousIndex}.)
+		 *
+		 * @param t the element to insert
+		 * @throws UnsupportedOperationException if the {@code add} method is
+		 *                                       not supported by this list iterator
+		 * @throws ClassCastException            if the class of the specified element
+		 *                                       prevents it from being added to this list
+		 * @throws IllegalArgumentException      if some aspect of this element
+		 *                                       prevents it from being added to this list
+		 */
+		public void add (byte t) {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index > deque.size()) {throw new NoSuchElementException();}
+			deque.insert(index, t);
+			index += direction;
+			latest = -1;
 		}
 
 		public void reset () {
-			index = descending ? deque.size - 1 : 0;
+			index = deque.size - 1 & direction >> 31;
+			latest = -1;
 		}
 
-		public ByteIterator iterator () {
+		public void reset (int index) {
+			if (index < 0 || index >= deque.size())
+				throw new IndexOutOfBoundsException("ByteDequeIterator does not satisfy index >= 0 && index < deque.size()");
+			this.index = index;
+			latest = -1;
+		}
+
+		/**
+		 * Returns an iterator over elements of type {@code byte}. Allows this to be used like an {@link Iterable}.
+		 *
+		 * @return this same ByteDequeIterator.
+		 */
+		public ByteDequeIterator iterator () {
 			return this;
 		}
 	}
