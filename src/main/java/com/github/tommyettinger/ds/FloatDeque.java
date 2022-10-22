@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 
 /**
  * A resizable, insertion-ordered double-ended queue of floats with efficient add and remove at the beginning and end. Values in the
