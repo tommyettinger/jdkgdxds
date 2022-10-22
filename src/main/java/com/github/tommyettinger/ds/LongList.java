@@ -864,7 +864,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
-	 * A {@link PrimitiveIterator}, plus {@link ListIterator} methods, over the elements of a LongList.
+	 * A {@link PrimitiveIterator.OfLong}, plus {@link ListIterator} methods, over the elements of a LongList.
 	 */
 	public static class LongListIterator implements PrimitiveIterator.OfLong {
 		protected int index, latest = -1;
@@ -1057,7 +1057,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		/**
 		 * Returns an iterator over elements of type {@code long}.
 		 *
-		 * @return a ListIterator; really this same LongListIterator.
+		 * @return this same LongListIterator.
 		 */
 		public LongListIterator iterator () {
 			return this;
