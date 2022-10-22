@@ -1213,7 +1213,6 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		return get(random.nextInt(size));
 	}
 
-
 	/**
 	 * A {@link CharIterator}, plus similar methods to a {@link ListIterator}, over the elements of an CharDeque.
 	 * Use {@link #nextChar()} in preference to {@link #next()} to avoid allocating Character objects.
