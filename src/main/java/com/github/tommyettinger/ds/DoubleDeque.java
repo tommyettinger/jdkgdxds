@@ -1202,9 +1202,10 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 		}
 		return get(random.nextInt(size));
 	}
+
 	/**
 	 * A {@link PrimitiveIterator.OfDouble}, plus similar methods to a {@link ListIterator}, over the elements of an DoubleDeque.
-	 * Use {@link #nextDouble()} in preference to {@link #next()} to avoid allocating Character objects.
+	 * Use {@link #nextDouble()} in preference to {@link #next()} to avoid allocating Double objects.
 	 */
 	public static class DoubleDequeIterator implements PrimitiveIterator.OfDouble {
 		protected int index, latest = -1;
@@ -1399,6 +1400,15 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 				throw new IndexOutOfBoundsException("DoubleDequeIterator does not satisfy index >= 0 && index < deque.size()");
 			this.index = index;
 			latest = -1;
+		}
+
+		/**
+		 * Returns an iterator over elements of type {@code double}. Allows this to be used like an {@link Iterable}.
+		 *
+		 * @return this same DoubleDequeIterator.
+		 */
+		public DoubleDequeIterator iterator () {
+			return this;
 		}
 	}
 
