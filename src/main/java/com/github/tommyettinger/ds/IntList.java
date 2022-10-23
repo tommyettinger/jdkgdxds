@@ -860,6 +860,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 
 	/**
 	 * A {@link PrimitiveIterator.OfInt}, plus {@link ListIterator} methods, over the elements of a IntList.
+	 * Use {@link #nextInt()} in preference to {@link #next()} to avoid allocating Integer objects.
 	 */
 	public static class IntListIterator implements PrimitiveIterator.OfInt {
 		protected int index, latest = -1;

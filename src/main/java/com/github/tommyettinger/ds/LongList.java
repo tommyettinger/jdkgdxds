@@ -865,6 +865,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	/**
 	 * A {@link PrimitiveIterator.OfLong}, plus {@link ListIterator} methods, over the elements of a LongList.
+	 * Use {@link #nextLong()} in preference to {@link #next()} to avoid allocating Long objects.
 	 */
 	public static class LongListIterator implements PrimitiveIterator.OfLong {
 		protected int index, latest = -1;

@@ -459,6 +459,7 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		addLast(t);
 		return oldSize != size;
 	}
+
 	/**
 	 * Inserts the specified element into this deque at the specified index.
 	 * Unlike {@link #offerFirst(float)} and {@link #offerLast(float)}, this does not run in expected constant time unless
