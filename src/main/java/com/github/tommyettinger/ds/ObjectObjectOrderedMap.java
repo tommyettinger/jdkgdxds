@@ -253,7 +253,9 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 
 	@Override
 	public V remove (Object key) {
-		if (!keys.remove(key)) {return null;}
+		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
+		if (!super.containsKey(key)) {return defaultValue;}
+		keys.remove(key);
 		return super.remove(key);
 	}
 

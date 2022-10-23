@@ -295,7 +295,9 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 
 	@Override
 	public float remove (int key) {
-		if (!keys.remove(key)) {return defaultValue;}
+		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
+		if (!super.containsKey(key)) {return defaultValue;}
+		keys.remove(key);
 		return super.remove(key);
 	}
 

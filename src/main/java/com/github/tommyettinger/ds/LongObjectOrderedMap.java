@@ -298,7 +298,9 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	@Override
 	@Nullable
 	public V remove (long key) {
-		if (!keys.remove(key)) {return null;}
+		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
+		if (!super.containsKey(key)) {return defaultValue;}
+		keys.remove(key);
 		return super.remove(key);
 	}
 

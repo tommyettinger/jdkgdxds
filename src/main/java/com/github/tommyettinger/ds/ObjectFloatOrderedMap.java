@@ -254,7 +254,9 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 
 	@Override
 	public float remove (Object key) {
-		if (!keys.remove(key)) {return defaultValue;}
+		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
+		if (!super.containsKey(key)) {return defaultValue;}
+		keys.remove(key);
 		return super.remove(key);
 	}
 
