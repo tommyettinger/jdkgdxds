@@ -208,6 +208,8 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	 * This should be called if you have removed any items using {@link Iterator#remove()} from this
 	 * NumberedSet, since the iterator's remove() method doesn't update the numbering on its own.
 	 * Use this method if you don't know the first incorrect index, or {@link #renumber(int)} if you do.
+	 * Note that you can remove multiple items using the iterator, and only need to renumber just before
+	 * you need the indices (such as for {@link #indexOf(Object)}).
 	 */
 	public void renumber () {
 		final int s = size();
@@ -220,9 +222,11 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	 * Reassigns the index values for each index starting with {@code start}, and going to the end.
 	 * This should be called if you have removed any items using {@link Iterator#remove()} from this
 	 * NumberedSet, since the iterator's remove() method doesn't update the numbering on its own.
-	 * Use {@link #renumber()} if you don't know the first incorrect index, or this method if you do.
+	 * Use {@link #renumber()} with no argument if you don't know the first incorrect index, or this
+	 * method if you do. Note that you can remove multiple items using the iterator, and only need
+	 * to renumber just before you need the indices (such as for {@link #indexOf(Object)}).
 	 *
-	 * @param start the first index to reassign.
+	 * @param start the first index to reassign, which must be non-negative
 	 */
 	public void renumber (final int start) {
 		final int s = size();
@@ -231,12 +235,17 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		}
 	}
 
+	/**
+	 * Tries to remove an item from this set and calls {@link #renumber(int)} if that item was removed
+	 * @param item object to be removed from this set, if present
+	 * @return true if this set was modified, or false if it wasn't
+	 */
 	@Override
-	public boolean remove (Object key) {
+	public boolean remove (Object item) {
 		int prev = size();
-		map.remove(key);
+		int oldIndex = map.remove(item);
 		if (size() != prev) {
-			renumber();
+			renumber(oldIndex);
 			return true;
 		}
 		return false;
@@ -303,6 +312,26 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		for (int i = offset, n = i + length; i < n; i++) {add(array[i]);}
 		return oldSize != size();
 	}
+	/**
+	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
+	 * inserting starting at {@code insertionIndex} in the iteration order.
+	 *
+	 * @param insertionIndex where to insert into the iteration order
+	 * @param array          a non-null array of {@code T}
+	 * @param offset         the first index in {@code other} to use
+	 * @param count          how many indices in {@code other} to use
+	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
+	 */
+	public boolean addAll (int insertionIndex, T[] array, int offset, int count) {
+		boolean changed = false;
+		int end = Math.min(offset + count, array.length);
+		ensureCapacity(end - offset);
+		for (int i = offset; i < end; i++) {
+			add(insertionIndex++, array[i]);
+			changed = true;
+		}
+		return changed;
+	}
 
 	@Override
 	public boolean retainAll (Collection<?> c) {
@@ -332,6 +361,27 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 			}
 		}
 		if (modified) {
+			renumber();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Bulk-removes each {@code T} item in the given array from this set. If an item appears more
+	 * than once in {@code arr}, this will be able to quickly verify that it was removed the first
+	 * time it appeared, and won't spend as long processing later items. This calls
+	 * {@link #renumber()} only after all removals were completed, and only if one or more items
+	 * were actually removed.
+	 * @param arr a non-null array of T items to remove from this set
+	 * @return true if this had one or more items removed, or false if it is unchanged
+	 */
+	public boolean removeAll (T[] arr) {
+		int prevSize = size();
+		for (int i = 0, len = arr.length; i < len; i++) {
+			map.remove(arr[i]);
+		}
+		if (prevSize != size()) {
 			renumber();
 			return true;
 		}
@@ -380,12 +430,24 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		return map.toString(separator, braces);
 	}
 
-	public int indexOf (Object key) {
-		return map.get(key);
+	/**
+	 * Gets the index of a given item in this set's ordering. Unlike most collections, this takes O(1) time here.
+	 * This returns -1 if the item was not present.
+	 * @param item the item to retrieve the index for
+	 * @return the index of the item, or -1 if it was not found
+	 */
+	public int indexOf (Object item) {
+		return map.get(item);
 	}
 
-	public int indexOfOrDefault (Object key, int defaultValue) {
-		return map.getOrDefault(key, defaultValue);
+	/**
+	 * Gets the index of a given item in this set's ordering. Unlike most collections, this takes O(1) time here.
+	 * This returns {@code defaultValue} if the item was not present.
+	 * @param item the item to retrieve the index for
+	 * @return the index of the item, or {@code defaultValue} if it was not found
+	 */
+	public int indexOfOrDefault (Object item, int defaultValue) {
+		return map.getOrDefault(item, defaultValue);
 	}
 
 	public boolean notEmpty () {
@@ -429,6 +491,15 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		if (size() > newSize) {removeRange(newSize, size());}
 	}
 
+	/**
+	 * Returns a {@link ListIterator} starting at index 0.
+	 * This caches the iterator to avoid repeated allocation, and so is not
+	 * suitable for nested iteration. You can use
+	 * {@link NumberedSetIterator#NumberedSetIterator(NumberedSet)} if
+	 * you need nested iteration.
+	 * This is equivalent to {@link #listIterator()}.
+	 * @return a ListIterator, or more specifically a {@link NumberedSetIterator} over this set
+	 */
 	@Override
 	public NumberedSetIterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
@@ -446,7 +517,14 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		iterator1.valid = false;
 		return iterator2;
 	}
-
+	/**
+	 * Returns a {@link ListIterator} starting at index 0.
+	 * This caches the iterator to avoid repeated allocation, and so is not
+	 * suitable for nested iteration. You can use
+	 * {@link NumberedSetIterator#NumberedSetIterator(NumberedSet)} if
+	 * you need nested iteration.
+	 * @return a ListIterator, or more specifically a {@link NumberedSetIterator} over this set
+	 */
 	public NumberedSetIterator<T> listIterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new NumberedSetIterator<>(this);
@@ -464,6 +542,16 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		return iterator2;
 	}
 
+	/**
+	 * Returns a {@link ListIterator} starting at the specified index.
+	 * This caches the iterator to avoid repeated allocation, and so is not
+	 * suitable for nested iteration. You can use
+	 * {@link NumberedSetIterator#NumberedSetIterator(NumberedSet, int)} if
+	 * you need nested iteration. Giving an index of 0 is equivalent to calling
+	 * {@link #listIterator()}, and starts at the first item in the order.
+	 * @param index the first index in this set's order to iterate from
+	 * @return a ListIterator, or more specifically a {@link NumberedSetIterator} over this set
+	 */
 	public NumberedSetIterator<T> listIterator (int index) {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new NumberedSetIterator<>(this, index);
