@@ -23,6 +23,7 @@ import com.github.tommyettinger.ds.support.sort.BooleanComparators;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
 
 import javax.annotation.Nullable;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Random;
@@ -768,13 +769,24 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		return iterator2;
 	}
 
+	/**
+	 * A {@link BooleanIterator}, plus {@link ListIterator} methods, over the elements of a BooleanList.
+	 * Use {@link #nextBoolean()} in preference to {@link #next()} to avoid allocating Boolean objects.
+	 */
 	public static class BooleanListIterator implements BooleanIterator {
-		protected int index = 0;
+		protected int index, latest = -1;
 		protected BooleanList list;
 		protected boolean valid = true;
 
 		public BooleanListIterator (BooleanList list) {
 			this.list = list;
+		}
+
+		public BooleanListIterator (BooleanList list, int index) {
+			if (index < 0 || index >= list.size())
+				throw new IndexOutOfBoundsException("BooleanListIterator does not satisfy index >= 0 && index < list.size()");
+			this.list = list;
+			this.index = index;
 		}
 
 		/**
@@ -786,20 +798,13 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		@Override
 		public boolean nextBoolean () {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index >= list.size) {throw new NoSuchElementException();}
-			return list.get(index++);
-		}
-
-		@Override
-		public void remove () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index >= list.size) {throw new NoSuchElementException();}
-			list.removeAt(index);
+			if (index >= list.size()) {throw new NoSuchElementException();}
+			return list.get(latest = index++);
 		}
 
 		/**
 		 * Returns {@code true} if the iteration has more elements.
-		 * (In other words, returns {@code true} if {@link #next} would
+		 * (In other words, returns {@code true} if {@link #nextBoolean} would
 		 * return an element rather than throwing an exception.)
 		 *
 		 * @return {@code true} if the iteration has more elements
@@ -807,11 +812,162 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		@Override
 		public boolean hasNext () {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			return index < list.size;
+			return index < list.size();
+		}
+
+		/**
+		 * Returns {@code true} if this list iterator has more elements when
+		 * traversing the list in the reverse direction.  (In other words,
+		 * returns {@code true} if {@link #previousBoolean} would return an element
+		 * rather than throwing an exception.)
+		 *
+		 * @return {@code true} if the list iterator has more elements when
+		 * traversing the list in the reverse direction
+		 */
+		public boolean hasPrevious () {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			return index > 0 && list.notEmpty();
+		}
+
+		/**
+		 * Returns the previous element in the list and moves the cursor
+		 * position backwards.  This method may be called repeatedly to
+		 * iterate through the list backwards, or intermixed with calls to
+		 * {@link #nextBoolean} to go back and forth.  (Note that alternating calls
+		 * to {@code next} and {@code previous} will return the same
+		 * element repeatedly.)
+		 *
+		 * @return the previous element in the list
+		 * @throws NoSuchElementException if the iteration has no previous
+		 *                                element
+		 */
+		public boolean previousBoolean () {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index <= 0 || list.isEmpty()) {throw new NoSuchElementException();}
+			return list.get(latest = --index);
+		}
+
+		/**
+		 * Returns the index of the element that would be returned by a
+		 * subsequent call to {@link #nextBoolean}. (Returns list size if the list
+		 * iterator is at the end of the list.)
+		 *
+		 * @return the index of the element that would be returned by a
+		 * subsequent call to {@code next}, or list size if the list
+		 * iterator is at the end of the list
+		 */
+		public int nextIndex () {
+			return index;
+		}
+
+		/**
+		 * Returns the index of the element that would be returned by a
+		 * subsequent call to {@link #previousBoolean}. (Returns -1 if the list
+		 * iterator is at the beginning of the list.)
+		 *
+		 * @return the index of the element that would be returned by a
+		 * subsequent call to {@code previous}, or -1 if the list
+		 * iterator is at the beginning of the list
+		 */
+		public int previousIndex () {
+			return index - 1;
+		}
+
+		/**
+		 * Removes from the list the last element that was returned by {@link
+		 * #nextBoolean} or {@link #previousBoolean} (optional operation).  This call can
+		 * only be made once per call to {@code next} or {@code previous}.
+		 * It can be made only if {@link #add} has not been
+		 * called after the last call to {@code next} or {@code previous}.
+		 *
+		 * @throws UnsupportedOperationException if the {@code remove}
+		 *                                       operation is not supported by this list iterator
+		 * @throws IllegalStateException         if neither {@code next} nor
+		 *                                       {@code previous} have been called, or {@code remove} or
+		 *                                       {@code add} have been called after the last call to
+		 *                                       {@code next} or {@code previous}
+		 */
+		@Override
+		public void remove () {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+			list.removeAt(latest);
+			index = latest;
+			latest = -1;
+		}
+
+		/**
+		 * Replaces the last element returned by {@link #nextBoolean} or
+		 * {@link #previousBoolean} with the specified element (optional operation).
+		 * This call can be made only if neither {@link #remove} nor {@link
+		 * #add} have been called after the last call to {@code next} or
+		 * {@code previous}.
+		 *
+		 * @param t the element with which to replace the last element returned by
+		 *          {@code next} or {@code previous}
+		 * @throws UnsupportedOperationException if the {@code set} operation
+		 *                                       is not supported by this list iterator
+		 * @throws ClassCastException            if the class of the specified element
+		 *                                       prevents it from being added to this list
+		 * @throws IllegalArgumentException      if some aspect of the specified
+		 *                                       element prevents it from being added to this list
+		 * @throws IllegalStateException         if neither {@code next} nor
+		 *                                       {@code previous} have been called, or {@code remove} or
+		 *                                       {@code add} have been called after the last call to
+		 *                                       {@code next} or {@code previous}
+		 */
+		public void set (boolean t) {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+			list.set(latest, t);
+		}
+
+		/**
+		 * Inserts the specified element into the list (optional operation).
+		 * The element is inserted immediately before the element that
+		 * would be returned by {@link #nextBoolean}, if any, and after the element
+		 * that would be returned by {@link #previousBoolean}, if any.  (If the
+		 * list contains no elements, the new element becomes the sole element
+		 * on the list.)  The new element is inserted before the implicit
+		 * cursor: a subsequent call to {@code next} would be unaffected, and a
+		 * subsequent call to {@code previous} would return the new element.
+		 * (This call increases by one the value that would be returned by a
+		 * call to {@code nextIndex} or {@code previousIndex}.)
+		 *
+		 * @param t the element to insert
+		 * @throws UnsupportedOperationException if the {@code add} method is
+		 *                                       not supported by this list iterator
+		 * @throws ClassCastException            if the class of the specified element
+		 *                                       prevents it from being added to this list
+		 * @throws IllegalArgumentException      if some aspect of this element
+		 *                                       prevents it from being added to this list
+		 */
+		public void add (boolean t) {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			if (index > list.size()) {throw new NoSuchElementException();}
+			list.insert(index++, t);
+			latest = -1;
 		}
 
 		public void reset () {
 			index = 0;
+			latest = -1;
+		}
+
+		public void reset (int index) {
+			if (index < 0 || index >= list.size())
+				throw new IndexOutOfBoundsException("BooleanListIterator does not satisfy index >= 0 && index < list.size()");
+			this.index = index;
+			latest = -1;
+		}
+
+		/**
+		 * Returns an iterator over elements of type {@code boolean}.
+		 *
+		 * @return this same BooleanListIterator.
+		 */
+		public BooleanList.BooleanListIterator iterator () {
+			return this;
 		}
 	}
 
