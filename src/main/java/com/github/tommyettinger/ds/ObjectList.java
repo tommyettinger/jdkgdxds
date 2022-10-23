@@ -476,7 +476,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * @throws IndexOutOfBoundsException {@inheritDoc}
 	 */
 	@Override
-	public ListIterator<T> listIterator (int index) {
+	public ObjectListIterator<T> listIterator (int index) {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this, index);
 			iterator2 = new ObjectListIterator<>(this, index);
@@ -494,8 +494,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
-	 * Returns a list iterator over the elements in this list (in proper
-	 * sequence).
+	 * Returns a list iterator over the elements in this list (in proper sequence).
 	 * <br>
 	 * The returned iterator is reused by this ObjectList, so it is likely unsuitable for nested iteration.
 	 * Use {@link ObjectListIterator#ObjectListIterator(ObjectList)} to create a ListIterator if you need nested iteration.
@@ -503,7 +502,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * @see #listIterator(int)
 	 */
 	@Override
-	public ListIterator<T> listIterator () {
+	public ObjectListIterator<T> listIterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this);
 			iterator2 = new ObjectListIterator<>(this);
@@ -529,7 +528,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * @return an iterator over the elements in this list in proper sequence
 	 */
 	@Override
-	public Iterator<T> iterator () {
+	public ObjectListIterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this);
 			iterator2 = new ObjectListIterator<>(this);
