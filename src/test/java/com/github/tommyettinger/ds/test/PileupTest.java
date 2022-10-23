@@ -547,7 +547,8 @@ public class PileupTest {
 //                h = h * 127 + text.charAt(i);
 //            }
 //            return h;
-            return text.hashCode();
+//            return (text.hashCode());
+            return Float.floatToRawIntBits(text.hashCode());
         }
 
         @Override
@@ -1253,14 +1254,45 @@ public class PileupTest {
         }
     }
 
+    // FLOAT BITS OF STRING HASHCODE
+
+    //hash multiplier: 0x5E5F6580F1FBDD77 on iteration 280
+    //gets total collisions: 62508, PILEUP: 10
+
+    //hash multiplier: 0x514394EB2C83D22B on iteration 9386
+    //gets total collisions: 60693, PILEUP: 9
+
+    // STRING HASHCODE
+
+    //hash multiplier: 0xA2762D7BDFCD4717 on iteration 104
+    //gets total collisions: 56173, PILEUP: 9
+
+    @Test
+    public void testBadStringSetExhaustive() {
+        final BadString[] words = generateUniqueBad(LEN);
+
+        for (int a = 0; a < 40000; a++) {
+//            for (int b = a + 1; b < 32; b++)
+            {
+                final int hashShiftA = a, hashShiftB = 1;
                 ObjectSet set = new ObjectSet(51, 0.6f) {
                     long collisionTotal = 0;
                     int longestPileup = 0;
 
+                    int hashAddend = 0xD1B54A32;
+                    {
+                        hashMultiplier = 0xD1B54A32D192ED03L;
+                        long ctr = hashAddend;
+                        for (int i = 0; i < hashShiftA; i++) {
+                            hashMultiplier = hashMultiplier * hashMultiplier + (ctr += 0x9E3779B97F4A7C16L);
+                        }
+                    }
                     @Override
                     protected int place (Object item) {
-                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
-                        return (h ^ h >>> hashShiftA ^ h >>> hashShiftB) & mask;
+                        return (int)(item.hashCode() * hashMultiplier >>> shift);
+//                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
+//                        return (h ^ h >>> hashShiftA ^ h >>> hashShiftB) & mask;
+//                        return (h ^ h >>> hashShiftA) + hashAddend & mask;
                     }
 
                     @Override
@@ -1284,7 +1316,8 @@ public class PileupTest {
                         mask = newSize - 1;
                         shift = Long.numberOfLeadingZeros(mask);
 
-                        hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+                        hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
+//                        hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
 
                         Object[] oldKeyTable = keyTable;
 
@@ -1299,7 +1332,7 @@ public class PileupTest {
                                 if (key != null) {addResize(key);}
                             }
                         }
-                        if(collisionTotal > 1850000L) throw new RuntimeException();
+                        if(longestPileup > 18) throw new RuntimeException();
 //                        System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
 //                        System.out.println("total collisions: " + collisionTotal);
 //                        System.out.println("longest pileup: " + longestPileup);
@@ -1307,10 +1340,10 @@ public class PileupTest {
 
                     @Override
                     public void clear () {
-                        if(collisionTotal < 1800000L || longestPileup < 45) {
-                            System.out.println("shifts: a " + hashShiftA + ", b " + hashShiftB);
-                            System.out.println("total collisions: " + collisionTotal);
-                            System.out.println("longest pileup: " + longestPileup);
+                        if(longestPileup <= 11) {
+                            System.out.println("hash multiplier: 0x" + Base.BASE16.unsigned(hashMultiplier) + " on iteration " + hashShiftA);
+//                            System.out.println("shifts: a " + hashShiftA + ", b " + hashShiftB);
+                            System.out.println("gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
                         }
                         super.clear();
                     }
