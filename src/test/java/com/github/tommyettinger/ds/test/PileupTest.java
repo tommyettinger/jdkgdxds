@@ -3,14 +3,14 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.ObjectSet;
-import org.junit.Ignore;
+import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.Test;
 
 import javax.annotation.Nonnull;
 
 public class PileupTest {
     public static final int LEN = 500000;
-    public static String[] generateUniqueWords(int size) {
+    public static String[] generateUniqueWordsFibSet(int size) {
         final int numLetters = 4;
         ObjectSet<String> set = new ObjectSet<String>(size, 0.6f){
             @Override
@@ -36,25 +36,74 @@ public class PileupTest {
         }
         return set.toArray(new String[0]);
     }
+    public static String[] generateUniqueWords(int size) {
+        final int numLetters = 4;
+        String[] items = new String[size];
+        char[] maker = new char[numLetters];
+        for (int i = 0; i < size; ) {
+            for (int w = 0; w < 26 && i < size; w++) {
+                maker[0] = (char)('a' + w);
+                for (int x = 0; x < 26 && i < size; x++) {
+                    maker[1] = (char)('a' + x);
+                    for (int y = 0; y < 26 && i < size; y++) {
+                        maker[2] = (char)('a' + y);
+                        for (int z = 0; z < 26 && i < size; z++) {
+                            maker[3] = (char)('a' + z);
+                            final String s = String.valueOf(maker) + i;
+                            items[i] = s;
+                            i++;
+                        }
+                    }
+                }
+            }
+        }
+        return items;
+    }
+    public static String[] generateUniqueWords(int size, long shuffleSeed) {
+        final int numLetters = 4;
+        String[] items = new String[size];
+        char[] maker = new char[numLetters];
+        for (int i = 0; i < size; ) {
+            for (int w = 0; w < 26 && i < size; w++) {
+                maker[0] = (char)('a' + w);
+                for (int x = 0; x < 26 && i < size; x++) {
+                    maker[1] = (char)('a' + x);
+                    for (int y = 0; y < 26 && i < size; y++) {
+                        maker[2] = (char)('a' + y);
+                        for (int z = 0; z < 26 && i < size; z++) {
+                            maker[3] = (char)('a' + z);
+                            final String s = String.valueOf(maker) + i;
+                            items[i] = s;
+                            i++;
+                        }
+                    }
+                }
+            }
+        }
+        WhiskerRandom rng = new WhiskerRandom(shuffleSeed);
+        rng.shuffle(items);
+        return items;
+    }
 
 //    @Ignore // this test used to take much longer to run than the others here (over a minute; everything else is under a second).
     @Test
     public void testObjectSetOld() {
-        final String[] words = generateUniqueWords(LEN);
+        final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging and the constant in place() changed
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
             int longestPileup = 0;
-//            @Override
-//            protected int place (Object item) {
-//                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
-//            }
 
             @Override
             protected int place (Object item) {
-                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // does extremely well???
+                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
             }
+
+//            @Override
+//            protected int place (Object item) {
+//                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // does extremely well???
+//            }
 
             @Override
             protected void addResize (@Nonnull Object key) {
@@ -76,6 +125,9 @@ public class PileupTest {
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
                 shift = Long.numberOfLeadingZeros(mask);
+
+//                hashMultiplier *= size | 0xF1357AEA2E62A9C5L;
+//                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -117,7 +169,7 @@ public class PileupTest {
     }
     @Test
     public void testObjectSetNew() {
-        final String[] words = generateUniqueWords(LEN);
+        final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -195,7 +247,7 @@ public class PileupTest {
 
     @Test
     public void testObjectQuadSet() {
-        final String[] words = generateUniqueWords(LEN);
+        final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -267,7 +319,7 @@ public class PileupTest {
 
     @Test
     public void testObjectQuadSetExperimental() {
-        final String[] words = generateUniqueWords(LEN);
+        final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -354,7 +406,7 @@ public class PileupTest {
 
     @Test
     public void testObjectQuadSetSimplePlace() {
-        final String[] words = generateUniqueWords(LEN);
+        final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -440,7 +492,7 @@ public class PileupTest {
 
     @Test
     public void testObjectSetIntPlace() {
-        final String[] words = generateUniqueWords(LEN);
+        final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -528,90 +580,84 @@ public class PileupTest {
         set.clear();
     }
 
-    private static class BadString implements CharSequence {
-        public CharSequence text;
-        public BadString () {
-            text = "aaa0";
-        }
-
-        public BadString(CharSequence text){
-            this.text = text;
-        }
-
-        @Override
-        public int hashCode () {
-//            return text.charAt(0);
-//            return text.charAt(0) * text.charAt(1);
-//            int h = 1;
-//            for (int i = 0, n = text.length(); i < n; i++) {
-//                h = h * 127 + text.charAt(i);
-//            }
-//            return h;
-//            return (text.hashCode());
-            return Float.floatToRawIntBits(text.hashCode());
-        }
-
-        @Override
-        public boolean equals (Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-
-            BadString badString = (BadString)o;
-
-            return text.equals(badString.text);
-        }
-
-        @Override
-        public int length () {
-            return text.length();
-        }
-
-        @Override
-        public char charAt (int index) {
-            return text.charAt(index);
-        }
-
-        @Nonnull
-        @Override
-        public CharSequence subSequence (int start, int end) {
-            return new BadString(text.subSequence(start, end));
-        }
-
-        @Nonnull
-        @Override
-        public String toString () {
-            return text.toString();
-        }
-    }
-    public static BadString[] generateUniqueBad(int size) {
-        final int numLetters = 3;
-        ObjectObjectMap<BadString, Object> set = new ObjectObjectMap<BadString, Object>(size, 0.5f){
+    public static BadString[] generateUniqueBadFibSet(int size) {
+        final int numLetters = 4;
+        ObjectSet<BadString> set = new ObjectSet<BadString>(size, 0.6f){
             @Override
-            protected int place (@Nonnull Object item) {
-                return (int)(item.hashCode() * 0xABCDEF0987654321L >>> shift);
+            protected int place (Object item) {
+                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
             }
         };
         char[] maker = new char[numLetters];
         for (int i = 0; set.size() < size; ) {
-            for (int x = 0; x < 26 && set.size() < size; x++) {
-                maker[0] = (char) ('a' + x);
-                for (int y = 0; y < 26 && set.size() < size; y++) {
-                    maker[1] = (char) ('a' + y);
-                    for (int z = 0; z < 26 && set.size() < size; z++) {
-                        maker[2] = (char) ('a' + z);
-                        set.put(new BadString(String.valueOf(maker) + (i++)), null);
+            for (int w = 0; w < 26 && set.size() < size; w++) {
+                maker[0] = (char)('a' + w);
+                for (int x = 0; x < 26 && set.size() < size; x++) {
+                    maker[1] = (char)('a' + x);
+                    for (int y = 0; y < 26 && set.size() < size; y++) {
+                        maker[2] = (char)('a' + y);
+                        for (int z = 0; z < 26 && set.size() < size; z++) {
+                            maker[3] = (char)('a' + z);
+                            set.add(new BadString(String.valueOf(maker) + (i++)));
+                        }
                     }
                 }
             }
         }
-        return set.keySet().toArray(new BadString[0]);
+        return set.toArray(new BadString[0]);
+    }
+    public static BadString[] generateUniqueBad(int size) {
+        final int numLetters = 4;
+        BadString[] items = new BadString[size];
+        char[] maker = new char[numLetters];
+        for (int i = 0; i < size; ) {
+            for (int w = 0; w < 26 && i < size; w++) {
+                maker[0] = (char)('a' + w);
+                for (int x = 0; x < 26 && i < size; x++) {
+                    maker[1] = (char)('a' + x);
+                    for (int y = 0; y < 26 && i < size; y++) {
+                        maker[2] = (char)('a' + y);
+                        for (int z = 0; z < 26 && i < size; z++) {
+                            maker[3] = (char)('a' + z);
+                            final String s = String.valueOf(maker) + i;
+                            items[i] = new BadString(s);
+                            i++;
+                        }
+                    }
+                }
+            }
+        }
+        return items;
+    }
+    public static BadString[] generateUniqueBad(int size, long shuffleSeed) {
+        final int numLetters = 4;
+        BadString[] items = new BadString[size];
+        char[] maker = new char[numLetters];
+        for (int i = 0; i < size; ) {
+            for (int w = 0; w < 26 && i < size; w++) {
+                maker[0] = (char)('a' + w);
+                for (int x = 0; x < 26 && i < size; x++) {
+                    maker[1] = (char)('a' + x);
+                    for (int y = 0; y < 26 && i < size; y++) {
+                        maker[2] = (char)('a' + y);
+                        for (int z = 0; z < 26 && i < size; z++) {
+                            maker[3] = (char)('a' + z);
+                            final String s = String.valueOf(maker) + i;
+                            items[i] = new BadString(s);
+                            i++;
+                        }
+                    }
+                }
+            }
+        }
+        WhiskerRandom rng = new WhiskerRandom(shuffleSeed);
+        rng.shuffle(items);
+        return items;
     }
 
     @Test
     public void testBadStringSetOld() {
-        final BadString[] words = generateUniqueBad(LEN);
+        final BadString[] words = generateUniqueBad(LEN, -123456789L);
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging
         ObjectSet set = new ObjectSet(51, 0.6f) {
@@ -685,7 +731,7 @@ public class PileupTest {
 
     @Test
     public void testBadStringSetNew() {
-        final BadString[] words = generateUniqueBad(LEN);
+        final BadString[] words = generateUniqueBad(LEN, -123456789L);
         long start = System.nanoTime();
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -772,7 +818,7 @@ public class PileupTest {
 
     @Test
     public void testBadStringQuadSet() {
-        final BadString[] words = generateUniqueBad(LEN);
+        final BadString[] words = generateUniqueBad(LEN, -123456789L);
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -844,6 +890,10 @@ public class PileupTest {
         set.clear();
     }
     /**
+     * Generates an array of Vector2 points (with all integer components) in a spiral order, starting
+     * at (0,0) and moving in a square spiral through all quadrants equally often. This can be a good
+     * worst-case test for hash tables that don't adequately use the sign bit, since the float bits of
+     * (-1,-1) and (1,1) are the same if you don't look at the sign bits.
      * Thanks to Jonathan M, <a href="https://stackoverflow.com/a/20591835">on Stack Overflow</a>.
      * @param size
      * @return
@@ -1119,252 +1169,4 @@ public class PileupTest {
         System.out.println(System.nanoTime() - start);
         set.clear();
     }
-
-    // These hash multipliers are all the value they had after many resizes; to get the
-    // original (starting) value, use the iteration number for the hashShiftA below.
-
-    //hash multiplier: 0x6CF8E91E893CB78D on iteration 287365
-    //gets total collisions: 1757600, PILEUP: 21
-
-    //hash multiplier: 0x4C7DA0AB8EFC274B on iteration 286778
-    //gets total collisions: 1754581, PILEUP: 21
-
-    //hash multiplier: 0x2D73A0F706C4DFE7 on iteration 366992
-    //gets total collisions: 1753314, PILEUP: 21
-
-    //hash multiplier: 0xA514593820923135 on iteration 14025
-    //gets total collisions: 1752811, PILEUP: 21
-
-    //hash multiplier: 0x5ADB4D08F27F4CC1 on iteration 280687
-    //gets total collisions: 1752780, PILEUP: 21
-
-    //hash multiplier: 0xBF276EB5FCCDECA3 on iteration 271814
-    //gets total collisions: 1752322, PILEUP: 21
-
-    //hash multiplier: 0x48887737D50F5C31 on iteration 333383
-    //gets total collisions: 1761164, PILEUP: 20
-
-    //hash multiplier: 0xFF97035ABD3FB86D on iteration 245941
-    //gets total collisions: 1753275, PILEUP: 20
-
-    //hash multiplier: 0x856008634862D9E3 on iteration 243814
-    //gets total collisions: 1761470, PILEUP: 19
-
-    //
-    @Test
-    public void testVector2SetExhaustive() {
-        final Vector2[] words = generateVectorSpiral(LEN);
-
-        for (int a = 0; a < 1; a++) {
-//            for (int b = a + 1; b < 32; b++)
-            {
-                // change hashShiftA to an iteration in the above listing to get its original multiplier
-//                final int hashShiftA = 243814, hashShiftB = 1;
-                final int hashShiftA = a, hashShiftB = 1;
-                ObjectSet set = new ObjectSet(51, 0.6f) {
-                    long collisionTotal = 0;
-                    int longestPileup = 0;
-                    long originalMultiplier;
-                    int hashAddend = 0xD1B54A32;
-                    {
-                        hashMultiplier = 0xD1B54A32D192ED03L;
-                        long ctr = hashAddend;
-                        for (int i = 0; i < hashShiftA; i++) {
-                            hashMultiplier = hashMultiplier * hashMultiplier + (ctr += 0x9E3779B97F4A7C16L);
-                        }
-                        originalMultiplier = hashMultiplier;
-                    }
-                    @Override
-                    protected int place (Object item) {
-                        return (int)(item.hashCode() * hashMultiplier >>> shift);
-//                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
-//                        return (h ^ h >>> hashShiftA ^ h >>> hashShiftB) & mask;
-//                        return (h ^ h >>> hashShiftA) + hashAddend & mask;
-                    }
-
-                    @Override
-                    protected void addResize (@Nonnull Object key) {
-                        Object[] keyTable = this.keyTable;
-                        for (int i = place(key), p = 0; ; i = i + 1 & mask) {
-                            if (keyTable[i] == null) {
-                                keyTable[i] = key;
-                                return;
-                            } else {
-                                collisionTotal++;
-                                longestPileup = Math.max(longestPileup, ++p);
-                            }
-                        }
-                    }
-
-                    @Override
-                    protected void resize (int newSize) {
-                        int oldCapacity = keyTable.length;
-                        threshold = (int)(newSize * loadFactor);
-                        mask = newSize - 1;
-                        shift = Long.numberOfLeadingZeros(mask);
-
-                        hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
-//                        hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
-
-                        Object[] oldKeyTable = keyTable;
-
-                        keyTable = new Object[newSize];
-
-                        collisionTotal = 0;
-                        longestPileup = 0;
-
-                        if (size > 0) {
-                            for (int i = 0; i < oldCapacity; i++) {
-                                Object key = oldKeyTable[i];
-                                if (key != null) {addResize(key);}
-                            }
-                        }
-                        if(collisionTotal > 1810000L) throw new RuntimeException();
-//                        System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
-//                        System.out.println("total collisions: " + collisionTotal);
-//                        System.out.println("longest pileup: " + longestPileup);
-                    }
-
-                    @Override
-                    public void clear () {
-                        if(collisionTotal < 1800000L && longestPileup <= 23) {
-                            System.out.println("hash multiplier: 0x" + Base.BASE16.unsigned(originalMultiplier) + " on iteration " + hashShiftA);
-//                            System.out.println("shifts: a " + hashShiftA + ", b " + hashShiftB);
-                            System.out.println("gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
-                        }
-                        super.clear();
-                    }
-                };
-//        final int limit = (int)(Math.sqrt(LEN));
-//        for (int x = -limit; x < limit; x+=2) {
-//            for (int y = -limit; y < limit; y+=2) {
-//                set.add(new Vector2(x, y));
-//            }
-//        }
-                try {
-                    for (int i = 0; i < LEN; i++) {
-                        set.add(words[i]);
-                    }
-                }catch (RuntimeException ignored){
-                    continue;
-                }
-//        System.out.println(System.nanoTime() - start);
-                set.clear();
-            }
-        }
-    }
-
-    // FLOAT BITS OF STRING HASHCODE
-
-    //hash multiplier: 0x5E5F6580F1FBDD77 on iteration 280
-    //gets total collisions: 62508, PILEUP: 10
-
-    //hash multiplier: 0x514394EB2C83D22B on iteration 9386
-    //gets total collisions: 60693, PILEUP: 9
-
-    // STRING HASHCODE
-
-    //hash multiplier: 0xA2762D7BDFCD4717 on iteration 104
-    //gets total collisions: 56173, PILEUP: 9
-
-    @Test
-    public void testBadStringSetExhaustive() {
-        final BadString[] words = generateUniqueBad(LEN);
-
-        for (int a = 0; a < 40000; a++) {
-//            for (int b = a + 1; b < 32; b++)
-            {
-                final int hashShiftA = a, hashShiftB = 1;
-                ObjectSet set = new ObjectSet(51, 0.6f) {
-                    long collisionTotal = 0;
-                    int longestPileup = 0;
-
-                    int hashAddend = 0xD1B54A32;
-                    {
-                        hashMultiplier = 0xD1B54A32D192ED03L;
-                        long ctr = hashAddend;
-                        for (int i = 0; i < hashShiftA; i++) {
-                            hashMultiplier = hashMultiplier * hashMultiplier + (ctr += 0x9E3779B97F4A7C16L);
-                        }
-                    }
-                    @Override
-                    protected int place (Object item) {
-                        return (int)(item.hashCode() * hashMultiplier >>> shift);
-//                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
-//                        return (h ^ h >>> hashShiftA ^ h >>> hashShiftB) & mask;
-//                        return (h ^ h >>> hashShiftA) + hashAddend & mask;
-                    }
-
-                    @Override
-                    protected void addResize (@Nonnull Object key) {
-                        Object[] keyTable = this.keyTable;
-                        for (int i = place(key), p = 0; ; i = i + 1 & mask) {
-                            if (keyTable[i] == null) {
-                                keyTable[i] = key;
-                                return;
-                            } else {
-                                collisionTotal++;
-                                longestPileup = Math.max(longestPileup, ++p);
-                            }
-                        }
-                    }
-
-                    @Override
-                    protected void resize (int newSize) {
-                        int oldCapacity = keyTable.length;
-                        threshold = (int)(newSize * loadFactor);
-                        mask = newSize - 1;
-                        shift = Long.numberOfLeadingZeros(mask);
-
-                        hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
-//                        hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
-
-                        Object[] oldKeyTable = keyTable;
-
-                        keyTable = new Object[newSize];
-
-                        collisionTotal = 0;
-                        longestPileup = 0;
-
-                        if (size > 0) {
-                            for (int i = 0; i < oldCapacity; i++) {
-                                Object key = oldKeyTable[i];
-                                if (key != null) {addResize(key);}
-                            }
-                        }
-                        if(longestPileup > 18) throw new RuntimeException();
-//                        System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
-//                        System.out.println("total collisions: " + collisionTotal);
-//                        System.out.println("longest pileup: " + longestPileup);
-                    }
-
-                    @Override
-                    public void clear () {
-                        if(longestPileup <= 11) {
-                            System.out.println("hash multiplier: 0x" + Base.BASE16.unsigned(hashMultiplier) + " on iteration " + hashShiftA);
-//                            System.out.println("shifts: a " + hashShiftA + ", b " + hashShiftB);
-                            System.out.println("gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
-                        }
-                        super.clear();
-                    }
-                };
-//        final int limit = (int)(Math.sqrt(LEN));
-//        for (int x = -limit; x < limit; x+=2) {
-//            for (int y = -limit; y < limit; y+=2) {
-//                set.add(new Vector2(x, y));
-//            }
-//        }
-                try {
-                    for (int i = 0; i < LEN; i++) {
-                        set.add(words[i]);
-                    }
-                }catch (RuntimeException ignored){
-                    continue;
-                }
-//        System.out.println(System.nanoTime() - start);
-                set.clear();
-            }
-        }
-    }
-
 }
