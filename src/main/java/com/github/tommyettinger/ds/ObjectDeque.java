@@ -1059,18 +1059,19 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		T value;
 		if (head < tail) { // index is between head and tail.
 			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index);
-			values[tail] = null;
+			System.arraycopy(values, index + 1, values, index, tail - index - 1);
 			this.tail--;
+			values[this.tail] = null;
 		} else if (index >= values.length) { // index is between 0 and tail.
 			index -= values.length;
 			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index);
+			System.arraycopy(values, index + 1, values, index, tail - index - 1);
 			this.tail--;
+			values[this.tail] = null;
 		} else { // index is between head and values.length.
 			value = values[index];
-			System.arraycopy(values, head, values, head + 1, index - head);
-			values[head] = null;
+			System.arraycopy(values, head, values, head + 1, index - head - 1);
+			values[this.head] = null;
 			this.head++;
 			if (this.head == values.length) {
 				this.head = 0;
@@ -1208,7 +1209,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque)}.
 	 */
 	@Override
-	public Iterator<T> iterator () {
+	public ObjectDequeIterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectDequeIterator<>(this);
 			iterator2 = new ObjectDequeIterator<>(this);
@@ -1236,7 +1237,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
 	@Override
-	public Iterator<T> descendingIterator () {
+	public ObjectDequeIterator<T> descendingIterator () {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new ObjectDequeIterator<>(this, true);
 			descendingIterator2 = new ObjectDequeIterator<>(this, true);

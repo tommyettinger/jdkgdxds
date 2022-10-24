@@ -67,38 +67,38 @@ public class IteratorTest {
 		while (it.hasNext()) {
 			String item = it.next();
 			if(random.nextBoolean()) {
-				System.out.println("Removing " + item);
+				//System.out.println("Removing " + item);
 				it.remove();
 				--counter;
-			} else
-				System.out.println("Not removing " + item);
+			}
+			//else System.out.println("Not removing " + item);
 		}
 		Assert.assertEquals(data.size(), counter);
-		System.out.println("\n Going backwards now...\n");
+		//System.out.println("\n Going backwards now...\n");
 		while (it.hasPrevious()) {
 			String item = it.previous();
 			if(random.nextBoolean()) {
-				System.out.println("Removing " + item);
-				System.out.println("Before: " + data);
+				//System.out.println("Removing " + item);
+				//System.out.println("Before: " + data);
 				it.remove();
-				System.out.println("After: " + data);
+				//System.out.println("After: " + data);
 				--counter;
-			} else
-				System.out.println("Not removing " + item);
+			}
+			//else System.out.println("Not removing " + item);
 		}
 		Assert.assertEquals(data.size(), counter);
-		System.out.println("\n Going forwards now...\n");
+		//System.out.println("\n Going forwards now...\n");
 		while (it.hasNext()) {
 			String item = it.next();
 			if (!random.nextBoolean()) {
-				System.out.println("Changing " + item);
+				//System.out.println("Changing " + item);
 				it.set(item.toUpperCase());
 			} else {
-				System.out.println("Adding :)");
+				//System.out.println("Adding :)");
 				it.add(":)");
 			}
 		}
-		System.out.println(data);
+		//System.out.println(data);
 		Assert.assertEquals("[beta, :), ETA, theta, :), iota, :), kappa, :), TAU, chi, :)]", data.toString());
 		data.clear();
 		data.add("aaa");
@@ -110,7 +110,7 @@ public class IteratorTest {
 			if("ccc".equals(item))
 				it.remove();
 		}
-		System.out.println(data);
+		//System.out.println(data);
 	}
 
 	/**
@@ -137,36 +137,36 @@ public class IteratorTest {
 		while (it.hasNext()) {
 			String item = it.next();
 			if(random.nextBoolean()) {
-				System.out.println("Removing " + item);
+				//System.out.println("Removing " + item);
 				it.remove();
 				--counter;
-			} else
-				System.out.println("Not removing " + item);
+			}
+			//else System.out.println("Not removing " + item);
 		}
 		Assert.assertEquals(data.size(), counter);
-		System.out.println("\n Going backwards now...\n");
+		//System.out.println("\n Going backwards now...\n");
 		while (it.hasPrevious()) {
 			String item = it.previous();
 			if(random.nextBoolean()) {
-				System.out.println("Removing " + item);
+				//System.out.println("Removing " + item);
 				it.remove();
 				--counter;
-			} else
-				System.out.println("Not removing " + item);
+			}
+			//else System.out.println("Not removing " + item);
 		}
 		Assert.assertEquals(data.size(), counter);
-		System.out.println("\n Going forwards now...\n");
+		//System.out.println("\n Going forwards now...\n");
 		while (it.hasNext()) {
 			String item = it.next();
 			if (!random.nextBoolean()) {
-				System.out.println("Changing " + item);
+				//System.out.println("Changing " + item);
 				it.set(item.toUpperCase());
 			} else {
-				System.out.println("Adding :)");
+				//System.out.println("Adding :)");
 				it.add(":)");
 			}
 		}
-		System.out.println(data);
+		//System.out.println(data);
 		Assert.assertEquals("[beta, :), ETA, theta, :), iota, :), kappa, :), TAU, chi, :)]", data.toString());
 		data.clear();
 		data.add("aaa");
@@ -178,7 +178,7 @@ public class IteratorTest {
 			if("ccc".equals(item))
 				it.remove();
 		}
-		System.out.println(data);
+		//System.out.println(data);
 	}
 
 	@Test
@@ -191,12 +191,62 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		Iterator<String> it = data.iterator();
+		counter = 0;
+		ListIterator<String> it = data.iterator();
 		while (it.hasNext()) {
 			String item = it.next();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
+		it = data.iterator();
+		WhiskerRandom random = new WhiskerRandom(12345678901L);
+		while (it.hasNext()) {
+			String item = it.next();
+			if(random.nextBoolean()) {
+				//System.out.println("Removing " + item);
+				it.remove();
+				--counter;
+			}
+			//else System.out.println("Not removing " + item);
+		}
+		Assert.assertEquals(data.size(), counter);
+		//System.out.println("\n Going backwards now...\n");
+		while (it.hasPrevious()) {
+			String item = it.previous();
+			if(random.nextBoolean()) {
+				//System.out.println("Removing " + item);
+				//System.out.println("Before: " + data);
+				it.remove();
+				//System.out.println("After: " + data);
+				--counter;
+			}
+			//else System.out.println("Not removing " + item);
+		}
+		Assert.assertEquals(data.size(), counter);
+		//System.out.println("\n Going forwards now...\n");
+		while (it.hasNext()) {
+			String item = it.next();
+			if (!random.nextBoolean()) {
+				//System.out.println("Changing " + item);
+				it.set(item.toUpperCase());
+			} else {
+				//System.out.println("Adding :)");
+				it.add(":)");
+			}
+		}
+		//System.out.println(data);
+		Assert.assertEquals("[beta, :), ETA, theta, :), iota, :), kappa, :), TAU, chi, :)]", data.toString());
+		data.clear();
+		data.add("aaa");
+		data.add("bbb");
+		data.add("ccc");
+		it = data.iterator();
+		while (it.hasNext()) {
+			String item = it.next();
+			if("ccc".equals(item))
+				it.remove();
+		}
+		//System.out.println(data);
 	}
 
 	@Test
