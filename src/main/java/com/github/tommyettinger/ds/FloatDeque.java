@@ -151,10 +151,10 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 			values = this.values;
 		}
 
-		values[tail++] = item;
 		if (tail == values.length) {
 			tail = 0;
 		}
+		values[tail++] = item;
 		size++;
 	}
 
@@ -847,12 +847,12 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		float value;
 		if (head < tail) { // index is between head and tail.
 			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index);
+			System.arraycopy(values, index + 1, values, index, tail - index - 1);
 			this.tail--;
 		} else if (index >= values.length) { // index is between 0 and tail.
 			index -= values.length;
 			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index);
+			System.arraycopy(values, index + 1, values, index, tail - index - 1);
 			this.tail--;
 		} else { // index is between head and values.length.
 			value = values[index];
@@ -976,7 +976,7 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 	 * iteration, use {@link FloatDequeIterator#FloatDequeIterator(FloatDeque)}.
 	 */
 	@Override
-	public FloatIterator iterator () {
+	public FloatDequeIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new FloatDequeIterator(this);
 			iterator2 = new FloatDequeIterator(this);
@@ -1003,7 +1003,7 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public FloatIterator descendingIterator () {
+	public FloatDequeIterator descendingIterator () {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new FloatDequeIterator(this, true);
 			descendingIterator2 = new FloatDequeIterator(this, true);
@@ -1031,8 +1031,10 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		StringBuilder sb = new StringBuilder(64);
 		sb.append('[');
 		sb.append(values[head]);
-		for (int i = (head + 1) % values.length; i != tail; i = (i + 1) % values.length) {
+		for (int i = (head + 1) % values.length; i != tail;) {
 			sb.append(", ").append(values[i]);
+			if(++i == tail) break;
+			if(i == values.length) i = 0;
 		}
 		sb.append(']');
 		return sb.toString();
@@ -1047,8 +1049,11 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 
 		StringBuilder sb = new StringBuilder(64);
 		sb.append(values[head]);
-		for (int i = (head + 1) % values.length; i != tail; i = (i + 1) % values.length)
+		for (int i = (head + 1) % values.length; i != tail;) {
 			sb.append(separator).append(values[i]);
+			if(++i == tail) break;
+			if(i == values.length) i = 0;
+		}
 		return sb.toString();
 	}
 
