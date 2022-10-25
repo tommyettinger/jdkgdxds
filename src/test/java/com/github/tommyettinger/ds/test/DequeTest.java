@@ -84,5 +84,26 @@ public class DequeTest {
 		deque.addLast("ZILTOID THE OMNISCIENT");
 		System.out.println(deque);
 
+
+		deque = ObjectDeque.with(
+			"alpha", "beta", "gamma", "delta", "epsilon", "zeta",
+			"eta", "theta", "iota", "kappa", "lambda",
+			"mu", "nu", "xi", "omicron", "pi", "rho", "sigma",
+			"tau", "upsilon", "phi", "chi", "psi", "omega"
+		);
+		deque.removeFirst();
+		deque.removeFirst();
+		deque.removeFirst();
+		deque.removeFirst();
+		deque.removeFirst();
+		deque.removeFirst();
+		System.out.println(deque);
+		deque.removeLast();
+		deque.removeLast();
+		System.out.println(deque);
+		deque.addLast("PSI");
+		deque.addLast("OMEGA");
+		deque.addLast("CAPTAIN SPECTACULAR");
+		System.out.println(deque);
 	}
 }
