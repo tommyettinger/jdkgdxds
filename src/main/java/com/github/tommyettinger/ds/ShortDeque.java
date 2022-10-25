@@ -465,15 +465,15 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	 * the index is less than or equal to 0 (where it acts like offerFirst()) or greater than or equal to {@link #size()}
 	 * (where it acts like offerLast()).
 	 * @param index the index in the deque's insertion order to insert the item
-	 * @param t a short item to insert; may be null
+	 * @param item a short item to insert; may be null
 	 * @return true if this deque was modified
 	 */
-	public boolean add (int index, short t) {
+	public boolean add (int index, short item) {
 		int oldSize = size;
 		if(index <= 0)
-			addFirst(t);
+			addFirst(item);
 		else if(index >= oldSize)
-			addLast(t);
+			addLast(item);
 		else {
 			short[] values = this.values;
 
@@ -483,17 +483,19 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 			}
 
 			if(head < tail) {
-				System.arraycopy(values, head + index, values, head + index + 1, tail - head - index);
-				values[head + index] = t;
+				index += head;
+				if(index >= values.length) index -= values.length;
+				System.arraycopy(values, index, values, (index + 1) % values.length, tail - index);
+				values[index] = item;
 				tail++;
-				if (tail == values.length) {
-					tail = 0;
+				if (tail > values.length) {
+					tail = 1;
 				}
 			} else {
 				if (head + index < values.length) {
 					// backward shift
 					System.arraycopy(values, head, values, head - 1, index);
-					values[head - 1 + index] = t;
+					values[head - 1 + index] = item;
 					head--;
 					// don't need to check for head being negative, because head is always > tail
 				}
@@ -501,13 +503,12 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 					// forward shift
 					index -= values.length - 1;
 					System.arraycopy(values, head + index, values, head + index + 1, tail - head - index);
-					values[head + index] = t;
+					values[head + index] = item;
 					tail++;
 					// again, don't need to check for tail going around, because the head is in the way and doesn't need to move
 				}
 			}
 			size++;
-
 		}
 		return oldSize != size;
 	}
