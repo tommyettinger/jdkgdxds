@@ -1070,7 +1070,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 			values[this.tail] = null;
 		} else { // index is between head and values.length.
 			value = values[index];
-			System.arraycopy(values, head, values, head + 1, index - head - 1);
+			System.arraycopy(values, head, values, head + 1, index - head);
 			values[this.head] = null;
 			this.head++;
 			if (this.head == values.length) {

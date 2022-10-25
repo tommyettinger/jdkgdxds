@@ -71,5 +71,18 @@ public class DequeTest {
 		// the deque should contain eta through omega, followed by three all-caps names.
 		// the names should be at slots 0, 1, 2, and eta starts at slot 6.
 		System.out.println(deque);
+		deque.removeAt(1); // removes theta
+		System.out.println(deque);
+		deque.removeAt(18); // removes BETTY
+		System.out.println(deque);
+		deque.addFirst("bet");
+		deque.addFirst("alef");
+		System.out.println(deque);
+		deque.removeLast(); // removes CAROL
+		deque.removeLast(); // removes AMBER
+		deque.removeLast(); // removes omega
+		deque.addLast("ZILTOID THE OMNISCIENT");
+		System.out.println(deque);
+
 	}
 }
