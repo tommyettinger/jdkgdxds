@@ -75,8 +75,8 @@ public class DequeTest {
 		System.out.println(deque);
 		deque.removeAt(18); // removes BETTY
 		System.out.println(deque);
-		deque.addFirst("bet");
 		deque.addFirst("alef");
+		deque.add(1, "bet");
 		System.out.println(deque);
 		deque.removeLast(); // removes CAROL
 		deque.removeLast(); // removes AMBER
@@ -101,9 +101,9 @@ public class DequeTest {
 		deque.removeLast();
 		deque.removeLast();
 		System.out.println(deque);
-		deque.addLast("PSI");
 		deque.addLast("OMEGA");
 		deque.addLast("CAPTAIN SPECTACULAR");
-		System.out.println(deque);
+		deque.add(17, "PSI");
+		System.out.println(deque.toString());
 	}
 }
