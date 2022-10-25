@@ -150,10 +150,10 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 			values = this.values;
 		}
 
-		values[tail++] = item;
 		if (tail == values.length) {
 			tail = 0;
 		}
+		values[tail++] = item;
 		size++;
 	}
 
@@ -845,12 +845,12 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		char value;
 		if (head < tail) { // index is between head and tail.
 			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index);
+			System.arraycopy(values, index + 1, values, index, tail - index - 1);
 			this.tail--;
 		} else if (index >= values.length) { // index is between 0 and tail.
 			index -= values.length;
 			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index);
+			System.arraycopy(values, index + 1, values, index, tail - index - 1);
 			this.tail--;
 		} else { // index is between head and values.length.
 			value = values[index];
@@ -974,7 +974,7 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 	 * iteration, use {@link CharDequeIterator#CharDequeIterator(CharDeque)}.
 	 */
 	@Override
-	public CharIterator iterator () {
+	public CharDequeIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new CharDequeIterator(this);
 			iterator2 = new CharDequeIterator(this);
@@ -1001,7 +1001,7 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public CharIterator descendingIterator () {
+	public CharDequeIterator descendingIterator () {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new CharDequeIterator(this, true);
 			descendingIterator2 = new CharDequeIterator(this, true);
@@ -1029,8 +1029,10 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		StringBuilder sb = new StringBuilder(64);
 		sb.append('[');
 		sb.append(values[head]);
-		for (int i = (head + 1) % values.length; i != tail; i = (i + 1) % values.length) {
+		for (int i = (head + 1) % values.length; i != tail;) {
 			sb.append(", ").append(values[i]);
+			if(++i == tail) break;
+			if(i == values.length) i = 0;
 		}
 		sb.append(']');
 		return sb.toString();
@@ -1045,13 +1047,16 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 
 		StringBuilder sb = new StringBuilder(64);
 		sb.append(values[head]);
-		for (int i = (head + 1) % values.length; i != tail; i = (i + 1) % values.length)
+		for (int i = (head + 1) % values.length; i != tail;) {
 			sb.append(separator).append(values[i]);
+			if(++i == tail) break;
+			if(i == values.length) i = 0;
+		}
 		return sb.toString();
 	}
 
 	/**
-	 * Simply returns all of the char items in this as one String, with no delimiters.
+	 * Simply returns all the char items in this as one String, with no delimiters.
 	 *
 	 * @return a String containing only the char items in this CharDeque
 	 */
