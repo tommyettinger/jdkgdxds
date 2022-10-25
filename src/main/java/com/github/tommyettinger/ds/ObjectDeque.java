@@ -137,10 +137,10 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 			values = this.values;
 		}
 
-		values[tail++] = object;
 		if (tail == values.length) {
 			tail = 0;
 		}
+		values[tail++] = object;
 		size++;
 	}
 
@@ -1265,8 +1265,10 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		StringBuilder sb = new StringBuilder(64);
 		sb.append('[');
 		sb.append(values[head]);
-		for (int i = (head + 1) % values.length; i != tail; i = (i + 1) % values.length) {
+		for (int i = (head + 1) % values.length; i != tail;) {
 			sb.append(", ").append(values[i]);
+			if(++i == tail) break;
+			if(i == values.length) i = 0;
 		}
 		sb.append(']');
 		return sb.toString();
@@ -1281,8 +1283,11 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 
 		StringBuilder sb = new StringBuilder(64);
 		sb.append(values[head]);
-		for (int i = (head + 1) % values.length; i != tail; i = (i + 1) % values.length)
+		for (int i = (head + 1) % values.length; i != tail;) {
 			sb.append(separator).append(values[i]);
+			if(++i == tail) break;
+			if(i == values.length) i = 0;
+		}
 		return sb.toString();
 	}
 
