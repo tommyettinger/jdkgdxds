@@ -1208,7 +1208,7 @@ public class PileupTest {
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
 
-            //            {
+//            {
 //                hashMultiplier = 0xD1B54A32D192ED03L;
 //            }
             @Override
@@ -1255,7 +1255,10 @@ public class PileupTest {
                 // was using this in many tests
                 // total 1788695, longest 33, average 5.686122731838816, sum 160
                 hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
-
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L; // average 5.898153681828007
+//                hashMultiplier *= 0x9E3779B97F4A7C15L; // average 5.793621174166804
+//                hashMultiplier *= 0xD1B54A32D192ED03L; // average 5.9661476545909995
+//                hashMultiplier *= (long)size << 10 ^ 0xF1357AEA2E62A9C5L; // average 5.865185076866346
 //                hashMultiplier = (hashMultiplier + size + size) * 0xF1357AEA2E62A9C5L + 0xD1B54A32D192ED03L ^ 0x9E3779B97F4A7C15L;
 //                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xE19B01AA9D42C631L) * 0xF1357AEA2E62A9C5L); // | 0x8000000000000000L; // + 0xC13FA9A902A6328EL
 
@@ -1349,6 +1352,17 @@ public class PileupTest {
                 // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
                 // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+                hashMultiplier *= 0xF1357AEA2E62A9C5L; // average 5.861974365169182
+//                hashMultiplier *= 0xD1B54A32D192ED03L; // average 6.411664102335872
+//                hashMultiplier *= 0x9E3779B97F4A7C15L; // average 6.314214233943263
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L ^ Long.reverseBytes(size); // average 6.339461236219371
+//                hashMultiplier *= (long)size << 4 ^ 0xF1357AEA2E62A9C5L; // average 6.149158221329298
+//                hashMultiplier *= (long)size << 6 ^ 0xF1357AEA2E62A9C5L; // average 6.166817135663695
+//                hashMultiplier *= (long)size << 10 ^ 0xF1357AEA2E62A9C5L; // average 5.93734025914576
+//                hashMultiplier *= (long)size << 27 ^ 0xF1357AEA2E62A9C5L; // average 6.140517910049209
+//                hashMultiplier *= (long)size << 11 ^ 0xD1B54A32D192ED03L; // average 6.031191587299569
+//                hashMultiplier *= (long)size << 13 ^ 0x9E3779B97F4A7C15L; // average 6.060720598146053
+//                hashMultiplier *= (long)size << 3 ^ 0x123456789ABCDEFL; // average 6.060720598146053
 //
 //                hashMultiplier = MathTools.GOLDEN_LONGS[64 - shift];
 //                hashMultiplier = MathTools.GOLDEN_LONGS[(int)((size * 320L >>> 1) % 509L)]; // average 6.126352631512023
@@ -1360,12 +1374,15 @@ public class PileupTest {
 //                hashMultiplier = MathTools.GOLDEN_LONGS[(int)((size * 948L >>> 1) % 509L)]; // average 10.943815724222118
 //                hashMultiplier = MathTools.GOLDEN_LONGS[(int)((size * 698L >>> 1) % 509L)]; // average 7.3446110906247215
 
-                hashMultiplier = MathTools.GOLDEN_LONGS[(int)((size * 802L >>> 1) % 1021L)]; // average 6.050716529125288, interestingly this isn't one of the good multipliers (see L'Ecuyer errata)
+//                hashMultiplier = MathTools.GOLDEN_LONGS[(int)((size * 802L >>> 1) % 1021L)]; // average 6.050716529125288, interestingly this isn't one of the good multipliers (see L'Ecuyer errata)
 //                hashMultiplier = MathTools.GOLDEN_LONGS[(int)((size * 1288L >>> 1) % 1021L)]; // average 6.232080414022863
 //                hashMultiplier = MathTools.GOLDEN_LONGS[(int)((size * 1912L >>> 1) % 1021L)]; // average 6.610314967638569
 //                hashMultiplier = MathTools.GOLDEN_LONGS[(int)((size * 130L >>> 1) % 1021L)]; // average 6.241976399679564
 //                hashMultiplier = MathTools.GOLDEN_LONGS[(int)((size * 662L >>> 1) % 1021L)]; // average 6.261281995854685, interestingly this isn't one of the good multipliers (see L'Ecuyer errata)
 //                hashMultiplier = MathTools.GOLDEN_LONGS[(int)((size * 774L >>> 1) % 1021L)]; // average 6.815190163142301
+//                hashMultiplier = MathTools.GOLDEN_LONGS[(64 - shift) * 21 & 1023]; // average 6.024830563432219
+//                hashMultiplier = MathTools.GOLDEN_LONGS[size + 64 - shift & 1023]; // average 6.062132039723815
+//                hashMultiplier *= MathTools.GOLDEN_LONGS[size + 64 - shift & 1022]; // average 5.971809315514413
                 //(int)((size * 320L >>> 1) % 509L)
 
                 Object[] oldKeyTable = keyTable;
