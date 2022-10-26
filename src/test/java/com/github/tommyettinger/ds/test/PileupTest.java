@@ -1,6 +1,7 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.random.WhiskerRandom;
@@ -93,7 +94,7 @@ public class PileupTest {
         // replicates old ObjectSet behavior, with added logging and the constant in place() changed
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
 
             @Override
             protected int place (Object item) {
@@ -133,6 +134,8 @@ public class PileupTest {
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
 
@@ -152,6 +155,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };
@@ -173,7 +177,7 @@ public class PileupTest {
         long start = System.nanoTime();
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
 
             @Override
             protected void addResize (@Nonnull Object key) {
@@ -210,6 +214,8 @@ public class PileupTest {
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
 
@@ -229,6 +235,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };
@@ -251,7 +258,7 @@ public class PileupTest {
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
 
             @Override
             protected void addResize (@Nonnull Object key) {
@@ -274,14 +281,20 @@ public class PileupTest {
                 mask = newSize - 1;
                 shift = Long.numberOfLeadingZeros(mask);
 
-                // we modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
-                // we incorporate the size in here (times 2, so it doesn't make the multiplier even) to randomize things more.
-                hashMultiplier = (hashMultiplier + size + size ^ 0xC79E7B18) * 0x13C6EB & 0x1FFFFF;
+////                 we modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
+////                 we incorporate the size in here (times 2, so it doesn't make the multiplier even) to randomize things more.
+//                hashMultiplier = (hashMultiplier + size + size ^ 0xC79E7B18) * 0x13C6EB & 0x1FFFFF;
+
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
                 Object[] oldKeyTable = keyTable;
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
 
@@ -301,6 +314,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };
@@ -323,7 +337,7 @@ public class PileupTest {
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
 
             @Override
             protected int place (Object item) {
@@ -359,16 +373,21 @@ public class PileupTest {
                 mask = newSize - 1;
                 shift = Long.numberOfLeadingZeros(mask);
 
-                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
-                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
-                // hex digit 5 or D -- this makes it a valid power-of-two-modulus MCG multiplier, which might help a bit. We also always
-                // set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
-                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
+//                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
+//                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
+//                // hex digit 5 or D -- this makes it a valid power-of-two-modulus MCG multiplier, which might help a bit. We also always
+//                // set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
+//                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
                 Object[] oldKeyTable = keyTable;
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
 
@@ -388,6 +407,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };
@@ -410,7 +430,7 @@ public class PileupTest {
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             int hm = 0x13C6ED;
 
             @Override
@@ -454,6 +474,8 @@ public class PileupTest {
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
 
@@ -473,6 +495,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hm) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };
@@ -496,7 +519,7 @@ public class PileupTest {
         long start = System.nanoTime();
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             int hm = 0x13C6ED;
 
             @Override
@@ -544,6 +567,8 @@ public class PileupTest {
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
 
@@ -563,6 +588,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hm) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };
@@ -662,7 +688,7 @@ public class PileupTest {
         // replicates old ObjectSet behavior, with added logging
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             @Override
             protected int place (Object item) {
                 return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // if this long constant is the same as the one used
@@ -694,6 +720,8 @@ public class PileupTest {
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
 
@@ -713,6 +741,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };
@@ -735,7 +764,7 @@ public class PileupTest {
         long start = System.nanoTime();
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
 
             @Override
             protected void addResize (@Nonnull Object key) {
@@ -780,6 +809,8 @@ public class PileupTest {
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
 
@@ -799,6 +830,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };
@@ -822,7 +854,7 @@ public class PileupTest {
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
 
             @Override
             protected void addResize (@Nonnull Object key) {
@@ -844,17 +876,23 @@ public class PileupTest {
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
                 shift = Long.numberOfLeadingZeros(mask);
+//
+//                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
+//                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
+//                // hex digit 5 or D -- this makes it a valid power-of-two-modulus MCG multiplier, which might help a bit. We also always
+//                // set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
+//                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
 
-                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
-                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
-                // hex digit 5 or D -- this makes it a valid power-of-two-modulus MCG multiplier, which might help a bit. We also always
-                // set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
-                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
                 Object[] oldKeyTable = keyTable;
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
 
@@ -874,6 +912,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };
@@ -889,6 +928,91 @@ public class PileupTest {
         System.out.println(System.nanoTime() - start);
         set.clear();
     }
+
+    @Test
+    public void testBadStringQuadSetGold() {
+        final BadString[] words = generateUniqueBad(LEN, -123456789L);
+        long start = System.nanoTime();
+        ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
+            long collisionTotal = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
+
+            {
+                hashMultiplier = 0xD1B54A32D192ED03L;
+            }
+            @Override
+            protected void addResize (@Nonnull Object key) {
+                Object[] keyTable = this.keyTable;
+                for (int i = place(key), dist = 0; ; i = i + dist & mask) {
+                    if (keyTable[i] == null) {
+                        keyTable[i] = key;
+                        return;
+                    } else {
+                        collisionTotal++;
+                        longestPileup = Math.max(longestPileup, ++dist);
+                    }
+                }
+            }
+
+            @Override
+            protected void resize (int newSize) {
+                int oldCapacity = keyTable.length;
+                threshold = (int)(newSize * loadFactor);
+                mask = newSize - 1;
+                shift = Long.numberOfLeadingZeros(mask);
+//
+//                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
+//                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
+//                // hex digit 5 or D -- this makes it a valid power-of-two-modulus MCG multiplier, which might help a bit. We also always
+//                // set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
+//                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
+
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+                hashMultiplier *= 0xD1B54A32D192ED03L; //MathTools.GOLDEN_LONGS[64 - shift];
+
+                Object[] oldKeyTable = keyTable;
+
+                keyTable = new Object[newSize];
+
+                allPileups += longestPileup;
+                pileupChecks++;
+                collisionTotal = 0;
+                longestPileup = 0;
+
+                if (size > 0) {
+                    for (int i = 0; i < oldCapacity; i++) {
+                        Object key = oldKeyTable[i];
+                        if (key != null) {addResize(key);}
+                    }
+                }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                super.clear();
+            }
+        };
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
+//        }
+        for (int i = 0; i < LEN; i++) {
+            set.add(words[i]);
+        }
+        System.out.println(System.nanoTime() - start);
+        set.clear();
+    }
+
     /**
      * Generates an array of Vector2 points (with all integer components) in a spiral order, starting
      * at (0,0) and moving in a square spiral through all quadrants equally often. This can be a good
@@ -920,7 +1044,7 @@ public class PileupTest {
         // replicates old ObjectSet behavior, with added logging
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
 
             int hashAddend = 0xD1B54A32;
             {
@@ -972,6 +1096,8 @@ public class PileupTest {
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
 
@@ -991,6 +1117,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };
@@ -1013,14 +1140,19 @@ public class PileupTest {
         long start = System.nanoTime();
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
+            double averagePileup = 0;
 
+//            {
+//                hashMultiplier = 0xD1B54A32D192ED03L;
+//            }
             @Override
             protected void addResize (@Nonnull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
                         keyTable[i] = key;
+                        averagePileup += p;
                         return;
                     } else {
                         collisionTotal++;
@@ -1051,18 +1183,28 @@ public class PileupTest {
                 // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;//0x59E3779B97F4A7C1L;
 //                hashMultiplier *= MathTools.GOLDEN_LONGS[size & 1023];
-//                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+//                hashMultiplier ^= size + size;
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
 
                 // was using this in many tests
+                // total 1788695, longest 33, average 5.686122731838816, sum 160
                 hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+//                hashMultiplier = (hashMultiplier + size + size) * 0xF1357AEA2E62A9C5L + 0xD1B54A32D192ED03L ^ 0x9E3779B97F4A7C15L;
 //                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xE19B01AA9D42C631L) * 0xF1357AEA2E62A9C5L); // | 0x8000000000000000L; // + 0xC13FA9A902A6328EL
+
+//                hashMultiplier = MathTools.GOLDEN_LONGS[64 - shift];
+//                hashMultiplier = MathTools.GOLDEN_LONGS[size - shift & 255];
 
                 Object[] oldKeyTable = keyTable;
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
+                averagePileup = 0.0;
 
                 if (size > 0) {
                     for (int i = 0; i < oldCapacity; i++) {
@@ -1073,6 +1215,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("average pileup: " + (averagePileup / size));
             }
 
             @Override
@@ -1080,6 +1223,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };
@@ -1102,7 +1246,7 @@ public class PileupTest {
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
-            int longestPileup = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
 
             @Override
             protected void addResize (@Nonnull Object key) {
@@ -1125,16 +1269,22 @@ public class PileupTest {
                 mask = newSize - 1;
                 shift = Long.numberOfLeadingZeros(mask);
 
-                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
-                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
-                // hex digit 5 or D -- this makes it a valid power-of-two-modulus MCG multiplier, which might help a bit. We also always
-                // set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
-                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
+//                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
+//                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
+//                // hex digit 5 or D -- this makes it a valid power-of-two-modulus MCG multiplier, which might help a bit. We also always
+//                // set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
+//                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
+
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
                 Object[] oldKeyTable = keyTable;
 
                 keyTable = new Object[newSize];
 
+                allPileups += longestPileup;
+                pileupChecks++;
                 collisionTotal = 0;
                 longestPileup = 0;
 
@@ -1154,6 +1304,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
                 super.clear();
             }
         };

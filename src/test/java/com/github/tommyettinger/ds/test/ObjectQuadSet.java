@@ -82,7 +82,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
 	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectOrderedSet}.
 	 */
-	protected int hashMultiplier = 0x13C6ED;
+	protected long hashMultiplier = 0x9E3779B97F4A7C15L;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
@@ -205,7 +205,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (Object item) {
-		return (item.hashCode() * hashMultiplier >>> shift);
+		return (int)(item.hashCode() * hashMultiplier >>> shift);
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
 	}
@@ -466,11 +466,15 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-		// We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
-		// We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
-		// hex digit 5 or D -- this makes it a valid power-of-two-modulus MCG multiplier, which might help a bit. We also always
-		// set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
-		hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
+//		// We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
+//		// We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
+//		// hex digit 5 or D -- this makes it a valid power-of-two-modulus MCG multiplier, which might help a bit. We also always
+//		// set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
+//		hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
+
+		// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+		// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+		hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
 		T[] oldKeyTable = keyTable;
 
