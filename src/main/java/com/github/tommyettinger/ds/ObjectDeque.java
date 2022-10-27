@@ -36,6 +36,13 @@ import java.util.Random;
  * and {@link #set(int, Object)}.
  */
 public class ObjectDeque<T> implements Deque<T>, Arrangeable {
+
+	/**
+	 * The value returned when nothing can be obtained from this deque and an exception is not meant to be thrown,
+	 * such as when calling {@link #peek()} on an empty deque.
+	 */
+	@Nullable
+	protected T defaultValue = null;
 	/**
 	 * Contains the values in the queue. Head and tail indices go in a circle around this array, wrapping at the end.
 	 */
@@ -98,6 +105,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		this.size = deque.size;
 		this.head = deque.head;
 		this.tail = deque.tail;
+		this.defaultValue = deque.defaultValue;
 	}
 
 	/**
@@ -122,6 +130,15 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		this.values = Arrays.copyOfRange(a, offset, offset + count);
 		tail = count;
 		size = count;
+	}
+
+	@Nullable
+	public T getDefaultValue () {
+		return defaultValue;
+	}
+
+	public void setDefaultValue (@Nullable T defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 
 	/**
@@ -304,26 +321,56 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 
 	/**
 	 * Retrieves and removes the first element of this deque,
-	 * or returns {@code null} if this deque is empty.
+	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty.
 	 *
-	 * @return the head of this deque, or {@code null} if this deque is empty
+	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	@Override
 	@Nullable
 	public T pollFirst () {
-		return removeFirst();
+		if (size == 0) {
+			// Underflow
+			return defaultValue;
+		}
+
+		final T[] values = this.values;
+
+		final T result = values[head];
+		values[head] = null;
+		head++;
+		if (head == values.length) {
+			head = 0;
+		}
+		size--;
+
+		return result;
 	}
 
 	/**
 	 * Retrieves and removes the last element of this deque,
-	 * or returns {@code null} if this deque is empty.
+	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty.
 	 *
-	 * @return the tail of this deque, or {@code null} if this deque is empty
+	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	@Override
 	@Nullable
 	public T pollLast () {
-		return removeLast();
+		if (size == 0) {
+			return defaultValue;
+		}
+
+		final T[] values = this.values;
+		int tail = this.tail;
+		tail--;
+		if (tail == -1) {
+			tail = values.length - 1;
+		}
+		final T result = values[tail];
+		values[tail] = null;
+		this.tail = tail;
+		size--;
+
+		return result;
 	}
 
 	/**
@@ -357,32 +404,32 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 
 	/**
 	 * Retrieves, but does not remove, the first element of this deque,
-	 * or returns {@code null} if this deque is empty.
+	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty.
 	 *
-	 * @return the head of this deque, or {@code null} if this deque is empty
+	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	@Override
 	@Nullable
 	public T peekFirst () {
 		if (size == 0) {
 			// Underflow
-			return null;
+			return defaultValue;
 		}
 		return values[head];
 	}
 
 	/**
 	 * Retrieves, but does not remove, the last element of this deque,
-	 * or returns {@code null} if this deque is empty.
+	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty.
 	 *
-	 * @return the tail of this deque, or {@code null} if this deque is empty
+	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	@Override
 	@Nullable
 	public T peekLast () {
 		if (size == 0) {
 			// Underflow
-			return null;
+			return defaultValue;
 		}
 		final T[] values = this.values;
 		int tail = this.tail;
@@ -579,17 +626,17 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/**
 	 * Retrieves and removes the head of the queue represented by this deque
 	 * (in other words, the first element of this deque), or returns
-	 * {@code null} if this deque is empty.
+	 * {@link #getDefaultValue() defaultValue} if this deque is empty.
 	 *
 	 * <p>This method is equivalent to {@link #pollFirst()}.
 	 *
-	 * @return the first element of this deque, or {@code null} if
+	 * @return the first element of this deque, or {@link #getDefaultValue() defaultValue} if
 	 * this deque is empty
 	 */
 	@Override
 	@Nullable
 	public T poll () {
-		return removeFirst();
+		return pollFirst();
 	}
 
 	/**
@@ -612,12 +659,12 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/**
 	 * Retrieves, but does not remove, the head of the queue represented by
 	 * this deque (in other words, the first element of this deque), or
-	 * returns {@code null} if this deque is empty.
+	 * returns {@link #getDefaultValue() defaultValue} if this deque is empty.
 	 *
 	 * <p>This method is equivalent to {@link #peekFirst()}.
 	 *
 	 * @return the head of the queue represented by this deque, or
-	 * {@code null} if this deque is empty
+	 * {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	@Override
 	@Nullable
