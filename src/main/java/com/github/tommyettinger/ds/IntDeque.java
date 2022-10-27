@@ -274,10 +274,6 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 	 * @param t the element to add
 	 * @return {@code true} if the element was added to this deque, else
 	 * {@code false}
-	 * @throws ClassCastException       if the class of the specified element
-	 *                                  prevents it from being added to this deque
-	 * @throws NullPointerException     if the specified element is null and this
-	 *                                  deque does not permit null elements
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
@@ -296,10 +292,6 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 	 * @param t the element to add
 	 * @return {@code true} if the element was added to this deque, else
 	 * {@code false}
-	 * @throws ClassCastException       if the class of the specified element
-	 *                                  prevents it from being added to this deque
-	 * @throws NullPointerException     if the specified element is null and this
-	 *                                  deque does not permit null elements
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
@@ -311,22 +303,47 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 
 	/**
 	 * Retrieves and removes the first element of this deque,
-	 * or returns {@code null} if this deque is empty.
+	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty.
 	 *
-	 * @return the head of this deque, or {@code null} if this deque is empty
+	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	public int pollFirst () {
-		return removeFirst();
+		if(size == 0)
+			return defaultValue;
+		final int[] values = this.values;
+
+		final int result = values[head];
+		head++;
+		if (head == values.length) {
+			head = 0;
+		}
+		size--;
+
+		return result;
 	}
 
 	/**
 	 * Retrieves and removes the last element of this deque,
-	 * or returns {@code null} if this deque is empty.
+	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty.
 	 *
-	 * @return the tail of this deque, or {@code null} if this deque is empty
+	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	public int pollLast () {
-		return removeLast();
+		if (size == 0) {
+			return defaultValue;
+		}
+
+		final int[] values = this.values;
+		int tail = this.tail;
+		tail--;
+		if (tail == -1) {
+			tail = values.length - 1;
+		}
+		final int result = values[tail];
+		this.tail = tail;
+		size--;
+
+		return result;
 	}
 
 	/**
@@ -392,18 +409,12 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 	 * Removes the first occurrence of the specified element from this deque.
 	 * If the deque does not contain the element, it is unchanged.
 	 * More formally, removes the first element {@code e} such that
-	 * {@code Objects.equals(o, e)} (if such an element exists).
+	 * {@code o == e)} (if such an element exists).
 	 * Returns {@code true} if this deque contained the specified element
 	 * (or equivalently, if this deque changed as a result of the call).
 	 *
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
-	 * @throws ClassCastException   if the class of the specified element
-	 *                              is incompatible with this deque
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException if the specified element is null and this
-	 *                              deque does not permit null elements
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	public boolean removeFirstOccurrence (int o) {
 		return removeValue(o);
@@ -413,18 +424,12 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 	 * Removes the last occurrence of the specified element from this deque.
 	 * If the deque does not contain the element, it is unchanged.
 	 * More formally, removes the last element {@code e} such that
-	 * {@code Objects.equals(o, e)} (if such an element exists).
+	 * {@code o == e} (if such an element exists).
 	 * Returns {@code true} if this deque contained the specified element
 	 * (or equivalently, if this deque changed as a result of the call).
 	 *
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
-	 * @throws ClassCastException   if the class of the specified element
-	 *                              is incompatible with this deque
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException if the specified element is null and this
-	 *                              deque does not permit null elements
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	public boolean removeLastOccurrence (int o) {
 		return removeLastValue(o);
@@ -445,10 +450,6 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 	 * @return {@code true} (as specified by {@link Collection#add})
 	 * @throws IllegalStateException    if the element cannot be added at this
 	 *                                  time due to capacity restrictions
-	 * @throws ClassCastException       if the class of the specified element
-	 *                                  prevents it from being added to this deque
-	 * @throws NullPointerException     if the specified element is null and this
-	 *                                  deque does not permit null elements
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
@@ -536,10 +537,6 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 	 * @param t the element to add
 	 * @return {@code true} if the element was added to this deque, else
 	 * {@code false}
-	 * @throws ClassCastException       if the class of the specified element
-	 *                                  prevents it from being added to this deque
-	 * @throws NullPointerException     if the specified element is null and this
-	 *                                  deque does not permit null elements
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
@@ -575,7 +572,7 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 	 * this deque is empty
 	 */
 	public int poll () {
-		return removeFirst();
+		return pollFirst();
 	}
 
 	/**
