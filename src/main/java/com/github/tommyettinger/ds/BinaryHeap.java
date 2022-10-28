@@ -593,6 +593,14 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		}
 	}
 
+	/**
+	 * Builds a BinaryHeap with the min-heap property from the given array or varargs of items that extend {@link Node}.
+	 * This is equivalent to {@link #minHeapWith(Node[])}.
+	 *
+	 * @param array an array or varargs of items that extend {@link Node}
+	 * @param <T>   must extend {@link Node}
+	 * @return a new BinaryHeap of T with the min-heap property.
+	 */
 	@SafeVarargs
 	public static <T extends BinaryHeap.Node> BinaryHeap<T> with (T... array) {
 		return new BinaryHeap<>(false, array);

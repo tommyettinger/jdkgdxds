@@ -6,13 +6,12 @@ buildscript {
         gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.21.0'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.22.0'
     }
 }
 
 apply plugin: 'java-library'
 apply plugin: 'com.vanniktech.maven.publish'
-apply plugin: 'idea'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -21,7 +20,7 @@ def projectName = 'jdkgdxds'
 version "$VERSION_NAME"
 group 'com.github.tommyettinger'
 
-//api "com.github.tommyettinger:jdkgdxds:1.0.2"
+//api "com.github.tommyettinger:jdkgdxds:1.0.5"
 
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
@@ -47,7 +46,8 @@ if(JavaVersion.current().isJava9Compatible()) {
     }
 }
 
-//// These next two lines aren't needed because we don't super-source code any more here.
+//// These next three lines aren't needed because we don't super-source code any more here.
+//apply plugin: 'idea'
 //idea.module.excludeDirs += [file("src/main/java/emu/")]
 //[compileJava, compileTestJava, javadoc]*.exclude("emu")
 

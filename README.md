@@ -103,7 +103,7 @@ speedup of over 3 orders of magnitude).
 
 You have two options: Maven Central for stable releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the Gradle dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.4'` (you can use `implementation` instead
+Maven Central uses the Gradle dependency `api 'com.github.tommyettinger:jdkgdxds:1.0.5'` (you can use `implementation` instead
 of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
 cases; if it can't be found, you may need the repository `mavenCentral()` . Jdkgdxds has dependencies on `digital` (which provides
 common math code meant for use by multiple projects) and `funderby` (Java 8 functional interfaces for primitive types). You can
@@ -113,8 +113,8 @@ and add the core dependency `api "com.github.tommyettinger:digital:0.1.4"` . Fun
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.1:sources"
-implementation "com.github.tommyettinger:digital:0.1.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.0.4:sources"
+implementation "com.github.tommyettinger:digital:0.1.4:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.0.5:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -142,22 +142,22 @@ works.
 The dependency (and `inherits` line) on digital is not necessary for jdkgdxds
 0.2.8, but is necessary starting in 1.0.3 and later. The dependency and `inherits` line for funderby is new in 1.0.4 .
 Versions 1.0.1 and 1.0.2 also depended on [juniper](https://github.com/tommyettinger/juniper) 0.0.2 ; if you intend to use the
-randomized algorithms here (like shuffles), then depending on Juniper might be a good idea, though it is still optional.
+randomized algorithms here (like shuffles), then depending on Juniper (0.1.6) might be a good idea, though it is still optional.
 The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
 for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
 The version for funderby is expected to stay at or around 0.0.1, since it is a relatively small library and is probably complete.
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/d0c385905f).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/57ba8a6dd8).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:d0c385905f'` or `api 'com.github.tommyettinger:jdkgdxds:d0c385905f'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:57ba8a6dd8'` or `api 'com.github.tommyettinger:jdkgdxds:57ba8a6dd8'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.1:sources"
-implementation "com.github.tommyettinger:digital:0.1.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:d0c385905f:sources"
+implementation "com.github.tommyettinger:digital:0.1.4:sources"
+implementation "com.github.tommyettinger:jdkgdxds:57ba8a6dd8:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -166,7 +166,7 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="digital" />
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. `d0c385905f` is an example of a recent commit, and can be
+in with the other `inherits` lines. `57ba8a6dd8` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
 
 There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to
