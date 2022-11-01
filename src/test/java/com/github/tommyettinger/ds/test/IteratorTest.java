@@ -1512,4 +1512,32 @@ public class IteratorTest {
 		Assert.assertEquals(size, counter);
 	}
 
+	private static class IntNode extends BinaryHeap.Node {
+		public int v;
+		public IntNode (int value) {
+			super(value);
+			v = value;
+		}
+
+		@Override
+		public float getValue () {
+			return super.getValue();
+		}
+	}
+	@Test
+	public void testBinaryHeapIterator() {
+		BinaryHeap<IntNode> data = BinaryHeap.minHeapWith(
+			new IntNode(10), new IntNode(1), new IntNode(3), new IntNode(9), new IntNode(5),
+			new IntNode(4), new IntNode(2), new IntNode(7), new IntNode(6), new IntNode(8));
+		int counter = 0, size = data.size();
+		Iterator<IntNode> it = data.iterator();
+		while (it.hasNext()) {
+			int item = it.next().v;
+			++counter;
+			System.out.print(item + ", ");
+		}
+		Assert.assertEquals(size, counter);
+	}
+
+
 }

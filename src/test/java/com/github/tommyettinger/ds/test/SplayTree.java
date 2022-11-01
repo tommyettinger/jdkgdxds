@@ -314,4 +314,11 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	}
 
+	public static void main(String[] args) {
+		SplayTree<String> tree = SplayTree.with(IteratorTest.strings);
+		for(String s : tree) {
+			System.out.print(s + ", ");
+		}
+	}
+
 }
