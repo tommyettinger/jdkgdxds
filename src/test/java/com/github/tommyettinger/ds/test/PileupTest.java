@@ -10,7 +10,7 @@ import org.junit.Test;
 import javax.annotation.Nonnull;
 
 public class PileupTest {
-    public static final int LEN = 500000;
+    public static final int LEN = 4000000;
 
     public static String[] generateUniqueWordsFibSet (int size) {
         final int numLetters = 4;
@@ -163,7 +163,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -190,13 +190,17 @@ public class PileupTest {
             double averagePileup = 0;
 
             @Override
+            protected int place (Object item) {
+                return (int)(hashMultiplier * item.hashCode()) >>> shift;
+            }
+
+            @Override
             protected void addResize (@Nonnull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
                         keyTable[i] = key;
                         averagePileup += p;
-
                         return;
                     } else {
                         collisionTotal++;
@@ -220,7 +224,9 @@ public class PileupTest {
 
                 // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
                 // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+//                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+                hashMultiplier *= 0xF1357AEA2E62A9C5L;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -249,7 +255,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -333,7 +339,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -431,7 +437,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -524,7 +530,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hm) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -622,7 +628,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hm) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -783,7 +789,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -877,7 +883,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -963,7 +969,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -1053,7 +1059,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -1097,7 +1103,7 @@ public class PileupTest {
 
     @Test
     public void testVector2SetOld () {
-        final Vector2[] words = generateVectorSpiral(LEN);
+        final Vector2[] spiral = generateVectorSpiral(LEN);
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging
         ObjectSet set = new ObjectSet(51, 0.6f) {
@@ -1108,12 +1114,14 @@ public class PileupTest {
             int hashAddend = 0xD1B54A32;
 
             {
-                hashMultiplier = 0x769C3DC968DB6A07L;
+                hashMultiplier = 0x9E3779B97F4A7C15L;
+//                hashMultiplier = 0x769C3DC968DB6A07L;
             }
 
             @Override
             protected int place (Object item) {
-                return (int)(item.hashCode() * hashMultiplier >>> shift); // total collisions: 2695641,    longest pileup: 41
+                return (int)(item.hashCode() * hashMultiplier) >>> shift; // total collisions: 1757128,    longest pileup: 23 ( hashMultiplier *= 0xF1357AEA2E62A9C5L; )
+//                return (int)(item.hashCode() * hashMultiplier >>> shift); // total collisions: 1761470,    longest pileup: 19
 //                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // total collisions: 2695641,    longest pileup: 41
 //                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift); // total collisions: 5949677,    longest pileup: 65
 //                return (item.hashCode() & mask);                               // total collisions: 2783028662, longest pileup: 25751
@@ -1153,7 +1161,8 @@ public class PileupTest {
                 shift = Long.numberOfLeadingZeros(mask);
 
                 hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
-                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
+//                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
+                hashMultiplier *= 0xF1357AEA2E62A9C5L;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -1182,7 +1191,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -1193,7 +1202,7 @@ public class PileupTest {
 //            }
 //        }
         for (int i = 0; i < LEN; i++) {
-            set.add(words[i]);
+            set.add(spiral[i]);
         }
         System.out.println(System.nanoTime() - start);
         set.clear();
@@ -1201,7 +1210,7 @@ public class PileupTest {
 
     @Test
     public void testVector2SetNew () {
-        final Vector2[] words = generateVectorSpiral(LEN);
+        final Vector2[] spiral = generateVectorSpiral(LEN);
         long start = System.nanoTime();
         ObjectSet set = new ObjectSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -1255,6 +1264,7 @@ public class PileupTest {
                 // was using this in many tests
                 // total 1788695, longest 33, average 5.686122731838816, sum 160
                 hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L; // average 5.898153681828007
 //                hashMultiplier *= 0x9E3779B97F4A7C15L; // average 5.793621174166804
 //                hashMultiplier *= 0xD1B54A32D192ED03L; // average 5.9661476545909995
@@ -1292,7 +1302,7 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
@@ -1303,7 +1313,7 @@ public class PileupTest {
 //            }
 //        }
         for (int i = 0; i < LEN; i++) {
-            set.add(words[i]);
+            set.add(spiral[i]);
         }
         System.out.println(System.nanoTime() - start);
         set.clear();
@@ -1311,7 +1321,7 @@ public class PileupTest {
 
     @Test
     public void testVector2QuadSet () {
-        final Vector2[] words = generateVectorSpiral(LEN);
+        final Vector2[] spiral = generateVectorSpiral(LEN);
         long start = System.nanoTime();
         ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
             long collisionTotal = 0;
@@ -1321,6 +1331,12 @@ public class PileupTest {
 //            {
 //                hashMultiplier = 0xD1B54A32D192ED03L;
 //            }
+
+            @Override
+            protected int place (Object item) {
+                return (int)(hashMultiplier * item.hashCode()) >>> shift;
+            }
+
             @Override
             protected void addResize (@Nonnull Object key) {
                 Object[] keyTable = this.keyTable;
@@ -1412,18 +1428,12 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + allPileups);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
-//        final int limit = (int)(Math.sqrt(LEN));
-//        for (int x = -limit; x < limit; x+=2) {
-//            for (int y = -limit; y < limit; y+=2) {
-//                set.add(new Vector2(x, y));
-//            }
-//        }
         for (int i = 0; i < LEN; i++) {
-            set.add(words[i]);
+            set.add(spiral[i]);
         }
         System.out.println(System.nanoTime() - start);
         set.clear();

@@ -62,7 +62,7 @@ public class ExhaustiveVectorHashTest {
 	//gets total collisions: 1758213, PILEUP: 23
 
 	public static void main(String[] args) { //testVector2SetExhaustive
-		final Vector2[] words = generateVectorSpiral(LEN);
+		final Vector2[] spiral = generateVectorSpiral(LEN);
 
 		for (int a = 0; a < 40000; a++) {
 //            for (int b = a + 1; b < 32; b++)
@@ -153,7 +153,7 @@ public class ExhaustiveVectorHashTest {
 //        }
 				try {
 					for (int i = 0; i < LEN; i++) {
-						set.add(words[i]);
+						set.add(spiral[i]);
 					}
 				}catch (RuntimeException ignored){
 					continue;
