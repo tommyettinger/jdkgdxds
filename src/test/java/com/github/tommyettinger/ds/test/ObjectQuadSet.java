@@ -341,19 +341,37 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		int i = locateKey(key);
 		if (i < 0) {return false;}
 		T[] keyTable = this.keyTable;
-		int mask = this.mask, next = i + 1 & mask;
+		int mask = this.mask, next = i + 1 & mask, dist = 1;
 		while ((key = keyTable[next]) != null) {
 			int placement = place(key);
 			if ((next - placement & mask) > (i - placement & mask)) {
 				keyTable[i] = (T)key;
 				i = next;
 			}
-			next = next + 1 & mask;
+			next = next + ++dist & mask;
 		}
 		keyTable[i] = null;
 		size--;
 		return true;
 	}
+
+//	public boolean remove (Object key) {
+//		int i = locateKey(key);
+//		if (i < 0) {return false;}
+//		T[] keyTable = this.keyTable;
+//		int mask = this.mask, next = i + 1 & mask;
+//		while ((key = keyTable[next]) != null) {
+//			int placement = place(key);
+//			if ((next - placement & mask) > (i - placement & mask)) {
+//				keyTable[i] = (T)key;
+//				i = next;
+//			}
+//			next = next + 1 & mask;
+//		}
+//		keyTable[i] = null;
+//		size--;
+//		return true;
+//	}
 
 	/**
 	 * Returns true if the set has one or more items.

@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -126,15 +128,22 @@ public class ObjectQuadSetTest {
 	}
 
 	@Test public void test_removeLjava_lang_Object () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectQuadSet.remove(java.lang.Object)
+		// Test for method boolean com.github.tommyettinger.ds.test.ObjectQuadSet.remove(java.lang.Object)
 		int size = hs.size();
 		hs.remove(new Integer(98));
 		Assert.assertTrue("Failed to remove element", !hs.contains(new Integer(98)));
 		Assert.assertTrue("Failed to decrement set size", hs.size() == size - 1);
 
-//		ObjectQuadSet s = new ObjectQuadSet();
-//		s.add(null);
-//		assertTrue("Cannot handle null", s.remove(null));
+//		WhiskerRandom rnd = new WhiskerRandom(123);
+//		int[] numbers = ArrayTools.shuffle(ArrayTools.range(objArray.length), rnd);
+		int[] numbers = ArrayTools.range(objArray.length);
+		for (int i = 0; i < numbers.length; i++) {
+			if(!hs.remove(new Integer(numbers[i])))
+				System.out.println(numbers[i]);
+		}
+		// This should print an empty set... but it doesn't.
+		System.out.println(hs);
+//		Assert.assertEquals(0, hs.size);
 	}
 
 	@Test public void test_size () {
@@ -157,9 +166,9 @@ public class ObjectQuadSetTest {
 	 */
 	@Before public void setUp () {
 		hs = new ObjectQuadSet();
-		for (int i = 0; i < objArray.length; i++)
+		for (int i = 0; i < objArray.length; i++) {
 			hs.add(objArray[i]);
-//		hs.add(null);
+		}
 	}
 
 	/**

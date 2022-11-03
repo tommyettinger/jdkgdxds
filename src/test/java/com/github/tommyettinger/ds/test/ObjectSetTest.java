@@ -17,7 +17,9 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -133,9 +135,13 @@ public class ObjectSetTest {
 		Assert.assertTrue("Failed to remove element", !hs.contains(new Integer(98)));
 		Assert.assertTrue("Failed to decrement set size", hs.size() == size - 1);
 
-//		ObjectSet s = new ObjectSet();
-//		s.add(null);
-//		assertTrue("Cannot handle null", s.remove(null));
+
+		WhiskerRandom rnd = new WhiskerRandom(123);
+		int[] randomized = ArrayTools.shuffle(ArrayTools.range(1000), rnd);
+		for (int r : randomized) {
+			hs.remove(new Integer(r));
+		}
+		Assert.assertEquals(0, hs.size());
 	}
 
 	@Test public void test_size () {
