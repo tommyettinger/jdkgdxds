@@ -1118,7 +1118,7 @@ public class PileupTest {
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
 
-            int hashAddend = 0x1A36A9;
+            int hashAddend = 0x9E3779B9;//0x1A36A9;
 
             {
 //                hashMultiplier = 0x9E3779B97F4A7C15L;
@@ -1127,9 +1127,10 @@ public class PileupTest {
 
             @Override
             protected int place (Object item) {
+                return item.hashCode() * hashAddend >>> shift; // total collisions: 1759892,    longest pileup: 25
 //                final int h = item.hashCode() * hashAddend;
 //                return (h ^ h >>> 16) & mask; //total collisions: 1842294, longest pileup: 35
-                return (int)(item.hashCode() * hashMultiplier) >>> shift; // total collisions: 1757128,    longest pileup: 23 ( hashMultiplier *= 0xF1357AEA2E62A9C5L; )
+//                return (int)(item.hashCode() * hashMultiplier) >>> shift; // total collisions: 1757128,    longest pileup: 23 ( hashMultiplier *= 0xF1357AEA2E62A9C5L; )
 //                return (int)(item.hashCode() * hashMultiplier >>> shift); // total collisions: 1761470,    longest pileup: 19
 //                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // total collisions: 2695641,    longest pileup: 41
 //                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift); // total collisions: 5949677,    longest pileup: 65
@@ -1170,7 +1171,7 @@ public class PileupTest {
                 shift = Long.numberOfLeadingZeros(mask);
 
 //                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
-                hashAddend = (int)((hashAddend) * 0xF1357AEA2E62A9C5L) >>> 11 | 1;
+                hashAddend = hashAddend * 0x2E62A9C5;
 //                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
                 hashMultiplier *= 0xF1357AEA2E62A9C5L;
 
