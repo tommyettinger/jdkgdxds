@@ -39,6 +39,11 @@ public class ExhaustiveBadStringHashTest {
 	//hash multiplier: 0x7A5A85AE2AD70CD5 on iteration 2075
 	//gets total collisions: 63283, PILEUP: 9
 
+	// Using int multiplier
+
+	//hash multiplier: 0xD010AA23 on iteration 3606
+	//gets total collisions: 63396, PILEUP: 10
+
 	// STRING HASHCODE
 
 	//hash multiplier: 0xA2762D7BDFCD4717 on iteration 104
@@ -47,26 +52,38 @@ public class ExhaustiveBadStringHashTest {
 	public static void main(String[] args) {
 		final BadString[] words = generateUniqueBad(LEN, -123456789L);
 
-		for (int a = 0; a < 40000; a++) {
+		for (int a = 0; a < 4000; a++) {
 //            for (int b = a + 1; b < 32; b++)
 			{
 				final int hashShiftA = a, hashShiftB = 1;
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
-					long originalMultiplier;
-					int hashAddend = 0xD1B54A32;
+					int originalMultiplier;
+					int hashAddend = 0x9E3779B9;
 					{
 						hashMultiplier = 0xD1B54A32D192ED03L;
-						long ctr = hashAddend;
+						long ctr = hashMultiplier << 1;
 						for (int i = 0; i < hashShiftA; i++) {
-							hashMultiplier = hashMultiplier * hashMultiplier + (ctr += 0x9E3779B97F4A7C16L);
+							hashAddend = hashAddend * hashAddend + (int)(ctr += 0x9E3779B97F4A7C16L);
 						}
-						originalMultiplier = hashMultiplier;
+						originalMultiplier = hashAddend;
 					}
+
+					//					long originalMultiplier;
+//					int hashAddend = 0xD1B54A32;
+//					{
+//						hashMultiplier = 0xD1B54A32D192ED03L;
+//						long ctr = hashAddend;
+//						for (int i = 0; i < hashShiftA; i++) {
+//							hashMultiplier = hashMultiplier * hashMultiplier + (ctr += 0x9E3779B97F4A7C16L);
+//						}
+//						originalMultiplier = hashMultiplier;
+//					}
 					@Override
 					protected int place (Object item) {
-						return (int)(item.hashCode() * hashMultiplier >>> shift);
+						return item.hashCode() * hashAddend >>> shift;
+//						return (int)(item.hashCode() * hashMultiplier >>> shift);
 //                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
 //                        return (h ^ h >>> hashShiftA ^ h >>> hashShiftB) & mask;
 //                        return (h ^ h >>> hashShiftA) + hashAddend & mask;
@@ -94,6 +111,7 @@ public class ExhaustiveBadStringHashTest {
 						shift = Long.numberOfLeadingZeros(mask);
 
 						hashMultiplier *= ((long)size << 3) ^ 0xF1357AEA2E62A9C5L;
+						hashAddend = hashAddend * 0x2E62A9C5;
 //                        hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
 
 						Object[] oldKeyTable = keyTable;
