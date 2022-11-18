@@ -44,6 +44,11 @@ public class ExhaustiveBadStringHashTest {
 	//hash multiplier: 0xD010AA23 on iteration 3606
 	//gets total collisions: 63396, PILEUP: 10
 
+	// Using int multiplier and int addend
+
+	//hash * 0x9A142C1D + 0xEE5D06C7 on iteration 729
+	//gets total collisions: 62659, PILEUP: 10
+
 	// STRING HASHCODE
 
 	//hash multiplier: 0xA2762D7BDFCD4717 on iteration 104
@@ -59,15 +64,17 @@ public class ExhaustiveBadStringHashTest {
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
-					int originalMultiplier;
-					int hashAddend = 0x9E3779B9;
+					int originalMultiplier, originalAddend;
+					int hashMul = 0x9E3779B9, hashAdd = 0xD192ED03;
 					{
 						hashMultiplier = 0xD1B54A32D192ED03L;
 						long ctr = hashMultiplier << 1;
 						for (int i = 0; i < hashShiftA; i++) {
-							hashAddend = hashAddend * hashAddend + (int)(ctr += 0x9E3779B97F4A7C16L);
+							hashMul = hashMul * hashMul + (int)(ctr += 0x9E3779B97F4A7C16L);
+							hashAdd += ctr;
 						}
-						originalMultiplier = hashAddend;
+						originalMultiplier = hashMul;
+						originalAddend = hashAdd;
 					}
 
 					//					long originalMultiplier;
@@ -82,7 +89,7 @@ public class ExhaustiveBadStringHashTest {
 //					}
 					@Override
 					protected int place (Object item) {
-						return item.hashCode() * hashAddend >>> shift;
+						return item.hashCode() * hashMul + hashAdd >>> shift;
 //						return (int)(item.hashCode() * hashMultiplier >>> shift);
 //                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
 //                        return (h ^ h >>> hashShiftA ^ h >>> hashShiftB) & mask;
@@ -111,7 +118,8 @@ public class ExhaustiveBadStringHashTest {
 						shift = Long.numberOfLeadingZeros(mask);
 
 						hashMultiplier *= ((long)size << 3) ^ 0xF1357AEA2E62A9C5L;
-						hashAddend = hashAddend * 0x2E62A9C5;
+						hashMul = hashMul * 0x2E62A9C5;
+						hashAdd += 0xF1357AEA;
 //                        hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
 
 						Object[] oldKeyTable = keyTable;
@@ -136,7 +144,8 @@ public class ExhaustiveBadStringHashTest {
 					@Override
 					public void clear () {
 						if(longestPileup <= 11) {
-							System.out.println("hash multiplier: 0x" + Base.BASE16.unsigned(originalMultiplier) + " on iteration " + hashShiftA);
+							System.out.println("hash * 0x" + Base.BASE16.unsigned(originalMultiplier) +
+								" + 0x" + Base.BASE16.unsigned(originalAddend) + " on iteration " + hashShiftA);
 //                            System.out.println("shifts: a " + hashShiftA + ", b " + hashShiftB);
 							System.out.println("gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						}
