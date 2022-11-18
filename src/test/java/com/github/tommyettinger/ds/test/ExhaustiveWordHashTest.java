@@ -39,13 +39,29 @@ public class ExhaustiveWordHashTest {
 	//}
 	// have identical collisions and pileup, so the addition does nothing to help.
 
+	//hash * 0xEE1862A3 on iteration 6486
+	//gets total collisions: 33339, PILEUP: 9
+
+	//hash * 0x8A58E8C9 on iteration 22551
+	//gets total collisions: 33359, PILEUP: 9
+
+	//hash * 0x04DA4427 on iteration 32184
+	//gets total collisions: 33026, PILEUP: 9
+
+	//hash * 0x92D390C1 on iteration 38611
+	//gets total collisions: 33180, PILEUP: 9
+
+	//hash * 0x38442BE5 on iteration 41565
+	//gets total collisions: 33175, PILEUP: 9
+
 	//hash * 0x94BF16E7FCB6C8F3 on iteration 3678
 	//gets total collisions: 33063, PILEUP: 9
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
-		Collections.shuffle(words, new WhiskerRandom(1234567890L));
-		for (int a = 0; a < 4000; a++) {
+		WhiskerRandom rng = new WhiskerRandom(1234567890L);
+		for (int a = 0; a < 100000; a++) {
 //            for (int b = a + 1; b < 32; b++)
+			Collections.shuffle(words, rng);
 			{
 				final int hashShiftA = a, hashShiftB = 1;
 				ObjectSet set = new ObjectSet(51, 0.6f) {
@@ -109,7 +125,7 @@ public class ExhaustiveWordHashTest {
 						shift = Long.numberOfLeadingZeros(mask);
 
 						hashMultiplier *= ((long)size << 3) ^ 0xF1357AEA2E62A9C5L;
-						hashMul = hashMul * 0x2E62A9C5;
+						hashMul *= 0x2E62A9C5 ^ size + size;
 						hashAdd += 0xF1357AEA;
 //                        hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
 
@@ -126,7 +142,7 @@ public class ExhaustiveWordHashTest {
 								if (key != null) {addResize(key);}
 							}
 						}
-						if(longestPileup > 18) throw new RuntimeException();
+						if(longestPileup > 13) throw new RuntimeException();
 //                        System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
 //                        System.out.println("total collisions: " + collisionTotal);
 //                        System.out.println("longest pileup: " + longestPileup);
@@ -134,7 +150,7 @@ public class ExhaustiveWordHashTest {
 
 					@Override
 					public void clear () {
-						if(longestPileup <= 11) {
+						if(longestPileup <= 10) {
 							System.out.println(
 //								"hash * 0x" + Base.BASE16.unsigned(originalMultiplier) +
 								"hash * 0x" + Base.BASE16.unsigned(originalMul) +

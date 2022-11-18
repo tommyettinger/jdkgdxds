@@ -1126,9 +1126,12 @@ public class PileupTest {
             int hashMul =
                 //0x8A58E8C9; //total collisions: 33952, longest pileup: 11
 //                0xEE1862A3; //total collisions: 33307, longest pileup: 14
-//                0x95C0793F; // total collisions: 32984, longest pileup: 9 with hashMul *= 0x2E62A9C5;
+                0x95C0793F; // total collisions: 32984, longest pileup: 9 with hashMul *= 0x2E62A9C5;
 //                0x95C0793F; // total collisions: 33466, longest pileup: 10 with hashMul *= 0x9E3779B9 + size + size;
-                0x04DA4427; // total collisions: 32925, longest pileup: 11 with hashMul *= 0x2E62A9C5 + size + size;
+//                0x04DA4427; // total collisions: 32925, longest pileup: 11 with hashMul *= 0x2E62A9C5 + size + size;
+//                0x38442BE5; // total collisions: 33930, longest pileup: 11 with hashMul *= 0x2E62A9C5 ^ size + size;
+//                0x92D390C1; // total collisions: 33478, longest pileup: 14 with hashMul *= 0x2E62A9C5 ^ size + size;
+//                0xF0364419; // total collisions: 33307, longest pileup: 12 with hashMul *= 0x2E62A9C5 ^ size + size;
 //            0xEB18A809; // total collisions: 33823, longest pileup: 15
 //            0x9E3779B9; //total collisions: 33807, longest pileup: 14
             // 0x1A36A9;
@@ -1185,7 +1188,8 @@ public class PileupTest {
 
 //                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
 //                hashMul *= 0x9E3779B9 + size + size;
-                hashMul *= 0x2E62A9C5 + size + size;
+//                hashMul *= 0x2E62A9C5 + size + size;
+                hashMul *= 0x2E62A9C5 ^ size + size;
 //                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
                 hashMultiplier *= 0xF1357AEA2E62A9C5L;
 
