@@ -1118,7 +1118,9 @@ public class PileupTest {
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
 
-            int hashAddend = 0x9E3779B9;//0x1A36A9;
+            int hashAddend = 0xEB18A809; // total collisions: 1752402, longest pileup: 21
+            //0x9E3779B9;
+            // 0x1A36A9;
 
             {
 //                hashMultiplier = 0x9E3779B97F4A7C15L;
