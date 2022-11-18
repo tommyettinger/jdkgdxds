@@ -1,13 +1,17 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.Test;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class PileupTest {
     public static final int LEN = 500000;
@@ -1109,8 +1113,9 @@ public class PileupTest {
     }
 
     @Test
-    public void testVector2SetOld () {
-        final Vector2[] spiral = generateVectorSpiral(LEN);
+    public void testStringSetWordList () throws IOException {
+        final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
+        Collections.shuffle(words, new WhiskerRandom(1234567890L));
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging
         ObjectSet set = new ObjectSet(51, 0.6f) {
@@ -1118,8 +1123,14 @@ public class PileupTest {
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
 
-            int hashAddend = 0xEB18A809; // total collisions: 1752402, longest pileup: 21
-            //0x9E3779B9;
+            int hashMul =
+                //0x8A58E8C9; //total collisions: 33952, longest pileup: 11
+//                0xEE1862A3; //total collisions: 33307, longest pileup: 14
+//                0x95C0793F; // total collisions: 32984, longest pileup: 9 with hashMul *= 0x2E62A9C5;
+//                0x95C0793F; // total collisions: 33466, longest pileup: 10 with hashMul *= 0x9E3779B9 + size + size;
+                0x04DA4427; // total collisions: 32925, longest pileup: 11 with hashMul *= 0x2E62A9C5 + size + size;
+//            0xEB18A809; // total collisions: 33823, longest pileup: 15
+//            0x9E3779B9; //total collisions: 33807, longest pileup: 14
             // 0x1A36A9;
 
             {
@@ -1129,7 +1140,7 @@ public class PileupTest {
 
             @Override
             protected int place (Object item) {
-                return item.hashCode() * hashAddend >>> shift; // total collisions: 1759892,    longest pileup: 25
+                return item.hashCode() * hashMul >>> shift; // total collisions: 1759892,    longest pileup: 25
 //                final int h = item.hashCode() * hashAddend;
 //                return (h ^ h >>> 16) & mask; //total collisions: 1842294, longest pileup: 35
 //                return (int)(item.hashCode() * hashMultiplier) >>> shift; // total collisions: 1757128,    longest pileup: 23 ( hashMultiplier *= 0xF1357AEA2E62A9C5L; )
@@ -1173,7 +1184,122 @@ public class PileupTest {
                 shift = Long.numberOfLeadingZeros(mask);
 
 //                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
-                hashAddend = hashAddend * 0x2E62A9C5;
+//                hashMul *= 0x9E3779B9 + size + size;
+                hashMul *= 0x2E62A9C5 + size + size;
+//                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
+                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+
+                Object[] oldKeyTable = keyTable;
+
+                keyTable = new Object[newSize];
+
+                allPileups += longestPileup;
+                pileupChecks++;
+                collisionTotal = 0;
+                longestPileup = 0;
+                averagePileup = 0.0;
+
+                if (size > 0) {
+                    for (int i = 0; i < oldCapacity; i++) {
+                        Object key = oldKeyTable[i];
+                        if (key != null) {addResize(key);}
+                    }
+                }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMul) + " with new size " + newSize);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                System.out.println("average pileup: " + (averagePileup / size));
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMul) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
+                super.clear();
+            }
+        };
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
+//        }
+        for (int i = 0; i < words.size(); i++) {
+            set.add(words.get(i));
+        }
+        System.out.println(System.nanoTime() - start);
+        set.clear();
+    }
+
+
+    @Test
+    public void testVector2SetOld () {
+        final Vector2[] spiral = generateVectorSpiral(LEN);
+        long start = System.nanoTime();
+        // replicates old ObjectSet behavior, with added logging
+        ObjectSet set = new ObjectSet(51, 0.6f) {
+            long collisionTotal = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
+            double averagePileup = 0;
+
+            int hashMul = 0xEB18A809; // total collisions: 1752402, longest pileup: 21
+            //0x9E3779B9;
+            // 0x1A36A9;
+
+            {
+//                hashMultiplier = 0x9E3779B97F4A7C15L;
+                hashMultiplier = 0x769C3DC968DB6A07L;
+            }
+
+            @Override
+            protected int place (Object item) {
+                return item.hashCode() * hashMul >>> shift; // total collisions: 1759892,    longest pileup: 25
+//                final int h = item.hashCode() * hashAddend;
+//                return (h ^ h >>> 16) & mask; //total collisions: 1842294, longest pileup: 35
+//                return (int)(item.hashCode() * hashMultiplier) >>> shift; // total collisions: 1757128,    longest pileup: 23 ( hashMultiplier *= 0xF1357AEA2E62A9C5L; )
+//                return (int)(item.hashCode() * hashMultiplier >>> shift); // total collisions: 1761470,    longest pileup: 19
+//                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // total collisions: 2695641,    longest pileup: 41
+//                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift); // total collisions: 5949677,    longest pileup: 65
+//                return (item.hashCode() & mask);                               // total collisions: 2783028662, longest pileup: 25751
+//                final int h = item.hashCode() + hashAddend;
+//                return (h ^ h >>> 12 ^ h >>> 22) & mask;                       // total collisions: 1786887, longest pileup: 35
+//                return (h ^ h >>> 10 ^ h >>> 18) & mask;                       // total collisions: 1779695, longest pileup: 62
+//                return (h ^ h >>> 12 ^ h >>> 23) & mask;                       // total collisions: 1799252, longest pileup: 43
+//                return (h ^ h >>> 13 ^ h >>> 14) & mask;                       // total collisions: 1805792, longest pileup: 27 (slow?)
+//                return (h ^ h >>> 11 ^ h >>> 21) & mask;                       // total collisions: 3691850, longest pileup: 101
+//                return (h ^ h >>> 11 ^ h >>> 23) & mask;                       // total collisions: 1849222, longest pileup: 59
+//                return (h ^ h >>> 9 ^ h >>> 25) & mask;                        // total collisions: 2027066, longest pileup: 36
+//                return (h & mask) ^ (h * (0x1A36A9) >>> shift);                // total collisions: 1847298, longest pileup: 47
+//                return (h & mask) ^ (h >>> shift);                             // total collisions: 1998198, longest pileup: 61
+            }
+
+            @Override
+            protected void addResize (@Nonnull Object key) {
+                Object[] keyTable = this.keyTable;
+                for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                    if (keyTable[i] == null) {
+                        keyTable[i] = key;
+                        averagePileup += p;
+
+                        return;
+                    } else {
+                        collisionTotal++;
+                        longestPileup = Math.max(longestPileup, ++p);
+                    }
+                }
+            }
+
+            @Override
+            protected void resize (int newSize) {
+                int oldCapacity = keyTable.length;
+                threshold = (int)(newSize * loadFactor);
+                mask = newSize - 1;
+                shift = Long.numberOfLeadingZeros(mask);
+
+//                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
+                hashMul = hashMul * 0x2E62A9C5;
 //                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
                 hashMultiplier *= 0xF1357AEA2E62A9C5L;
 
