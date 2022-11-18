@@ -28,12 +28,19 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
-import static com.github.tommyettinger.ds.test.PileupTest.LEN;
-
 public class ExhaustiveWordHashTest {
 
+	// these two: {
 	//hash * 0x95C0793F + 0xEEC45107 on iteration 1428
 	//gets total collisions: 32984, PILEUP: 9
+
+	//hash * 0x95C0793F on iteration 1428
+	//gets total collisions: 32984, PILEUP: 9
+	//}
+	// have identical collisions and pileup, so the addition does nothing to help.
+
+	//hash * 0x94BF16E7FCB6C8F3 on iteration 3678
+	//gets total collisions: 33063, PILEUP: 9
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		Collections.shuffle(words, new WhiskerRandom(1234567890L));
@@ -43,18 +50,21 @@ public class ExhaustiveWordHashTest {
 				final int hashShiftA = a, hashShiftB = 1;
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
+					long originalMultiplier;
 					int longestPileup = 0;
-					int originalMultiplier, originalAddend;
+					int originalMul, originalAdd;
 					int hashMul = 0x9E3779B9, hashAdd = 0xD192ED03;
 					{
 						hashMultiplier = 0xD1B54A32D192ED03L;
 						long ctr = hashMultiplier << 1;
 						for (int i = 0; i < hashShiftA; i++) {
-							hashMul = hashMul * hashMul + (int)(ctr += 0x9E3779B97F4A7C16L);
+							hashMultiplier = hashMultiplier * hashMultiplier + (ctr += 0x9E3779B97F4A7C16L);
+							hashMul = hashMul * hashMul + (int)ctr;
 							hashAdd += ctr;
 						}
-						originalMultiplier = hashMul;
-						originalAddend = hashAdd;
+						originalMultiplier = hashMultiplier;
+						originalMul = hashMul;
+						originalAdd = hashAdd;
 					}
 
 					//					long originalMultiplier;
@@ -125,8 +135,11 @@ public class ExhaustiveWordHashTest {
 					@Override
 					public void clear () {
 						if(longestPileup <= 11) {
-							System.out.println("hash * 0x" + Base.BASE16.unsigned(originalMultiplier) +
-								" + 0x" + Base.BASE16.unsigned(originalAddend) + " on iteration " + hashShiftA);
+							System.out.println(
+//								"hash * 0x" + Base.BASE16.unsigned(originalMultiplier) +
+								"hash * 0x" + Base.BASE16.unsigned(originalMul) +
+//								" + 0x" + Base.BASE16.unsigned(originalAdd) +
+								" on iteration " + hashShiftA);
 //                            System.out.println("shifts: a " + hashShiftA + ", b " + hashShiftB);
 							System.out.println("gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						}
