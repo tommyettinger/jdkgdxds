@@ -1112,6 +1112,11 @@ public class PileupTest {
         }
     }
 
+    public static final long CONSTANT =
+//        0x9E3779B97F4A7C15L; //int: total collisions: 33748, longest pileup: 12, long: total collisions: 34124, longest pileup: 13
+//        0xD1B54A32D192ED03L;//long: total collisions: 33579, longest pileup: 12
+        0xF1357AEA2E62A9C5L;//long: total collisions: 34430, longest pileup: 11
+
     @Test
     public void testStringSetWordList () throws IOException {
         final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
@@ -1149,14 +1154,17 @@ public class PileupTest {
 
             {
 //                hashMultiplier = 0x9E3779B97F4A7C15L;
-                System.out.println(mask);
-                hashMultiplier = 0x9E3779B97F4A7C15L >>> shift + 32; //total collisions: 34124, longest pileup: 13
+//                hashMultiplier = 0x9E3779B97F4A7C15L >>> shift + 32 | 1L; //total collisions: 34124, longest pileup: 13
+//                hashMultiplier = 0xD1B54A32D192ED03L >>> shift + 32 | 1L; //total collisions: 33579, longest pileup: 12
+//                hashMultiplier = 0xF1357AEA2E62A9C5L >>> shift + 32 | 1L; //total collisions: 34430, longest pileup: 11
+                hashMultiplier = CONSTANT >>> shift + 32 | 1L; //total collisions: 34430, longest pileup: 11
 //                hashMultiplier = 0x769C3DC968DB6A07L;
+                hashMul = (int)(hashMultiplier >>> 32);
             }
 
             @Override
             protected int place (Object item) {
-//                return item.hashCode() * hashMul >>> shift; // total collisions: 1759892,    longest pileup: 25
+//                return item.hashCode() * hashMul >>> shift;
 //                final int h = item.hashCode() * hashAddend;
 //                return (h ^ h >>> 16) & mask; //total collisions: 1842294, longest pileup: 35
 //                return (int)(item.hashCode() * hashMultiplier) >>> shift; // total collisions: 1757128,    longest pileup: 23 ( hashMultiplier *= 0xF1357AEA2E62A9C5L; )
@@ -1204,10 +1212,11 @@ public class PileupTest {
 //                hashMul *= 0x9E3779B9 + size + size;
 //                hashMul *= 0x2E62A9C5 + size + size;
 //                hashMul *= 0x2E62A9C5 ^ size + size;
-                hashMul =  hashMul * 0x9E377 & 0xFFFFF;
+//                hashMul =  hashMul * 0x9E377 & 0xFFFFF;
 //                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-                hashMultiplier = 0x9E3779B97F4A7C15L >>> shift + 32;
+                hashMultiplier = CONSTANT >>> shift + 32 | 1L;
+                hashMul = (int)(hashMultiplier >>> 32);
 
                 Object[] oldKeyTable = keyTable;
 
