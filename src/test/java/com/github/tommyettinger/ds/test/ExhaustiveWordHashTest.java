@@ -69,21 +69,37 @@ public class ExhaustiveWordHashTest {
 					long originalMultiplier;
 					int longestPileup = 0;
 					int originalMul, originalAdd;
-					int hashMul = 0x9E3779B9, hashAdd = 0xD192ED03;
+					int hashMul = 0x9E377, hashAdd = 0xD192ED03;
 					{
 						hashMultiplier = 0xD1B54A32D192ED03L;
 						long ctr = hashMultiplier << 1;
 						for (int i = 0; i < hashShiftA; i++) {
 							hashMultiplier = hashMultiplier * hashMultiplier + (ctr += 0x9E3779B97F4A7C16L);
-							hashMul = hashMul * hashMul + (int)ctr;
+							hashMul = hashMul + (int)ctr & 0xFFFFF;
 							hashAdd += ctr;
 						}
 						originalMultiplier = hashMultiplier;
 						originalMul = hashMul;
 						originalAdd = hashAdd;
 					}
+//					long originalMultiplier;
+//					int longestPileup = 0;
+//					int originalMul, originalAdd;
+//					int hashMul = 0x9E3779B9, hashAdd = 0xD192ED03;
+//					{
+//						hashMultiplier = 0xD1B54A32D192ED03L;
+//						long ctr = hashMultiplier << 1;
+//						for (int i = 0; i < hashShiftA; i++) {
+//							hashMultiplier = hashMultiplier * hashMultiplier + (ctr += 0x9E3779B97F4A7C16L);
+//							hashMul = hashMul * hashMul + (int)ctr;
+//							hashAdd += ctr;
+//						}
+//						originalMultiplier = hashMultiplier;
+//						originalMul = hashMul;
+//						originalAdd = hashAdd;
+//					}
 
-					//					long originalMultiplier;
+//					long originalMultiplier;
 //					int hashAddend = 0xD1B54A32;
 //					{
 //						hashMultiplier = 0xD1B54A32D192ED03L;
@@ -125,7 +141,8 @@ public class ExhaustiveWordHashTest {
 						shift = Long.numberOfLeadingZeros(mask);
 
 						hashMultiplier *= ((long)size << 3) ^ 0xF1357AEA2E62A9C5L;
-						hashMul *= 0x2E62A9C5 ^ size + size;
+						hashMul =  hashMul * 0x9E377 & 0xFFFFF;
+//						hashMul *= 0x2E62A9C5 ^ size + size;
 						hashAdd += 0xF1357AEA;
 //                        hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
 
