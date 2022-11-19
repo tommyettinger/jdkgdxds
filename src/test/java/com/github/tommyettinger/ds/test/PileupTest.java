@@ -1269,9 +1269,12 @@ public class PileupTest {
         Collections.shuffle(words, new WhiskerRandom(1234567890L));
         for (int a = 1; a < 32; a += 4) {
             for (int b = 2; b < 32; b += 4) {
+                // using Hasher:
                 // (5, 18) (5, 22) (5, 26) (5, 30): total collisions: 33432, longest pileup: 11
                 // (13, 18) (13, 22) (13, 26) (13, 30): total collisions: 33432, longest pileup: 11
                 // (21, 18) (21, 22) (21, 26) (21, 30): total collisions: 33432, longest pileup: 11
+                // using 2 rounds of int LCG, shifted over 16:
+                // (1, 2) (1, 10) (1, 18) (5, 6) (5, 26) (9, 10) (9, 18) (9, 22) (13, 18) (17, 2) (21, 2) (21, 10) (21, 18) (25, 26) (29, 10) (29, 22) : total collisions: 33207, longest pileup: 11
                 long start = System.nanoTime();
                 // replicates old ObjectSet behavior, with added logging
                 int finalA = a;
@@ -1324,8 +1327,11 @@ public class PileupTest {
 //                        ra = ((int)(hashMultiplier >>> 59) & 28) | 1;
 //                        rb = ((int)hashMultiplier >>> 27 & 28) | 2;
 
-                        ra = ((int)Hasher.randomize3(ra + mask) & 28) | 1;
-                        rb = ((int)Hasher.randomize3(rb - mask) & 28) | 2;
+//                        ra = ((int)Hasher.randomize3(ra + mask) & 28) | 1;
+//                        rb = ((int)Hasher.randomize3(rb - mask) & 28) | 2;
+
+                        ra = ((ra * 0xDE4D + 0x9E377 - rb) * 0xDE4D + 0x9E377 >>> 16 & 28) | 1;
+                        rb = ((rb * 0xBA55 + 0x2ED03 - ra) * 0xBA55 + 0x2ED03 >>> 16 & 28) | 2;
                         Object[] oldKeyTable = keyTable;
 
                         keyTable = new Object[newSize];
