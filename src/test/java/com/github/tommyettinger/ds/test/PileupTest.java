@@ -1,6 +1,7 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.Test;
@@ -1260,6 +1261,116 @@ public class PileupTest {
         }
         System.out.println(System.nanoTime() - start);
         set.clear();
+    }
+
+    @Test
+    public void testStringSetWordListRotating () throws IOException {
+        final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
+        Collections.shuffle(words, new WhiskerRandom(1234567890L));
+        for (int a = 1; a < 32; a += 4) {
+            for (int b = 2; b < 32; b += 4) {
+                // (5, 18) (5, 22) (5, 26) (5, 30): total collisions: 33432, longest pileup: 11
+                // (13, 18) (13, 22) (13, 26) (13, 30): total collisions: 33432, longest pileup: 11
+                // (21, 18) (21, 22) (21, 26) (21, 30): total collisions: 33432, longest pileup: 11
+                long start = System.nanoTime();
+                // replicates old ObjectSet behavior, with added logging
+                int finalA = a;
+                int finalB = b;
+                ObjectSet set = new ObjectSet(51, 0.6f) {
+                    long collisionTotal = 0;
+                    int longestPileup = 0, allPileups = 0, pileupChecks = 0;
+                    double averagePileup = 0;
+
+                    int ra = finalA, rb = finalB; //total collisions: 33707, longest pileup: 17
+                    int oa = ra, ob = rb;
+
+                    @Override
+                    protected int place (Object item) {
+                        final int h = item.hashCode();
+                        return (h ^ (h << ra | h >>> -ra) ^ (h << rb | h >>> -rb)) & mask;
+                    }
+
+                    @Override
+                    protected void addResize (@Nonnull Object key) {
+                        Object[] keyTable = this.keyTable;
+                        for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                            if (keyTable[i] == null) {
+                                keyTable[i] = key;
+                                averagePileup += p;
+
+                                return;
+                            } else {
+                                collisionTotal++;
+                                longestPileup = Math.max(longestPileup, ++p);
+                            }
+                        }
+                    }
+
+                    @Override
+                    protected void resize (int newSize) {
+                        int oldCapacity = keyTable.length;
+                        threshold = (int)(newSize * loadFactor);
+                        mask = newSize - 1;
+                        shift = Long.numberOfLeadingZeros(mask);
+
+//                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
+//                hashMul *= 0x9E3779B9 + size + size;
+//                hashMul *= 0x2E62A9C5 + size + size;
+//                hashMul *= 0x2E62A9C5 ^ size + size;
+//                hashMul =  hashMul * 0x9E377 & 0xFFFFF;
+//                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+//                        hashMultiplier *= 0xF1357AEA2E62A9C5L;
+//                        ra = ((int)(hashMultiplier >>> 59) & 28) | 1;
+//                        rb = ((int)hashMultiplier >>> 27 & 28) | 2;
+
+                        ra = ((int)Hasher.randomize3(ra + mask) & 28) | 1;
+                        rb = ((int)Hasher.randomize3(rb - mask) & 28) | 2;
+                        Object[] oldKeyTable = keyTable;
+
+                        keyTable = new Object[newSize];
+
+                        allPileups += longestPileup;
+                        pileupChecks++;
+                        collisionTotal = 0;
+                        longestPileup = 0;
+                        averagePileup = 0.0;
+
+                        if (size > 0) {
+                            for (int i = 0; i < oldCapacity; i++) {
+                                Object key = oldKeyTable[i];
+                                if (key != null) {addResize(key);}
+                            }
+                        }
+//                        System.out.println("rotations: " + ra + ", " + rb + ", with new size " + newSize);
+//                        System.out.print("total collisions: " + collisionTotal);
+//                        System.out.println(", longest pileup: " + longestPileup);
+//                        System.out.println("average pileup: " + (averagePileup / size));
+                    }
+
+                    @Override
+                    public void clear () {
+                        System.out.println("rotations: " + oa + ", " + ob + ", with final size " + size);
+                        System.out.print("total collisions: " + collisionTotal);
+                        System.out.println(", longest pileup: " + longestPileup);
+                        System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
+                        super.clear();
+                    }
+                };
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
+//        }
+                for (int i = 0; i < words.size(); i++) {
+                    set.add(words.get(i));
+                }
+//                System.out.println(System.nanoTime() - start);
+                set.clear();
+
+            }
+        }
     }
 
 
