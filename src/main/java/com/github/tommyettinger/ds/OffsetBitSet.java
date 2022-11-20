@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.BitConversion;
+
 import java.util.Arrays;
 
 /**
@@ -179,25 +181,20 @@ public class OffsetBitSet {
 		long[] bits = this.bits;
 		int word = fromIndex >>> 6;
 		int bitsLength = bits.length;
-		if (word >= bitsLength) return -1;
-		long bitsAtWord = bits[word];
+		if (word >= bitsLength)
+			return -1;
+		long bitsAtWord = bits[word] & -1L << fromIndex; // shift implicitly is masked to bottom 63 bits
 		if (bitsAtWord != 0) {
-			for (int i = fromIndex & 0x3f; i < 64; i++) {
-				if ((bitsAtWord & (1L << (i & 0x3F))) != 0L) {
-					return (word << 6) + i;
-				}
-			}
+			long t = BitConversion.lowestOneBit(bitsAtWord); // there's a bug in GWT that requires this instead of (b & -b)
+			if (t != 0)
+				return Long.numberOfTrailingZeros(t) + (word << 6); // numberOfTrailingZeros() is an intrinsic candidate, and should be extremely fast
 		}
 		for (word++; word < bitsLength; word++) {
-			if (word != 0) {
-				bitsAtWord = bits[word];
-				if (bitsAtWord != 0) {
-					for (int i = 0; i < 64; i++) {
-						if ((bitsAtWord & (1L << (i & 0x3F))) != 0L) {
-							return (word << 6) + i;
-						}
-					}
-				}
+			bitsAtWord = bits[word];
+			if (bitsAtWord != 0) {
+				long t = BitConversion.lowestOneBit(bitsAtWord);
+				if (t != 0)
+					return Long.numberOfTrailingZeros(t) + (word << 6);
 			}
 		}
 		return -1;
@@ -216,10 +213,10 @@ public class OffsetBitSet {
 			}
 		}
 		for (word++; word < bitsLength; word++) {
-			if (word == 0) {
+			bitsAtWord = bits[word];
+			if (bitsAtWord == 0) {
 				return word << 6;
 			}
-			bitsAtWord = bits[word];
 			for (int i = 0; i < 64; i++) {
 				if ((bitsAtWord & (1L << (i & 0x3F))) == 0L) {
 					return (word << 6) + i;
