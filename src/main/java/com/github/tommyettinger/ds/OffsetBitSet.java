@@ -143,6 +143,19 @@ public class OffsetBitSet {
 		return 0;
 	}
 
+	/**
+	 * Returns the size of the set, or its cardinality; this is the count of distinct activated positions in the set.
+	 * @return the count of distinct activated positions in the set.
+	 */
+	public int size() {
+		long[] bits = this.bits;
+		int count = 0;
+		for (int word = bits.length - 1; word >= 0; --word) {
+			count += Long.bitCount(bits[word]);
+		}
+		return count;
+	}
+
 	/** @return true if this bitset contains at least one bit set to true */
 	public boolean notEmpty () {
 		return !isEmpty();
