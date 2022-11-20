@@ -206,21 +206,18 @@ public class OffsetBitSet {
 		int word = fromIndex >>> 6;
 		int bitsLength = bits.length;
 		if (word >= bitsLength) return bits.length << 6;
-		long bitsAtWord = bits[word];
-		for (int i = fromIndex & 0x3f; i < 64; i++) {
-			if ((bitsAtWord & (1L << (i & 0x3F))) == 0L) {
-				return (word << 6) + i;
-			}
+		long bitsAtWord = bits[word] | (1L << fromIndex) - 1L; // shift implicitly is masked to bottom 63 bits
+		if (bitsAtWord != -1L) {
+			long t = BitConversion.lowestOneBit(~bitsAtWord); // there's a bug in GWT that requires this instead of (b & -b)
+			if (t != 0)
+				return Long.numberOfTrailingZeros(t) + (word << 6); // numberOfTrailingZeros() is an intrinsic candidate, and should be extremely fast
 		}
 		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
-			if (bitsAtWord == 0) {
-				return word << 6;
-			}
-			for (int i = 0; i < 64; i++) {
-				if ((bitsAtWord & (1L << (i & 0x3F))) == 0L) {
-					return (word << 6) + i;
-				}
+			if (bitsAtWord != -1L) {
+				long t = BitConversion.lowestOneBit(~bitsAtWord);
+				if (t != 0)
+					return Long.numberOfTrailingZeros(t) + (word << 6);
 			}
 		}
 		return bits.length << 6;
