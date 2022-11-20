@@ -19,8 +19,12 @@ package com.github.tommyettinger.ds;
 
 import java.util.Arrays;
 
-/** A bitset, without size limitation, allows comparison via bitwise operators to other bitfields.
- * 
+/**
+ * A bit set, which can be seen as a set of integer positions greater than some starting number,
+ * that allows comparison via bitwise operators to other bit sets.
+ * <br>
+ * This was originally Bits in libGDX. Many methods have been renamed to more-closely match the Collection API.
+ *
  * @author mzechner
  * @author jshapcott */
 public class OffsetBitSet {
