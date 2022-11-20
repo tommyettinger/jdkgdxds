@@ -380,4 +380,16 @@ public class OffsetBitSet {
 
 		return length() == other.length();
 	}
+
+	public static OffsetBitSet with(int index) {
+		OffsetBitSet s = new OffsetBitSet(index+1);
+		s.add(index);
+		return s;
+	}
+
+	public static OffsetBitSet with(int... indices) {
+		OffsetBitSet s = new OffsetBitSet();
+		s.addAll(indices);
+		return s;
+	}
 }
