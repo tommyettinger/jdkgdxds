@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 
 import java.util.Arrays;
+import java.util.PrimitiveIterator;
 
 /**
  * A bit set, which can be seen as a set of integer positions greater than some starting number,
@@ -87,6 +88,29 @@ public class OffsetBitSet {
 		long oldBits = bits[word];
 		bits[word] |= 1L << (index & 0x3F);
 		return bits[word] == oldBits;
+	}
+
+	public boolean addAll(int[] indices) {
+		return addAll(indices, 0, indices.length);
+	}
+
+	public boolean addAll (int[] indices, int off, int length) {
+		if(length <= 0 || off < 0 || off + length > indices.length)
+			return false;
+		boolean changed = false;
+		for (int i = off, n = off + length; i < n; i++) {
+			changed |= add(indices[i]);
+		}
+		return changed;
+	}
+
+	public boolean addAll(PrimitiveCollection.OfInt indices) {
+		PrimitiveIterator.OfInt it = indices.iterator();
+		boolean changed = false;
+		while (it.hasNext()){
+			changed |= add(it.nextInt());
+		}
+		return changed;
 	}
 
 	/** @param index the index of the bit to set
