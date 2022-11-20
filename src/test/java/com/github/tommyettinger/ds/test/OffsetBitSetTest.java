@@ -19,7 +19,9 @@ package com.github.tommyettinger.ds.test;
 
 import static org.junit.Assert.*;
 
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.OffsetBitSet;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -29,8 +31,8 @@ public class OffsetBitSetTest {
 
 	@Test
 	public void testHashcodeAndEquals () {
-		OffsetBitSet  b1 = new OffsetBitSet();
-		OffsetBitSet  b2 = new OffsetBitSet ();
+		OffsetBitSet b1 = new OffsetBitSet();
+		OffsetBitSet b2 = new OffsetBitSet();
 
 		b1.add(1);
 		b2.add(1);
@@ -55,8 +57,8 @@ public class OffsetBitSetTest {
 
 	@Test
 	public void testXor () {
-		OffsetBitSet  b1 = new OffsetBitSet ();
-		OffsetBitSet  b2 = new OffsetBitSet ();
+		OffsetBitSet b1 = new OffsetBitSet();
+		OffsetBitSet b2 = new OffsetBitSet();
 
 		b2.add(200);
 
@@ -73,8 +75,8 @@ public class OffsetBitSetTest {
 
 	@Test
 	public void testOr () {
-		OffsetBitSet  b1 = new OffsetBitSet ();
-		OffsetBitSet  b2 = new OffsetBitSet ();
+		OffsetBitSet b1 = new OffsetBitSet();
+		OffsetBitSet b2 = new OffsetBitSet();
 
 		b2.add(200);
 
@@ -91,8 +93,8 @@ public class OffsetBitSetTest {
 
 	@Test
 	public void testAnd () {
-		OffsetBitSet  b1 = new OffsetBitSet ();
-		OffsetBitSet  b2 = new OffsetBitSet ();
+		OffsetBitSet b1 = new OffsetBitSet();
+		OffsetBitSet b2 = new OffsetBitSet();
 
 		b2.add(200);
 		// b1 should cancel b2:s bit
@@ -108,15 +110,46 @@ public class OffsetBitSetTest {
 
 	@Test
 	public void testCopyConstructor () {
-		OffsetBitSet  b1 = new OffsetBitSet ();
+		OffsetBitSet b1 = new OffsetBitSet();
 		b1.add(50);
 		b1.add(100);
 		b1.add(150);
 
-		OffsetBitSet  b2 = new OffsetBitSet (b1);
+		OffsetBitSet b2 = new OffsetBitSet(b1);
 		assertNotSame(b1, b2);
 		assertTrue(b1.containsAll(b2));
 		assertTrue(b2.containsAll(b1));
 		assertEquals(b1, b2);
+	}
+
+	@Test
+	public void testNextSetBit () {
+		OffsetBitSet b1 = OffsetBitSet.with(50, 100, 200);
+		int bit = b1.nextSetBit(0);
+		Assert.assertEquals(50, bit);
+		bit = b1.nextSetBit(bit+1);
+		Assert.assertEquals(100, bit);
+		bit = b1.nextSetBit(bit+1);
+		Assert.assertEquals(200, bit);
+		bit = b1.nextSetBit(bit+1);
+		Assert.assertEquals(-1, bit);
+	}
+
+	@Test
+	public void testNextClearBit () {
+		OffsetBitSet b1 = new OffsetBitSet(256);
+		b1.addAll(ArrayTools.range(1, 50));
+		b1.addAll(ArrayTools.range(51, 100));
+		b1.addAll(ArrayTools.range(101, 256));
+		int bit = b1.nextClearBit(0);
+		Assert.assertEquals(0, bit);
+		bit = b1.nextClearBit(bit+1);
+		Assert.assertEquals(50, bit);
+		bit = b1.nextClearBit(bit+1);
+		Assert.assertEquals(100, bit);
+		bit = b1.nextClearBit(bit+1);
+		Assert.assertEquals(256, bit);
+		bit = b1.nextClearBit(bit+1);
+		Assert.assertEquals(256, bit);
 	}
 }
