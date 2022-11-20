@@ -102,9 +102,9 @@ public class OffsetBitSet {
 		bits[word] ^= 1L << (index & 0x3F);
 	}
 
-	private void checkCapacity (int len) {
-		if (len > bits.length) {
-			long[] newBits = new long[Integer.highestOneBit(len) << 1]; // resizes to next power of two size that can fit len
+	private void checkCapacity (int index) {
+		if (index >= bits.length) {
+			long[] newBits = new long[Integer.highestOneBit(index) << 1]; // resizes to next power of two size that can fit index
 			System.arraycopy(bits, 0, newBits, 0, bits.length);
 			bits = newBits;
 		}
@@ -128,10 +128,10 @@ public class OffsetBitSet {
 		return bits.length << 6;
 	}
 
-	/** Returns the "logical size" of this bitset: the index of the highest set bit in the bitset plus one. Returns zero if the
+	/** Returns the "logical extent" of this bitset: the index of the highest set bit in the bitset plus one. Returns zero if the
 	 * bitset contains no set bits.
 	 * 
-	 * @return the logical size of this bitset */
+	 * @return the logical extent of this bitset */
 	public int length () {
 		long[] bits = this.bits;
 		for (int word = bits.length - 1; word >= 0; --word) {
