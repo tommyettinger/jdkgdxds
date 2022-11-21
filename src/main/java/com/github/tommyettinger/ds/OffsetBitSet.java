@@ -305,25 +305,38 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * argument also had the value true.
 	 * @param other another OffsetBitSet */
 	public void and (OffsetBitSet other) {
-		int commonWords = Math.min(bits.length, other.bits.length);
-		for (int i = 0; commonWords > i; i++) {
-			bits[i] &= other.bits[i];
-		}
-
-		if (bits.length > commonWords) {
-			for (int i = commonWords, s = bits.length; s > i; i++) {
-				bits[i] = 0L;
+		if(offset == other.offset) {
+			int commonWords = Math.min(bits.length, other.bits.length);
+			for (int i = 0; commonWords > i; i++) {
+				bits[i] &= other.bits[i];
 			}
+
+			if (bits.length > commonWords) {
+				for (int i = commonWords, s = bits.length; s > i; i++) {
+					bits[i] = 0L;
+				}
+			}
+		}
+		else {
+			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call and().");
 		}
 	}
 
 	/** Clears all the bits in this bit set whose corresponding bit is set in the specified bit set.
-	 * 
+	 * This can be seen as an optimized version of {@link #removeAll(OfInt)} that only works if both OffsetBitSet objects
+	 * have the same {@link #offset}.
+	 *
 	 * @param other another OffsetBitSet */
 	public void andNot (OffsetBitSet other) {
-		for (int i = 0, j = bits.length, k = other.bits.length; i < j && i < k; i++) {
-			bits[i] &= ~other.bits[i];
+		if(offset == other.offset) {
+			for (int i = 0, j = bits.length, k = other.bits.length; i < j && i < k; i++) {
+				bits[i] &= ~other.bits[i];
+			}
 		}
+		else {
+			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call andNot().");
+		}
+
 	}
 
 	/** Performs a logical <b>OR</b> of this bit set with the bit set argument. This bit set is modified so that a bit in it has
@@ -331,16 +344,21 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * value true.
 	 * @param other another OffsetBitSet */
 	public void or (OffsetBitSet other) {
-		int commonWords = Math.min(bits.length, other.bits.length);
-		for (int i = 0; commonWords > i; i++) {
-			bits[i] |= other.bits[i];
-		}
-
-		if (commonWords < other.bits.length) {
-			checkCapacity(other.bits.length);
-			for (int i = commonWords, s = other.bits.length; s > i; i++) {
-				bits[i] = other.bits[i];
+		if(offset == other.offset) {
+			int commonWords = Math.min(bits.length, other.bits.length);
+			for (int i = 0; commonWords > i; i++) {
+				bits[i] |= other.bits[i];
 			}
+
+			if (commonWords < other.bits.length) {
+				checkCapacity(other.bits.length);
+				for (int i = commonWords, s = other.bits.length; s > i; i++) {
+					bits[i] = other.bits[i];
+				}
+			}
+		}
+		else {
+			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call or().");
 		}
 	}
 
@@ -352,17 +370,20 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * </ul>
 	 * @param other another OffsetBitSet */
 	public void xor (OffsetBitSet other) {
-		int commonWords = Math.min(bits.length, other.bits.length);
-
-		for (int i = 0; commonWords > i; i++) {
-			bits[i] ^= other.bits[i];
-		}
-
-		if (commonWords < other.bits.length) {
-			checkCapacity(other.bits.length);
-			for (int i = commonWords, s = other.bits.length; s > i; i++) {
-				bits[i] = other.bits[i];
+		if(offset == other.offset) {
+			int commonWords = Math.min(bits.length, other.bits.length);
+			for (int i = 0; commonWords > i; i++) {
+				bits[i] ^= other.bits[i];
 			}
+			if (commonWords < other.bits.length) {
+				checkCapacity(other.bits.length);
+				for (int i = commonWords, s = other.bits.length; s > i; i++) {
+					bits[i] = other.bits[i];
+				}
+			}
+		}
+		else {
+			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call xor().");
 		}
 	}
 
@@ -371,14 +392,19 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * @param other a bit set
 	 * @return boolean indicating whether this bit set intersects the specified bit set */
 	public boolean intersects (OffsetBitSet other) {
-		long[] bits = this.bits;
-		long[] otherBits = other.bits;
-		for (int i = Math.min(bits.length, otherBits.length) - 1; i >= 0; i--) {
-			if ((bits[i] & otherBits[i]) != 0) {
-				return true;
+		if(offset == other.offset) {
+			long[] bits = this.bits;
+			long[] otherBits = other.bits;
+			for (int i = Math.min(bits.length, otherBits.length) - 1; i >= 0; i--) {
+				if ((bits[i] & otherBits[i]) != 0) {
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
+		else {
+			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call intersects().");
+		}
 	}
 
 	/** Returns true if this bit set is a super set of the specified set, i.e. it has all bits set to true that are also set to
@@ -387,28 +413,31 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * @param other a bit set
 	 * @return boolean indicating whether this bit set is a super set of the specified set */
 	public boolean containsAll (OffsetBitSet other) {
-		long[] bits = this.bits;
-		long[] otherBits = other.bits;
-		int otherBitsLength = otherBits.length;
-		int bitsLength = bits.length;
+		if (offset == other.offset) {
+			long[] bits = this.bits;
+			long[] otherBits = other.bits;
+			int otherBitsLength = otherBits.length;
+			int bitsLength = bits.length;
 
-		for (int i = bitsLength; i < otherBitsLength; i++) {
-			if (otherBits[i] != 0) {
-				return false;
+			for (int i = bitsLength; i < otherBitsLength; i++) {
+				if (otherBits[i] != 0) {
+					return false;
+				}
 			}
-		}
-		for (int i = Math.min(bitsLength, otherBitsLength) - 1; i >= 0; i--) {
-			if ((bits[i] & otherBits[i]) != otherBits[i]) {
-				return false;
+			for (int i = Math.min(bitsLength, otherBitsLength) - 1; i >= 0; i--) {
+				if ((bits[i] & otherBits[i]) != otherBits[i]) {
+					return false;
+				}
 			}
+			return true;
 		}
-		return true;
+		else return ((PrimitiveCollection.OfInt)this).containsAll(other);
 	}
 
 	@Override
 	public int hashCode () {
-		final int word = length() >>> 6;
-		int hash = 0;
+		final int word = (length() >>> 6) - offset;
+		int hash = offset;
 		for (int i = 0; word >= i; i++) {
 			hash = 107 * hash + (int)(bits[i] ^ (bits[i] >>> 32));
 		}
@@ -422,6 +451,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		if (getClass() != obj.getClass()) return false;
 
 		OffsetBitSet other = (OffsetBitSet)obj;
+		if(offset != other.offset) return false;
 		long[] otherBits = other.bits;
 
 		int commonWords = Math.min(bits.length, otherBits.length);
