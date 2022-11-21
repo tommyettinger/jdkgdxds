@@ -55,6 +55,15 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		bits = new long[bitCapacity + 63 >>> 6];
 	}
 
+	/** Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range offset through
+	 * end-1.
+	 * @param start the lowest value that can be stored in the bit set
+	 * @param end the initial end of the range of the bit set */
+	public OffsetBitSet (int start, int end) {
+		this.offset = start;
+		bits = new long[end + 63 - start >>> 6];
+	}
+
 	/** Creates a bit set from another bit set.
 	 * @param toCopy bitset to copy */
 	public OffsetBitSet (OffsetBitSet toCopy) {
@@ -67,6 +76,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * @return whether the bit is set
 	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
 	public boolean contains (int index) {
+		index -= offset;
 		final int word = index >>> 6;
 		if (word >= bits.length) return false;
 		return (bits[word] & (1L << (index & 0x3F))) != 0L;
@@ -77,6 +87,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * @return whether the bit was set before invocation
 	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
 	public boolean remove (int index) {
+		index -= offset;
 		final int word = index >>> 6;
 		if (word >= bits.length) return false;
 		long oldBits = bits[word];
@@ -89,6 +100,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * @return whether the bit was set before invocation
 	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
 	public boolean add (int index) {
+		index -= offset;
 		final int word = index >>> 6;
 		checkCapacity(word);
 		long oldBits = bits[word];
@@ -143,16 +155,33 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	}
 
 
-	/** @param index the index of the bit to set
+	/**
+	 * Always sets the given int position to true.
+	 * @param index the index of the bit to set
 	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
 	public void activate (int index) {
+		index -= offset;
 		final int word = index >>> 6;
 		checkCapacity(word);
 		bits[word] |= 1L << (index & 0x3F);
 	}
 
-	/** @param index the index of the bit to flip */
+	/**
+	 * Always sets the given int position to false.
+	 * @param index the index of the bit to clear
+	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
+	public void deactivate (int index) {
+		index -= offset;
+		final int word = index >>> 6;
+		if (word >= bits.length) return;
+		bits[word] &= ~(1L << (index & 0x3F));
+	}
+
+	/**
+	 * Changes the given int position from true to false, or from false to true.
+	 *  @param index the index of the bit to flip */
 	public void toggle (int index) {
+		index -= offset;
 		final int word = index >>> 6;
 		checkCapacity(word);
 		bits[word] ^= 1L << (index & 0x3F);
@@ -166,14 +195,6 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		}
 	}
 
-	/** @param index the index of the bit to clear
-	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
-	public void deactivate (int index) {
-		final int word = index >>> 6;
-		if (word >= bits.length) return;
-		bits[word] &= ~(1L << (index & 0x3F));
-	}
-
 	/** Clears the entire bitset */
 	public void clear () {
 		Arrays.fill(bits, 0);
@@ -185,7 +206,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	}
 
 	/** Returns the "logical extent" of this bitset: the index of the highest set bit in the bitset plus one. Returns zero if the
-	 * bitset contains no set bits.
+	 * bitset contains no set bits. If this has any set bits, it will return an int at least equal to {@code offset}.
 	 * 
 	 * @return the logical extent of this bitset */
 	public int length () {
@@ -193,7 +214,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		for (int word = bits.length - 1; word >= 0; --word) {
 			long bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
-				return (word + 1 << 6) - Long.numberOfLeadingZeros(bitsAtWord) + 1;
+				return (word + 1 << 6) - Long.numberOfLeadingZeros(bitsAtWord) + 1 + offset;
 			}
 		}
 		return 0;
@@ -232,6 +253,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	/** Returns the index of the first bit that is set to true that occurs on or after the specified starting index. If no such bit
 	 * exists then -1 is returned. */
 	public int nextSetBit (int fromIndex) {
+		fromIndex -= offset;
 		long[] bits = this.bits;
 		int word = fromIndex >>> 6;
 		int bitsLength = bits.length;
@@ -241,14 +263,14 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		if (bitsAtWord != 0) {
 			long t = BitConversion.lowestOneBit(bitsAtWord); // there's a bug in GWT that requires this instead of (b & -b)
 			if (t != 0)
-				return Long.numberOfTrailingZeros(t) + (word << 6); // numberOfTrailingZeros() is an intrinsic candidate, and should be extremely fast
+				return Long.numberOfTrailingZeros(t) + (word << 6) + offset; // numberOfTrailingZeros() is an intrinsic candidate, and should be extremely fast
 		}
 		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
 				long t = BitConversion.lowestOneBit(bitsAtWord);
 				if (t != 0)
-					return Long.numberOfTrailingZeros(t) + (word << 6);
+					return Long.numberOfTrailingZeros(t) + (word << 6) + offset;
 			}
 		}
 		return -1;
@@ -256,6 +278,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 
 	/** Returns the index of the first bit that is set to false that occurs on or after the specified starting index. */
 	public int nextClearBit (int fromIndex) {
+		fromIndex -= offset;
 		long[] bits = this.bits;
 		int word = fromIndex >>> 6;
 		int bitsLength = bits.length;
@@ -264,17 +287,17 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		if (bitsAtWord != -1L) {
 			long t = BitConversion.lowestOneBit(~bitsAtWord); // there's a bug in GWT that requires this instead of (b & -b)
 			if (t != 0)
-				return Long.numberOfTrailingZeros(t) + (word << 6); // numberOfTrailingZeros() is an intrinsic candidate, and should be extremely fast
+				return Long.numberOfTrailingZeros(t) + (word << 6) + offset; // numberOfTrailingZeros() is an intrinsic candidate, and should be extremely fast
 		}
 		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != -1L) {
 				long t = BitConversion.lowestOneBit(~bitsAtWord);
 				if (t != 0)
-					return Long.numberOfTrailingZeros(t) + (word << 6);
+					return Long.numberOfTrailingZeros(t) + (word << 6) + offset;
 			}
 		}
-		return bits.length << 6;
+		return (bits.length << 6) + offset;
 	}
 
 	/** Performs a logical <b>AND</b> of this target bit set with the argument bit set. This bit set is modified so that each bit
