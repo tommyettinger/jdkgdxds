@@ -206,6 +206,13 @@ public class OffsetBitSetTest {
 			if(n == 1009) it.remove();
 		}
 		Assert.assertEquals(IntList.with(1000, 1001, 1004, 1020, 1050, 1100), b1.iterator().toList());
+	}
 
+	@Test
+	public void testToString () {
+		OffsetBitSet o1 = OffsetBitSet.with(3, 99, 2, 0, 1);
+		o1.changeOffset(-5);
+		Assert.assertEquals("[-5, -4, -3, -2, 94]", o1.toString());
+//		System.out.println(o1.toString());
 	}
 }
