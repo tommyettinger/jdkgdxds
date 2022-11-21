@@ -19,7 +19,9 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 
 /**
@@ -30,7 +32,7 @@ import java.util.PrimitiveIterator;
  *
  * @author mzechner
  * @author jshapcott */
-public class OffsetBitSet {
+public class OffsetBitSet implements PrimitiveCollection.OfInt {
 
 	protected long[] bits;
 	/**
@@ -38,6 +40,10 @@ public class OffsetBitSet {
 	 * If all positions are at least equal to some value, using that for the offset can save much space.
 	 */
 	protected int offset = 0;
+
+	@Nullable protected transient OffsetBitSetIterator iterator1;
+	@Nullable protected transient OffsetBitSetIterator iterator2;
+
 	public OffsetBitSet () {
 		bits = new long[]{0L};
 	}
@@ -112,6 +118,30 @@ public class OffsetBitSet {
 		}
 		return changed;
 	}
+
+	/**
+	 * Returns an iterator for the keys in the set. Remove is supported.
+	 * <p>
+	 * Use the {@link OffsetBitSetIterator} constructor for nested or multithreaded iteration.
+	 */
+	@Override
+	public PrimitiveIterator.OfInt iterator () {
+		if (iterator1 == null || iterator2 == null) {
+			iterator1 = new OffsetBitSetIterator(this);
+			iterator2 = new OffsetBitSetIterator(this);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset();
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset();
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
+	}
+
 
 	/** @param index the index of the bit to set
 	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
@@ -380,6 +410,82 @@ public class OffsetBitSet {
 
 		return length() == other.length();
 	}
+
+		public static class OffsetBitSetIterator implements PrimitiveIterator.OfInt {
+			static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
+
+			public boolean hasNext;
+
+			final OffsetBitSet set;
+			int nextIndex, currentIndex;
+			boolean valid = true;
+
+			public OffsetBitSetIterator (OffsetBitSet set) {
+				this.set = set;
+				reset();
+			}
+
+			public void reset () {
+				currentIndex = INDEX_ILLEGAL;
+				nextIndex = INDEX_ZERO;
+				findNextIndex();
+			}
+
+			void findNextIndex () {
+				nextIndex = set.nextSetBit(currentIndex + 1);
+				hasNext = nextIndex != INDEX_ZERO;
+			}
+
+			/**
+			 * Returns {@code true} if the iteration has more elements.
+			 * (In other words, returns {@code true} if {@link #next} would
+			 * return an element rather than throwing an exception.)
+			 *
+			 * @return {@code true} if the iteration has more elements
+			 */
+			@Override
+			public boolean hasNext () {
+				if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				return hasNext;
+			}
+
+			@Override
+			public void remove () {
+				if (currentIndex < 0) {
+					throw new IllegalStateException("next must be called before remove.");
+				}
+				set.deactivate(currentIndex);
+				currentIndex = INDEX_ILLEGAL;
+			}
+
+			@Override
+			public int nextInt () {
+				if (!hasNext) {throw new NoSuchElementException();}
+				if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				int key = nextIndex;
+				currentIndex = nextIndex;
+				findNextIndex();
+				return key;
+			}
+
+			/**
+			 * Returns a new {@link IntList} containing the remaining items.
+			 * Does not change the position of this iterator.
+			 */
+			public IntList toList () {
+				IntList list = new IntList(true, set.size());
+				int currentIdx = currentIndex, nextIdx = nextIndex;
+				boolean hn = hasNext;
+				while (hasNext) {
+					list.add(nextInt());
+				}
+				currentIndex = currentIdx;
+				nextIndex = nextIdx;
+				hasNext = hn;
+				return list;
+			}
+		}
+
 
 	public static OffsetBitSet with(int index) {
 		OffsetBitSet s = new OffsetBitSet(index+1);
