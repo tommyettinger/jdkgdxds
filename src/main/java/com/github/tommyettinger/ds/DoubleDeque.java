@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
+import java.util.Random;
 
 /**
  * A resizable, insertion-ordered double-ended queue of doubles with efficient add and remove at the beginning and end. Values in the
@@ -1198,7 +1199,7 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 		}
 	}
 
-	public double random (java.util.Random random) {
+	public double random (Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("DoubleDeque is empty.");
 		}

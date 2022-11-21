@@ -439,29 +439,32 @@ public class LongSet implements PrimitiveCollection.OfLong {
 		}
 	}
 
-	@Override
-	public String toString () {
-		if (size == 0) {return "[]";}
-		StringBuilder buffer = new StringBuilder(32);
-		buffer.append('[');
+	public StringBuilder appendTo (StringBuilder builder) {
+		if (size == 0) {return builder.append("[]");}
+		builder.append('[');
 		long[] keyTable = this.keyTable;
 		int i = keyTable.length;
-		if (hasZeroValue) {buffer.append("0");} else {
+		if (hasZeroValue) {builder.append('0');} else {
 			while (i-- > 0) {
 				long key = keyTable[i];
 				if (key == 0) {continue;}
-				buffer.append(key);
+				builder.append(key);
 				break;
 			}
 		}
 		while (i-- > 0) {
 			long key = keyTable[i];
 			if (key == 0) {continue;}
-			buffer.append(", ");
-			buffer.append(key);
+			builder.append(", ");
+			builder.append(key);
 		}
-		buffer.append(']');
-		return buffer.toString();
+		builder.append(']');
+		return builder;
+	}
+
+	@Override
+	public String toString () {
+		return appendTo(new StringBuilder(32)).toString();
 	}
 
 	/**

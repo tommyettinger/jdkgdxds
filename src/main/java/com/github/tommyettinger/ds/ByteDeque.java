@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 /**
  * A resizable, insertion-ordered double-ended queue of bytes with efficient add and remove at the beginning and end. Values in the
@@ -1197,7 +1198,7 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 		}
 	}
 
-	public byte random (java.util.Random random) {
+	public byte random (Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("ByteDeque is empty.");
 		}

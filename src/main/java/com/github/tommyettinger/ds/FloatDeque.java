@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 /**
  * A resizable, insertion-ordered double-ended queue of floats with efficient add and remove at the beginning and end. Values in the
@@ -1199,7 +1200,7 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		}
 	}
 
-	public float random (java.util.Random random) {
+	public float random (Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("FloatDeque is empty.");
 		}

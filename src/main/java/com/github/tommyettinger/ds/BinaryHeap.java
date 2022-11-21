@@ -31,7 +31,7 @@ import java.util.NoSuchElementException;
  * This can expand if its capacity is exceeded. It defaults to acting as a min-heap, sorting lowest-first.
  * The {@link Node} class can be extended to store additional information.
  * <br>
- * This isn't a direct copy from libGDX, but it's very close. It implements {@link java.util.Queue} and {@link java.util.Collection}.
+ * This isn't a direct copy from libGDX, but it's very close. It implements {@link java.util.Queue} and {@link Collection}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger

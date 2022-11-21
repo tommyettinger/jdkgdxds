@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 /**
  * A resizable, insertion-ordered double-ended queue of shorts with efficient add and remove at the beginning and end. Values in the
@@ -1198,7 +1199,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 		}
 	}
 
-	public short random (java.util.Random random) {
+	public short random (Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("ShortDeque is empty.");
 		}

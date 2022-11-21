@@ -553,30 +553,32 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 			return false;
 		}
 	}
-
-	@Override
-	public String toString () {
-		return '{' + toString(", ") + '}';
-	}
-
-	public String toString (String separator) {
-		if (size == 0) {return "";}
-		StringBuilder buffer = new StringBuilder(32);
+	public StringBuilder appendTo (StringBuilder builder, String separator) {
+		if (size == 0) {return builder;}
 		T[] keyTable = this.keyTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			T key = keyTable[i];
 			if (key == null) {continue;}
-			buffer.append(key == this ? "(this)" : key);
+			builder.append(key == this ? "(this)" : key);
 			break;
 		}
 		while (i-- > 0) {
 			T key = keyTable[i];
 			if (key == null) {continue;}
-			buffer.append(separator);
-			buffer.append(key == this ? "(this)" : key);
+			builder.append(separator);
+			builder.append(key == this ? "(this)" : key);
 		}
-		return buffer.toString();
+		return builder;
+	}
+
+	@Override
+	public String toString () {
+		return appendTo(new StringBuilder(32).append('['), ", ").append(']').toString();
+	}
+
+	public String toString (String separator) {
+		return appendTo(new StringBuilder(32), separator).toString();
 	}
 
 	/**

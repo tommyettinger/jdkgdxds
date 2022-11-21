@@ -786,7 +786,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Returns a Collection of the values in the map. Remove is supported. Note that the same Collection instance is returned each
 	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
 	 *
-	 * @return a {@link java.util.Collection} containing V values
+	 * @return a {@link Collection} containing V values
 	 */
 	public Values<V> values () {
 		if (values1 == null || values2 == null) {

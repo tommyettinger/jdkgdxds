@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 /**
  * A resizable, insertion-ordered double-ended queue of shorts with efficient add and remove at the beginning and end. Values in the
@@ -1209,7 +1210,7 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		}
 	}
 
-	public char random (java.util.Random random) {
+	public char random (Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("CharDeque is empty.");
 		}
