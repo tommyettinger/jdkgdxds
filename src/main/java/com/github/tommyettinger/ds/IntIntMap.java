@@ -997,7 +997,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		 */
 		public IntList toList () {
 			IntList list = new IntList(true, map.size);
-			while (hasNext) {list.add(next());}
+			while (hasNext) {list.add(nextInt());}
 			return list;
 		}
 

@@ -999,7 +999,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		 */
 		public LongList toList () {
 			LongList list = new LongList(true, map.size);
-			while (hasNext) {list.add(next());}
+			while (hasNext) {list.add(nextLong());}
 			return list;
 		}
 

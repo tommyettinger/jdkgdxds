@@ -597,7 +597,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 			LongList list = new LongList(true, set.size);
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) {list.add(next());}
+			while (hasNext) {list.add(nextLong());}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;

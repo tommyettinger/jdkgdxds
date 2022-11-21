@@ -985,7 +985,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 */
 		public IntList toList () {
 			IntList list = new IntList(true, map.size);
-			while (hasNext) {list.add(next());}
+			while (hasNext) {list.add(nextInt());}
 			return list;
 		}
 

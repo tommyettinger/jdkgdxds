@@ -592,7 +592,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 			IntList list = new IntList(true, set.size);
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) {list.add(next());}
+			while (hasNext) {list.add(nextInt());}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
