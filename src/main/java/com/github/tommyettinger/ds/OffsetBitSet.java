@@ -125,7 +125,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * Use the {@link OffsetBitSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public PrimitiveIterator.OfInt iterator () {
+	public OffsetBitSetIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new OffsetBitSetIterator(this);
 			iterator2 = new OffsetBitSetIterator(this);
@@ -412,7 +412,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	}
 
 		public static class OffsetBitSetIterator implements PrimitiveIterator.OfInt {
-			static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
+			static private final int INDEX_ILLEGAL = -1, INDEX_ZERO = -1;
 
 			public boolean hasNext;
 
@@ -432,8 +432,8 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 			}
 
 			void findNextIndex () {
-				nextIndex = set.nextSetBit(currentIndex + 1);
-				hasNext = nextIndex != INDEX_ZERO;
+				nextIndex = set.nextSetBit(nextIndex + 1);
+				hasNext = nextIndex != INDEX_ILLEGAL;
 			}
 
 			/**

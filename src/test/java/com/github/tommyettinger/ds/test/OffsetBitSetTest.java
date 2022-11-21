@@ -24,6 +24,8 @@ import com.github.tommyettinger.ds.OffsetBitSet;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.PrimitiveIterator;
+
 /**
  * This was originally BitsTest, from libGDX's tests.
  */
@@ -151,5 +153,22 @@ public class OffsetBitSetTest {
 		Assert.assertEquals(256, bit);
 		bit = b1.nextClearBit(bit+1);
 		Assert.assertEquals(256, bit);
+	}
+
+	@Test
+	public void testIterator () {
+		int[] items = new int[]{0, 1, 4, 20, 50, 9, 100};
+		OffsetBitSet b1 = OffsetBitSet.with(items);
+		PrimitiveIterator.OfInt it = b1.iterator();
+		while (it.hasNext()){
+			int n = it.next();
+			if(n == 9) it.remove();
+		}
+		it = b1.iterator();
+		while (it.hasNext()) {
+			System.out.print(it.next() + ", ");
+		}
+		System.out.println("\n" + b1.iterator().toList());
+
 	}
 }
