@@ -94,6 +94,28 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		this.offset += addend;
 	}
 
+	/**
+	 * This gets the internal {@code long[]} used to store bits in bulk. This is not meant for typical usage; it may be
+	 * useful for serialization or other code that would typically need reflection to access the internals here. This
+	 * may and often does include padding at the end.
+	 * @return the raw long array used to store positions, one bit per on and per off position
+	 */
+	public long[] getRawBits () {
+		return bits;
+	}
+
+	/**
+	 * This allows setting the internal {@code long[]} used to store bits in bulk. This is not meant for typical usage; it
+	 * may be useful for serialization or other code that would typically need reflection to access the internals here.
+	 * Be very careful with this method. If bits is null or empty, it is ignored; this is the only error validation this does.
+	 * @param bits a non-null, non-empty long array storing positions, typically obtained from {@link #getRawBits()}
+	 */
+	public void setRawBits (long[] bits) {
+		if (bits != null && bits.length != 0) {
+			this.bits = bits;
+		}
+	}
+
 	/** @param index the index of the bit
 	 * @return whether the bit is set
 	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
