@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds.test;
 import static org.junit.Assert.*;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.OffsetBitSet;
 import org.junit.Assert;
 import org.junit.Test;
@@ -55,6 +56,27 @@ public class OffsetBitSetTest {
 
 		assertEquals(b1.hashCode(), b2.hashCode());
 		assertEquals(b1, b2);
+
+		OffsetBitSet o1 = new OffsetBitSet(100, 200);
+		OffsetBitSet o2 = new OffsetBitSet(100, 200);
+
+		o1.add(100);
+		o2.add(100);
+
+		assertEquals(o1.hashCode(), o2.hashCode());
+		assertEquals(o1, o2);
+
+		o2.add(420);
+		o2.deactivate(420);
+
+		assertEquals(o1.hashCode(), o2.hashCode());
+		assertEquals(o1, o2);
+
+		o1.add(810);
+		o1.deactivate(810);
+
+		assertEquals(o1.hashCode(), o2.hashCode());
+		assertEquals(o1, o2);
 	}
 
 	@Test
@@ -116,6 +138,7 @@ public class OffsetBitSetTest {
 		b1.add(50);
 		b1.add(100);
 		b1.add(150);
+		b1.changeOffset(1000);
 
 		OffsetBitSet b2 = new OffsetBitSet(b1);
 		assertNotSame(b1, b2);
@@ -127,14 +150,15 @@ public class OffsetBitSetTest {
 	@Test
 	public void testNextSetBit () {
 		OffsetBitSet b1 = OffsetBitSet.with(50, 100, 200);
-		int bit = b1.nextSetBit(0);
-		Assert.assertEquals(50, bit);
+		b1.setOffset(-1000);
+		int bit = b1.nextSetBit(-1000);
+		Assert.assertEquals(50-1000, bit);
 		bit = b1.nextSetBit(bit+1);
-		Assert.assertEquals(100, bit);
+		Assert.assertEquals(100-1000, bit);
 		bit = b1.nextSetBit(bit+1);
-		Assert.assertEquals(200, bit);
+		Assert.assertEquals(200-1000, bit);
 		bit = b1.nextSetBit(bit+1);
-		Assert.assertEquals(-1, bit);
+		Assert.assertEquals(-1-1000, bit);
 	}
 
 	@Test
@@ -143,32 +167,45 @@ public class OffsetBitSetTest {
 		b1.addAll(ArrayTools.range(1, 50));
 		b1.addAll(ArrayTools.range(51, 100));
 		b1.addAll(ArrayTools.range(101, 256));
-		int bit = b1.nextClearBit(0);
-		Assert.assertEquals(0, bit);
+		b1.changeOffset(-5);
+		int bit = b1.nextClearBit(0-5);
+		Assert.assertEquals(0-5, bit);
 		bit = b1.nextClearBit(bit+1);
-		Assert.assertEquals(50, bit);
+		Assert.assertEquals(50-5, bit);
 		bit = b1.nextClearBit(bit+1);
-		Assert.assertEquals(100, bit);
+		Assert.assertEquals(100-5, bit);
 		bit = b1.nextClearBit(bit+1);
-		Assert.assertEquals(256, bit);
+		Assert.assertEquals(256-5, bit);
 		bit = b1.nextClearBit(bit+1);
-		Assert.assertEquals(256, bit);
+		Assert.assertEquals(256-5, bit);
 	}
 
 	@Test
 	public void testIterator () {
+//		int[] items = new int[]{0, 1, 4, 20, 50, 9, 100};
+//		OffsetBitSet b1 = OffsetBitSet.with(items);
+//		b1.changeOffset(1000);
+//		PrimitiveIterator.OfInt it = b1.iterator();
+//		while (it.hasNext()){
+//			int n = it.next();
+//			if(n == 1009) it.remove();
+//		}
+//		it = b1.iterator();
+//		while (it.hasNext()) {
+//			System.out.print(it.next() + ", ");
+//		}
+//		Assert.assertEquals(IntList.with(1000, 1001, 1004, 1020, 1050, 1100), b1.iterator().toList());
+
+
 		int[] items = new int[]{0, 1, 4, 20, 50, 9, 100};
 		OffsetBitSet b1 = OffsetBitSet.with(items);
+		b1.changeOffset(1000);
 		PrimitiveIterator.OfInt it = b1.iterator();
 		while (it.hasNext()){
 			int n = it.next();
-			if(n == 9) it.remove();
+			if(n == 1009) it.remove();
 		}
-		it = b1.iterator();
-		while (it.hasNext()) {
-			System.out.print(it.next() + ", ");
-		}
-		System.out.println("\n" + b1.iterator().toList());
+		Assert.assertEquals(IntList.with(1000, 1001, 1004, 1020, 1050, 1100), b1.iterator().toList());
 
 	}
 }

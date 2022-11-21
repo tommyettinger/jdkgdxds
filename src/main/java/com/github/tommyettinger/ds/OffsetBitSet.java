@@ -72,6 +72,28 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		this.offset = toCopy.offset;
 	}
 
+	public int getOffset () {
+		return offset;
+	}
+
+	/**
+	 * Changes the offset without considering the previous value. This effectively adds {@code newOffset - getOffset()}
+	 * to every int stored in this, in constant time. This also changes the minimum value in the process.
+	 * @param newOffset the value to use instead of the current offset
+	 */
+	public void setOffset(int newOffset) {
+		this.offset = newOffset;
+	}
+
+	/**
+	 * Adds {@code addend} to the current offset, effectively adding to every int stored in this, in constant time.
+	 * This also changes the minimum value in the process.
+	 * @param addend the value to add to the current offset
+	 */
+	public void changeOffset(int addend) {
+		this.offset += addend;
+	}
+
 	/** @param index the index of the bit
 	 * @return whether the bit is set
 	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
@@ -251,7 +273,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	}
 
 	/** Returns the index of the first bit that is set to true that occurs on or after the specified starting index. If no such bit
-	 * exists then -1 is returned. */
+	 * exists then {@link #getOffset() - 1} is returned. */
 	public int nextSetBit (int fromIndex) {
 		fromIndex -= offset;
 		long[] bits = this.bits;
@@ -273,7 +295,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 					return Long.numberOfTrailingZeros(t) + (word << 6) + offset;
 			}
 		}
-		return -1;
+		return offset - 1;
 	}
 
 	/** Returns the index of the first bit that is set to false that occurs on or after the specified starting index. */
@@ -282,7 +304,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		long[] bits = this.bits;
 		int word = fromIndex >>> 6;
 		int bitsLength = bits.length;
-		if (word >= bitsLength) return bits.length << 6;
+		if (word >= bitsLength) return (bits.length << 6) + offset;
 		long bitsAtWord = bits[word] | (1L << fromIndex) - 1L; // shift implicitly is masked to bottom 63 bits
 		if (bitsAtWord != -1L) {
 			long t = BitConversion.lowestOneBit(~bitsAtWord); // there's a bug in GWT that requires this instead of (b & -b)
@@ -479,14 +501,14 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 			}
 
 			public void reset () {
-				currentIndex = INDEX_ILLEGAL;
-				nextIndex = INDEX_ZERO;
+				currentIndex = INDEX_ILLEGAL + set.offset;
+				nextIndex = INDEX_ZERO + set.offset;
 				findNextIndex();
 			}
 
 			void findNextIndex () {
 				nextIndex = set.nextSetBit(nextIndex + 1);
-				hasNext = nextIndex != INDEX_ILLEGAL;
+				hasNext = nextIndex != INDEX_ILLEGAL + set.offset;
 			}
 
 			/**
@@ -508,7 +530,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 					throw new IllegalStateException("next must be called before remove.");
 				}
 				set.deactivate(currentIndex);
-				currentIndex = INDEX_ILLEGAL;
+				currentIndex = INDEX_ILLEGAL + set.offset;
 			}
 
 			@Override
