@@ -616,56 +616,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		public Iterator<Map.Entry<K, V>> iterator () {
 			return iter;
 		}
-
-		/**
-		 * Returns a new {@link ObjectList} containing the remaining items.
-		 * Does not change the position of this iterator.
-		 */
-		public ObjectList<Map.Entry<K, V>> toList () {
-			ObjectList<Map.Entry<K, V>> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(new Entry<>(iter.next()));}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return list;
-		}
-
-		/**
-		 * Append the remaining items that this can iterate through into the given Collection.
-		 * Does not change the position of this iterator.
-		 * @param coll any modifiable Collection; may have items appended into it
-		 * @return the given collection
-		 */
-		public Collection<Map.Entry<K, V>> appendInto(Collection<Map.Entry<K, V>> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(new Entry<>(iter.next()));}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return coll;
-		}
-
-		/**
-		 * Append the remaining items that this can iterate through into the given Map.
-		 * Does not change the position of this iterator. Note that a Map is not a Collection.
-		 * @param coll any modifiable Map; may have items appended into it
-		 * @return the given map
-		 */
-		public Map<K, V> appendInto(Map<K, V> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {
-				iter.next();
-				coll.put(entry.key, entry.value);
-			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return coll;
-		}
 	}
 
 	public static class OrderedMapKeys<K, V> extends Keys<K, V> {
@@ -717,37 +667,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		@Override
 		public Iterator<K> iterator () {
 			return iter;
-		}
-
-		/**
-		 * Returns a new {@link ObjectList} containing the remaining items.
-		 * Does not change the position of this iterator.
-		 */
-		public ObjectList<K> toList () {
-			ObjectList<K> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(iter.next());}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return list;
-		}
-
-		/**
-		 * Append the remaining items that this can iterate through into the given Collection.
-		 * Does not change the position of this iterator.
-		 * @param coll any modifiable Collection; may have items appended into it
-		 * @return the given collection
-		 */
-		public Collection<K> appendInto(Collection<K> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(iter.next());}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return coll;
 		}
 	}
 
@@ -801,37 +720,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		@Override
 		public Iterator<V> iterator () {
 			return iter;
-		}
-
-		/**
-		 * Returns a new {@link ObjectList} containing the remaining items.
-		 * Does not change the position of this iterator.
-		 */
-		public ObjectList<V> toList () {
-			ObjectList<V> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(iter.next());}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return list;
-		}
-
-		/**
-		 * Append the remaining items that this can iterate through into the given Collection.
-		 * Does not change the position of this iterator.
-		 * @param coll any modifiable Collection; may have items appended into it
-		 * @return the given collection
-		 */
-		public Collection<V> appendInto(Collection<V> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(iter.next());}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return coll;
 		}
 	}
 

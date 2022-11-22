@@ -1116,6 +1116,14 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			return iter;
 		}
 
+		/**
+		 * The iterator is reused by this data structure, and you can reset it
+		 * back to the start of the iteration order using this.
+		 */
+		public void resetIterator () {
+			iter.reset();
+		}
+
 		@Override
 		public int size () {
 			return iter.map.size;
@@ -1211,6 +1219,14 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			return iter;
 		}
 
+		/**
+		 * The iterator is reused by this data structure, and you can reset it
+		 * back to the start of the iteration order using this.
+		 */
+		public void resetIterator () {
+			iter.reset();
+		}
+
 		@Override
 		public int size () {
 			return iter.map.size;
@@ -1289,6 +1305,14 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		@Override
 		public Iterator<K> iterator () {
 			return iter;
+		}
+
+		/**
+		 * The iterator is reused by this data structure, and you can reset it
+		 * back to the start of the iteration order using this.
+		 */
+		public void resetIterator () {
+			iter.reset();
 		}
 
 		@Override
