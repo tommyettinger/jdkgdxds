@@ -1121,7 +1121,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			return iter.map.size;
 		}
 
-
 		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
@@ -1171,7 +1170,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			iter.hasNext = hn;
 			return coll;
 		}
-
 	}
 
 	public static class Values<K, V> extends AbstractCollection<V> {
