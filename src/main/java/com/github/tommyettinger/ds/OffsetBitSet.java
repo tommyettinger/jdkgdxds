@@ -86,6 +86,20 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		this.offset = toCopy.offset;
 	}
 
+	/** Creates a bit set from another bit set. This will copy the raw bits and will have the same offset.
+	 * @param toCopy bitset to copy */
+	public OffsetBitSet (PrimitiveCollection.OfInt toCopy) {
+		int start = Integer.MAX_VALUE, end = Integer.MIN_VALUE;
+		for(PrimitiveIterator.OfInt it = toCopy.iterator(); it.hasNext();) {
+			int n = it.next();
+			start = Math.min(start, n);
+			end = Math.max(end, n + 1);
+		}
+		offset = start;
+		bits = new long[end + 63 - start >>> 6];
+		addAll(toCopy);
+	}
+
 	public int getOffset () {
 		return offset;
 	}
@@ -130,22 +144,29 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		}
 	}
 
-	/** @param index the index of the bit
+	/**
+	 * Returns true if the given position is contained in this bit set.
+	 * If the index is less than the {@link #getOffset() offset}, this returns false.
+	 * @param index the index of the bit
 	 * @return whether the bit is set
-	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
+	 */
 	public boolean contains (int index) {
 		index -= offset;
+		if(index < 0) return false;
 		final int word = index >>> 6;
 		if (word >= bits.length) return false;
 		return (bits[word] & (1L << (index & 0x3F))) != 0L;
 	}
 
-	/** Returns the bit at the given index and clears it in one go.
+	/** Deactivates the given position and returns true if the bit set was modified
+	 * in the process. If the index is less than the {@link #getOffset() offset},
+	 * this does not modify the bit set and returns false.
 	 * @param index the index of the bit
-	 * @return whether the bit was set before invocation
-	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
+	 * @return true if this modified the bit set
+	 */
 	public boolean remove (int index) {
 		index -= offset;
+		if(index < 0) return false;
 		final int word = index >>> 6;
 		if (word >= bits.length) return false;
 		long oldBits = bits[word];
@@ -153,17 +174,20 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		return bits[word] != oldBits;
 	}
 
-	/** Returns the bit at the given index and sets it in one go.
+	/** Activates the given position and returns true if the bit set was modified
+	 * in the process. If the index is less than the {@link #getOffset() offset},
+	 * this does not modify the bit set and returns false.
 	 * @param index the index of the bit
-	 * @return whether the bit was set before invocation
-	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
+	 * @return true if this modified the bit set
+	 */
 	public boolean add (int index) {
 		index -= offset;
+		if(index < 0) return false;
 		final int word = index >>> 6;
 		checkCapacity(word);
 		long oldBits = bits[word];
 		bits[word] |= 1L << (index & 0x3F);
-		return bits[word] == oldBits;
+		return bits[word] != oldBits;
 	}
 
 	public boolean addAll(int[] indices) {
@@ -214,32 +238,40 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 
 
 	/**
-	 * Always sets the given int position to true.
+	 * Sets the given int position to true, unless the position is less
+	 * than the {@link #getOffset() offset} (then it does nothing).
 	 * @param index the index of the bit to set
-	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
+	 */
 	public void activate (int index) {
 		index -= offset;
+		if(index < 0) return;
 		final int word = index >>> 6;
 		checkCapacity(word);
 		bits[word] |= 1L << (index & 0x3F);
 	}
 
 	/**
-	 * Always sets the given int position to false.
+	 * Sets the given int position to false, unless the position is less
+	 * than the {@link #getOffset() offset} (then it does nothing).
 	 * @param index the index of the bit to clear
-	 * @throws ArrayIndexOutOfBoundsException if index < 0 */
+	 */
 	public void deactivate (int index) {
 		index -= offset;
+		if(index < 0) return;
 		final int word = index >>> 6;
 		if (word >= bits.length) return;
 		bits[word] &= ~(1L << (index & 0x3F));
 	}
 
 	/**
-	 * Changes the given int position from true to false, or from false to true.
-	 *  @param index the index of the bit to flip */
+	 * Changes the given int position from true to false, or from false to true,
+	 * unless the position is less than the {@link #getOffset() offset} (then it
+	 * does nothing).
+	 * @param index the index of the bit to flip
+	 */
 	public void toggle (int index) {
 		index -= offset;
+		if(index < 0) return;
 		final int word = index >>> 6;
 		checkCapacity(word);
 		bits[word] ^= 1L << (index & 0x3F);
@@ -312,6 +344,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * exists then {@link #getOffset() - 1} is returned. */
 	public int nextSetBit (int fromIndex) {
 		fromIndex -= offset;
+		if(fromIndex < 0) return -1;
 		long[] bits = this.bits;
 		int word = fromIndex >>> 6;
 		int bitsLength = bits.length;
@@ -337,6 +370,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	/** Returns the index of the first bit that is set to false that occurs on or after the specified starting index. */
 	public int nextClearBit (int fromIndex) {
 		fromIndex -= offset;
+		if(fromIndex < 0) return (bits.length << 6) + offset;
 		long[] bits = this.bits;
 		int word = fromIndex >>> 6;
 		int bitsLength = bits.length;
