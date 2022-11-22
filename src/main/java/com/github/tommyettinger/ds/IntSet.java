@@ -486,7 +486,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	 * Use the {@link IntSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public PrimitiveIterator.OfInt iterator () {
+	public IntSetIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new IntSetIterator(this);
 			iterator2 = new IntSetIterator(this);
@@ -618,6 +618,21 @@ public class IntSet implements PrimitiveCollection.OfInt {
 			nextIndex = nextIdx;
 			hasNext = hn;
 			return list;
+		}
+		/**
+		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.OfInt.
+		 * Does not change the position of this iterator.
+		 * @param coll any modifiable PrimitiveCollection.OfInt; may have items appended into it
+		 * @return the given primitive collection
+		 */
+		public PrimitiveCollection.OfInt appendInto(PrimitiveCollection.OfInt coll) {
+			int currentIdx = currentIndex, nextIdx = nextIndex;
+			boolean hn = hasNext;
+			while (hasNext) {coll.add(nextInt());}
+			currentIndex = currentIdx;
+			nextIndex = nextIdx;
+			hasNext = hn;
+			return coll;
 		}
 	}
 

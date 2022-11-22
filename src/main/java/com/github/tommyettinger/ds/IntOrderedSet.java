@@ -325,7 +325,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public PrimitiveIterator.OfInt iterator () {
+	public IntSetIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new IntOrderedSetIterator(this);
 			iterator2 = new IntOrderedSetIterator(this);
