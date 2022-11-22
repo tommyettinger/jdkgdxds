@@ -686,12 +686,16 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
 	 * size, no action is taken. This indiscriminately removes items from the backing array until the
 	 * requested newSize is reached, or until the full backing array has had its elements removed.
+	 * <br>
+	 * This tries to remove from the end of the iteration order, but because the iteration order is not
+	 * guaranteed by an unordered set, this can remove essentially any item(s) from the set if it is larger
+	 * than newSize.
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	public void truncate (int newSize) {
 		T[] keyTable = this.keyTable;
-		for (int i = 0; i < keyTable.length && size > newSize; i++) {
+		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
 			if (keyTable[i] != null) {
 				keyTable[i] = null;
 				--size;

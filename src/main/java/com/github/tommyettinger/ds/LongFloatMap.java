@@ -761,20 +761,24 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * Reduces the size of the map to the specified size. If the map is already smaller than the specified
 	 * size, no action is taken. This indiscriminately removes items from the backing array until the
 	 * requested newSize is reached, or until the full backing array has had its elements removed.
+	 * <br>
+	 * This tries to remove from the end of the iteration order, but because the iteration order is not
+	 * guaranteed by an unordered map, this can remove essentially any item(s) from the map if it is larger
+	 * than newSize.
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	public void truncate (int newSize) {
 		long[] keyTable = this.keyTable;
-		if (hasZeroValue && size > newSize) {
-			hasZeroValue = false;
-			--size;
-		}
-		for (int i = 0; i < keyTable.length && size > newSize; i++) {
+		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
 			if (keyTable[i] != 0) {
 				keyTable[i] = 0;
 				--size;
 			}
+		}
+		if (hasZeroValue && size > newSize) {
+			hasZeroValue = false;
+			--size;
 		}
 	}
 
