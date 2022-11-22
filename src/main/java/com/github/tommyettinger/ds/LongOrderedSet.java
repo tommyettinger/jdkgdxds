@@ -316,7 +316,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public PrimitiveIterator.OfLong iterator () {
+	public LongSetIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new LongOrderedSetIterator(this);
 			iterator2 = new LongOrderedSetIterator(this);

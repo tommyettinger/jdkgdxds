@@ -494,7 +494,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	 * Use the {@link LongSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public PrimitiveIterator.OfLong iterator () {
+	public LongSetIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new LongSetIterator(this);
 			iterator2 = new LongSetIterator(this);
@@ -623,6 +623,21 @@ public class LongSet implements PrimitiveCollection.OfLong {
 			nextIndex = nextIdx;
 			hasNext = hn;
 			return list;
+		}
+		/**
+		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.OfLong.
+		 * Does not change the position of this iterator.
+		 * @param coll any modifiable PrimitiveCollection.OfLong; may have items appended into it
+		 * @return the given primitive collection
+		 */
+		public PrimitiveCollection.OfLong appendInto(PrimitiveCollection.OfLong coll) {
+			int currentIdx = currentIndex, nextIdx = nextIndex;
+			boolean hn = hasNext;
+			while (hasNext) {coll.add(nextLong());}
+			currentIndex = currentIdx;
+			nextIndex = nextIdx;
+			hasNext = hn;
+			return coll;
 		}
 	}
 
