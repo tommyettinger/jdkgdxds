@@ -1098,56 +1098,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 					return hasNext;
 				}
-
-				/**
-				 * Returns a new {@link ObjectList} containing the remaining items.
-				 * Does not change the position of this iterator.
-				 */
-				public ObjectList<Map.Entry<K, V>> toList () {
-					ObjectList<Map.Entry<K, V>> list = new ObjectList<>(map.size);
-					int currentIdx = currentIndex, nextIdx = nextIndex;
-					boolean hn = hasNext;
-					while (hasNext) {list.add(new Entry<>(next()));}
-					currentIndex = currentIdx;
-					nextIndex = nextIdx;
-					hasNext = hn;
-					return list;
-				}
-
-				/**
-				 * Append the remaining items that this can iterate through into the given Collection.
-				 * Does not change the position of this iterator.
-				 * @param coll any modifiable Collection; may have items appended into it
-				 * @return the given collection
-				 */
-				public Collection<Map.Entry<K, V>> appendInto(Collection<Map.Entry<K, V>> coll) {
-					int currentIdx = currentIndex, nextIdx = nextIndex;
-					boolean hn = hasNext;
-					while (hasNext) {coll.add(new Entry<>(next()));}
-					currentIndex = currentIdx;
-					nextIndex = nextIdx;
-					hasNext = hn;
-					return coll;
-				}
-
-				/**
-				 * Append the remaining items that this can iterate through into the given Map.
-				 * Does not change the position of this iterator. Note that a Map is not a Collection.
-				 * @param coll any modifiable Map; may have items appended into it
-				 * @return the given map
-				 */
-				public Map<K, V> appendInto(Map<K, V> coll) {
-					int currentIdx = currentIndex, nextIdx = nextIndex;
-					boolean hn = hasNext;
-					while (hasNext) {
-						next();
-						coll.put(entry.key, entry.value);
-					}
-					currentIndex = currentIdx;
-					nextIndex = nextIdx;
-					hasNext = hn;
-					return coll;
-				}
 			};
 		}
 
@@ -1170,6 +1120,58 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		public int size () {
 			return iter.map.size;
 		}
+
+
+		/**
+		 * Returns a new {@link ObjectList} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 */
+		public ObjectList<Map.Entry<K, V>> toList () {
+			ObjectList<Map.Entry<K, V>> list = new ObjectList<>(iter.map.size);
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {list.add(new Entry<>(iter.next()));}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return list;
+		}
+
+		/**
+		 * Append the remaining items that this can iterate through into the given Collection.
+		 * Does not change the position of this iterator.
+		 * @param coll any modifiable Collection; may have items appended into it
+		 * @return the given collection
+		 */
+		public Collection<Map.Entry<K, V>> appendInto(Collection<Map.Entry<K, V>> coll) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {coll.add(new Entry<>(iter.next()));}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return coll;
+		}
+
+		/**
+		 * Append the remaining items that this can iterate through into the given Map.
+		 * Does not change the position of this iterator. Note that a Map is not a Collection.
+		 * @param coll any modifiable Map; may have items appended into it
+		 * @return the given map
+		 */
+		public Map<K, V> appendInto(Map<K, V> coll) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {
+				iter.next();
+				coll.put(entry.key, entry.value);
+			}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return coll;
+		}
+
 	}
 
 	public static class Values<K, V> extends AbstractCollection<V> {
@@ -1216,6 +1218,36 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			return iter.map.size;
 		}
 
+		/**
+		 * Returns a new {@link ObjectList} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 */
+		public ObjectList<V> toList () {
+			ObjectList<V> list = new ObjectList<>(iter.map.size);
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {list.add(iter.next());}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return list;
+		}
+
+		/**
+		 * Append the remaining items that this can iterate through into the given Collection.
+		 * Does not change the position of this iterator.
+		 * @param coll any modifiable Collection; may have items appended into it
+		 * @return the given collection
+		 */
+		public Collection<V> appendInto(Collection<V> coll) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {coll.add(iter.next());}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return coll;
+		}
 	}
 
 	public static class Keys<K, V> extends AbstractSet<K> {
@@ -1277,6 +1309,38 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			}
 			return h;
 		}
+
+		/**
+		 * Returns a new {@link ObjectList} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 */
+		public ObjectList<K> toList () {
+			ObjectList<K> list = new ObjectList<>(iter.map.size);
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {list.add(iter.next());}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return list;
+		}
+
+		/**
+		 * Append the remaining items that this can iterate through into the given Collection.
+		 * Does not change the position of this iterator.
+		 * @param coll any modifiable Collection; may have items appended into it
+		 * @return the given collection
+		 */
+		public Collection<K> appendInto(Collection<K> coll) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {coll.add(iter.next());}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return coll;
+		}
+
 	}
 
 	/**
