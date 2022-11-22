@@ -26,14 +26,24 @@ import java.util.PrimitiveIterator;
 
 /**
  * A bit set, which can be seen as a set of integer positions greater than some starting number,
- * that allows comparison via bitwise operators to other bit sets.
+ * that has changeable offset, or starting position. If you know the integer positions will all
+ * be greater than or equal to some minimum value, such as -128, 0, or 1000, then you can use an offset
+ * of that minimum value to save memory. This is important because every possible integer position, whether
+ * contained in the bit set or not, takes up one bit of memory (rounded up to a multiple of 64), but
+ * positions less than the offset simply aren't stored, and the bit set can grow to fit positions arbitrarily
+ * higher than the offset. Allows comparison via bitwise operators to other bit sets, if the offsets are the same.
  * <br>
  * This was originally Bits in libGDX. Many methods have been renamed to more-closely match the Collection API.
+ * This has also had the offset functionality added.
  *
  * @author mzechner
- * @author jshapcott */
+ * @author jshapcott
+ */
 public class OffsetBitSet implements PrimitiveCollection.OfInt {
 
+	/**
+	 * The raw bits, each one representing the presence or absence of an integer at a position.
+	 */
 	protected long[] bits;
 	/**
 	 * This is the lowest integer position that this OffsetBitSet can store.
@@ -44,27 +54,31 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	@Nullable protected transient OffsetBitSetIterator iterator1;
 	@Nullable protected transient OffsetBitSetIterator iterator2;
 
+	/**
+	 * Creates a bit set with an initial size that can store positions between 0 and 63, inclusive, without
+	 * needing to resize. This has an offset of 0 and can resize to fit larger positions.
+	 */
 	public OffsetBitSet () {
 		bits = new long[]{0L};
 	}
 
 	/** Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range 0 through
-	 * bitCapacity-1.
+	 * bitCapacity-1. This has an offset of 0 and can resize to fit larger positions.
 	 * @param bitCapacity the initial size of the bit set */
 	public OffsetBitSet (int bitCapacity) {
 		bits = new long[bitCapacity + 63 >>> 6];
 	}
 
-	/** Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range offset through
-	 * end-1.
+	/** Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range {@code start} through
+	 * {@code end-1}. This has an offset of {@code start} and can resize to fit larger positions.
 	 * @param start the lowest value that can be stored in the bit set
 	 * @param end the initial end of the range of the bit set */
 	public OffsetBitSet (int start, int end) {
-		this.offset = start;
+		offset = start;
 		bits = new long[end + 63 - start >>> 6];
 	}
 
-	/** Creates a bit set from another bit set.
+	/** Creates a bit set from another bit set. This will copy the raw bits and will have the same offset.
 	 * @param toCopy bitset to copy */
 	public OffsetBitSet (OffsetBitSet toCopy) {
 		this.bits = new long[toCopy.bits.length];
@@ -600,13 +614,26 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		}
 	}
 
-
+	/**
+	 * Static builder for an OffsetBitSet; this overload does not allocate an
+	 * array for the index/indices, but only takes one index. This always has
+	 * an offset of 0.
+	 * @param index the one position to place in the built bit set; must be non-negative
+	 * @return a new OffsetBitSet with the given item
+	 */
 	public static OffsetBitSet with(int index) {
 		OffsetBitSet s = new OffsetBitSet(index+1);
 		s.add(index);
 		return s;
 	}
 
+	/**
+	 * Static builder for an OffsetBitSet; this overload allocates an array for
+	 * the indices unless given an array already, and can take many indices. This
+	 * always has an offset of 0.
+	 * @param indices the positions to place in the built bit set; must be non-negative
+	 * @return a new OffsetBitSet with the given items
+	 */
 	public static OffsetBitSet with(int... indices) {
 		OffsetBitSet s = new OffsetBitSet();
 		s.addAll(indices);
