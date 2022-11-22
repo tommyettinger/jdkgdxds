@@ -337,7 +337,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public Iterator<T> iterator () {
+	public ObjectSetIterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectOrderedSetIterator<>(this);
 			iterator2 = new ObjectOrderedSetIterator<>(this);

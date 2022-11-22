@@ -605,7 +605,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 * iteration, use {@link ObjectSetIterator#ObjectSetIterator(ObjectSet)}.
 	 */
 	@Override
-	public Iterator<T> iterator () {
+	public ObjectSetIterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectSetIterator<>(this);
 			iterator2 = new ObjectSetIterator<>(this);
@@ -723,6 +723,22 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 			nextIndex = nextIdx;
 			hasNext = hn;
 			return list;
+		}
+
+		/**
+		 * Append the remaining items that this can iterate through into the given Collection.
+		 * Does not change the position of this iterator.
+		 * @param coll any modifiable Collection; may have items appended into it
+		 * @return the given collection
+		 */
+		public Collection<T> appendInto(Collection<T> coll) {
+			int currentIdx = currentIndex, nextIdx = nextIndex;
+			boolean hn = hasNext;
+			while (hasNext) {coll.add(next());}
+			currentIndex = currentIdx;
+			nextIndex = nextIdx;
+			hasNext = hn;
+			return coll;
 		}
 	}
 
