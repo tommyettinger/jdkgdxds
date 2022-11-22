@@ -915,6 +915,19 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		@Nullable public K key;
 		@Nullable public V value;
 
+		public Entry () {
+		}
+
+		public Entry (@Nullable K key, @Nullable V value) {
+			this.key = key;
+			this.value = value;
+		}
+
+		public Entry (Map.Entry<? extends K, ? extends V> entry) {
+			key = entry.getKey();
+			value = entry.getValue();
+		}
+
 		@Override
 		@Nullable
 		public String toString () {
@@ -998,7 +1011,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		}
 	}
 
-	static protected abstract class MapIterator<K, V, I> implements Iterable<I>, Iterator<I> {
+	protected static abstract class MapIterator<K, V, I> implements Iterable<I>, Iterator<I> {
 		public boolean hasNext;
 
 		protected final ObjectObjectMap<K, V> map;
@@ -1016,7 +1029,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			findNextIndex();
 		}
 
-		void findNextIndex () {
+		protected void findNextIndex () {
 			K[] keyTable = map.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != null) {
@@ -1063,7 +1076,11 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 					return this;
 				}
 
-				/** Note the same entry instance is returned each time this method is called. */
+				/**
+				 * Note: the same entry instance is returned each time this method is called.
+				 *
+				 * @return a reused Entry that will have its key and value set to the next pair
+				 */
 				@Override
 				public Map.Entry<K, V> next () {
 					if (!hasNext) {throw new NoSuchElementException();}
@@ -1080,6 +1097,56 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 				public boolean hasNext () {
 					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 					return hasNext;
+				}
+
+				/**
+				 * Returns a new {@link ObjectList} containing the remaining items.
+				 * Does not change the position of this iterator.
+				 */
+				public ObjectList<Map.Entry<K, V>> toList () {
+					ObjectList<Map.Entry<K, V>> list = new ObjectList<>(map.size);
+					int currentIdx = currentIndex, nextIdx = nextIndex;
+					boolean hn = hasNext;
+					while (hasNext) {list.add(new Entry<>(next()));}
+					currentIndex = currentIdx;
+					nextIndex = nextIdx;
+					hasNext = hn;
+					return list;
+				}
+
+				/**
+				 * Append the remaining items that this can iterate through into the given Collection.
+				 * Does not change the position of this iterator.
+				 * @param coll any modifiable Collection; may have items appended into it
+				 * @return the given collection
+				 */
+				public Collection<Map.Entry<K, V>> appendInto(Collection<Map.Entry<K, V>> coll) {
+					int currentIdx = currentIndex, nextIdx = nextIndex;
+					boolean hn = hasNext;
+					while (hasNext) {coll.add(new Entry<>(next()));}
+					currentIndex = currentIdx;
+					nextIndex = nextIdx;
+					hasNext = hn;
+					return coll;
+				}
+
+				/**
+				 * Append the remaining items that this can iterate through into the given Map.
+				 * Does not change the position of this iterator. Note that a Map is not a Collection.
+				 * @param coll any modifiable Map; may have items appended into it
+				 * @return the given map
+				 */
+				public Map<K, V> appendInto(Map<K, V> coll) {
+					int currentIdx = currentIndex, nextIdx = nextIndex;
+					boolean hn = hasNext;
+					while (hasNext) {
+						next();
+						coll.put(entry.key, entry.value);
+					}
+					currentIndex = currentIdx;
+					nextIndex = nextIdx;
+					hasNext = hn;
+					return coll;
 				}
 			};
 		}

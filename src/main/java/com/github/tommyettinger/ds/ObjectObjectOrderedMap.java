@@ -604,9 +604,60 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 				@Override
 				public void remove () {
 					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+					assert entry.key != null;
 					map.remove(entry.key);
 					nextIndex--;
 					currentIndex = -1;
+				}
+
+				/**
+				 * Returns a new {@link ObjectList} containing the remaining items.
+				 * Does not change the position of this iterator.
+				 */
+				public ObjectList<Map.Entry<K, V>> toList () {
+					ObjectList<Map.Entry<K, V>> list = new ObjectList<>(map.size);
+					int currentIdx = currentIndex, nextIdx = nextIndex;
+					boolean hn = hasNext;
+					while (hasNext) {list.add(new Entry<>(next()));}
+					currentIndex = currentIdx;
+					nextIndex = nextIdx;
+					hasNext = hn;
+					return list;
+				}
+
+				/**
+				 * Append the remaining items that this can iterate through into the given Collection.
+				 * Does not change the position of this iterator.
+				 * @param coll any modifiable Collection; may have items appended into it
+				 * @return the given collection
+				 */
+				public Collection<Map.Entry<K, V>> appendInto(Collection<Map.Entry<K, V>> coll) {
+					int currentIdx = currentIndex, nextIdx = nextIndex;
+					boolean hn = hasNext;
+					while (hasNext) {coll.add(new Entry<>(next()));}
+					currentIndex = currentIdx;
+					nextIndex = nextIdx;
+					hasNext = hn;
+					return coll;
+				}
+
+				/**
+				 * Append the remaining items that this can iterate through into the given Map.
+				 * Does not change the position of this iterator. Note that a Map is not a Collection.
+				 * @param coll any modifiable Map; may have items appended into it
+				 * @return the given map
+				 */
+				public Map<K, V> appendInto(Map<K, V> coll) {
+					int currentIdx = currentIndex, nextIdx = nextIndex;
+					boolean hn = hasNext;
+					while (hasNext) {
+						next();
+						coll.put(entry.key, entry.value);
+					}
+					currentIndex = currentIdx;
+					nextIndex = nextIdx;
+					hasNext = hn;
+					return coll;
 				}
 			};
 		}
