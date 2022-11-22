@@ -511,11 +511,29 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	public static class IntSetIterator implements PrimitiveIterator.OfInt {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
+		/**
+		 * This can be queried in place of calling {@link #hasNext()}. The method also performs
+		 * a check that the iterator is valid, where using the field does not check.
+		 */
 		public boolean hasNext;
-
-		final IntSet set;
-		int nextIndex, currentIndex;
-		boolean valid = true;
+		/**
+		 * The next index in the set's key table to go to and return from {@link #nextInt()} (or,
+		 * while discouraged because of boxing, {@link #next()}).
+		 */
+		protected int nextIndex;
+		/**
+		 * The current index in the set's key table; this is the index that will be removed if
+		 * {@link #remove()} is called.
+		 */
+		protected int currentIndex;
+		/**
+		 * Internally employed by the iterator-reuse functionality.
+		 */
+		protected boolean valid = true;
+		/**
+		 * The set to iterate over.
+		 */
+		protected final IntSet set;
 
 		public IntSetIterator (IntSet set) {
 			this.set = set;
@@ -528,7 +546,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 			if (set.hasZeroValue) {hasNext = true;} else {findNextIndex();}
 		}
 
-		void findNextIndex () {
+		protected void findNextIndex () {
 			int[] keyTable = set.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != 0) {

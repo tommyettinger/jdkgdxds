@@ -623,11 +623,28 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	}
 
 	public static class ObjectSetIterator<T> implements Iterable<T>, Iterator<T> {
+		/**
+		 * This can be queried in place of calling {@link #hasNext()}. The method also performs
+		 * a check that the iterator is valid, where using the field does not check.
+		 */
 		public boolean hasNext;
-
-		final ObjectSet<T> set;
-		int nextIndex, currentIndex;
-		boolean valid = true;
+		/**
+		 * The next index in the set's key table to go to and return from {@link #next()}.
+		 */
+		protected int nextIndex;
+		/**
+		 * The current index in the set's key table; this is the index that will be removed if
+		 * {@link #remove()} is called.
+		 */
+		protected int currentIndex;
+		/**
+		 * Internally employed by the iterator-reuse functionality.
+		 */
+		protected boolean valid = true;
+		/**
+		 * The set to iterate over.
+		 */
+		protected final ObjectSet<T> set;
 
 		public ObjectSetIterator (ObjectSet<T> set) {
 			this.set = set;
@@ -640,7 +657,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 			findNextIndex();
 		}
 
-		private void findNextIndex () {
+		protected void findNextIndex () {
 			T[] keyTable = set.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != null) {
