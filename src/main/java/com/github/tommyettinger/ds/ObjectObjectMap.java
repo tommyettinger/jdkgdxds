@@ -1116,17 +1116,29 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			return iter;
 		}
 
+		@Override
+		public int size () {
+			return iter.map.size;
+		}
+
+		@Override
+		public int hashCode () {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			int hc = super.hashCode();
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return hc;
+		}
+
 		/**
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
 		public void resetIterator () {
 			iter.reset();
-		}
-
-		@Override
-		public int size () {
-			return iter.map.size;
 		}
 
 		/**
@@ -1219,6 +1231,18 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			return iter;
 		}
 
+		@Override
+		public int hashCode () {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			int hc = super.hashCode();
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return hc;
+		}
+
 		/**
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
@@ -1307,14 +1331,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			return iter;
 		}
 
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator () {
-			iter.reset();
-		}
-
 		@Override
 		public int size () {
 			return iter.map.size;
@@ -1322,14 +1338,22 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 		@Override
 		public int hashCode () {
-			int h = 0;
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
 			iter.reset();
-			while (iter.hasNext()) {
-				K obj = iter.next();
-				if (obj != null)
-					h += obj.hashCode();
-			}
-			return h;
+			int hc = super.hashCode();
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return hc;
+		}
+
+		/**
+		 * The iterator is reused by this data structure, and you can reset it
+		 * back to the start of the iteration order using this.
+		 */
+		public void resetIterator () {
+			iter.reset();
 		}
 
 		/**
@@ -1362,7 +1386,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			iter.hasNext = hn;
 			return coll;
 		}
-
 	}
 
 	/**
