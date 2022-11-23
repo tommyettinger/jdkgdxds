@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
