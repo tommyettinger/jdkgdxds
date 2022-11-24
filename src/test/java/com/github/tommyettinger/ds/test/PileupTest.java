@@ -1113,6 +1113,28 @@ public class PileupTest {
         }
     }
 
+    /**
+     * Generates an array of Point2 points (with all integer components) in a series of concentric shells,
+     * starting at (0,0) and moving through quadrant I.
+     * Thanks to <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">Steven Pigeon's blog</a>.
+     *
+     * @param size
+     * @return
+     */
+    public static Point2[] generatePointShells (int size) {
+        Point2[] result = new Point2[size];
+        for (int root = 0, index = 0; ; ++root) {
+            for (int limit = index + root + root; index <= limit; ) {
+                final int r = index - root * root;
+                final int x = (r < root) ? root : root + root - r;
+                final int y = Math.min(r, root);
+                result[index] = new Point2(x, y);
+                if (++index >= size)
+                    return result;
+            }
+        }
+    }
+
     public static final long CONSTANT =
 //        0x9E3779B97F4A7C15L; //int: total collisions: 33748, longest pileup: 12, long: total collisions: 34124, longest pileup: 13
 //        0xD1B54A32D192ED03L;//long: total collisions: 33579, longest pileup: 12
@@ -1379,7 +1401,6 @@ public class PileupTest {
         }
     }
 
-
     @Test
     public void testVector2SetOld () {
         final Vector2[] spiral = generateVectorSpiral(LEN);
@@ -1391,21 +1412,24 @@ public class PileupTest {
             double averagePileup = 0;
 
             int hashMul = 0xEB18A809; // total collisions: 1752402, longest pileup: 21
-            //0x9E3779B9;
+            //0x9E3779B9;  // total collisions: 1759892,    longest pileup: 25 , maybe?
             // 0x1A36A9;
 
             {
-//                hashMultiplier = 0x9E3779B97F4A7C15L;
-                hashMultiplier = 0x769C3DC968DB6A07L;
+                hashMultiplier =
+//                    0x9E3779B97F4A7C15L;
+                    0x769C3DC968DB6A07L;
+//                    0xD1B54A32D192ED03L;//long: total collisions: 33579, longest pileup: 12
+//                    0xF1357AEA2E62A9C5L;//long: total collisions: 34430, longest pileup: 11
             }
 
             @Override
             protected int place (Object item) {
-                return item.hashCode() * hashMul >>> shift; // total collisions: 1759892,    longest pileup: 25
+//                return item.hashCode() * hashMul >>> shift;
 //                final int h = item.hashCode() * hashAddend;
 //                return (h ^ h >>> 16) & mask; //total collisions: 1842294, longest pileup: 35
 //                return (int)(item.hashCode() * hashMultiplier) >>> shift; // total collisions: 1757128,    longest pileup: 23 ( hashMultiplier *= 0xF1357AEA2E62A9C5L; )
-//                return (int)(item.hashCode() * hashMultiplier >>> shift); // total collisions: 1761470,    longest pileup: 19
+                return (int)(item.hashCode() * hashMultiplier >>> shift); // total collisions: 1761470,    longest pileup: 19
 //                return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // total collisions: 2695641,    longest pileup: 41
 //                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift); // total collisions: 5949677,    longest pileup: 65
 //                return (item.hashCode() & mask);                               // total collisions: 2783028662, longest pileup: 25751
@@ -1446,8 +1470,11 @@ public class PileupTest {
 
 //                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
                 hashMul = hashMul * 0x2E62A9C5;
-//                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
-                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+
+                // this one is used in 1.0.5
+//                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
 
                 Object[] oldKeyTable = keyTable;
 
@@ -1723,4 +1750,118 @@ public class PileupTest {
         System.out.println(System.nanoTime() - start);
         set.clear();
     }
+
+
+    @Test
+    public void testPointSetConfigurable () {
+        final Point2[] spiral = generatePointShells(LEN);
+        long start = System.nanoTime();
+        ObjectSet set = new ObjectSet(51, 0.6f) {
+            long collisionTotal = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
+            double averagePileup = 0;
+
+            //            {
+//                hashMultiplier = 0xD1B54A32D192ED03L;
+//            }
+            @Override
+            protected void addResize (@Nonnull Object key) {
+                Object[] keyTable = this.keyTable;
+                for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                    if (keyTable[i] == null) {
+                        keyTable[i] = key;
+                        averagePileup += p;
+
+                        return;
+                    } else {
+                        collisionTotal++;
+                        longestPileup = Math.max(longestPileup, ++p);
+                    }
+                }
+            }
+
+            @Override
+            protected void resize (int newSize) {
+                int oldCapacity = keyTable.length;
+                threshold = (int)(newSize * loadFactor);
+                mask = newSize - 1;
+                shift = Long.numberOfLeadingZeros(mask);
+
+                // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
+                // Pseudorandom Number Generators
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+                // ensures hashMultiplier is never too small, and is always odd
+//                hashMultiplier |= 0x0000010000000001L;
+
+                // we add a constant from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
+                // Pseudorandom Number Generators, times -8 to keep the bottom 3 bits the same every time.
+                //361274435
+//                hashMultiplier += 0xC3910C8D016B07D6L;//0x765428AE8CEAB1D8L;
+                //211888218
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;//0x59E3779B97F4A7C1L;
+//                hashMultiplier *= MathTools.GOLDEN_LONGS[size & 1023];
+//                hashMultiplier ^= size + size;
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+
+                // was using this in many tests
+                // total 1788695, longest 33, average 5.686122731838816, sum 160
+                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L; // average 5.898153681828007
+//                hashMultiplier *= 0x9E3779B97F4A7C15L; // average 5.793621174166804
+//                hashMultiplier *= 0xD1B54A32D192ED03L; // average 5.9661476545909995
+//                hashMultiplier *= (long)size << 10 ^ 0xF1357AEA2E62A9C5L; // average 5.865185076866346
+//                hashMultiplier = (hashMultiplier + size + size) * 0xF1357AEA2E62A9C5L + 0xD1B54A32D192ED03L ^ 0x9E3779B97F4A7C15L;
+//                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xE19B01AA9D42C631L) * 0xF1357AEA2E62A9C5L); // | 0x8000000000000000L; // + 0xC13FA9A902A6328EL
+
+//                hashMultiplier = MathTools.GOLDEN_LONGS[64 - shift];
+//                hashMultiplier = MathTools.GOLDEN_LONGS[size - shift & 255];
+
+                Object[] oldKeyTable = keyTable;
+
+                keyTable = new Object[newSize];
+
+                allPileups += longestPileup;
+                pileupChecks++;
+                collisionTotal = 0;
+                longestPileup = 0;
+                averagePileup = 0.0;
+
+                if (size > 0) {
+                    for (int i = 0; i < oldCapacity; i++) {
+                        Object key = oldKeyTable[i];
+                        if (key != null) {addResize(key);}
+                    }
+                }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                System.out.println("average pileup: " + (averagePileup / size));
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
+                super.clear();
+            }
+        };
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
+//        }
+        for (int i = 0; i < LEN; i++) {
+            set.add(spiral[i]);
+        }
+        System.out.println(System.nanoTime() - start);
+        set.clear();
+    }
+
+
 }
