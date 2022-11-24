@@ -1757,14 +1757,16 @@ public class PileupTest {
     public void testPointSetConfigurable () {
         final Point2[] shells = generatePointShells(LEN);
         IntBinaryOperator[] hashes = {
-            ((x, y) -> x * 31 + y),
+            ((x, y) -> x * 0x125493 + y * 0x19E373),
+            ((x, y) -> x * 0xDEED5 + y * 0xBEA57),
             ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)),
             ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)),
             ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}),
             ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}),
-            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >> 1)),
+            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)),
             ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}),
             ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}),
+            ((x, y) -> (y + ((x + y) * (x + y + 1) + 36 >>> 1))),
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -1783,8 +1785,8 @@ public class PileupTest {
                 @Override
                 protected int place (Object item) {
                     Point2 p = (Point2)item;
-                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
-//                    return hash.applyAsInt(p.x, p.y) & mask;
+//                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
+                    return hash.applyAsInt(p.x, p.y) & mask;
                 }
 
                 @Override
