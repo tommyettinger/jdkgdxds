@@ -1123,6 +1123,8 @@ public class PileupTest {
      * @return
      */
     public static Point2[] generatePointShells (int size) {
+        WhiskerRandom random = new WhiskerRandom(size);
+        size <<= 2;
         Point2[] result = new Point2[size];
         for (int root = 0, index = 0; ; ++root) {
             for (int limit = index + root + root; index <= limit; ) {
@@ -1130,8 +1132,10 @@ public class PileupTest {
                 final int x = (r < root) ? root : root + root - r;
                 final int y = Math.min(r, root);
                 result[index] = new Point2(x, y);
-                if (++index >= size)
+                if (++index >= size) {
+                    random.shuffle(result);
                     return result;
+                }
             }
         }
     }
