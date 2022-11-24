@@ -1116,6 +1116,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		public int size () {
 			return iter.map.size;
 		}
+
 		@Override
 		public int hashCode () {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
