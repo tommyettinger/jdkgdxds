@@ -23,6 +23,7 @@ import com.github.tommyettinger.function.LongIntToIntBiFunction;
 import javax.annotation.Nullable;
 import java.util.AbstractSet;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
@@ -837,6 +838,19 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		public long key;
 		public int value;
 
+		public Entry () {
+		}
+
+		public Entry (long key, int value) {
+			this.key = key;
+			this.value = value;
+		}
+
+		public Entry (Entry entry) {
+			this.key = entry.key;
+			this.value = entry.value;
+		}
+
 		@Override
 		public String toString () {
 			return key + "=" + value;
@@ -1099,6 +1113,77 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		public int size () {
 			return iter.map.size;
 		}
+
+		@Override
+		public int hashCode () {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			int hc = super.hashCode();
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return hc;
+		}
+
+		/**
+		 * The iterator is reused by this data structure, and you can reset it
+		 * back to the start of the iteration order using this.
+		 */
+		public void resetIterator () {
+			iter.reset();
+		}
+
+		/**
+		 * Returns a new {@link ObjectList} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 */
+		public ObjectList<Entry> toList () {
+			ObjectList<Entry> list = new ObjectList<>(iter.map.size);
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {list.add(new Entry(iter.next()));}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return list;
+		}
+
+		/**
+		 * Append the remaining items that this can iterate through into the given Collection.
+		 * Does not change the position of this iterator.
+		 * @param coll any modifiable Collection; may have items appended into it
+		 * @return the given collection
+		 */
+		public Collection<Entry> appendInto(Collection<Entry> coll) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {coll.add(new Entry(iter.next()));}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return coll;
+		}
+
+		/**
+		 * Append the remaining items that this can iterate through into the given Map.
+		 * Does not change the position of this iterator. Note that a Map is not a Collection.
+		 * @param coll any modifiable Map; may have items appended into it
+		 * @return the given map
+		 */
+		public LongFloatMap appendInto(LongFloatMap coll) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {
+				iter.next();
+				coll.put(iter.entry.key, iter.entry.value);
+			}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return coll;
+		}
+
 	}
 
 	public static class Values implements PrimitiveCollection.OfInt {
@@ -1143,6 +1228,56 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 			iter = new ValueIterator(map);
 		}
 
+		@Override
+		public int hashCode () {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			int hc = super.hashCode();
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return hc;
+		}
+
+		/**
+		 * The iterator is reused by this data structure, and you can reset it
+		 * back to the start of the iteration order using this.
+		 */
+		public void resetIterator () {
+			iter.reset();
+		}
+
+		/**
+		 * Returns a new {@link ObjectList} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 */
+		public IntList toList () {
+			IntList list = new IntList(iter.map.size);
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {list.add(iter.nextInt());}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return list;
+		}
+
+		/**
+		 * Append the remaining items that this can iterate through into the given Collection.
+		 * Does not change the position of this iterator.
+		 * @param coll any modifiable Collection; may have items appended into it
+		 * @return the given collection
+		 */
+		public PrimitiveCollection.OfInt appendInto(PrimitiveCollection.OfInt coll) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {coll.add(iter.nextInt());}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return coll;
+		}
 	}
 
 	public static class Keys implements PrimitiveCollection.OfLong {
@@ -1180,6 +1315,57 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		@Override
 		public int size () {
 			return iter.map.size;
+		}
+
+		@Override
+		public int hashCode () {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			int hc = super.hashCode();
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return hc;
+		}
+
+		/**
+		 * The iterator is reused by this data structure, and you can reset it
+		 * back to the start of the iteration order using this.
+		 */
+		public void resetIterator () {
+			iter.reset();
+		}
+
+		/**
+		 * Returns a new {@link ObjectList} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 */
+		public LongList toList () {
+			LongList list = new LongList(iter.map.size);
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {list.add(iter.nextLong());}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return list;
+		}
+
+		/**
+		 * Append the remaining items that this can iterate through into the given Collection.
+		 * Does not change the position of this iterator.
+		 * @param coll any modifiable Collection; may have items appended into it
+		 * @return the given collection
+		 */
+		public PrimitiveCollection.OfLong appendInto(PrimitiveCollection.OfLong coll) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {coll.add(iter.nextLong());}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return coll;
 		}
 	}
 

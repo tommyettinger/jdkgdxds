@@ -1228,7 +1228,6 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 			iter.hasNext = hn;
 			return coll;
 		}
-
 	}
 
 	public static class Values implements PrimitiveCollection.OfFloat {
