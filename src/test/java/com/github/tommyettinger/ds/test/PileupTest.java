@@ -1796,6 +1796,14 @@ public class PileupTest {
             ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}),
             ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}),
             ((x, y) -> (y + ((x + y) * (x + y + 1) + 36 >>> 1))),
+            ((x, y) -> {
+                x |= y << 16;
+                x =    ((x & 0x0000ff00) << 8) | ((x >>> 8) & 0x0000ff00) | (x & 0xff0000ff);
+                x =    ((x & 0x00f000f0) << 4) | ((x >>> 4) & 0x00f000f0) | (x & 0xf00ff00f);
+                x =    ((x & 0x0c0c0c0c) << 2) | ((x >>> 2) & 0x0c0c0c0c) | (x & 0xc3c3c3c3);
+                return ((x & 0x22222222) << 1) | ((x >>> 1) & 0x22222222) | (x & 0x99999999);
+            }),
+            ((x, y) -> (x ^ (y << 16 | y >>> 16))),
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -1843,38 +1851,7 @@ public class PileupTest {
                     mask = newSize - 1;
                     shift = Long.numberOfLeadingZeros(mask);
 
-                    // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
-                    // Pseudorandom Number Generators
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-                    // ensures hashMultiplier is never too small, and is always odd
-//                hashMultiplier |= 0x0000010000000001L;
-
-                    // we add a constant from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
-                    // Pseudorandom Number Generators, times -8 to keep the bottom 3 bits the same every time.
-                    //361274435
-//                hashMultiplier += 0xC3910C8D016B07D6L;//0x765428AE8CEAB1D8L;
-                    //211888218
-                    // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
-                    // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;//0x59E3779B97F4A7C1L;
-//                hashMultiplier *= MathTools.GOLDEN_LONGS[size & 1023];
-//                hashMultiplier ^= size + size;
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-
-                    // was using this in many tests
-                    // total 1788695, longest 33, average 5.686122731838816, sum 160
                     hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L; // average 5.898153681828007
-//                hashMultiplier *= 0x9E3779B97F4A7C15L; // average 5.793621174166804
-//                hashMultiplier *= 0xD1B54A32D192ED03L; // average 5.9661476545909995
-//                hashMultiplier *= (long)size << 10 ^ 0xF1357AEA2E62A9C5L; // average 5.865185076866346
-//                hashMultiplier = (hashMultiplier + size + size) * 0xF1357AEA2E62A9C5L + 0xD1B54A32D192ED03L ^ 0x9E3779B97F4A7C15L;
-//                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xE19B01AA9D42C631L) * 0xF1357AEA2E62A9C5L); // | 0x8000000000000000L; // + 0xC13FA9A902A6328EL
-
-//                hashMultiplier = MathTools.GOLDEN_LONGS[64 - shift];
-//                hashMultiplier = MathTools.GOLDEN_LONGS[size - shift & 255];
-
                     hashMul = (int)hashMultiplier;
 
                     Object[] oldKeyTable = keyTable;
@@ -1936,6 +1913,14 @@ public class PileupTest {
             ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}),
             ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}),
             ((x, y) -> (y + ((x + y) * (x + y + 1) + 36 >>> 1))),
+            ((x, y) -> {
+                x |= y << 16;
+                x =    ((x & 0x0000ff00) << 8) | ((x >>> 8) & 0x0000ff00) | (x & 0xff0000ff);
+                x =    ((x & 0x00f000f0) << 4) | ((x >>> 4) & 0x00f000f0) | (x & 0xf00ff00f);
+                x =    ((x & 0x0c0c0c0c) << 2) | ((x >>> 2) & 0x0c0c0c0c) | (x & 0xc3c3c3c3);
+                return ((x & 0x22222222) << 1) | ((x >>> 1) & 0x22222222) | (x & 0x99999999);
+            }),
+            ((x, y) -> (x ^ (y << 16 | y >>> 16))),
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -1983,37 +1968,9 @@ public class PileupTest {
                     mask = newSize - 1;
                     shift = Long.numberOfLeadingZeros(mask);
 
-                    // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
-                    // Pseudorandom Number Generators
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-                    // ensures hashMultiplier is never too small, and is always odd
-//                hashMultiplier |= 0x0000010000000001L;
-
-                    // we add a constant from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
-                    // Pseudorandom Number Generators, times -8 to keep the bottom 3 bits the same every time.
-                    //361274435
-//                hashMultiplier += 0xC3910C8D016B07D6L;//0x765428AE8CEAB1D8L;
-                    //211888218
-                    // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
-                    // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;//0x59E3779B97F4A7C1L;
-//                hashMultiplier *= MathTools.GOLDEN_LONGS[size & 1023];
-//                hashMultiplier ^= size + size;
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-
                     // was using this in many tests
                     // total 1788695, longest 33, average 5.686122731838816, sum 160
                     hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L; // average 5.898153681828007
-//                hashMultiplier *= 0x9E3779B97F4A7C15L; // average 5.793621174166804
-//                hashMultiplier *= 0xD1B54A32D192ED03L; // average 5.9661476545909995
-//                hashMultiplier *= (long)size << 10 ^ 0xF1357AEA2E62A9C5L; // average 5.865185076866346
-//                hashMultiplier = (hashMultiplier + size + size) * 0xF1357AEA2E62A9C5L + 0xD1B54A32D192ED03L ^ 0x9E3779B97F4A7C15L;
-//                hashMultiplier = ((hashMultiplier + size << 3 ^ 0xE19B01AA9D42C631L) * 0xF1357AEA2E62A9C5L); // | 0x8000000000000000L; // + 0xC13FA9A902A6328EL
-
-//                hashMultiplier = MathTools.GOLDEN_LONGS[64 - shift];
-//                hashMultiplier = MathTools.GOLDEN_LONGS[size - shift & 255];
 
                     hashMul = (int)hashMultiplier;
 
