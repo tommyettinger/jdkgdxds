@@ -1818,7 +1818,7 @@ public class PileupTest {
                 //            {
 //                hashMultiplier = 0xD1B54A32D192ED03L;
 //            }
-                int hashMul = (int)hashMultiplier;
+                int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                 @Override
                 protected int place (Object item) {
@@ -1852,7 +1852,7 @@ public class PileupTest {
                     shift = Long.numberOfLeadingZeros(mask);
 
                     hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
-                    hashMul = (int)hashMultiplier;
+                    hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                     Object[] oldKeyTable = keyTable;
 
@@ -1870,6 +1870,7 @@ public class PileupTest {
                             if (key != null) {addResize(key);}
                         }
                     }
+                    if(collisionTotal > 150000) throw new IllegalStateException("UH OH");
 //                    System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
 //                    System.out.println("total collisions: " + collisionTotal);
 //                    System.out.println("longest pileup: " + longestPileup);
@@ -1890,8 +1891,12 @@ public class PileupTest {
 //                set.add(new Vector2(x, y));
 //            }
 //        }
-            for (int i = 0; i < LEN; i++) {
-                set.add(shells[i]);
+            try {
+                for (int i = 0; i < LEN; i++) {
+                    set.add(shells[i]);
+                }
+            }catch (IllegalStateException ex) {
+                System.out.println("Way too many collisions! Only got through " + set.size() + "/" + LEN);
             }
             System.out.println(System.nanoTime() - start);
             set.clear();
@@ -1935,7 +1940,7 @@ public class PileupTest {
                 //            {
 //                hashMultiplier = 0xD1B54A32D192ED03L;
 //            }
-                int hashMul = (int)hashMultiplier;
+                int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                 @Override
                 protected int place (Object item) {
@@ -1972,7 +1977,7 @@ public class PileupTest {
                     // total 1788695, longest 33, average 5.686122731838816, sum 160
                     hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
-                    hashMul = (int)hashMultiplier;
+                    hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                     Object[] oldKeyTable = keyTable;
 
@@ -1990,6 +1995,8 @@ public class PileupTest {
                             if (key != null) {addResize(key);}
                         }
                     }
+                    if(collisionTotal > 150000) throw new IllegalStateException("UH OH");
+
 //                    System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
 //                    System.out.println("total collisions: " + collisionTotal);
 //                    System.out.println("longest pileup: " + longestPileup);
@@ -2010,8 +2017,12 @@ public class PileupTest {
 //                set.add(new Vector2(x, y));
 //            }
 //        }
-            for (int i = 0; i < LEN; i++) {
-                set.add(shells[i]);
+            try {
+                for (int i = 0; i < LEN; i++) {
+                    set.add(shells[i]);
+                }
+            }catch (IllegalStateException ex) {
+                System.out.println("Way too many collisions! Only got through " + set.size() + "/" + LEN);
             }
             System.out.println(System.nanoTime() - start);
             set.clear();
