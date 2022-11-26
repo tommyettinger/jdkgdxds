@@ -1804,6 +1804,7 @@ public class PileupTest {
                 return ((x & 0x22222222) << 1) | ((x >>> 1) & 0x22222222) | (x & 0x99999999);
             }),
             ((x, y) -> (x ^ (y << 16 | y >>> 16))),
+            ((x, y) -> (x + (y << 16 | y >>> 16))),
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -1823,8 +1824,8 @@ public class PileupTest {
                 @Override
                 protected int place (Object item) {
                     Point2 p = (Point2)item;
-                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
-//                    return hash.applyAsInt(p.x, p.y) & mask;
+//                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
+                    return hash.applyAsInt(p.x, p.y) & mask;
 //                    return hash.applyAsInt(p.x, p.y) * hashMul & mask;
                 }
 
@@ -1908,24 +1909,25 @@ public class PileupTest {
     public void testPointSetAngles () {
         final Point2[] shells = generatePointAngles(LEN);
         IntBinaryOperator[] hashes = {
-            ((x, y) -> x * 0x125493 + y * 0x19E373),
-            ((x, y) -> x * 0xDEED5 + y * 0xBEA57),
-            ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)),
-            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)),
-            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}),
-            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}),
-            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)),
-            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}),
-            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}),
-            ((x, y) -> (y + ((x + y) * (x + y + 1) + 36 >>> 1))),
+            ((x, y) -> x * 0x125493 + y * 0x19E373), // 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // 1MS , 2A strong, 3MA strong
+            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // 1MS fail 78643/500000, 2A fail 9830/500000, 3MA fail 78643/500000
+            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}), // 1MS fail 78643/500000, 2A fail 9830/500000, 3MA fail 78643/500000
+            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // 1MS fail 78643/500000, 2A fail 78643/500000, 3MA fail 78643/500000
+            ((x, y) -> y + ((x + y) * (x + y + 1) + 36 >>> 1)), // 1MS fail 39321/500000, 2A 2457/500000, 3MA fail 39321/500000
             ((x, y) -> {
                 x |= y << 16;
                 x =    ((x & 0x0000ff00) << 8) | ((x >>> 8) & 0x0000ff00) | (x & 0xff0000ff);
                 x =    ((x & 0x00f000f0) << 4) | ((x >>> 4) & 0x00f000f0) | (x & 0xf00ff00f);
                 x =    ((x & 0x0c0c0c0c) << 2) | ((x >>> 2) & 0x0c0c0c0c) | (x & 0xc3c3c3c3);
                 return ((x & 0x22222222) << 1) | ((x >>> 1) & 0x22222222) | (x & 0x99999999);
-            }),
-            ((x, y) -> (x ^ (y << 16 | y >>> 16))),
+            }), // 1MS strong, 2A fail, 3MA fail 314572/500000
+            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> (x + (y << 16 | y >>> 16))), // 1MS strong, 2A strong, 3MA strong
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -1945,9 +1947,9 @@ public class PileupTest {
                 @Override
                 protected int place (Object item) {
                     Point2 p = (Point2)item;
-                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
-//                    return hash.applyAsInt(p.x, p.y) & mask;
-//                    return hash.applyAsInt(p.x, p.y) * hashMul & mask;
+//                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
+//                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
+                    return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
                 }
 
                 @Override
