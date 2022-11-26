@@ -1140,6 +1140,20 @@ public class PileupTest {
         }
     }
 
+    public static Point2[] generatePointRectangle(int width, int height) {
+        WhiskerRandom random = new WhiskerRandom((long)width * height);
+        width <<= 1;
+        height <<= 1;
+        Point2[] result = new Point2[width * height];
+        for (int x = 0, index = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                result[index++] = new Point2(x, y);
+            }
+        }
+        random.shuffle(result);
+        return result;
+    }
+
     /**
      * Generates an array of Point2 points (with all integer components) in a series of concentric triangle shapes,
      * starting at (0,0) and moving through quadrant I.
@@ -2047,13 +2061,16 @@ public class PileupTest {
                 for (int i = 0; i < LEN; i++) {
                     set.add(shells[i]);
                 }
+                System.out.println("strong");
             }catch (IllegalStateException ex) {
-                System.out.println("Way too many collisions! Only got through " + set.size() + "/" + LEN);
+                System.out.println("Way too many collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.out.println("fail " + set.size() + "/" + LEN);
             }
             System.out.println(System.nanoTime() - start);
             set.clear();
         }
     }
+
     @Test
     public void testPointSetSpiral () {
         final Point2[] shells = generatePointSpiral(LEN);
@@ -2171,6 +2188,146 @@ public class PileupTest {
             }
             System.out.println(System.nanoTime() - start);
             set.clear();
+        }
+    }
+
+    @Test
+    public void testPointSetRectangles () {
+        final int[] widths = {500, 200, 100, 50};
+        final int[] heights = {LEN / 500, LEN / 200, LEN / 100, LEN / 50};
+        final IntBinaryOperator[] hashes = {((x, y) -> x * 0x125493 + y * 0x19E373), // 1MS , 2A , 3MA
+            ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // 1MS , 2A , 3MA
+            ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // 1MS , 2A , 3MA
+            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // 1MS , 2A , 3MA
+            ((x, y) -> {
+                int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12);
+                return n ^ n >>> 1;
+            }), // 1MS , 2A , 3MA
+            ((x, y) -> {
+                int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12);
+                return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;
+            }), // 1MS , 2A , 3MA
+            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // 1MS , 2A , 3MA
+            ((x, y) -> {
+                int n = (y + ((x + y + 6) * (x + y + 7) >> 1));
+                return n ^ n >>> 1;
+            }), // 1MS , 2A , 3MA
+            ((x, y) -> {
+                int n = (y + ((x + y + 6) * (x + y + 7) >> 1));
+                return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;
+            }), // 1MS , 2A , 3MA
+            ((x, y) -> y + ((x + y) * (x + y + 1) + 36 >>> 1)), // 1MS , 2A , 3MA
+            ((x, y) -> {
+                x |= y << 16;
+                x = ((x & 0x0000ff00) << 8) | ((x >>> 8) & 0x0000ff00) | (x & 0xff0000ff);
+                x = ((x & 0x00f000f0) << 4) | ((x >>> 4) & 0x00f000f0) | (x & 0xf00ff00f);
+                x = ((x & 0x0c0c0c0c) << 2) | ((x >>> 2) & 0x0c0c0c0c) | (x & 0xc3c3c3c3);
+                return ((x & 0x22222222) << 1) | ((x >>> 1) & 0x22222222) | (x & 0x99999999);
+            }), // 1MS , 2A , 3MA
+            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // 1MS , 2A , 3MA
+            ((x, y) -> (x + (y << 16 | y >>> 16))), // 1MS , 2A , 3MA
+        };
+
+        for (int idx = 0; idx < widths.length; idx++) {
+            final int wide = widths[idx], high = heights[idx];
+            final Point2[] shells = generatePointRectangle(wide, high);
+            int index = 0;
+            for (IntBinaryOperator op : hashes) {
+                System.out.println("Working with hash " + index++ + ":");
+                final IntBinaryOperator hash = op;
+                long start = System.nanoTime();
+                ObjectSet set = new ObjectSet(51, 0.6f) {
+                    long collisionTotal = 0;
+                    int longestPileup = 0, allPileups = 0, pileupChecks = 0;
+                    double averagePileup = 0;
+
+                    //            {
+//                hashMultiplier = 0xD1B54A32D192ED03L;
+//            }
+                    int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
+
+                    @Override
+                    protected int place (Object item) {
+                        Point2 p = (Point2)item;
+//                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
+                        return hash.applyAsInt(p.x, p.y) & mask; // option 2A
+//                    return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
+                    }
+
+                    @Override
+                    protected void addResize (@Nonnull Object key) {
+                        Object[] keyTable = this.keyTable;
+                        for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                            if (keyTable[i] == null) {
+                                keyTable[i] = key;
+                                averagePileup += p;
+
+                                return;
+                            } else {
+                                collisionTotal++;
+                                longestPileup = Math.max(longestPileup, ++p);
+                            }
+                        }
+                    }
+
+                    @Override
+                    protected void resize (int newSize) {
+                        int oldCapacity = keyTable.length;
+                        threshold = (int)(newSize * loadFactor);
+                        mask = newSize - 1;
+                        shift = Long.numberOfLeadingZeros(mask);
+
+                        // was using this in many tests
+                        // total 1788695, longest 33, average 5.686122731838816, sum 160
+                        hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+                        hashMul = (int)(hashMultiplier & 0x1FFFFFL);
+
+                        Object[] oldKeyTable = keyTable;
+
+                        keyTable = new Object[newSize];
+
+                        allPileups += longestPileup;
+                        pileupChecks++;
+                        collisionTotal = 0;
+                        longestPileup = 0;
+                        averagePileup = 0.0;
+
+                        if (size > 0) {
+                            for (int i = 0; i < oldCapacity; i++) {
+                                Object key = oldKeyTable[i];
+                                if (key != null) {addResize(key);}
+                            }
+                        }
+                        if (collisionTotal > 150000)
+                            throw new IllegalStateException("UH OH");
+
+//                    System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+//                    System.out.println("total collisions: " + collisionTotal);
+//                    System.out.println("longest pileup: " + longestPileup);
+//                    System.out.println("average pileup: " + (averagePileup / size));
+                    }
+
+                    @Override
+                    public void clear () {
+//                    System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                        System.out.println("total collisions: " + collisionTotal + ", longest pileup: " + longestPileup);
+                        System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
+                        super.clear();
+                    }
+                };
+                try {
+                    for (int i = 0; i < LEN; i++) {
+                        set.add(shells[i]);
+                    }
+                    System.out.println("strong");
+                } catch (IllegalStateException ex) {
+                    System.out.println("Way too many collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    System.out.println("fail " + set.size() + "/" + LEN);
+                }
+                System.out.println(System.nanoTime() - start);
+                set.clear();
+            }
         }
     }
 }
