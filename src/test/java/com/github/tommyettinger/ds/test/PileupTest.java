@@ -2231,70 +2231,70 @@ public class PileupTest {
 
         /*
          width 500
-         hash 0, 1MS , 2A strong, 3MA
-         hash 1, 1MS , 2A strong, 3MA
-         hash 2, 1MS , 2A fail 314572/500000, 3MA
-         hash 3, 1MS , 2A strong, 3MA
-         hash 4, 1MS , 2A strong, 3MA
-         hash 5, 1MS , 2A strong, 3MA
-         hash 6, 1MS , 2A strong, 3MA
-         hash 7, 1MS , 2A strong, 3MA
-         hash 8, 1MS , 2A strong, 3MA
-         hash 9, 1MS , 2A strong, 3MA
-         hash 10, 1MS , 2A strong, 3MA
-         hash 11, 1MS , 2A fail 2457/500000, 3MA
-         hash 12, 1MS , 2A fail 2457/500000, 3MA
+         hash 0, 1MS strong, 2A strong, 3MA
+         hash 1, 1MS strong, 2A strong, 3MA
+         hash 2, 1MS fail 314572/500000, 2A fail 314572/500000, 3MA
+         hash 3, 1MS strong, 2A strong, 3MA
+         hash 4, 1MS strong, 2A strong, 3MA
+         hash 5, 1MS strong, 2A strong, 3MA
+         hash 6, 1MS strong, 2A strong, 3MA
+         hash 7, 1MS strong, 2A strong, 3MA
+         hash 8, 1MS strong, 2A strong, 3MA
+         hash 9, 1MS strong, 2A strong, 3MA
+         hash 10, 1MS strong, 2A strong, 3MA
+         hash 11, 1MS strong, 2A fail 2457/500000, 3MA
+         hash 12, 1MS strong, 2A fail 2457/500000, 3MA
          */
 
         /*
          width 200
-         hash 0, 1MS , 2A strong, 3MA
-         hash 1, 1MS , 2A strong, 3MA
-         hash 2, 1MS , 2A fail 157286/500000, 3MA
-         hash 3, 1MS , 2A fail 314572/500000, 3MA
-         hash 4, 1MS , 2A strong, 3MA
-         hash 5, 1MS , 2A strong, 3MA
-         hash 6, 1MS , 2A strong, 3MA
-         hash 7, 1MS , 2A strong, 3MA
-         hash 8, 1MS , 2A strong, 3MA
-         hash 9, 1MS , 2A strong, 3MA
-         hash 10, 1MS , 2A fail 157286/500000, 3MA
-         hash 11, 1MS , 2A fail 1228/500000, 3MA
-         hash 12, 1MS , 2A fail 1228/500000, 3MA
+         hash 0, 1MS strong, 2A strong, 3MA
+         hash 1, 1MS strong, 2A strong, 3MA
+         hash 2, 1MS fail 78643/500000, 2A fail 157286/500000, 3MA
+         hash 3, 1MS strong, 2A fail 314572/500000, 3MA
+         hash 4, 1MS strong, 2A strong, 3MA
+         hash 5, 1MS strong, 2A strong, 3MA
+         hash 6, 1MS strong, 2A strong, 3MA
+         hash 7, 1MS strong, 2A strong, 3MA
+         hash 8, 1MS strong, 2A strong, 3MA
+         hash 9, 1MS strong, 2A strong, 3MA
+         hash 10, 1MS strong, 2A fail 157286/500000, 3MA
+         hash 11, 1MS strong, 2A fail 1228/500000, 3MA
+         hash 12, 1MS strong, 2A fail 1228/500000, 3MA
          */
 
         /*
          width 100
-         hash 0, 1MS , 2A fail 314572/500000, 3MA
-         hash 1, 1MS , 2A strong, 3MA
-         hash 2, 1MS , 2A fail 157286/500000, 3MA
-         hash 3, 1MS , 2A fail 314572/500000, 3MA
-         hash 4, 1MS , 2A fail 314572/500000, 3MA
-         hash 5, 1MS , 2A strong, 3MA
-         hash 6, 1MS , 2A fail 314572/500000, 3MA
-         hash 7, 1MS , 2A fail 314572/500000, 3MA
-         hash 8, 1MS , 2A strong, 3MA
-         hash 9, 1MS , 2A fail 314572/500000, 3MA
-         hash 10, 1MS , 2A fail 157286/500000, 3MA
-         hash 11, 1MS , 2A fail 1228/500000, 3MA
-         hash 12, 1MS , 2A fail 1228/500000, 3MA
+         hash 0, 1MS strong, 2A fail 314572/500000, 3MA
+         hash 1, 1MS strong, 2A strong, 3MA
+         hash 2, 1MS fail 78643/500000, 2A fail 157286/500000, 3MA
+         hash 3, 1MS strong, 2A fail 314572/500000, 3MA
+         hash 4, 1MS strong, 2A fail 314572/500000, 3MA
+         hash 5, 1MS strong, 2A strong, 3MA
+         hash 6, 1MS strong, 2A fail 314572/500000, 3MA
+         hash 7, 1MS strong, 2A fail 314572/500000, 3MA
+         hash 8, 1MS strong, 2A strong, 3MA
+         hash 9, 1MS strong, 2A fail 314572/500000, 3MA
+         hash 10, 1MS strong, 2A fail 157286/500000, 3MA
+         hash 11, 1MS strong, 2A fail 1228/500000, 3MA
+         hash 12, 1MS strong, 2A fail 1228/500000, 3MA
          */
 
         /*
          width 50
-         hash 0, 1MS , 2A strong, 3MA
-         hash 1, 1MS , 2A strong, 3MA
-         hash 2, 1MS , 2A fail 157286/500000, 3MA
-         hash 3, 1MS , 2A fail 157286/500000, 3MA
-         hash 4, 1MS , 2A fail 314572/500000, 3MA
-         hash 5, 1MS , 2A strong, 3MA
-         hash 6, 1MS , 2A fail 314572/500000, 3MA
-         hash 7, 1MS , 2A fail 314572/500000, 3MA
-         hash 8, 1MS , 2A strong, 3MA
-         hash 9, 1MS , 2A fail 314572/500000, 3MA
-         hash 10, 1MS , 2A fail 39321/500000, 3MA
-         hash 11, 1MS , 2A fail 614/500000, 3MA
-         hash 12, 1MS , 2A fail 614/500000, 3MA
+         hash 0, 1MS strong, 2A strong, 3MA
+         hash 1, 1MS strong, 2A strong, 3MA
+         hash 2, 1MS fail 78643/500000, 2A fail 157286/500000, 3MA
+         hash 3, 1MS strong, 2A fail 157286/500000, 3MA
+         hash 4, 1MS strong, 2A fail 314572/500000, 3MA
+         hash 5, 1MS strong, 2A strong, 3MA
+         hash 6, 1MS strong, 2A fail 314572/500000, 3MA
+         hash 7, 1MS strong, 2A fail 314572/500000, 3MA
+         hash 8, 1MS strong, 2A strong, 3MA
+         hash 9, 1MS strong, 2A fail 314572/500000, 3MA
+         hash 10, 1MS strong, 2A fail 39321/500000, 3MA
+         hash 11, 1MS strong, 2A fail 614/500000, 3MA
+         hash 12, 1MS strong, 2A fail 614/500000, 3MA
          */
 
 
@@ -2319,8 +2319,8 @@ public class PileupTest {
                     @Override
                     protected int place (Object item) {
                         Point2 p = (Point2)item;
-//                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
-                        return hash.applyAsInt(p.x, p.y) & mask; // option 2A
+                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
+//                        return hash.applyAsInt(p.x, p.y) & mask; // option 2A
 //                    return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
                     }
 
