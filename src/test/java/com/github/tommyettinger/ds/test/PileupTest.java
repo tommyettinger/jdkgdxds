@@ -2195,38 +2195,108 @@ public class PileupTest {
     public void testPointSetRectangles () {
         final int[] widths = {500, 200, 100, 50};
         final int[] heights = {LEN / 500, LEN / 200, LEN / 100, LEN / 50};
-        final IntBinaryOperator[] hashes = {((x, y) -> x * 0x125493 + y * 0x19E373), // 1MS , 2A , 3MA
-            ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // 1MS , 2A , 3MA
-            ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // 1MS , 2A , 3MA
-            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // 1MS , 2A , 3MA
+        final IntBinaryOperator[] hashes = {
+            ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0, 1MS , 2A , 3MA
+            ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1, 1MS , 2A , 3MA
+            ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // hash 2, 1MS , 2A , 3MA
+            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3, 1MS , 2A , 3MA
             ((x, y) -> {
                 int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12);
                 return n ^ n >>> 1;
-            }), // 1MS , 2A , 3MA
+            }), // hash 4, 1MS , 2A , 3MA
             ((x, y) -> {
                 int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12);
                 return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;
-            }), // 1MS , 2A , 3MA
-            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // 1MS , 2A , 3MA
+            }), // hash 5, 1MS , 2A , 3MA
+            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // hash 6, 1MS , 2A , 3MA
             ((x, y) -> {
                 int n = (y + ((x + y + 6) * (x + y + 7) >> 1));
                 return n ^ n >>> 1;
-            }), // 1MS , 2A , 3MA
+            }), // hash 7, 1MS , 2A , 3MA
             ((x, y) -> {
                 int n = (y + ((x + y + 6) * (x + y + 7) >> 1));
                 return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;
-            }), // 1MS , 2A , 3MA
-            ((x, y) -> y + ((x + y) * (x + y + 1) + 36 >>> 1)), // 1MS , 2A , 3MA
+            }), // hash 8, 1MS , 2A , 3MA
+            ((x, y) -> y + ((x + y) * (x + y + 1) + 36 >>> 1)), // hash 9, 1MS , 2A , 3MA
             ((x, y) -> {
                 x |= y << 16;
                 x = ((x & 0x0000ff00) << 8) | ((x >>> 8) & 0x0000ff00) | (x & 0xff0000ff);
                 x = ((x & 0x00f000f0) << 4) | ((x >>> 4) & 0x00f000f0) | (x & 0xf00ff00f);
                 x = ((x & 0x0c0c0c0c) << 2) | ((x >>> 2) & 0x0c0c0c0c) | (x & 0xc3c3c3c3);
                 return ((x & 0x22222222) << 1) | ((x >>> 1) & 0x22222222) | (x & 0x99999999);
-            }), // 1MS , 2A , 3MA
-            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // 1MS , 2A , 3MA
-            ((x, y) -> (x + (y << 16 | y >>> 16))), // 1MS , 2A , 3MA
+            }), // hash 10, 1MS , 2A , 3MA
+            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11, 1MS , 2A , 3MA
+            ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12, 1MS , 2A , 3MA
         };
+
+        /*
+         width 500
+         hash 0, 1MS , 2A strong, 3MA
+         hash 1, 1MS , 2A strong, 3MA
+         hash 2, 1MS , 2A fail 314572/500000, 3MA
+         hash 3, 1MS , 2A strong, 3MA
+         hash 4, 1MS , 2A strong, 3MA
+         hash 5, 1MS , 2A strong, 3MA
+         hash 6, 1MS , 2A strong, 3MA
+         hash 7, 1MS , 2A strong, 3MA
+         hash 8, 1MS , 2A strong, 3MA
+         hash 9, 1MS , 2A strong, 3MA
+         hash 10, 1MS , 2A strong, 3MA
+         hash 11, 1MS , 2A fail 2457/500000, 3MA
+         hash 12, 1MS , 2A fail 2457/500000, 3MA
+         */
+
+        /*
+         width 200
+         hash 0, 1MS , 2A strong, 3MA
+         hash 1, 1MS , 2A strong, 3MA
+         hash 2, 1MS , 2A fail 157286/500000, 3MA
+         hash 3, 1MS , 2A fail 314572/500000, 3MA
+         hash 4, 1MS , 2A strong, 3MA
+         hash 5, 1MS , 2A strong, 3MA
+         hash 6, 1MS , 2A strong, 3MA
+         hash 7, 1MS , 2A strong, 3MA
+         hash 8, 1MS , 2A strong, 3MA
+         hash 9, 1MS , 2A strong, 3MA
+         hash 10, 1MS , 2A fail 157286/500000, 3MA
+         hash 11, 1MS , 2A fail 1228/500000, 3MA
+         hash 12, 1MS , 2A fail 1228/500000, 3MA
+         */
+
+        /*
+         width 100
+         hash 0, 1MS , 2A fail 314572/500000, 3MA
+         hash 1, 1MS , 2A strong, 3MA
+         hash 2, 1MS , 2A fail 157286/500000, 3MA
+         hash 3, 1MS , 2A fail 314572/500000, 3MA
+         hash 4, 1MS , 2A fail 314572/500000, 3MA
+         hash 5, 1MS , 2A strong, 3MA
+         hash 6, 1MS , 2A fail 314572/500000, 3MA
+         hash 7, 1MS , 2A fail 314572/500000, 3MA
+         hash 8, 1MS , 2A strong, 3MA
+         hash 9, 1MS , 2A fail 314572/500000, 3MA
+         hash 10, 1MS , 2A fail 157286/500000, 3MA
+         hash 11, 1MS , 2A fail 1228/500000, 3MA
+         hash 12, 1MS , 2A fail 1228/500000, 3MA
+         */
+
+        /*
+         width 50
+         hash 0, 1MS , 2A strong, 3MA
+         hash 1, 1MS , 2A strong, 3MA
+         hash 2, 1MS , 2A fail 157286/500000, 3MA
+         hash 3, 1MS , 2A fail 157286/500000, 3MA
+         hash 4, 1MS , 2A fail 314572/500000, 3MA
+         hash 5, 1MS , 2A strong, 3MA
+         hash 6, 1MS , 2A fail 314572/500000, 3MA
+         hash 7, 1MS , 2A fail 314572/500000, 3MA
+         hash 8, 1MS , 2A strong, 3MA
+         hash 9, 1MS , 2A fail 314572/500000, 3MA
+         hash 10, 1MS , 2A fail 39321/500000, 3MA
+         hash 11, 1MS , 2A fail 614/500000, 3MA
+         hash 12, 1MS , 2A fail 614/500000, 3MA
+         */
+
 
         for (int idx = 0; idx < widths.length; idx++) {
             final int wide = widths[idx], high = heights[idx];
