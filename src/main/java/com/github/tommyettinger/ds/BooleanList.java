@@ -46,10 +46,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	@Nullable protected transient BooleanListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 16.
+	 * Creates an ordered array with a capacity of 10.
 	 */
 	public BooleanList () {
-		this(true, 16);
+		this(true, 10);
 	}
 
 	/**

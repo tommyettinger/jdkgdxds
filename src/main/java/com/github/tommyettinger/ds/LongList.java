@@ -46,10 +46,10 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	@Nullable protected transient LongListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 16.
+	 * Creates an ordered array with a capacity of 10.
 	 */
 	public LongList () {
-		this(true, 16);
+		this(true, 10);
 	}
 
 	/**

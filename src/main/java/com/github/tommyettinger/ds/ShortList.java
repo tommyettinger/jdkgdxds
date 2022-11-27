@@ -47,10 +47,10 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	@Nullable protected transient ShortListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 16.
+	 * Creates an ordered array with a capacity of 10.
 	 */
 	public ShortList () {
-		this(true, 16);
+		this(true, 10);
 	}
 
 	/**

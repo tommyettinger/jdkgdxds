@@ -48,10 +48,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	@Nullable protected transient FloatListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 16.
+	 * Creates an ordered array with a capacity of 10.
 	 */
 	public FloatList () {
-		this(true, 16);
+		this(true, 10);
 	}
 
 	/**

@@ -71,10 +71,10 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	protected transient @Nullable ObjectDequeIterator<T> descendingIterator2;
 
 	/**
-	 * Creates a new ObjectDeque which can hold 16 values without needing to resize backing array.
+	 * Creates a new ObjectDeque which can hold 10 values without needing to resize backing array.
 	 */
 	public ObjectDeque () {
-		this(16);
+		this(10);
 	}
 
 	/**

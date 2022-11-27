@@ -68,10 +68,10 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	protected transient @Nullable ShortDequeIterator descendingIterator2;
 
 	/**
-	 * Creates a new ShortDeque which can hold 16 values without needing to resize backing array.
+	 * Creates a new ShortDeque which can hold 10 values without needing to resize backing array.
 	 */
 	public ShortDeque () {
-		this(16);
+		this(10);
 	}
 
 	/**

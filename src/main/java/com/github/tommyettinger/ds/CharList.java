@@ -47,10 +47,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	@Nullable protected transient CharListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 16.
+	 * Creates an ordered array with a capacity of 10.
 	 */
 	public CharList () {
-		this(true, 16);
+		this(true, 10);
 	}
 
 	/**

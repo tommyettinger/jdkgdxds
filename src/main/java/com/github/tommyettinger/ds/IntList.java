@@ -46,10 +46,10 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	@Nullable protected transient IntListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 16.
+	 * Creates an ordered array with a capacity of 10.
 	 */
 	public IntList () {
-		this(true, 16);
+		this(true, 10);
 	}
 
 	/**

@@ -47,10 +47,10 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	@Nullable protected transient ByteListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 16.
+	 * Creates an ordered array with a capacity of 10.
 	 */
 	public ByteList () {
-		this(true, 16);
+		this(true, 10);
 	}
 
 	/**

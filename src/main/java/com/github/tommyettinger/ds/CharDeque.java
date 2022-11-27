@@ -68,10 +68,10 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 	protected transient @Nullable CharDequeIterator descendingIterator2;
 
 	/**
-	 * Creates a new CharDeque which can hold 16 values without needing to resize backing array.
+	 * Creates a new CharDeque which can hold 10 values without needing to resize backing array.
 	 */
 	public CharDeque () {
-		this(16);
+		this(10);
 	}
 
 	/**

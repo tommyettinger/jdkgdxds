@@ -68,10 +68,10 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	protected transient @Nullable LongDequeIterator descendingIterator2;
 
 	/**
-	 * Creates a new LongDeque which can hold 16 values without needing to resize backing array.
+	 * Creates a new LongDeque which can hold 10 values without needing to resize backing array.
 	 */
 	public LongDeque () {
-		this(16);
+		this(10);
 	}
 
 	/**

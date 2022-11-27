@@ -68,10 +68,10 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 	protected transient @Nullable ByteDequeIterator descendingIterator2;
 
 	/**
-	 * Creates a new ByteDeque which can hold 16 values without needing to resize backing array.
+	 * Creates a new ByteDeque which can hold 10 values without needing to resize backing array.
 	 */
 	public ByteDeque () {
-		this(16);
+		this(10);
 	}
 
 	/**

@@ -47,10 +47,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	@Nullable protected transient DoubleListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 16.
+	 * Creates an ordered array with a capacity of 10.
 	 */
 	public DoubleList () {
-		this(true, 16);
+		this(true, 10);
 	}
 
 	/**

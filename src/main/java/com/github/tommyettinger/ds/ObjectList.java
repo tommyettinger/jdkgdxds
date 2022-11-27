@@ -75,10 +75,10 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
-	 * Constructs an empty list with an initial capacity of 16.
+	 * Constructs an empty list with an initial capacity of 10.
 	 */
 	public ObjectList () {
-		super(16);
+		super();
 	}
 
 	/**
