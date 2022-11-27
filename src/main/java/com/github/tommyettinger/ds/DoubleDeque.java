@@ -69,10 +69,10 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 	protected transient @Nullable DoubleDequeIterator descendingIterator2;
 
 	/**
-	 * Creates a new DoubleDeque which can hold 10 values without needing to resize backing array.
+	 * Creates a new DoubleDeque which can hold 16 values without needing to resize backing array.
 	 */
 	public DoubleDeque () {
-		this(10);
+		this(16);
 	}
 
 	/**

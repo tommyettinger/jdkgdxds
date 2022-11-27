@@ -68,10 +68,10 @@ public class BooleanDeque implements PrimitiveCollection.OfBoolean, Arrangeable 
 	protected transient @Nullable BooleanDequeIterator descendingIterator2;
 
 	/**
-	 * Creates a new BooleanDeque which can hold 10 values without needing to resize backing array.
+	 * Creates a new BooleanDeque which can hold 16 values without needing to resize backing array.
 	 */
 	public BooleanDeque () {
-		this(10);
+		this(16);
 	}
 
 	/**

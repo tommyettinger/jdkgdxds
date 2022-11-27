@@ -68,10 +68,10 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 	protected transient @Nullable IntDequeIterator descendingIterator2;
 
 	/**
-	 * Creates a new IntDeque which can hold 10 values without needing to resize backing array.
+	 * Creates a new IntDeque which can hold 16 values without needing to resize backing array.
 	 */
 	public IntDeque () {
-		this(10);
+		this(16);
 	}
 
 	/**
