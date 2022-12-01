@@ -1412,7 +1412,6 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 			iter.hasNext = hn;
 			return coll;
 		}
-
 	}
 
 	public float putIfAbsent (long key, float value) {
