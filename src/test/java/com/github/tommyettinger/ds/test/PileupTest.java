@@ -1,6 +1,7 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.random.WhiskerRandom;
@@ -2441,6 +2442,9 @@ public class PileupTest {
             }), // hash 10 1MS , 2A , 3MA
             ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11 1MS , 2A fail 1228/500000, 3MA fail 19660/500000
             ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12 1MS , 2A fail 1228/500000, 3MA fail 19660/500000
+            ((x, y) -> x ^ y ^ (BitConversion.imul(y, y) | 1)), // hash 13 1MS , 2A , 3MA
+            ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS , 2A , 3MA
+            ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS , 2A , 3MA
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -2569,6 +2573,9 @@ public class PileupTest {
             }), // hash 10 1MS , 2A fail 314572/500000, 3MA fail 314572/500000
             ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11 1MS , 2A , 3MA
             ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12 1MS , 2A , 3MA
+            ((x, y) -> x ^ y ^ (BitConversion.imul(y, y) | 1)), // hash 13 1MS , 2A , 3MA
+            ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS , 2A , 3MA
+            ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS , 2A , 3MA
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -2669,11 +2676,11 @@ public class PileupTest {
     public void testPointSetSpiralFull () {
         final Point2[] shells = generatePointSpiral(LEN, 0);
         IntBinaryOperator[] hashes = {
-            // 1MS everything fails except 0, 1, and 12. wow.
-            // 2A only 0 and 1 pass, with no collisions, even. wowza yow.
-            // 3MA 0 and 1 pass with no collisions, everything else fails. mm.
+            // 1MS everything fails except 0, 1, 12, 14, and 15. 15, though, gets NO collisions at the end.
+            // 2A only 0, 1, 14, and 15 pass. for 0, 1, and 15 with no collisions, even. wowza yow.
+            // 3MA 0, 1, and 15 pass with no collisions, everything else fails. mm.
             ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS , 2A , 3MA
-            ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS , 2A , 3MA
+            ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS absurdly good, 2A , 3MA
             ((x, y) -> 31 * x + y), // hash 2 1MS fail 157286/500000, 2A fail 39321/500000, 3MA fail 157286/500000
             ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3 1MS fail 157286/500000, 2A fail 19660/500000, 3MA fail 157286/500000
             ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // hash 4 1MS fail 157286/500000, 2A fail 19660/500000, 3MA fail 157286/500000
@@ -2691,6 +2698,9 @@ public class PileupTest {
             }), // hash 10 1MS fail 19660/500000, 2A fail 4915/500000, 3MA fail 19660/500000
             ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11 1MS fail 314572/500000, 2A fail 1228/500000, 3MA fail 19660/500000
             ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12 1MS , 2A fail 1228/500000, 3MA fail 19660/500000
+            ((x, y) -> x ^ y ^ (BitConversion.imul(y, y) | 1)), // hash 13 1MS fail 314572/500000, 2A fail 19660/500000, 3MA fail 314572/500000
+            ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS , 2A , 3MA fail 314572/500000
+            ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS NO COLLISIONS, 2A NO COLLISIONS, 3MA NO COLLISIONS
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -2811,6 +2821,9 @@ public class PileupTest {
             }), // hash 10 1MS , 2A , 3MA
             ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11 1MS , 2A , 3MA
             ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12 1MS , 2A , 3MA
+            ((x, y) -> x ^ y ^ (BitConversion.imul(y, y) | 1)), // hash 13 1MS , 2A , 3MA
+            ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS , 2A , 3MA
+            ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS , 2A , 3MA
         };
 
         /*
