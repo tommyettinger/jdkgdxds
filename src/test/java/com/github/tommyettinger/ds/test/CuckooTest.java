@@ -2,6 +2,7 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.ds.IdentityObjectMap;
 import com.github.tommyettinger.ds.ObjectObjectMap;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -109,6 +110,7 @@ public class CuckooTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void workingLethalCuckooTest (){
 		ObjectObjectCuckooMap<Killer, Object> map = new ObjectObjectCuckooMap<>();
@@ -121,6 +123,7 @@ public class CuckooTest {
 		System.out.println("Yay! Succeeded; finished ObjectObjectCuckooMap has size: " + map.size);
 	}
 
+	@Ignore
 	@Test
 	public void workingLethalLinearTest (){
 		ObjectObjectMap<Killer, Object> map = new ObjectObjectMap<>();
