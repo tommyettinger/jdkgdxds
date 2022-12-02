@@ -2420,17 +2420,17 @@ public class PileupTest {
         final Point2[] shells = generatePointShells(LEN, 0);
         IntBinaryOperator[] hashes = {
             // 1MS defaults to strong unless it failed or did very well
-            // 2A ???
-            // 3MA ???
+            // 2A almost all have no collisions; only 2, 11, and 12 have any (and all fail)
+            // 3MA almost all have no collisions; only 2, 11, and 12 have any (and all fail)
             ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS , 2A , 3MA
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS absurdly strong, 2A , 3MA
-            ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // hash 2 1MS fail 157286/500000, 2A , 3MA
-            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3 1MS , 2A , 3MA
+            ((x, y) -> 31 * x + y), // hash 2 1MS fail 157286/500000, 2A fail 39321/500000, 3MA fail 157286/500000
+            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3 1MS , 2A seems unusually fast, 3MA
             ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // hash 4 1MS , 2A , 3MA
             ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 5 1MS , 2A , 3MA
-            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // hash 6 1MS , 2A , 3MA
+            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // hash 6 1MS , 2A , 3MA seems fast
             ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}), // hash 7 1MS , 2A , 3MA
-            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 8 1MS , 2A , 3MA
+            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 8 1MS , 2A , 3MA seems fast
             ((x, y) -> y + ((x + y) * (x + y + 1) + 36 >>> 1)), // hash 9 1MS , 2A , 3MA
             ((x, y) -> {
                 x |= y << 16;
@@ -2439,8 +2439,8 @@ public class PileupTest {
                 x =    ((x & 0x0c0c0c0c) << 2) | ((x >>> 2) & 0x0c0c0c0c) | (x & 0xc3c3c3c3);
                 return ((x & 0x22222222) << 1) | ((x >>> 1) & 0x22222222) | (x & 0x99999999);
             }), // hash 10 1MS , 2A , 3MA
-            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11 1MS , 2A , 3MA
-            ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12 1MS , 2A , 3MA
+            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11 1MS , 2A fail 1228/500000, 3MA fail 19660/500000
+            ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12 1MS , 2A fail 1228/500000, 3MA fail 19660/500000
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -2457,9 +2457,9 @@ public class PileupTest {
                 @Override
                 protected int place (Object item) {
                     Point2 p = (Point2)item;
-                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
+//                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
 //                    return hash.applyAsInt(p.x, p.y) & mask;
-//                    return hash.applyAsInt(p.x, p.y) * hashMul & mask;
+                    return hash.applyAsInt(p.x, p.y) * hashMul & mask;
                 }
 
                 @Override
@@ -2543,9 +2543,12 @@ public class PileupTest {
     public void testPointSetAnglesFull () {
         final Point2[] shells = generatePointAngles(LEN, 0);
         IntBinaryOperator[] hashes = {
+            // the old hash 2 was: (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)
+            // it had a ton of collisions. The new hash 2 is what a typical auto-generated hashCode would use.
+            // it is also horrible.
             ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS , 2A , 3MA
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS , 2A , 3MA
-            ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // hash 2 1MS , 2A , 3MA
+            ((x, y) -> 31 * x + y), // hash 2 1MS , 2A , 3MA
             ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3 1MS , 2A , 3MA
             ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // hash 4 1MS , 2A , 3MA
             ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 5 1MS , 2A , 3MA
@@ -2667,7 +2670,7 @@ public class PileupTest {
         IntBinaryOperator[] hashes = {
             ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS , 2A , 3MA
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS , 2A , 3MA
-            ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // hash 2 1MS , 2A , 3MA
+            ((x, y) -> 31 * x + y), // hash 2 1MS , 2A , 3MA
             ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3 1MS , 2A , 3MA
             ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // hash 4 1MS , 2A , 3MA
             ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 5 1MS , 2A , 3MA
@@ -2787,7 +2790,7 @@ public class PileupTest {
         final IntBinaryOperator[] hashes = {
             ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS , 2A , 3MA
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS , 2A , 3MA
-            ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // hash 2 1MS , 2A , 3MA
+            ((x, y) -> 31 * x + y), // hash 2 1MS , 2A , 3MA
             ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3 1MS , 2A , 3MA
             ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // hash 4 1MS , 2A , 3MA
             ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 5 1MS , 2A , 3MA
