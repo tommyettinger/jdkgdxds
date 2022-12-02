@@ -2669,25 +2669,28 @@ public class PileupTest {
     public void testPointSetSpiralFull () {
         final Point2[] shells = generatePointSpiral(LEN, 0);
         IntBinaryOperator[] hashes = {
+            // 1MS everything fails except 0, 1, and 12. wow.
+            // 2A only 0 and 1 pass, with no collisions, even. wowza yow.
+            // 3MA 0 and 1 pass with no collisions, everything else fails. mm.
             ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS , 2A , 3MA
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS , 2A , 3MA
-            ((x, y) -> 31 * x + y), // hash 2 1MS , 2A , 3MA
-            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3 1MS , 2A , 3MA
-            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // hash 4 1MS , 2A , 3MA
-            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 5 1MS , 2A , 3MA
-            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // hash 6 1MS , 2A , 3MA
-            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}), // hash 7 1MS , 2A , 3MA
-            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 8 1MS , 2A , 3MA
-            ((x, y) -> y + ((x + y) * (x + y + 1) + 36 >>> 1)), // hash 9 1MS , 2A , 3MA
+            ((x, y) -> 31 * x + y), // hash 2 1MS fail 157286/500000, 2A fail 39321/500000, 3MA fail 157286/500000
+            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3 1MS fail 157286/500000, 2A fail 19660/500000, 3MA fail 157286/500000
+            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // hash 4 1MS fail 157286/500000, 2A fail 19660/500000, 3MA fail 157286/500000
+            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 5 1MS fail 157286/500000, 2A fail 157286/500000, 3MA fail 157286/500000
+            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // hash 6 1MS fail 157286/500000, 2A fail 9830/500000, 3MA fail 157286/500000
+            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}), // hash 7 1MS fail 157286/500000, 2A fail 9830/500000, 3MA fail 157286/500000
+            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 8 1MS fail 157286/500000, 2A fail 157286/500000, 3MA fail 157286/500000
+            ((x, y) -> y + ((x + y) * (x + y + 1) + 36 >>> 1)), // hash 9 1MS fail 157286/500000, 2A fail 9830/500000, 3MA fail 157286/500000
             ((x, y) -> {
                 x |= y << 16;
                 x =    ((x & 0x0000ff00) << 8) | ((x >>> 8) & 0x0000ff00) | (x & 0xff0000ff);
                 x =    ((x & 0x00f000f0) << 4) | ((x >>> 4) & 0x00f000f0) | (x & 0xf00ff00f);
                 x =    ((x & 0x0c0c0c0c) << 2) | ((x >>> 2) & 0x0c0c0c0c) | (x & 0xc3c3c3c3);
                 return ((x & 0x22222222) << 1) | ((x >>> 1) & 0x22222222) | (x & 0x99999999);
-            }), // hash 10 1MS , 2A , 3MA
-            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11 1MS , 2A , 3MA
-            ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12 1MS , 2A , 3MA
+            }), // hash 10 1MS fail 19660/500000, 2A fail 4915/500000, 3MA fail 19660/500000
+            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11 1MS fail 314572/500000, 2A fail 1228/500000, 3MA fail 19660/500000
+            ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12 1MS , 2A fail 1228/500000, 3MA fail 19660/500000
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -2704,8 +2707,8 @@ public class PileupTest {
                 @Override
                 protected int place (Object item) {
                     Point2 p = (Point2)item;
-                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
-//                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
+//                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
+                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
 //                    return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
                 }
 
