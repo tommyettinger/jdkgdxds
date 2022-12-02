@@ -38,6 +38,7 @@ import java.util.PrimitiveIterator;
  *
  * @author mzechner
  * @author jshapcott
+ * @author tommyettinger
  */
 public class OffsetBitSet implements PrimitiveCollection.OfInt {
 
@@ -45,9 +46,10 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * The raw bits, each one representing the presence or absence of an integer at a position.
 	 */
 	protected long[] bits;
+
 	/**
 	 * This is the lowest integer position that this OffsetBitSet can store.
-	 * If all positions are at least equal to some value, using that for the offset can save much space.
+	 * If all positions are at least equal to some value, using that for the offset can save space.
 	 */
 	protected int offset = 0;
 
@@ -62,33 +64,52 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		bits = new long[]{0L};
 	}
 
-	/** Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range 0 through
+	/**
+	 * Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range 0 through
 	 * bitCapacity-1. This has an offset of 0 and can resize to fit larger positions.
-	 * @param bitCapacity the initial size of the bit set */
+	 *
+	 * @param bitCapacity the initial size of the bit set
+	 */
 	public OffsetBitSet (int bitCapacity) {
 		bits = new long[bitCapacity + 63 >>> 6];
 	}
 
-	/** Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range {@code start} through
+	/**
+	 * Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range {@code start} through
 	 * {@code end-1}. This has an offset of {@code start} and can resize to fit larger positions.
+	 *
 	 * @param start the lowest value that can be stored in the bit set
-	 * @param end the initial end of the range of the bit set */
+	 * @param end the initial end of the range of the bit set
+	 */
 	public OffsetBitSet (int start, int end) {
 		offset = start;
 		bits = new long[end + 63 - start >>> 6];
 	}
 
-	/** Creates a bit set from another bit set. This will copy the raw bits and will have the same offset.
-	 * @param toCopy bitset to copy */
+	/**
+	 * Creates a bit set from another bit set. This will copy the raw bits and will have the same offset.
+	 *
+	 * @param toCopy bitset to copy
+	 */
 	public OffsetBitSet (OffsetBitSet toCopy) {
 		this.bits = new long[toCopy.bits.length];
 		System.arraycopy(toCopy.bits, 0, this.bits, 0, toCopy.bits.length);
 		this.offset = toCopy.offset;
 	}
 
-	/** Creates a bit set from another bit set. This will copy the raw bits and will have the same offset.
-	 * @param toCopy bitset to copy */
+	/**
+	 * Creates a bit set from any primitive int collection, such as a {@link IntList} or {@link IntSet}.
+	 * The offset of the new bit set will be the lowest int in the collection, which you should be aware of
+	 * if you intend to use the bitwise methods such as {@link #and(OffsetBitSet)} and {@link #or(OffsetBitSet)}.
+	 *
+	 * @param toCopy the primitive int collection to copy
+	 */
 	public OffsetBitSet (PrimitiveCollection.OfInt toCopy) {
+		if(toCopy.isEmpty()){
+			offset = 0;
+			bits = new long[1];
+			return;
+		}
 		int start = Integer.MAX_VALUE, end = Integer.MIN_VALUE;
 		for(PrimitiveIterator.OfInt it = toCopy.iterator(); it.hasNext();) {
 			int n = it.next();
@@ -100,6 +121,10 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		addAll(toCopy);
 	}
 
+	/**
+	 * Gets the lowest integer position that this OffsetBitSet can store.
+	 * If all positions are at least equal to some value, using that for the offset can save space.
+	 */
 	public int getOffset () {
 		return offset;
 	}
@@ -285,20 +310,29 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		}
 	}
 
-	/** Clears the entire bitset */
+	/**
+	 * Clears the entire bitset, removing all contained ints. Doesn't change the capacity.
+	 */
 	public void clear () {
 		Arrays.fill(bits, 0);
 	}
 
-	/** @return the number of bits currently stored, <b>not</b> the highest set bit! */
+	/**
+	 * Gets the capacity in bits, including both true and false values, and including any false values that may be
+	 * after the last contained position, but does not include the offset. Runs in O(1) time.
+	 * @return the number of bits currently stored, <b>not</b> the highest set bit; doesn't include offset either
+	 */
 	public int numBits () {
 		return bits.length << 6;
 	}
 
-	/** Returns the "logical extent" of this bitset: the index of the highest set bit in the bitset plus one. Returns zero if the
+	/**
+	 * Returns the "logical extent" of this bitset: the index of the highest set bit in the bitset plus one. Returns zero if the
 	 * bitset contains no set bits. If this has any set bits, it will return an int at least equal to {@code offset}.
+	 * Runs in O(n) time.
 	 * 
-	 * @return the logical extent of this bitset */
+	 * @return the logical extent of this bitset
+	 */
 	public int length () {
 		long[] bits = this.bits;
 		for (int word = bits.length - 1; word >= 0; --word) {
@@ -314,6 +348,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	 * Returns the size of the set, or its cardinality; this is the count of distinct activated positions in the set.
 	 * Note that unlike most Collection types, which typically have O(1) size() runtime, this runs in O(n) time, where
 	 * n is on the order of the capacity.
+	 *
 	 * @return the count of distinct activated positions in the set.
 	 */
 	public int size() {
@@ -382,6 +417,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	/**
 	 * Returns the index of the first bit that is set to false that occurs on or after the specified starting index. If no such bit
 	 * exists then {@code numBits() + getOffset()}  is returned.
+	 *
 	 * @param fromIndex the index to start looking at
 	 * @return the first position that is set to true that occurs on or after the specified starting index
 	 */
@@ -409,10 +445,13 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		return (bits.length << 6) + offset;
 	}
 
-	/** Performs a logical <b>AND</b> of this target bit set with the argument bit set. This bit set is modified so that each bit
+	/**
+	 * Performs a logical <b>AND</b> of this target bit set with the argument bit set. This bit set is modified so that each bit
 	 * in it has the value true if and only if it both initially had the value true and the corresponding bit in the bit set
 	 * argument also had the value true. Both this OffsetBitSet and {@code other} must have the same offset.
-	 * @param other another OffsetBitSet */
+	 *
+	 * @param other another OffsetBitSet; must have the same offset as this
+	 */
 	public void and (OffsetBitSet other) {
 		if(offset == other.offset) {
 			int commonWords = Math.min(bits.length, other.bits.length);
@@ -431,11 +470,13 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		}
 	}
 
-	/** Clears all the bits in this bit set whose corresponding bit is set in the specified bit set.
+	/**
+	 * Clears all the bits in this bit set whose corresponding bit is set in the specified bit set.
 	 * This can be seen as an optimized version of {@link #removeAll(OfInt)} that only works if both OffsetBitSet objects
 	 * have the same {@link #offset}. Both this OffsetBitSet and {@code other} must have the same offset.
 	 *
-	 * @param other another OffsetBitSet */
+	 * @param other another OffsetBitSet; must have the same offset as this
+	 */
 	public void andNot (OffsetBitSet other) {
 		if(offset == other.offset) {
 			for (int i = 0, j = bits.length, k = other.bits.length; i < j && i < k; i++) {
@@ -448,10 +489,13 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 
 	}
 
-	/** Performs a logical <b>OR</b> of this bit set with the bit set argument. This bit set is modified so that a bit in it has
+	/**
+	 * Performs a logical <b>OR</b> of this bit set with the bit set argument. This bit set is modified so that a bit in it has
 	 * the value true if and only if it either already had the value true or the corresponding bit in the bit set argument has the
 	 * value true. Both this OffsetBitSet and {@code other} must have the same offset.
-	 * @param other another OffsetBitSet */
+	 *
+	 * @param other another OffsetBitSet; must have the same offset as this
+	 */
 	public void or (OffsetBitSet other) {
 		if(offset == other.offset) {
 			int commonWords = Math.min(bits.length, other.bits.length);
@@ -471,14 +515,17 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		}
 	}
 
-	/** Performs a logical <b>XOR</b> of this bit set with the bit set argument. This bit set is modified so that a bit in it has
+	/**
+	 * Performs a logical <b>XOR</b> of this bit set with the bit set argument. This bit set is modified so that a bit in it has
 	 * the value true if and only if one of the following statements holds:
 	 * <ul>
 	 * <li>The bit initially has the value true, and the corresponding bit in the argument has the value false.</li>
 	 * <li>The bit initially has the value false, and the corresponding bit in the argument has the value true.</li>
 	 * </ul>
 	 * Both this OffsetBitSet and {@code other} must have the same offset.
-	 * @param other another OffsetBitSet */
+	 *
+	 * @param other another OffsetBitSet; must have the same offset as this
+	 */
 	public void xor (OffsetBitSet other) {
 		if(offset == other.offset) {
 			int commonWords = Math.min(bits.length, other.bits.length);
@@ -500,8 +547,10 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	/**
 	 * Returns true if the specified BitSet has any bits set to true that are also set to true in this BitSet.
 	 * Both this OffsetBitSet and {@code other} must have the same offset.
-	 * @param other a bit set
-	 * @return boolean indicating whether this bit set intersects the specified bit set */
+	 *
+	 * @param other another OffsetBitSet; must have the same offset as this
+	 * @return boolean indicating whether this bit set intersects the specified bit set
+	 */
 	public boolean intersects (OffsetBitSet other) {
 		if(offset == other.offset) {
 			long[] bits = this.bits;
@@ -519,9 +568,10 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	}
 
 	/** Returns true if this bit set is a super set of the specified set, i.e. it has all bits set to true that are also set to
-	 * true in the specified BitSet. Both this OffsetBitSet and {@code other} must have the same offset.
+	 * true in the specified BitSet. If this OffsetBitSet and {@code other} have the same offset, this is much more efficient, but
+	 * it will work even if the offsets are different.
 	 *
-	 * @param other a bit set
+	 * @param other another OffsetBitSet
 	 * @return boolean indicating whether this bit set is a super set of the specified set */
 	public boolean containsAll (OffsetBitSet other) {
 		if (offset == other.offset) {
@@ -548,11 +598,11 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	@Override
 	public int hashCode () {
 		final int word = (length() >>> 6) - offset;
-		int hash = offset;
-		for (int i = 0; word >= i; i++) {
-			hash = 107 * hash + (int)(bits[i] ^ (bits[i] >>> 32));
+		long hash = offset;
+		for (int i = 0; i <= word; i++) {
+			hash += bits[i];
 		}
-		return hash;
+		return (int)(hash ^ hash >>> 32);
 	}
 
 	@Override
