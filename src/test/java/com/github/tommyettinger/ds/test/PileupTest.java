@@ -2445,6 +2445,7 @@ public class PileupTest {
             ((x, y) -> x ^ y ^ (BitConversion.imul(y, y) | 1)), // hash 13 1MS fail 314572/500000, 2A fail 39321/500000, 3MA fail 314572/500000
             ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS , 2A , 3MA fail 314572/500000
             ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS , 2A , 3MA
+            ((x, y) -> x * 0x7587 + y * 0x6A89), // hash 16 1MS , 2A , 3MA
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -2576,6 +2577,7 @@ public class PileupTest {
             ((x, y) -> x ^ y ^ (BitConversion.imul(y, y) | 1)), // hash 13 1MS , 2A , 3MA
             ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS , 2A , 3MA
             ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS , 2A , 3MA
+            ((x, y) -> x * 0x7587 + y * 0x6A89), // hash 16 1MS , 2A , 3MA
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -2593,8 +2595,8 @@ public class PileupTest {
                 protected int place (Object item) {
                     final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
-//                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
-                    return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
+                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
+//                    return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
                 }
 
                 @Override
@@ -2701,6 +2703,7 @@ public class PileupTest {
             ((x, y) -> x ^ y ^ (BitConversion.imul(y, y) | 1)), // hash 13 1MS fail 314572/500000, 2A fail 19660/500000, 3MA fail 314572/500000
             ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS , 2A , 3MA fail 314572/500000
             ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS NO COLLISIONS, 2A NO COLLISIONS, 3MA NO COLLISIONS
+            ((x, y) -> x * 0x7587 + y * 0x6A89), // hash 16 1MS , 2A , 3MA
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
@@ -2824,6 +2827,7 @@ public class PileupTest {
             ((x, y) -> x ^ y ^ (BitConversion.imul(y, y) | 1)), // hash 13 1MS , 2A , 3MA
             ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS , 2A , 3MA
             ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS , 2A , 3MA
+            ((x, y) -> x * 0x7587 + y * 0x6A89), // hash 16 1MS , 2A , 3MA
         };
 
         /*
@@ -2844,6 +2848,7 @@ public class PileupTest {
          hash 13, 1MS fail 314572/500000, 2A fail 39321/500000, 3MA
          hash 14, 1MS , 2A , 3MA
          hash 15, 1MS , 2A , 3MA
+         hash 16, 1MS , 2A , 3MA
          */
 
         /*
@@ -2864,6 +2869,7 @@ public class PileupTest {
          hash 13, 1MS , 2A fail 78643/500000, 3MA
          hash 14, 1MS , 2A , 3MA
          hash 15, 1MS , 2A , 3MA
+         hash 16, 1MS , 2A , 3MA
          */
 
         /*
@@ -2884,6 +2890,7 @@ public class PileupTest {
          hash 13, 1MS , 2A fail 157286/500000, 3MA
          hash 14, 1MS , 2A , 3MA
          hash 15, 1MS , 2A , 3MA
+         hash 16, 1MS , 2A , 3MA
          */
 
         /*
@@ -2904,6 +2911,7 @@ public class PileupTest {
          hash 13, 1MS , 2A fail 157286/500000, 3MA
          hash 14, 1MS , 2A , 3MA
          hash 15, 1MS , 2A fail 157286/500000, 3MA fail 314572/500000
+         hash 16, 1MS , 2A , 3MA
          */
 
 
@@ -2926,8 +2934,8 @@ public class PileupTest {
                     protected int place (Object item) {
                         final Point2 p = (Point2)item;
 //                        return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
-//                        return hash.applyAsInt(p.x, p.y) & mask; // option 2A
-                        return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
+                        return hash.applyAsInt(p.x, p.y) & mask; // option 2A
+//                        return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
                     }
 
                     @Override
