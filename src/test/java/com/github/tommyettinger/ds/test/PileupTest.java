@@ -1883,7 +1883,7 @@ public class PileupTest {
 
                 @Override
                 protected int place (Object item) {
-                    Point2 p = (Point2)item;
+                    final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
                     return hash.applyAsInt(p.x, p.y) & mask;
 //                    return hash.applyAsInt(p.x, p.y) * hashMul & mask;
@@ -2007,7 +2007,7 @@ public class PileupTest {
 
                 @Override
                 protected int place (Object item) {
-                    Point2 p = (Point2)item;
+                    final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
                     return hash.applyAsInt(p.x, p.y) & mask; // option 2A
 //                    return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
@@ -2126,7 +2126,7 @@ public class PileupTest {
 
                 @Override
                 protected int place (Object item) {
-                    Point2 p = (Point2)item;
+                    final Point2 p = (Point2)item;
                     return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 //                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
 //                    return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
@@ -2331,7 +2331,7 @@ public class PileupTest {
 
                     @Override
                     protected int place (Object item) {
-                        Point2 p = (Point2)item;
+                        final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 //                        return hash.applyAsInt(p.x, p.y) & mask; // option 2A
                     return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
@@ -2422,7 +2422,7 @@ public class PileupTest {
         IntBinaryOperator[] hashes = {
             // 1MS defaults to strong unless it failed or did very well
             // 2A almost all have no collisions; only 2, 11, 12, 13 and 14 have any (and all fail except 14)
-            // 3MA almost all have no collisions; only 2, 11, 12, 13 and 14 have any (and all fail)
+            // 3MA almost all have no collisions; only 2, 11, 12, and 13 have any (and all fail)
             ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS , 2A , 3MA
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS absurdly strong, 2A , 3MA
             ((x, y) -> 31 * x + y), // hash 2 1MS fail 157286/500000, 2A fail 39321/500000, 3MA fail 157286/500000
@@ -2460,7 +2460,7 @@ public class PileupTest {
 
                 @Override
                 protected int place (Object item) {
-                    Point2 p = (Point2)item;
+                    final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
                     return hash.applyAsInt(p.x, p.y) & mask;
 //                    return hash.applyAsInt(p.x, p.y) * hashMul & mask;
@@ -2591,7 +2591,7 @@ public class PileupTest {
 
                 @Override
                 protected int place (Object item) {
-                    Point2 p = (Point2)item;
+                    final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 //                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
                     return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
@@ -2716,7 +2716,7 @@ public class PileupTest {
 
                 @Override
                 protected int place (Object item) {
-                    Point2 p = (Point2)item;
+                    final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
                     return hash.applyAsInt(p.x, p.y) & mask; // option 2A
 //                    return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
@@ -2830,7 +2830,7 @@ public class PileupTest {
          width 500
          hash 0, 1MS , 2A , 3MA
          hash 1, 1MS , 2A , 3MA
-         hash 2, 1MS , 2A , 3MA
+         hash 2, 1MS fail 78643/500000, 2A , 3MA
          hash 3, 1MS , 2A , 3MA
          hash 4, 1MS , 2A , 3MA
          hash 5, 1MS , 2A , 3MA
@@ -2841,13 +2841,16 @@ public class PileupTest {
          hash 10, 1MS , 2A , 3MA
          hash 11, 1MS , 2A , 3MA
          hash 12, 1MS , 2A , 3MA
+         hash 13, 1MS fail 314572/500000, 2A , 3MA
+         hash 14, 1MS , 2A , 3MA
+         hash 15, 1MS , 2A , 3MA
          */
 
         /*
          width 200
          hash 0, 1MS , 2A , 3MA
          hash 1, 1MS , 2A , 3MA
-         hash 2, 1MS , 2A , 3MA
+         hash 2, 1MS fail 78643/500000, 2A , 3MA
          hash 3, 1MS , 2A , 3MA
          hash 4, 1MS , 2A , 3MA
          hash 5, 1MS , 2A , 3MA
@@ -2858,13 +2861,16 @@ public class PileupTest {
          hash 10, 1MS , 2A , 3MA
          hash 11, 1MS , 2A , 3MA
          hash 12, 1MS , 2A , 3MA
+         hash 13, 1MS , 2A , 3MA
+         hash 14, 1MS , 2A , 3MA
+         hash 15, 1MS , 2A , 3MA
          */
 
         /*
          width 100
          hash 0, 1MS , 2A , 3MA
          hash 1, 1MS , 2A , 3MA
-         hash 2, 1MS , 2A , 3MA
+         hash 2, 1MS fail 78643/500000, 2A , 3MA
          hash 3, 1MS , 2A , 3MA
          hash 4, 1MS , 2A , 3MA
          hash 5, 1MS , 2A , 3MA
@@ -2875,13 +2881,16 @@ public class PileupTest {
          hash 10, 1MS , 2A , 3MA
          hash 11, 1MS , 2A , 3MA
          hash 12, 1MS , 2A , 3MA
+         hash 13, 1MS , 2A , 3MA
+         hash 14, 1MS , 2A , 3MA
+         hash 15, 1MS , 2A , 3MA
          */
 
         /*
          width 50
          hash 0, 1MS , 2A , 3MA
          hash 1, 1MS , 2A , 3MA
-         hash 2, 1MS , 2A , 3MA
+         hash 2, 1MS fail 78643/500000, 2A , 3MA
          hash 3, 1MS , 2A , 3MA
          hash 4, 1MS , 2A , 3MA
          hash 5, 1MS , 2A , 3MA
@@ -2892,6 +2901,9 @@ public class PileupTest {
          hash 10, 1MS , 2A , 3MA 
          hash 11, 1MS , 2A , 3MA 
          hash 12, 1MS , 2A , 3MA 
+         hash 13, 1MS , 2A , 3MA
+         hash 14, 1MS , 2A , 3MA
+         hash 15, 1MS , 2A , 3MA
          */
 
 
@@ -2900,7 +2912,7 @@ public class PileupTest {
             final Point2[] shells = generatePointRectangle(wide, high, 0);
             int index = 0;
             for (IntBinaryOperator op : hashes) {
-                System.out.println("Working with hash " + index++ + ":");
+                System.out.println("Working on size " + wide + " with hash " + index++ + ":");
                 final IntBinaryOperator hash = op;
                 long start = System.nanoTime();
                 ObjectSet set = new ObjectSet(51, 0.6f) {
@@ -2912,10 +2924,10 @@ public class PileupTest {
 
                     @Override
                     protected int place (Object item) {
-                        Point2 p = (Point2)item;
-//                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
+                        final Point2 p = (Point2)item;
+                        return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 //                        return hash.applyAsInt(p.x, p.y) & mask; // option 2A
-                        return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
+//                        return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
                     }
 
                     @Override
