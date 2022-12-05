@@ -31,7 +31,8 @@ import java.util.PrimitiveIterator;
  * of that minimum value to save memory. This is important because every possible integer position, whether
  * contained in the bit set or not, takes up one bit of memory (rounded up to a multiple of 64), but
  * positions less than the offset simply aren't stored, and the bit set can grow to fit positions arbitrarily
- * higher than the offset. Allows comparison via bitwise operators to other bit sets, if the offsets are the same.
+ * higher than the offset. Allows comparison via bitwise operators to other bit sets, as long as the offsets
+ * are the same.
  * <br>
  * This was originally Bits in libGDX. Many methods have been renamed to more-closely match the Collection API.
  * This has also had the offset functionality added.
@@ -625,15 +626,31 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		return length() == other.length();
 	}
 
-	public StringBuilder appendTo (StringBuilder builder) {
-		builder.append('[');
+	/**
+	 * Given a StringBuilder, this appends some of the toString() representation of this OffsetBitSet, without allocating a String.
+	 * This does not include the opening {@code [} and closing {@code ]} chars, and only appends the int positions in this OffsetBitSet,
+	 * each pair separated by the given delimiter String. You can use this to choose a different delimiter from what toString() uses.
+	 * @param builder a StringBuilder that will be modified in-place and returned
+	 * @param delimiter the String that separates every pair of integers in the result
+	 * @return the given StringBuilder, after modifications
+	 */
+	public StringBuilder appendContents (StringBuilder builder, String delimiter) {
 		int curr = nextSetBit(offset);
 		builder.append(curr);
 		while ((curr = nextSetBit(curr+1)) != offset - 1) {
-			builder.append(", ").append(curr);
+			builder.append(delimiter).append(curr);
 		}
-		builder.append(']');
 		return builder;
+	}
+
+	/**
+	 * Given a StringBuilder, this appends the toString() representation of this OffsetBitSet, without allocating a String.
+	 * This includes the opening {@code [} and closing {@code ]} chars; it uses {@code ", "} as its delimiter.
+	 * @param builder a StringBuilder that will be modified in-place and returned
+	 * @return the given StringBuilder, after modifications
+	 */
+	public StringBuilder appendTo (StringBuilder builder) {
+		return appendContents(builder.append('['), ", ").append(']');
 	}
 
 	@Override
