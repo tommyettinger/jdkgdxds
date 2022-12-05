@@ -2,7 +2,6 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.Test;
@@ -11,17 +10,17 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.IntBinaryOperator;
 
 public class PileupTest {
     public static final int LEN = 500000;
+    public static final float LOAD = 0.5f; //0.6f
 
     public static String[] generateUniqueWordsFibSet (int size) {
         final int numLetters = 4;
-        ObjectSet<String> set = new ObjectSet<String>(size, 0.6f) {
+        ObjectSet<String> set = new ObjectSet<String>(size, LOAD) {
             @Override
             protected int place (Object item) {
                 return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
@@ -102,7 +101,7 @@ public class PileupTest {
         final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging and the constant in place() changed
-        ObjectSet set = new ObjectSet(51, 0.6f) {
+        ObjectSet set = new ObjectSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -191,7 +190,7 @@ public class PileupTest {
     public void testObjectSetNew () {
         final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, 0.6f) {
+        ObjectSet set = new ObjectSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -283,7 +282,7 @@ public class PileupTest {
     public void testObjectQuadSet () {
         final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
+        ObjectQuadSet set = new ObjectQuadSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -367,7 +366,7 @@ public class PileupTest {
     public void testObjectQuadSetExperimental () {
         final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
+        ObjectQuadSet set = new ObjectQuadSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -465,7 +464,7 @@ public class PileupTest {
     public void testObjectQuadSetSimplePlace () {
         final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
+        ObjectQuadSet set = new ObjectQuadSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -559,7 +558,7 @@ public class PileupTest {
     public void testObjectSetIntPlace () {
         final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, 0.6f) {
+        ObjectSet set = new ObjectSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -655,7 +654,7 @@ public class PileupTest {
 
     public static BadString[] generateUniqueBadFibSet (int size) {
         final int numLetters = 4;
-        ObjectSet<BadString> set = new ObjectSet<BadString>(size, 0.6f) {
+        ObjectSet<BadString> set = new ObjectSet<BadString>(size, LOAD) {
             @Override
             protected int place (Object item) {
                 return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
@@ -735,7 +734,7 @@ public class PileupTest {
         final BadString[] words = generateUniqueBad(LEN, -123456789L);
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging
-        ObjectSet set = new ObjectSet(51, 0.6f) {
+        ObjectSet set = new ObjectSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -817,7 +816,7 @@ public class PileupTest {
     public void testBadStringSetNew () {
         final BadString[] words = generateUniqueBad(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, 0.6f) {
+        ObjectSet set = new ObjectSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -918,7 +917,7 @@ public class PileupTest {
     public void testBadStringQuadSet () {
         final BadString[] words = generateUniqueBad(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
+        ObjectQuadSet set = new ObjectQuadSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -1004,7 +1003,7 @@ public class PileupTest {
     public void testBadStringQuadSetGold () {
         final BadString[] words = generateUniqueBad(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
+        ObjectQuadSet set = new ObjectQuadSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -1236,7 +1235,7 @@ public class PileupTest {
         Collections.shuffle(words, new WhiskerRandom(1234567890L));
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging
-        ObjectSet set = new ObjectSet(51, 0.6f) {
+        ObjectSet set = new ObjectSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -1391,7 +1390,7 @@ public class PileupTest {
                 // replicates old ObjectSet behavior, with added logging
                 int finalA = a;
                 int finalB = b;
-                ObjectSet set = new ObjectSet(51, 0.6f) {
+                ObjectSet set = new ObjectSet(51, LOAD) {
                     long collisionTotal = 0;
                     int longestPileup = 0, allPileups = 0, pileupChecks = 0;
                     double averagePileup = 0;
@@ -1496,7 +1495,7 @@ public class PileupTest {
         final Vector2[] spiral = generateVectorSpiral(LEN);
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging
-        ObjectSet set = new ObjectSet(51, 0.6f) {
+        ObjectSet set = new ObjectSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -1614,7 +1613,7 @@ public class PileupTest {
     public void testVector2SetNew () {
         final Vector2[] spiral = generateVectorSpiral(LEN);
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, 0.6f) {
+        ObjectSet set = new ObjectSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -1725,7 +1724,7 @@ public class PileupTest {
     public void testVector2QuadSet () {
         final Vector2[] spiral = generateVectorSpiral(LEN);
         long start = System.nanoTime();
-        ObjectQuadSet set = new ObjectQuadSet(51, 0.6f) {
+        ObjectQuadSet set = new ObjectQuadSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -1845,33 +1844,37 @@ public class PileupTest {
     @Test
     public void testPointSetShells () {
         final Point2[] shells = generatePointShells(LEN);
-        IntBinaryOperator[] hashes = {
-            ((x, y) -> x * 0x125493 + y * 0x19E373),
-            ((x, y) -> x * 0xDEED5 + y * 0xBEA57),
-            ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)),
-            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)),
-            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}),
-            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}),
-            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)),
-            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}),
-            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}),
-            ((x, y) -> (y + ((x + y) * (x + y + 1) + 36 >>> 1))),
+        final IntBinaryOperator[] hashes = {
+            ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS , 2A , 3MA
+            ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS , 2A , 3MA
+            ((x, y) -> 31 * x + y), // hash 2 1MS , 2A , 3MA
+            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3 1MS , 2A , 3MA
+            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // hash 4 1MS , 2A , 3MA
+            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 5 1MS , 2A , 3MA
+            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // hash 6 1MS , 2A , 3MA
+            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}), // hash 7 1MS , 2A , 3MA
+            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 8 1MS , 2A , 3MA
+            ((x, y) -> y + ((x + y) * (x + y + 1) + 36 >>> 1)), // hash 9 1MS , 2A , 3MA
             ((x, y) -> {
                 x |= y << 16;
                 x =    ((x & 0x0000ff00) << 8) | ((x >>> 8) & 0x0000ff00) | (x & 0xff0000ff);
                 x =    ((x & 0x00f000f0) << 4) | ((x >>> 4) & 0x00f000f0) | (x & 0xf00ff00f);
                 x =    ((x & 0x0c0c0c0c) << 2) | ((x >>> 2) & 0x0c0c0c0c) | (x & 0xc3c3c3c3);
                 return ((x & 0x22222222) << 1) | ((x >>> 1) & 0x22222222) | (x & 0x99999999);
-            }),
-            ((x, y) -> (x ^ (y << 16 | y >>> 16))),
-            ((x, y) -> (x + (y << 16 | y >>> 16))),
+            }), // hash 10 1MS , 2A , 3MA
+            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11 1MS , 2A , 3MA
+            ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12 1MS , 2A , 3MA
+            ((x, y) -> x ^ y ^ (BitConversion.imul(y, y) | 1)), // hash 13 1MS , 2A , 3MA
+            ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS , 2A , 3MA
+            ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS , 2A , 3MA
+            ((x, y) -> x * 0x7587 + y * 0x6A89), // hash 16 1MS , 2A , 3MA
         };
         int index = 0;
         for(IntBinaryOperator op : hashes) {
             System.out.println("Working with hash " + index++ + ":");
             final IntBinaryOperator hash = op;
             long start = System.nanoTime();
-            ObjectSet set = new ObjectSet(51, 0.6f) {
+            ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
                 int longestPileup = 0, allPileups = 0, pileupChecks = 0;
                 double averagePileup = 0;
@@ -1995,7 +1998,7 @@ public class PileupTest {
             System.out.println("Working with hash " + index++ + ":");
             final IntBinaryOperator hash = op;
             long start = System.nanoTime();
-            ObjectSet set = new ObjectSet(51, 0.6f) {
+            ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
                 int longestPileup = 0, allPileups = 0, pileupChecks = 0;
                 double averagePileup = 0;
@@ -2117,7 +2120,7 @@ public class PileupTest {
             System.out.println("Working with hash " + index++ + ":");
             final IntBinaryOperator hash = op;
             long start = System.nanoTime();
-            ObjectSet set = new ObjectSet(51, 0.6f) {
+            ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
                 int longestPileup = 0, allPileups = 0, pileupChecks = 0;
                 double averagePileup = 0;
@@ -2322,7 +2325,7 @@ public class PileupTest {
                 System.out.println("Working with hash " + index++ + ":");
                 final IntBinaryOperator hash = op;
                 long start = System.nanoTime();
-                ObjectSet set = new ObjectSet(51, 0.6f) {
+                ObjectSet set = new ObjectSet(51, LOAD) {
                     long collisionTotal = 0;
                     int longestPileup = 0, allPileups = 0, pileupChecks = 0;
                     double averagePileup = 0;
@@ -2452,7 +2455,7 @@ public class PileupTest {
             System.out.println("Working with hash " + index++ + ":");
             final IntBinaryOperator hash = op;
             long start = System.nanoTime();
-            ObjectSet set = new ObjectSet(51, 0.6f) {
+            ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
                 int longestPileup = 0, allPileups = 0, pileupChecks = 0;
                 double averagePileup = 0;
@@ -2584,7 +2587,7 @@ public class PileupTest {
             System.out.println("Working with hash " + index++ + ":");
             final IntBinaryOperator hash = op;
             long start = System.nanoTime();
-            ObjectSet set = new ObjectSet(51, 0.6f) {
+            ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
                 int longestPileup = 0, allPileups = 0, pileupChecks = 0;
                 double averagePileup = 0;
@@ -2710,7 +2713,7 @@ public class PileupTest {
             System.out.println("Working with hash " + index++ + ":");
             final IntBinaryOperator hash = op;
             long start = System.nanoTime();
-            ObjectSet set = new ObjectSet(51, 0.6f) {
+            ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
                 int longestPileup = 0, allPileups = 0, pileupChecks = 0;
                 double averagePileup = 0;
@@ -2923,7 +2926,7 @@ public class PileupTest {
                 System.out.println("Working on size " + wide + " with hash " + index++ + ":");
                 final IntBinaryOperator hash = op;
                 long start = System.nanoTime();
-                ObjectSet set = new ObjectSet(51, 0.6f) {
+                ObjectSet set = new ObjectSet(51, LOAD) {
                     long collisionTotal = 0;
                     int longestPileup = 0, allPileups = 0, pileupChecks = 0;
                     double averagePileup = 0;
