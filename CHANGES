@@ -1,3 +1,19 @@
+[1.1.0]
+- OffsetBitSet is the main new addition in this version; it is a fairly standard bitset, so it acts like an implicitly sorted int set, but unlike typical bitsets, it allows choosing an offset where it should start permitting items.
+- ObjectComparators can sort Object arrays now.
+- Sets have an appendTo() method that places some or all of the String representation into a StringBuilder, with minimal allocation.
+- The iterators for sets, for map entry sets, for map key sets, and for map value collections all can produce a list of the remaining items, with toList() .
+- In addition to the above toList() , there is appendInto() for those iterators, which allows placing the remaining items from the iterator into any compatible collection.
+- To make the iterators' new methods more useful, you can call resetIterator() on a map's entry set/key set/value collection, which sets the iterator back to the start.
+- jdkgdxds depends on digital version 0.1.5 now. If you use juniper, using 0.1.7 or higher is suggested (that's what the tests use here).
+
+[1.0.5]
+- Many fixes for deques, affecting/improving removeAt(), add() with an index, iteration, and default values.
+- The iterators for all lists, all deques, and for NumberedSet are all effectively ListIterators now, or share the same API. If you need a ListIterator for an ordered set or an ordered map's keys, call .order().iterator() .
+
+[1.0.4]
+- [BREAKING CHANGE] jdkgdxds now depends on funderby (version 0.0.1), a small new library that only contains primitive-based functional interfaces. This replaces the functional interfaces for primitives here. This is breaking because the package changed for the functional interfaces.
+
 [1.0.3]
 - [BREAKING CHANGE] jdkgdxds no longer depends on juniper. The one case where we still used it was in Arrangeable.rearrange(EnhancedRandom), which now takes a long seed instead.
 - The simple random hash family now incorporates the current size of the map or set at the time of a resize.
