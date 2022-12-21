@@ -135,7 +135,7 @@ public class ExhaustiveBadStringHashTest {
 								if (key != null) {addResize(key);}
 							}
 						}
-						if(longestPileup > 18) throw new RuntimeException();
+//						if(longestPileup > 18) throw new RuntimeException();
 //                        System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
 //                        System.out.println("total collisions: " + collisionTotal);
 //                        System.out.println("longest pileup: " + longestPileup);
@@ -143,7 +143,8 @@ public class ExhaustiveBadStringHashTest {
 
 					@Override
 					public void clear () {
-						if(longestPileup <= 11) {
+//						if(longestPileup <= 11) {
+						if(longestPileup <= 170) {
 							System.out.println("hash * 0x" + Base.BASE16.unsigned(originalMultiplier) +
 								" + 0x" + Base.BASE16.unsigned(originalAddend) + " on iteration " + hashShiftA);
 //                            System.out.println("shifts: a " + hashShiftA + ", b " + hashShiftB);

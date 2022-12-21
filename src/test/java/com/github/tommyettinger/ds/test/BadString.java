@@ -48,7 +48,11 @@ public class BadString implements CharSequence {
 //            }
 //            return h;
 //            return (text.hashCode());
-		return Float.floatToIntBits(text.hashCode());
+
+//		return Float.floatToIntBits(text.hashCode());
+
+		final int h = text.hashCode();
+		return h & (h * h | 1);
 	}
 
 	@Override

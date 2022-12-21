@@ -32,6 +32,8 @@ public class WordListStats {
 		h -> h & (h << 21 | h >>> 11) & (h << 13 | h >>> 19), // hash 2, ARR
 		h -> h & (BitConversion.imul(h, h) | 1), // hash 3, AQO
 		h -> h & (h ^ h << 1), // hash 4, mask with a sort of gray-ish code
+		h -> h << 16, // hash 5, imitating float hash behavior in Vector2
+		h -> Float.floatToIntBits(h), // hash 6, current BadString behavior
 	};
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
