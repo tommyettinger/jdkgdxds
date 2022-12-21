@@ -23,7 +23,7 @@ import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.function.FloatToFloatFunction;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;

@@ -20,7 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.function.IntObjBiConsumer;
 import com.github.tommyettinger.function.IntObjToObjBiFunction;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
 import java.util.Arrays;

@@ -20,7 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;

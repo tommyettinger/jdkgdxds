@@ -4,7 +4,7 @@ import com.github.tommyettinger.ds.HolderSet;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Created by Tommy Ettinger on 10/26/2020.
@@ -12,15 +12,15 @@ import javax.annotation.Nonnull;
 @SuppressWarnings("SuspiciousMethodCalls")
 public class HolderSetTest {
 	public static class Person {
-		@Nonnull private String name;
+		@NonNull private String name;
 		private int x, y;
 
-		@Nonnull
+		@NonNull
 		public String getName () {
 			return name;
 		}
 
-		public void setName (@Nonnull String name) {
+		public void setName (@NonNull String name) {
 			this.name = name;
 		}
 
@@ -44,11 +44,11 @@ public class HolderSetTest {
 			this("Nihilus", 0, 0);
 		}
 
-		public Person (@Nonnull String name) {
+		public Person (@NonNull String name) {
 			this(name, 0, 0);
 		}
 
-		public Person (@Nonnull String name, int x, int y) {
+		public Person (@NonNull String name, int x, int y) {
 			this.name = name;
 			this.x = x;
 			this.y = y;

@@ -22,7 +22,7 @@ import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.Ordered;
 import com.github.tommyettinger.ds.Utilities;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;

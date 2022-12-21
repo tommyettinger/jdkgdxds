@@ -19,7 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;

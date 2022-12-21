@@ -9,7 +9,7 @@ import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -120,7 +120,7 @@ public class PileupTest {
 //            }
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
@@ -204,7 +204,7 @@ public class PileupTest {
             }
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
@@ -291,7 +291,7 @@ public class PileupTest {
             double averagePileup = 0;
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + p & mask) {
                     if (keyTable[i] == null) {
@@ -388,7 +388,7 @@ public class PileupTest {
 //            }
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + p & mask) {
                     if (keyTable[i] == null) {
@@ -479,7 +479,7 @@ public class PileupTest {
             }
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + p & mask) {
                     if (keyTable[i] == null) {
@@ -573,7 +573,7 @@ public class PileupTest {
             }
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
@@ -749,7 +749,7 @@ public class PileupTest {
             }
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
@@ -831,7 +831,7 @@ public class PileupTest {
             }
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
@@ -926,7 +926,7 @@ public class PileupTest {
             double averagePileup = 0;
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + p & mask) {
                     if (keyTable[i] == null) {
@@ -1016,7 +1016,7 @@ public class PileupTest {
             }
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + p & mask) {
                     if (keyTable[i] == null) {
@@ -1301,7 +1301,7 @@ public class PileupTest {
             }
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
@@ -1408,7 +1408,7 @@ public class PileupTest {
                     }
 
                     @Override
-                    protected void addResize (@Nonnull Object key) {
+                    protected void addResize (@NonNull Object key) {
                         Object[] keyTable = this.keyTable;
                         for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                             if (keyTable[i] == null) {
@@ -1538,7 +1538,7 @@ public class PileupTest {
             }
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
@@ -1625,7 +1625,7 @@ public class PileupTest {
 //                hashMultiplier = 0xD1B54A32D192ED03L;
 //            }
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                     if (keyTable[i] == null) {
@@ -1742,7 +1742,7 @@ public class PileupTest {
             }
 
             @Override
-            protected void addResize (@Nonnull Object key) {
+            protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
                 for (int i = place(key), p = 0; ; i = i + p & mask) {
                     if (keyTable[i] == null) {
@@ -1925,7 +1925,7 @@ public class PileupTest {
                 }
 
                 @Override
-                protected void addResize (@Nonnull Object key) {
+                protected void addResize (@NonNull Object key) {
                     Object[] keyTable = this.keyTable;
                     for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                         if (keyTable[i] == null) {
@@ -2057,7 +2057,7 @@ public class PileupTest {
                 }
 
                 @Override
-                protected void addResize (@Nonnull Object key) {
+                protected void addResize (@NonNull Object key) {
                     Object[] keyTable = this.keyTable;
                     for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                         if (keyTable[i] == null) {
@@ -2176,7 +2176,7 @@ public class PileupTest {
                 }
 
                 @Override
-                protected void addResize (@Nonnull Object key) {
+                protected void addResize (@NonNull Object key) {
                     Object[] keyTable = this.keyTable;
                     for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                         if (keyTable[i] == null) {
@@ -2381,7 +2381,7 @@ public class PileupTest {
                     }
 
                     @Override
-                    protected void addResize (@Nonnull Object key) {
+                    protected void addResize (@NonNull Object key) {
                         Object[] keyTable = this.keyTable;
                         for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                             if (keyTable[i] == null) {
@@ -2511,7 +2511,7 @@ public class PileupTest {
                 }
 
                 @Override
-                protected void addResize (@Nonnull Object key) {
+                protected void addResize (@NonNull Object key) {
                     Object[] keyTable = this.keyTable;
                     for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                         if (keyTable[i] == null) {
@@ -2643,7 +2643,7 @@ public class PileupTest {
                 }
 
                 @Override
-                protected void addResize (@Nonnull Object key) {
+                protected void addResize (@NonNull Object key) {
                     Object[] keyTable = this.keyTable;
                     for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                         if (keyTable[i] == null) {
@@ -2769,7 +2769,7 @@ public class PileupTest {
                 }
 
                 @Override
-                protected void addResize (@Nonnull Object key) {
+                protected void addResize (@NonNull Object key) {
                     Object[] keyTable = this.keyTable;
                     for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                         if (keyTable[i] == null) {
@@ -2982,7 +2982,7 @@ public class PileupTest {
                     }
 
                     @Override
-                    protected void addResize (@Nonnull Object key) {
+                    protected void addResize (@NonNull Object key) {
                         Object[] keyTable = this.keyTable;
                         for (int i = place(key), p = 0; ; i = i + 1 & mask) {
                             if (keyTable[i] == null) {

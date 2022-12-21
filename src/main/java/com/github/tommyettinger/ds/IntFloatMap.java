@@ -24,7 +24,7 @@ import com.github.tommyettinger.function.IntFloatToFloatBiFunction;
 import com.github.tommyettinger.function.IntToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;

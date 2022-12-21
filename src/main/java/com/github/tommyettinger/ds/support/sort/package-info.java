@@ -22,7 +22,5 @@
  * <a href="https://github.com/vigna/fastutil/blob/2411defb3b1bd7f004ea75a7706ccaebb4dbfc25/LICENSE-2.0">it is here</a>.
  */
 
-@NotNullDefault
 package com.github.tommyettinger.ds.support.sort;
 
-import com.github.tommyettinger.ds.annotations.NotNullDefault;

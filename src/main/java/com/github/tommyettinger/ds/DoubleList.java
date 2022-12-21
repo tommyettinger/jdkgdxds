@@ -21,7 +21,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;

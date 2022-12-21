@@ -21,7 +21,7 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.random.WhiskerRandom;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -120,7 +120,7 @@ public class ExhaustiveWordHashTest {
 					}
 
 					@Override
-					protected void addResize (@Nonnull Object key) {
+					protected void addResize (@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {

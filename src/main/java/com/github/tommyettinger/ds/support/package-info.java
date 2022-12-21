@@ -21,7 +21,5 @@
  * Only the subpackages of this have any code.
  */
 
-@NotNullDefault
 package com.github.tommyettinger.ds.support;
 
-import com.github.tommyettinger.ds.annotations.NotNullDefault;

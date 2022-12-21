@@ -30,7 +30,5 @@
  * the classpath exception.
  */
 
-@NotNullDefault
 package com.github.tommyettinger.ds.support.util;
 
-import com.github.tommyettinger.ds.annotations.NotNullDefault;

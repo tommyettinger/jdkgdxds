@@ -20,7 +20,7 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.ObjectSet;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import static com.github.tommyettinger.ds.test.PileupTest.LEN;
 import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
@@ -102,7 +102,7 @@ public class ExhaustiveVectorHashTest {
 					}
 
 					@Override
-					protected void addResize (@Nonnull Object key) {
+					protected void addResize (@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {

@@ -23,8 +23,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -612,7 +612,7 @@ public class ObjectObjectMapTest extends junit.framework.TestCase {
 
 		@Override
 		@Nullable
-		public V put (@Nonnull K key, @Nullable V value) {
+		public V put (@NonNull K key, @Nullable V value) {
 			throw new UnsupportedOperationException();
 		}
 	}

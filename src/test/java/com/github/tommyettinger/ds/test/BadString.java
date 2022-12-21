@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds.test;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A wrapper around a CharSequence (almost always a String) with a typically-worse hashCode() implementation,
@@ -73,13 +73,13 @@ public class BadString implements CharSequence {
 		return text.charAt(index);
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public CharSequence subSequence (int start, int end) {
 		return new BadString(text.subSequence(start, end));
 	}
 
-	@Nonnull
+	@NonNull
 	@Override
 	public String toString () {
 		return text.toString();

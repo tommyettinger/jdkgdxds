@@ -21,7 +21,7 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.ds.Utilities;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
 import java.util.Iterator;

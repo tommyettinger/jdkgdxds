@@ -72,7 +72,8 @@ repositories {
 dependencies {
     api "com.github.tommyettinger:funderby:$funderbyVersion"
     api "com.github.tommyettinger:digital:$digitalVersion"
-    api 'com.google.code.findbugs:jsr305:3.0.2'
+    api 'org.checkerframework:checker-qual:3.28.0'
+//    api 'com.google.code.findbugs:jsr305:3.0.2'
     testImplementation "com.github.tommyettinger:juniper:$juniperVersion"
     testImplementation "junit:junit:4.13.2"
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.9.0'

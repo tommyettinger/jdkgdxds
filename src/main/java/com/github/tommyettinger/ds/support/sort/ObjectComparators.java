@@ -19,7 +19,7 @@ package com.github.tommyettinger.ds.support.sort;
 
 import com.github.tommyettinger.function.ObjToFloatFunction;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
