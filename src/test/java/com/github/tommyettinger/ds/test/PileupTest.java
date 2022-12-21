@@ -2,7 +2,10 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.IntLongMap;
+import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.Test;
 
@@ -1845,33 +1848,62 @@ public class PileupTest {
     public void testPointSetShells () {
         final Point2[] shells = generatePointShells(LEN);
         final IntBinaryOperator[] hashes = {
-            ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS , 2A , 3MA
-            ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS , 2A , 3MA
-            ((x, y) -> 31 * x + y), // hash 2 1MS , 2A , 3MA
-            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3 1MS , 2A , 3MA
-            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // hash 4 1MS , 2A , 3MA
-            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 5 1MS , 2A , 3MA
-            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // hash 6 1MS , 2A , 3MA
-            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}), // hash 7 1MS , 2A , 3MA
-            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 8 1MS , 2A , 3MA
-            ((x, y) -> y + ((x + y) * (x + y + 1) + 36 >>> 1)), // hash 9 1MS , 2A , 3MA
+            ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> 31 * x + y), // hash 2 1MS fail 131072/500000, 2A fail 65536/500000, 3MA fail 131072/500000
+            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // hash 3 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // hash 4 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 5 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // hash 6 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}), // hash 7 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // hash 8 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> y + ((x + y) * (x + y + 1) + 36 >>> 1)), // hash 9 1MS strong, 2A strong, 3MA strong
             ((x, y) -> {
                 x |= y << 16;
                 x =    ((x & 0x0000ff00) << 8) | ((x >>> 8) & 0x0000ff00) | (x & 0xff0000ff);
                 x =    ((x & 0x00f000f0) << 4) | ((x >>> 4) & 0x00f000f0) | (x & 0xf00ff00f);
                 x =    ((x & 0x0c0c0c0c) << 2) | ((x >>> 2) & 0x0c0c0c0c) | (x & 0xc3c3c3c3);
                 return ((x & 0x22222222) << 1) | ((x >>> 1) & 0x22222222) | (x & 0x99999999);
-            }), // hash 10 1MS , 2A , 3MA
-            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11 1MS , 2A , 3MA
-            ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12 1MS , 2A , 3MA
-            ((x, y) -> x ^ y ^ (BitConversion.imul(y, y) | 1)), // hash 13 1MS , 2A , 3MA
-            ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS , 2A , 3MA
-            ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS , 2A , 3MA
-            ((x, y) -> x * 0x7587 + y * 0x6A89), // hash 16 1MS , 2A , 3MA
+            }), // hash 10 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // hash 11 1MS strong, 2A fail 2048/500000, 3MA fail 16384/500000
+            ((x, y) -> (x + (y << 16 | y >>> 16))), // hash 12 1MS strong, 2A fail 2048/500000, 3MA fail 16384/500000
+            ((x, y) -> x ^ y ^ (BitConversion.imul(y, y) | 1)), // hash 13 1MS strong, 2A fail 65536/500000, 3MA strong
+            ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS strong, 2A strong, 3MA strong
+            ((x, y) -> x * 0x7587 + y * 0x6A89), // hash 16 1MS strong, 2A strong, 3MA strong
         };
-        int index = 0;
+
+        // for method 1MS, hash 15 is fastest, followed by hash 16.
+        // for method 2A , hash 3 is fastest, followed by hash 16.
+        // for method 3MA, hash 16 is fastest, followed by hash 7.
+
+        /* // Very rough speed benchmark. This needs to be verified with JMH or BumbleBench!
+    1MS                          2A                           3MA
+12: 74702300 ns            |  3: 63187100 ns            | 16: 71190400 ns
+15: 75322000 ns            |  4: 65759900 ns            |  7: 75657500 ns
+ 4: 76360700 ns            |  8: 72703400 ns            |  4: 75894500 ns
+ 7: 77831800 ns            |  7: 74673300 ns            |  3: 76486400 ns
+ 9: 79387600 ns            |  9: 76345800 ns            | 10: 77296100 ns
+ 6: 79399500 ns            | 14: 79661000 ns            |  8: 77299300 ns
+13: 80128900 ns            |  6: 80823300 ns            | 15: 78662700 ns
+ 8: 80272200 ns            | 15: 82385200 ns            |  9: 83325900 ns
+11: 82534100 ns            | 16: 99081800 ns            |  6: 85033800 ns
+16: 85207800 ns            |  5: 106265600 ns           |  5: 97736000 ns
+14: 85919200 ns            |  0: 120346200 ns           | 13: 100021900 ns
+ 3: 88574100 ns            |  1: 131019300 ns           |  1: 110444800 ns
+10: 100581900 ns           | 10: 165088500 ns           |  0: 125566300 ns
+ 5: 108926500 ns           |  2: 9223372036854775807 ns | 14: 1130961600 ns
+ 1: 120539900 ns           | 11: 9223372036854775807 ns |  2: 9223372036854775807 ns
+ 0: 125462900 ns           | 12: 9223372036854775807 ns | 11: 9223372036854775807 ns
+ 2: 9223372036854775807 ns | 13: 9223372036854775807 ns | 12: 9223372036854775807 ns
+         */
+
+
+        int index = -1;
+        IntLongOrderedMap timing = new IntLongOrderedMap(hashes.length);
         for(IntBinaryOperator op : hashes) {
-            System.out.println("Working with hash " + index++ + ":");
+            ++index;
+            System.out.println("Working with hash " + index + ":");
             final IntBinaryOperator hash = op;
             long start = System.nanoTime();
             ObjectSet set = new ObjectSet(51, LOAD) {
@@ -1888,8 +1920,8 @@ public class PileupTest {
                 protected int place (Object item) {
                     final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
-                    return hash.applyAsInt(p.x, p.y) & mask;
-//                    return hash.applyAsInt(p.x, p.y) * hashMul & mask;
+//                    return hash.applyAsInt(p.x, p.y) & mask;
+                    return hash.applyAsInt(p.x, p.y) * hashMul & mask;
                 }
 
                 @Override
@@ -1960,13 +1992,21 @@ public class PileupTest {
                     set.add(shells[i]);
                 }
                 System.out.println("strong");
+                long time = System.nanoTime() - start;
+                System.out.println(time);
+                timing.put(index, time);
             } catch (IllegalStateException ex) {
                 System.out.println("Way too many collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 System.out.println("fail " + set.size() + "/" + LEN);
+                timing.put(index, Long.MAX_VALUE);
             }
-            System.out.println(System.nanoTime() - start);
             set.clear();
         }
+        timing.sortByValue(LongComparators.NATURAL_COMPARATOR);
+        for(IntLongMap.Entry ent : timing.entrySet()){
+            System.out.printf("%2d: %d ns\n", ent.key, ent.value);
+        }
+        System.gc();
     }
 
     @Test
