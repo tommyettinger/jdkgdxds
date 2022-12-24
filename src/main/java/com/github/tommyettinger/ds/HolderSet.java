@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -88,6 +89,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(Function)} is called with
 	 * a valid Function that gets K keys from T items.
 	 */
+	@SuppressWarnings("unchecked")
 	public HolderSet () {
 
 		loadFactor = Utilities.getDefaultLoadFactor();
@@ -128,6 +130,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
+	@SuppressWarnings("unchecked")
 	public HolderSet (Function<T, K> extractor, int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) {
 			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
@@ -332,7 +335,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * @return true if this Set was modified
 	 */
 	@Override
-	public boolean retainAll (Collection<?> c) {
+	public boolean retainAll (@NonNull Collection<?> c) {
 		boolean modified = false;
 		for (Object o : this) {
 			if (!c.contains(o)) {
@@ -389,8 +392,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
 	protected void addResize (T key) {
+		assert extractor != null;
 		T[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = i + 1 & mask) {
+		for (int i = place(extractor.apply(key)); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
 				return;
@@ -402,18 +406,21 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * Takes a K key and not a T value!
 	 * Returns true if the key was removed.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean remove (Object key) {
 		int i = locateKey(key);
 		if (i < 0) {
 			return false;
 		}
+		assert extractor != null;
 		T[] keyTable = this.keyTable;
 		int mask = this.mask, next = i + 1 & mask;
 		while ((key = keyTable[next]) != null) {
-			int placement = place(key);
+			T tk = (T)key;
+			int placement = place(extractor.apply(tk));
 			if ((next - placement & mask) > (i - placement & mask)) {
-				keyTable[i] = (T)key;
+				keyTable[i] = tk;
 				i = next;
 			}
 			next = next + 1 & mask;
@@ -547,6 +554,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void resize (int newSize) {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
@@ -633,6 +641,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		return h;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean equals (Object obj) {
 		if (!(obj instanceof HolderSet)) {
@@ -643,8 +652,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 			return false;
 		}
 		T[] keyTable = this.keyTable;
+		assert extractor != null;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			if (keyTable[i] != null && !other.contains(keyTable[i])) {
+			if (keyTable[i] != null && !other.contains(extractor.apply(keyTable[i]))) {
 				return false;
 			}
 		}

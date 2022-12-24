@@ -455,7 +455,8 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		public void remove () {
 			if (nextIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
 			nextIndex--;
-			set.remove(items.get(nextIndex));
+			assert set.extractor != null;
+			set.remove(set.extractor.apply(items.get(nextIndex)));
 		}
 	}
 

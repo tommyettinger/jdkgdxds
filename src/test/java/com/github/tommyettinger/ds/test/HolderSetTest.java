@@ -55,6 +55,11 @@ public class HolderSetTest {
 		}
 
 		@Override
+		public String toString () {
+			return name;
+		}
+
+		@Override
 		public boolean equals (Object o) {
 			if (this == o)
 				return true;
@@ -102,9 +107,12 @@ public class HolderSetTest {
 		Assert.assertTrue(people.contains("Carol"));
 		Assert.assertEquals(people.get("Carol").x, -1);
 		Assert.assertEquals(people.get("Carol").y, -1);
+		HolderSet<Person, String> peopleCopy = new HolderSet<>(people);
 		people.remove("Alice");
 		Assert.assertFalse(people.contains("Alice"));
 		Assert.assertEquals(people.size(), 2);
+		peopleCopy.remove("Alice");
+		Assert.assertEquals(people, peopleCopy);
 
 	}
 }
