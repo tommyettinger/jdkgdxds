@@ -233,10 +233,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return the removed item
 	 */
 	public T removeAt (int index) {
-		T key = items.removeAt(index);
+		T item = items.removeAt(index);
 		assert extractor != null;
-		super.remove(extractor.apply(key));
-		return key;
+		super.remove(extractor.apply(item));
+		return item;
 	}
 
 	/**
@@ -276,8 +276,8 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
 	public boolean alter (T before, T after) {
-		if (contains(after)) {return false;}
-		if (!super.remove(before)) {return false;}
+		if (contains(extractor.apply(after))) {return false;}
+		if (!super.remove(extractor.apply(before))) {return false;}
 		super.add(after);
 		items.set(items.indexOf(before), after);
 		return true;
@@ -293,7 +293,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
 	public boolean alterAt (int index, T after) {
-		if (index < 0 || index >= size || contains(after)) {return false;}
+		if (index < 0 || index >= size || contains(extractor.apply(after))) {return false;}
 		super.remove(items.get(index));
 		super.add(after);
 		items.set(index, after);
@@ -324,11 +324,11 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Gets the ObjectList of items in the order this class will iterate through them.
+	 * Gets the ObjectList of T items in the order this class will iterate through them.
 	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
 	 * also change the iteration order here.
 	 *
-	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
+	 * @return the ObjectList of T items, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
 	public ObjectList<T> order () {
@@ -336,17 +336,17 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Sorts this ObjectOrderedSet in-place by the keys' natural ordering; {@code T} must implement {@link Comparable}.
+	 * Sorts this ObjectOrderedSet in-place by the T items' natural ordering; {@code T} must implement {@link Comparable}.
 	 */
 	public void sort () {
 		items.sort(null);
 	}
 
 	/**
-	 * Sorts this ObjectOrderedSet in-place by the given Comparator used on the keys. If {@code comp} is null, then this
-	 * will sort by the natural ordering of the keys, which requires {@code T} to {@link Comparable}.
+	 * Sorts this ObjectOrderedSet in-place by the given Comparator used on the T items. If {@code comp} is null, then this
+	 * will sort by the natural ordering of the items, which requires {@code T} to {@link Comparable}.
 	 *
-	 * @param comp a Comparator that can compare two {@code T} keys, or null to use the keys' natural ordering
+	 * @param comp a Comparator that can compare two {@code T} items, or null to use the items' natural ordering
 	 */
 	public void sort (@Nullable Comparator<? super T> comp) {
 		items.sort(comp);
