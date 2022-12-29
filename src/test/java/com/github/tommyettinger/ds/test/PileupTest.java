@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.IntBinaryOperator;
 
 public class PileupTest {
-    public static final int LEN = 500000;
+    public static final int LEN = 1000000;//500000;
     public static final float LOAD = 0.5f; //0.6f
 
     public static String[] generateUniqueWordsFibSet (int size) {
@@ -1614,6 +1614,20 @@ public class PileupTest {
         set.clear();
     }
 
+    /**
+     * With 1M vectors and default settings, this gets:
+     * average pileup: 19.86948013305664
+     * 334691000 ns
+     * total collisions: 10417330
+     * longest pileup: 79
+     * total of 14 pileups: 320
+     * With 1M vectors and hashMultiplier starting at 0xD1B54A32D192ED03L, this gets:
+     * average pileup: 7.402956008911133
+     * 205292300 ns
+     * total collisions: 3881281
+     * longest pileup: 45
+     * total of 14 pileups: 226
+     */
     @Test
     public void testVector2SetNew () {
         final Vector2[] spiral = generateVectorSpiral(LEN);
@@ -1623,9 +1637,9 @@ public class PileupTest {
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
 
-//            {
-//                hashMultiplier = 0xD1B54A32D192ED03L;
-//            }
+            {
+                hashMultiplier = 0xD1B54A32D192ED03L;
+            }
             @Override
             protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
@@ -1721,10 +1735,18 @@ public class PileupTest {
         for (int i = 0; i < LEN; i++) {
             set.add(spiral[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
+    /**
+     * With 1M vectors and default settings, this gets:
+     * average pileup: 8.4169921875
+     * 241277500 ns
+     * total collisions: 4412928
+     * longest pileup: 103
+     * total of 14 pileups: 325
+     */
     @Test
     public void testVector2SetHarder () {
         final Vector2[] spiral = generateVectorSpiral(LEN);
@@ -1740,9 +1762,9 @@ public class PileupTest {
 
             @Override
             protected int place (Object item) {
-                // 97823400 ns, total collisions: 1917655, longest pileup: 125, average pileup: 7.315273284912109
+// 97823400 ns, total collisions: 1917655, longest pileup: 125, average pileup: 7.315273284912109, total of 13 pileups: 428
 //                return (int)Hasher.randomize2(hashMultiplier ^ item.hashCode()) & mask;
-                // 79389600 ns, total collisions: 1604133, longest pileup: 57, average pileup: 6.119281768798828
+//77881700 ns, total collisions: 1564928, longest pileup: 67, average pileup: 5.9697265625, total of 13 pileups: 222
                 final long y = item.hashCode() * 0xC13FA9A902A6328FL + hashMultiplier;
                 return (int)(y ^ y >>> 32) & mask;
             }
@@ -1770,13 +1792,16 @@ public class PileupTest {
                 mask = newSize - 1;
                 shift = Long.numberOfLeadingZeros(mask);
 
-//                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
-//                hashMul = hashMul * 0x2E62A9C5;
+//                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
-                hashMultiplier = (hashMultiplier ^ (hashMultiplier * hashMultiplier | 5L)) * 0xD1B54A32D192ED03L + size;
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+                hashMultiplier = (size + size ^ hashMultiplier) * 0xD1342543DE82EF95L + 0xF1357AEA2E62A9C5L;
 
-//                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
+//                hashMultiplier = (hashMultiplier) * 0xD1342543DE82EF95L + 0xF1357AEA2E62A9C5L ^ size + size;
+
+//79389600 ns, total collisions: 1604133, longest pileup: 57, average pileup: 6.119281768798828, total of 13 pileups: 241
+//                hashMultiplier = (hashMultiplier ^ (hashMultiplier * hashMultiplier | 5L)) * 0xD1B54A32D192ED03L + size;
+
+//                hashMultiplier = (hashMultiplier ^ (hashMultiplier * hashMultiplier | 5L)) * 0xD1B54A32D192ED03L ^ size + size;
 
 
                 Object[] oldKeyTable = keyTable;
@@ -1819,7 +1844,7 @@ public class PileupTest {
         for (int i = 0; i < LEN; i++) {
             set.add(spiral[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
