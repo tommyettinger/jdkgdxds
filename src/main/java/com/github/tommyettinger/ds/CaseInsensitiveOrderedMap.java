@@ -155,16 +155,17 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 		return h;
 	}
 
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) {return true;}
 		if (!(obj instanceof CaseInsensitiveOrderedMap)) {return false;}
 		CaseInsensitiveOrderedMap other = (CaseInsensitiveOrderedMap)obj;
 		if (other.size != size) {return false;}
-		CharSequence[] keyTable = this.keyTable;
+		Object[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			CharSequence key = keyTable[i];
+			Object key = keyTable[i];
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
