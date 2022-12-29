@@ -2,6 +2,7 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntLongMap;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.ds.ObjectSet;
@@ -1237,7 +1238,6 @@ public class PileupTest {
         final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
         Collections.shuffle(words, new WhiskerRandom(1234567890L));
         long start = System.nanoTime();
-        // replicates old ObjectSet behavior, with added logging
         ObjectSet set = new ObjectSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
@@ -1509,8 +1509,8 @@ public class PileupTest {
 
             {
                 hashMultiplier =
-//                    0x9E3779B97F4A7C15L;
-                    0x769C3DC968DB6A07L;
+                    0x9E3779B97F4A7C15L;
+//                    0x769C3DC968DB6A07L;
 //                    0xD1B54A32D192ED03L;//long: total collisions: 33579, longest pileup: 12
 //                    0xF1357AEA2E62A9C5L;//long: total collisions: 34430, longest pileup: 11
             }
@@ -1561,12 +1561,14 @@ public class PileupTest {
                 shift = Long.numberOfLeadingZeros(mask);
 
 //                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
-                hashMul = hashMul * 0x2E62A9C5;
+//                hashMul = hashMul * 0x2E62A9C5;
 
                 // this one is used in 1.0.5
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
-                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+
+//                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
+
 
                 Object[] oldKeyTable = keyTable;
 
@@ -1722,6 +1724,105 @@ public class PileupTest {
         System.out.println(System.nanoTime() - start);
         set.clear();
     }
+
+    @Test
+    public void testVector2SetHarder () {
+        final Vector2[] spiral = generateVectorSpiral(LEN);
+        long start = System.nanoTime();
+        ObjectSet set = new ObjectSet(51, LOAD) {
+            long collisionTotal = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
+            double averagePileup = 0;
+
+            {
+                hashMultiplier = 0x9E3779B97F4A7C15L;
+            }
+
+            @Override
+            protected int place (Object item) {
+                // 97823400 ns, total collisions: 1917655, longest pileup: 125, average pileup: 7.315273284912109
+//                return (int)Hasher.randomize2(hashMultiplier ^ item.hashCode()) & mask;
+                // 79389600 ns, total collisions: 1604133, longest pileup: 57, average pileup: 6.119281768798828
+                final long y = item.hashCode() * 0xC13FA9A902A6328FL + hashMultiplier;
+                return (int)(y ^ y >>> 32) & mask;
+            }
+
+            @Override
+            protected void addResize (@NonNull Object key) {
+                Object[] keyTable = this.keyTable;
+                for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                    if (keyTable[i] == null) {
+                        keyTable[i] = key;
+                        averagePileup += p;
+
+                        return;
+                    } else {
+                        collisionTotal++;
+                        longestPileup = Math.max(longestPileup, ++p);
+                    }
+                }
+            }
+
+            @Override
+            protected void resize (int newSize) {
+                int oldCapacity = keyTable.length;
+                threshold = (int)(newSize * loadFactor);
+                mask = newSize - 1;
+                shift = Long.numberOfLeadingZeros(mask);
+
+//                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
+//                hashMul = hashMul * 0x2E62A9C5;
+
+                hashMultiplier = (hashMultiplier ^ (hashMultiplier * hashMultiplier | 5L)) * 0xD1B54A32D192ED03L + size;
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+
+//                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
+
+
+                Object[] oldKeyTable = keyTable;
+
+                keyTable = new Object[newSize];
+
+                allPileups += longestPileup;
+                pileupChecks++;
+                collisionTotal = 0;
+                longestPileup = 0;
+                averagePileup = 0.0;
+
+                if (size > 0) {
+                    for (int i = 0; i < oldCapacity; i++) {
+                        Object key = oldKeyTable[i];
+                        if (key != null) {addResize(key);}
+                    }
+                }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                System.out.println("average pileup: " + (averagePileup / size));
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
+                super.clear();
+            }
+        };
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
+//        }
+        for (int i = 0; i < LEN; i++) {
+            set.add(spiral[i]);
+        }
+        System.out.println(System.nanoTime() - start);
+        set.clear();
+    }
+
 
     @Test
     public void testVector2QuadSet () {
