@@ -477,6 +477,39 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		}
 	}
 
+	/**
+	 * Gets the current hash multiplier as used by {@link #place(Object)}; for specific advanced usage only.
+	 * The hash multiplier changes whenever {@link #resize(int)} is called, though its value before the resize
+	 * affects its value after.
+	 * @return the current hash multiplier, which should always be a large odd long
+	 */
+	public long getHashMultiplier () {
+		return hashMultiplier;
+	}
+
+	/**
+	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size; this
+	 * is for specific advanced usage only. Calling resize() will change the multiplier before it gets used, and the current
+	 * {@link #size()} of the data structure also changes the value. The hash multiplier is used by {@link #place(Object)}.
+	 * The hash multiplier must be an odd long, and should always be "rather large." Here, that means the absolute value of
+	 * the multiplier should be at least a quadrillion or so (a million billions, or roughly {@code 0x4000000000000L}), and
+	 * it should also not have repetitive bit patterns ({@code 0x5555555555555555L}, for example, would be an especially bad
+	 * choice). The only validation this does is to ensure the multiplier is odd; everything else is up to the caller. This
+	 * is why this is for advanced usage only. The hash multiplier changes whenever {@link #resize(int)} is called, though
+	 * its value before the resize affects its value after.
+	 * <br>
+	 * This is accessible at all mainly so serialization code that has a need to access the hash multiplier can do so, but
+	 * also to provide an "emergency escape route" in case of hash flooding. Using one of the "golden longs" in
+	 * {@link com.github.tommyettinger.digital.MathTools#GOLDEN_LONGS} should usually be fine if you don't know what
+	 * multiplier will work well. Be advised that because this has to call resize(), it isn't especially fast, and it slows
+	 * down the more items are in the data structure.
+	 * @param hashMultiplier a large long without repetitive bit patterns (see docs)
+	 */
+	public void setHashMultiplier (long hashMultiplier) {
+		this.hashMultiplier = hashMultiplier | 1L;
+		resize(keyTable.length);
+	}
+
 	@Override
 	public Object[] toArray () {
 		return toArray(new Object[size()]);
