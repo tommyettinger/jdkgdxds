@@ -29,13 +29,21 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
-public class AllGoldenWordHashTest {
+/**
+ * Wow, because of the randomization in resize(), these "poor-quality" hash multipliers aren't bad at all!
+ */
+public class AllPoorWordHashTest {
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		WhiskerRandom rng = new WhiskerRandom(1234567890L);
 		Collections.shuffle(words, rng);
-		for (int a = 0; a < MathTools.GOLDEN_LONGS.length; a++) {
-			final long g = MathTools.GOLDEN_LONGS[a];
+		final long[] POOR = new long[]{1L, -1L, -1L << 32, 0x4000000000000L, 0x4000000000000L - 1L, 0x5555555555555555L,
+			MathTools.modularMultiplicativeInverse(3L), MathTools.modularMultiplicativeInverse(5L),
+			MathTools.modularMultiplicativeInverse(7L), MathTools.modularMultiplicativeInverse(9L),
+			MathTools.modularMultiplicativeInverse(0xF1357AEA2E62A9C5L), // this one makes the hashMultiplier 1L briefly
+		};
+		for (int a = 0; a < POOR.length; a++) {
+			final long g = POOR[a] | 1L;
 			{
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
