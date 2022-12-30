@@ -25,6 +25,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -33,7 +34,8 @@ import java.util.Random;
  * resize when adding). Deque functionality is provided via {@link #removeLast()} and {@link #addFirst(Object)}.
  * <br>
  * Unlike most Deque implementations in the JDK, you can get and set items anywhere in the deque in constant time with {@link #get(int)}
- * and {@link #set(int, Object)}.
+ * and {@link #set(int, Object)}. Unlike ArrayDeque in the JDK, this implements {@link #equals(Object)} and {@link #hashCode()}, as well
+ * as {@link #equalsIdentity(Object)}.
  */
 public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 
@@ -1362,6 +1364,13 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		return hash;
 	}
 
+	/**
+	 * Using {@link Object#equals(Object)} between each item in order, compares for equality specifically with
+	 * other ObjectDeque collections. If {@code o} is not an ObjectDeque
+	 * (and is also not somehow reference-equivalent to this collection), this returns false.
+	 * @param o object to be compared for equality with this collection
+	 * @return true if this is equal to o, or false otherwise
+	 */
 	public boolean equals (Object o) {
 		if (this == o)
 			return true;
@@ -1385,7 +1394,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 			T myValue = myValues[myIndex];
 			Object itsValue = itsValues[itsIndex];
 
-			if (!(myValue == null ? itsValue == null : myValue.equals(itsValue)))
+			if (!(Objects.equals(myValue, itsValue)))
 				return false;
 			myIndex++;
 			itsIndex++;
@@ -1398,7 +1407,11 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	}
 
 	/**
-	 * Uses == for comparison of each item.
+	 * Using {@code ==} between each item in order, compares for equality specifically with
+	 * other ObjectDeque collections. If {@code o} is not an ObjectDeque
+	 * (and is also not somehow reference-equivalent to this collection), this returns false.
+	 * @param o object to be compared for equality with this collection
+	 * @return true if this is equal to o, or false otherwise
 	 */
 	public boolean equalsIdentity (Object o) {
 		if (this == o)

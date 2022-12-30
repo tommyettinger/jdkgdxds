@@ -406,8 +406,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 			return true;
 		if (!ordered)
 			return false;
-		if (!(o instanceof ObjectList)) {return false;}
-		if (!((ObjectList)o).ordered)
+		if (o instanceof ObjectList && !((ObjectList<?>)o).ordered)
 			return false;
 		return super.equals(o);
 	}

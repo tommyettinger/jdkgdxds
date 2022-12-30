@@ -734,25 +734,31 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		return h;
 	}
 
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) {return true;}
-		if (!(obj instanceof ObjectObjectMap)) {return false;}
-		ObjectObjectMap other = (ObjectObjectMap)obj;
-		if (other.size != size) {return false;}
+		if (!(obj instanceof Map)) {return false;}
+		Map other = (Map)obj;
+		if (other.size() != size) {return false;}
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {
-			K key = keyTable[i];
-			if (key != null) {
-				V value = valueTable[i];
-				if (value == null) {
-					if (other.getOrDefault(key, neverIdentical) != null) {return false;}
-				} else {
-					if (!value.equals(other.get(key))) {return false;}
+		try {
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				K key = keyTable[i];
+				if (key != null) {
+					V value = valueTable[i];
+					if (value == null) {
+						if (other.getOrDefault(key, neverIdentical) != null) {return false;}
+					} else {
+						if (!value.equals(other.get(key))) {return false;}
+					}
 				}
 			}
+		}catch (ClassCastException | NullPointerException unused) {
+			return false;
 		}
+
 		return true;
 	}
 
