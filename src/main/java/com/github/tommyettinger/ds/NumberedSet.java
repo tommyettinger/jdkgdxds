@@ -405,6 +405,14 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		map.ensureCapacity(additionalCapacity);
 	}
 
+	public long getHashMultiplier () {
+		return map.getHashMultiplier();
+	}
+
+	public void setHashMultiplier (long hashMultiplier) {
+		map.setHashMultiplier(hashMultiplier);
+	}
+
 	public boolean alter (T before, T after) {
 		return map.alter(before, after);
 	}
