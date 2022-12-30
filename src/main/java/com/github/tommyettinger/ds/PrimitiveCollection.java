@@ -252,6 +252,28 @@ public interface PrimitiveCollection<T, T_CONS> {
 				return it.nextInt();
 			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
 		}
+
+		/**
+		 * Compares this PrimitiveCollection.OfInt with another PrimitiveCollection.OfInt by checking their identity,
+		 * their types (both must implement PrimitiveCollection.OfInt), and their sizes, before checking if other
+		 * contains each item in this PrimitiveCollection.OfInt, in any order or quantity. This is most useful for
+		 * the key "set" or value collection in a primitive-backed map, since quantity doesn't matter for keys and
+		 * order doesn't matter for either.
+		 * @param other another Object that should be a PrimitiveCollection.OfInt
+		 * @return true if other is another PrimitiveCollection.OfInt with exactly the same items, false otherwise
+		 */
+		@Override
+		default boolean equals (Object other) {
+			if(this == other) return true;
+			if(!(other instanceof PrimitiveCollection.OfInt)) return false;
+			PrimitiveCollection.OfInt pc = (PrimitiveCollection.OfInt) other;
+			if(size() != pc.size()) return false;
+			PrimitiveIterator.OfInt it = iterator();
+			while (it.hasNext()) {
+				if(pc.contains(it.nextInt())) return false;
+			}
+			return true;
+		}
 	}
 
 	interface OfLong extends PrimitiveCollection<Long, LongConsumer> {

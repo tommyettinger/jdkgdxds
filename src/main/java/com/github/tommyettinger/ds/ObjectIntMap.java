@@ -1268,6 +1268,18 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 			iter.hasNext = hn;
 			return coll;
 		}
+
+		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfInt.equals() changes the iterator
+		@Override
+		public boolean equals (Object other) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			boolean eq = PrimitiveCollection.OfInt.super.equals(other);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return eq;
+		}
 	}
 
 	public static class Keys<K> extends AbstractSet<K> {

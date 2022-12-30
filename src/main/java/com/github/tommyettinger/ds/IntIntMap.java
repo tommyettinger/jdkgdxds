@@ -594,7 +594,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	}
 
 	/**
-	 * Gets the current hash multiplier as used by {@link #place(Object)}; for specific advanced usage only.
+	 * Gets the current hash multiplier as used by {@link #place(int)}; for specific advanced usage only.
 	 * The hash multiplier changes whenever {@link #resize(int)} is called, though its value before the resize
 	 * affects its value after.
 	 * @return the current hash multiplier, which should always be a large odd long
@@ -606,7 +606,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	/**
 	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size; this
 	 * is for specific advanced usage only. Calling resize() will change the multiplier before it gets used, and the current
-	 * {@link #size()} of the data structure also changes the value. The hash multiplier is used by {@link #place(Object)}.
+	 * {@link #size()} of the data structure also changes the value. The hash multiplier is used by {@link #place(int)}.
 	 * The hash multiplier must be an odd long, and should usually be "rather large." Here, that means the absolute value of
 	 * the multiplier should be at least a quadrillion or so (a million billions, or roughly {@code 0x4000000000000L}). The
 	 * only validation this does is to ensure the multiplier is odd; everything else is up to the caller. The hash multiplier
@@ -1313,6 +1313,18 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 			iter.hasNext = hn;
 			return coll;
 		}
+
+		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfInt.equals() changes the iterator
+		@Override
+		public boolean equals (Object other) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			boolean eq = OfInt.super.equals(other);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return eq;
+		}
 	}
 
 	public static class Keys implements PrimitiveCollection.OfInt {
@@ -1401,6 +1413,18 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return coll;
+		}
+
+		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfInt.equals() changes the iterator
+		@Override
+		public boolean equals (Object other) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			boolean eq = OfInt.super.equals(other);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return eq;
 		}
 	}
 
