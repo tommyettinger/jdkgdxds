@@ -604,7 +604,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * multiplier will work well. Be advised that because this has to call resize(), it isn't especially fast, and it slows
 	 * down the more items are in the data structure. If you in a situation where you are worried about hash flooding, you
 	 * also shouldn't permit adversaries to cause this method to be called frequently.
-	 * @param hashMultiplier a large long without repetitive bit patterns (see docs)
+	 * @param hashMultiplier any odd long; will not be used as-is
 	 */
 	public void setHashMultiplier (long hashMultiplier) {
 		this.hashMultiplier = hashMultiplier | 1L;

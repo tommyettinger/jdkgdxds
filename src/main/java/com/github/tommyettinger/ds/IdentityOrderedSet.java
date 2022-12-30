@@ -89,6 +89,25 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 		return h;
 	}
 
+	/**
+	 * Gets the hash multiplier, which this class does not use itself.
+	 * @return the current hash multiplier
+	 */
+	@Override
+	public long getHashMultiplier () {
+		return hashMultiplier;
+	}
+
+	/**
+	 * Sets the hash multiplier, which this class does not use itself. Because of that, this method does not
+	 * call {@link #resize(int)} at all. The hash multiplier will change anyway the next time resize() is called.
+	 * You probably just don't need to call this method.
+	 * @param hashMultiplier will not be used, but will be treated as odd and stored in case some other code needs it
+	 */
+	@Override
+	public void setHashMultiplier (long hashMultiplier) {
+		this.hashMultiplier = hashMultiplier | 1L;
+	}
 
 	public static <T> IdentityOrderedSet<T> with (T item) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(1);

@@ -620,11 +620,24 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 * multiplier will work well. Be advised that because this has to call resize(), it isn't especially fast, and it slows
 	 * down the more items are in the data structure. If you in a situation where you are worried about hash flooding, you
 	 * also shouldn't permit adversaries to cause this method to be called frequently.
-	 * @param hashMultiplier a large long without repetitive bit patterns (see docs)
+	 * @param hashMultiplier any odd long; will not be used as-is
 	 */
 	public void setHashMultiplier (long hashMultiplier) {
 		this.hashMultiplier = hashMultiplier | 1L;
 		resize(keyTable.length);
+	}
+
+	public float getLoadFactor () {
+		return loadFactor;
+	}
+
+	public void setLoadFactor (float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+		this.loadFactor = loadFactor;
+		int tableSize = tableSize(size, loadFactor);
+		if (tableSize - 1 != mask) {
+			resize(tableSize);
+		}
 	}
 
 	@Override
