@@ -258,12 +258,12 @@ public interface PrimitiveCollection<T, T_CONS> {
 		 * their types (both must implement PrimitiveCollection.OfInt), and their sizes, before checking if other
 		 * contains each item in this PrimitiveCollection.OfInt, in any order or quantity. This is most useful for
 		 * the key "set" or value collection in a primitive-backed map, since quantity doesn't matter for keys and
-		 * order doesn't matter for either.
+		 * order doesn't matter for either. Many implementations may need to reset the iterator on this
+		 * PrimitiveCollection.OfInt, but that isn't necessary for {@code other}.
 		 * @param other another Object that should be a PrimitiveCollection.OfInt
 		 * @return true if other is another PrimitiveCollection.OfInt with exactly the same items, false otherwise
 		 */
-		@Override
-		default boolean equals (Object other) {
+		default boolean areEqual (Object other) {
 			if(this == other) return true;
 			if(!(other instanceof PrimitiveCollection.OfInt)) return false;
 			PrimitiveCollection.OfInt pc = (PrimitiveCollection.OfInt) other;
@@ -457,6 +457,28 @@ public interface PrimitiveCollection<T, T_CONS> {
 			if (it.hasNext())
 				return it.nextLong();
 			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
+		}
+
+		/**
+		 * Compares this PrimitiveCollection.OfLong with another PrimitiveCollection.OfLong by checking their identity,
+		 * their types (both must implement PrimitiveCollection.OfLong), and their sizes, before checking if other
+		 * contains each item in this PrimitiveCollection.OfLong, in any order or quantity. This is most useful for
+		 * the key "set" or value collection in a primitive-backed map, since quantity doesn't matter for keys and
+		 * order doesn't matter for either. Many implementations may need to reset the iterator on this
+		 * PrimitiveCollection.OfLong, but that isn't necessary for {@code other}.
+		 * @param other another Object that should be a PrimitiveCollection.OfLong
+		 * @return true if other is another PrimitiveCollection.OfLong with exactly the same items, false otherwise
+		 */
+		default boolean areEqual (Object other) {
+			if(this == other) return true;
+			if(!(other instanceof PrimitiveCollection.OfLong)) return false;
+			PrimitiveCollection.OfLong pc = (PrimitiveCollection.OfLong) other;
+			if(size() != pc.size()) return false;
+			PrimitiveIterator.OfLong it = iterator();
+			while (it.hasNext()) {
+				if(pc.contains(it.nextLong())) return false;
+			}
+			return true;
 		}
 	}
 

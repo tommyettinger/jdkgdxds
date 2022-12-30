@@ -1274,7 +1274,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			boolean eq = PrimitiveCollection.OfInt.super.equals(other);
+			boolean eq = PrimitiveCollection.OfInt.super.areEqual(other);
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;

@@ -1310,6 +1310,18 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 			iter.hasNext = hn;
 			return coll;
 		}
+
+		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfLong.equals() changes the iterator
+		@Override
+		public boolean equals (Object other) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			boolean eq = PrimitiveCollection.OfLong.super.areEqual(other);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return eq;
+		}
 	}
 
 	public static class Keys implements PrimitiveCollection.OfLong {
@@ -1398,6 +1410,18 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return coll;
+		}
+
+		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfLong.equals() changes the iterator
+		@Override
+		public boolean equals (Object other) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			boolean eq = PrimitiveCollection.OfLong.super.areEqual(other);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return eq;
 		}
 	}
 

@@ -1319,7 +1319,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			boolean eq = OfInt.super.equals(other);
+			boolean eq = OfInt.super.areEqual(other);
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1420,7 +1420,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			boolean eq = OfInt.super.equals(other);
+			boolean eq = OfInt.super.areEqual(other);
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;

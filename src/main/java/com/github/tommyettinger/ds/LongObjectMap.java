@@ -1402,6 +1402,18 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 			iter.hasNext = hn;
 			return coll;
 		}
+
+		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfLong.equals() changes the iterator
+		@Override
+		public boolean equals (Object other) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			boolean eq = PrimitiveCollection.OfLong.super.areEqual(other);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return eq;
+		}
 	}
 
 	@Nullable
