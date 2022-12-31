@@ -664,6 +664,28 @@ public interface PrimitiveCollection<T, T_CONS> {
 				return it.nextFloat();
 			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
 		}
+
+		/**
+		 * Compares this PrimitiveCollection.OfFloat with another PrimitiveCollection.OfFloat by checking their identity,
+		 * their types (both must implement PrimitiveCollection.OfFloat), and their sizes, before checking if other
+		 * contains each item in this PrimitiveCollection.OfFloat, in any order or quantity. This is most useful for
+		 * the key "set" or value collection in a primitive-backed map, since quantity doesn't matter for keys and
+		 * order doesn't matter for either. Many implementations may need to reset the iterator on this
+		 * PrimitiveCollection.OfFloat, but that isn't necessary for {@code other}.
+		 * @param other another Object that should be a PrimitiveCollection.OfFloat
+		 * @return true if other is another PrimitiveCollection.OfFloat with exactly the same items, false otherwise
+		 */
+		default boolean areEqual (Object other) {
+			if(this == other) return true;
+			if(!(other instanceof PrimitiveCollection.OfFloat)) return false;
+			PrimitiveCollection.OfFloat pc = (PrimitiveCollection.OfFloat) other;
+			if(size() != pc.size()) return false;
+			FloatIterator it = iterator();
+			while (it.hasNext()) {
+				if(pc.contains(it.nextFloat())) return false;
+			}
+			return true;
+		}
 	}
 
 	interface OfDouble extends PrimitiveCollection<Double, DoubleConsumer> {

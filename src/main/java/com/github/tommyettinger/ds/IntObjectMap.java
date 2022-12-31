@@ -1400,7 +1400,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			return coll;
 		}
 
-		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfInt.equals() changes the iterator
+		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;

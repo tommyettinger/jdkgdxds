@@ -1403,7 +1403,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 			return coll;
 		}
 
-		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfLong.equals() changes the iterator
+		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;

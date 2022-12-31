@@ -1310,6 +1310,18 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 			iter.hasNext = hn;
 			return coll;
 		}
+
+		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+		@Override
+		public boolean equals (Object other) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			boolean eq = PrimitiveCollection.OfFloat.super.areEqual(other);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return eq;
+		}
 	}
 
 	public static class Keys<K> extends AbstractSet<K> {

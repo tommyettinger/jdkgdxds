@@ -1311,7 +1311,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 			return coll;
 		}
 
-		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfInt.equals() changes the iterator
+		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1412,7 +1412,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 			return coll;
 		}
 
-		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfLong.equals() changes the iterator
+		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;

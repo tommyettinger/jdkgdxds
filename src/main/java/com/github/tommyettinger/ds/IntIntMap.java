@@ -1314,7 +1314,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 			return coll;
 		}
 
-		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfInt.equals() changes the iterator
+		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1415,7 +1415,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 			return coll;
 		}
 
-		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfInt.equals() changes the iterator
+		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;

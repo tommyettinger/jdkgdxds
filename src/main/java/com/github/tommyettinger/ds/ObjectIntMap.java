@@ -1269,7 +1269,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 			return coll;
 		}
 
-		@SuppressWarnings("DataFlowIssue") // PrimitiveCollection.OfInt.equals() changes the iterator
+		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;

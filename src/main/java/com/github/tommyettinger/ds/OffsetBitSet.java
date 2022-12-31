@@ -627,7 +627,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	}
 
 	/**
-	 * Given a StringBuilder, this appends some of the toString() representation of this OffsetBitSet, without allocating a String.
+	 * Given a StringBuilder, this appends part of the toString() representation of this OffsetBitSet, without allocating a String.
 	 * This does not include the opening {@code [} and closing {@code ]} chars, and only appends the int positions in this OffsetBitSet,
 	 * each pair separated by the given delimiter String. You can use this to choose a different delimiter from what toString() uses.
 	 * @param builder a StringBuilder that will be modified in-place and returned
