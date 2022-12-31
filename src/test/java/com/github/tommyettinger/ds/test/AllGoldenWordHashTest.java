@@ -19,7 +19,9 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.ds.LongLongOrderedMap;
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -29,11 +31,14 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
+import static com.github.tommyettinger.ds.test.AllGoldenVectorHashTest.GOOD_MULTIPLIERS;
+
 public class AllGoldenWordHashTest {
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		WhiskerRandom rng = new WhiskerRandom(1234567890L);
 		Collections.shuffle(words, rng);
+		LongLongOrderedMap problems = new LongLongOrderedMap(100);
 		for (int a = -1; a < MathTools.GOLDEN_LONGS.length; a++) {
 			final long g = a == -1 ? 1 : MathTools.GOLDEN_LONGS[a];
 			{
@@ -64,7 +69,9 @@ public class AllGoldenWordHashTest {
 
 						// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
 						// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-						hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+//						hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+						hashMultiplier = GOOD_MULTIPLIERS[(int)((hashMultiplier >>> 27) + shift & 0x1FF)];
 
 						Object[] oldKeyTable = keyTable;
 
@@ -79,7 +86,10 @@ public class AllGoldenWordHashTest {
 								if (key != null) {addResize(key);}
 							}
 						}
-						if(collisionTotal > 40000) throw new RuntimeException();
+						if(collisionTotal > 40000) {
+							problems.put(g, collisionTotal);
+//							throw new RuntimeException();
+						}
 					}
 
 					@Override
@@ -102,6 +112,11 @@ public class AllGoldenWordHashTest {
 				set.clear();
 			}
 		}
+		problems.sortByValue(LongComparators.NATURAL_COMPARATOR);
+		System.out.println(problems);
+		System.out.println("\n\nnew long[]{");
+		System.out.println("};\n\n" + problems.size() + " problem multipliers in total.");
+
 	}
 
 }
