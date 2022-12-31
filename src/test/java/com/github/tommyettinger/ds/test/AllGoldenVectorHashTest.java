@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.ds.LongList;
 import com.github.tommyettinger.ds.LongLongOrderedMap;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
@@ -63,9 +62,17 @@ public class AllGoldenVectorHashTest {
 						mask = newSize - 1;
 						shift = Long.numberOfLeadingZeros(mask);
 
-						// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
-						// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-						hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+//						// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+//						// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+//						hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+//						hashMultiplier += 0x6A09E667F3BCC90AL ^ size + size; // fractional part of the silver ratio, times 2 to the 64
+//						hashMultiplier ^= size + size; // 86 problems, worst collisions 68609571
+//						hashMultiplier ^= hashMultiplier * hashMultiplier * 0x6A09E667F3BCC90AL;
+//						hashMultiplier = ~((hashMultiplier ^ -(hashMultiplier * hashMultiplier | 5L)) << 1);
+//						hashMultiplier *= 0xD413CCCFE7799215L + size + size; // 113 problems, worst collisions 109417377
+//						hashMultiplier += 0xD413CCCFE7799216L + size + size; // 118 problems, worst collisions 296284292
+//						hashMultiplier += 0xD413CCCFE7799216L * size; // 137 problems, worst collisions 290750405
+						hashMultiplier ^= 0xD413CCCFEL * size; // 105 problems, worst collisions 87972280
 
 						Object[] oldKeyTable = keyTable;
 
@@ -81,7 +88,7 @@ public class AllGoldenVectorHashTest {
 							}
 						}
 						if (collisionTotal > THRESHOLD) {
-							System.out.println("  WHOOPS!!!  ");
+							System.out.printf("  WHOOPS!!!  Multiplier %016X with bit count %d has %d collisions and %d pileup\n", hashMultiplier, Long.bitCount(hashMultiplier), collisionTotal, longestPileup);
 							problems.put(g, collisionTotal);
 //							throw new RuntimeException();
 						}
@@ -107,6 +114,7 @@ public class AllGoldenVectorHashTest {
 				set.clear();
 			}
 		}
+		System.out.println("This used a threshold of " + THRESHOLD);
 		problems.sortByValue(LongComparators.NATURAL_COMPARATOR);
 		System.out.println(problems);
 		System.out.println("\n\n" + problems.size() + " problem multipliers in total.");
