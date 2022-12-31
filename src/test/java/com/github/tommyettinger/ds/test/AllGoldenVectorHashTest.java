@@ -29,11 +29,12 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
-public class AllGoldenWordHashTest {
+import static com.github.tommyettinger.ds.test.PileupTest.LEN;
+import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
+
+public class AllGoldenVectorHashTest {
 	public static void main(String[] args) throws IOException {
-		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
-		WhiskerRandom rng = new WhiskerRandom(1234567890L);
-		Collections.shuffle(words, rng);
+		final Vector2[] spiral = generateVectorSpiral(LEN);
 		for (int a = -1; a < MathTools.GOLDEN_LONGS.length; a++) {
 			final long g = a == -1 ? 1 : MathTools.GOLDEN_LONGS[a];
 			{
@@ -79,21 +80,23 @@ public class AllGoldenWordHashTest {
 								if (key != null) {addResize(key);}
 							}
 						}
-						if(collisionTotal > 40000) throw new RuntimeException();
+						if(collisionTotal > 10000000)
+							System.out.println("  WHOOPS!!!  ");
+//							throw new RuntimeException();
 					}
 
 					@Override
 					public void clear () {
-							System.out.print("Original 0x" + Base.BASE16.unsigned(g));
-							System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+						System.out.print("Original 0x" + Base.BASE16.unsigned(g));
+						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						super.clear();
 					}
 				};
 				if(a != -1)
 					set.setHashMultiplier(g);
 				try {
-					for (int i = 0, n = words.size(); i < n; i++) {
-						set.add(words.get(i));
+					for (int i = 0, n = spiral.length; i < n; i++) {
+						set.add(spiral[i]);
 					}
 				}catch (RuntimeException ignored){
 					System.out.println(g + " FAILURE");
