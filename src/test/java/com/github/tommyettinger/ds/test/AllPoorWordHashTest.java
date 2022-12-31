@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -70,9 +71,7 @@ public class AllPoorWordHashTest {
 						mask = newSize - 1;
 						shift = Long.numberOfLeadingZeros(mask);
 
-						// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
-						// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-						hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 511];
 
 						Object[] oldKeyTable = keyTable;
 

@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.LongLongOrderedMap;
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -31,7 +32,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
-import static com.github.tommyettinger.ds.test.AllGoldenVectorHashTest.GOOD_MULTIPLIERS;
+import static com.github.tommyettinger.ds.Utilities.GOOD_MULTIPLIERS;
 
 public class AllGoldenWordHashTest {
 	public static void main(String[] args) throws IOException {
@@ -67,11 +68,7 @@ public class AllGoldenWordHashTest {
 						mask = newSize - 1;
 						shift = Long.numberOfLeadingZeros(mask);
 
-						// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
-						// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-//						hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
-
-						hashMultiplier = GOOD_MULTIPLIERS[(int)((hashMultiplier >>> 27) + shift & 0x1FF)];
+						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 0x1FF];
 
 						Object[] oldKeyTable = keyTable;
 

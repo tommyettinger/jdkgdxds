@@ -562,10 +562,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		shift = Long.numberOfLeadingZeros(mask);
 		T[] oldKeyTable = keyTable;
 
-		// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
-		// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-		hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
-
+hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 511];
 		keyTable = (T[])new Object[newSize];
 
 		if (size > 0) {
