@@ -72,7 +72,10 @@ public class AllGoldenVectorHashTest {
 //						hashMultiplier *= 0xD413CCCFE7799215L + size + size; // 113 problems, worst collisions 109417377
 //						hashMultiplier += 0xD413CCCFE7799216L + size + size; // 118 problems, worst collisions 296284292
 //						hashMultiplier += 0xD413CCCFE7799216L * size; // 137 problems, worst collisions 290750405
-						hashMultiplier ^= 0xD413CCCFEL * size; // 105 problems, worst collisions 87972280
+//						hashMultiplier ^= 0xD413CCCFEL * size; // 105 problems, worst collisions 87972280
+//						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier >>> 40) % MathTools.GOLDEN_LONGS.length]; // 99 problems, worst collisions 68917443
+//						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier & 0xFF)]; // 39 problems, worst collisions 9800516
+						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier & 0x7F)]; // 0 problems, worst collisions nope
 
 						Object[] oldKeyTable = keyTable;
 
@@ -96,7 +99,7 @@ public class AllGoldenVectorHashTest {
 
 					@Override
 					public void clear () {
-						System.out.print("Original 0x" + Base.BASE16.unsigned(g));
+						System.out.print("Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hashMultiplier));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						super.clear();
 					}
