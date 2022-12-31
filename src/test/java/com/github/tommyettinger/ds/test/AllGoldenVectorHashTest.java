@@ -19,15 +19,13 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.ds.LongList;
+import com.github.tommyettinger.ds.LongLongOrderedMap;
 import com.github.tommyettinger.ds.ObjectSet;
-import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.tommyettinger.ds.support.sort.LongComparators;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
 
 import static com.github.tommyettinger.ds.test.PileupTest.LEN;
 import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
@@ -35,6 +33,8 @@ import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
 public class AllGoldenVectorHashTest {
 	public static void main(String[] args) throws IOException {
 		final Vector2[] spiral = generateVectorSpiral(LEN);
+		final long THRESHOLD = (long)(Math.pow(LEN, 7.0/6.0));
+		LongLongOrderedMap problems = new LongLongOrderedMap(100);
 		for (int a = -1; a < MathTools.GOLDEN_LONGS.length; a++) {
 			final long g = a == -1 ? 1 : MathTools.GOLDEN_LONGS[a];
 			{
@@ -80,9 +80,11 @@ public class AllGoldenVectorHashTest {
 								if (key != null) {addResize(key);}
 							}
 						}
-						if(collisionTotal > 10000000)
+						if (collisionTotal > THRESHOLD) {
 							System.out.println("  WHOOPS!!!  ");
+							problems.put(g, collisionTotal);
 //							throw new RuntimeException();
+						}
 					}
 
 					@Override
@@ -105,6 +107,9 @@ public class AllGoldenVectorHashTest {
 				set.clear();
 			}
 		}
+		problems.sortByValue(LongComparators.NATURAL_COMPARATOR);
+		System.out.println(problems);
+		System.out.println("\n\n" + problems.size() + " problem multipliers in total.");
 	}
 
 }

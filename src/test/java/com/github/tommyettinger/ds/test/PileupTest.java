@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.IntBinaryOperator;
 
 public class PileupTest {
-    public static final int LEN = 1000000;//500000;
+    public static final int LEN = 200000;//500000;//1000000;//
     public static final float LOAD = 0.5f; //0.6f
 
     public static String[] generateUniqueWordsFibSet (int size) {
