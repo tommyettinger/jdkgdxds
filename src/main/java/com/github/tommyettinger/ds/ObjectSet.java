@@ -461,7 +461,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 		T[] oldKeyTable = keyTable;
 
 		keyTable = (T[])new Object[newSize];

@@ -490,7 +490,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 //		// set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
 //		hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
 
-hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 		T[] oldKeyTable = keyTable;
 
 		keyTable = (T[])new Object[newSize];

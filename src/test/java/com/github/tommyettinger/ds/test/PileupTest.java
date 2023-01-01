@@ -6,6 +6,7 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntLongMap;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.Test;
@@ -99,12 +100,20 @@ public class PileupTest {
         return items;
     }
 
-    //    @Ignore // this test used to take much longer to run than the others here (over a minute; everything else is under a second).
+    /**
+     * average pileup: 0.21540069580078125
+     * 59512900 ns
+     * final size 200000
+     * total collisions: 28233
+     * longest pileup: 15
+     * total of 12 pileups: 88
+     */
+    //@Ignore // this test used to take much longer to run than the others here (over a minute; everything else is under a second).
     @Test
     public void testObjectSetOld () {
         final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
-        // replicates old ObjectSet behavior, with added logging and the constant in place() changed
+        // replicates old ObjectSet behavior, with added logging and the constant in place() changed back
         ObjectSet set = new ObjectSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
@@ -186,10 +195,18 @@ public class PileupTest {
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
+    /**
+     * average pileup: 0.16497802734375
+     * 64831700 ns
+     * hash multiplier: C35BAAAA3DACBEF3 with final size 200000
+     * total collisions: 21624
+     * longest pileup: 8
+     * total of 12 pileups: 72
+     */
     @Test
     public void testObjectSetNew () {
         final String[] words = generateUniqueWords(LEN, -123456789L);
@@ -278,10 +295,124 @@ public class PileupTest {
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
+    /**
+     * Initial version using {@link Utilities#GOOD_MULTIPLIERS}:
+     * {@code hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 511];}
+     * <br>
+     * average pileup: 0.20037841796875
+     * 56633100 ns
+     * hash multiplier: 992942A852DFBF6F with final size 200000
+     * total collisions: 26264
+     * longest pileup: 9
+     * total of 12 pileups: 75
+     * <br>
+     * Alternate version with variable shift:
+     * {@code hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];}
+     * <br>
+     * average pileup: 0.17543792724609375
+     * 49647200 ns
+     * hash multiplier: 8BA92E4143ACC451 with final size 200000
+     * total collisions: 22995
+     * longest pileup: 8
+     * total of 12 pileups: 61
+     */
+    @Test
+    public void testObjectSetCurrent () {
+        final String[] words = generateUniqueWords(LEN, -123456789L);
+        long start = System.nanoTime();
+        ObjectSet set = new ObjectSet(51, LOAD) {
+            long collisionTotal = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
+            double averagePileup = 0;
+
+            @Override
+            protected void addResize (@NonNull Object key) {
+                Object[] keyTable = this.keyTable;
+                for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                    if (keyTable[i] == null) {
+                        keyTable[i] = key;
+                        averagePileup += p;
+                        return;
+                    } else {
+                        collisionTotal++;
+                        longestPileup = Math.max(longestPileup, ++p);
+                    }
+                }
+            }
+
+            @Override
+            protected void resize (int newSize) {
+                int oldCapacity = keyTable.length;
+                threshold = (int)(newSize * loadFactor);
+                mask = newSize - 1;
+                shift = Long.numberOfLeadingZeros(mask);
+
+                // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
+                // Pseudorandom Number Generators
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+                // ensures hashMultiplier is never too small, and is always odd
+//                hashMultiplier |= 0x0000010000000001L;
+
+                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
+                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
+//                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+
+                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
+
+                Object[] oldKeyTable = keyTable;
+
+                keyTable = new Object[newSize];
+
+                allPileups += longestPileup;
+                pileupChecks++;
+                collisionTotal = 0;
+                longestPileup = 0;
+                averagePileup = 0.0;
+
+                if (size > 0) {
+                    for (int i = 0; i < oldCapacity; i++) {
+                        Object key = oldKeyTable[i];
+                        if (key != null) {addResize(key);}
+                    }
+                }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                System.out.println("average pileup: " + (averagePileup / size));
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
+                super.clear();
+            }
+        };
+//        final int limit = (int)(Math.sqrt(LEN));
+//        for (int x = -limit; x < limit; x+=2) {
+//            for (int y = -limit; y < limit; y+=2) {
+//                set.add(new Vector2(x, y));
+//            }
+//        }
+        for (int i = 0; i < LEN; i++) {
+            set.add(words[i]);
+        }
+        System.out.println((System.nanoTime() - start) + " ns");
+        set.clear();
+    }
+
+    /**
+     * The Quad classes use quadratic probing, and removal doesn't work in them yet.
+     * Not ready for prime time currently, or any usage.
+     */
     @Test
     public void testObjectQuadSet () {
         final String[] words = generateUniqueWords(LEN, -123456789L);
@@ -362,7 +493,7 @@ public class PileupTest {
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
@@ -460,7 +591,7 @@ public class PileupTest {
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
@@ -554,7 +685,7 @@ public class PileupTest {
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
@@ -652,7 +783,7 @@ public class PileupTest {
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
@@ -733,6 +864,14 @@ public class PileupTest {
         return items;
     }
 
+    /**
+     * average pileup: 0.3085174560546875
+     * 71534200 ns
+     * hash multiplier: D1B54A32D192ED03 with final size 200000
+     * total collisions: 40438
+     * longest pileup: 101
+     * total of 12 pileups: 225
+     */
     @Test
     public void testBadStringSetOld () {
         final BadString[] words = generateUniqueBad(LEN, -123456789L);
@@ -746,7 +885,7 @@ public class PileupTest {
             @Override
             protected int place (Object item) {
                 return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // if this long constant is the same as the one used
-                // by place() in generateUniqueBad's map, then this slows down massively.
+                // by place() in generateUniqueBadFibSet's map, and this uses that FibSet version, then this slows down massively.
             }
 
             @Override
@@ -803,19 +942,22 @@ public class PileupTest {
                 super.clear();
             }
         };
-//        final int limit = (int)(Math.sqrt(LEN));
-//        for (int x = -limit; x < limit; x+=2) {
-//            for (int y = -limit; y < limit; y+=2) {
-//                set.add(new Vector2(x, y));
-//            }
-//        }
+
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
+    /**
+     * average pileup: 0.29967498779296875
+     * 66977800 ns
+     * hash multiplier: 620F7FCC96CA89A5 with final size 200000
+     * total collisions: 39279
+     * longest pileup: 74
+     * total of 12 pileups: 177
+     */
     @Test
     public void testBadStringSetNew () {
         final BadString[] words = generateUniqueBad(LEN, -123456789L);
@@ -904,16 +1046,92 @@ public class PileupTest {
                 super.clear();
             }
         };
-//        final int limit = (int)(Math.sqrt(LEN));
-//        for (int x = -limit; x < limit; x+=2) {
-//            for (int y = -limit; y < limit; y+=2) {
-//                set.add(new Vector2(x, y));
-//            }
-//        }
+
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
+        set.clear();
+    }
+
+    /**
+     * average pileup: 0.3052825927734375
+     * 80341400 ns
+     * hash multiplier: 8BA92E4143ACC451 with final size 200000
+     * total collisions: 40014
+     * longest pileup: 98
+     * total of 12 pileups: 208
+     */
+    @Test
+    public void testBadStringSetCurrent () {
+        final BadString[] words = generateUniqueBad(LEN, -123456789L);
+        long start = System.nanoTime();
+        ObjectSet set = new ObjectSet(51, LOAD) {
+            long collisionTotal = 0;
+            int longestPileup = 0, allPileups = 0, pileupChecks = 0;
+            double averagePileup = 0;
+
+            @Override
+            protected void addResize (@NonNull Object key) {
+                Object[] keyTable = this.keyTable;
+                for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                    if (keyTable[i] == null) {
+                        keyTable[i] = key;
+                        averagePileup += p;
+
+                        return;
+                    } else {
+                        collisionTotal++;
+                        longestPileup = Math.max(longestPileup, ++p);
+                    }
+                }
+            }
+
+            @Override
+            protected void resize (int newSize) {
+                int oldCapacity = keyTable.length;
+                threshold = (int)(newSize * loadFactor);
+                mask = newSize - 1;
+                shift = Long.numberOfLeadingZeros(mask);
+
+                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
+
+                Object[] oldKeyTable = keyTable;
+
+                keyTable = new Object[newSize];
+
+                allPileups += longestPileup;
+                pileupChecks++;
+                collisionTotal = 0;
+                longestPileup = 0;
+                averagePileup = 0.0;
+
+                if (size > 0) {
+                    for (int i = 0; i < oldCapacity; i++) {
+                        Object key = oldKeyTable[i];
+                        if (key != null) {addResize(key);}
+                    }
+                }
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                System.out.println("average pileup: " + (averagePileup / size));
+            }
+
+            @Override
+            public void clear () {
+                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("total collisions: " + collisionTotal);
+                System.out.println("longest pileup: " + longestPileup);
+                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
+                super.clear();
+            }
+        };
+
+        for (int i = 0; i < LEN; i++) {
+            set.add(words[i]);
+        }
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
@@ -990,16 +1208,10 @@ public class PileupTest {
                 super.clear();
             }
         };
-//        final int limit = (int)(Math.sqrt(LEN));
-//        for (int x = -limit; x < limit; x+=2) {
-//            for (int y = -limit; y < limit; y+=2) {
-//                set.add(new Vector2(x, y));
-//            }
-//        }
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
@@ -1089,7 +1301,7 @@ public class PileupTest {
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
@@ -1373,7 +1585,7 @@ public class PileupTest {
         for (int i = 0; i < words.size(); i++) {
             set.add(words.get(i));
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
@@ -1486,7 +1698,7 @@ public class PileupTest {
                 for (int i = 0; i < words.size(); i++) {
                     set.add(words.get(i));
                 }
-//                System.out.println(System.nanoTime() - start);
+//                System.out.println((System.nanoTime() - start) + " ns");
                 set.clear();
 
             }
@@ -1610,7 +1822,7 @@ public class PileupTest {
         for (int i = 0; i < LEN; i++) {
             set.add(spiral[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
@@ -1965,7 +2177,7 @@ public class PileupTest {
         for (int i = 0; i < LEN; i++) {
             set.add(spiral[i]);
         }
-        System.out.println(System.nanoTime() - start);
+        System.out.println((System.nanoTime() - start) + " ns");
         set.clear();
     }
 
@@ -2252,7 +2464,7 @@ public class PileupTest {
                 System.out.println("Way too many collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 System.out.println("fail " + set.size() + "/" + LEN);
             }
-            System.out.println(System.nanoTime() - start);
+            System.out.println((System.nanoTime() - start) + " ns");
             set.clear();
         }
     }
@@ -2371,7 +2583,7 @@ public class PileupTest {
                 System.out.println("Way too many collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 System.out.println("fail " + set.size() + "/" + LEN);
             }
-            System.out.println(System.nanoTime() - start);
+            System.out.println((System.nanoTime() - start) + " ns");
             set.clear();
         }
     }
@@ -2577,7 +2789,7 @@ public class PileupTest {
                     System.out.println("Way too many collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     System.out.println("fail " + set.size() + "/" + LEN);
                 }
-                System.out.println(System.nanoTime() - start);
+                System.out.println((System.nanoTime() - start) + " ns");
                 set.clear();
             }
         }
@@ -2708,7 +2920,7 @@ public class PileupTest {
                 System.out.println("Way too many collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 System.out.println("fail " + set.size() + "/" + LEN);
             }
-            System.out.println(System.nanoTime() - start);
+            System.out.println((System.nanoTime() - start) + " ns");
             set.clear();
         }
     }
@@ -2838,7 +3050,7 @@ public class PileupTest {
                 System.out.println("Way too many collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 System.out.println("fail " + set.size() + "/" + LEN);
             }
-            System.out.println(System.nanoTime() - start);
+            System.out.println((System.nanoTime() - start) + " ns");
             set.clear();
         }
     }
@@ -2964,7 +3176,7 @@ public class PileupTest {
                 System.out.println("Way too many collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 System.out.println("fail " + set.size() + "/" + LEN);
             }
-            System.out.println(System.nanoTime() - start);
+            System.out.println((System.nanoTime() - start) + " ns");
             set.clear();
         }
     }
@@ -3178,7 +3390,7 @@ public class PileupTest {
                     System.out.println("Way too many collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     System.out.println("fail " + set.size() + "/" + LEN);
                 }
-                System.out.println(System.nanoTime() - start);
+                System.out.println((System.nanoTime() - start) + " ns");
                 set.clear();
             }
         }

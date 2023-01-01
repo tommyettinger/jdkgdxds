@@ -577,7 +577,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 		long[] oldKeyTable = keyTable;
 		int[] oldValueTable = valueTable;
 

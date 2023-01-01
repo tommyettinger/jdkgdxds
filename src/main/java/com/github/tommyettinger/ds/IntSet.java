@@ -375,7 +375,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 		mask = newSize - 1;
 		shift = Long.numberOfLeadingZeros(mask);
 
-hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 		int[] oldKeyTable = keyTable;
 
 		keyTable = new int[newSize];

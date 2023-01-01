@@ -68,8 +68,8 @@ public class AllGoldenWordHashTest {
 						mask = newSize - 1;
 						shift = Long.numberOfLeadingZeros(mask);
 
-						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 0x1FF];
-
+//						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 0x1FF];
+						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
