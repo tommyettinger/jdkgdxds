@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.github.tommyettinger.ds"},{"l":"com.github.tommyettinger.ds.annotations"},{"l":"com.github.tommyettinger.ds.support.sort"},{"l":"com.github.tommyettinger.ds.support.util"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.github.tommyettinger.ds"},{"l":"com.github.tommyettinger.ds.support.sort"},{"l":"com.github.tommyettinger.ds.support.util"}];updateSearchResults();

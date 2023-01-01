@@ -1689,12 +1689,7 @@ public class PileupTest {
                         super.clear();
                     }
                 };
-//        final int limit = (int)(Math.sqrt(LEN));
-//        for (int x = -limit; x < limit; x+=2) {
-//            for (int y = -limit; y < limit; y+=2) {
-//                set.add(new Vector2(x, y));
-//            }
-//        }
+
                 for (int i = 0; i < words.size(); i++) {
                     set.add(words.get(i));
                 }

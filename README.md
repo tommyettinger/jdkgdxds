@@ -103,23 +103,27 @@ speedup of over 3 orders of magnitude).
 
 You have two options: Maven Central for stable releases, or JitPack to select a commit of your choice to build.
 
-Maven Central uses the Gradle dependency `api 'com.github.tommyettinger:jdkgdxds:1.1.0'` (you can use `implementation` instead
-of `api` if you don't use the `java-library` plugin). It does not need any additional repository to be specified in most
-cases; if it can't be found, you may need the repository `mavenCentral()` . Jdkgdxds has dependencies on `digital` (which provides
+Maven Central uses the Gradle dependency:
+```
+api 'com.github.tommyettinger:jdkgdxds:1.1.1'
+```
+You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
+It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
+`mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on `digital` (which provides
 common math code meant for use by multiple projects), `funderby` (Java 8 functional interfaces for primitive types), and for
-annotations only, `checker-qual` ([The project GitHub is here.](https://github.com/typetools/checker-framework)). The
-version for the `digital` dependency is 0.1.5 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.1.5"`). Funderby hasn't changed since its initial release, 0.0.1 (you can specify it
-manually with `implementation "com.github.tommyettinger:funderby:0.0.1:sources"`). The version for `checker-qual` is 3.28.0 , and
+annotations only, `checker-qual` ([the project GitHub page is here.](https://github.com/typetools/checker-framework)). The
+version for the `digital` dependency is 0.1.6 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.1.6"`). Funderby hasn't changed since its initial release, 0.0.1 (you can specify it
+manually with `implementation "com.github.tommyettinger:funderby:0.0.1"`). The version for `checker-qual` is 3.28.0 , and
 is expected to go up often because checker-qual rather-frequently updates to handle JDK changes. Earlier versions of jdkgdxds used
 `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to mention that JSR305 is currently
-unmaintained).
+unmaintained). You can manually specify a `checker-qual` version with `api "org.checkerframework:checker-qual:3.28.0"`.
 
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.1:sources"
-implementation "com.github.tommyettinger:digital:0.1.5:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.1.0:sources"
+implementation "com.github.tommyettinger:digital:0.1.6:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.1.1:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -135,6 +139,11 @@ gdx-liftoff that target Java 8 or higher have this already, but projects made wi
 ```
 android.defaultConfig.multiDexEnabled true
 android.compileOptions.coreLibraryDesugaringEnabled true
+
+// These can be higher versions, but typically no greater than JDK 11
+android.compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
+android.compileOptions.targetCompatibility JavaVersion.VERSION_1_8
+
 dependencies {
 	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 }
@@ -153,16 +162,16 @@ for that library -- both digital and juniper were both mostly drawn from code in
 The version for funderby is expected to stay at or around 0.0.1, since it is a relatively small library and is probably complete.
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/598bede570).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/50e8ae043e).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:598bede570'` or `api 'com.github.tommyettinger:jdkgdxds:598bede570'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:50e8ae043e'` or `api 'com.github.tommyettinger:jdkgdxds:50e8ae043e'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.1:sources"
-implementation "com.github.tommyettinger:digital:0.1.5:sources"
-implementation "com.github.tommyettinger:jdkgdxds:598bede570:sources"
+implementation "com.github.tommyettinger:digital:0.1.6:sources"
+implementation "com.github.tommyettinger:jdkgdxds:50e8ae043e:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -171,18 +180,19 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="digital" />
 <inherits name="jdkgdxds" />
 ```
-in with the other `inherits` lines. `598bede570` is an example of a recent commit, and can be
+in with the other `inherits` lines. `50e8ae043e` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
 
 There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to
 transfer libGDX data structures to and from jdkgdxds data structures, and more importantly, to store any`*` jdkgdxds classes using
 libGDX's `Json` class. `*`Any, only because `IdentityMap` and `IdentityOrderedMap` don't make sense to serialize, while
 `HolderSet` and `HolderOrderedSet` can't be serialized easily because their behavior depends on a `Function`. For historical
-reasons, jdkgdxds-interop also can serialize classes from digital and juniper.
+reasons, jdkgdxds-interop also can serialize classes from digital and juniper. Dependency information is provided in the
+jdkgdxds-interop README.md .
 
 Another optional dependency, [kryo-more](https://github.com/tommyettinger/kryo-more), allows serializing jdkgdxds data structures
-efficiently on non-GWT platforms (using Kryo 5.x for binary serialization). The dependency you would probably use for it is
-`implementation "com.github.tommyettinger:kryo-jdkgdxds:1.0.4.0"` .
+efficiently on non-GWT platforms (using Kryo 5.x for binary serialization). Dependency information is provided in the kryo-more
+README.md .
 
 ## Updating to 1.0.1
 
