@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
-import com.github.tommyettinger.function.ObjToFloatFunction;
+import com.github.tommyettinger.fun.ObjToFloatFunction;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Comparator;

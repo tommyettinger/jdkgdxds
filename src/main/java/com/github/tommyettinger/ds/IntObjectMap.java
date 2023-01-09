@@ -17,8 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.function.IntObjBiConsumer;
-import com.github.tommyettinger.function.IntObjToObjBiFunction;
+import com.github.tommyettinger.fun.IntObjBiConsumer;
+import com.github.tommyettinger.fun.IntObjToObjBiFunction;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractCollection;

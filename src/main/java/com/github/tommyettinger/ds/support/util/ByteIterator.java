@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds.support.util;
 
-import com.github.tommyettinger.function.ByteConsumer;
+import com.github.tommyettinger.fun.ByteConsumer;
 
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;

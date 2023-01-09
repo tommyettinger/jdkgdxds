@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.function.IntIntBiConsumer;
+import com.github.tommyettinger.fun.IntIntBiConsumer;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractSet;

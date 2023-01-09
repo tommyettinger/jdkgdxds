@@ -18,10 +18,10 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
-import com.github.tommyettinger.function.ObjFloatBiConsumer;
-import com.github.tommyettinger.function.ObjFloatToFloatBiFunction;
-import com.github.tommyettinger.function.ObjToFloatFunction;
+import com.github.tommyettinger.fun.FloatFloatToFloatBiFunction;
+import com.github.tommyettinger.fun.ObjFloatBiConsumer;
+import com.github.tommyettinger.fun.ObjFloatToFloatBiFunction;
+import com.github.tommyettinger.fun.ObjToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
