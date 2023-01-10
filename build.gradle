@@ -75,7 +75,7 @@ dependencies {
     api "com.github.tommyettinger:funderby:$funderbyVersion:sources"
     api "com.github.tommyettinger:digital:$digitalVersion"
     api "com.github.tommyettinger:digital:$digitalVersion:sources"
-    api "org.checkerframework:checker-qual:3.28.0" // provides nullity annotations
+    api "org.checkerframework:checker-qual:3.29.0" // provides nullity annotations
 //    api 'com.google.code.findbugs:jsr305:3.0.2' // may cause issues if JDK9+ modules are used
     testImplementation "com.github.tommyettinger:juniper:$juniperVersion"
     testImplementation "junit:junit:4.13.2"

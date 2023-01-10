@@ -62,3 +62,10 @@ ObjectObjectSortedMapTest is also originally by Wang.
 Thanks to the libGDX Discord and all of the libGDX contributors!
 This applies in particular to the changes in 0.2.8, involving
 the removeAll() method.
+
+Thanks to Dmitrii Tikhomirov and Colin Alworth from the GWT Gitter,
+for helping track down an incredibly strange bug that affected GWT
+and was resolved in 1.1.2 . My apologies to LandoSystem from the
+libGDX Discord, who published his Ludum Dare 52 entry
+( https://ldjam.com/events/ludum-dare/52/reapo-man-death-who )
+without using jdkgdxds because of that bug.
