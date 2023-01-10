@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.fun.LongLongBiConsumer;
+import com.github.tommyettinger.function.LongLongBiConsumer;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractSet;

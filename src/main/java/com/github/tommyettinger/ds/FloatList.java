@@ -21,7 +21,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
-import com.github.tommyettinger.fun.FloatToFloatFunction;
+import com.github.tommyettinger.function.FloatToFloatFunction;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
