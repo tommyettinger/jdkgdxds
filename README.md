@@ -105,26 +105,26 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.1.2'
+api 'com.github.tommyettinger:jdkgdxds:1.1.3'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
 `mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on `digital` (which provides
 common math code meant for use by multiple projects), `funderby` (Java 8 functional interfaces for primitive types), and for
 annotations only, `checker-qual` ([the project GitHub page is here.](https://github.com/typetools/checker-framework)). The
-version for the `digital` dependency is 0.1.7 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.1.7"`). Funderby has only changed once since its initial release, and is on version 0.0.2
+version for the `digital` dependency is 0.1.8 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.1.8"`). Funderby has only changed once since its initial release, and is on version 0.0.2
 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.0.2"`). The version for `checker-qual` is
-3.29.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes. Earlier versions of
+3.30.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes. Earlier versions of
 jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to mention that JSR305
 is currently unmaintained). You can manually specify a `checker-qual` version with
-`api "org.checkerframework:checker-qual:3.29.0"`.
+`api "org.checkerframework:checker-qual:3.30.0"`.
 
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.2:sources"
-implementation "com.github.tommyettinger:digital:0.1.7:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.1.2:sources"
+implementation "com.github.tommyettinger:digital:0.1.8:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.1.3:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -157,7 +157,7 @@ works.
 The dependency (and `inherits` line) on digital is not necessary for jdkgdxds
 0.2.8, but is necessary starting in 1.0.3 and later. The dependency and `inherits` line for funderby is new in 1.0.4 .
 Versions 1.0.1 and 1.0.2 also depended on [juniper](https://github.com/tommyettinger/juniper) 0.0.2 ; if you intend to use the
-randomized algorithms here (like shuffles), then depending on Juniper (0.1.8) might be a good idea, though it is still optional.
+randomized algorithms here (like shuffles), then depending on Juniper (0.1.9) might be a good idea, though it is still optional.
 The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
 for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
 The version for funderby is expected to stay at or around 0.0.2, since it is a relatively small library and is probably complete.
@@ -171,7 +171,7 @@ on what your other dependencies use, to your project or its core module (if ther
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.2:sources"
-implementation "com.github.tommyettinger:digital:0.1.7:sources"
+implementation "com.github.tommyettinger:digital:0.1.8:sources"
 implementation "com.github.tommyettinger:jdkgdxds:50e8ae043e:sources"
 ```
 to its
