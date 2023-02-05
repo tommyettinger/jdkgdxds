@@ -45,7 +45,9 @@ public class WordListStats {
 			double averageHashCode = sum / (double)wordCount;
 			double averageBitCount = words.parallelStream().mapToLong((s) -> Integer.bitCount(op.applyAsInt(s.hashCode()))).sum() / (double)wordCount;
 			double averageExtent = words.parallelStream().mapToLong((s) -> 32 - Integer.numberOfLeadingZeros(op.applyAsInt(s.hashCode()))).sum() / (double)wordCount;
+			long collisionCount = wordCount - words.parallelStream().mapToInt((s)->op.applyAsInt(s.hashCode())).distinct().count();
 			System.out.printf("Number of words   : %d\n", wordCount);
+			System.out.printf("Collision count   : %d\n", collisionCount);
 			System.out.printf("hashCode() sum    : %d\n", sum);
 			System.out.printf("hashCode() average: %10.8f\n", averageHashCode);
 			System.out.printf("bitCount() average: %10.8f\n", averageBitCount);

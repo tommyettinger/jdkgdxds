@@ -3,8 +3,10 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntLongMap;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
@@ -1440,6 +1442,21 @@ public class PileupTest {
         }
     }
 
+    public static Point2[] generatePointScatter (int size) {
+        long xc = 1L, yc = 2L;
+        ObjectOrderedSet<Point2> pts = new ObjectOrderedSet<>(size);
+
+        while (pts.size() < size) {
+            // R2 sequence, sub-random with lots of space between nearby points
+            xc += 0xC13FA9A902A6328FL;
+            yc += 0x91E10DA5C79E7B1DL;
+            // Using well-spread inputs to Probit() gives points that shouldn't overlap as often.
+            // 1.1102230246251565E-16 is 2 to the -53 .
+            pts.add(new Point2((int)(MathTools.probit((xc >>> 11) * 0x1p-53) * 1024.0), (int)(MathTools.probit((yc >>> 11) * 0x1p-53) * 1024.0)));
+        }
+        return pts.order().toArray(new Point2[size]);
+    }
+
     public static final long CONSTANT =
 //        0x9E3779B97F4A7C15L; //int: total collisions: 33748, longest pileup: 12, long: total collisions: 34124, longest pileup: 13
 //        0xD1B54A32D192ED03L;//long: total collisions: 33579, longest pileup: 12
@@ -2534,6 +2551,127 @@ public class PileupTest {
                     // was using this in many tests
                     // total 1788695, longest 33, average 5.686122731838816, sum 160
                     hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+                    hashMul = (int)(hashMultiplier & 0x1FFFFFL);
+
+                    Object[] oldKeyTable = keyTable;
+
+                    keyTable = new Object[newSize];
+
+                    allPileups += longestPileup;
+                    pileupChecks++;
+                    collisionTotal = 0;
+                    longestPileup = 0;
+                    averagePileup = 0.0;
+
+                    if (size > 0) {
+                        for (int i = 0; i < oldCapacity; i++) {
+                            Object key = oldKeyTable[i];
+                            if (key != null) {addResize(key);}
+                        }
+                    }
+                    if(collisionTotal > 150000) throw new IllegalStateException("UH OH");
+
+//                    System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+//                    System.out.println("total collisions: " + collisionTotal);
+//                    System.out.println("longest pileup: " + longestPileup);
+//                    System.out.println("average pileup: " + (averagePileup / size));
+                }
+
+                @Override
+                public void clear () {
+//                    System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                    System.out.println("total collisions: " + collisionTotal + ", longest pileup: " + longestPileup);
+                    System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
+                    super.clear();
+                }
+            };
+            try {
+                for (int i = 0; i < LEN; i++) {
+                    set.add(shells[i]);
+                }
+                System.out.println("strong");
+            } catch (IllegalStateException ex) {
+                System.out.println("Way too many collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.out.println("fail " + set.size() + "/" + LEN);
+            }
+            System.out.println((System.nanoTime() - start) + " ns");
+            set.clear();
+        }
+    }
+
+    @Test
+    public void testPointSetScatter () {
+        final Point2[] shells = generatePointScatter(LEN);
+        IntBinaryOperator[] hashes = {
+            ((x, y) -> x * 0x125493 + y * 0x19E373), // 1MS strong
+            ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // 1MS strong
+            ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // 1MS weak pass
+            ((x, y) -> (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12)), // 1MS moderate
+            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return n ^ n >>> 1;}), // 1MS moderate
+            ((x, y) -> {int n = (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // 1MS moderate
+            ((x, y) -> y + ((x + y + 6) * (x + y + 7) >>> 1)), // 1MS moderate
+            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return n ^ n >>> 1;}), // 1MS moderate
+            ((x, y) -> {int n = (y + ((x + y + 6) * (x + y + 7) >> 1)); return ((n ^ n >>> 1) * 0x9E373 ^ 0xD1B54A35) * 0x125493 ^ 0x91E10DA5;}), // 1MS moderate
+            ((x, y) -> y + ((x + y) * (x + y + 1) + 36 >>> 1)), // 1MS moderate
+            ((x, y) -> {
+                x |= y << 16;
+                x =    ((x & 0x0000ff00) << 8) | ((x >>> 8) & 0x0000ff00) | (x & 0xff0000ff);
+                x =    ((x & 0x00f000f0) << 4) | ((x >>> 4) & 0x00f000f0) | (x & 0xf00ff00f);
+                x =    ((x & 0x0c0c0c0c) << 2) | ((x >>> 2) & 0x0c0c0c0c) | (x & 0xc3c3c3c3);
+                return ((x & 0x22222222) << 1) | ((x >>> 1) & 0x22222222) | (x & 0x99999999);
+            }), // 1MS fail 655356/500000
+            ((x, y) -> (x ^ (y << 16 | y >>> 16))), // 1MS strong
+            ((x, y) -> (x + (y << 16 | y >>> 16))), // 1MS strong
+        };
+        int index = 0;
+        for(IntBinaryOperator op : hashes) {
+            System.out.println("Working with hash " + index++ + ":");
+            final IntBinaryOperator hash = op;
+            long start = System.nanoTime();
+            ObjectSet set = new ObjectSet(51, LOAD) {
+                long collisionTotal = 0;
+                int longestPileup = 0, allPileups = 0, pileupChecks = 0;
+                double averagePileup = 0;
+
+                int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
+
+                @Override
+                protected int place (Object item) {
+                    final Point2 p = (Point2)item;
+                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
+//                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
+//                    return hash.applyAsInt(p.x, p.y) * hashMul & mask; // option 3MA
+                }
+
+                @Override
+                protected void addResize (@NonNull Object key) {
+                    Object[] keyTable = this.keyTable;
+                    for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                        if (keyTable[i] == null) {
+                            keyTable[i] = key;
+                            averagePileup += p;
+
+                            return;
+                        } else {
+                            collisionTotal++;
+                            longestPileup = Math.max(longestPileup, ++p);
+                        }
+                    }
+                }
+
+                @Override
+                protected void resize (int newSize) {
+                    int oldCapacity = keyTable.length;
+                    threshold = (int)(newSize * loadFactor);
+                    mask = newSize - 1;
+                    shift = Long.numberOfLeadingZeros(mask);
+
+                    // was using this in many tests
+                    // total 1788695, longest 33, average 5.686122731838816, sum 160
+//                    hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
+
+                    hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 
                     hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 

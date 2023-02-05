@@ -48,8 +48,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal.
  * It tries different hashes from a simple family, with the hash changing on resize.
- * Linear
- * probing continues to work even when all hashCodes collide; it just works more slowly in that case.
+ * Linear probing continues to work even when all hashCodes collide; it just works more slowly in that case.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
