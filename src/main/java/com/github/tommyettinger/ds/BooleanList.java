@@ -480,11 +480,11 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	/**
 	 * Removes all items from this BooleanList that are not present somewhere in {@code other}, any number of times.
 	 *
-	 * @param other an BooleanList that contains the items that this should keep, whenever present
+	 * @param other a PrimitiveCollection.OfBoolean that contains the items that this should keep, whenever present
 	 * @return true if this BooleanList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (BooleanList other) {
+	public boolean retainAll (PrimitiveCollection.OfBoolean other) {
 		final int size = this.size;
 		final boolean[] items = this.items;
 		int r = 0, w = 0;

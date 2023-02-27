@@ -572,11 +572,11 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	/**
 	 * Removes all items from this FloatList that are not present somewhere in {@code other}, any number of times.
 	 *
-	 * @param other a FloatList that contains the items that this should keep, whenever present
+	 * @param other a PrimitiveCollection.OfFloat that contains the items that this should keep, whenever present
 	 * @return true if this FloatList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (FloatList other) {
+	public boolean retainAll (PrimitiveCollection.OfFloat other) {
 		final int size = this.size;
 		final float[] items = this.items;
 		int r = 0, w = 0;

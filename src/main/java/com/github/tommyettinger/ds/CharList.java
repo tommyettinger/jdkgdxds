@@ -471,11 +471,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Removes all items from this CharList that are not present somewhere in {@code other}, any number of times.
 	 *
-	 * @param other an CharList that contains the items that this should keep, whenever present
+	 * @param other a PrimitiveCollection.OfChar that contains the items that this should keep, whenever present
 	 * @return true if this CharList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (CharList other) {
+	public boolean retainAll (PrimitiveCollection.OfChar other) {
 		final int size = this.size;
 		final char[] items = this.items;
 		int r = 0, w = 0;

@@ -571,11 +571,11 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	/**
 	 * Removes all items from this IntList that are not present somewhere in {@code other}, any number of times.
 	 *
-	 * @param other an IntList that contains the items that this should keep, whenever present
+	 * @param other a PrimitiveCollection.OfInt that contains the items that this should keep, whenever present
 	 * @return true if this IntList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (IntList other) {
+	public boolean retainAll (PrimitiveCollection.OfInt other) {
 		final int size = this.size;
 		final int[] items = this.items;
 		int r = 0, w = 0;

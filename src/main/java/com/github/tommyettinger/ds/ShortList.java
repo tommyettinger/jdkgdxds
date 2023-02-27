@@ -572,11 +572,11 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	/**
 	 * Removes all items from this ShortList that are not present somewhere in {@code other}, any number of times.
 	 *
-	 * @param other an ShortList that contains the items that this should keep, whenever present
+	 * @param other a PrimitiveCollection.OfShort that contains the items that this should keep, whenever present
 	 * @return true if this ShortList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (ShortList other) {
+	public boolean retainAll (PrimitiveCollection.OfShort other) {
 		final int size = this.size;
 		final short[] items = this.items;
 		int r = 0, w = 0;
