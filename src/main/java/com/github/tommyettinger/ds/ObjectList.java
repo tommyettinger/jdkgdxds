@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -376,10 +377,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 */
 	public boolean equalsIdentity (Object object) {
 		if (object == this) {return true;}
-		if (!(object instanceof ObjectList)) {return false;}
-		ObjectList list = (ObjectList)object;
-		if (!list.isOrdered())
-			return false;
+		if (!(object instanceof List)) {return false;}
+		List list = (List)object;
 		int n = size();
 		if (n != list.size()) {return false;}
 		for (int i = 0; i < n; i++) {if (get(i) != list.get(i)) {return false;}}
@@ -390,7 +389,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	public boolean equals (Object o) {
 		if (o == this)
 			return true;
-		if (o instanceof ObjectList && !((ObjectList<?>)o).isOrdered())
+		if (o instanceof List)
 			return false;
 		return super.equals(o);
 	}
@@ -706,7 +705,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		public void add (@Nullable T t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
-			list.insert(index++, t);
+			list.insert(index, t);
+			if(list.isOrdered()) ++index;
 			latest = -1;
 		}
 

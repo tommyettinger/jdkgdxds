@@ -23,7 +23,9 @@ import java.util.Collection;
 
 /**
  * An unordered List of T items. This allows efficient iteration via a reused iterator or via index.
- * Items are permitted to change position in the ordering when any item is removed.
+ * Items are permitted to change position in the ordering when any item is removed or added.
+ * Although this won't keep an order during modifications, you can {@link #sort()} the bag to ensure,
+ * if no modifications are made after, that the iteration will happen in sorted order.
  */
 public class ObjectBag<T> extends ObjectList<T> {
 	/**
@@ -146,14 +148,6 @@ public class ObjectBag<T> extends ObjectList<T> {
 		return object == this;
 	}
 
-	/**
-	 * Uses == for comparison of the bags; does not compare their items.
-	 */
-	@Override
-	public boolean equals (Object o) {
-		return (o == this);
-	}
-
 	@Override
 	public int hashCode () {
 		int h = 1, n = size();
@@ -161,5 +155,16 @@ public class ObjectBag<T> extends ObjectList<T> {
 			h += get(i).hashCode();
 		}
 		return h;
+	}
+
+	public static <T> ObjectBag<T> with (T item) {
+		ObjectBag<T> list = new ObjectBag<>(1);
+		list.add(item);
+		return list;
+	}
+
+	@SafeVarargs
+	public static <T> ObjectBag<T> with (T... varargs) {
+		return new ObjectBag<>(varargs);
 	}
 }
