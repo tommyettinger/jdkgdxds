@@ -39,55 +39,59 @@ import java.util.Random;
  * @author Tommy Ettinger
  */
 public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, Arrangeable {
+	/**
+	 * Returns true if this implementation retains order, which it does.
+	 * @return true
+	 */
+	public boolean isOrdered() {
+		return true;
+	}
 
 	public short[] items;
 	protected int size;
-	public boolean ordered;
 	@Nullable protected transient ShortListIterator iterator1;
 	@Nullable protected transient ShortListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 10.
+	 * Creates an ordered list with a capacity of 10.
 	 */
 	public ShortList () {
-		this(true, 10);
+		this(10);
 	}
 
 	/**
-	 * Creates an ordered array with the specified capacity.
+	 * Creates an ordered list with the specified capacity.
 	 */
 	public ShortList (int capacity) {
-		this(true, capacity);
-	}
-
-	/**
-	 * @param ordered  If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                 memory copy.
-	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
-	 */
-	public ShortList (boolean ordered, int capacity) {
-		this.ordered = ordered;
 		items = new short[capacity];
 	}
 
 	/**
-	 * Creates a new list containing the elements in the specific array. The new array will be ordered if the specific array is
-	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
-	 * grown.
+	 * @param ordered ignored; for an unordered list use {@link ShortBag}
+	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
+	 * @deprecated ShortList is always ordered; for an unordered list use {@link ShortBag}
+	 */
+	@Deprecated
+	public ShortList (boolean ordered, int capacity) {
+		this(capacity);
+	}
+
+	/**
+	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
+	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
 	 */
 	public ShortList (ShortList array) {
-		this.ordered = array.ordered;
 		size = array.size;
 		items = new short[size];
 		System.arraycopy(array.items, 0, items, 0, size);
 	}
 
 	/**
-	 * Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
 	 */
 	public ShortList (short[] array) {
-		this(true, array, 0, array.length);
+		this(array, 0, array.length);
 	}
 
 	/**
@@ -95,20 +99,21 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 * subsequent elements added will cause the backing array to be grown.
 	 */
 	public ShortList (short[] array, int startIndex, int count) {
-		this(true, array, startIndex, count);
+		this(count);
+		size = count;
+		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                memory copy.
+	 * @param ordered ignored; for an unordered list use {@link ShortBag}
+	 * @deprecated ShortList is always ordered; for an unordered list use {@link ShortBag}
 	 */
+	@Deprecated
 	public ShortList (boolean ordered, short[] array, int startIndex, int count) {
-		this(ordered, count);
-		size = count;
-		System.arraycopy(array, startIndex, items, 0, count);
+		this(array, startIndex, count);
 	}
 
 	/**
@@ -375,7 +380,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		short[] items = this.items;
 		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
-		if (ordered) {System.arraycopy(items, index, items, index + 1, size - index);} else {items[size] = items[index];}
+		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
 	}
@@ -494,7 +499,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		short[] items = this.items;
 		short value = items[index];
 		size--;
-		if (ordered) {System.arraycopy(items, index + 1, items, index, size - index);} else {items[index] = items[size];}
+		System.arraycopy(items, index + 1, items, index, size - index);
 		return value;
 	}
 
@@ -511,11 +516,8 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		int n = size;
 		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
 		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
-		int count = end - start, lastIndex = n - count;
-		if (ordered) {System.arraycopy(items, start + count, items, start, n - (start + count));} else {
-			int i = Math.max(lastIndex, end);
-			System.arraycopy(items, i, items, start, n - i);
-		}
+		int count = end - start;
+		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
 	}
 
@@ -780,12 +782,8 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	public int hashCode () {
 		short[] items = this.items;
 		int h = 1;
-		if (ordered) {
-			for (int i = 0, n = size; i < n; i++) {h = h * 31 + items[i];}
-		} else {
-			for (int i = 0, n = size; i < n; i++) {
-				h += items[i];
-			}
+		for (int i = 0, n = size; i < n; i++) {
+			h = h * 31 + items[i];
 		}
 		return h;
 	}
@@ -796,12 +794,10 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	@Override
 	public boolean equals (Object object) {
 		if (object == this) {return true;}
-		if (!ordered) {return false;}
 		if (!(object instanceof ShortList)) {return false;}
 		ShortList array = (ShortList)object;
-		if (!array.ordered) {return false;}
 		int n = size;
-		if (n != array.size) {return false;}
+		if (n != array.size()) {return false;}
 		short[] items1 = this.items, items2 = array.items;
 		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
 		return true;
@@ -835,8 +831,8 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this ShortList. Iterates in order if {@link #ordered}
-	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
+	 * Returns a Java 8 primitive iterator over the int items in this ShortList. Iterates in order if
+	 * {@link #isOrdered()} returns true, which it does for a ShortList but not a ShortBag.
 	 * <br>
 	 * This will reuse one of two iterators in this ShortList; this does not allow nested iteration.
 	 * Use {@link ShortListIterator#ShortListIterator(ShortList)} to nest iterators.

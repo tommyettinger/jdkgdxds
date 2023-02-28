@@ -115,15 +115,15 @@ annotations only, `checker-qual` ([the project GitHub page is here.](https://git
 version for the `digital` dependency is 0.1.8 (you can specify it manually with the core dependency
 `api "com.github.tommyettinger:digital:0.1.8"`). Funderby has only changed once since its initial release, and is on version 0.0.2
 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.0.2"`). The version for `checker-qual` is
-3.30.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes. Earlier versions of
+3.31.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes. Earlier versions of
 jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to mention that JSR305
 is currently unmaintained). You can manually specify a `checker-qual` version with
-`api "org.checkerframework:checker-qual:3.30.0"`.
+`api "org.checkerframework:checker-qual:3.31.0"`.
 
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.2:sources"
-implementation "com.github.tommyettinger:digital:0.1.8:sources"
+implementation "com.github.tommyettinger:digital:0.2.0:sources"
 implementation "com.github.tommyettinger:jdkgdxds:1.1.3:sources"
 ```
 to its
@@ -171,7 +171,7 @@ on what your other dependencies use, to your project or its core module (if ther
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.2:sources"
-implementation "com.github.tommyettinger:digital:0.1.8:sources"
+implementation "com.github.tommyettinger:digital:0.2.0:sources"
 implementation "com.github.tommyettinger:jdkgdxds:50e8ae043e:sources"
 ```
 to its
