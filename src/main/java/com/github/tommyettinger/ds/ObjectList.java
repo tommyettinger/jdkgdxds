@@ -43,9 +43,16 @@ import java.util.Random;
  */
 public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 
-	public boolean ordered = true;
 	@Nullable protected transient ObjectListIterator<T> iterator1;
 	@Nullable protected transient ObjectListIterator<T> iterator2;
+
+	/**
+	 * Returns true if this implementation retains order, which it does.
+	 * @return true
+	 */
+	public boolean isOrdered() {
+		return true;
+	}
 
 	/**
 	 * Constructs an empty list with the specified initial capacity.
@@ -60,18 +67,16 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 
 	/**
 	 * Constructs an empty list with the specified initial capacity.
-	 * You can specify whether this ObjectList will maintain order;
-	 * the default is true, but if you set it to false then deletion
-	 * becomes faster at the expense of unpredictable iteration order.
 	 *
-	 * @param ordered         true if this should maintain the order items are added in; false if this can rearrange them for speed
+	 * @param ordered         ignored; use an {@link ObjectBag} for an unordered list
 	 * @param initialCapacity the initial capacity of the list
 	 * @throws IllegalArgumentException if the specified initial capacity
 	 *                                  is negative
+	 * @deprecated This is equivalent to {@link #ObjectList(int)}; make an {@link ObjectBag} for an unordered list
 	 */
+	@Deprecated
 	public ObjectList (boolean ordered, int initialCapacity) {
 		super(initialCapacity);
-		this.ordered = ordered;
 	}
 
 	/**
@@ -101,13 +106,14 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * the default is true, but if you set it to false then deletion
 	 * becomes faster at the expense of unpredictable iteration order.
 	 *
-	 * @param ordered true if this should maintain the order items are added in; false if this can rearrange them for speed
+	 * @param ordered ignored; use an {@link ObjectBag} for an unordered list
 	 * @param c       the collection whose elements are to be placed into this list
 	 * @throws NullPointerException if the specified collection is null
+	 * @deprecated This is equivalent to {@link #ObjectList(Collection)}; make an {@link ObjectBag} for an unordered list
 	 */
+	@Deprecated
 	public ObjectList (boolean ordered, Collection<? extends T> c) {
 		super(c);
-		this.ordered = ordered;
 	}
 
 	public ObjectList (T[] a) {
@@ -137,10 +143,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 
 	@Override
 	public void add (int index, @Nullable T element) {
-		if (ordered)
-			super.add(index, element);
-		else
-			super.add(element);
+		super.add(index, element);
 	}
 
 	/**
@@ -150,22 +153,13 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * @param element element to be inserted
 	 */
 	public void insert (int index, @Nullable T element) {
-		if (ordered)
-			super.add(index, element);
-		else
-			super.add(element);
+		super.add(index, element);
 	}
 
 	@Override
 	@Nullable
 	public T remove (int index) {
-		if (ordered)
-			return super.remove(index);
-		T value = super.get(index);
-		int size = size();
-		super.set(index, get(size - 1));
-		super.remove(size - 1);
-		return value;
+		return super.remove(index);
 	}
 
 	/**
@@ -176,13 +170,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 */
 	@Nullable
 	public T removeAt (int index) {
-		if (ordered)
-			return super.remove(index);
-		T value = super.get(index);
-		int size = size();
-		super.set(index, get(size - 1));
-		super.remove(size - 1);
-		return value;
+		return super.remove(index);
 	}
 
 	/**
@@ -388,11 +376,9 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 */
 	public boolean equalsIdentity (Object object) {
 		if (object == this) {return true;}
-		if (!ordered)
-			return false;
 		if (!(object instanceof ObjectList)) {return false;}
 		ObjectList list = (ObjectList)object;
-		if (!list.ordered)
+		if (!list.isOrdered())
 			return false;
 		int n = size();
 		if (n != list.size()) {return false;}
@@ -404,22 +390,14 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	public boolean equals (Object o) {
 		if (o == this)
 			return true;
-		if (!ordered)
-			return false;
-		if (o instanceof ObjectList && !((ObjectList<?>)o).ordered)
+		if (o instanceof ObjectList && !((ObjectList<?>)o).isOrdered())
 			return false;
 		return super.equals(o);
 	}
 
 	@Override
 	public int hashCode () {
-		if (ordered)
-			return super.hashCode();
-		int h = 1, n = size();
-		for (int i = 0; i < n; i++) {
-			h += get(i).hashCode();
-		}
-		return h;
+		return super.hashCode();
 	}
 
 	@Override
