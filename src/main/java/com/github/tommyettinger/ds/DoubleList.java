@@ -20,8 +20,8 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -30,89 +30,106 @@ import java.util.Random;
 import java.util.function.DoubleUnaryOperator;
 
 /**
- * A resizable, ordered or unordered double list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Double.
- * If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
+ * A resizable, insertion-ordered double list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Double.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
+ * @see DoubleBag DoubleBag is an unordered variant on DoubleList.
  */
 public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDouble, Arrangeable {
+	/**
+	 * Returns true if this implementation retains order, which it does.
+	 * @return true
+	 */
+	public boolean keepsOrder () {
+		return true;
+	}
 
 	public double[] items;
 	protected int size;
-	public boolean ordered;
 	@Nullable protected transient DoubleListIterator iterator1;
 	@Nullable protected transient DoubleListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 10.
+	 * Creates an ordered list with a capacity of 10.
 	 */
 	public DoubleList () {
-		this(true, 10);
+		this(10);
 	}
 
 	/**
-	 * Creates an ordered array with the specified capacity.
-	 */
-	public DoubleList (int capacity) {
-		this(true, capacity);
-	}
-
-	/**
-	 * @param ordered  If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                 memory copy.
+	 * Creates an ordered list with the specified capacity.
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
-	public DoubleList (boolean ordered, int capacity) {
-		this.ordered = ordered;
+	public DoubleList (int capacity) {
 		items = new double[capacity];
 	}
 
 	/**
-	 * Creates a new list containing the elements in the specific array. The new array will be ordered if the specific array is
-	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
-	 * grown.
+	 * Creates an ordered list with the specified capacity.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link DoubleBag}
+	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
+	 * @deprecated DoubleList is always ordered; for an unordered list use {@link DoubleBag}
 	 */
-	public DoubleList (DoubleList array) {
-		this.ordered = array.ordered;
-		size = array.size;
-		items = new double[size];
-		System.arraycopy(array.items, 0, items, 0, size);
+	@Deprecated
+	public DoubleList (boolean ordered, int capacity) {
+		this(capacity);
 	}
 
 	/**
-	 * Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
+	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
+	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 * @param list another DoubleList (or DoubleBag) to copy from
+	 */
+	public DoubleList (DoubleList list) {
+		size = list.size;
+		items = new double[size];
+		System.arraycopy(list.items, 0, items, 0, size);
+	}
+
+	/**
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 * @param array a double array to copy from
 	 */
 	public DoubleList (double[] array) {
-		this(true, array, 0, array.length);
-	}
-
-	/**
-	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
-	 * subsequent elements added will cause the backing array to be grown.
-	 */
-	public DoubleList (double[] array, int startIndex, int count) {
-		this(true, array, startIndex, count);
+		this(array, 0, array.length);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                memory copy.
+	 * @param array a non-null double array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
 	 */
-	public DoubleList (boolean ordered, double[] array, int startIndex, int count) {
-		this(ordered, count);
+	public DoubleList (double[] array, int startIndex, int count) {
+		this(count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
 	/**
-	 * Creates a new list containing the items in the specified PrimitiveCollection.
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * subsequent elements added will cause the backing array to be grown.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link DoubleBag}
+	 * @param array a non-null double array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
+	 * @deprecated DoubleList is always ordered; for an unordered list use {@link DoubleBag}
+	 */
+	@Deprecated
+	public DoubleList (boolean ordered, double[] array, int startIndex, int count) {
+		this(array, startIndex, count);
+	}
+
+	/**
+	 * Creates a new list containing the items in the specified PrimitiveCollection.OfDouble.
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
@@ -124,7 +141,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	/**
 	 * Copies the given Ordered.OfDouble into a new DoubleList.
 	 *
-	 * @param other another Ordered.OfDouble
+	 * @param other another Ordered.OfDouble that will have its contents copied into this
 	 */
 	public DoubleList (Ordered.OfDouble other) {
 		this(other.order());
@@ -178,7 +195,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	public void add (double value1, double value2, double value3, double value4) {
 		double[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(8, (int)(size * 1.8f))); // 1.75 isn't enough when size=5.
+			items = resize(Math.max(9, (int)(size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -188,14 +205,14 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	// Modified from libGDX
-	public boolean addAll (DoubleList array) {
-		return addAll(array.items, 0, array.size);
+	public boolean addAll (DoubleList list) {
+		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (DoubleList array, int offset, int length) {
-		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
-		return addAll(array.items, offset, length);
+	public boolean addAll (DoubleList list, int offset, int count) {
+		if (offset + count > list.size) {throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);}
+		return addAll(list.items, offset, count);
 	}
 
 	/**
@@ -374,7 +391,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		double[] items = this.items;
 		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
-		if (ordered) {System.arraycopy(items, index, items, index + 1, size - index);} else {items[size] = items[index];}
+		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
 	}
@@ -426,7 +443,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	/**
 	 * Returns true if this DoubleList contains, at least once, every item in {@code other}; otherwise returns false.
 	 *
-	 * @param other a DoubleList
+	 * @param other an DoubleList
 	 * @return true if this contains every item in {@code other}, otherwise false
 	 */
 	// Newly-added
@@ -496,7 +513,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		double[] items = this.items;
 		double value = items[index];
 		size--;
-		if (ordered) {System.arraycopy(items, index + 1, items, index, size - index);} else {items[index] = items[size];}
+		System.arraycopy(items, index + 1, items, index, size - index);
 		return value;
 	}
 
@@ -513,11 +530,8 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		int n = size;
 		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
 		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
-		int count = end - start, lastIndex = n - count;
-		if (ordered) {System.arraycopy(items, start + count, items, start, n - (start + count));} else {
-			int i = Math.max(lastIndex, end);
-			System.arraycopy(items, i, items, start, n - i);
-		}
+		int count = end - start;
+		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
 	}
 
@@ -527,7 +541,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param c a primitive collection of int items to remove fully, such as another DoubleList or a DoubleDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (PrimitiveCollection.OfDouble c) {
+	public boolean removeAll (OfDouble c) {
 		int size = this.size;
 		int startSize = size;
 		double[] items = this.items;
@@ -553,7 +567,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param c a primitive collection of int items to remove one-by-one, such as another DoubleList or a DoubleDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (PrimitiveCollection.OfDouble c) {
+	public boolean removeEach (OfDouble c) {
 		int size = this.size;
 		int startSize = size;
 		double[] items = this.items;
@@ -578,7 +592,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @return true if this DoubleList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (PrimitiveCollection.OfDouble other) {
+	public boolean retainAll (OfDouble other) {
 		final int size = this.size;
 		final double[] items = this.items;
 		int r = 0, w = 0;
@@ -595,7 +609,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a DoubleUnaryOperator (a functional interface defined in the JDK)
+	 * @param operator a DoubleToDoubleFunction (a functional interface defined in funderby)
 	 */
 	public void replaceAll (DoubleUnaryOperator operator) {
 		for (int i = 0, n = size; i < n; i++) {
@@ -635,18 +649,18 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	/**
-	 * Returns true if the array has one or more items, or false otherwise.
+	 * Returns true if the list has one or more items, or false otherwise.
 	 *
-	 * @return true if the array has one or more items, or false otherwise
+	 * @return true if the list has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
 		return size != 0;
 	}
 
 	/**
-	 * Returns true if the array is empty.
+	 * Returns true if the list is empty.
 	 *
-	 * @return true if the array is empty, or false if it has any items
+	 * @return true if the list is empty, or false if it has any items
 	 */
 	@Override
 	public boolean isEmpty () {
@@ -687,7 +701,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	/**
-	 * Sets the array size, leaving any values beyond the current size undefined.
+	 * Sets the list size, leaving any values beyond the current size undefined.
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
@@ -708,6 +722,41 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	public void sort () {
 		Arrays.sort(items, 0, size);
+	}
+
+	/**
+	 * Sorts all elements according to the order induced by the specified
+	 * comparator using {@link DoubleComparators#sort(double[], int, int, DoubleComparator)}.
+	 * If {@code c} is null, this instead delegates to {@link #sort()},
+	 * which uses {@link Arrays#sort(double[])}, and does not always run in-place.
+	 *
+	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
+	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
+	 * used as a generic sorting algorithm.
+	 *
+	 * @param c the comparator to determine the order of the DoubleList
+	 */
+	public void sort (@Nullable final DoubleComparator c) {
+		if (c == null) {
+			sort();
+		} else {
+			sort(0, size, c);
+		}
+	}
+
+	/**
+	 * Sorts the specified range of elements according to the order induced by the specified
+	 * comparator using mergesort, or {@link Arrays#sort(double[], int, int)} if {@code c} is null.
+	 * This purely uses {@link DoubleComparators#sort(double[], int, int, DoubleComparator)}, and you
+	 * can see its docs for more information.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted.
+	 * @param to   the index of the last element (exclusive) to be sorted.
+	 * @param c    the comparator to determine the order of the DoubleList
+	 */
+	public void sort (final int from, final int to, final DoubleComparator c) {
+		DoubleComparators.sort(items, from, to, c);
 	}
 
 	@Override
@@ -734,7 +783,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	/**
-	 * Reduces the size of the array to the specified size. If the array is already smaller than the specified size, no action is
+	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
 	public void truncate (int newSize) {
@@ -742,7 +791,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	/**
-	 * Returns a random item from the array, or zero if the array is empty.
+	 * Returns a random item from the list, or zero if the list is empty.
 	 *
 	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
@@ -766,10 +815,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	/**
 	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
 	 * into {@code array} and returns it; otherwise, it allocates a new double array that can fit all
-	 * of the items in this, and proceeds to copy into that and return that.
+	 * the items in this, and proceeds to copy into that and return that.
 	 *
 	 * @param array a double array that will be modified if it can fit {@link #size()} items
-	 * @return {@code array}, if it had sufficient size, or a new array otherwise, both with a copy of this
+	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
 	 */
 	public double[] toArray (double[] array) {
 		if (array.length < size)
@@ -781,40 +830,29 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	@Override
 	public int hashCode () {
 		double[] items = this.items;
-		long h;
-		if (!ordered) {
-			h = 1L;
-			for (int i = 0, n = size; i < n; i++) {
-				h += BitConversion.doubleToLongBits(items[i]);
-			}
-		} else {
-			h = 0xC13FA9A902A6328FL;
-			for (int i = 0, n = size; i < n; i++) {
-				h = h * 0x9E3779B97F4A7C15L + BitConversion.doubleToRawLongBits(items[i]);
-			}
+
+		long h = 0xC13FA9A902A6328FL;
+		for (int i = 0, n = size; i < n; i++) {
+			h = h * 0x9E3779B97F4A7C15L + BitConversion.doubleToRawLongBits(items[i]);
 		}
+
 		return (int)(h ^ h >>> 32);
 	}
 
-	/**
-	 * Returns false if either array is unordered.
-	 */
 	@Override
 	public boolean equals (Object object) {
 		if (object == this) {return true;}
-		if (!ordered) {return false;}
 		if (!(object instanceof DoubleList)) {return false;}
-		DoubleList array = (DoubleList)object;
-		if (!array.ordered) {return false;}
+		DoubleList list = (DoubleList)object;
 		int n = size;
-		if (n != array.size) {return false;}
-		double[] items1 = this.items, items2 = array.items;
+		if (n != list.size()) {return false;}
+		double[] items1 = this.items, items2 = list.items;
 		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
 		return true;
 	}
 
 	/**
-	 * Returns false if either array is unordered. Otherwise, compares double items with the given tolerance for error.
+	 * Compares double items with the given tolerance for error.
 	 */
 	public boolean equals (Object object, double tolerance) {
 		if (object == this) {return true;}
@@ -822,8 +860,6 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		DoubleList array = (DoubleList)object;
 		int n = size;
 		if (n != array.size) {return false;}
-		if (!ordered) {return false;}
-		if (!array.ordered) {return false;}
 		double[] items1 = this.items, items2 = array.items;
 		for (int i = 0; i < n; i++) {if (Math.abs(items1[i] - items2[i]) > tolerance) {return false;}}
 		return true;
@@ -857,8 +893,8 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this DoubleList. Iterates in order if {@link #ordered}
-	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
+	 * Returns a Java 8 primitive iterator over the int items in this DoubleList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a DoubleList but not a DoubleBag.
 	 * <br>
 	 * This will reuse one of two iterators in this DoubleList; this does not allow nested iteration.
 	 * Use {@link DoubleListIterator#DoubleListIterator(DoubleList)} to nest iterators.
@@ -1059,7 +1095,8 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		public void add (double t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
-			list.insert(index++, t);
+			list.insert(index, t);
+			if(list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
@@ -1096,40 +1133,5 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	public static DoubleList with (double... array) {
 		return new DoubleList(array);
-	}
-
-	/**
-	 * Sorts all elements according to the order induced by the specified
-	 * comparator using {@link DoubleComparators#sort(double[], int, int, DoubleComparator)}.
-	 * If {@code c} is null, this instead delegates to {@link #sort()},
-	 * which uses {@link Arrays#sort(double[])}, and does not always run in-place.
-	 *
-	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
-	 *
-	 * @param c the comparator to determine the order of the DoubleList
-	 */
-	public void sort (@Nullable final DoubleComparator c) {
-		if (c == null) {
-			sort();
-		} else {
-			sort(0, size, c);
-		}
-	}
-
-	/**
-	 * Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using mergesort, or {@link Arrays#sort(double[], int, int)} if {@code c} is null.
-	 * This purely uses {@link DoubleComparators#sort(double[], int, int, DoubleComparator)}, and you
-	 * can see its docs for more information.
-	 *
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to   the index of the last element (exclusive) to be sorted.
-	 * @param c    the comparator to determine the order of the DoubleList
-	 */
-	public void sort (final int from, final int to, final DoubleComparator c) {
-		DoubleComparators.sort(items, from, to, c);
 	}
 }

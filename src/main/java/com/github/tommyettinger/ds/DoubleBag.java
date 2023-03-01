@@ -22,13 +22,13 @@ import com.github.tommyettinger.digital.BitConversion;
 import java.util.List;
 
 /**
- * An unordered List of float items. This allows efficient iteration via a reused iterator or via index.
+ * An unordered List of double items. This allows efficient iteration via a reused iterator or via index.
  * This class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
  * Items are permitted to change position in the ordering when any item is removed or added.
  * Although this won't keep an order during modifications, you can {@link #sort()} the bag to ensure,
  * if no modifications are made later, that the iteration will happen in sorted order.
  */
-public class FloatBag extends FloatList {
+public class DoubleBag extends DoubleList {
 	/**
 	 * Returns true if this implementation retains order, which it does not.
 	 *
@@ -42,7 +42,7 @@ public class FloatBag extends FloatList {
 	/**
 	 * Creates an ordered bag with a capacity of 10.
 	 */
-	public FloatBag () {
+	public DoubleBag () {
 		super();
 	}
 
@@ -51,7 +51,7 @@ public class FloatBag extends FloatList {
 	 *
 	 * @param capacity
 	 */
-	public FloatBag (int capacity) {
+	public DoubleBag (int capacity) {
 		super(capacity);
 	}
 
@@ -59,9 +59,9 @@ public class FloatBag extends FloatList {
 	 * Creates a new bag containing the elements in the specific list or bag. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param list another FloatList or FloatBag
+	 * @param list another DoubleList or DoubleBag
 	 */
-	public FloatBag (FloatList list) {
+	public DoubleBag (DoubleList list) {
 		super(list);
 	}
 
@@ -69,9 +69,9 @@ public class FloatBag extends FloatList {
 	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null float array to add to this bag
+	 * @param array a non-null double array to add to this bag
 	 */
-	public FloatBag (float[] array) {
+	public DoubleBag (double[] array) {
 		super(array);
 	}
 
@@ -79,29 +79,29 @@ public class FloatBag extends FloatList {
 	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null float array to add to this bag
+	 * @param array a non-null double array to add to this bag
 	 * @param startIndex the first index in {@code array} to use
 	 * @param count how many items to use from {@code array}
 	 */
-	public FloatBag (float[] array, int startIndex, int count) {
+	public DoubleBag (double[] array, int startIndex, int count) {
 		super(array, startIndex, count);
 	}
 
 	/**
-	 * Creates a new bag containing the items in the specified PrimitiveCollection.OfFloat.
+	 * Creates a new bag containing the items in the specified PrimitiveCollection.OfDouble.
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public FloatBag (OfFloat coll) {
+	public DoubleBag (OfDouble coll) {
 		super(coll);
 	}
 
 	/**
-	 * Copies the given Ordered.OfFloat into a new bag.
+	 * Copies the given Ordered.OfDouble into a new bag.
 	 *
-	 * @param other another Ordered.OfFloat
+	 * @param other another Ordered.OfDouble
 	 */
-	public FloatBag (Ordered.OfFloat other) {
+	public DoubleBag (Ordered.OfDouble other) {
 		super(other);
 	}
 
@@ -109,11 +109,11 @@ public class FloatBag extends FloatList {
 	 * Creates a new bag by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 *
-	 * @param other  another Ordered.OfFloat
+	 * @param other  another Ordered.OfDouble
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public FloatBag (Ordered.OfFloat other, int offset, int count) {
+	public DoubleBag (Ordered.OfDouble other, int offset, int count) {
 		super(other, offset, count);
 	}
 
@@ -123,9 +123,9 @@ public class FloatBag extends FloatList {
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void insert (int index, float element) {
+	public void insert (int index, double element) {
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
-		float[] items = this.items;
+		double[] items = this.items;
 		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
 		items[size] = element;
 		++size;
@@ -134,16 +134,16 @@ public class FloatBag extends FloatList {
 	/**
 	 * Removes and returns the item at the specified index.
 	 * Note that this is equivalent to {@link List#remove(int)}, but can't have that name because
-	 * we also have {@link #remove(float)} that removes a value, rather than an index.
+	 * we also have {@link #remove(double)} that removes a value, rather than an index.
 	 *
 	 * @param index the index of the item to remove and return
 	 * @return the removed item
 	 */
 	@Override
-	public float removeAt (int index) {
+	public double removeAt (int index) {
 		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
-		float[] items = this.items;
-		float value = items[index];
+		double[] items = this.items;
+		double value = items[index];
 		size--;
 		items[index] = items[size];
 		return value;
@@ -171,25 +171,25 @@ public class FloatBag extends FloatList {
 
 	@Override
 	public int hashCode () {
-		float[] items = this.items;
-		int h = 1;
+		double[] items = this.items;
+		long h = 1L;
 		for (int i = 0, n = size; i < n; i++) {
-			h += BitConversion.floatToRawIntBits(items[i]);
+			h += BitConversion.doubleToRawLongBits(items[i]);
 		}
-		return h ^ h >>> 16;
+		return (int)(h ^ h >>> 32);
 	}
 
-	public static FloatBag with (float item) {
-		FloatBag list = new FloatBag(1);
+	public static DoubleBag with (double item) {
+		DoubleBag list = new DoubleBag(1);
 		list.add(item);
 		return list;
 	}
 
 	/**
-	 * @see #FloatBag(float[])
+	 * @see #DoubleBag(double[])
 	 */
-	public static FloatBag with (float... array) {
-		return new FloatBag(array);
+	public static DoubleBag with (double... array) {
+		return new DoubleBag(array);
 	}
 
 }

@@ -835,7 +835,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		for (int i = 0, n = size; i < n; i++) {
 			h = h * 31 + BitConversion.floatToRawIntBits(items[i]);
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	@Override
@@ -847,6 +847,20 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		if (n != list.size()) {return false;}
 		float[] items1 = this.items, items2 = list.items;
 		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
+		return true;
+	}
+
+	/**
+	 * Compares float items with the given tolerance for error.
+	 */
+	public boolean equals (Object object, float tolerance) {
+		if (object == this) {return true;}
+		if (!(object instanceof FloatList)) {return false;}
+		FloatList array = (FloatList)object;
+		int n = size;
+		if (n != array.size) {return false;}
+		float[] items1 = this.items, items2 = array.items;
+		for (int i = 0; i < n; i++) {if (Math.abs(items1[i] - items2[i]) > tolerance) {return false;}}
 		return true;
 	}
 
