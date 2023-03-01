@@ -17,12 +17,12 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.function.ByteToByteFunction;
 import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
-
+import com.github.tommyettinger.function.ByteToByteFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -30,90 +30,106 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
- * A resizable, ordered or unordered byte list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Byte.
- * If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
+ * A resizable, insertion-ordered byte list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Byte.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
+ * @see ByteBag ByteBag is an unordered variant on ByteList.
  */
 public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arrangeable {
+	/**
+	 * Returns true if this implementation retains order, which it does.
+	 * @return true
+	 */
+	public boolean keepsOrder () {
+		return true;
+	}
 
 	public byte[] items;
 	protected int size;
-	public boolean ordered;
 	@Nullable protected transient ByteListIterator iterator1;
 	@Nullable protected transient ByteListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 10.
+	 * Creates an ordered list with a capacity of 10.
 	 */
 	public ByteList () {
-		this(true, 10);
+		this(10);
 	}
 
 	/**
-	 * Creates an ordered array with the specified capacity.
-	 */
-	public ByteList (int capacity) {
-		this(true, capacity);
-	}
-
-	/**
-	 * @param ordered  If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                 memory copy.
+	 * Creates an ordered list with the specified capacity.
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
-	public ByteList (boolean ordered, int capacity) {
-		this.ordered = ordered;
+	public ByteList (int capacity) {
 		items = new byte[capacity];
 	}
 
 	/**
-	 * Creates a new list containing the elements in the specific array. The new array will be ordered if the specific array is
-	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
-	 * grown.
+	 * Creates an ordered list with the specified capacity.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link ByteBag}
+	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
+	 * @deprecated ByteList is always ordered; for an unordered list use {@link ByteBag}
 	 */
-	public ByteList (ByteList array) {
-		this.ordered = array.ordered;
-		size = array.size;
-		items = new byte[size];
-		System.arraycopy(array.items, 0, items, 0, size);
+	@Deprecated
+	public ByteList (boolean ordered, int capacity) {
+		this(capacity);
 	}
 
 	/**
-	 * Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
+	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
+	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 * @param list another ByteList (or ByteBag) to copy from
+	 */
+	public ByteList (ByteList list) {
+		size = list.size;
+		items = new byte[size];
+		System.arraycopy(list.items, 0, items, 0, size);
+	}
+
+	/**
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 * @param array a byte array to copy from
 	 */
 	public ByteList (byte[] array) {
-		this(true, array, 0, array.length);
-	}
-
-	/**
-	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
-	 * subsequent elements added will cause the backing array to be grown.
-	 */
-	public ByteList (byte[] array, int startIndex, int count) {
-		this(true, array, startIndex, count);
+		this(array, 0, array.length);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                memory copy.
+	 * @param array a non-null byte array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
 	 */
-	public ByteList (boolean ordered, byte[] array, int startIndex, int count) {
-		this(ordered, count);
+	public ByteList (byte[] array, int startIndex, int count) {
+		this(count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
 	/**
-	 * Creates a new list containing the items in the specified PrimitiveCollection.OfByte. Only this class currently implements
-	 * that interface, but user code can as well.
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * subsequent elements added will cause the backing array to be grown.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link ByteBag}
+	 * @param array a non-null byte array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
+	 * @deprecated ByteList is always ordered; for an unordered list use {@link ByteBag}
+	 */
+	@Deprecated
+	public ByteList (boolean ordered, byte[] array, int startIndex, int count) {
+		this(array, startIndex, count);
+	}
+
+	/**
+	 * Creates a new list containing the items in the specified PrimitiveCollection.OfByte.
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
@@ -125,7 +141,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	/**
 	 * Copies the given Ordered.OfByte into a new ByteList.
 	 *
-	 * @param other another Ordered.OfByte
+	 * @param other another Ordered.OfByte that will have its contents copied into this
 	 */
 	public ByteList (Ordered.OfByte other) {
 		this(other.order());
@@ -179,7 +195,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	public void add (byte value1, byte value2, byte value3, byte value4) {
 		byte[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(8, (int)(size * 1.8f))); // 1.75 isn't enough when size=5.
+			items = resize(Math.max(9, (int)(size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -189,14 +205,14 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	// Modified from libGDX
-	public boolean addAll (ByteList array) {
-		return addAll(array.items, 0, array.size);
+	public boolean addAll (ByteList list) {
+		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (ByteList array, int offset, int length) {
-		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
-		return addAll(array.items, offset, length);
+	public boolean addAll (ByteList list, int offset, int count) {
+		if (offset + count > list.size) {throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);}
+		return addAll(list.items, offset, count);
 	}
 
 	/**
@@ -375,7 +391,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		byte[] items = this.items;
 		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
-		if (ordered) {System.arraycopy(items, index, items, index + 1, size - index);} else {items[size] = items[index];}
+		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
 	}
@@ -497,7 +513,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		byte[] items = this.items;
 		byte value = items[index];
 		size--;
-		if (ordered) {System.arraycopy(items, index + 1, items, index, size - index);} else {items[index] = items[size];}
+		System.arraycopy(items, index + 1, items, index, size - index);
 		return value;
 	}
 
@@ -514,11 +530,8 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		int n = size;
 		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
 		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
-		int count = end - start, lastIndex = n - count;
-		if (ordered) {System.arraycopy(items, start + count, items, start, n - (start + count));} else {
-			int i = Math.max(lastIndex, end);
-			System.arraycopy(items, i, items, start, n - i);
-		}
+		int count = end - start;
+		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
 	}
 
@@ -528,7 +541,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * @param c a primitive collection of int items to remove fully, such as another ByteList or a ByteDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (PrimitiveCollection.OfByte c) {
+	public boolean removeAll (OfByte c) {
 		int size = this.size;
 		int startSize = size;
 		byte[] items = this.items;
@@ -554,7 +567,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * @param c a primitive collection of int items to remove one-by-one, such as another ByteList or a ByteDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (PrimitiveCollection.OfByte c) {
+	public boolean removeEach (OfByte c) {
 		int size = this.size;
 		int startSize = size;
 		byte[] items = this.items;
@@ -579,7 +592,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * @return true if this ByteList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (PrimitiveCollection.OfByte other) {
+	public boolean retainAll (OfByte other) {
 		final int size = this.size;
 		final byte[] items = this.items;
 		int r = 0, w = 0;
@@ -636,18 +649,18 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
-	 * Returns true if the array has one or more items, or false otherwise.
+	 * Returns true if the list has one or more items, or false otherwise.
 	 *
-	 * @return true if the array has one or more items, or false otherwise
+	 * @return true if the list has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
 		return size != 0;
 	}
 
 	/**
-	 * Returns true if the array is empty.
+	 * Returns true if the list is empty.
 	 *
-	 * @return true if the array is empty, or false if it has any items
+	 * @return true if the list is empty, or false if it has any items
 	 */
 	@Override
 	public boolean isEmpty () {
@@ -688,7 +701,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
-	 * Sets the array size, leaving any values beyond the current size undefined.
+	 * Sets the list size, leaving any values beyond the current size undefined.
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
@@ -709,6 +722,41 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	public void sort () {
 		Arrays.sort(items, 0, size);
+	}
+
+	/**
+	 * Sorts all elements according to the order induced by the specified
+	 * comparator using {@link ByteComparators#sort(byte[], int, int, ByteComparator)}.
+	 * If {@code c} is null, this instead delegates to {@link #sort()},
+	 * which uses {@link Arrays#sort(byte[])}, and does not always run in-place.
+	 *
+	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
+	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
+	 * used as a generic sorting algorithm.
+	 *
+	 * @param c the comparator to determine the order of the ByteList
+	 */
+	public void sort (@Nullable final ByteComparator c) {
+		if (c == null) {
+			sort();
+		} else {
+			sort(0, size, c);
+		}
+	}
+
+	/**
+	 * Sorts the specified range of elements according to the order induced by the specified
+	 * comparator using mergesort, or {@link Arrays#sort(byte[], int, int)} if {@code c} is null.
+	 * This purely uses {@link ByteComparators#sort(byte[], int, int, ByteComparator)}, and you
+	 * can see its docs for more information.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted.
+	 * @param to   the index of the last element (exclusive) to be sorted.
+	 * @param c    the comparator to determine the order of the ByteList
+	 */
+	public void sort (final int from, final int to, final ByteComparator c) {
+		ByteComparators.sort(items, from, to, c);
 	}
 
 	@Override
@@ -735,7 +783,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
-	 * Reduces the size of the array to the specified size. If the array is already smaller than the specified size, no action is
+	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
 	public void truncate (int newSize) {
@@ -743,7 +791,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
-	 * Returns a random item from the array, or zero if the array is empty.
+	 * Returns a random item from the list, or zero if the list is empty.
 	 *
 	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
@@ -783,29 +831,20 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	public int hashCode () {
 		byte[] items = this.items;
 		int h = 1;
-		if (ordered) {
-			for (int i = 0, n = size; i < n; i++) {h = h * 31 + items[i];}
-		} else {
-			for (int i = 0, n = size; i < n; i++) {
-				h += items[i];
-			}
+		for (int i = 0, n = size; i < n; i++) {
+			h = h * 31 + items[i];
 		}
 		return h;
 	}
 
-	/**
-	 * Returns false if either array is unordered.
-	 */
 	@Override
 	public boolean equals (Object object) {
 		if (object == this) {return true;}
-		if (!ordered) {return false;}
 		if (!(object instanceof ByteList)) {return false;}
-		ByteList array = (ByteList)object;
-		if (!array.ordered) {return false;}
+		ByteList list = (ByteList)object;
 		int n = size;
-		if (n != array.size) {return false;}
-		byte[] items1 = this.items, items2 = array.items;
+		if (n != list.size()) {return false;}
+		byte[] items1 = this.items, items2 = list.items;
 		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
 		return true;
 	}
@@ -838,8 +877,8 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this ByteList. Iterates in order if {@link #ordered}
-	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
+	 * Returns a Java 8 primitive iterator over the int items in this ByteList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a ByteList but not a ByteBag.
 	 * <br>
 	 * This will reuse one of two iterators in this ByteList; this does not allow nested iteration.
 	 * Use {@link ByteListIterator#ByteListIterator(ByteList)} to nest iterators.
@@ -1040,7 +1079,8 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		public void add (byte t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
-			list.insert(index++, t);
+			list.insert(index, t);
+			if(list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
@@ -1077,40 +1117,5 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 */
 	public static ByteList with (byte... array) {
 		return new ByteList(array);
-	}
-
-	/**
-	 * Sorts all elements according to the order induced by the specified
-	 * comparator using {@link ByteComparators#sort(byte[], int, int, ByteComparator)}.
-	 * If {@code c} is null, this instead delegates to {@link #sort()},
-	 * which uses {@link Arrays#sort(byte[])}, and does not always run in-place.
-	 *
-	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
-	 *
-	 * @param c the comparator to determine the order of the ByteList
-	 */
-	public void sort (@Nullable final ByteComparator c) {
-		if (c == null) {
-			sort();
-		} else {
-			sort(0, size, c);
-		}
-	}
-
-	/**
-	 * Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using mergesort, or {@link Arrays#sort(byte[], int, int)} if {@code c} is null.
-	 * This purely uses {@link ByteComparators#sort(byte[], int, int, ByteComparator)}, and you
-	 * can see its docs for more information.
-	 *
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to   the index of the last element (exclusive) to be sorted.
-	 * @param c    the comparator to determine the order of the ByteList
-	 */
-	public void sort (final int from, final int to, final ByteComparator c) {
-		ByteComparators.sort(items, from, to, c);
 	}
 }
