@@ -61,12 +61,15 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 
 	/**
 	 * Creates an ordered list with the specified capacity.
+	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
 	public ShortList (int capacity) {
 		items = new short[capacity];
 	}
 
 	/**
+	 * Creates an ordered list with the specified capacity.
+	 *
 	 * @param ordered ignored; for an unordered list use {@link ShortBag}
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 * @deprecated ShortList is always ordered; for an unordered list use {@link ShortBag}
@@ -79,16 +82,18 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	/**
 	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
 	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 * @param list another ShortList (or ShortBag) to copy from
 	 */
-	public ShortList (ShortList array) {
-		size = array.size;
+	public ShortList (ShortList list) {
+		size = list.size;
 		items = new short[size];
-		System.arraycopy(array.items, 0, items, 0, size);
+		System.arraycopy(list.items, 0, items, 0, size);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 * @param array a short array to copy from
 	 */
 	public ShortList (short[] array) {
 		this(array, 0, array.length);
@@ -97,6 +102,10 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
+	 *
+	 * @param array a non-null short array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
 	 */
 	public ShortList (short[] array, int startIndex, int count) {
 		this(count);
@@ -109,6 +118,9 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
 	 * @param ordered ignored; for an unordered list use {@link ShortBag}
+	 * @param array a non-null short array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
 	 * @deprecated ShortList is always ordered; for an unordered list use {@link ShortBag}
 	 */
 	@Deprecated
@@ -117,8 +129,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
-	 * Creates a new list containing the items in the specified PrimitiveCollection.OfShort. Only this class currently implements
-	 * that interface, but user code can as well.
+	 * Creates a new list containing the items in the specified PrimitiveCollection.OfShort.
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
@@ -130,7 +141,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	/**
 	 * Copies the given Ordered.OfShort into a new ShortList.
 	 *
-	 * @param other another Ordered.OfShort
+	 * @param other another Ordered.OfShort that will have its contents copied into this
 	 */
 	public ShortList (Ordered.OfShort other) {
 		this(other.order());
@@ -184,7 +195,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	public void add (short value1, short value2, short value3, short value4) {
 		short[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(8, (int)(size * 1.8f))); // 1.75 isn't enough when size=5.
+			items = resize(Math.max(9, (int)(size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -713,6 +724,41 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		Arrays.sort(items, 0, size);
 	}
 
+	/**
+	 * Sorts all elements according to the order induced by the specified
+	 * comparator using {@link ShortComparators#sort(short[], int, int, ShortComparator)}.
+	 * If {@code c} is null, this instead delegates to {@link #sort()},
+	 * which uses {@link Arrays#sort(short[])}, and does not always run in-place.
+	 *
+	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
+	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
+	 * used as a generic sorting algorithm.
+	 *
+	 * @param c the comparator to determine the order of the ShortList
+	 */
+	public void sort (@Nullable final ShortComparator c) {
+		if (c == null) {
+			sort();
+		} else {
+			sort(0, size, c);
+		}
+	}
+
+	/**
+	 * Sorts the specified range of elements according to the order induced by the specified
+	 * comparator using mergesort, or {@link Arrays#sort(short[], int, int)} if {@code c} is null.
+	 * This purely uses {@link ShortComparators#sort(short[], int, int, ShortComparator)}, and you
+	 * can see its docs for more information.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted.
+	 * @param to   the index of the last element (exclusive) to be sorted.
+	 * @param c    the comparator to determine the order of the ShortList
+	 */
+	public void sort (final int from, final int to, final ShortComparator c) {
+		ShortComparators.sort(items, from, to, c);
+	}
+
 	@Override
 	public void reverse () {
 		short[] items = this.items;
@@ -747,7 +793,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	/**
 	 * Returns a random item from the list, or zero if the list is empty.
 	 *
-	 * @param random a {@link Random} or a subclass, such as or any from juniper
+	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
 	public short random (Random random) {
@@ -1033,7 +1079,8 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		public void add (short t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
-			list.insert(index++, t);
+			list.insert(index, t);
+			if(list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
@@ -1070,40 +1117,5 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 */
 	public static ShortList with (short... array) {
 		return new ShortList(array);
-	}
-
-	/**
-	 * Sorts all elements according to the order induced by the specified
-	 * comparator using {@link ShortComparators#sort(short[], int, int, ShortComparator)}.
-	 * If {@code c} is null, this instead delegates to {@link #sort()},
-	 * which uses {@link Arrays#sort(short[])}, and does not always run in-place.
-	 *
-	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
-	 *
-	 * @param c the comparator to determine the order of the ShortList
-	 */
-	public void sort (@Nullable final ShortComparator c) {
-		if (c == null) {
-			sort();
-		} else {
-			sort(0, size, c);
-		}
-	}
-
-	/**
-	 * Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using mergesort, or {@link Arrays#sort(short[], int, int)} if {@code c} is null.
-	 * This purely uses {@link ShortComparators#sort(short[], int, int, ShortComparator)}, and you
-	 * can see its docs for more information.
-	 *
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to   the index of the last element (exclusive) to be sorted.
-	 * @param c    the comparator to determine the order of the ShortList
-	 */
-	public void sort (final int from, final int to, final ShortComparator c) {
-		ShortComparators.sort(items, from, to, c);
 	}
 }

@@ -23,7 +23,7 @@ import java.util.List;
  * This class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
  * Items are permitted to change position in the ordering when any item is removed or added.
  * Although this won't keep an order during modifications, you can {@link #sort()} the bag to ensure,
- * if no modifications are made after, that the iteration will happen in sorted order.
+ * if no modifications are made later, that the iteration will happen in sorted order.
  */
 public class ShortBag extends ShortList {
 	/**
@@ -37,14 +37,14 @@ public class ShortBag extends ShortList {
 	}
 
 	/**
-	 * Creates an ordered array with a capacity of 10.
+	 * Creates an ordered bag with a capacity of 10.
 	 */
 	public ShortBag () {
 		super();
 	}
 
 	/**
-	 * Creates an ordered array with the specified capacity.
+	 * Creates an ordered bag with the specified capacity.
 	 *
 	 * @param capacity
 	 */
@@ -53,41 +53,39 @@ public class ShortBag extends ShortList {
 	}
 
 	/**
-	 * Creates a new list containing the elements in the specific array. The new array will be ordered if the specific array is
-	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
-	 * grown.
+	 * Creates a new bag containing the elements in the specific list or bag. The capacity is set to the number of elements,
+	 * so any subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array
+	 * @param list another ShortList or ShortBag
 	 */
-	public ShortBag (ShortList array) {
-		super(array);
+	public ShortBag (ShortList list) {
+		super(list);
 	}
 
 	/**
-	 * Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
+	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array
+	 * @param array a non-null short array to add to this bag
 	 */
 	public ShortBag (short[] array) {
 		super(array);
 	}
 
 	/**
-	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array
-	 * @param startIndex
-	 * @param count
+	 * @param array a non-null short array to add to this bag
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
 	 */
 	public ShortBag (short[] array, int startIndex, int count) {
 		super(array, startIndex, count);
 	}
 
 	/**
-	 * Creates a new list containing the items in the specified PrimitiveCollection.OfShort. Only this class currently implements
-	 * that interface, but user code can as well.
+	 * Creates a new bag containing the items in the specified PrimitiveCollection.OfShort.
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
@@ -96,7 +94,7 @@ public class ShortBag extends ShortList {
 	}
 
 	/**
-	 * Copies the given Ordered.OfShort into a new ShortList.
+	 * Copies the given Ordered.OfShort into a new bag.
 	 *
 	 * @param other another Ordered.OfShort
 	 */
@@ -105,7 +103,7 @@ public class ShortBag extends ShortList {
 	}
 
 	/**
-	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * Creates a new bag by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 *
 	 * @param other  another Ordered.OfShort
@@ -116,14 +114,18 @@ public class ShortBag extends ShortList {
 		super(other, offset, count);
 	}
 
+	/**
+	 * This always adds {@code element} to the end of this bag's ordering.
+	 * @param index ignored
+	 * @param element element to be inserted
+	 */
 	@Override
-	public void insert (int index, short value) {
+	public void insert (int index, short element) {
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		short[] items = this.items;
 		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
-		items[size] = items[index];
-		size++;
-		items[index] = value;
+		items[size] = element;
+		++size;
 	}
 
 	/**
