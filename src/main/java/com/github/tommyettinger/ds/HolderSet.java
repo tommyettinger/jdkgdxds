@@ -434,7 +434,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * Returns true if the set has one or more items.
 	 */
 	public boolean notEmpty () {
-		return size > 0;
+		return size != 0;
 	}
 
 	/**

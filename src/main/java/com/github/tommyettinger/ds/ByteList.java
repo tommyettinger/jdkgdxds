@@ -382,14 +382,17 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
-	 * indices before the insertion.
+	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 * @param index the first index to duplicate
+	 * @param count how many items to duplicate
 	 */
-	public void insertRange (int index, int count) {
+	public boolean duplicateRange (int index, int count) {
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		int sizeNeeded = size + count;
 		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
+		return count > 0;
 	}
 
 	/**
@@ -638,7 +641,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * @return true if the array has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
-		return size > 0;
+		return size != 0;
 	}
 
 	/**

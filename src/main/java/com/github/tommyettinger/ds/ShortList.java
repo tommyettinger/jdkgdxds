@@ -30,20 +30,20 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
- * A resizable, ordered or unordered short list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Short.
- * If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
+ * A resizable, insertion-ordered short list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Short.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
+ * @see ShortBag ShortBag is an unordered variant on ShortList.
  */
 public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, Arrangeable {
 	/**
 	 * Returns true if this implementation retains order, which it does.
 	 * @return true
 	 */
-	public boolean isOrdered() {
+	public boolean keepsOrder () {
 		return true;
 	}
 
@@ -387,14 +387,17 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
-	 * indices before the insertion.
+	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 * @param index the first index to duplicate
+	 * @param count how many items to duplicate
 	 */
-	public void insertRange (int index, int count) {
+	public boolean duplicateRange (int index, int count) {
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		int sizeNeeded = size + count;
 		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
+		return count > 0;
 	}
 
 	/**
@@ -635,18 +638,18 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
-	 * Returns true if the array has one or more items, or false otherwise.
+	 * Returns true if the list has one or more items, or false otherwise.
 	 *
-	 * @return true if the array has one or more items, or false otherwise
+	 * @return true if the list has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
-		return size > 0;
+		return size != 0;
 	}
 
 	/**
-	 * Returns true if the array is empty.
+	 * Returns true if the list is empty.
 	 *
-	 * @return true if the array is empty, or false if it has any items
+	 * @return true if the list is empty, or false if it has any items
 	 */
 	@Override
 	public boolean isEmpty () {
@@ -687,7 +690,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
-	 * Sets the array size, leaving any values beyond the current size undefined.
+	 * Sets the list size, leaving any values beyond the current size undefined.
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
@@ -734,7 +737,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
-	 * Reduces the size of the array to the specified size. If the array is already smaller than the specified size, no action is
+	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
 	public void truncate (int newSize) {
@@ -742,7 +745,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
-	 * Returns a random item from the array, or zero if the array is empty.
+	 * Returns a random item from the list, or zero if the list is empty.
 	 *
 	 * @param random a {@link Random} or a subclass, such as or any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
@@ -766,7 +769,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	/**
 	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
 	 * into {@code array} and returns it; otherwise, it allocates a new short array that can fit all
-	 * of the items in this, and proceeds to copy into that and return that.
+	 * the items in this, and proceeds to copy into that and return that.
 	 *
 	 * @param array a short array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
@@ -788,17 +791,14 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		return h;
 	}
 
-	/**
-	 * Returns false if either array is unordered.
-	 */
 	@Override
 	public boolean equals (Object object) {
 		if (object == this) {return true;}
 		if (!(object instanceof ShortList)) {return false;}
-		ShortList array = (ShortList)object;
+		ShortList list = (ShortList)object;
 		int n = size;
-		if (n != array.size()) {return false;}
-		short[] items1 = this.items, items2 = array.items;
+		if (n != list.size()) {return false;}
+		short[] items1 = this.items, items2 = list.items;
 		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
 		return true;
 	}
@@ -832,7 +832,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 
 	/**
 	 * Returns a Java 8 primitive iterator over the int items in this ShortList. Iterates in order if
-	 * {@link #isOrdered()} returns true, which it does for a ShortList but not a ShortBag.
+	 * {@link #keepsOrder()} returns true, which it does for a ShortList but not a ShortBag.
 	 * <br>
 	 * This will reuse one of two iterators in this ShortList; this does not allow nested iteration.
 	 * Use {@link ShortListIterator#ShortListIterator(ShortList)} to nest iterators.

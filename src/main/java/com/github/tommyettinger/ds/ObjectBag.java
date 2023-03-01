@@ -34,7 +34,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @return false
 	 */
 	@Override
-	public boolean isOrdered () {
+	public boolean keepsOrder () {
 		return false;
 	}
 

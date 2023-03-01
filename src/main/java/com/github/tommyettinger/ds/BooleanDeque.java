@@ -866,7 +866,7 @@ public class BooleanDeque implements PrimitiveCollection.OfBoolean, Arrangeable 
 	 * Returns true if the queue has one or more items.
 	 */
 	public boolean notEmpty () {
-		return size > 0;
+		return size != 0;
 	}
 
 	/**

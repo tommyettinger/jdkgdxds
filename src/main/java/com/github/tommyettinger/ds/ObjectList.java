@@ -31,7 +31,7 @@ import java.util.NoSuchElementException;
 import java.util.Random;
 
 /**
- * A resizable, ordered list of {@code T} items, typically objects (they can also be arrays).
+ * A resizable, insertion-ordered list of {@code T} items, typically objects (they can also be arrays).
  * This is a thin wrapper around {@link ArrayList} to implement {@link Ordered} and do some of
  * what libGDX's Array class does. Because this is a generic class and arrays do not interact
  * well with generics, ObjectList does not permit access to a {@code T[]} of items like Array
@@ -41,6 +41,7 @@ import java.util.Random;
  * {@code ObjectList<String> myList = new ObjectList<>(); String[] s = myList.toArray(String::new);}.
  *
  * @author Tommy Ettinger
+ * @see ObjectBag ObjectBag is an unordered variant on ObjectList.
  */
 public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 
@@ -51,7 +52,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * Returns true if this implementation retains order, which it does.
 	 * @return true
 	 */
-	public boolean isOrdered() {
+	public boolean keepsOrder () {
 		return true;
 	}
 
@@ -103,9 +104,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * Constructs a list containing the elements of the specified
 	 * collection, in the order they are returned by the collection's
 	 * iterator.
-	 * You can specify whether this ObjectList will maintain order;
-	 * the default is true, but if you set it to false then deletion
-	 * becomes faster at the expense of unpredictable iteration order.
 	 *
 	 * @param ordered ignored; use an {@link ObjectBag} for an unordered list
 	 * @param c       the collection whose elements are to be placed into this list
@@ -178,7 +176,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * Removes the items between the specified start index, inclusive, and end index, exclusive.
 	 * Note that this takes different arguments than some other range-related methods; this needs
 	 * a start index and an end index, rather than a count of items. This matches the behavior in
-	 * the JDK collections. This is also different from removeRange() in libGDX' Array class
+	 * the JDK collections. This is also different from removeRange() in the libGDX Array class
 	 * because it is exclusive on end, instead of how Array is inclusive on end.
 	 *
 	 * @param start the first index to remove, inclusive
@@ -247,7 +245,12 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		}
 		return changed;
 	}
-
+	/**
+	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
+	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 * @param index the first index to duplicate
+	 * @param count how many items to duplicate
+	 */
 	public boolean duplicateRange (int index, int count) {
 		if (index + count >= size()) {throw new IllegalStateException("Sum of index and count is too large: " + (index + count) + " must not be >= " + size());}
 		addAll(index, subList(index, index + count));
@@ -706,7 +709,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
 			list.insert(index, t);
-			if(list.isOrdered()) ++index;
+			if(list.keepsOrder()) ++index;
 			latest = -1;
 		}
 

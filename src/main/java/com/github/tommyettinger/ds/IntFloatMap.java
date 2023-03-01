@@ -450,7 +450,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * Returns true if the map has one or more items.
 	 */
 	public boolean notEmpty () {
-		return size > 0;
+		return size != 0;
 	}
 
 	/**

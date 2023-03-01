@@ -299,7 +299,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	 * Returns true if the set has one or more items.
 	 */
 	public boolean notEmpty () {
-		return size > 0;
+		return size != 0;
 	}
 
 	/**

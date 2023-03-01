@@ -355,7 +355,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	 * Returns true if the heap has one or more items.
 	 */
 	public boolean notEmpty () {
-		return size > 0;
+		return size != 0;
 	}
 
 	/**

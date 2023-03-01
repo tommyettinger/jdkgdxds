@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds;
 import java.util.List;
 /**
  * An unordered List of short items. This allows efficient iteration via a reused iterator or via index.
+ * This class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
  * Items are permitted to change position in the ordering when any item is removed or added.
  * Although this won't keep an order during modifications, you can {@link #sort()} the bag to ensure,
  * if no modifications are made after, that the iteration will happen in sorted order.
@@ -31,7 +32,7 @@ public class ShortBag extends ShortList {
 	 * @return false
 	 */
 	@Override
-	public boolean isOrdered () {
+	public boolean keepsOrder () {
 		return false;
 	}
 
