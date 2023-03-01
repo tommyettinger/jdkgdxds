@@ -22,8 +22,8 @@ import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.function.FloatToFloatFunction;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -31,93 +31,110 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
- * A resizable, ordered or unordered float list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Float.
- * If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
+ * A resizable, insertion-ordered float list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Float.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
+ * @see FloatBag FloatBag is an unordered variant on FloatList.
  */
 public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, Arrangeable {
+	/**
+	 * Returns true if this implementation retains order, which it does.
+	 * @return true
+	 */
+	public boolean keepsOrder () {
+		return true;
+	}
 
 	public float[] items;
 	protected int size;
-	public boolean ordered;
 	@Nullable protected transient FloatListIterator iterator1;
 	@Nullable protected transient FloatListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 10.
+	 * Creates an ordered list with a capacity of 10.
 	 */
 	public FloatList () {
-		this(true, 10);
+		this(10);
 	}
 
 	/**
-	 * Creates an ordered array with the specified capacity.
-	 */
-	public FloatList (int capacity) {
-		this(true, capacity);
-	}
-
-	/**
-	 * @param ordered  If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                 memory copy.
+	 * Creates an ordered list with the specified capacity.
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
-	public FloatList (boolean ordered, int capacity) {
-		this.ordered = ordered;
+	public FloatList (int capacity) {
 		items = new float[capacity];
 	}
 
 	/**
-	 * Creates a new list containing the elements in the specific array. The new array will be ordered if the specific array is
-	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
-	 * grown.
+	 * Creates an ordered list with the specified capacity.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link FloatBag}
+	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
+	 * @deprecated FloatList is always ordered; for an unordered list use {@link FloatBag}
 	 */
-	public FloatList (FloatList array) {
-		this.ordered = array.ordered;
-		size = array.size;
-		items = new float[size];
-		System.arraycopy(array.items, 0, items, 0, size);
+	@Deprecated
+	public FloatList (boolean ordered, int capacity) {
+		this(capacity);
 	}
 
 	/**
-	 * Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
+	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
+	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 * @param list another FloatList (or FloatBag) to copy from
+	 */
+	public FloatList (FloatList list) {
+		size = list.size;
+		items = new float[size];
+		System.arraycopy(list.items, 0, items, 0, size);
+	}
+
+	/**
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 * @param array a float array to copy from
 	 */
 	public FloatList (float[] array) {
-		this(true, array, 0, array.length);
-	}
-
-	/**
-	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
-	 * subsequent elements added will cause the backing array to be grown.
-	 */
-	public FloatList (float[] array, int startIndex, int count) {
-		this(true, array, startIndex, count);
+		this(array, 0, array.length);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                memory copy.
+	 * @param array a non-null float array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
 	 */
-	public FloatList (boolean ordered, float[] array, int startIndex, int count) {
-		this(ordered, count);
+	public FloatList (float[] array, int startIndex, int count) {
+		this(count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
 	/**
-	 * Creates a new list containing the items in the specified PrimitiveCollection, such as an {@link ObjectFloatMap.Values}.
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * subsequent elements added will cause the backing array to be grown.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link FloatBag}
+	 * @param array a non-null float array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
+	 * @deprecated FloatList is always ordered; for an unordered list use {@link FloatBag}
+	 */
+	@Deprecated
+	public FloatList (boolean ordered, float[] array, int startIndex, int count) {
+		this(array, startIndex, count);
+	}
+
+	/**
+	 * Creates a new list containing the items in the specified PrimitiveCollection.OfFloat.
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public FloatList (PrimitiveCollection.OfFloat coll) {
+	public FloatList (OfFloat coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -125,7 +142,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	/**
 	 * Copies the given Ordered.OfFloat into a new FloatList.
 	 *
-	 * @param other another Ordered.OfFloat
+	 * @param other another Ordered.OfFloat that will have its contents copied into this
 	 */
 	public FloatList (Ordered.OfFloat other) {
 		this(other.order());
@@ -179,7 +196,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	public void add (float value1, float value2, float value3, float value4) {
 		float[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(8, (int)(size * 1.8f))); // 1.75 isn't enough when size=5.
+			items = resize(Math.max(9, (int)(size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -189,14 +206,14 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	// Modified from libGDX
-	public boolean addAll (FloatList array) {
-		return addAll(array.items, 0, array.size);
+	public boolean addAll (FloatList list) {
+		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (FloatList array, int offset, int length) {
-		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
-		return addAll(array.items, offset, length);
+	public boolean addAll (FloatList list, int offset, int count) {
+		if (offset + count > list.size) {throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);}
+		return addAll(list.items, offset, count);
 	}
 
 	/**
@@ -375,7 +392,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		float[] items = this.items;
 		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
-		if (ordered) {System.arraycopy(items, index, items, index + 1, size - index);} else {items[size] = items[index];}
+		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
 	}
@@ -427,7 +444,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	/**
 	 * Returns true if this FloatList contains, at least once, every item in {@code other}; otherwise returns false.
 	 *
-	 * @param other a FloatList
+	 * @param other an FloatList
 	 * @return true if this contains every item in {@code other}, otherwise false
 	 */
 	// Newly-added
@@ -497,7 +514,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		float[] items = this.items;
 		float value = items[index];
 		size--;
-		if (ordered) {System.arraycopy(items, index + 1, items, index, size - index);} else {items[index] = items[size];}
+		System.arraycopy(items, index + 1, items, index, size - index);
 		return value;
 	}
 
@@ -514,11 +531,8 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		int n = size;
 		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
 		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
-		int count = end - start, lastIndex = n - count;
-		if (ordered) {System.arraycopy(items, start + count, items, start, n - (start + count));} else {
-			int i = Math.max(lastIndex, end);
-			System.arraycopy(items, i, items, start, n - i);
-		}
+		int count = end - start;
+		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
 	}
 
@@ -528,7 +542,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param c a primitive collection of int items to remove fully, such as another FloatList or a FloatDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (PrimitiveCollection.OfFloat c) {
+	public boolean removeAll (OfFloat c) {
 		int size = this.size;
 		int startSize = size;
 		float[] items = this.items;
@@ -554,7 +568,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param c a primitive collection of int items to remove one-by-one, such as another FloatList or a FloatDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (PrimitiveCollection.OfFloat c) {
+	public boolean removeEach (OfFloat c) {
 		int size = this.size;
 		int startSize = size;
 		float[] items = this.items;
@@ -579,7 +593,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @return true if this FloatList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (PrimitiveCollection.OfFloat other) {
+	public boolean retainAll (OfFloat other) {
 		final int size = this.size;
 		final float[] items = this.items;
 		int r = 0, w = 0;
@@ -636,18 +650,18 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
-	 * Returns true if the array has one or more items, or false otherwise.
+	 * Returns true if the list has one or more items, or false otherwise.
 	 *
-	 * @return true if the array has one or more items, or false otherwise
+	 * @return true if the list has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
 		return size != 0;
 	}
 
 	/**
-	 * Returns true if the array is empty.
+	 * Returns true if the list is empty.
 	 *
-	 * @return true if the array is empty, or false if it has any items
+	 * @return true if the list is empty, or false if it has any items
 	 */
 	@Override
 	public boolean isEmpty () {
@@ -688,7 +702,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
-	 * Sets the array size, leaving any values beyond the current size undefined.
+	 * Sets the list size, leaving any values beyond the current size undefined.
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
@@ -709,6 +723,41 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	public void sort () {
 		Arrays.sort(items, 0, size);
+	}
+
+	/**
+	 * Sorts all elements according to the order induced by the specified
+	 * comparator using {@link FloatComparators#sort(float[], int, int, FloatComparator)}.
+	 * If {@code c} is null, this instead delegates to {@link #sort()},
+	 * which uses {@link Arrays#sort(float[])}, and does not always run in-place.
+	 *
+	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
+	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
+	 * used as a generic sorting algorithm.
+	 *
+	 * @param c the comparator to determine the order of the FloatList
+	 */
+	public void sort (@Nullable final FloatComparator c) {
+		if (c == null) {
+			sort();
+		} else {
+			sort(0, size, c);
+		}
+	}
+
+	/**
+	 * Sorts the specified range of elements according to the order induced by the specified
+	 * comparator using mergesort, or {@link Arrays#sort(float[], int, int)} if {@code c} is null.
+	 * This purely uses {@link FloatComparators#sort(float[], int, int, FloatComparator)}, and you
+	 * can see its docs for more information.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted.
+	 * @param to   the index of the last element (exclusive) to be sorted.
+	 * @param c    the comparator to determine the order of the FloatList
+	 */
+	public void sort (final int from, final int to, final FloatComparator c) {
+		FloatComparators.sort(items, from, to, c);
 	}
 
 	@Override
@@ -735,7 +784,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
-	 * Reduces the size of the array to the specified size. If the array is already smaller than the specified size, no action is
+	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
 	public void truncate (int newSize) {
@@ -743,7 +792,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
-	 * Returns a random item from the array, or zero if the array is empty.
+	 * Returns a random item from the list, or zero if the list is empty.
 	 *
 	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
@@ -767,10 +816,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	/**
 	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
 	 * into {@code array} and returns it; otherwise, it allocates a new float array that can fit all
-	 * of the items in this, and proceeds to copy into that and return that.
+	 * the items in this, and proceeds to copy into that and return that.
 	 *
 	 * @param array a float array that will be modified if it can fit {@link #size()} items
-	 * @return {@code array}, if it had sufficient size, or a new array otherwise, both with a copy of this
+	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
 	 */
 	public float[] toArray (float[] array) {
 		if (array.length < size)
@@ -783,46 +832,21 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	public int hashCode () {
 		float[] items = this.items;
 		int h = 1;
-		if (ordered) {
-			for (int i = 0, n = size; i < n; i++) {h = h * 31 + BitConversion.floatToRawIntBits(items[i]);}
-		} else {
-			for (int i = 0, n = size; i < n; i++) {
-				h += BitConversion.floatToRawIntBits(items[i]);
-			}
+		for (int i = 0, n = size; i < n; i++) {
+			h = h * 31 + BitConversion.floatToRawIntBits(items[i]);
 		}
 		return h;
 	}
 
-	/**
-	 * Returns false if either array is unordered.
-	 */
 	@Override
 	public boolean equals (Object object) {
 		if (object == this) {return true;}
-		if (!ordered) {return false;}
 		if (!(object instanceof FloatList)) {return false;}
-		FloatList array = (FloatList)object;
-		if (!array.ordered) {return false;}
+		FloatList list = (FloatList)object;
 		int n = size;
-		if (n != array.size) {return false;}
-		float[] items1 = this.items, items2 = array.items;
+		if (n != list.size()) {return false;}
+		float[] items1 = this.items, items2 = list.items;
 		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
-		return true;
-	}
-
-	/**
-	 * Returns false if either array is unordered. Otherwise, compares float items with the given tolerance for error.
-	 */
-	public boolean equals (Object object, float tolerance) {
-		if (object == this) {return true;}
-		if (!(object instanceof FloatList)) {return false;}
-		FloatList array = (FloatList)object;
-		int n = size;
-		if (n != array.size) {return false;}
-		if (!ordered) {return false;}
-		if (!array.ordered) {return false;}
-		float[] items1 = this.items, items2 = array.items;
-		for (int i = 0; i < n; i++) {if (Math.abs(items1[i] - items2[i]) > tolerance) {return false;}}
 		return true;
 	}
 
@@ -854,8 +878,8 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this FloatList. Iterates in order if {@link #ordered}
-	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
+	 * Returns a Java 8 primitive iterator over the int items in this FloatList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a FloatList but not a FloatBag.
 	 * <br>
 	 * This will reuse one of two iterators in this FloatList; this does not allow nested iteration.
 	 * Use {@link FloatListIterator#FloatListIterator(FloatList)} to nest iterators.
@@ -1056,7 +1080,8 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		public void add (float t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
-			list.insert(index++, t);
+			list.insert(index, t);
+			if(list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
@@ -1093,40 +1118,5 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	public static FloatList with (float... array) {
 		return new FloatList(array);
-	}
-
-	/**
-	 * Sorts all elements according to the order induced by the specified
-	 * comparator using {@link FloatComparators#sort(float[], int, int, FloatComparator)}.
-	 * If {@code c} is null, this instead delegates to {@link #sort()},
-	 * which uses {@link Arrays#sort(float[])}, and does not always run in-place.
-	 *
-	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
-	 *
-	 * @param c the comparator to determine the order of the FloatList
-	 */
-	public void sort (@Nullable final FloatComparator c) {
-		if (c == null) {
-			sort();
-		} else {
-			sort(0, size, c);
-		}
-	}
-
-	/**
-	 * Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using mergesort, or {@link Arrays#sort(float[], int, int)} if {@code c} is null.
-	 * This purely uses {@link FloatComparators#sort(float[], int, int, FloatComparator)}, and you
-	 * can see its docs for more information.
-	 *
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to   the index of the last element (exclusive) to be sorted.
-	 * @param c    the comparator to determine the order of the FloatList
-	 */
-	public void sort (final int from, final int to, final FloatComparator c) {
-		FloatComparators.sort(items, from, to, c);
 	}
 }

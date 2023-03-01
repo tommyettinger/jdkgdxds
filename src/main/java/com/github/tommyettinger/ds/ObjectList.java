@@ -244,7 +244,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		add(value2);
 		add(value3);
 	}
-	
+
 	/**
 	 * Adds each item in the array {@code a} to this ObjectList, appending to the end.
 	 *
@@ -282,6 +282,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		}
 		return offset < n;
 	}
+
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
 	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
