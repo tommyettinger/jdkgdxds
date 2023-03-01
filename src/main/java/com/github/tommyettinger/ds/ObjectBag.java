@@ -23,9 +23,10 @@ import java.util.Collection;
 
 /**
  * An unordered List of T items. This allows efficient iteration via a reused iterator or via index.
+ * This class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
  * Items are permitted to change position in the ordering when any item is removed or added.
  * Although this won't keep an order during modifications, you can {@link #sort()} the bag to ensure,
- * if no modifications are made after, that the iteration will happen in sorted order.
+ * if no modifications are made later, that the iteration will happen in sorted order.
  */
 public class ObjectBag<T> extends ObjectList<T> {
 	/**
@@ -39,9 +40,9 @@ public class ObjectBag<T> extends ObjectList<T> {
 	}
 
 	/**
-	 * Constructs an empty list with the specified initial capacity.
+	 * Constructs an empty bag with the specified initial capacity.
 	 *
-	 * @param initialCapacity the initial capacity of the list
+	 * @param initialCapacity the initial capacity of the bag
 	 * @throws IllegalArgumentException if the specified initial capacity
 	 *                                  is negative
 	 */
@@ -50,18 +51,18 @@ public class ObjectBag<T> extends ObjectList<T> {
 	}
 
 	/**
-	 * Constructs an empty list with an initial capacity of 10.
+	 * Constructs an empty bag with an initial capacity of 10.
 	 */
 	public ObjectBag () {
 		super();
 	}
 
 	/**
-	 * Constructs a list containing the elements of the specified
+	 * Constructs a bag containing the elements of the specified
 	 * collection, in the order they are returned by the collection's
 	 * iterator.
 	 *
-	 * @param c the collection whose elements are to be placed into this list
+	 * @param c the collection whose elements are to be placed into this bag
 	 * @throws NullPointerException if the specified collection is null
 	 */
 	public ObjectBag (Collection<? extends T> c) {
@@ -77,7 +78,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	}
 
 	/**
-	 * Creates a new list by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * Creates a new bag by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 *
 	 * @param other  another Ordered of the same type
@@ -89,7 +90,8 @@ public class ObjectBag<T> extends ObjectList<T> {
 	}
 
 	/**
-	 * This always adds {@code element} to the end of this bag's ordering.
+	 * This always adds {@code element} to the end of this bag's ordering; {@code index} is ignored.
+	 *
 	 * @param index ignored
 	 * @param element element to be inserted
 	 */
@@ -99,10 +101,10 @@ public class ObjectBag<T> extends ObjectList<T> {
 	}
 
 	/**
-	 * This always adds {@code element} to the end of this bag's ordering.
+	 * This always adds {@code element} to the end of this bag's ordering; {@code index} is ignored.
 	 * This is an alias for {@link #add(int, Object)} to improve compatibility with primitive lists.
 	 *
-	 * @param index   index at which the specified element is to be inserted
+	 * @param index   ignored
 	 * @param element element to be inserted
 	 */
 	@Override
@@ -157,12 +159,24 @@ public class ObjectBag<T> extends ObjectList<T> {
 		return h;
 	}
 
+	/**
+	 * Creates a new ObjectBag that holds only the given item, but can be resized.
+	 * @param item one T item
+	 * @return a new ObjectBag that holds the given item
+	 * @param <T> the type of item, typically inferred except for array arguments
+	 */
 	public static <T> ObjectBag<T> with (T item) {
 		ObjectBag<T> list = new ObjectBag<>(1);
 		list.add(item);
 		return list;
 	}
 
+	/**
+	 * Creates a new ObjectBag that will hold the items in the given array or varargs.
+	 * @param varargs either 0 or more T items, or an array of T
+	 * @return a new ObjectBag that holds the given T items
+	 * @param <T> the type of items, typically inferred by all the items being the same type
+	 */
 	@SafeVarargs
 	public static <T> ObjectBag<T> with (T... varargs) {
 		return new ObjectBag<>(varargs);

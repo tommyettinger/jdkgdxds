@@ -210,6 +210,42 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
+	 * Convenience method that adds two items. This avoids constructing an array for a varargs.
+	 * @param value0 a T item to add
+	 * @param value1 a T item to add
+	 */
+	public void add(@Nullable T value0, @Nullable T value1) {
+		add(value0);
+		add(value1);
+	}
+
+	/**
+	 * Convenience method that adds three items. This avoids constructing an array for a varargs.
+	 * @param value0 a T item to add
+	 * @param value1 a T item to add
+	 * @param value2 a T item to add
+	 */
+	public void add(@Nullable T value0, @Nullable T value1, @Nullable T value2) {
+		add(value0);
+		add(value1);
+		add(value2);
+	}
+
+	/**
+	 * Convenience method that adds four items. This avoids constructing an array for a varargs.
+	 * @param value0 a T item to add
+	 * @param value1 a T item to add
+	 * @param value2 a T item to add
+	 * @param value3 a T item to add
+	 */
+	public void add(@Nullable T value0, @Nullable T value1, @Nullable T value2, @Nullable T value3) {
+		add(value0);
+		add(value1);
+		add(value2);
+		add(value3);
+	}
+	
+	/**
 	 * Adds each item in the array {@code a} to this ObjectList, appending to the end.
 	 *
 	 * @param a a non-null array of {@code T}
@@ -239,11 +275,12 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
 	public boolean addAll (T[] a, int offset, int count) {
-		boolean changed = false;
-		for (int i = offset, n = Math.min(offset + count, a.length); i < n; i++) {
-			changed |= add(a[i]);
+		if(offset < 0) throw new IndexOutOfBoundsException("offset cannot be negative.");
+		int n = Math.min(offset + count, a.length);
+		for (int i = offset; i < n; i++) {
+			add(a[i]);
 		}
-		return changed;
+		return offset < n;
 	}
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
@@ -819,12 +856,24 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		ObjectComparators.sort(this, c);
 	}
 
+	/**
+	 * Creates a new ObjectList that holds only the given item, but can be resized.
+	 * @param item one T item
+	 * @return a new ObjectList that holds the given item
+	 * @param <T> the type of item, typically inferred except for array arguments
+	 */
 	public static <T> ObjectList<T> with (T item) {
 		ObjectList<T> list = new ObjectList<>(1);
 		list.add(item);
 		return list;
 	}
 
+	/**
+	 * Creates a new ObjectList that will hold the items in the given array or varargs.
+	 * @param varargs either 0 or more T items, or an array of T
+	 * @return a new ObjectList that holds the given T items
+	 * @param <T> the type of items, typically inferred by all the items being the same type
+	 */
 	@SafeVarargs
 	public static <T> ObjectList<T> with (T... varargs) {
 		return new ObjectList<>(varargs);
