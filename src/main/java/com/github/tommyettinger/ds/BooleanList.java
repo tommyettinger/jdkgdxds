@@ -17,102 +17,118 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.function.BooleanPredicate;
 import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.BooleanComparators;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
-
+import com.github.tommyettinger.function.BooleanToBooleanFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
- * A resizable, ordered or unordered boolean list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Boolean.
- * If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
+ * A resizable, insertion-ordered boolean list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Boolean.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
+ * @see BooleanBag BooleanBag is an unordered variant on BooleanList.
  */
 public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoolean, Arrangeable {
+	/**
+	 * Returns true if this implementation retains order, which it does.
+	 * @return true
+	 */
+	public boolean keepsOrder () {
+		return true;
+	}
 
 	public boolean[] items;
 	protected int size;
-	public boolean ordered;
 	@Nullable protected transient BooleanListIterator iterator1;
 	@Nullable protected transient BooleanListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 10.
+	 * Creates an ordered list with a capacity of 10.
 	 */
 	public BooleanList () {
-		this(true, 10);
+		this(10);
 	}
 
 	/**
-	 * Creates an ordered array with the specified capacity.
-	 */
-	public BooleanList (int capacity) {
-		this(true, capacity);
-	}
-
-	/**
-	 * @param ordered  If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                 memory copy.
+	 * Creates an ordered list with the specified capacity.
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
-	public BooleanList (boolean ordered, int capacity) {
-		this.ordered = ordered;
+	public BooleanList (int capacity) {
 		items = new boolean[capacity];
 	}
 
 	/**
-	 * Creates a new list containing the elements in the specific array. The new array will be ordered if the specific array is
-	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
-	 * grown.
+	 * Creates an ordered list with the specified capacity.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link BooleanBag}
+	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
+	 * @deprecated BooleanList is always ordered; for an unordered list use {@link BooleanBag}
 	 */
-	public BooleanList (BooleanList array) {
-		this.ordered = array.ordered;
-		size = array.size;
-		items = new boolean[size];
-		System.arraycopy(array.items, 0, items, 0, size);
+	@Deprecated
+	public BooleanList (boolean ordered, int capacity) {
+		this(capacity);
 	}
 
 	/**
-	 * Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
+	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
+	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 * @param list another BooleanList (or BooleanBag) to copy from
+	 */
+	public BooleanList (BooleanList list) {
+		size = list.size;
+		items = new boolean[size];
+		System.arraycopy(list.items, 0, items, 0, size);
+	}
+
+	/**
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 * @param array a boolean array to copy from
 	 */
 	public BooleanList (boolean[] array) {
-		this(true, array, 0, array.length);
-	}
-
-	/**
-	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
-	 * subsequent elements added will cause the backing array to be grown.
-	 */
-	public BooleanList (boolean[] array, int startIndex, int count) {
-		this(true, array, startIndex, count);
+		this(array, 0, array.length);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                memory copy.
+	 * @param array a non-null boolean array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
 	 */
-	public BooleanList (boolean ordered, boolean[] array, int startIndex, int count) {
-		this(ordered, count);
+	public BooleanList (boolean[] array, int startIndex, int count) {
+		this(count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
 	/**
-	 * Creates a new list containing the items in the specified PrimitiveCollection.OfBoolean. Only this class currently implements
-	 * that interface, but user code can as well.
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * subsequent elements added will cause the backing array to be grown.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link BooleanBag}
+	 * @param array a non-null boolean array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
+	 * @deprecated BooleanList is always ordered; for an unordered list use {@link BooleanBag}
+	 */
+	@Deprecated
+	public BooleanList (boolean ordered, boolean[] array, int startIndex, int count) {
+		this(array, startIndex, count);
+	}
+
+	/**
+	 * Creates a new list containing the items in the specified PrimitiveCollection.OfBoolean.
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
@@ -124,7 +140,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	/**
 	 * Copies the given Ordered.OfBoolean into a new BooleanList.
 	 *
-	 * @param other another Ordered.OfBoolean
+	 * @param other another Ordered.OfBoolean that will have its contents copied into this
 	 */
 	public BooleanList (Ordered.OfBoolean other) {
 		this(other.order());
@@ -178,7 +194,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	public void add (boolean value1, boolean value2, boolean value3, boolean value4) {
 		boolean[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(8, (int)(size * 1.8f))); // 1.75 isn't enough when size=5.
+			items = resize(Math.max(9, (int)(size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -188,14 +204,14 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	// Modified from libGDX
-	public boolean addAll (BooleanList array) {
-		return addAll(array.items, 0, array.size);
+	public boolean addAll (BooleanList list) {
+		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (BooleanList array, int offset, int length) {
-		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
-		return addAll(array.items, offset, length);
+	public boolean addAll (BooleanList list, int offset, int count) {
+		if (offset + count > list.size) {throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);}
+		return addAll(list.items, offset, count);
 	}
 
 	/**
@@ -283,7 +299,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		boolean[] items = this.items;
 		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
-		if (ordered) {System.arraycopy(items, index, items, index + 1, size - index);} else {items[size] = items[index];}
+		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
 	}
@@ -405,7 +421,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		boolean[] items = this.items;
 		boolean value = items[index];
 		size--;
-		if (ordered) {System.arraycopy(items, index + 1, items, index, size - index);} else {items[index] = items[size];}
+		System.arraycopy(items, index + 1, items, index, size - index);
 		return value;
 	}
 
@@ -422,11 +438,8 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		int n = size;
 		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
 		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
-		int count = end - start, lastIndex = n - count;
-		if (ordered) {System.arraycopy(items, start + count, items, start, n - (start + count));} else {
-			int i = Math.max(lastIndex, end);
-			System.arraycopy(items, i, items, start, n - i);
-		}
+		int count = end - start;
+		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
 	}
 
@@ -436,7 +449,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param c a primitive collection of int items to remove fully, such as another BooleanList or a BooleanDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (PrimitiveCollection.OfBoolean c) {
+	public boolean removeAll (OfBoolean c) {
 		int size = this.size;
 		int startSize = size;
 		boolean[] items = this.items;
@@ -462,7 +475,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param c a primitive collection of int items to remove one-by-one, such as another BooleanList or a BooleanDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (PrimitiveCollection.OfBoolean c) {
+	public boolean removeEach (OfBoolean c) {
 		int size = this.size;
 		int startSize = size;
 		boolean[] items = this.items;
@@ -487,7 +500,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @return true if this BooleanList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (PrimitiveCollection.OfBoolean other) {
+	public boolean retainAll (OfBoolean other) {
 		final int size = this.size;
 		final boolean[] items = this.items;
 		int r = 0, w = 0;
@@ -504,11 +517,11 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a BooleanPredicate (a functional interface defined in funderby)
+	 * @param operator a BooleanToBooleanFunction (a functional interface defined in funderby)
 	 */
-	public void replaceAll (BooleanPredicate operator) {
+	public void replaceAll (BooleanToBooleanFunction operator) {
 		for (int i = 0, n = size; i < n; i++) {
-			items[i] = operator.test(items[i]);
+			items[i] = operator.applyAsBoolean(items[i]);
 		}
 	}
 
@@ -544,18 +557,18 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
-	 * Returns true if the array has one or more items, or false otherwise.
+	 * Returns true if the list has one or more items, or false otherwise.
 	 *
-	 * @return true if the array has one or more items, or false otherwise
+	 * @return true if the list has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
 		return size != 0;
 	}
 
 	/**
-	 * Returns true if the array is empty.
+	 * Returns true if the list is empty.
 	 *
-	 * @return true if the array is empty, or false if it has any items
+	 * @return true if the list is empty, or false if it has any items
 	 */
 	@Override
 	public boolean isEmpty () {
@@ -596,7 +609,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
-	 * Sets the array size, leaving any values beyond the current size undefined.
+	 * Sets the list size, leaving any values beyond the current size undefined.
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
@@ -617,6 +630,39 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	public void sort () {
 		sort(BooleanComparators.NATURAL_COMPARATOR);
+	}
+	/**
+	 * Sorts all elements according to the order induced by the specified
+	 * comparator using {@link BooleanComparators#sort(boolean[], int, int, BooleanComparator)}.
+	 * If {@code c} is null, this uses {@link BooleanComparators#NATURAL_COMPARATOR} as its c.
+	 *
+	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
+	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
+	 * used as a generic sorting algorithm.
+	 *
+	 * @param c the comparator to determine the order of the BooleanList
+	 */
+	public void sort (@Nullable final BooleanComparator c) {
+		if (c == null) {
+			sort(0, size, BooleanComparators.NATURAL_COMPARATOR);
+		} else {
+			sort(0, size, c);
+		}
+	}
+
+	/**
+	 * Sorts the specified range of elements according to the order induced by the specified
+	 * comparator using mergesort, or {@link BooleanComparators#NATURAL_COMPARATOR} if {@code c} is null.
+	 * This purely uses {@link BooleanComparators#sort(boolean[], int, int, BooleanComparator)}, and you
+	 * can see its docs for more information.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted.
+	 * @param to   the index of the last element (exclusive) to be sorted.
+	 * @param c    the comparator to determine the order of the BooleanList
+	 */
+	public void sort (final int from, final int to, final BooleanComparator c) {
+		BooleanComparators.sort(items, from, to, c);
 	}
 
 	@Override
@@ -643,7 +689,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
-	 * Reduces the size of the array to the specified size. If the array is already smaller than the specified size, no action is
+	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
 	public void truncate (int newSize) {
@@ -651,10 +697,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
-	 * Returns a random item from the array, or false if the array is empty.
+	 * Returns a random item from the list, or false if the list is empty.
 	 *
 	 * @param random a {@link Random} or a subclass, such as any from juniper
-	 * @return a randomly selected item from this, or {@code 0} if this is empty
+	 * @return a randomly selected item from this, or {@code false} if this is empty
 	 */
 	public boolean random (Random random) {
 		if (size == 0) {return false;}
@@ -675,7 +721,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	/**
 	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
 	 * into {@code array} and returns it; otherwise, it allocates a new boolean array that can fit all
-	 * of the items in this, and proceeds to copy into that and return that.
+	 * the items in this, and proceeds to copy into that and return that.
 	 *
 	 * @param array a boolean array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
@@ -691,29 +737,20 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	public int hashCode () {
 		boolean[] items = this.items;
 		int h = 1;
-		if (ordered) {
-			for (int i = 0, n = size; i < n; i++) {h = h * 31 + (items[i] ? 421 : 5);}
-		} else {
-			for (int i = 0, n = size; i < n; i++) {
-				h += items[i] ? 421 : 5;
-			}
+		for (int i = 0, n = size; i < n; i++) {
+			h = h * 31 + (items[i] ? 421 : 5);
 		}
 		return h;
 	}
 
-	/**
-	 * Returns false if either array is unordered.
-	 */
 	@Override
 	public boolean equals (Object object) {
 		if (object == this) {return true;}
-		if (!ordered) {return false;}
 		if (!(object instanceof BooleanList)) {return false;}
-		BooleanList array = (BooleanList)object;
-		if (!array.ordered) {return false;}
+		BooleanList list = (BooleanList)object;
 		int n = size;
-		if (n != array.size) {return false;}
-		boolean[] items1 = this.items, items2 = array.items;
+		if (n != list.size()) {return false;}
+		boolean[] items1 = this.items, items2 = list.items;
 		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
 		return true;
 	}
@@ -746,8 +783,8 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this BooleanList. Iterates in order if {@link #ordered}
-	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
+	 * Returns a Java 8 primitive iterator over the int items in this BooleanList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a BooleanList but not a BooleanBag.
 	 * <br>
 	 * This will reuse one of two iterators in this BooleanList; this does not allow nested iteration.
 	 * Use {@link BooleanListIterator#BooleanListIterator(BooleanList)} to nest iterators.
@@ -948,7 +985,8 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		public void add (boolean t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
-			list.insert(index++, t);
+			list.insert(index, t);
+			if(list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
@@ -985,181 +1023,5 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 */
 	public static BooleanList with (boolean... array) {
 		return new BooleanList(array);
-	}
-
-/// The remainder of the code is based on FastUtil.
-
-	/**
-	 * Transforms two consecutive sorted ranges into a single sorted range. The initial ranges are
-	 * {@code [first..middle)} and {@code [middle..last)}, and the resulting range is
-	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
-	 * the second.
-	 */
-	private void inPlaceMerge (final int from, int mid, final int to, final BooleanComparator comp) {
-		if (from >= mid || mid >= to) {return;}
-		if (to - from == 2) {
-			if (comp.compare(get(mid), get(from)) < 0) {swap(from, mid);}
-			return;
-		}
-
-		int firstCut;
-		int secondCut;
-
-		if (mid - from > to - mid) {
-			firstCut = from + (mid - from) / 2;
-			secondCut = lowerBound(mid, to, firstCut, comp);
-		} else {
-			secondCut = mid + (to - mid) / 2;
-			firstCut = upperBound(from, mid, secondCut, comp);
-		}
-
-		int first2 = firstCut;
-		int middle2 = mid;
-		int last2 = secondCut;
-		if (middle2 != first2 && middle2 != last2) {
-			int first1 = first2;
-			int last1 = middle2;
-			while (first1 < --last1) {swap(first1++, last1);}
-			first1 = middle2;
-			last1 = last2;
-			while (first1 < --last1) {swap(first1++, last1);}
-			first1 = first2;
-			last1 = last2;
-			while (first1 < --last1) {swap(first1++, last1);}
-		}
-
-		mid = firstCut + secondCut - mid;
-		inPlaceMerge(from, firstCut, mid, comp);
-		inPlaceMerge(mid, secondCut, to, comp);
-	}
-
-	/**
-	 * Performs a binary search on an already-sorted range: finds the first position where an
-	 * element can be inserted without violating the ordering. Sorting is by a user-supplied
-	 * comparison function.
-	 *
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
-	 * @return the largest index i such that, for every j in the range {@code [first..i)},
-	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
-	 */
-	private int lowerBound (int from, final int to, final int pos, final BooleanComparator comp) {
-		int len = to - from;
-		boolean[] items = this.items;
-		while (len > 0) {
-			int half = len / 2;
-			int middle = from + half;
-			if (comp.compare(items[middle], items[pos]) < 0) {
-				from = middle + 1;
-				len -= half + 1;
-			} else {
-				len = half;
-			}
-		}
-		return from;
-	}
-
-	/**
-	 * Performs a binary search on an already sorted range: finds the last position where an element
-	 * can be inserted without violating the ordering. Sorting is by a user-supplied comparison
-	 * function.
-	 *
-	 * @param from the index of the first element (inclusive) to be included in the binary search.
-	 * @param to   the index of the last element (exclusive) to be included in the binary search.
-	 * @param pos  the position of the element to be searched for.
-	 * @param comp the comparison function.
-	 * @return The largest index i such that, for every j in the range {@code [first..i)},
-	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
-	 */
-	private int upperBound (int from, final int to, final int pos, final BooleanComparator comp) {
-		int len = to - from;
-		boolean[] items = this.items;
-		while (len > 0) {
-			int half = len / 2;
-			int middle = from + half;
-			if (comp.compare(items[pos], items[middle]) < 0) {
-				len = half;
-			} else {
-				from = middle + 1;
-				len -= half + 1;
-			}
-		}
-		return from;
-	}
-
-	/**
-	 * Sorts all elements according to the order induced by the specified
-	 * comparator using mergesort. If {@code c} is null, this instead uses
-	 * {@link BooleanComparators#NATURAL_COMPARATOR} to sort.
-	 *
-	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
-	 *
-	 * @param c the comparator to determine the order of the BooleanList
-	 */
-	public void sort (@Nullable final BooleanComparator c) {
-		if (c == null) {
-			sort(0, size, BooleanComparators.NATURAL_COMPARATOR);
-		} else {
-			sort(0, size, c);
-		}
-	}
-
-	/**
-	 * Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using mergesort.
-	 *
-	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
-	 *
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to   the index of the last element (exclusive) to be sorted.
-	 * @param c    the comparator to determine the order of the BooleanList
-	 */
-	public void sort (final int from, final int to, final BooleanComparator c) {
-		if (to <= 0) {
-			return;
-		}
-		if (from < 0 || from >= size || to > size) {
-			throw new UnsupportedOperationException("The given from/to range in BooleanList.sort() is invalid.");
-		}
-		/*
-		 * We retain the same method signature as quickSort. Given only a comparator and this list
-		 * do not know how to copy and move elements from/to temporary arrays. Hence, in contrast to
-		 * the JDK mergesorts this is an "in-place" mergesort, i.e. does not allocate any temporary
-		 * arrays. A non-inplace mergesort would perhaps be faster in most cases, but would require
-		 * non-intuitive delegate objects...
-		 */
-		final int length = to - from;
-
-		boolean[] items = this.items;
-
-		// Insertion sort on smallest arrays, less than 16 items
-		if (length < 16) {
-			for (int i = from; i < to; i++) {
-				for (int j = i; j > from && c.compare(items[j - 1], items[j]) > 0; j--) {
-					swap(j, j - 1);
-				}
-			}
-			return;
-		}
-
-		// Recursively sort halves
-		int mid = from + to >>> 1;
-		sort(from, mid, c);
-		sort(mid, to, c);
-
-		// If list is already sorted, nothing left to do. This is an
-		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
-
-		// Merge sorted halves
-		inPlaceMerge(from, mid, to, c);
 	}
 }
