@@ -19,8 +19,8 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -29,93 +29,110 @@ import java.util.Random;
 import java.util.function.IntUnaryOperator;
 
 /**
- * A resizable, ordered or unordered int list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Integer.
- * If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
+ * A resizable, insertion-ordered int list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Integer.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
+ * @see IntBag IntBag is an unordered variant on IntList.
  */
 public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrangeable {
+	/**
+	 * Returns true if this implementation retains order, which it does.
+	 * @return true
+	 */
+	public boolean keepsOrder () {
+		return true;
+	}
 
 	public int[] items;
 	protected int size;
-	public boolean ordered;
 	@Nullable protected transient IntListIterator iterator1;
 	@Nullable protected transient IntListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 10.
+	 * Creates an ordered list with a capacity of 10.
 	 */
 	public IntList () {
-		this(true, 10);
+		this(10);
 	}
 
 	/**
-	 * Creates an ordered array with the specified capacity.
-	 */
-	public IntList (int capacity) {
-		this(true, capacity);
-	}
-
-	/**
-	 * @param ordered  If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                 memory copy.
+	 * Creates an ordered list with the specified capacity.
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
-	public IntList (boolean ordered, int capacity) {
-		this.ordered = ordered;
+	public IntList (int capacity) {
 		items = new int[capacity];
 	}
 
 	/**
-	 * Creates a new list containing the elements in the specific array. The new array will be ordered if the specific array is
-	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
-	 * grown.
+	 * Creates an ordered list with the specified capacity.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link IntBag}
+	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
+	 * @deprecated IntList is always ordered; for an unordered list use {@link IntBag}
 	 */
-	public IntList (IntList array) {
-		this.ordered = array.ordered;
-		size = array.size;
-		items = new int[size];
-		System.arraycopy(array.items, 0, items, 0, size);
+	@Deprecated
+	public IntList (boolean ordered, int capacity) {
+		this(capacity);
 	}
 
 	/**
-	 * Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
+	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
+	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 * @param list another IntList (or IntBag) to copy from
+	 */
+	public IntList (IntList list) {
+		size = list.size;
+		items = new int[size];
+		System.arraycopy(list.items, 0, items, 0, size);
+	}
+
+	/**
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 * @param array a int array to copy from
 	 */
 	public IntList (int[] array) {
-		this(true, array, 0, array.length);
-	}
-
-	/**
-	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
-	 * subsequent elements added will cause the backing array to be grown.
-	 */
-	public IntList (int[] array, int startIndex, int count) {
-		this(true, array, startIndex, count);
+		this(array, 0, array.length);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                memory copy.
+	 * @param array a non-null int array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
 	 */
-	public IntList (boolean ordered, int[] array, int startIndex, int count) {
-		this(ordered, count);
+	public IntList (int[] array, int startIndex, int count) {
+		this(count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
 	/**
-	 * Creates a new list containing the items in the specified PrimitiveCollection, such as an {@link ObjectIntMap.Values}.
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * subsequent elements added will cause the backing array to be grown.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link IntBag}
+	 * @param array a non-null int array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
+	 * @deprecated IntList is always ordered; for an unordered list use {@link IntBag}
+	 */
+	@Deprecated
+	public IntList (boolean ordered, int[] array, int startIndex, int count) {
+		this(array, startIndex, count);
+	}
+
+	/**
+	 * Creates a new list containing the items in the specified PrimitiveCollection.OfInt.
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public IntList (PrimitiveCollection.OfInt coll) {
+	public IntList (OfInt coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -123,7 +140,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	/**
 	 * Copies the given Ordered.OfInt into a new IntList.
 	 *
-	 * @param other another Ordered.OfInt
+	 * @param other another Ordered.OfInt that will have its contents copied into this
 	 */
 	public IntList (Ordered.OfInt other) {
 		this(other.order());
@@ -177,7 +194,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	public void add (int value1, int value2, int value3, int value4) {
 		int[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(8, (int)(size * 1.8f))); // 1.75 isn't enough when size=5.
+			items = resize(Math.max(9, (int)(size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -187,14 +204,14 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	// Modified from libGDX
-	public boolean addAll (IntList array) {
-		return addAll(array.items, 0, array.size);
+	public boolean addAll (IntList list) {
+		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (IntList array, int offset, int length) {
-		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
-		return addAll(array.items, offset, length);
+	public boolean addAll (IntList list, int offset, int count) {
+		if (offset + count > list.size) {throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);}
+		return addAll(list.items, offset, count);
 	}
 
 	/**
@@ -238,7 +255,6 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 
 	// Modified from libGDX
 	public boolean addAll (int[] array, int offset, int length) {
-		if (length <= 0 || items.length == 0) {return false;}
 		int[] items = this.items;
 		int sizeNeeded = size + length;
 		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
@@ -253,7 +269,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		return items[index];
 	}
 
-	// Kotlin-friendly operator
+	//Kotlin-friendly operator
 	public void set (int index, int value) {
 		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
 		items[index] = value;
@@ -374,7 +390,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		int[] items = this.items;
 		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
-		if (ordered) {System.arraycopy(items, index, items, index + 1, size - index);} else {items[size] = items[index];}
+		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
 	}
@@ -442,7 +458,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	/**
 	 * Returns the first index in this list that contains the specified value, or -1 if it is not present.
 	 *
-	 * @param value an int value to search for
+	 * @param value a int value to search for
 	 * @return the first index of the given value, or -1 if it is not present
 	 */
 	public int indexOf (int value) {
@@ -454,7 +470,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	/**
 	 * Returns the last index in this list that contains the specified value, or -1 if it is not present.
 	 *
-	 * @param value an int value to search for
+	 * @param value a int value to search for
 	 * @return the last index of the given value, or -1 if it is not present
 	 */
 	public int lastIndexOf (int value) {
@@ -496,7 +512,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		int[] items = this.items;
 		int value = items[index];
 		size--;
-		if (ordered) {System.arraycopy(items, index + 1, items, index, size - index);} else {items[index] = items[size];}
+		System.arraycopy(items, index + 1, items, index, size - index);
 		return value;
 	}
 
@@ -513,21 +529,18 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		int n = size;
 		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
 		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
-		int count = end - start, lastIndex = n - count;
-		if (ordered) {System.arraycopy(items, start + count, items, start, n - (start + count));} else {
-			int i = Math.max(lastIndex, end);
-			System.arraycopy(items, i, items, start, n - i);
-		}
+		int count = end - start;
+		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
 	}
 
 	/**
 	 * Removes from this IntList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @param c a primitive collection of int items to remove fully, such as another IntList or an IntSet
+	 * @param c a primitive collection of int items to remove fully, such as another IntList or a IntDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (PrimitiveCollection.OfInt c) {
+	public boolean removeAll (OfInt c) {
 		int size = this.size;
 		int startSize = size;
 		int[] items = this.items;
@@ -550,10 +563,10 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
 	 * contents as this IntList or has additional items, then removing each of {@code c} will clear this.
 	 *
-	 * @param c a primitive collection of int items to remove one-by-one, such as another IntList or an IntSet
+	 * @param c a primitive collection of int items to remove one-by-one, such as another IntList or a IntDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (PrimitiveCollection.OfInt c) {
+	public boolean removeEach (OfInt c) {
 		int size = this.size;
 		int startSize = size;
 		int[] items = this.items;
@@ -578,7 +591,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * @return true if this IntList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (PrimitiveCollection.OfInt other) {
+	public boolean retainAll (OfInt other) {
 		final int size = this.size;
 		final int[] items = this.items;
 		int r = 0, w = 0;
@@ -595,7 +608,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator an IntUnaryOperator (a functional interface defined in the JDK)
+	 * @param operator a IntToIntFunction (a functional interface defined in funderby)
 	 */
 	public void replaceAll (IntUnaryOperator operator) {
 		for (int i = 0, n = size; i < n; i++) {
@@ -635,18 +648,18 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * Returns true if the array has one or more items, or false otherwise.
+	 * Returns true if the list has one or more items, or false otherwise.
 	 *
-	 * @return true if the array has one or more items, or false otherwise
+	 * @return true if the list has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
 		return size != 0;
 	}
 
 	/**
-	 * Returns true if the array is empty.
+	 * Returns true if the list is empty.
 	 *
-	 * @return true if the array is empty, or false if it has any items
+	 * @return true if the list is empty, or false if it has any items
 	 */
 	@Override
 	public boolean isEmpty () {
@@ -655,7 +668,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 
 	/**
 	 * Effectively removes all items from this IntList.
-	 * This is done simply by setting size to 0; because an {@code int} item isn't a reference, it doesn't need to be set to null.
+	 * This is done simply by setting size to 0; because a {@code int} item isn't a reference, it doesn't need to be set to null.
 	 */
 	@Override
 	public void clear () {
@@ -687,7 +700,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * Sets the array size, leaving any values beyond the current size undefined.
+	 * Sets the list size, leaving any values beyond the current size undefined.
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
@@ -708,6 +721,41 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 
 	public void sort () {
 		Arrays.sort(items, 0, size);
+	}
+
+	/**
+	 * Sorts all elements according to the order induced by the specified
+	 * comparator using {@link IntComparators#sort(int[], int, int, IntComparator)}.
+	 * If {@code c} is null, this instead delegates to {@link #sort()},
+	 * which uses {@link Arrays#sort(int[])}, and does not always run in-place.
+	 *
+	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
+	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
+	 * used as a generic sorting algorithm.
+	 *
+	 * @param c the comparator to determine the order of the IntList
+	 */
+	public void sort (@Nullable final IntComparator c) {
+		if (c == null) {
+			sort();
+		} else {
+			sort(0, size, c);
+		}
+	}
+
+	/**
+	 * Sorts the specified range of elements according to the order induced by the specified
+	 * comparator using mergesort, or {@link Arrays#sort(int[], int, int)} if {@code c} is null.
+	 * This purely uses {@link IntComparators#sort(int[], int, int, IntComparator)}, and you
+	 * can see its docs for more information.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted.
+	 * @param to   the index of the last element (exclusive) to be sorted.
+	 * @param c    the comparator to determine the order of the IntList
+	 */
+	public void sort (final int from, final int to, final IntComparator c) {
+		IntComparators.sort(items, from, to, c);
 	}
 
 	@Override
@@ -734,7 +782,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * Reduces the size of the array to the specified size. If the array is already smaller than the specified size, no action is
+	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
 	public void truncate (int newSize) {
@@ -742,12 +790,11 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * Returns a random item from the array, or zero if the array is empty.
+	 * Returns a random item from the list, or zero if the list is empty.
 	 *
-	 * @param random a {@link Random} or a subclass
+	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
-	// Modified from libGDX
 	public int random (Random random) {
 		if (size == 0) {return 0;}
 		return items[random.nextInt(size)];
@@ -767,7 +814,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	/**
 	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
 	 * into {@code array} and returns it; otherwise, it allocates a new int array that can fit all
-	 * of the items in this, and proceeds to copy into that and return that.
+	 * the items in this, and proceeds to copy into that and return that.
 	 *
 	 * @param array a int array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
@@ -783,12 +830,8 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	public int hashCode () {
 		int[] items = this.items;
 		int h = 1;
-		if (ordered) {
-			for (int i = 0, n = size; i < n; i++) {h = h * 31 + items[i];}
-		} else {
-			for (int i = 0, n = size; i < n; i++) {
-				h += items[i];
-			}
+		for (int i = 0, n = size; i < n; i++) {
+			h = h * 31 + items[i];
 		}
 		return h;
 	}
@@ -796,13 +839,11 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	@Override
 	public boolean equals (Object object) {
 		if (object == this) {return true;}
-		if (!ordered) {return false;}
 		if (!(object instanceof IntList)) {return false;}
-		IntList array = (IntList)object;
-		if (!array.ordered) {return false;}
+		IntList list = (IntList)object;
 		int n = size;
-		if (n != array.size) {return false;}
-		int[] items1 = this.items, items2 = array.items;
+		if (n != list.size()) {return false;}
+		int[] items1 = this.items, items2 = list.items;
 		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
 		return true;
 	}
@@ -835,8 +876,8 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this IntList. Iterates in order if {@link #ordered}
-	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
+	 * Returns a Java 8 primitive iterator over the int items in this IntList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a IntList but not a IntBag.
 	 * <br>
 	 * This will reuse one of two iterators in this IntList; this does not allow nested iteration.
 	 * Use {@link IntListIterator#IntListIterator(IntList)} to nest iterators.
@@ -1037,7 +1078,8 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		public void add (int t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
-			list.insert(index++, t);
+			list.insert(index, t);
+			if(list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
@@ -1058,7 +1100,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		 *
 		 * @return this same IntListIterator.
 		 */
-		public IntListIterator iterator () {
+		public IntList.IntListIterator iterator () {
 			return this;
 		}
 	}
@@ -1074,40 +1116,5 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 */
 	public static IntList with (int... array) {
 		return new IntList(array);
-	}
-
-	/**
-	 * Sorts all elements according to the order induced by the specified
-	 * comparator using {@link IntComparators#sort(int[], int, int, IntComparator)}.
-	 * If {@code c} is null, this instead delegates to {@link #sort()},
-	 * which uses {@link Arrays#sort(int[])}, and does not always run in-place.
-	 *
-	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
-	 *
-	 * @param c the comparator to determine the order of the IntList
-	 */
-	public void sort (@Nullable final IntComparator c) {
-		if (c == null) {
-			sort();
-		} else {
-			sort(0, size, c);
-		}
-	}
-
-	/**
-	 * Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using mergesort, or {@link Arrays#sort(int[], int, int)} if {@code c} is null.
-	 * This purely uses {@link IntComparators#sort(int[], int, int, IntComparator)}, and you
-	 * can see its docs for more information.
-	 *
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to   the index of the last element (exclusive) to be sorted.
-	 * @param c    the comparator to determine the order of the IntList
-	 */
-	public void sort (final int from, final int to, final IntComparator c) {
-		IntComparators.sort(items, from, to, c);
 	}
 }
