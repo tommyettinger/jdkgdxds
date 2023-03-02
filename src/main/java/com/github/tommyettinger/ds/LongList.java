@@ -19,103 +19,120 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
-
+import com.github.tommyettinger.function.LongToLongFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Random;
-import java.util.function.LongUnaryOperator;
 
 /**
- * A resizable, ordered or unordered long list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Long.
- * If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
+ * A resizable, insertion-ordered long list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Long.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
+ * @see LongBag LongBag is an unordered variant on LongList.
  */
 public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arrangeable {
+	/**
+	 * Returns true if this implementation retains order, which it does.
+	 * @return true
+	 */
+	public boolean keepsOrder () {
+		return true;
+	}
 
 	public long[] items;
 	protected int size;
-	public boolean ordered;
 	@Nullable protected transient LongListIterator iterator1;
 	@Nullable protected transient LongListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 10.
+	 * Creates an ordered list with a capacity of 10.
 	 */
 	public LongList () {
-		this(true, 10);
+		this(10);
 	}
 
 	/**
-	 * Creates an ordered array with the specified capacity.
-	 */
-	public LongList (int capacity) {
-		this(true, capacity);
-	}
-
-	/**
-	 * @param ordered  If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                 memory copy.
+	 * Creates an ordered list with the specified capacity.
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
-	public LongList (boolean ordered, int capacity) {
-		this.ordered = ordered;
+	public LongList (int capacity) {
 		items = new long[capacity];
 	}
 
 	/**
-	 * Creates a new list containing the elements in the specific array. The new array will be ordered if the specific array is
-	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
-	 * grown.
+	 * Creates an ordered list with the specified capacity.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link LongBag}
+	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
+	 * @deprecated LongList is always ordered; for an unordered list use {@link LongBag}
 	 */
-	public LongList (LongList array) {
-		this.ordered = array.ordered;
-		size = array.size;
-		items = new long[size];
-		System.arraycopy(array.items, 0, items, 0, size);
+	@Deprecated
+	public LongList (boolean ordered, int capacity) {
+		this(capacity);
 	}
 
 	/**
-	 * Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
+	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
+	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 * @param list another LongList (or LongBag) to copy from
+	 */
+	public LongList (LongList list) {
+		size = list.size;
+		items = new long[size];
+		System.arraycopy(list.items, 0, items, 0, size);
+	}
+
+	/**
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 * @param array a long array to copy from
 	 */
 	public LongList (long[] array) {
-		this(true, array, 0, array.length);
-	}
-
-	/**
-	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
-	 * subsequent elements added will cause the backing array to be grown.
-	 */
-	public LongList (long[] array, int startIndex, int count) {
-		this(true, array, startIndex, count);
+		this(array, 0, array.length);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                memory copy.
+	 * @param array a non-null long array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
 	 */
-	public LongList (boolean ordered, long[] array, int startIndex, int count) {
-		this(ordered, count);
+	public LongList (long[] array, int startIndex, int count) {
+		this(count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
 	/**
-	 * Creates a new list containing the items in the specified PrimitiveCollection, such as an {@link ObjectLongMap.Values}.
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * subsequent elements added will cause the backing array to be grown.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link LongBag}
+	 * @param array a non-null long array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
+	 * @deprecated LongList is always ordered; for an unordered list use {@link LongBag}
+	 */
+	@Deprecated
+	public LongList (boolean ordered, long[] array, int startIndex, int count) {
+		this(array, startIndex, count);
+	}
+
+	/**
+	 * Creates a new list containing the items in the specified PrimitiveCollection.OfLong.
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public LongList (PrimitiveCollection.OfLong coll) {
+	public LongList (OfLong coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -123,7 +140,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	/**
 	 * Copies the given Ordered.OfLong into a new LongList.
 	 *
-	 * @param other another Ordered.OfLong
+	 * @param other another Ordered.OfLong that will have its contents copied into this
 	 */
 	public LongList (Ordered.OfLong other) {
 		this(other.order());
@@ -177,7 +194,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	public void add (long value1, long value2, long value3, long value4) {
 		long[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(8, (int)(size * 1.8f))); // 1.75 isn't enough when size=5.
+			items = resize(Math.max(9, (int)(size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -187,14 +204,14 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	// Modified from libGDX
-	public boolean addAll (LongList array) {
-		return addAll(array.items, 0, array.size);
+	public boolean addAll (LongList list) {
+		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (LongList array, int offset, int length) {
-		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
-		return addAll(array.items, offset, length);
+	public boolean addAll (LongList list, int offset, int count) {
+		if (offset + count > list.size) {throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);}
+		return addAll(list.items, offset, count);
 	}
 
 	/**
@@ -373,7 +390,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		long[] items = this.items;
 		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
-		if (ordered) {System.arraycopy(items, index, items, index + 1, size - index);} else {items[size] = items[index];}
+		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
 	}
@@ -495,7 +512,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		long[] items = this.items;
 		long value = items[index];
 		size--;
-		if (ordered) {System.arraycopy(items, index + 1, items, index, size - index);} else {items[index] = items[size];}
+		System.arraycopy(items, index + 1, items, index, size - index);
 		return value;
 	}
 
@@ -512,21 +529,18 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		int n = size;
 		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
 		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
-		int count = end - start, lastIndex = n - count;
-		if (ordered) {System.arraycopy(items, start + count, items, start, n - (start + count));} else {
-			int i = Math.max(lastIndex, end);
-			System.arraycopy(items, i, items, start, n - i);
-		}
+		int count = end - start;
+		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
 	}
 
 	/**
 	 * Removes from this LongList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @param c a primitive collection of int items to remove fully, such as another LongList or a LongSet
+	 * @param c a primitive collection of int items to remove fully, such as another LongList or a LongDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (PrimitiveCollection.OfLong c) {
+	public boolean removeAll (OfLong c) {
 		int size = this.size;
 		int startSize = size;
 		long[] items = this.items;
@@ -549,10 +563,10 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
 	 * contents as this LongList or has additional items, then removing each of {@code c} will clear this.
 	 *
-	 * @param c a primitive collection of int items to remove one-by-one, such as another LongList or a LongSet
+	 * @param c a primitive collection of int items to remove one-by-one, such as another LongList or a LongDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (PrimitiveCollection.OfLong c) {
+	public boolean removeEach (OfLong c) {
 		int size = this.size;
 		int startSize = size;
 		long[] items = this.items;
@@ -577,7 +591,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * @return true if this LongList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (PrimitiveCollection.OfLong other) {
+	public boolean retainAll (OfLong other) {
 		final int size = this.size;
 		final long[] items = this.items;
 		int r = 0, w = 0;
@@ -594,9 +608,9 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a LongUnaryOperator (a functional interface defined in the JDK)
+	 * @param operator a LongToLongFunction (a functional interface defined in funderby)
 	 */
-	public void replaceAll (LongUnaryOperator operator) {
+	public void replaceAll (LongToLongFunction operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsLong(items[i]);
 		}
@@ -634,18 +648,18 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
-	 * Returns true if the array has one or more items, or false otherwise.
+	 * Returns true if the list has one or more items, or false otherwise.
 	 *
-	 * @return true if the array has one or more items, or false otherwise
+	 * @return true if the list has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
 		return size != 0;
 	}
 
 	/**
-	 * Returns true if the array is empty.
+	 * Returns true if the list is empty.
 	 *
-	 * @return true if the array is empty, or false if it has any items
+	 * @return true if the list is empty, or false if it has any items
 	 */
 	@Override
 	public boolean isEmpty () {
@@ -686,7 +700,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
-	 * Sets the array size, leaving any values beyond the current size undefined.
+	 * Sets the list size, leaving any values beyond the current size undefined.
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
@@ -707,6 +721,41 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	public void sort () {
 		Arrays.sort(items, 0, size);
+	}
+
+	/**
+	 * Sorts all elements according to the order induced by the specified
+	 * comparator using {@link LongComparators#sort(long[], int, int, LongComparator)}.
+	 * If {@code c} is null, this instead delegates to {@link #sort()},
+	 * which uses {@link Arrays#sort(long[])}, and does not always run in-place.
+	 *
+	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
+	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
+	 * used as a generic sorting algorithm.
+	 *
+	 * @param c the comparator to determine the order of the LongList
+	 */
+	public void sort (@Nullable final LongComparator c) {
+		if (c == null) {
+			sort();
+		} else {
+			sort(0, size, c);
+		}
+	}
+
+	/**
+	 * Sorts the specified range of elements according to the order induced by the specified
+	 * comparator using mergesort, or {@link Arrays#sort(long[], int, int)} if {@code c} is null.
+	 * This purely uses {@link LongComparators#sort(long[], int, int, LongComparator)}, and you
+	 * can see its docs for more information.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted.
+	 * @param to   the index of the last element (exclusive) to be sorted.
+	 * @param c    the comparator to determine the order of the LongList
+	 */
+	public void sort (final int from, final int to, final LongComparator c) {
+		LongComparators.sort(items, from, to, c);
 	}
 
 	@Override
@@ -733,7 +782,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
-	 * Reduces the size of the array to the specified size. If the array is already smaller than the specified size, no action is
+	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
 	public void truncate (int newSize) {
@@ -741,7 +790,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
-	 * Returns a random item from the array, or zero if the array is empty.
+	 * Returns a random item from the list, or zero if the list is empty.
 	 *
 	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
@@ -765,7 +814,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	/**
 	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
 	 * into {@code array} and returns it; otherwise, it allocates a new long array that can fit all
-	 * of the items in this, and proceeds to copy into that and return that.
+	 * the items in this, and proceeds to copy into that and return that.
 	 *
 	 * @param array a long array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
@@ -780,34 +829,21 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	@Override
 	public int hashCode () {
 		long[] items = this.items;
-		long h;
-		if (!ordered) {
-			h = 1L;
-			for (int i = 0, n = size; i < n; i++) {
-				h += items[i];
-			}
-		} else {
-			h = 0xC13FA9A902A6328FL;
-			for (int i = 0, n = size; i < n; i++) {
-				h = h * 0x9E3779B97F4A7C15L + items[i];
-			}
+		long h = 0xC13FA9A902A6328FL;
+		for (int i = 0, n = size; i < n; i++) {
+			h = h * 0x9E3779B97F4A7C15L + items[i];
 		}
 		return (int)(h ^ h >>> 32);
 	}
 
-	/**
-	 * Returns false if either array is unordered.
-	 */
 	@Override
 	public boolean equals (Object object) {
 		if (object == this) {return true;}
-		if (!ordered) {return false;}
 		if (!(object instanceof LongList)) {return false;}
-		LongList array = (LongList)object;
-		if (!array.ordered) {return false;}
+		LongList list = (LongList)object;
 		int n = size;
-		if (n != array.size) {return false;}
-		long[] items1 = this.items, items2 = array.items;
+		if (n != list.size()) {return false;}
+		long[] items1 = this.items, items2 = list.items;
 		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
 		return true;
 	}
@@ -840,8 +876,8 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this LongList. Iterates in order if {@link #ordered}
-	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
+	 * Returns a Java 8 primitive iterator over the int items in this LongList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a LongList but not a LongBag.
 	 * <br>
 	 * This will reuse one of two iterators in this LongList; this does not allow nested iteration.
 	 * Use {@link LongListIterator#LongListIterator(LongList)} to nest iterators.
@@ -1042,7 +1078,8 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		public void add (long t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
-			list.insert(index++, t);
+			list.insert(index, t);
+			if(list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
@@ -1063,7 +1100,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		 *
 		 * @return this same LongListIterator.
 		 */
-		public LongListIterator iterator () {
+		public LongList.LongListIterator iterator () {
 			return this;
 		}
 	}
@@ -1079,40 +1116,5 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 */
 	public static LongList with (long... array) {
 		return new LongList(array);
-	}
-
-	/**
-	 * Sorts all elements according to the order induced by the specified
-	 * comparator using {@link LongComparators#sort(long[], int, int, LongComparator)}.
-	 * If {@code c} is null, this instead delegates to {@link #sort()},
-	 * which uses {@link Arrays#sort(long[])}, and does not always run in-place.
-	 *
-	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
-	 *
-	 * @param c the comparator to determine the order of the LongList
-	 */
-	public void sort (@Nullable final LongComparator c) {
-		if (c == null) {
-			sort();
-		} else {
-			sort(0, size, c);
-		}
-	}
-
-	/**
-	 * Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using mergesort, or {@link Arrays#sort(long[], int, int)} if {@code c} is null.
-	 * This purely uses {@link LongComparators#sort(long[], int, int, LongComparator)}, and you
-	 * can see its docs for more information.
-	 *
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to   the index of the last element (exclusive) to be sorted.
-	 * @param c    the comparator to determine the order of the LongList
-	 */
-	public void sort (final int from, final int to, final LongComparator c) {
-		LongComparators.sort(items, from, to, c);
 	}
 }
