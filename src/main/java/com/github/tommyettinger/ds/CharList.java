@@ -17,12 +17,12 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.function.CharToCharFunction;
 import com.github.tommyettinger.ds.support.sort.CharComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparators;
 import com.github.tommyettinger.ds.support.util.CharIterator;
-
+import com.github.tommyettinger.function.CharToCharFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -30,90 +30,106 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
- * A resizable, ordered or unordered char list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Character.
- * If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
+ * A resizable, insertion-ordered char list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Character.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
+ * @see CharBag CharBag is an unordered variant on CharList.
  */
 public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable {
+	/**
+	 * Returns true if this implementation retains order, which it does.
+	 * @return true
+	 */
+	public boolean keepsOrder () {
+		return true;
+	}
 
 	public char[] items;
 	protected int size;
-	public boolean ordered;
 	@Nullable protected transient CharListIterator iterator1;
 	@Nullable protected transient CharListIterator iterator2;
 
 	/**
-	 * Creates an ordered array with a capacity of 10.
+	 * Creates an ordered list with a capacity of 10.
 	 */
 	public CharList () {
-		this(true, 10);
+		this(10);
 	}
 
 	/**
-	 * Creates an ordered array with the specified capacity.
-	 */
-	public CharList (int capacity) {
-		this(true, capacity);
-	}
-
-	/**
-	 * @param ordered  If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                 memory copy.
+	 * Creates an ordered list with the specified capacity.
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
-	public CharList (boolean ordered, int capacity) {
-		this.ordered = ordered;
+	public CharList (int capacity) {
 		items = new char[capacity];
 	}
 
 	/**
-	 * Creates a new list containing the elements in the specific array. The new array will be ordered if the specific array is
-	 * ordered. The capacity is set to the number of elements, so any subsequent elements added will cause the backing array to be
-	 * grown.
+	 * Creates an ordered list with the specified capacity.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link CharBag}
+	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
+	 * @deprecated CharList is always ordered; for an unordered list use {@link CharBag}
 	 */
-	public CharList (CharList array) {
-		this.ordered = array.ordered;
-		size = array.size;
-		items = new char[size];
-		System.arraycopy(array.items, 0, items, 0, size);
+	@Deprecated
+	public CharList (boolean ordered, int capacity) {
+		this(capacity);
 	}
 
 	/**
-	 * Creates a new ordered array containing the elements in the specified array. The capacity is set to the number of elements,
+	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
+	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 * @param list another CharList (or CharBag) to copy from
+	 */
+	public CharList (CharList list) {
+		size = list.size;
+		items = new char[size];
+		System.arraycopy(list.items, 0, items, 0, size);
+	}
+
+	/**
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 * @param array a char array to copy from
 	 */
 	public CharList (char[] array) {
-		this(true, array, 0, array.length);
-	}
-
-	/**
-	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
-	 * subsequent elements added will cause the backing array to be grown.
-	 */
-	public CharList (char[] array, int startIndex, int count) {
-		this(true, array, startIndex, count);
+		this(array, 0, array.length);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered If false, methods that remove elements may change the order of other elements in the array, which avoids a
-	 *                memory copy.
+	 * @param array a non-null char array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
 	 */
-	public CharList (boolean ordered, char[] array, int startIndex, int count) {
-		this(ordered, count);
+	public CharList (char[] array, int startIndex, int count) {
+		this(count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
 	}
 
 	/**
-	 * Creates a new list containing the items in the specified PrimitiveCollection.OfChar. Only this class currently implements
-	 * that interface, but user code can as well.
+	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
+	 * subsequent elements added will cause the backing array to be grown.
+	 *
+	 * @param ordered ignored; for an unordered list use {@link CharBag}
+	 * @param array a non-null char array to add to this list
+	 * @param startIndex the first index in {@code array} to use
+	 * @param count how many items to use from {@code array}
+	 * @deprecated CharList is always ordered; for an unordered list use {@link CharBag}
+	 */
+	@Deprecated
+	public CharList (boolean ordered, char[] array, int startIndex, int count) {
+		this(array, startIndex, count);
+	}
+
+	/**
+	 * Creates a new list containing the items in the specified PrimitiveCollection.OfChar.
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
@@ -125,7 +141,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Copies the given Ordered.OfChar into a new CharList.
 	 *
-	 * @param other another Ordered.OfChar
+	 * @param other another Ordered.OfChar that will have its contents copied into this
 	 */
 	public CharList (Ordered.OfChar other) {
 		this(other.order());
@@ -179,7 +195,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	public void add (char value1, char value2, char value3, char value4) {
 		char[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(8, (int)(size * 1.8f))); // 1.75 isn't enough when size=5.
+			items = resize(Math.max(9, (int)(size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -189,24 +205,14 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	// Modified from libGDX
-	public boolean addAll (CharList array) {
-		return addAll(array.items, 0, array.size);
+	public boolean addAll (CharList list) {
+		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (CharList array, int offset, int length) {
-		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
-		return addAll(array.items, offset, length);
-	}
-
-	/**
-	 * Adds all items in the Ordered.OfChar {@code other} to this list, inserting at the end of the iteration order.
-	 *
-	 * @param other a non-null {@link Ordered.OfChar}
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfChar)} does
-	 */
-	public boolean addAll (Ordered.OfChar other) {
-		return addAll(size(), other, 0, other.size());
+	public boolean addAll (CharList list, int offset, int count) {
+		if (offset + count > list.size) {throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);}
+		return addAll(list.items, offset, count);
 	}
 
 	/**
@@ -216,7 +222,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param other  a non-null {@link Ordered.OfChar}
 	 * @param offset the first index in {@code other} to use
 	 * @param count  how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfChar)} does
+	 * @return true if this is modified by this call, as {@link #addAll(CharList)} does
 	 */
 	public boolean addAll (Ordered.OfChar other, int offset, int count) {
 		return addAll(size(), other, offset, count);
@@ -230,7 +236,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param other          a non-null {@link Ordered.OfChar}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
-	 * @return true if this is modified by this call, as {@link #addAll(Ordered.OfChar)} does
+	 * @return true if this is modified by this call, as {@link #addAll(CharList)} does
 	 */
 	public boolean addAll (int insertionIndex, Ordered.OfChar other, int offset, int count) {
 		boolean changed = false;
@@ -274,7 +280,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		char[] items = this.items;
 		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
-		if (ordered) {System.arraycopy(items, index, items, index + 1, size - index);} else {items[size] = items[index];}
+		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
 	}
@@ -396,7 +402,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		char[] items = this.items;
 		char value = items[index];
 		size--;
-		if (ordered) {System.arraycopy(items, index + 1, items, index, size - index);} else {items[index] = items[size];}
+		System.arraycopy(items, index + 1, items, index, size - index);
 		return value;
 	}
 
@@ -413,11 +419,8 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		int n = size;
 		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
 		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
-		int count = end - start, lastIndex = n - count;
-		if (ordered) {System.arraycopy(items, start + count, items, start, n - (start + count));} else {
-			int i = Math.max(lastIndex, end);
-			System.arraycopy(items, i, items, start, n - i);
-		}
+		int count = end - start;
+		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
 	}
 
@@ -427,7 +430,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param c a primitive collection of int items to remove fully, such as another CharList or a CharDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (PrimitiveCollection.OfChar c) {
+	public boolean removeAll (OfChar c) {
 		int size = this.size;
 		int startSize = size;
 		char[] items = this.items;
@@ -453,7 +456,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param c a primitive collection of int items to remove one-by-one, such as another CharList or a CharDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (PrimitiveCollection.OfChar c) {
+	public boolean removeEach (OfChar c) {
 		int size = this.size;
 		int startSize = size;
 		char[] items = this.items;
@@ -478,7 +481,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @return true if this CharList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (PrimitiveCollection.OfChar other) {
+	public boolean retainAll (OfChar other) {
 		final int size = this.size;
 		final char[] items = this.items;
 		int r = 0, w = 0;
@@ -535,18 +538,18 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
-	 * Returns true if the array has one or more items, or false otherwise.
+	 * Returns true if the list has one or more items, or false otherwise.
 	 *
-	 * @return true if the array has one or more items, or false otherwise
+	 * @return true if the list has one or more items, or false otherwise
 	 */
 	public boolean notEmpty () {
 		return size != 0;
 	}
 
 	/**
-	 * Returns true if the array is empty.
+	 * Returns true if the list is empty.
 	 *
-	 * @return true if the array is empty, or false if it has any items
+	 * @return true if the list is empty, or false if it has any items
 	 */
 	@Override
 	public boolean isEmpty () {
@@ -587,7 +590,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
-	 * Sets the array size, leaving any values beyond the current size undefined.
+	 * Sets the list size, leaving any values beyond the current size undefined.
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
@@ -608,6 +611,41 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	public void sort () {
 		Arrays.sort(items, 0, size);
+	}
+
+	/**
+	 * Sorts all elements according to the order induced by the specified
+	 * comparator using {@link CharComparators#sort(char[], int, int, CharComparator)}.
+	 * If {@code c} is null, this instead delegates to {@link #sort()},
+	 * which uses {@link Arrays#sort(char[])}, and does not always run in-place.
+	 *
+	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
+	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
+	 * used as a generic sorting algorithm.
+	 *
+	 * @param c the comparator to determine the order of the CharList
+	 */
+	public void sort (@Nullable final CharComparator c) {
+		if (c == null) {
+			sort();
+		} else {
+			sort(0, size, c);
+		}
+	}
+
+	/**
+	 * Sorts the specified range of elements according to the order induced by the specified
+	 * comparator using mergesort, or {@link Arrays#sort(char[], int, int)} if {@code c} is null.
+	 * This purely uses {@link CharComparators#sort(char[], int, int, CharComparator)}, and you
+	 * can see its docs for more information.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted.
+	 * @param to   the index of the last element (exclusive) to be sorted.
+	 * @param c    the comparator to determine the order of the CharList
+	 */
+	public void sort (final int from, final int to, final CharComparator c) {
+		CharComparators.sort(items, from, to, c);
 	}
 
 	@Override
@@ -634,7 +672,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
-	 * Reduces the size of the array to the specified size. If the array is already smaller than the specified size, no action is
+	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
 	public void truncate (int newSize) {
@@ -642,7 +680,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
-	 * Returns a random item from the array, or zero if the array is empty.
+	 * Returns a random item from the list, or zero if the list is empty.
 	 *
 	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
@@ -666,7 +704,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * If {@code array.length} at least equal to {@link #size()}, this copies the contents of this
 	 * into {@code array} and returns it; otherwise, it allocates a new char array that can fit all
-	 * of the items in this, and proceeds to copy into that and return that.
+	 * the items in this, and proceeds to copy into that and return that.
 	 *
 	 * @param array a char array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
@@ -682,29 +720,20 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	public int hashCode () {
 		char[] items = this.items;
 		int h = 1;
-		if (ordered) {
-			for (int i = 0, n = size; i < n; i++) {h = h * 31 + items[i];}
-		} else {
-			for (int i = 0, n = size; i < n; i++) {
-				h += items[i];
-			}
+		for (int i = 0, n = size; i < n; i++) {
+			h = h * 31 + items[i];
 		}
 		return h;
 	}
 
-	/**
-	 * Returns false if either array is unordered.
-	 */
 	@Override
 	public boolean equals (Object object) {
 		if (object == this) {return true;}
-		if (!ordered) {return false;}
 		if (!(object instanceof CharList)) {return false;}
-		CharList array = (CharList)object;
-		if (!array.ordered) {return false;}
+		CharList list = (CharList)object;
 		int n = size;
-		if (n != array.size) {return false;}
-		char[] items1 = this.items, items2 = array.items;
+		if (n != list.size()) {return false;}
+		char[] items1 = this.items, items2 = list.items;
 		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
 		return true;
 	}
@@ -737,7 +766,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
-	 * Simply returns all of the char items in this as one String, with no delimiters.
+	 * Simply returns all the char items in this as one String, with no delimiters.
 	 * This is the same as calling {@code String.valueOf(charList.items, 0, charList.size())} .
 	 *
 	 * @return a String containing only the char items in this CharList
@@ -747,8 +776,8 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this CharList. Iterates in order if {@link #ordered}
-	 * is true, otherwise this is not guaranteed to iterate in the same order as items were added.
+	 * Returns a Java 8 primitive iterator over the int items in this CharList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a CharList but not a CharBag.
 	 * <br>
 	 * This will reuse one of two iterators in this CharList; this does not allow nested iteration.
 	 * Use {@link CharListIterator#CharListIterator(CharList)} to nest iterators.
@@ -949,7 +978,8 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		public void add (char t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
-			list.insert(index++, t);
+			list.insert(index, t);
+			if(list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
@@ -987,40 +1017,4 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	public static CharList with (char... array) {
 		return new CharList(array);
 	}
-
-	/**
-	 * Sorts all elements according to the order induced by the specified
-	 * comparator using {@link CharComparators#sort(char[], int, int, CharComparator)}.
-	 * If {@code c} is null, this instead delegates to {@link #sort()},
-	 * which uses {@link Arrays#sort(char[])}, and does not always run in-place.
-	 *
-	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
-	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
-	 *
-	 * @param c the comparator to determine the order of the CharList
-	 */
-	public void sort (@Nullable final CharComparator c) {
-		if (c == null) {
-			sort();
-		} else {
-			sort(0, size, c);
-		}
-	}
-
-	/**
-	 * Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using mergesort, or {@link Arrays#sort(char[], int, int)} if {@code c} is null.
-	 * This purely uses {@link CharComparators#sort(char[], int, int, CharComparator)}, and you
-	 * can see its docs for more information.
-	 *
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to   the index of the last element (exclusive) to be sorted.
-	 * @param c    the comparator to determine the order of the CharList
-	 */
-	public void sort (final int from, final int to, final CharComparator c) {
-		CharComparators.sort(items, from, to, c);
-	}
-
 }
