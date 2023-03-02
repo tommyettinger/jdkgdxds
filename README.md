@@ -21,7 +21,8 @@ implements `com.github.tommyettinger.ds.Ordered.OfInt`, which specifies that the
 You use jdkgdxds much like the standard JDK collections, just extended for primitive types. The types of data structure offered
 here are lists (array-backed, like `ArrayList`), deques (double-ended queues, like `ArrayDeque` but also allowing access inside
 the deque), sets (allowing only unique items, and coming in unordered and insertion-ordered varieties), maps (allowing unique keys
-associated with values, and also coming in unordered and insertion-ordered varieties), and some extra types. The Object-based
+associated with values, and also coming in unordered and insertion-ordered varieties), bags (unordered lists, with fast removal
+but unpredictable iteration order) and some extra types. The Object-based
 classes are generic, centered around `com.github.tommyettinger.ds.ObjectList`, `com.github.tommyettinger.ds.ObjectDeque`,
 `com.github.tommyettinger.ds.ObjectSet`, and `com.github.tommyettinger.ds.ObjectObjectMap`; `ObjectOrderedSet` and
 `ObjectObjectOrderedMap` are also here and extend the other Set and Map. These are effectively replacements for
@@ -30,11 +31,13 @@ classes are generic, centered around `com.github.tommyettinger.ds.ObjectList`, `
 would be to just call these by the same names (except Array, that one's just confusing), we have other kinds of Object-keyed Maps,
 and other kinds of insertion-ordered Maps, so `ObjectMap` is now `ObjectObjectMap` because it has Object keys and Object values,
 while `OrderedMap` is now `ObjectObjectOrderedMap`, because of the same reason. Primitive-backed collections support `int`
-and `long` keys, and `int`, `long`, or `float` values; all primitive types are available for lists and deques. So, there's
+and `long` keys, and `int`, `long`, or `float` values; all primitive types are available for lists, deques, and bags. So, there's
 `IntSet` and `LongSet`, with ordered variants `IntOrderedSet` and `LongOrderedSet`, while their map counterparts are more
 numerous. Most of the primitive lists are very similar, only changing the numeric type, but there are some small changes for
 `CharList` (which doesn't define math operations on its items) and `BooleanList` (which defines logical operations but not math
-ones). The deques don't currently implement math operations on their items. As for the maps...
+ones). The deques don't currently implement math operations on their items. Each of the bag classes extends a list class, and
+changes its behavior on certain operations (like `remove()`, which takes `O(1)` time instead of `O(n)`, but rearranges the items),
+while keeping the other operations mostly the same. As for the maps...
 
 There's `IntFloatMap`, `IntFloatOrderedMap`, `IntIntMap`, `IntIntOrderedMap`, `IntLongMap`, `IntLongOrderedMap`,
 `IntObjectMap`, `IntObjectOrderedMap`, `LongFloatMap`, `LongFloatOrderedMap`, `LongIntMap`, `LongIntOrderedMap`,
@@ -105,7 +108,7 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.1.3'
+api 'com.github.tommyettinger:jdkgdxds:1.2.0'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -124,7 +127,7 @@ If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.2:sources"
 implementation "com.github.tommyettinger:digital:0.2.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.1.3:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.2.0:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -151,28 +154,29 @@ dependencies {
 ```
 to whatever module uses an `android` or `com.android.application` plugin. The `desugar_jdk_libs` version should only be updated if
 you have checked for compatibility with your Android Gradle Plugin version; see [Android docs](https://developer.android.com/studio/write/java8-support#library-desugaring-versions).
-You may need to set the `minSdkVersion` to a higher value, depending on where it is already; 19 is known to work, and 16 probably
-works.
+In short, if you use Android Gradle Plugin 7.3.0, you should use `'com.android.tools:desugar_jdk_libs:1.2.2'`. If you use Android
+Gradle Plugin 7.4.0 or later, you should use `'com.android.tools:desugar_jdk_libs:2.0.0'`. You may need to set the `minSdkVersion`
+to a higher value, depending on where it is already; 19 is known to work, and 16 probably works.
 
-The dependency (and `inherits` line) on digital is not necessary for jdkgdxds
-0.2.8, but is necessary starting in 1.0.3 and later. The dependency and `inherits` line for funderby is new in 1.0.4 .
-Versions 1.0.1 and 1.0.2 also depended on [juniper](https://github.com/tommyettinger/juniper) 0.0.2 ; if you intend to use the
+The dependency (and `inherits` line) on digital is not necessary for jdkgdxds 0.2.8, but is necessary starting in 1.0.3 and later.
+The dependency and `inherits` line for funderby is new in 1.0.4 . Versions 1.0.1 and 1.0.2 also depended on
+[juniper](https://github.com/tommyettinger/juniper) 0.0.2 ; if you intend to use the
 randomized algorithms here (like shuffles), then depending on Juniper (0.1.9) might be a good idea, though it is still optional.
 The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
 for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
 The version for funderby is expected to stay at or around 0.0.2, since it is a relatively small library and is probably complete.
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/50e8ae043e).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/e8279e094a).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:50e8ae043e'` or `api 'com.github.tommyettinger:jdkgdxds:50e8ae043e'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:e8279e094a'` or `api 'com.github.tommyettinger:jdkgdxds:e8279e094a'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.0.2:sources"
 implementation "com.github.tommyettinger:digital:0.2.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:50e8ae043e:sources"
+implementation "com.github.tommyettinger:jdkgdxds:e8279e094a:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -181,7 +185,7 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="com.github.tommyettinger.digital" />
 <inherits name="com.github.tommyettinger.jdkgdxds" />
 ```
-in with the other `inherits` lines. `50e8ae043e` is an example of a recent commit, and can be
+in with the other `inherits` lines. `e8279e094a` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
 
 There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to

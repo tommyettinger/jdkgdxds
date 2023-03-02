@@ -1,3 +1,27 @@
+[1.2.0]
+- [BREAKING CHANGE] The insertRange() method in the primitive lists is now named the duplicateRange() method, as it was in ObjectList already.
+- [BREAKING CHANGE] Several sorting methods in BooleanList have (finally) been moved to BooleanComparators, which was done for other primitive types much earlier.
+- There is now an unordered Bag class that extends each List class here.
+- General cleanup was done on the various List classes, so they're all more similarly-structured inside.
+- The retainAll() method in primitive lists now can receive any PrimitiveCollection of the appropriate type.
+- In the equals() and equalsIdentity() methods for lists, a list (or bag) being unordered will no longer disqualify it from equality comparison.
+- digital has been updated to 0.2.0 .
+
+[1.1.3]
+- [BREAKING CHANGE] The .gwt.xml file has moved to `src/main/resources/com/github/tommyettinger/jdkgdxds.gwt.xml` in the repo.
+- [BREAKING CHANGE] In GWT projects, you must now depend on jdkgdxds using `<inherits name="com.github.tommyettinger.jdkgdxds" />` .
+- digital has been updated to 0.1.8, and its inherit also changed.
+- funderby has been updated to 0.0.2, and its inherit also changed.
+
+[1.1.2]
+- Immediately replaced by 1.1.3, above.
+
+[1.1.1]
+- [BREAKING CHANGE] The dependency on JSR305 (for nullity annotations) has changed to checker-qual.
+- The strategy for choosing a hashMultiplier (for maps and sets) is more robust now, and chooses from a large array of known-good multipliers.
+- Added IdentitySet and IdentityOrderedSet.
+- Several fixes in HolderSet and HolderOrderedSet.
+
 [1.1.0]
 - OffsetBitSet is the main new addition in this version; it is a fairly standard bitset, so it acts like an implicitly sorted int set, but unlike typical bitsets, it allows choosing an offset where it should start permitting items.
 - ObjectComparators can sort Object arrays now.
