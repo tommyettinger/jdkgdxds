@@ -492,12 +492,16 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			clear();
 			return;
 		}
+		hasZeroValue = false;
+		zeroValue = null;
 		size = 0;
 		resize(tableSize);
 	}
 
 	public void clear () {
 		if (size == 0) {return;}
+		hasZeroValue = false;
+		zeroValue = null;
 		size = 0;
 		Arrays.fill(keyTable, 0);
 	}

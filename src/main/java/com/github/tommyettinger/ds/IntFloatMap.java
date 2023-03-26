@@ -512,12 +512,14 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			clear();
 			return;
 		}
+		hasZeroValue = false;
 		size = 0;
 		resize(tableSize);
 	}
 
 	public void clear () {
 		if (size == 0) {return;}
+		hasZeroValue = false;
 		size = 0;
 		Arrays.fill(keyTable, 0);
 	}
