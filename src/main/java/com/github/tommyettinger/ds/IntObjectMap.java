@@ -504,6 +504,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		zeroValue = null;
 		size = 0;
 		Arrays.fill(keyTable, 0);
+		Arrays.fill(valueTable, null);
 	}
 
 	/**
