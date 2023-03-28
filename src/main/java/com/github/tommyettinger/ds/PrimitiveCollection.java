@@ -33,6 +33,7 @@ import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 
+import java.util.Iterator;
 import java.util.PrimitiveIterator;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoublePredicate;
@@ -42,14 +43,13 @@ import java.util.function.LongConsumer;
 import java.util.function.LongPredicate;
 
 /**
- * Analogous to {@link java.util.Collection} but for a primitive type, this is built around
- * {@link PrimitiveIterator} (or more typically, one of the nested interfaces here, like
- * {@link OfInt}, is built around one of PrimitiveIterator's nested interfaces, like
- * {@link PrimitiveIterator.OfInt}). This is not necessarily a modifiable collection. The
- * nested interfaces define most of the actually useful operations, and you will probably
+ * Analogous to {@link java.util.Collection} but for a primitive type, this is technically built around
+ * {@link Iterator}, but should almost always use a primitive-specialized iterator such as
+ * {@link FloatIterator} instead of the generic {@link Iterator}. This is not necessarily a modifiable
+ * collection. The nested interfaces define most of the actually useful operations, and you will probably
  * never use PrimitiveCollection directly.
  */
-public interface PrimitiveCollection<T, T_CONS> {
+public interface PrimitiveCollection<T> {
 	int size ();
 
 	default boolean isEmpty () {
@@ -60,7 +60,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 		return size() != 0;
 	}
 
-	PrimitiveIterator<T, T_CONS> iterator ();
+	Iterator<T> iterator ();
 
 	void clear ();
 
@@ -70,7 +70,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 	@Override
 	boolean equals (Object other);
 
-	interface OfInt extends PrimitiveCollection<Integer, IntConsumer> {
+	interface OfInt extends PrimitiveCollection<Integer> {
 		boolean add (int item);
 
 		boolean remove (int item);
@@ -135,7 +135,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 
 		/**
-		 * Removes all of the elements of this collection that satisfy the given
+		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
 		 * the predicate are relayed to the caller.
 		 *
@@ -276,7 +276,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 	}
 
-	interface OfLong extends PrimitiveCollection<Long, LongConsumer> {
+	interface OfLong extends PrimitiveCollection<Long> {
 		boolean add (long item);
 
 		boolean remove (long item);
@@ -341,7 +341,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 
 		/**
-		 * Removes all of the elements of this collection that satisfy the given
+		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
 		 * the predicate are relayed to the caller.
 		 *
@@ -482,7 +482,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 	}
 
-	interface OfFloat extends PrimitiveCollection<Float, FloatConsumer> {
+	interface OfFloat extends PrimitiveCollection<Float> {
 		boolean add (float item);
 
 		boolean remove (float item);
@@ -547,7 +547,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 
 		/**
-		 * Removes all of the elements of this collection that satisfy the given
+		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
 		 * the predicate are relayed to the caller.
 		 *
@@ -688,7 +688,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 	}
 
-	interface OfDouble extends PrimitiveCollection<Double, DoubleConsumer> {
+	interface OfDouble extends PrimitiveCollection<Double> {
 		boolean add (double item);
 
 		boolean remove (double item);
@@ -872,7 +872,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 	}
 
-	interface OfShort extends PrimitiveCollection<Short, ShortConsumer> {
+	interface OfShort extends PrimitiveCollection<Short> {
 		boolean add (short item);
 
 		boolean remove (short item);
@@ -1056,7 +1056,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 	}
 
-	interface OfByte extends PrimitiveCollection<Byte, ByteConsumer> {
+	interface OfByte extends PrimitiveCollection<Byte> {
 		boolean add (byte item);
 
 		boolean remove (byte item);
@@ -1240,7 +1240,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 	}
 
-	interface OfChar extends PrimitiveCollection<Character, CharConsumer> {
+	interface OfChar extends PrimitiveCollection<Character> {
 		boolean add (char item);
 
 		boolean remove (char item);
@@ -1424,7 +1424,7 @@ public interface PrimitiveCollection<T, T_CONS> {
 		}
 	}
 
-	interface OfBoolean extends PrimitiveCollection<Boolean, BooleanConsumer> {
+	interface OfBoolean extends PrimitiveCollection<Boolean> {
 		boolean add (boolean item);
 
 		boolean remove (boolean item);

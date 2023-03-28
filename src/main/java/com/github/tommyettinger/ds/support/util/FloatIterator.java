@@ -19,17 +19,16 @@ package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.function.FloatConsumer;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.function.Consumer;
 
 /**
  * An Iterator specialized for {@code float} values.
- * This is a {@link PrimitiveIterator}, like the existing {@link PrimitiveIterator.OfInt}
- * and {@link PrimitiveIterator.OfLong} interfaces, but it can't be a nested interface like
- * those because it is defined outside of the JDK.
+ * This iterates over primitive floats using {@link #nextFloat()}.
  */
-public interface FloatIterator extends PrimitiveIterator<Float, FloatConsumer> {
+public interface FloatIterator extends Iterator<Float> {
 	/**
 	 * Returns the next {@code float} element in the iteration.
 	 *
@@ -52,7 +51,6 @@ public interface FloatIterator extends PrimitiveIterator<Float, FloatConsumer> {
 	 *         action.accept(nextFloat());
 	 * }</pre>
 	 */
-	@Override
 	default void forEachRemaining (FloatConsumer action) {
 		while (hasNext()) {action.accept(nextFloat());}
 	}
@@ -71,10 +69,10 @@ public interface FloatIterator extends PrimitiveIterator<Float, FloatConsumer> {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @implSpec If the action is an instance of {@code LongConsumer} then it is cast
-	 * to {@code LongConsumer} and passed to {@link #forEachRemaining};
+	 * @implSpec If the action is an instance of {@code FloatConsumer} then it is cast
+	 * to {@code FloatConsumer} and passed to {@link #forEachRemaining};
 	 * otherwise the action is adapted to an instance of
-	 * {@code LongConsumer}, by boxing the argument of {@code LongConsumer},
+	 * {@code FloatConsumer}, by boxing the argument of {@code FloatConsumer},
 	 * and then passed to {@link #forEachRemaining}.
 	 */
 	@Override
