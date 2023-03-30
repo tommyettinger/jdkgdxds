@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -633,7 +634,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	@Override
 	public boolean addAll (PrimitiveCollection.OfLong c) {
 		int oldSize = size;
-		PrimitiveIterator.OfLong it = c.iterator();
+		LongIterator it = c.iterator();
 		while (it.hasNext()) {
 			addLast(it.nextLong());
 		}
@@ -1207,10 +1208,10 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	}
 
 	/**
-	 * A {@link PrimitiveIterator.OfLong}, plus similar methods to a {@link ListIterator}, over the elements of an LongDeque.
+	 * A {@link LongIterator}, plus similar methods to a {@link ListIterator}, over the elements of an LongDeque.
 	 * Use {@link #nextLong()} in preference to {@link #next()} to avoid allocating Long objects.
 	 */
-	public static class LongDequeIterator implements PrimitiveIterator.OfLong {
+	public static class LongDequeIterator implements LongIterator {
 		protected int index, latest = -1;
 		protected LongDeque deque;
 		protected boolean valid = true;

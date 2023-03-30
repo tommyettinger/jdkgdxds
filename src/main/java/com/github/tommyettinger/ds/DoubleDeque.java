@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
 
+import com.github.tommyettinger.ds.support.util.DoubleIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -633,7 +634,7 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 	@Override
 	public boolean addAll (OfDouble c) {
 		int oldSize = size;
-		PrimitiveIterator.OfDouble it = c.iterator();
+		DoubleIterator it = c.iterator();
 		while (it.hasNext()) {
 			addLast(it.nextDouble());
 		}

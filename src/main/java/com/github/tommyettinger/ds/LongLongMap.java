@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongLongBiConsumer;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -193,10 +194,10 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	public void putAll (PrimitiveCollection.OfLong keys, PrimitiveCollection.OfLong values) {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
-		PrimitiveIterator.OfLong ki = keys.iterator();
-		PrimitiveIterator.OfLong vi = values.iterator();
+		LongIterator ki = keys.iterator();
+		LongIterator vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
-			put(ki.next(), vi.next());
+			put(ki.nextLong(), vi.nextLong());
 		}
 	}
 
@@ -1026,7 +1027,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 
 	}
 
-	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfLong {
+	public static class KeyIterator extends MapIterator implements LongIterator {
 		public KeyIterator (LongLongMap map) {
 			super(map);
 		}
@@ -1057,7 +1058,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		}
 	}
 
-	public static class ValueIterator extends MapIterator implements PrimitiveIterator.OfLong {
+	public static class ValueIterator extends MapIterator implements LongIterator {
 		public ValueIterator (LongLongMap map) {
 			super(map);
 		}
@@ -1246,7 +1247,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public PrimitiveIterator.OfLong iterator () {
+		public LongIterator iterator () {
 			return iter;
 		}
 
@@ -1346,7 +1347,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		}
 
 		@Override
-		public PrimitiveIterator.OfLong iterator () {
+		public LongIterator iterator () {
 			return iter;
 		}
 

@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.IntLongBiConsumer;
 import com.github.tommyettinger.function.IntLongToLongBiFunction;
 
@@ -194,10 +196,10 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	public void putAll (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfLong values) {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
-		PrimitiveIterator.OfInt ki = keys.iterator();
-		PrimitiveIterator.OfLong vi = values.iterator();
+		IntIterator ki = keys.iterator();
+		LongIterator vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
-			put(ki.next(), vi.next());
+			put(ki.nextInt(), vi.nextLong());
 		}
 	}
 
@@ -789,9 +791,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 * reflected in the set, and vice-versa.  If the map is modified
 	 * while an iteration over the set is in progress (except through
 	 * the iterator's own {@code remove} operation), the results of
-	 * the iteration are undefined. The set supports element removal,
-	 * which removes the corresponding mapping from the map, via the
-	 * {@link PrimitiveIterator.OfInt#remove()} operation.  It does
+	 * the iteration are undefined. The set does
 	 * not support the {@code add}, {@code addAll}, {@code remove},
 	 * {@code removeAll}, or {@code clear} operations.
 	 *
@@ -1059,7 +1059,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		}
 	}
 
-	public static class ValueIterator extends MapIterator implements PrimitiveIterator.OfLong {
+	public static class ValueIterator extends MapIterator implements LongIterator {
 		public ValueIterator (IntLongMap map) {
 			super(map);
 		}
@@ -1248,7 +1248,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public PrimitiveIterator.OfLong iterator () {
+		public LongIterator iterator () {
 			return iter;
 		}
 

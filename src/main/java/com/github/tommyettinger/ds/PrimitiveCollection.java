@@ -17,6 +17,9 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.DoubleIterator;
+import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.BooleanConsumer;
 import com.github.tommyettinger.function.BooleanPredicate;
 import com.github.tommyettinger.function.ByteConsumer;
@@ -34,13 +37,12 @@ import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 
 import java.util.Iterator;
-import java.util.PrimitiveIterator;
-import java.util.function.DoubleConsumer;
-import java.util.function.DoublePredicate;
-import java.util.function.IntConsumer;
-import java.util.function.IntPredicate;
-import java.util.function.LongConsumer;
-import java.util.function.LongPredicate;
+import com.github.tommyettinger.function.DoubleConsumer;
+import com.github.tommyettinger.function.DoublePredicate;
+import com.github.tommyettinger.function.IntConsumer;
+import com.github.tommyettinger.function.IntPredicate;
+import com.github.tommyettinger.function.LongConsumer;
+import com.github.tommyettinger.function.LongPredicate;
 
 /**
  * Analogous to {@link java.util.Collection} but for a primitive type, this is technically built around
@@ -78,7 +80,7 @@ public interface PrimitiveCollection<T> {
 		boolean contains (int item);
 
 		default boolean addAll (OfInt other) {
-			PrimitiveIterator.OfInt it = other.iterator();
+			IntIterator it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextInt());
@@ -93,7 +95,7 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll (OfInt other) {
-			PrimitiveIterator.OfInt it = other.iterator(), me;
+			IntIterator it = other.iterator(), me;
 			int originalSize = size();
 			while (it.hasNext()) {
 				int item = it.nextInt();
@@ -117,7 +119,7 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach (OfInt other) {
-			PrimitiveIterator.OfInt it = other.iterator();
+			IntIterator it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextInt());
@@ -126,7 +128,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAll (OfInt other) {
-			PrimitiveIterator.OfInt it = other.iterator();
+			IntIterator it = other.iterator();
 			boolean has = true;
 			while (it.hasNext()) {
 				has &= contains(it.nextInt());
@@ -148,13 +150,13 @@ public interface PrimitiveCollection<T> {
 		 *                                       supported.
 		 * @implSpec The default implementation traverses all elements of the collection using
 		 * its {@link #iterator()}.  Each matching element is removed using
-		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * {@link Iterator#remove()}.  If the collection's iterator does not
 		 * support removal then an {@code UnsupportedOperationException} will be
 		 * thrown on the first matching element.
 		 */
 		default boolean removeIf (IntPredicate filter) {
 			boolean removed = false;
-			final PrimitiveIterator.OfInt each = iterator();
+			final IntIterator each = iterator();
 			while (each.hasNext()) {
 				if (filter.test(each.nextInt())) {
 					each.remove();
@@ -166,7 +168,7 @@ public interface PrimitiveCollection<T> {
 
 		default boolean retainAll (OfInt other) {
 			boolean changed = false;
-			PrimitiveIterator.OfInt it = iterator();
+			IntIterator it = iterator();
 			while (it.hasNext()) {
 				if (!other.contains(it.nextInt())) {
 					it.remove();
@@ -177,7 +179,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		@Override
-		PrimitiveIterator.OfInt iterator ();
+		IntIterator iterator ();
 
 		/**
 		 * Allocates a new int array with exactly {@link #size()} items, fills it with the
@@ -188,7 +190,7 @@ public interface PrimitiveCollection<T> {
 		default int[] toArray () {
 			final int sz = size();
 			int[] receiver = new int[sz];
-			PrimitiveIterator.OfInt it = iterator();
+			IntIterator it = iterator();
 			int i = 0;
 			while (it.hasNext())
 				receiver[i++] = it.nextInt();
@@ -207,7 +209,7 @@ public interface PrimitiveCollection<T> {
 			final int sz = size();
 			if (receiver.length < sz)
 				receiver = new int[sz];
-			PrimitiveIterator.OfInt it = iterator();
+			IntIterator it = iterator();
 			int i = 0;
 			while (it.hasNext())
 				receiver[i++] = it.nextInt();
@@ -224,7 +226,7 @@ public interface PrimitiveCollection<T> {
 		 * @param action The action to be performed for each element
 		 */
 		default void forEach (IntConsumer action) {
-			PrimitiveIterator.OfInt it = iterator();
+			IntIterator it = iterator();
 			while (it.hasNext())
 				action.accept(it.nextInt());
 		}
@@ -247,7 +249,7 @@ public interface PrimitiveCollection<T> {
 		 * @throws IllegalStateException if this is empty
 		 */
 		default int first () {
-			PrimitiveIterator.OfInt it = iterator();
+			IntIterator it = iterator();
 			if (it.hasNext())
 				return it.nextInt();
 			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
@@ -268,7 +270,7 @@ public interface PrimitiveCollection<T> {
 			if(!(other instanceof PrimitiveCollection.OfInt)) return false;
 			PrimitiveCollection.OfInt pc = (PrimitiveCollection.OfInt) other;
 			if(size() != pc.size()) return false;
-			PrimitiveIterator.OfInt it = iterator();
+			IntIterator it = iterator();
 			while (it.hasNext()) {
 				if(pc.contains(it.nextInt())) return false;
 			}
@@ -284,7 +286,7 @@ public interface PrimitiveCollection<T> {
 		boolean contains (long item);
 
 		default boolean addAll (OfLong other) {
-			PrimitiveIterator.OfLong it = other.iterator();
+			LongIterator it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextLong());
@@ -299,7 +301,7 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll (OfLong other) {
-			PrimitiveIterator.OfLong it = other.iterator(), me;
+			LongIterator it = other.iterator(), me;
 			int originalSize = size();
 			while (it.hasNext()) {
 				long item = it.nextLong();
@@ -323,7 +325,7 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach (OfLong other) {
-			PrimitiveIterator.OfLong it = other.iterator();
+			LongIterator it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextLong());
@@ -332,7 +334,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAll (OfLong other) {
-			PrimitiveIterator.OfLong it = other.iterator();
+			LongIterator it = other.iterator();
 			boolean has = true;
 			while (it.hasNext()) {
 				has &= contains(it.nextLong());
@@ -354,13 +356,13 @@ public interface PrimitiveCollection<T> {
 		 *                                       supported.
 		 * @implSpec The default implementation traverses all elements of the collection using
 		 * its {@link #iterator()}.  Each matching element is removed using
-		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * {@link Iterator#remove()}.  If the collection's iterator does not
 		 * support removal then an {@code UnsupportedOperationException} will be
 		 * thrown on the first matching element.
 		 */
 		default boolean removeIf (LongPredicate filter) {
 			boolean removed = false;
-			final PrimitiveIterator.OfLong each = iterator();
+			final LongIterator each = iterator();
 			while (each.hasNext()) {
 				if (filter.test(each.nextLong())) {
 					each.remove();
@@ -372,7 +374,7 @@ public interface PrimitiveCollection<T> {
 
 		default boolean retainAll (OfLong other) {
 			boolean changed = false;
-			PrimitiveIterator.OfLong it = iterator();
+			LongIterator it = iterator();
 			while (it.hasNext()) {
 				if (!other.contains(it.nextLong())) {
 					it.remove();
@@ -383,7 +385,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		@Override
-		PrimitiveIterator.OfLong iterator ();
+		LongIterator iterator ();
 
 		/**
 		 * Allocates a new long array with exactly {@link #size()} items, fills it with the
@@ -394,7 +396,7 @@ public interface PrimitiveCollection<T> {
 		default long[] toArray () {
 			final int sz = size();
 			long[] receiver = new long[sz];
-			PrimitiveIterator.OfLong it = iterator();
+			LongIterator it = iterator();
 			int i = 0;
 			while (it.hasNext())
 				receiver[i++] = it.nextLong();
@@ -413,7 +415,7 @@ public interface PrimitiveCollection<T> {
 			final int sz = size();
 			if (receiver.length < sz)
 				receiver = new long[sz];
-			PrimitiveIterator.OfLong it = iterator();
+			LongIterator it = iterator();
 			int i = 0;
 			while (it.hasNext())
 				receiver[i++] = it.nextLong();
@@ -430,7 +432,7 @@ public interface PrimitiveCollection<T> {
 		 * @param action The action to be performed for each element
 		 */
 		default void forEach (LongConsumer action) {
-			PrimitiveIterator.OfLong it = iterator();
+			LongIterator it = iterator();
 			while (it.hasNext())
 				action.accept(it.nextLong());
 		}
@@ -453,7 +455,7 @@ public interface PrimitiveCollection<T> {
 		 * @throws IllegalStateException if this is empty
 		 */
 		default long first () {
-			PrimitiveIterator.OfLong it = iterator();
+			LongIterator it = iterator();
 			if (it.hasNext())
 				return it.nextLong();
 			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
@@ -474,7 +476,7 @@ public interface PrimitiveCollection<T> {
 			if(!(other instanceof PrimitiveCollection.OfLong)) return false;
 			PrimitiveCollection.OfLong pc = (PrimitiveCollection.OfLong) other;
 			if(size() != pc.size()) return false;
-			PrimitiveIterator.OfLong it = iterator();
+			LongIterator it = iterator();
 			while (it.hasNext()) {
 				if(pc.contains(it.nextLong())) return false;
 			}
@@ -560,7 +562,7 @@ public interface PrimitiveCollection<T> {
 		 *                                       supported.
 		 * @implSpec The default implementation traverses all elements of the collection using
 		 * its {@link #iterator()}.  Each matching element is removed using
-		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * {@link Iterator#remove()}.  If the collection's iterator does not
 		 * support removal then an {@code UnsupportedOperationException} will be
 		 * thrown on the first matching element.
 		 */
@@ -696,7 +698,7 @@ public interface PrimitiveCollection<T> {
 		boolean contains (double item);
 
 		default boolean addAll (OfDouble other) {
-			PrimitiveIterator.OfDouble it = other.iterator();
+			DoubleIterator it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextDouble());
@@ -711,7 +713,7 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll (OfDouble other) {
-			PrimitiveIterator.OfDouble it = other.iterator(), me;
+			DoubleIterator it = other.iterator(), me;
 			int originalSize = size();
 			while (it.hasNext()) {
 				double item = it.nextDouble();
@@ -735,7 +737,7 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach (OfDouble other) {
-			PrimitiveIterator.OfDouble it = other.iterator();
+			DoubleIterator it = other.iterator();
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextDouble());
@@ -744,7 +746,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAll (OfDouble other) {
-			PrimitiveIterator.OfDouble it = other.iterator();
+			DoubleIterator it = other.iterator();
 			boolean has = true;
 			while (it.hasNext()) {
 				has &= contains(it.nextDouble());
@@ -766,13 +768,13 @@ public interface PrimitiveCollection<T> {
 		 *                                       supported.
 		 * @implSpec The default implementation traverses all elements of the collection using
 		 * its {@link #iterator()}.  Each matching element is removed using
-		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * {@link Iterator#remove()}.  If the collection's iterator does not
 		 * support removal then an {@code UnsupportedOperationException} will be
 		 * thrown on the first matching element.
 		 */
 		default boolean removeIf (DoublePredicate filter) {
 			boolean removed = false;
-			final PrimitiveIterator.OfDouble each = iterator();
+			final DoubleIterator each = iterator();
 			while (each.hasNext()) {
 				if (filter.test(each.nextDouble())) {
 					each.remove();
@@ -784,7 +786,7 @@ public interface PrimitiveCollection<T> {
 
 		default boolean retainAll (OfDouble other) {
 			boolean changed = false;
-			PrimitiveIterator.OfDouble it = iterator();
+			DoubleIterator it = iterator();
 			while (it.hasNext()) {
 				if (!other.contains(it.nextDouble())) {
 					it.remove();
@@ -795,7 +797,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		@Override
-		PrimitiveIterator.OfDouble iterator ();
+		DoubleIterator iterator ();
 
 		/**
 		 * Allocates a new double array with exactly {@link #size()} items, fills it with the
@@ -806,7 +808,7 @@ public interface PrimitiveCollection<T> {
 		default double[] toArray () {
 			final int sz = size();
 			double[] receiver = new double[sz];
-			PrimitiveIterator.OfDouble it = iterator();
+			DoubleIterator it = iterator();
 			int i = 0;
 			while (it.hasNext())
 				receiver[i++] = it.nextDouble();
@@ -825,7 +827,7 @@ public interface PrimitiveCollection<T> {
 			final int sz = size();
 			if (receiver.length < sz)
 				receiver = new double[sz];
-			PrimitiveIterator.OfDouble it = iterator();
+			DoubleIterator it = iterator();
 			int i = 0;
 			while (it.hasNext())
 				receiver[i++] = it.nextDouble();
@@ -842,7 +844,7 @@ public interface PrimitiveCollection<T> {
 		 * @param action The action to be performed for each element
 		 */
 		default void forEach (DoubleConsumer action) {
-			PrimitiveIterator.OfDouble it = iterator();
+			DoubleIterator it = iterator();
 			while (it.hasNext())
 				action.accept(it.nextDouble());
 		}
@@ -865,7 +867,7 @@ public interface PrimitiveCollection<T> {
 		 * @throws IllegalStateException if this is empty
 		 */
 		default double first () {
-			PrimitiveIterator.OfDouble it = iterator();
+			DoubleIterator it = iterator();
 			if (it.hasNext())
 				return it.nextDouble();
 			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
@@ -950,7 +952,7 @@ public interface PrimitiveCollection<T> {
 		 *                                       supported.
 		 * @implSpec The default implementation traverses all elements of the collection using
 		 * its {@link #iterator()}.  Each matching element is removed using
-		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * {@link Iterator#remove()}.  If the collection's iterator does not
 		 * support removal then an {@code UnsupportedOperationException} will be
 		 * thrown on the first matching element.
 		 */
@@ -1134,7 +1136,7 @@ public interface PrimitiveCollection<T> {
 		 *                                       supported.
 		 * @implSpec The default implementation traverses all elements of the collection using
 		 * its {@link #iterator()}.  Each matching element is removed using
-		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * {@link Iterator#remove()}.  If the collection's iterator does not
 		 * support removal then an {@code UnsupportedOperationException} will be
 		 * thrown on the first matching element.
 		 */
@@ -1318,7 +1320,7 @@ public interface PrimitiveCollection<T> {
 		 *                                       supported.
 		 * @implSpec The default implementation traverses all elements of the collection using
 		 * its {@link #iterator()}.  Each matching element is removed using
-		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * {@link Iterator#remove()}.  If the collection's iterator does not
 		 * support removal then an {@code UnsupportedOperationException} will be
 		 * thrown on the first matching element.
 		 */
@@ -1502,7 +1504,7 @@ public interface PrimitiveCollection<T> {
 		 *                                       supported.
 		 * @implSpec The default implementation traverses all elements of the collection using
 		 * its {@link #iterator()}.  Each matching element is removed using
-		 * {@link PrimitiveIterator#remove()}.  If the collection's iterator does not
+		 * {@link Iterator#remove()}.  If the collection's iterator does not
 		 * support removal then an {@code UnsupportedOperationException} will be
 		 * thrown on the first matching element.
 		 */

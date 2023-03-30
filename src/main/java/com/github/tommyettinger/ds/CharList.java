@@ -32,7 +32,7 @@ import java.util.Random;
 /**
  * A resizable, insertion-ordered char list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Character.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
- * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
+ * Has a primitive iterator accessible via {@link #iterator()}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger

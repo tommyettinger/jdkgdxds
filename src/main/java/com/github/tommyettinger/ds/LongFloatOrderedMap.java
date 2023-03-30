@@ -23,6 +23,7 @@ import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Iterator;
 import java.util.Map;
@@ -108,7 +109,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 	 */
 	public LongFloatOrderedMap (LongFloatMap map) {
 		this(map.size());
-		PrimitiveIterator.OfLong it = map.keySet().iterator();
+		LongIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			long k = it.nextLong();
 			put(k, map.get(k));
@@ -712,7 +713,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 		}
 
 		@Override
-		public PrimitiveIterator.OfLong iterator () {
+		public LongIterator iterator () {
 			return iter;
 		}
 	}

@@ -19,19 +19,19 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongToLongFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
  * A resizable, insertion-ordered long list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Long.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
- * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
+ * Has a primitive iterator accessible via {@link #iterator()}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
@@ -544,7 +544,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		int size = this.size;
 		int startSize = size;
 		long[] items = this.items;
-		PrimitiveIterator.OfLong it = c.iterator();
+		LongIterator it = c.iterator();
 		for (int i = 0, n = c.size(); i < n; i++) {
 			long item = it.nextLong();
 			for (int ii = 0; ii < size; ii++) {
@@ -570,7 +570,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		int size = this.size;
 		int startSize = size;
 		long[] items = this.items;
-		PrimitiveIterator.OfLong it = c.iterator();
+		LongIterator it = c.iterator();
 		for (int i = 0, n = c.size(); i < n; i++) {
 			long item = it.nextLong();
 			for (int ii = 0; ii < size; ii++) {
@@ -882,7 +882,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * This will reuse one of two iterators in this LongList; this does not allow nested iteration.
 	 * Use {@link LongListIterator#LongListIterator(LongList)} to nest iterators.
 	 *
-	 * @return a {@link PrimitiveIterator.OfLong}; use its nextLong() method instead of next()
+	 * @return a {@link LongIterator}; use its nextLong() method instead of next()
 	 */
 	@Override
 	public LongListIterator iterator () {
@@ -903,10 +903,10 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
-	 * A {@link PrimitiveIterator.OfLong}, plus {@link ListIterator} methods, over the elements of a LongList.
+	 * A {@link LongIterator}, plus {@link ListIterator} methods, over the elements of a LongList.
 	 * Use {@link #nextLong()} in preference to {@link #next()} to avoid allocating Long objects.
 	 */
-	public static class LongListIterator implements PrimitiveIterator.OfLong {
+	public static class LongListIterator implements LongIterator {
 		protected int index, latest = -1;
 		protected LongList list;
 		protected boolean valid = true;

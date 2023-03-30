@@ -437,7 +437,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong iv = data.values().iterator();
+		LongIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			long item = iv.nextLong();
 			++counter;
@@ -469,7 +469,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong iv = data.values().iterator();
+		LongIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			long item = iv.nextLong();
 			++counter;
@@ -558,7 +558,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		LongIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			long item = ik.nextLong();
 			++counter;
@@ -590,7 +590,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		LongIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			long item = ik.nextLong();
 			++counter;
@@ -622,7 +622,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		LongIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			long item = ik.nextLong();
 			++counter;
@@ -654,7 +654,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		LongIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			long item = ik.nextLong();
 			++counter;
@@ -686,14 +686,14 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		LongIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			long item = ik.nextLong();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong iv = data.values().iterator();
+		LongIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			long item = iv.nextLong();
 			++counter;
@@ -718,14 +718,14 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		LongIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			long item = ik.nextLong();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong iv = data.values().iterator();
+		LongIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			long item = iv.nextLong();
 			++counter;
@@ -750,7 +750,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		LongIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			long item = ik.nextLong();
 			++counter;
@@ -782,7 +782,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong ik = data.keySet().iterator();
+		LongIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			long item = ik.nextLong();
 			++counter;
@@ -949,7 +949,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong iv = data.values().iterator();
+		LongIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			long item = iv.nextLong();
 			++counter;
@@ -981,7 +981,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfLong iv = data.values().iterator();
+		LongIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			long item = iv.nextLong();
 			++counter;
@@ -1117,7 +1117,7 @@ public class IteratorTest {
 	public void testLongListIterator() {
 		LongList data = LongList.with(longs);
 		int counter = 0, size = data.size();
-		PrimitiveIterator.OfLong it = data.iterator();
+		LongIterator it = data.iterator();
 		while (it.hasNext()) {
 			long item = it.nextLong();
 			++counter;
@@ -1213,7 +1213,7 @@ public class IteratorTest {
 	public void testLongDequeIterator() {
 		LongDeque data = LongDeque.with(longs);
 		int counter = 0, size = data.size();
-		PrimitiveIterator.OfLong it = data.iterator();
+		LongIterator it = data.iterator();
 		while (it.hasNext()) {
 			long item = it.nextLong();
 			++counter;
@@ -1273,7 +1273,7 @@ public class IteratorTest {
 	public void testLongSetIterator() {
 		LongSet data = LongSet.with(longs);
 		int counter = 0, size = data.size();
-		PrimitiveIterator.OfLong it = data.iterator();
+		LongIterator it = data.iterator();
 		while (it.hasNext()) {
 			long item = it.nextLong();
 			++counter;
@@ -1285,7 +1285,7 @@ public class IteratorTest {
 	public void testLongOrderedSetIterator() {
 		LongOrderedSet data = LongOrderedSet.with(longs);
 		int counter = 0, size = data.size();
-		PrimitiveIterator.OfLong it = data.iterator();
+		LongIterator it = data.iterator();
 		while (it.hasNext()) {
 			long item = it.nextLong();
 			++counter;

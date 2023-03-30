@@ -20,18 +20,17 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.BooleanComparators;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
-import com.github.tommyettinger.function.BooleanToBooleanFunction;
+import com.github.tommyettinger.function.BooleanPredicate;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
  * A resizable, insertion-ordered boolean list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Boolean.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
- * Has a Java 8 {@link PrimitiveIterator} accessible via {@link #iterator()}.
+ * Has a primitive iterator accessible via {@link #iterator()}.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
@@ -517,11 +516,11 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a BooleanToBooleanFunction (a functional interface defined in funderby)
+	 * @param operator a BooleanPredicate (a functional interface defined in funderby)
 	 */
-	public void replaceAll (BooleanToBooleanFunction operator) {
+	public void replaceAll (BooleanPredicate operator) {
 		for (int i = 0, n = size; i < n; i++) {
-			items[i] = operator.applyAsBoolean(items[i]);
+			items[i] = operator.test(items[i]);
 		}
 	}
 

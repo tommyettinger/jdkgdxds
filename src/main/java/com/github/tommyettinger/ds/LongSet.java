@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -545,7 +546,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 		return iterator2;
 	}
 
-	public static class LongSetIterator implements PrimitiveIterator.OfLong {
+	public static class LongSetIterator implements LongIterator {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
 		/**

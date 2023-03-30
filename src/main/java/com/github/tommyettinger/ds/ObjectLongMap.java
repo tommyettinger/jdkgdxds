@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.ObjLongToLongBiFunction;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -189,11 +190,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		ensureCapacity(length);
 		K key;
 		Iterator<? extends K> ki = keys.iterator();
-		PrimitiveIterator.OfLong vi = values.iterator();
+		LongIterator vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
 			key = ki.next();
 			if (key != null) {
-				put(key, vi.next());
+				put(key, vi.nextLong());
 			}
 		}
 	}
@@ -1026,7 +1027,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 	}
 
-	public static class ValueIterator<K> extends MapIterator<K> implements PrimitiveIterator.OfLong {
+	public static class ValueIterator<K> extends MapIterator<K> implements LongIterator {
 		public ValueIterator (ObjectLongMap<K> map) {
 			super(map);
 		}
@@ -1206,7 +1207,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public PrimitiveIterator.OfLong iterator () {
+		public LongIterator iterator () {
 			return iter;
 		}
 

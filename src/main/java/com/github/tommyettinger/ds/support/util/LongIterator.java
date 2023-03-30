@@ -27,7 +27,7 @@ import java.util.function.Consumer;
  * An Iterator specialized for {@code long} values.
  * This iterates over primitive longs using {@link #nextLong()}.
  * <br>
- * This is roughly equivalent to {@code PrimitiveIterator.OfLong} in Java 8, and is present here so environments
+ * This is roughly equivalent to {@code LongIterator} in Java 8, and is present here so environments
  * don't fully support Java 8 APIs (such as RoboVM) can use it.
  */
 public interface LongIterator extends Iterator<Long> {

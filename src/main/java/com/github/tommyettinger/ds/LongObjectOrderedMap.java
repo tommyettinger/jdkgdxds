@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
@@ -108,7 +109,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 */
 	public LongObjectOrderedMap (LongObjectMap<? extends V> map) {
 		this(map.size());
-		PrimitiveIterator.OfLong it = map.keySet().iterator();
+		LongIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			long k = it.nextLong();
 			put(k, map.get(k));
@@ -704,7 +705,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 		}
 
 		@Override
-		public PrimitiveIterator.OfLong iterator () {
+		public LongIterator iterator () {
 			return iter;
 		}
 	}

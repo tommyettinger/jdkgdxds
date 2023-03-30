@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongIntBiConsumer;
 import com.github.tommyettinger.function.LongIntToIntBiFunction;
 
@@ -193,10 +194,10 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	public void putAll (PrimitiveCollection.OfLong keys, PrimitiveCollection.OfInt values) {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
-		PrimitiveIterator.OfLong ki = keys.iterator();
+		LongIterator ki = keys.iterator();
 		PrimitiveIterator.OfInt vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
-			put(ki.next(), vi.next());
+			put(ki.nextLong(), vi.nextInt());
 		}
 	}
 
@@ -1026,7 +1027,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 
 	}
 
-	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfLong {
+	public static class KeyIterator extends MapIterator implements LongIterator {
 		public KeyIterator (LongIntMap map) {
 			super(map);
 		}
@@ -1346,7 +1347,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		}
 
 		@Override
-		public PrimitiveIterator.OfLong iterator () {
+		public LongIterator iterator () {
 			return iter;
 		}
 

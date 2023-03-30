@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.LongFloatBiConsumer;
 import com.github.tommyettinger.function.LongFloatToFloatBiFunction;
@@ -195,10 +196,10 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	public void putAll (PrimitiveCollection.OfLong keys, PrimitiveCollection.OfFloat values) {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
-		PrimitiveIterator.OfLong ki = keys.iterator();
+		LongIterator ki = keys.iterator();
 		FloatIterator vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
-			put(ki.next(), vi.next());
+			put(ki.nextLong(), vi.nextFloat());
 		}
 	}
 
@@ -1071,7 +1072,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 
 	}
 
-	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfLong {
+	public static class KeyIterator extends MapIterator implements LongIterator {
 		public KeyIterator (LongFloatMap map) {
 			super(map);
 		}
@@ -1391,7 +1392,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		}
 
 		@Override
-		public PrimitiveIterator.OfLong iterator () {
+		public LongIterator iterator () {
 			return iter;
 		}
 

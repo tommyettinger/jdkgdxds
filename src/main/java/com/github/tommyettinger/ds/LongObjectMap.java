@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongObjBiConsumer;
 import com.github.tommyettinger.function.LongObjToObjBiFunction;
 
@@ -343,10 +344,10 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	public void putAll (PrimitiveCollection.OfLong keys, Collection<? extends V> values) {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
-		PrimitiveIterator.OfLong ki = keys.iterator();
+		LongIterator ki = keys.iterator();
 		Iterator<? extends V> vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
-			put(ki.next(), vi.next());
+			put(ki.nextLong(), vi.next());
 		}
 	}
 
@@ -1031,7 +1032,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		}
 	}
 
-	public static class KeyIterator<V> extends MapIterator<V> implements PrimitiveIterator.OfLong {
+	public static class KeyIterator<V> extends MapIterator<V> implements LongIterator {
 		public KeyIterator (LongObjectMap<V> map) {
 			super(map);
 		}
@@ -1340,7 +1341,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		}
 
 		@Override
-		public PrimitiveIterator.OfLong iterator () {
+		public LongIterator iterator () {
 			return iter;
 		}
 
