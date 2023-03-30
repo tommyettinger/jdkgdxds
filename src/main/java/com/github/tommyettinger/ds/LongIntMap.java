@@ -29,8 +29,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.function.IntBinaryOperator;
-import java.util.function.LongToIntFunction;
+import com.github.tommyettinger.function.IntIntToIntBiFunction;
+import com.github.tommyettinger.function.LongToIntFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -95,7 +95,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	protected long hashMultiplier = 0xD1B54A32D192ED03L;
 
 	/**
-	 * A bitmask used to confine hashcodes to the size of the tables. Must be all 1 bits in its low positions, ie a power of two
+	 * A bitmask used to confine hashcodes to the size of the tables. Must be all 1-bits in its low positions, ie a power of two
 	 * minus 1. If {@link #place(long)} is overridden, this can be used instead of {@link #shift} to isolate usable bits of a
 	 * hash.
 	 */
@@ -1046,7 +1046,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		 * Returns a new LongList containing the remaining keys.
 		 */
 		public LongList toList () {
-			LongList list = new LongList(true, map.size);
+			LongList list = new LongList(map.size);
 			while (hasNext) {list.add(nextLong());}
 			return list;
 		}
@@ -1485,7 +1485,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		return false;
 	}
 
-	public int merge (long key, int value, IntBinaryOperator remappingFunction) {
+	public int merge (long key, int value, IntIntToIntBiFunction remappingFunction) {
 		int i = locateKey(key);
 		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
 		put(key, next);

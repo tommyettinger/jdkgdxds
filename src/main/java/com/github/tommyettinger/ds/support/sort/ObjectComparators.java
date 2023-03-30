@@ -23,8 +23,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.ToDoubleFunction;
 
 public final class ObjectComparators {
 	private ObjectComparators () {
@@ -37,7 +35,7 @@ public final class ObjectComparators {
 	 * <br>
 	 * This is in ObjectComparators and not in FloatComparators because there
 	 * are similar methods in Comparator, such as
-	 * {@link Comparator#comparingDouble(ToDoubleFunction)}.
+	 * {@code Comparator.comparingDouble(ToDoubleFunction)}.
 	 * <br>
 	 * The returned comparator is not serializable, by design. This library
 	 * intentionally avoids the java.io.Serializable ecosystem because of the
@@ -47,7 +45,6 @@ public final class ObjectComparators {
 	 * @param keyExtractor the function used to extract the float sort key
 	 * @return a comparator that compares by an extracted key
 	 * @throws NullPointerException if the argument is null
-	 * @see Comparator#comparing(Function)
 	 */
 	public static <T> Comparator<T> comparingFloat (ObjToFloatFunction<? super T> keyExtractor) {
 		Objects.requireNonNull(keyExtractor);

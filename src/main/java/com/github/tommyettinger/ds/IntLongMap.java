@@ -29,8 +29,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.function.IntToLongFunction;
-import java.util.function.LongBinaryOperator;
+import com.github.tommyettinger.function.IntToLongFunction;
+import com.github.tommyettinger.function.LongLongToLongBiFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -1485,7 +1485,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		return false;
 	}
 
-	public long merge (int key, long value, LongBinaryOperator remappingFunction) {
+	public long merge (int key, long value, LongLongToLongBiFunction remappingFunction) {
 		int i = locateKey(key);
 		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
 		put(key, next);

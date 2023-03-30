@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
+import com.github.tommyettinger.function.ObjToObjFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -61,8 +61,8 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}. This does not set the
-	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(Function)} is called with
-	 * a valid Function that gets K keys from T items.
+	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(ObjToObjFunction)} is called with
+	 * a valid ObjToObjFunction that gets K keys from T items.
 	 */
 	public HolderOrderedSet () {
 		super();
@@ -74,7 +74,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 *
 	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 */
-	public HolderOrderedSet (Function<T, K> extractor) {
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor) {
 		super(extractor);
 		items = new ObjectList<>();
 	}
@@ -85,7 +85,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param extractor       a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public HolderOrderedSet (Function<T, K> extractor, int initialCapacity) {
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, int initialCapacity) {
 		super(extractor, initialCapacity);
 		items = new ObjectList<>(initialCapacity);
 	}
@@ -98,14 +98,14 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public HolderOrderedSet (Function<T, K> extractor, int initialCapacity, float loadFactor) {
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, int initialCapacity, float loadFactor) {
 		super(extractor, initialCapacity, loadFactor);
 		items = new ObjectList<>(initialCapacity);
 	}
 
 	/**
 	 * Creates a new set identical to the specified set.
-	 * This doesn't copy the extractor; instead it references the same Function from the argument.
+	 * This doesn't copy the extractor; instead it references the same ObjToObjFunction from the argument.
 	 * This can have issues if the extractor causes side effects or is stateful.
 	 */
 	public HolderOrderedSet (HolderOrderedSet<T, K> set) {
@@ -119,7 +119,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param extractor a function that will be used to extract K keys from the T items in coll
 	 * @param coll      a Collection of T items; depending on extractor, some different T items may not be added because their K key is equal
 	 */
-	public HolderOrderedSet (Function<T, K> extractor, Collection<? extends T> coll) {
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, Collection<? extends T> coll) {
 		this(extractor, coll.size());
 		addAll(coll);
 	}
@@ -130,7 +130,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param extractor a function that will be used to extract K keys from the T items in coll
 	 * @param items     an array of T items; depending on extractor, some different T items may not be added because their K key is equal
 	 */
-	public HolderOrderedSet (Function<T, K> extractor, T[] items) {
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, T[] items) {
 		this(extractor, items.length);
 		addAll(items);
 	}
@@ -144,7 +144,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param offset    the first index in other's ordering to draw an item from
 	 * @param count     how many items to copy from other
 	 */
-	public HolderOrderedSet (Function<T, K> extractor, Ordered<T> other, int offset, int count) {
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, Ordered<T> other, int offset, int count) {
 		this(extractor, count);
 		addAll(0, other, offset, count);
 	}
@@ -460,14 +460,14 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		}
 	}
 
-	public static <T, K> HolderOrderedSet<T, K> with (Function<T, K> extractor, T item) {
+	public static <T, K> HolderOrderedSet<T, K> with (ObjToObjFunction<T, K> extractor, T item) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 1);
 		set.add(item);
 		return set;
 	}
 
 	@SafeVarargs
-	public static <T, K> HolderOrderedSet<T, K> with (Function<T, K> extractor, T... array) {
+	public static <T, K> HolderOrderedSet<T, K> with (ObjToObjFunction<T, K> extractor, T... array) {
 		return new HolderOrderedSet<>(extractor, array);
 	}
 }

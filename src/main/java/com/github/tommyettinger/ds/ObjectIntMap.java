@@ -18,8 +18,10 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.function.ObjIntBiConsumer;
 import com.github.tommyettinger.function.ObjIntToIntBiFunction;
 
+import com.github.tommyettinger.function.ObjToIntFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -27,9 +29,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.function.IntBinaryOperator;
-import java.util.function.ObjIntConsumer;
-import java.util.function.ToIntFunction;
+import com.github.tommyettinger.function.IntIntToIntBiFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -715,7 +715,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (ObjIntConsumer<? super K> action) {
+	public void forEach (ObjIntBiConsumer<? super K> action) {
 		for (Entry<K> entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}
@@ -1380,7 +1380,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		return defaultValue;
 	}
 
-	public int computeIfAbsent (K key, ToIntFunction<? super K> mappingFunction) {
+	public int computeIfAbsent (K key, ObjToIntFunction<? super K> mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
 			int newValue = mappingFunction.applyAsInt(key);
@@ -1399,7 +1399,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		return false;
 	}
 
-	public int merge (K key, int value, IntBinaryOperator remappingFunction) {
+	public int merge (K key, int value, IntIntToIntBiFunction remappingFunction) {
 		int i = locateKey(key);
 		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
 		put(key, next);

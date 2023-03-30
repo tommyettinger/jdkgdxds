@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.function.Function;
+import com.github.tommyettinger.function.ObjToObjFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -82,12 +82,12 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	protected int mask;
 	@Nullable protected transient HolderSetIterator<T, K> iterator1;
 	@Nullable protected transient HolderSetIterator<T, K> iterator2;
-	@Nullable protected transient Function<T, K> extractor;
+	@Nullable protected transient ObjToObjFunction<T, K> extractor;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}. This does not set the
-	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(Function)} is called with
-	 * a valid Function that gets K keys from T items.
+	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(ObjToObjFunction)} is called with
+	 * a valid ObjToObjFunction that gets K keys from T items.
 	 */
 	@SuppressWarnings("unchecked")
 	public HolderSet () {
@@ -108,7 +108,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 *
 	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 */
-	public HolderSet (Function<T, K> extractor) {
+	public HolderSet (ObjToObjFunction<T, K> extractor) {
 		this(extractor, 51, Utilities.getDefaultLoadFactor());
 	}
 
@@ -118,7 +118,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * @param extractor       a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public HolderSet (Function<T, K> extractor, int initialCapacity) {
+	public HolderSet (ObjToObjFunction<T, K> extractor, int initialCapacity) {
 		this(extractor, initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
@@ -131,7 +131,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	@SuppressWarnings("unchecked")
-	public HolderSet (Function<T, K> extractor, int initialCapacity, float loadFactor) {
+	public HolderSet (ObjToObjFunction<T, K> extractor, int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) {
 			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
 		}
@@ -148,7 +148,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 
 	/**
 	 * Creates a new set identical to the specified set.
-	 * This doesn't copy the extractor; instead it references the same Function from the argument.
+	 * This doesn't copy the extractor; instead it references the same ObjToObjFunction from the argument.
 	 * This can have issues if the extractor causes side effects or is stateful.
 	 */
 	public HolderSet (HolderSet<T, K> set) {
@@ -168,7 +168,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * @param extractor a function that will be used to extract K keys from the T items in coll
 	 * @param coll      a Collection of T items; depending on extractor, some different T items may not be added because their K key is equal
 	 */
-	public HolderSet (Function<T, K> extractor, Collection<? extends T> coll) {
+	public HolderSet (ObjToObjFunction<T, K> extractor, Collection<? extends T> coll) {
 		this(extractor, coll.size());
 		addAll(coll);
 	}
@@ -179,7 +179,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * @param extractor a function that will be used to extract K keys from the T items in coll
 	 * @param items     an array of T items; depending on extractor, some different T items may not be added because their K key is equal
 	 */
-	public HolderSet (Function<T, K> extractor, T[] items) {
+	public HolderSet (ObjToObjFunction<T, K> extractor, T[] items) {
 		this(extractor, items.length);
 		addAll(items);
 	}
@@ -189,12 +189,12 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * This may be null if {@link #HolderSet()} was used to construct this object (or technically if
 	 * {@link #HolderSet(HolderSet)} was used to copy a HolderSet with an invalid extractor); in that
 	 * case, this cannot have items added, removed, or inserted until a valid extractor is set with
-	 * {@link #setExtractor(Function)}.
+	 * {@link #setExtractor(ObjToObjFunction)}.
 	 *
 	 * @return the extractor function this uses to get keys from items
 	 */
 	@Nullable
-	public Function<T, K> getExtractor () {
+	public ObjToObjFunction<T, K> getExtractor () {
 		return extractor;
 	}
 
@@ -205,9 +205,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * used to copy another HolderSet with an invalid extractor. All other cases should require the
 	 * extractor function to be specified at construction-time.
 	 *
-	 * @param extractor a Function that takes a T and gets a unique K from it; often a method reference
+	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 */
-	public void setExtractor (Function<T, K> extractor) {
+	public void setExtractor (ObjToObjFunction<T, K> extractor) {
 		if (this.extractor == null)
 			this.extractor = extractor;
 	}
@@ -865,14 +865,14 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		}
 	}
 
-	public static <T, K> HolderSet<T, K> with (Function<T, K> extractor, T item) {
+	public static <T, K> HolderSet<T, K> with (ObjToObjFunction<T, K> extractor, T item) {
 		HolderSet<T, K> set = new HolderSet<>(extractor, 1);
 		set.add(item);
 		return set;
 	}
 
 	@SafeVarargs
-	public static <T, K> HolderSet<T, K> with (Function<T, K> extractor, T... array) {
+	public static <T, K> HolderSet<T, K> with (ObjToObjFunction<T, K> extractor, T... array) {
 		return new HolderSet<>(extractor, array);
 	}
 }

@@ -18,8 +18,10 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.LongIterator;
+import com.github.tommyettinger.function.ObjLongBiConsumer;
 import com.github.tommyettinger.function.ObjLongToLongBiFunction;
 
+import com.github.tommyettinger.function.ObjToLongFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -27,9 +29,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.function.LongBinaryOperator;
-import java.util.function.ObjLongConsumer;
-import java.util.function.ToLongFunction;
+import com.github.tommyettinger.function.LongLongToLongBiFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -717,7 +717,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (ObjLongConsumer<? super K> action) {
+	public void forEach (ObjLongBiConsumer<? super K> action) {
 		for (Entry<K> entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}
@@ -1384,7 +1384,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		return defaultValue;
 	}
 
-	public long computeIfAbsent (K key, ToLongFunction<? super K> mappingFunction) {
+	public long computeIfAbsent (K key, ObjToLongFunction<? super K> mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
 			long newValue = mappingFunction.applyAsLong(key);
@@ -1403,7 +1403,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		return false;
 	}
 
-	public long merge (K key, long value, LongBinaryOperator remappingFunction) {
+	public long merge (K key, long value, LongLongToLongBiFunction remappingFunction) {
 		int i = locateKey(key);
 		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
 		put(key, next);

@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
-import java.util.function.DoubleUnaryOperator;
+import com.github.tommyettinger.function.DoubleToDoubleFunction;
 
 /**
  * A resizable, insertion-ordered double list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Double.
@@ -611,7 +611,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @param operator a DoubleToDoubleFunction (a functional interface defined in funderby)
 	 */
-	public void replaceAll (DoubleUnaryOperator operator) {
+	public void replaceAll (DoubleToDoubleFunction operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsDouble(items[i]);
 		}

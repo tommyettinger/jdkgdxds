@@ -19,7 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.IntBinaryOperator;
+import com.github.tommyettinger.function.IntIntToIntBiFunction;
 
 public class PileupTest {
     public static final int LEN = 200000;//500000;//1000000;//
@@ -2197,7 +2197,7 @@ public class PileupTest {
     @Test
     public void testPointSetShells () {
         final Point2[] shells = generatePointShells(LEN);
-        final IntBinaryOperator[] hashes = {
+        final IntIntToIntBiFunction[] hashes = {
             ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS strong, 2A strong, 3MA strong
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS strong, 2A strong, 3MA strong
             ((x, y) -> 31 * x + y), // hash 2 1MS fail 131072/500000, 2A fail 65536/500000, 3MA fail 131072/500000
@@ -2251,10 +2251,10 @@ public class PileupTest {
 
         int index = -1;
         IntLongOrderedMap timing = new IntLongOrderedMap(hashes.length);
-        for(IntBinaryOperator op : hashes) {
+        for(IntIntToIntBiFunction op : hashes) {
             ++index;
             System.out.println("Working with hash " + index + ":");
-            final IntBinaryOperator hash = op;
+            final IntIntToIntBiFunction hash = op;
             long start = System.nanoTime();
             ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
@@ -2362,7 +2362,7 @@ public class PileupTest {
     @Test
     public void testPointSetAngles () {
         final Point2[] shells = generatePointAngles(LEN);
-        IntBinaryOperator[] hashes = {
+        IntIntToIntBiFunction[] hashes = {
             ((x, y) -> x * 0x125493 + y * 0x19E373), // 1MS strong, 2A strong, 3MA strong
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // 1MS strong, 2A strong, 3MA strong
             ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // 1MS strong, 2A strong, 3MA strong
@@ -2384,9 +2384,9 @@ public class PileupTest {
             ((x, y) -> (x + (y << 16 | y >>> 16))), // 1MS strong, 2A strong, 3MA strong
         };
         int index = 0;
-        for(IntBinaryOperator op : hashes) {
+        for(IntIntToIntBiFunction op : hashes) {
             System.out.println("Working with hash " + index++ + ":");
-            final IntBinaryOperator hash = op;
+            final IntIntToIntBiFunction hash = op;
             long start = System.nanoTime();
             ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
@@ -2484,7 +2484,7 @@ public class PileupTest {
     @Test
     public void testPointSetSpiral () {
         final Point2[] shells = generatePointSpiral(LEN);
-        IntBinaryOperator[] hashes = {
+        IntIntToIntBiFunction[] hashes = {
             ((x, y) -> x * 0x125493 + y * 0x19E373), // 1MS strong, 2A strong, 3MA strong
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // 1MS very strong, 2A strong, 3MA strong
             ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // 1MS fail 314572/500000, 2A fail 314572/500000, 3MA fail 314572/500000
@@ -2506,9 +2506,9 @@ public class PileupTest {
             ((x, y) -> (x + (y << 16 | y >>> 16))), // 1MS very strong, 2A fail 2457/500000, 3MA fail 39321/500000
         };
         int index = 0;
-        for(IntBinaryOperator op : hashes) {
+        for(IntIntToIntBiFunction op : hashes) {
             System.out.println("Working with hash " + index++ + ":");
-            final IntBinaryOperator hash = op;
+            final IntIntToIntBiFunction hash = op;
             long start = System.nanoTime();
             ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
@@ -2603,7 +2603,7 @@ public class PileupTest {
     @Test
     public void testPointSetScatter () {
         final Point2[] shells = generatePointScatter(LEN);
-        IntBinaryOperator[] hashes = {
+        IntIntToIntBiFunction[] hashes = {
             ((x, y) -> x * 0x125493 + y * 0x19E373), // 1MS strong
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // 1MS strong
             ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // 1MS weak pass
@@ -2625,9 +2625,9 @@ public class PileupTest {
             ((x, y) -> (x + (y << 16 | y >>> 16))), // 1MS strong
         };
         int index = 0;
-        for(IntBinaryOperator op : hashes) {
+        for(IntIntToIntBiFunction op : hashes) {
             System.out.println("Working with hash " + index++ + ":");
-            final IntBinaryOperator hash = op;
+            final IntIntToIntBiFunction hash = op;
             long start = System.nanoTime();
             ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
@@ -2725,7 +2725,7 @@ public class PileupTest {
     public void testPointSetRectangles () {
         final int[] widths = {500, 200, 100, 50};
         final int[] heights = {LEN / 500, LEN / 200, LEN / 100, LEN / 50};
-        final IntBinaryOperator[] hashes = {
+        final IntIntToIntBiFunction[] hashes = {
             ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0, 1MS , 2A , 3MA
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1, 1MS , 2A , 3MA
             ((x, y) -> (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)), // hash 2, 1MS , 2A , 3MA
@@ -2832,9 +2832,9 @@ public class PileupTest {
             final int wide = widths[idx], high = heights[idx];
             final Point2[] shells = generatePointRectangle(wide, high);
             int index = 0;
-            for (IntBinaryOperator op : hashes) {
+            for (IntIntToIntBiFunction op : hashes) {
                 System.out.println("Working with hash " + index++ + ":");
-                final IntBinaryOperator hash = op;
+                final IntIntToIntBiFunction hash = op;
                 long start = System.nanoTime();
                 ObjectSet set = new ObjectSet(51, LOAD) {
                     long collisionTotal = 0;
@@ -2933,7 +2933,7 @@ public class PileupTest {
     @Test
     public void testPointSetShellsFull () {
         final Point2[] shells = generatePointShells(LEN, 0);
-        IntBinaryOperator[] hashes = {
+        IntIntToIntBiFunction[] hashes = {
             // 1MS defaults to strong unless it failed or did very well
             // 2A almost all have no collisions; only 2, 11, 12, 13 and 14 have any (and all fail except 14)
             // 3MA almost all have no collisions; only 2, 11, 12, and 13 have any (and all fail)
@@ -2962,9 +2962,9 @@ public class PileupTest {
             ((x, y) -> x * 0x7587 + y * 0x6A89), // hash 16 1MS , 2A , 3MA
         };
         int index = 0;
-        for(IntBinaryOperator op : hashes) {
+        for(IntIntToIntBiFunction op : hashes) {
             System.out.println("Working with hash " + index++ + ":");
-            final IntBinaryOperator hash = op;
+            final IntIntToIntBiFunction hash = op;
             long start = System.nanoTime();
             ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
@@ -3061,7 +3061,7 @@ public class PileupTest {
     @Test
     public void testPointSetAnglesFull () {
         final Point2[] shells = generatePointAngles(LEN, 0);
-        IntBinaryOperator[] hashes = {
+        IntIntToIntBiFunction[] hashes = {
             // the old hash 2 was: (int)((x * 107 + y) * 0xD1B54A32D192ED03L >>> 32)
             // it had a ton of collisions. The new hash 2 is what a typical auto-generated hashCode would use.
             // it is also horrible in some tables.
@@ -3094,9 +3094,9 @@ public class PileupTest {
             ((x, y) -> x * 0x7587 + y * 0x6A89), // hash 16 1MS , 2A , 3MA
         };
         int index = 0;
-        for(IntBinaryOperator op : hashes) {
+        for(IntIntToIntBiFunction op : hashes) {
             System.out.println("Working with hash " + index++ + ":");
-            final IntBinaryOperator hash = op;
+            final IntIntToIntBiFunction hash = op;
             long start = System.nanoTime();
             ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
@@ -3191,7 +3191,7 @@ public class PileupTest {
     @Test
     public void testPointSetSpiralFull () {
         final Point2[] shells = generatePointSpiral(LEN, 0);
-        IntBinaryOperator[] hashes = {
+        IntIntToIntBiFunction[] hashes = {
             // 1MS everything fails except 0, 1, 12, 14, and 15. 15, though, gets NO collisions at the end.
             // 2A only 0, 1, 14, and 15 pass. for 0, 1, and 15 with no collisions, even. wowza yow.
             // 3MA 0, 1, and 15 pass with no collisions, everything else fails. mm.
@@ -3220,9 +3220,9 @@ public class PileupTest {
             ((x, y) -> x * 0x7587 + y * 0x6A89), // hash 16 1MS , 2A , 3MA
         };
         int index = 0;
-        for(IntBinaryOperator op : hashes) {
+        for(IntIntToIntBiFunction op : hashes) {
             System.out.println("Working with hash " + index++ + ":");
-            final IntBinaryOperator hash = op;
+            final IntIntToIntBiFunction hash = op;
             long start = System.nanoTime();
             ObjectSet set = new ObjectSet(51, LOAD) {
                 long collisionTotal = 0;
@@ -3318,7 +3318,7 @@ public class PileupTest {
     public void testPointSetRectanglesFull () {
         final int[] widths = {500, 200, 100, 50};
         final int[] heights = {LEN / 500, LEN / 200, LEN / 100, LEN / 50};
-        final IntBinaryOperator[] hashes = {
+        final IntIntToIntBiFunction[] hashes = {
             ((x, y) -> x * 0x125493 + y * 0x19E373), // hash 0 1MS , 2A , 3MA
             ((x, y) -> x * 0xDEED5 + y * 0xBEA57), // hash 1 1MS , 2A , 3MA
             ((x, y) -> 31 * x + y), // hash 2 1MS , 2A , 3MA
@@ -3433,9 +3433,9 @@ public class PileupTest {
             final int wide = widths[idx], high = heights[idx];
             final Point2[] shells = generatePointRectangle(wide, high, 0);
             int index = 0;
-            for (IntBinaryOperator op : hashes) {
+            for (IntIntToIntBiFunction op : hashes) {
                 System.out.println("Working on size " + wide + " with hash " + index++ + ":");
-                final IntBinaryOperator hash = op;
+                final IntIntToIntBiFunction hash = op;
                 long start = System.nanoTime();
                 ObjectSet set = new ObjectSet(51, LOAD) {
                     long collisionTotal = 0;

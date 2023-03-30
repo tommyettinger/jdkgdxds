@@ -23,10 +23,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.function.IntUnaryOperator;
+import com.github.tommyettinger.function.IntToIntFunction;
 
 public class WordListStats {
-	public static final IntUnaryOperator[] worse = {
+	public static final IntToIntFunction[] worse = {
 		h -> h, // hash 0, identity
 		h -> h & (h ^ h >>> 1), // hash 1, mask with its own gray code
 		h -> h & (h << 21 | h >>> 11) & (h << 13 | h >>> 19), // hash 2, ARR
@@ -39,7 +39,7 @@ public class WordListStats {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		int wordCount = words.size();
 		for (int i = 0; i < worse.length; i++) {
-			IntUnaryOperator op = worse[i];
+			IntToIntFunction op = worse[i];
 			System.out.println("Working with hash-worsening operator " + i);
 			long sum = words.parallelStream().mapToLong(s -> op.applyAsInt(s.hashCode())).sum();
 			double averageHashCode = sum / (double)wordCount;

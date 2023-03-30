@@ -27,8 +27,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.function.LongBinaryOperator;
-import java.util.function.LongUnaryOperator;
+import com.github.tommyettinger.function.LongLongToLongBiFunction;
+import com.github.tommyettinger.function.LongToLongFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -740,7 +740,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 *
 	 * @param function the function to apply to each entry
 	 */
-	public void replaceAll (LongBinaryOperator function) {
+	public void replaceAll (LongLongToLongBiFunction function) {
 		for (Entry entry : entrySet()) {
 			entry.setValue(function.applyAsLong(entry.getKey(), entry.getValue()));
 		}
@@ -792,7 +792,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 * the iterator's own {@code remove} operation), the results of
 	 * the iteration are undefined. The set supports element removal,
 	 * which removes the corresponding mapping from the map, via the
-	 * {@link IntIterator#remove()} operation.  It does
+	 * {@link LongIterator#remove()} operation.  It does
 	 * not support the {@code add}, {@code addAll}, {@code remove},
 	 * {@code removeAll}, or {@code clear} operations.
 	 *
@@ -1465,7 +1465,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		return defaultValue;
 	}
 
-	public long computeIfAbsent (long key, LongUnaryOperator mappingFunction) {
+	public long computeIfAbsent (long key, LongToLongFunction mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
 			long newValue = mappingFunction.applyAsLong(key);
@@ -1484,7 +1484,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		return false;
 	}
 
-	public long merge (long key, long value, LongBinaryOperator remappingFunction) {
+	public long merge (long key, long value, LongLongToLongBiFunction remappingFunction) {
 		int i = locateKey(key);
 		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
 		put(key, next);

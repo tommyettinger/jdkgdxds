@@ -27,8 +27,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.function.IntBinaryOperator;
-import java.util.function.IntUnaryOperator;
+import com.github.tommyettinger.function.IntIntToIntBiFunction;
+import com.github.tommyettinger.function.IntToIntFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -737,7 +737,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 *
 	 * @param function the function to apply to each entry
 	 */
-	public void replaceAll (IntBinaryOperator function) {
+	public void replaceAll (IntIntToIntBiFunction function) {
 		for (Entry entry : entrySet()) {
 			entry.setValue(function.applyAsInt(entry.getKey(), entry.getValue()));
 		}
@@ -1468,7 +1468,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		return defaultValue;
 	}
 
-	public int computeIfAbsent (int key, IntUnaryOperator mappingFunction) {
+	public int computeIfAbsent (int key, IntToIntFunction mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
 			int newValue = mappingFunction.applyAsInt(key);
@@ -1487,7 +1487,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		return false;
 	}
 
-	public int merge (int key, int value, IntBinaryOperator remappingFunction) {
+	public int merge (int key, int value, IntIntToIntBiFunction remappingFunction) {
 		int i = locateKey(key);
 		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
 		put(key, next);

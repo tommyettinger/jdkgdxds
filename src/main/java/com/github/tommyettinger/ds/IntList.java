@@ -20,13 +20,13 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.function.IntToIntFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
-import java.util.function.IntUnaryOperator;
 
 /**
  * A resizable, insertion-ordered int list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Integer.
@@ -608,9 +608,9 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * Replaces each element of this list with the result of applying the
 	 * given operator to that element.
 	 *
-	 * @param operator a IntToIntFunction (a functional interface defined in funderby)
+	 * @param operator an IntToIntFunction (a functional interface defined in funderby)
 	 */
-	public void replaceAll (IntUnaryOperator operator) {
+	public void replaceAll (IntToIntFunction operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsInt(items[i]);
 		}

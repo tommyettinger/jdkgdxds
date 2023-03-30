@@ -21,6 +21,8 @@ import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntObjBiConsumer;
 import com.github.tommyettinger.function.IntObjToObjBiFunction;
 
+import com.github.tommyettinger.function.IntToObjFunction;
+import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -30,8 +32,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.IntFunction;
 
 import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
@@ -1458,7 +1458,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		return defaultValue;
 	}
 
-	public V computeIfAbsent (int key, IntFunction<? extends V> mappingFunction) {
+	public V computeIfAbsent (int key, IntToObjFunction<? extends V> mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
 			V newValue = mappingFunction.apply(key);
@@ -1478,7 +1478,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	@Nullable
-	public V merge (int key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+	public V merge (int key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		int i = locateKey(key);
 		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
 		if (next == null)
