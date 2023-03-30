@@ -19,17 +19,14 @@ package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.function.ByteConsumer;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
-import java.util.function.Consumer;
 
 /**
  * An Iterator specialized for {@code byte} values.
- * This is a {@link PrimitiveIterator}, like the existing {@link OfInt}
- * and {@link OfLong} interfaces, but it can't be a nested interface like
- * those because it is defined outside of the JDK.
+ * This iterates over primitive bytes using {@link #nextByte()}.
  */
-public interface ByteIterator extends PrimitiveIterator<Byte, ByteConsumer> {
+public interface ByteIterator extends Iterator<Byte> {
 	/**
 	 * Returns the next {@code byte} element in the iteration.
 	 *
@@ -52,7 +49,6 @@ public interface ByteIterator extends PrimitiveIterator<Byte, ByteConsumer> {
 	 *         action.accept(nextByte());
 	 * }</pre>
 	 */
-	@Override
 	default void forEachRemaining (ByteConsumer action) {
 		while (hasNext()) {action.accept(nextByte());}
 	}
@@ -67,23 +63,4 @@ public interface ByteIterator extends PrimitiveIterator<Byte, ByteConsumer> {
 	default Byte next () {
 		return nextByte();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @implSpec If the action is an instance of {@code LongConsumer} then it is cast
-	 * to {@code LongConsumer} and passed to {@link #forEachRemaining};
-	 * otherwise the action is adapted to an instance of
-	 * {@code LongConsumer}, by boxing the argument of {@code LongConsumer},
-	 * and then passed to {@link #forEachRemaining}.
-	 */
-	@Override
-	default void forEachRemaining (Consumer<? super Byte> action) {
-		if (action instanceof ByteConsumer) {
-			forEachRemaining((ByteConsumer)action);
-		} else {
-			forEachRemaining((ByteConsumer)action::accept);
-		}
-	}
-
 }

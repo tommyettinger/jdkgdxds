@@ -19,17 +19,14 @@ package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.function.BooleanConsumer;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
-import java.util.function.Consumer;
 
 /**
  * An Iterator specialized for {@code boolean} values.
- * This is a {@link PrimitiveIterator}, like the existing {@link OfInt}
- * and {@link OfLong} interfaces, but it can't be a nested interface like
- * those because it is defined outside of the JDK.
+ * This iterates over primitive booleans using {@link #nextBoolean()}.
  */
-public interface BooleanIterator extends PrimitiveIterator<Boolean, BooleanConsumer> {
+public interface BooleanIterator extends Iterator<Boolean> {
 	/**
 	 * Returns the next {@code boolean} element in the iteration.
 	 *
@@ -52,7 +49,6 @@ public interface BooleanIterator extends PrimitiveIterator<Boolean, BooleanConsu
 	 *         action.accept(nextBoolean());
 	 * }</pre>
 	 */
-	@Override
 	default void forEachRemaining (BooleanConsumer action) {
 		while (hasNext()) {action.accept(nextBoolean());}
 	}
@@ -67,23 +63,4 @@ public interface BooleanIterator extends PrimitiveIterator<Boolean, BooleanConsu
 	default Boolean next () {
 		return nextBoolean();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @implSpec If the action is an instance of {@code LongConsumer} then it is cast
-	 * to {@code LongConsumer} and passed to {@link #forEachRemaining};
-	 * otherwise the action is adapted to an instance of
-	 * {@code LongConsumer}, by boxing the argument of {@code LongConsumer},
-	 * and then passed to {@link #forEachRemaining}.
-	 */
-	@Override
-	default void forEachRemaining (Consumer<? super Boolean> action) {
-		if (action instanceof BooleanConsumer) {
-			forEachRemaining((BooleanConsumer)action);
-		} else {
-			forEachRemaining((BooleanConsumer)action::accept);
-		}
-	}
-
 }

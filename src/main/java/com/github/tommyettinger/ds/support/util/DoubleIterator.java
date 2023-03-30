@@ -21,7 +21,6 @@ import com.github.tommyettinger.function.DoubleConsumer;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Consumer;
 
 /**
  * An Iterator specialized for {@code double} values.
@@ -67,23 +66,4 @@ public interface DoubleIterator extends Iterator<Double> {
 	default Double next () {
 		return nextDouble();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @implSpec If the action is an instance of {@code DoubleConsumer} then it is cast
-	 * to {@code DoubleConsumer} and passed to {@link #forEachRemaining};
-	 * otherwise the action is adapted to an instance of
-	 * {@code DoubleConsumer}, by boxing the argument of {@code DoubleConsumer},
-	 * and then passed to {@link #forEachRemaining}.
-	 */
-	@Override
-	default void forEachRemaining (Consumer<? super Double> action) {
-		if (action instanceof DoubleConsumer) {
-			forEachRemaining((DoubleConsumer)action);
-		} else {
-			forEachRemaining((DoubleConsumer)action::accept);
-		}
-	}
-
 }

@@ -21,7 +21,6 @@ import com.github.tommyettinger.function.IntConsumer;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Consumer;
 
 /**
  * An Iterator specialized for {@code int} values.
@@ -67,23 +66,4 @@ public interface IntIterator extends Iterator<Integer> {
 	default Integer next () {
 		return nextInt();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @implSpec If the action is an instance of {@code IntConsumer} then it is cast
-	 * to {@code IntConsumer} and passed to {@link #forEachRemaining};
-	 * otherwise the action is adapted to an instance of
-	 * {@code IntConsumer}, by boxing the argument of {@code IntConsumer},
-	 * and then passed to {@link #forEachRemaining}.
-	 */
-	@Override
-	default void forEachRemaining (Consumer<? super Integer> action) {
-		if (action instanceof IntConsumer) {
-			forEachRemaining((IntConsumer)action);
-		} else {
-			forEachRemaining((IntConsumer)action::accept);
-		}
-	}
-
 }

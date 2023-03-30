@@ -21,7 +21,6 @@ import com.github.tommyettinger.function.LongConsumer;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Consumer;
 
 /**
  * An Iterator specialized for {@code long} values.
@@ -67,23 +66,4 @@ public interface LongIterator extends Iterator<Long> {
 	default Long next () {
 		return nextLong();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @implSpec If the action is an instance of {@code LongConsumer} then it is cast
-	 * to {@code LongConsumer} and passed to {@link #forEachRemaining};
-	 * otherwise the action is adapted to an instance of
-	 * {@code LongConsumer}, by boxing the argument of {@code LongConsumer},
-	 * and then passed to {@link #forEachRemaining}.
-	 */
-	@Override
-	default void forEachRemaining (Consumer<? super Long> action) {
-		if (action instanceof LongConsumer) {
-			forEachRemaining((LongConsumer)action);
-		} else {
-			forEachRemaining((LongConsumer)action::accept);
-		}
-	}
-
 }

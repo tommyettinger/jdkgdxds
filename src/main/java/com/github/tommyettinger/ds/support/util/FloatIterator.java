@@ -21,7 +21,6 @@ import com.github.tommyettinger.function.FloatConsumer;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Consumer;
 
 /**
  * An Iterator specialized for {@code float} values.
@@ -64,23 +63,4 @@ public interface FloatIterator extends Iterator<Float> {
 	default Float next () {
 		return nextFloat();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @implSpec If the action is an instance of {@code FloatConsumer} then it is cast
-	 * to {@code FloatConsumer} and passed to {@link #forEachRemaining};
-	 * otherwise the action is adapted to an instance of
-	 * {@code FloatConsumer}, by boxing the argument of {@code FloatConsumer},
-	 * and then passed to {@link #forEachRemaining}.
-	 */
-	@Override
-	default void forEachRemaining (Consumer<? super Float> action) {
-		if (action instanceof FloatConsumer) {
-			forEachRemaining((FloatConsumer)action);
-		} else {
-			forEachRemaining((FloatConsumer)action::accept);
-		}
-	}
-
 }

@@ -19,17 +19,14 @@ package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.function.ShortConsumer;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
-import java.util.function.Consumer;
 
 /**
  * An Iterator specialized for {@code short} values.
- * This is a {@link PrimitiveIterator}, like the existing {@link OfInt}
- * and {@link OfLong} interfaces, but it can't be a nested interface like
- * those because it is defined outside of the JDK.
+ * This iterates over primitive shorts using {@link #nextShort()}.
  */
-public interface ShortIterator extends PrimitiveIterator<Short, ShortConsumer> {
+public interface ShortIterator extends Iterator<Short> {
 	/**
 	 * Returns the next {@code short} element in the iteration.
 	 *
@@ -52,7 +49,6 @@ public interface ShortIterator extends PrimitiveIterator<Short, ShortConsumer> {
 	 *         action.accept(nextShort());
 	 * }</pre>
 	 */
-	@Override
 	default void forEachRemaining (ShortConsumer action) {
 		while (hasNext()) {action.accept(nextShort());}
 	}
@@ -67,23 +63,4 @@ public interface ShortIterator extends PrimitiveIterator<Short, ShortConsumer> {
 	default Short next () {
 		return nextShort();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @implSpec If the action is an instance of {@code LongConsumer} then it is cast
-	 * to {@code LongConsumer} and passed to {@link #forEachRemaining};
-	 * otherwise the action is adapted to an instance of
-	 * {@code LongConsumer}, by boxing the argument of {@code LongConsumer},
-	 * and then passed to {@link #forEachRemaining}.
-	 */
-	@Override
-	default void forEachRemaining (Consumer<? super Short> action) {
-		if (action instanceof ShortConsumer) {
-			forEachRemaining((ShortConsumer)action);
-		} else {
-			forEachRemaining((ShortConsumer)action::accept);
-		}
-	}
-
 }

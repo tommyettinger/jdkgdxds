@@ -19,17 +19,14 @@ package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.function.CharConsumer;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
-import java.util.function.Consumer;
 
 /**
  * An Iterator specialized for {@code char} values.
- * This is a {@link PrimitiveIterator}, like the existing {@link OfInt}
- * and {@link OfLong} interfaces, but it can't be a nested interface like
- * those because it is defined outside of the JDK.
+ * This iterates over primitive chars using {@link #nextChar()}.
  */
-public interface CharIterator extends PrimitiveIterator<Character, CharConsumer> {
+public interface CharIterator extends Iterator<Character> {
 	/**
 	 * Returns the next {@code char} element in the iteration.
 	 *
@@ -52,7 +49,6 @@ public interface CharIterator extends PrimitiveIterator<Character, CharConsumer>
 	 *         action.accept(nextChar());
 	 * }</pre>
 	 */
-	@Override
 	default void forEachRemaining (CharConsumer action) {
 		while (hasNext()) {action.accept(nextChar());}
 	}
@@ -67,23 +63,4 @@ public interface CharIterator extends PrimitiveIterator<Character, CharConsumer>
 	default Character next () {
 		return nextChar();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @implSpec If the action is an instance of {@code LongConsumer} then it is cast
-	 * to {@code LongConsumer} and passed to {@link #forEachRemaining};
-	 * otherwise the action is adapted to an instance of
-	 * {@code LongConsumer}, by boxing the argument of {@code LongConsumer},
-	 * and then passed to {@link #forEachRemaining}.
-	 */
-	@Override
-	default void forEachRemaining (Consumer<? super Character> action) {
-		if (action instanceof CharConsumer) {
-			forEachRemaining((CharConsumer)action);
-		} else {
-			forEachRemaining((CharConsumer)action::accept);
-		}
-	}
-
 }
