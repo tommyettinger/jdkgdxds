@@ -19,12 +19,12 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Random;
 import java.util.function.IntUnaryOperator;
 
@@ -544,7 +544,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		int size = this.size;
 		int startSize = size;
 		int[] items = this.items;
-		PrimitiveIterator.OfInt it = c.iterator();
+		IntIterator it = c.iterator();
 		for (int i = 0, n = c.size(); i < n; i++) {
 			int item = it.nextInt();
 			for (int ii = 0; ii < size; ii++) {
@@ -570,7 +570,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		int size = this.size;
 		int startSize = size;
 		int[] items = this.items;
-		PrimitiveIterator.OfInt it = c.iterator();
+		IntIterator it = c.iterator();
 		for (int i = 0, n = c.size(); i < n; i++) {
 			int item = it.nextInt();
 			for (int ii = 0; ii < size; ii++) {
@@ -882,7 +882,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * This will reuse one of two iterators in this IntList; this does not allow nested iteration.
 	 * Use {@link IntListIterator#IntListIterator(IntList)} to nest iterators.
 	 *
-	 * @return a {@link PrimitiveIterator.OfInt}; use its nextInt() method instead of next()
+	 * @return a {@link IntIterator}; use its nextInt() method instead of next()
 	 */
 	@Override
 	public IntListIterator iterator () {
@@ -903,10 +903,10 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * A {@link PrimitiveIterator.OfInt}, plus {@link ListIterator} methods, over the elements of a IntList.
+	 * A {@link IntIterator}, plus {@link ListIterator} methods, over the elements of a IntList.
 	 * Use {@link #nextInt()} in preference to {@link #next()} to avoid allocating Integer objects.
 	 */
-	public static class IntListIterator implements PrimitiveIterator.OfInt {
+	public static class IntListIterator implements IntIterator {
 		protected int index, latest = -1;
 		protected IntList list;
 		protected boolean valid = true;

@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongIntBiConsumer;
 import com.github.tommyettinger.function.LongIntToIntBiFunction;
@@ -27,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.function.IntBinaryOperator;
 import java.util.function.LongToIntFunction;
@@ -195,7 +195,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
 		LongIterator ki = keys.iterator();
-		PrimitiveIterator.OfInt vi = values.iterator();
+		IntIterator vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
 			put(ki.nextLong(), vi.nextInt());
 		}
@@ -1058,7 +1058,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		}
 	}
 
-	public static class ValueIterator extends MapIterator implements PrimitiveIterator.OfInt {
+	public static class ValueIterator extends MapIterator implements IntIterator {
 		public ValueIterator (LongIntMap map) {
 			super(map);
 		}
@@ -1247,7 +1247,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public PrimitiveIterator.OfInt iterator () {
+		public IntIterator iterator () {
 			return iter;
 		}
 

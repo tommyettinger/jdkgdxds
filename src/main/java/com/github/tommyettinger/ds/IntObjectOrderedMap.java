@@ -19,13 +19,13 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Set;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
@@ -119,7 +119,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 */
 	public IntObjectOrderedMap (IntObjectMap<? extends V> map) {
 		this(map.size());
-		PrimitiveIterator.OfInt it = map.keySet().iterator();
+		IntIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			int k = it.nextInt();
 			put(k, map.get(k));
@@ -703,7 +703,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 		}
 
 		@Override
-		public PrimitiveIterator.OfInt iterator () {
+		public IntIterator iterator () {
 			return iter;
 		}
 	}

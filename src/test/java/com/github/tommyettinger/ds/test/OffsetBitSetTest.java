@@ -17,15 +17,14 @@
 
 package com.github.tommyettinger.ds.test;
 
-import static org.junit.Assert.*;
-
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.OffsetBitSet;
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.PrimitiveIterator;
+import static org.junit.Assert.*;
 
 /**
  * This was originally BitsTest, from libGDX's tests.
@@ -185,7 +184,7 @@ public class OffsetBitSetTest {
 //		int[] items = new int[]{0, 1, 4, 20, 50, 9, 100};
 //		OffsetBitSet b1 = OffsetBitSet.with(items);
 //		b1.changeOffset(1000);
-//		PrimitiveIterator.OfInt it = b1.iterator();
+//		IntIterator it = b1.iterator();
 //		while (it.hasNext()){
 //			int n = it.next();
 //			if(n == 1009) it.remove();
@@ -200,7 +199,7 @@ public class OffsetBitSetTest {
 		int[] items = new int[]{0, 1, 4, 20, 50, 9, 100};
 		OffsetBitSet b1 = OffsetBitSet.with(items);
 		b1.changeOffset(1000);
-		PrimitiveIterator.OfInt it = b1.iterator();
+		IntIterator it = b1.iterator();
 		while (it.hasNext()){
 			int n = it.next();
 			if(n == 1009) it.remove();

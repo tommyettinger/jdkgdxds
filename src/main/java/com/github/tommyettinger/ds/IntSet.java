@@ -17,10 +17,10 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -542,7 +542,7 @@ public class IntSet implements PrimitiveCollection.OfInt {
 		return size;
 	}
 
-	public static class IntSetIterator implements PrimitiveIterator.OfInt {
+	public static class IntSetIterator implements IntIterator {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
 		/**

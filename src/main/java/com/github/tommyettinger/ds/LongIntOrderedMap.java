@@ -22,12 +22,12 @@ import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -760,7 +760,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 		}
 
 		@Override
-		public PrimitiveIterator.OfInt iterator () {
+		public IntIterator iterator () {
 			return iter;
 		}
 	}

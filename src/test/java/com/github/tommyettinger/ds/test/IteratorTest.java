@@ -4,7 +4,10 @@ import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
 import com.github.tommyettinger.ds.support.util.CharIterator;
+import com.github.tommyettinger.ds.support.util.DoubleIterator;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
+import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.Assert;
@@ -14,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.PrimitiveIterator;
 
 public class IteratorTest {
 	public static final String[] strings = {
@@ -373,7 +375,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt iv = data.values().iterator();
+		IntIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			int item = iv.nextInt();
 			++counter;
@@ -405,7 +407,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt iv = data.values().iterator();
+		IntIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			int item = iv.nextInt();
 			++counter;
@@ -629,7 +631,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt iv = data.values().iterator();
+		IntIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			int item = iv.nextInt();
 			++counter;
@@ -661,7 +663,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt iv = data.values().iterator();
+		IntIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			int item = iv.nextInt();
 			++counter;
@@ -814,7 +816,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt ik = data.keySet().iterator();
+		IntIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			int item = ik.nextInt();
 			++counter;
@@ -846,7 +848,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt ik = data.keySet().iterator();
+		IntIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			int item = ik.nextInt();
 			++counter;
@@ -878,14 +880,14 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt ik = data.keySet().iterator();
+		IntIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			int item = ik.nextInt();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt iv = data.values().iterator();
+		IntIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			int item = iv.nextInt();
 			++counter;
@@ -910,14 +912,14 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt ik = data.keySet().iterator();
+		IntIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			int item = ik.nextInt();
 			++counter;
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt iv = data.values().iterator();
+		IntIterator iv = data.values().iterator();
 		while (iv.hasNext()) {
 			int item = iv.nextInt();
 			++counter;
@@ -942,7 +944,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt ik = data.keySet().iterator();
+		IntIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			int item = ik.nextInt();
 			++counter;
@@ -974,7 +976,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt ik = data.keySet().iterator();
+		IntIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			int item = ik.nextInt();
 			++counter;
@@ -1006,7 +1008,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt ik = data.keySet().iterator();
+		IntIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			int item = ik.nextInt();
 			++counter;
@@ -1038,7 +1040,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 		counter = 0;
-		PrimitiveIterator.OfInt ik = data.keySet().iterator();
+		IntIterator ik = data.keySet().iterator();
 		while (ik.hasNext()) {
 			int item = ik.nextInt();
 			++counter;
@@ -1105,7 +1107,7 @@ public class IteratorTest {
 	public void testIntListIterator() {
 		IntList data = IntList.with(ints);
 		int counter = 0, size = data.size();
-		PrimitiveIterator.OfInt it = data.iterator();
+		IntIterator it = data.iterator();
 		while (it.hasNext()) {
 			int item = it.nextInt();
 			++counter;
@@ -1129,7 +1131,7 @@ public class IteratorTest {
 	public void testDoubleListIterator() {
 		DoubleList data = DoubleList.with(doubles);
 		int counter = 0, size = data.size();
-		PrimitiveIterator.OfDouble it = data.iterator();
+		DoubleIterator it = data.iterator();
 		while (it.hasNext()) {
 			double item = it.nextDouble();
 			++counter;
@@ -1201,7 +1203,7 @@ public class IteratorTest {
 	public void testIntDequeIterator() {
 		IntDeque data = IntDeque.with(ints);
 		int counter = 0, size = data.size();
-		PrimitiveIterator.OfInt it = data.iterator();
+		IntIterator it = data.iterator();
 		while (it.hasNext()) {
 			int item = it.nextInt();
 			++counter;
@@ -1225,7 +1227,7 @@ public class IteratorTest {
 	public void testDoubleDequeIterator() {
 		DoubleDeque data = DoubleDeque.with(doubles);
 		int counter = 0, size = data.size();
-		PrimitiveIterator.OfDouble it = data.iterator();
+		DoubleIterator it = data.iterator();
 		while (it.hasNext()) {
 			double item = it.nextDouble();
 			++counter;
@@ -1249,7 +1251,7 @@ public class IteratorTest {
 	public void testIntSetIterator() {
 		IntSet data = IntSet.with(ints);
 		int counter = 0, size = data.size();
-		PrimitiveIterator.OfInt it = data.iterator();
+		IntIterator it = data.iterator();
 		while (it.hasNext()) {
 			int item = it.nextInt();
 			++counter;
@@ -1261,7 +1263,7 @@ public class IteratorTest {
 	public void testIntOrderedSetIterator() {
 		IntOrderedSet data = IntOrderedSet.with(ints);
 		int counter = 0, size = data.size();
-		PrimitiveIterator.OfInt it = data.iterator();
+		IntIterator it = data.iterator();
 		while (it.hasNext()) {
 			int item = it.nextInt();
 			++counter;

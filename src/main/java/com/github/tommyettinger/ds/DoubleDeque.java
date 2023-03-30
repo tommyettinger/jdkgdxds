@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
@@ -1208,10 +1207,10 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 	}
 
 	/**
-	 * A {@link PrimitiveIterator.OfDouble}, plus similar methods to a {@link ListIterator}, over the elements of an DoubleDeque.
+	 * A {@link DoubleIterator}, plus similar methods to a {@link ListIterator}, over the elements of an DoubleDeque.
 	 * Use {@link #nextDouble()} in preference to {@link #next()} to avoid allocating Double objects.
 	 */
-	public static class DoubleDequeIterator implements PrimitiveIterator.OfDouble {
+	public static class DoubleDequeIterator implements DoubleIterator {
 		protected int index, latest = -1;
 		protected DoubleDeque deque;
 		protected boolean valid = true;

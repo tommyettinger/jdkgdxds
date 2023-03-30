@@ -23,11 +23,11 @@ import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -108,7 +108,7 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	 */
 	public IntFloatOrderedMap (IntFloatMap map) {
 		this(map.size());
-		PrimitiveIterator.OfInt it = map.keySet().iterator();
+		IntIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			int k = it.nextInt();
 			put(k, map.get(k));
@@ -712,7 +712,7 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 		}
 
 		@Override
-		public PrimitiveIterator.OfInt iterator () {
+		public IntIterator iterator () {
 			return iter;
 		}
 	}

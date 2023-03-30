@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntIntBiConsumer;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -25,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.function.IntBinaryOperator;
 import java.util.function.IntUnaryOperator;
@@ -193,10 +193,10 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	public void putAll (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values) {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
-		PrimitiveIterator.OfInt ki = keys.iterator();
-		PrimitiveIterator.OfInt vi = values.iterator();
+		IntIterator ki = keys.iterator();
+		IntIterator vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
-			put(ki.next(), vi.next());
+			put(ki.nextInt(), vi.nextInt());
 		}
 	}
 
@@ -790,7 +790,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * the iterator's own {@code remove} operation), the results of
 	 * the iteration are undefined. The set supports element removal,
 	 * which removes the corresponding mapping from the map, via the
-	 * {@link PrimitiveIterator.OfInt#remove()} operation.  It does
+	 * {@link IntIterator#remove()} operation.  It does
 	 * not support the {@code add}, {@code addAll}, {@code remove},
 	 * {@code removeAll}, or {@code clear} operations.
 	 *
@@ -1026,7 +1026,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 
 	}
 
-	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfInt {
+	public static class KeyIterator extends MapIterator implements IntIterator {
 
 		public KeyIterator (IntIntMap map) {
 			super(map);
@@ -1059,7 +1059,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 
 	}
 
-	public static class ValueIterator extends MapIterator implements PrimitiveIterator.OfInt {
+	public static class ValueIterator extends MapIterator implements IntIterator {
 		public ValueIterator (IntIntMap map) {
 			super(map);
 		}
@@ -1249,7 +1249,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public PrimitiveIterator.OfInt iterator () {
+		public IntIterator iterator () {
 			return iter;
 		}
 
@@ -1349,7 +1349,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		}
 
 		@Override
-		public PrimitiveIterator.OfInt iterator () {
+		public IntIterator iterator () {
 			return iter;
 		}
 

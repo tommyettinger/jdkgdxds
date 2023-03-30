@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntObjBiConsumer;
 import com.github.tommyettinger.function.IntObjToObjBiFunction;
 
@@ -28,7 +29,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.IntFunction;
@@ -199,10 +199,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	public void putAll (PrimitiveCollection.OfInt keys, Collection<? extends V> values) {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
-		PrimitiveIterator.OfInt ki = keys.iterator();
+		IntIterator ki = keys.iterator();
 		Iterator<? extends V> vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
-			put(ki.next(), vi.next());
+			put(ki.nextInt(), vi.next());
 		}
 	}
 
@@ -1026,7 +1026,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 	}
 
-	public static class KeyIterator<V> extends MapIterator<V> implements PrimitiveIterator.OfInt {
+	public static class KeyIterator<V> extends MapIterator<V> implements IntIterator {
 
 		public KeyIterator (IntObjectMap<V> map) {
 			super(map);
@@ -1337,7 +1337,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		}
 
 		@Override
-		public PrimitiveIterator.OfInt iterator () {
+		public IntIterator iterator () {
 			return iter;
 		}
 

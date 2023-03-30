@@ -20,12 +20,12 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
+import com.github.tommyettinger.ds.support.util.DoubleIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Random;
 import java.util.function.DoubleUnaryOperator;
 
@@ -545,7 +545,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		int size = this.size;
 		int startSize = size;
 		double[] items = this.items;
-		PrimitiveIterator.OfDouble it = c.iterator();
+		DoubleIterator it = c.iterator();
 		for (int i = 0, n = c.size(); i < n; i++) {
 			double item = it.nextDouble();
 			for (int ii = 0; ii < size; ii++) {
@@ -571,7 +571,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		int size = this.size;
 		int startSize = size;
 		double[] items = this.items;
-		PrimitiveIterator.OfDouble it = c.iterator();
+		DoubleIterator it = c.iterator();
 		for (int i = 0, n = c.size(); i < n; i++) {
 			double item = it.nextDouble();
 			for (int ii = 0; ii < size; ii++) {
@@ -899,7 +899,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * This will reuse one of two iterators in this DoubleList; this does not allow nested iteration.
 	 * Use {@link DoubleListIterator#DoubleListIterator(DoubleList)} to nest iterators.
 	 *
-	 * @return a {@link PrimitiveIterator.OfDouble}; use its nextDouble() method instead of next()
+	 * @return a {@link DoubleIterator}; use its nextDouble() method instead of next()
 	 */
 	@Override
 	public DoubleListIterator iterator () {
@@ -920,10 +920,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	/**
-	 * A {@link PrimitiveIterator.OfDouble}, plus {@link ListIterator} methods, over the elements of a DoubleList.
+	 * A {@link DoubleIterator}, plus {@link ListIterator} methods, over the elements of a DoubleList.
 	 * Use {@link #nextDouble()} in preference to {@link #next()} to avoid allocating Double objects.
 	 */
-	public static class DoubleListIterator implements PrimitiveIterator.OfDouble {
+	public static class DoubleListIterator implements DoubleIterator {
 		protected int index, latest = -1;
 		protected DoubleList list;
 		protected boolean valid = true;

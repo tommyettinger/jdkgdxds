@@ -27,7 +27,7 @@ import java.util.function.Consumer;
  * An Iterator specialized for {@code int} values.
  * This iterates over primitive ints using {@link #nextInt()}.
  * <br>
- * This is roughly equivalent to {@code PrimitiveIterator.OfInt} in Java 8, and is present here so environments
+ * This is roughly equivalent to {@code IntIterator} in Java 8, and is present here so environments
  * don't fully support Java 8 APIs (such as RoboVM) can use it.
  */
 public interface IntIterator extends Iterator<Integer> {

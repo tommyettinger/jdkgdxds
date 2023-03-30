@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.ObjIntToIntBiFunction;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -25,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.function.IntBinaryOperator;
 import java.util.function.ObjIntConsumer;
@@ -188,11 +188,11 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		ensureCapacity(length);
 		K key;
 		Iterator<? extends K> ki = keys.iterator();
-		PrimitiveIterator.OfInt vi = values.iterator();
+		IntIterator vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
 			key = ki.next();
 			if (key != null) {
-				put(key, vi.next());
+				put(key, vi.nextInt());
 			}
 		}
 	}
@@ -1023,7 +1023,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 	}
 
-	public static class ValueIterator<K> extends MapIterator<K> implements PrimitiveIterator.OfInt {
+	public static class ValueIterator<K> extends MapIterator<K> implements IntIterator {
 		public ValueIterator (ObjectIntMap<K> map) {
 			super(map);
 		}
@@ -1202,7 +1202,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 
 		@Override
-		public PrimitiveIterator.OfInt iterator () {
+		public IntIterator iterator () {
 			return iter;
 		}
 

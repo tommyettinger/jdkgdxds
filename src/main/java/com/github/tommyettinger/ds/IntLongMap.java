@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.function.IntToLongFunction;
 import java.util.function.LongBinaryOperator;
@@ -1027,7 +1026,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 
 	}
 
-	public static class KeyIterator extends MapIterator implements PrimitiveIterator.OfInt {
+	public static class KeyIterator extends MapIterator implements IntIterator {
 
 		public KeyIterator (IntLongMap map) {
 			super(map);
@@ -1348,7 +1347,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		}
 
 		@Override
-		public PrimitiveIterator.OfInt iterator () {
+		public IntIterator iterator () {
 			return iter;
 		}
 

@@ -27,7 +27,7 @@ import java.util.function.Consumer;
  * An Iterator specialized for {@code double} values.
  * This iterates over primitive doubles using {@link #nextDouble()}.
  * <br>
- * This is roughly equivalent to {@code PrimitiveIterator.OfDouble} in Java 8, and is present here so environments
+ * This is roughly equivalent to {@code DoubleIterator} in Java 8, and is present here so environments
  * don't fully support Java 8 APIs (such as RoboVM) can use it.
  */
 public interface DoubleIterator extends Iterator<Double> {

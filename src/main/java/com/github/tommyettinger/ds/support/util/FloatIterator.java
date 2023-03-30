@@ -21,7 +21,6 @@ import com.github.tommyettinger.function.FloatConsumer;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.function.Consumer;
 
 /**

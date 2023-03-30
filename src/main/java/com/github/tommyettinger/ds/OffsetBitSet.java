@@ -19,10 +19,10 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 
 /**
  * A bit set, which can be seen as a set of integer positions greater than some starting number,
@@ -112,7 +112,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 			return;
 		}
 		int start = Integer.MAX_VALUE, end = Integer.MIN_VALUE;
-		for(PrimitiveIterator.OfInt it = toCopy.iterator(); it.hasNext();) {
+		for(IntIterator it = toCopy.iterator(); it.hasNext();) {
 			int n = it.next();
 			start = Math.min(start, n);
 			end = Math.max(end, n + 1);
@@ -231,7 +231,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	}
 
 	public boolean addAll(PrimitiveCollection.OfInt indices) {
-		PrimitiveIterator.OfInt it = indices.iterator();
+		IntIterator it = indices.iterator();
 		boolean changed = false;
 		while (it.hasNext()){
 			changed |= add(it.nextInt());
@@ -659,7 +659,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 	}
 
 
-	public static class OffsetBitSetIterator implements PrimitiveIterator.OfInt {
+	public static class OffsetBitSetIterator implements IntIterator {
 		static private final int INDEX_ILLEGAL = -1, INDEX_ZERO = -1;
 
 		public boolean hasNext;

@@ -20,12 +20,12 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
@@ -632,7 +632,7 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 	@Override
 	public boolean addAll (OfInt c) {
 		int oldSize = size;
-		PrimitiveIterator.OfInt it = c.iterator();
+		IntIterator it = c.iterator();
 		while (it.hasNext()) {
 			addLast(it.nextInt());
 		}
@@ -1207,10 +1207,10 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 
 
 	/**
-	 * A {@link PrimitiveIterator.OfInt}, plus similar methods to a {@link ListIterator}, over the elements of an IntDeque.
+	 * A {@link IntIterator}, plus similar methods to a {@link ListIterator}, over the elements of an IntDeque.
 	 * Use {@link #nextInt()} in preference to {@link #next()} to avoid allocating Integer objects.
 	 */
-	public static class IntDequeIterator implements PrimitiveIterator.OfInt {
+	public static class IntDequeIterator implements IntIterator {
 		protected int index, latest = -1;
 		protected IntDeque deque;
 		protected boolean valid = true;

@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.function.LongBinaryOperator;
 import java.util.function.LongUnaryOperator;
@@ -793,7 +792,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 * the iterator's own {@code remove} operation), the results of
 	 * the iteration are undefined. The set supports element removal,
 	 * which removes the corresponding mapping from the map, via the
-	 * {@link PrimitiveIterator.OfInt#remove()} operation.  It does
+	 * {@link IntIterator#remove()} operation.  It does
 	 * not support the {@code add}, {@code addAll}, {@code remove},
 	 * {@code removeAll}, or {@code clear} operations.
 	 *
