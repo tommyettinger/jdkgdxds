@@ -201,7 +201,7 @@ public class OffsetBitSetTest {
 		b1.changeOffset(1000);
 		IntIterator it = b1.iterator();
 		while (it.hasNext()){
-			int n = it.next();
+			int n = it.nextInt();
 			if(n == 1009) it.remove();
 		}
 		Assert.assertEquals(IntList.with(1000, 1001, 1004, 1020, 1050, 1100), b1.iterator().toList());

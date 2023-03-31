@@ -10,11 +10,11 @@ like optional insertion-ordering. The problem with libGDX's data structures is t
 they implement, typically implementing no more than `java.io.Serializable` and `java.lang.Iterable`. They also are limited to Java
 6 or 7 features, despite Java 8 features being available on Android and GWT for some time now, and even reaching iOS soon, if not
 already. So what is this? It is a redo of libGDX's data structures so that they implement common JDK interfaces like
-`java.util.Map`, `java.util.List`, and `java.util.Set`, plus their parts that can't implement generic interfaces use JDK 8's
-`java.util.PrimitiveIterator` in some way. It also sharply increases the number of primitive-backed maps; they don't implement
-`java.util.Map`, but often implement other interfaces here. As an example, `com.github.tommyettinger.ds.IntLongOrderedMap`
-implements `com.github.tommyettinger.ds.Ordered.OfInt`, which specifies that the order of items (keys here) is represented by a
-`com.github.tommyettinger.ds.IntList` containing those keys.
+`java.util.Map`, `java.util.List`, and `java.util.Set`, plus their parts that can't implement generic interfaces use interfaces
+defined here, such as `PrimitiveCollection`, `Ordered`, `FloatIterator`, `LongComparator`, and so on. It also sharply increases
+the number of primitive-backed maps; they don't implement `java.util.Map`, but often implement other interfaces here. As an
+example, `com.github.tommyettinger.ds.IntLongOrderedMap` implements `com.github.tommyettinger.ds.Ordered.OfInt`, which specifies
+that the order of items (keys here) is represented by a `com.github.tommyettinger.ds.IntList` containing those keys.
 
 ## OK, how do I use it?
 
@@ -57,7 +57,7 @@ slower removal from the middle of the NumberedSet; that class doesn't implement 
 There's also a close relative of libGDX's `BinaryHeap` class, but the one here implements the JDK's `Queue`.
 
 The library includes expanded interfaces for these to implement, like the aforementioned `Ordered` interface,
-`PrimitiveCollection` to complement Java 8's `PrimitiveIterator`, some `float`-based versions of primitive specializations where
+`PrimitiveCollection` is akin to Java 8's `PrimitiveIterator`, some `float`-based versions of primitive specializations where
 the JDK only offers `int`, `long`, and `double`, and primitive `Comparator`s (which are Java 8 `FunctionalInterface`s).
 
 You can extend essentially all classes in jdkgdxds, and it's meant to be friendlier to inherit from than the libGDX collections.
@@ -66,10 +66,10 @@ The Object-keyed maps and sets have protected `place()` and `equate()` methods t
 behavior of an array in a hashed collection like a map or set is basically unusable. Arrays are compared by reference rather than
 by value, so you would need the exact `char[]` you had put in to get a value out. They're also hashed by identity, which means
 more than just the equality comparison needs to change. Thankfully, in jdkgdxds you can override `place()` to
-`return Arrays.hashCode(item) & mask;` and `equate()` to `return Objects.deepEquals(left, right);`; this uses standard JDK methods
-to hash and compare arrays, and will work as long as you don't edit any array keys while they are in the map. There are other
-potential uses for this extensibility, like the case-insensitive CharSequence comparison that `CaseInsensitiveMap` and related
-classes use, or some form of fuzzy equality for float or double keys.
+`return Arrays.hashCode((char[])item) & mask;` and `equate()` to `return Objects.deepEquals(left, right);`; this uses standard JDK
+methods to hash and compare arrays, and will work as long as you don't edit any array keys while they are in the map. There are
+other potential uses for this extensibility, like the case-insensitive CharSequence comparison that `CaseInsensitiveMap` and
+related classes use, or some form of fuzzy equality for float or double keys.
 
 Most of the ordered data structures now allow `addAll()` or `putAll()` to specify a range with a starting index and count of how
 many items to copy from the data structure passed as a parameter (often some kind of `Ordered`). This also optionally takes a
@@ -84,13 +84,14 @@ An oddity in libGDX's Array classes (such as IntArray, FloatArray, and of course
 act like removeAll() in the JDK List interface. In `List.removeAll(Collection)`, when the Collection `c` contains an item even
 once, every occurrence of that item is removed from the `List`. In libGDX, if an item appears once in the parameter, it is removed
 once from the Array; similarly, if it appears twice, it is removed twice. Here, we have the List behavior for removeAll(), but
-also keep the Array behavior in `removeEach()`.
+also keep the Array behavior in the newly-added `removeEach()`.
 
 Here, we rely on some shared common functionality in two other libraries (by the same author).
 [Digital](https://github.com/tommyettinger/digital) has core math code, including the BitConversion and Base classes that were
-here earlier. [Juniper](https://github.com/tommyettinger/juniper) has the random number generators that also used to be here.
-Having these as external libraries allows someone's LibraryA that really only needs the core math from digital to only use that,
-but for projects that need both jdkgdxds and LibraryA, the shared dependency won't be duplicated.
+here earlier. [Funderby](https://github.com/tommyettinger/funderby) provides functional interfaces for primitive types, with a
+rather large amount of total combinations. [Juniper](https://github.com/tommyettinger/juniper) has the random number generators
+that also used to be here. Having these as external libraries allows someone's LibraryA that really only needs the core math from
+digital to only use that, but for projects that need both jdkgdxds and LibraryA, the shared dependency won't be duplicated.
 
 Versions of jdkgdxds before 1.0.2 used "Fibonacci hashing" to mix `hashCode()` results. This involved multiplying the hash by a
 specific constant (2 to the 64, divided by the golden ratio) and shifting the resulting bits so only an upper portion was used
@@ -100,7 +101,9 @@ relating to reinserting already-partially-colliding keys in a large map or set. 
 mixing `hashCode()` results -- instead of multiplying by a specific constant every time, we change the constant every time we need
 to resize the backing tables. Everything else is the same. This simple change allows one test, inserting 2 million
 specifically-chosen Strings, to complete in under 2 seconds, when without the change, it wouldn't complete given 77 minutes (a
-speedup of over 3 orders of magnitude).
+speedup of over 3 orders of magnitude). In 1.1.1, the strategy for picking a constant changed, and now the constant is picked from
+a table of 512 known-good multipliers, appropriately called `Utilities.GOOD_MULTIPLIERS`. You can change the behavior of a map or
+set when it chooses its `hashMultiplier` by overriding `resize(int)`.
 
 ## How do I get it?
 
@@ -108,7 +111,7 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.2.2'
+api 'com.github.tommyettinger:jdkgdxds:1.3.0'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -116,8 +119,8 @@ It does not need any additional repository to be specified in most cases; if it 
 common math code meant for use by multiple projects), `funderby` (Java 8 functional interfaces for primitive types), and for
 annotations only, `checker-qual` ([the project GitHub page is here.](https://github.com/typetools/checker-framework)). The
 version for the `digital` dependency is 0.2.0 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.2.0"`). Funderby has only changed twice since its initial release, and is on version
-0.1.0 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.0"`). The version for
+`api "com.github.tommyettinger:digital:0.2.0"`). Funderby has only changed a bit since its initial release, and is on version
+0.1.1 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.1"`). The version for
 `checker-qual` is 3.32.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes.
 Earlier versions of jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to
 mention that JSR305 is currently unmaintained). You can manually specify a `checker-qual` version with
@@ -125,9 +128,9 @@ mention that JSR305 is currently unmaintained). You can manually specify a `chec
 
 If you have an HTML module, add:
 ```
-implementation "com.github.tommyettinger:funderby:0.1.0:sources"
+implementation "com.github.tommyettinger:funderby:0.1.1:sources"
 implementation "com.github.tommyettinger:digital:0.2.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.2.2:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.3.0:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -164,19 +167,19 @@ The dependency and `inherits` line for funderby is new in 1.0.4 . Versions 1.0.1
 randomized algorithms here (like shuffles), then depending on Juniper (0.2.0) might be a good idea, though it is still optional.
 The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
 for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
-The version for funderby is expected to stay at or around 0.1.0, since it is a relatively small library and is probably complete.
+The version for funderby is expected to stay at or around 0.1.1, since it is a relatively small library and is probably complete.
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/e8279e094a).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/a87ee5c520).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:e8279e094a'` or `api 'com.github.tommyettinger:jdkgdxds:e8279e094a'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:a87ee5c520'` or `api 'com.github.tommyettinger:jdkgdxds:a87ee5c520'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
-implementation "com.github.tommyettinger:funderby:0.1.0:sources"
+implementation "com.github.tommyettinger:funderby:0.1.1:sources"
 implementation "com.github.tommyettinger:digital:0.2.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:e8279e094a:sources"
+implementation "com.github.tommyettinger:jdkgdxds:a87ee5c520:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -185,7 +188,7 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="com.github.tommyettinger.digital" />
 <inherits name="com.github.tommyettinger.jdkgdxds" />
 ```
-in with the other `inherits` lines. `e8279e094a` is an example of a recent commit, and can be
+in with the other `inherits` lines. `a87ee5c520` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
 
 There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to
@@ -257,3 +260,22 @@ strangely enough, these libraries were typically tested with projects that used 
 shared with the sources in the GWT-affected libraries, and this caused the compilation to mysteriously succeed. After testing on
 other packages on GWT, Dmitrii Tikhomirov and Colin Alworth tracked down the odd behavior to this folder situation, and so all the
 folders needed to change. They did so in digital 0.1.7, funderby 0.0.2, juniper 0.1.8, and jdkgdxds 1.1.2 , among others.
+
+## Updating to 1.3.0
+
+Version 1.3.0 removes a lot of Java 8 APIs, including all interfaces that require Java 8 code. Language level 8 is still used,
+since it's been safe to use on all platforms for a while now, but RoboVM (for iOS support) still doesn't support Java 8 APIs (just
+the language level). To update, change any usage of `PrimitiveIterator.OfInt`, `PrimitiveIterator.OfLong`, and
+`PrimitiveIterator.OfDouble` to `com.github.tommyettinger.ds.support.util.IntIterator`,
+`com.github.tommyettinger.ds.support.util.LongIterator`, and `com.github.tommyettinger.ds.support.util.DoubleIterator`,
+respectively. You may also need to change some functional interfaces to use the ones in Funderby, which are named differently:
+
+ - `Function` becomes `ObjToObjFunction`, `BiFunction` becomes `ObjObjToObjBiFunction`, `Consumer` becomes `ObjConsumer`,
+   `BiConsumer` becomes `ObjObjBiConsumer`, `Supplier` becomes `ObjSupplier`, and `Predicate` becomes `ObjPredicate`.
+ - The pattern of specifying types in order continues for primitive types, and most combinations are supported.
+   - `IntLongToLongBiFunction` and `IntIntToLongBiFunction` exist because using one or two primitive types is always supported.
+   - If you were to try `IntLongToFloatBiFunction`, it isn't defined because it uses three primitive types.
+     - There is an exception for predicates, which return `boolean`; `IntLongPredicate` is defined.
+
+If you get errors about a Java 8 functional interface not being assignable to something in jdkgdxds, it probably should be swapped
+out for something defined by funderby -- jdkgdxds won't use functional interfaces defined anywhere but there or here.
