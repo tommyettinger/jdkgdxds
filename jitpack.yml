@@ -1,4 +1,0 @@
-install:
-  - echo "Installing with Gradle"
-  - chmod 755 gradlew
-  - ./gradlew clean publishToMavenLocal -x signMavenPublication
