@@ -111,7 +111,7 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.3.1'
+api 'com.github.tommyettinger:jdkgdxds:1.3.2'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -129,8 +129,8 @@ mention that JSR305 is currently unmaintained). You can manually specify a `chec
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
-implementation "com.github.tommyettinger:digital:0.3.2:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.3.1:sources"
+implementation "com.github.tommyettinger:digital:0.3.3:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.3.2:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -178,7 +178,7 @@ on what your other dependencies use, to your project or its core module (if ther
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
-implementation "com.github.tommyettinger:digital:0.3.2:sources"
+implementation "com.github.tommyettinger:digital:0.3.3:sources"
 implementation "com.github.tommyettinger:jdkgdxds:08f4c56fb9:sources"
 ```
 to its
