@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongIterator;
+import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.LongIntBiConsumer;
 import com.github.tommyettinger.function.LongIntToIntBiFunction;
 
@@ -1485,11 +1486,36 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		return false;
 	}
 
-	public int merge (long key, int value, IntIntToIntBiFunction remappingFunction) {
+	/**
+	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM),
+	 * this uses primitive values, and this won't remove entries if the remappingFunction returns null (because
+	 * that isn't possible with primitive types).
+	 * This uses a functional interface from Funderby.
+	 * @param key key with which the resulting value is to be associated
+	 * @param value the value to be merged with the existing value
+	 *        associated with the key or, if no existing value
+	 *        is associated with the key, to be associated with the key
+	 * @param remappingFunction given a int from this and the int {@code value}, this should return what int to use
+	 * @return the value now associated with key
+	 */
+	public int combine (long key, int value, IntIntToIntBiFunction remappingFunction) {
 		int i = locateKey(key);
 		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
 		put(key, next);
 		return next;
+	}
+
+	/**
+	 * Simply calls {@link #combine(long, int, IntIntToIntBiFunction)} on this map using every
+	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
+	 * this map, though this depends on the {@code remappingFunction}.
+	 * @param other a non-null LongIntMap (or subclass) with a compatible key type
+	 * @param remappingFunction given a int value from this and a value from other, this should return what int to use
+	 */
+	public void combine (LongIntMap other, IntIntToIntBiFunction remappingFunction) {
+		for (LongIntMap.Entry e : other.entrySet()) {
+			combine(e.key, e.value, remappingFunction);
+		}
 	}
 
 	/**

@@ -838,6 +838,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	@Override
+	@Nullable
 	public V replace (K key, V value) {
 		int i = locateKey(key);
 		if (i >= 0) {
@@ -859,6 +860,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @param remappingFunction given a V from this and the V {@code value}, this should return what V to use
 	 * @return the value now associated with key
 	 */
+	@Nullable
 	public V combine (K key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		int i = locateKey(key);
 		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);

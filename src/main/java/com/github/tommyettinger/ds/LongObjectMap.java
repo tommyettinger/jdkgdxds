@@ -28,6 +28,7 @@ import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
@@ -1461,6 +1462,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		return defaultValue;
 	}
 
+	@Nullable
 	public V computeIfAbsent (long key, LongToObjFunction<? extends V> mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
@@ -1480,15 +1482,36 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		return false;
 	}
 
+	/**
+	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM), and this
+	 * won't remove entries if the remappingFunction returns null (in that case, it will call {@code put(key, null)}).
+	 * This also uses a functional interface from Funderby instead of the JDK, for RoboVM support.
+	 * @param key key with which the resulting value is to be associated
+	 * @param value the value to be merged with the existing value
+	 *        associated with the key or, if no existing value
+	 *        is associated with the key, to be associated with the key
+	 * @param remappingFunction given a V from this and the V {@code value}, this should return what V to use
+	 * @return the value now associated with key
+	 */
 	@Nullable
-	public V merge (long key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+	public V combine (long key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		int i = locateKey(key);
 		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
-		if (next == null)
-			remove(key);
-		else
-			put(key, next);
+		put(key, next);
 		return next;
+	}
+
+	/**
+	 * Simply calls {@link #combine(long, Object, ObjObjToObjBiFunction)} on this map using every
+	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
+	 * this map, though this depends on the {@code remappingFunction}.
+	 * @param other a non-null Map (or subclass) with compatible key and value types
+	 * @param remappingFunction given a V value from this and a value from other, this should return what V to use
+	 */
+	public void combine (LongObjectMap<? extends V> other, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+		for (LongObjectMap.Entry<? extends V> e : other.entrySet()) {
+			combine(e.getKey(), e.getValue(), remappingFunction);
+		}
 	}
 
 	/**

@@ -22,6 +22,7 @@ import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.LongFloatBiConsumer;
 import com.github.tommyettinger.function.LongFloatToFloatBiFunction;
+import com.github.tommyettinger.function.LongLongToLongBiFunction;
 import com.github.tommyettinger.function.LongToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
@@ -1529,11 +1530,36 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		return false;
 	}
 
-	public float merge (long key, float value, FloatFloatToFloatBiFunction remappingFunction) {
+	/**
+	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM),
+	 * this uses primitive values, and this won't remove entries if the remappingFunction returns null (because
+	 * that isn't possible with primitive types).
+	 * This uses a functional interface from Funderby.
+	 * @param key key with which the resulting value is to be associated
+	 * @param value the value to be merged with the existing value
+	 *        associated with the key or, if no existing value
+	 *        is associated with the key, to be associated with the key
+	 * @param remappingFunction given a float from this and the float {@code value}, this should return what float to use
+	 * @return the value now associated with key
+	 */
+	public float combine (long key, float value, FloatFloatToFloatBiFunction remappingFunction) {
 		int i = locateKey(key);
 		float next = (i < 0) ? value : remappingFunction.applyAsFloat(valueTable[i], value);
 		put(key, next);
 		return next;
+	}
+
+	/**
+	 * Simply calls {@link #combine(long, float, FloatFloatToFloatBiFunction)} on this map using every
+	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
+	 * this map, though this depends on the {@code remappingFunction}.
+	 * @param other a non-null LongFloatMap (or subclass) with a compatible key type
+	 * @param remappingFunction given a float value from this and a value from other, this should return what float to use
+	 */
+	public void combine (LongFloatMap other, FloatFloatToFloatBiFunction remappingFunction) {
+		for (LongFloatMap.Entry e : other.entrySet()) {
+			combine(e.key, e.value, remappingFunction);
+		}
 	}
 
 	/**

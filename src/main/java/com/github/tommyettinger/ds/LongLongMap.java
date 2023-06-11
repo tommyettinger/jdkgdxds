@@ -1484,12 +1484,38 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		return false;
 	}
 
-	public long merge (long key, long value, LongLongToLongBiFunction remappingFunction) {
+	/**
+	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM),
+	 * this uses primitive values, and this won't remove entries if the remappingFunction returns null (because
+	 * that isn't possible with primitive types).
+	 * This uses a functional interface from Funderby.
+	 * @param key key with which the resulting value is to be associated
+	 * @param value the value to be merged with the existing value
+	 *        associated with the key or, if no existing value
+	 *        is associated with the key, to be associated with the key
+	 * @param remappingFunction given a long from this and the long {@code value}, this should return what long to use
+	 * @return the value now associated with key
+	 */
+	public long combine (long key, long value, LongLongToLongBiFunction remappingFunction) {
 		int i = locateKey(key);
 		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
 		put(key, next);
 		return next;
 	}
+
+	/**
+	 * Simply calls {@link #combine(long, long, LongLongToLongBiFunction)} on this map using every
+	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
+	 * this map, though this depends on the {@code remappingFunction}.
+	 * @param other a non-null LongLongMap (or subclass) with a compatible key type
+	 * @param remappingFunction given a long value from this and a value from other, this should return what long to use
+	 */
+	public void combine (LongLongMap other, LongLongToLongBiFunction remappingFunction) {
+		for (LongLongMap.Entry e : other.entrySet()) {
+			combine(e.key, e.value, remappingFunction);
+		}
+	}
+
 
 	/**
 	 * Constructs a single-entry map given one key and one value.
