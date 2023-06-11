@@ -18,13 +18,13 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.ObjFloatBiConsumer;
 import com.github.tommyettinger.function.ObjFloatToFloatBiFunction;
 import com.github.tommyettinger.function.ObjToFloatFunction;
-import com.github.tommyettinger.ds.support.util.FloatIterator;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1446,6 +1446,18 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		float next = (i < 0) ? value : remappingFunction.applyAsFloat(valueTable[i], value);
 		put(key, next);
 		return next;
+	}
+	/**
+	 * Simply calls {@link #merge(Object, float, FloatFloatToFloatBiFunction)} on this map using every
+	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
+	 * this map, though this depends on the {@code remappingFunction}.
+	 * @param other a non-null ObjectFloatMap (or subclass) with a compatible key type
+	 * @param remappingFunction given a float value from this and a value from other, this should return what float to use
+	 */
+	public void merge (ObjectFloatMap<? extends K> other, FloatFloatToFloatBiFunction remappingFunction) {
+		for (ObjectFloatMap.Entry<? extends K> e : other.entrySet()) {
+			merge(e.key, e.value, remappingFunction);
+		}
 	}
 
 	/**

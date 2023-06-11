@@ -18,18 +18,18 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.function.IntIntToIntBiFunction;
 import com.github.tommyettinger.function.ObjIntBiConsumer;
 import com.github.tommyettinger.function.ObjIntToIntBiFunction;
-
 import com.github.tommyettinger.function.ObjToIntFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import com.github.tommyettinger.function.IntIntToIntBiFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -1404,6 +1404,19 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
 		put(key, next);
 		return next;
+	}
+
+	/**
+	 * Simply calls {@link #merge(Object, int, IntIntToIntBiFunction)} on this map using every
+	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
+	 * this map, though this depends on the {@code remappingFunction}.
+	 * @param other a non-null ObjectIntMap (or subclass) with a compatible key type
+	 * @param remappingFunction given an int value from this and a value from other, this should return what int to use
+	 */
+	public void merge (ObjectIntMap<? extends K> other, IntIntToIntBiFunction remappingFunction) {
+		for (ObjectIntMap.Entry<? extends K> e : other.entrySet()) {
+			merge(e.key, e.value, remappingFunction);
+		}
 	}
 
 	/**

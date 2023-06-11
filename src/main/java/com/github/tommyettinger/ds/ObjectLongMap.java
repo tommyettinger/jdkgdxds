@@ -18,18 +18,18 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.LongIterator;
+import com.github.tommyettinger.function.LongLongToLongBiFunction;
 import com.github.tommyettinger.function.ObjLongBiConsumer;
 import com.github.tommyettinger.function.ObjLongToLongBiFunction;
-
 import com.github.tommyettinger.function.ObjToLongFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import com.github.tommyettinger.function.LongLongToLongBiFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -1408,6 +1408,19 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
 		put(key, next);
 		return next;
+	}
+
+	/**
+	 * Simply calls {@link #merge(Object, long, LongLongToLongBiFunction)} on this map using every
+	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
+	 * this map, though this depends on the {@code remappingFunction}.
+	 * @param other a non-null ObjectLongMap (or subclass) with a compatible key type
+	 * @param remappingFunction given a long value from this and a value from other, this should return what long to use
+	 */
+	public void merge (ObjectLongMap<? extends K> other, LongLongToLongBiFunction remappingFunction) {
+		for (Entry<? extends K> e : other.entrySet()) {
+			merge(e.key, e.value, remappingFunction);
+		}
 	}
 
 	/**

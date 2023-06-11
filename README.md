@@ -170,16 +170,16 @@ for that library -- both digital and juniper were both mostly drawn from code in
 The version for funderby is expected to stay at or around 0.1.1, since it is a relatively small library and is probably complete.
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/08f4c56fb9).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/4e8ddbddd7).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:08f4c56fb9'` or `api 'com.github.tommyettinger:jdkgdxds:08f4c56fb9'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:4e8ddbddd7'` or `api 'com.github.tommyettinger:jdkgdxds:4e8ddbddd7'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
 implementation "com.github.tommyettinger:digital:0.3.3:sources"
-implementation "com.github.tommyettinger:jdkgdxds:08f4c56fb9:sources"
+implementation "com.github.tommyettinger:jdkgdxds:4e8ddbddd7:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -188,7 +188,7 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="com.github.tommyettinger.digital" />
 <inherits name="com.github.tommyettinger.jdkgdxds" />
 ```
-in with the other `inherits` lines. `08f4c56fb9` is an example of a recent commit, and can be
+in with the other `inherits` lines. `4e8ddbddd7` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
 
 There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to

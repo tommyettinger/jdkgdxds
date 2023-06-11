@@ -473,8 +473,8 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 
 	/**
 	 * Clears all the bits in this bit set whose corresponding bit is set in the specified bit set.
-	 * This can be seen as an optimized version of {@link #removeAll(OfInt)} that only works if both OffsetBitSet objects
-	 * have the same {@link #offset}. Both this OffsetBitSet and {@code other} must have the same offset.
+	 * This can be seen as an optimized version of {@link PrimitiveCollection.OfInt#removeAll(OfInt)} that only works if
+	 * both OffsetBitSet objects have the same {@link #offset}. Both this OffsetBitSet and {@code other} must have the same offset.
 	 *
 	 * @param other another OffsetBitSet; must have the same offset as this
 	 */
