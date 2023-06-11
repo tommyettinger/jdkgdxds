@@ -1399,7 +1399,19 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		return false;
 	}
 
-	public int merge (K key, int value, IntIntToIntBiFunction remappingFunction) {
+	/**
+	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM),
+	 * this uses primitive values, and this won't remove entries if the remappingFunction returns null (because
+	 * that isn't possible with primitive types).
+	 * This uses a functional interface from Funderby.
+	 * @param key key with which the resulting value is to be associated
+	 * @param value the value to be merged with the existing value
+	 *        associated with the key or, if no existing value
+	 *        is associated with the key, to be associated with the key
+	 * @param remappingFunction given an int from this and the int {@code value}, this should return what int to use
+	 * @return the value now associated with key
+	 */
+	public int combine (K key, int value, IntIntToIntBiFunction remappingFunction) {
 		int i = locateKey(key);
 		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
 		put(key, next);
@@ -1407,15 +1419,15 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	/**
-	 * Simply calls {@link #merge(Object, int, IntIntToIntBiFunction)} on this map using every
+	 * Simply calls {@link #combine(Object, int, IntIntToIntBiFunction)} on this map using every
 	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
 	 * this map, though this depends on the {@code remappingFunction}.
 	 * @param other a non-null ObjectIntMap (or subclass) with a compatible key type
 	 * @param remappingFunction given an int value from this and a value from other, this should return what int to use
 	 */
-	public void merge (ObjectIntMap<? extends K> other, IntIntToIntBiFunction remappingFunction) {
+	public void combine (ObjectIntMap<? extends K> other, IntIntToIntBiFunction remappingFunction) {
 		for (ObjectIntMap.Entry<? extends K> e : other.entrySet()) {
-			merge(e.key, e.value, remappingFunction);
+			combine(e.key, e.value, remappingFunction);
 		}
 	}
 
