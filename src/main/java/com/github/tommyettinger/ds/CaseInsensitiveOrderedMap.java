@@ -181,8 +181,8 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	@Override
 	public ObjectObjectMap.Keys<CharSequence, V> keySet () {
 		if (keys1 == null || keys2 == null) {
-			keys1 = new CaseInsensitiveMap.Keys<>(this);
-			keys2 = new CaseInsensitiveMap.Keys<>(this);
+			keys1 = new Keys<>(this);
+			keys2 = new Keys<>(this);
 		}
 		if (!keys1.iter.valid) {
 			keys1.iter.reset();
