@@ -27,7 +27,7 @@ import java.util.Collection;
 /**
  * A custom variant on ObjectOrderedSet that always uses enum items, which simplifies some operations.
  */
-public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<Enum<E>> {
+public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
@@ -106,6 +106,7 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<Enum<E>>
 
 	@Override
 	protected int place (Object item) {
+		// As long as the capacity is sufficient, ordinals will never collide.
 		if (item instanceof Enum)
 			return ((Enum<?>)item).ordinal() & mask;
 		return super.place(item);

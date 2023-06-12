@@ -1085,7 +1085,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 		protected final ObjectObjectMap<K, V> map;
 		protected int nextIndex, currentIndex;
-		protected boolean valid = true;
+		public boolean valid = true;
 
 		public MapIterator (ObjectObjectMap<K, V> map) {
 			this.map = map;
@@ -1396,7 +1396,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<K> iterator () {
+		public MapIterator<K, V, K> iterator () {
 			return iter;
 		}
 
