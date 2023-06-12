@@ -572,7 +572,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			keys = map.keys;
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
-				public Iterator<Map.Entry<K, V>> iterator () {
+				public MapIterator<K, V, Map.Entry<K, V>> iterator () {
 					return this;
 				}
 
@@ -622,7 +622,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			keys = map.keys;
 			iter = new MapIterator<K, V, K>(map) {
 				@Override
-				public Iterator<K> iterator () {
+				public MapIterator<K, V, K> iterator () {
 					return this;
 				}
 
@@ -670,7 +670,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			keys = map.keys;
 			iter = new MapIterator<K, V, V>(map) {
 				@Override
-				public Iterator<V> iterator () {
+				public MapIterator<K, V, V> iterator () {
 					return this;
 				}
 

@@ -555,7 +555,7 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public Iterator<Entry<K>> iterator () {
+	public ObjectLongMap.EntryIterator<K> iterator () {
 		return entrySet().iterator();
 	}
 

@@ -767,7 +767,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public Iterator<Entry<K>> iterator () {
+	public EntryIterator<K> iterator () {
 		return entrySet().iterator();
 	}
 
@@ -950,7 +950,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 		protected final ObjectLongMap<K> map;
 		protected int nextIndex, currentIndex;
-		protected boolean valid = true;
+		public boolean valid = true;
 
 		public MapIterator (ObjectLongMap<K> map) {
 			this.map = map;
@@ -1005,7 +1005,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public Iterator<K> iterator () {
+		public KeyIterator<K> iterator () {
 			return this;
 		}
 
@@ -1062,7 +1062,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public Iterator<Entry<K>> iterator () {
+		public EntryIterator<K> iterator () {
 			return this;
 		}
 
@@ -1101,7 +1101,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<Entry<K>> iterator () {
+		public EntryIterator<K> iterator () {
 			return iter;
 		}
 
@@ -1206,7 +1206,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public LongIterator iterator () {
+		public ValueIterator<K> iterator () {
 			return iter;
 		}
 
@@ -1296,7 +1296,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public Iterator<K> iterator () {
+		public KeyIterator<K> iterator () {
 			return iter;
 		}
 

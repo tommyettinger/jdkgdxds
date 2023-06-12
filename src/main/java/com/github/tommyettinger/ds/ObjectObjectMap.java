@@ -1141,7 +1141,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		public Entries (ObjectObjectMap<K, V> map) {
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
-				public Iterator<Map.Entry<K, V>> iterator () {
+				public MapIterator<K, V, Map.Entry<K, V>> iterator () {
 					return this;
 				}
 

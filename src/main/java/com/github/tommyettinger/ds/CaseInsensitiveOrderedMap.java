@@ -196,27 +196,6 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 		return keys2;
 	}
 
-	public static class Entry<V> extends ObjectObjectMap.Entry<CharSequence, V> {
-		@Override
-		public boolean equals (@Nullable Object o) {
-			if (this == o) {return true;}
-			if (o == null || getClass() != o.getClass()) {return false;}
-
-			ObjectObjectMap.Entry<CharSequence, ?> entry = (ObjectObjectMap.Entry<CharSequence, ?>)o;
-
-			if (key != null ? (entry.key == null || !Utilities.equalsIgnoreCase(key, entry.key)) : entry.key != null) {return false;}
-			return Objects.equals(value, entry.value);
-
-		}
-
-		@Override
-		public int hashCode () {
-			int result = key != null ? (int)Utilities.longHashCodeIgnoreCase(key) : 0;
-			result = 31 * result + (value != null ? value.hashCode() : 0);
-			return result;
-		}
-	}
-
 	public static class Keys<V> extends OrderedMapKeys<CharSequence, V> {
 		public Keys (ObjectObjectOrderedMap<CharSequence, V> map) {
 			super(map);

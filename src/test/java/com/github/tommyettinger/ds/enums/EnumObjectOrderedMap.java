@@ -155,10 +155,10 @@ public class EnumObjectOrderedMap<K extends Enum<K>, V> extends ObjectObjectOrde
 	}
 
 	@Override
-	public ObjectObjectMap.Keys<K, V> keySet () {
+	public Keys<K, V> keySet () {
 		if (keys1 == null || keys2 == null) {
-			keys1 = new Keys<>(this);
-			keys2 = new Keys<>(this);
+			keys1 = new OrderedMapKeys<>(this);
+			keys2 = new OrderedMapKeys<>(this);
 		}
 		if (!keys1.iterator().valid) {
 			keys1.iterator().reset();
@@ -170,24 +170,6 @@ public class EnumObjectOrderedMap<K extends Enum<K>, V> extends ObjectObjectOrde
 		keys2.iterator().valid = true;
 		keys1.iterator().valid = false;
 		return keys2;
-	}
-
-	public static class Keys<K extends Enum<K>, V> extends OrderedMapKeys<K, V> {
-		public Keys (ObjectObjectOrderedMap<K, V> map) {
-			super(map);
-		}
-
-		@Override
-		public int hashCode () {
-			int h = 0;
-			iter.reset();
-			while (iter.hasNext()) {
-				K obj = iter.next();
-				if (obj != null)
-					h += obj.ordinal() * 421;
-			}
-			return h;
-		}
 	}
 
 	/**

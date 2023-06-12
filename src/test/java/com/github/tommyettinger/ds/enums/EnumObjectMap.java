@@ -153,63 +153,6 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 		return true;
 	}
 
-	@Override
-	public ObjectObjectMap.Keys<K, V> keySet () {
-		if (keys1 == null || keys2 == null) {
-			keys1 = new Keys<>(this);
-			keys2 = new Keys<>(this);
-		}
-		if (!keys1.iterator().valid) {
-			keys1.iterator().reset();
-			keys1.iterator().valid = true;
-			keys2.iterator().valid = false;
-			return keys1;
-		}
-		keys2.iterator().reset();
-		keys2.iterator().valid = true;
-		keys1.iterator().valid = false;
-		return keys2;
-	}
-
-	public static class Entry<K extends  Enum<K>, V> extends ObjectObjectMap.Entry<K, V> {
-		@Override
-		public boolean equals (@Nullable Object o) {
-			if (this == o) {return true;}
-			if (o == null || getClass() != o.getClass()) {return false;}
-
-			Entry<?, ?> entry = (Entry<?, ?>)o;
-
-			if (key != null ? (entry.key == null || key != entry.key) : entry.key != null) {return false;}
-			return Objects.equals(value, entry.value);
-
-		}
-
-		@Override
-		public int hashCode () {
-			int result = key != null ? key.ordinal() * 421 : 0;
-			result = result + (value != null ? value.hashCode() : 0);
-			return result;
-		}
-	}
-
-	public static class Keys<K extends Enum<K>, V> extends ObjectObjectMap.Keys<K, V> {
-		public Keys (ObjectObjectMap<K, V> map) {
-			super(map);
-		}
-
-		@Override
-		public int hashCode () {
-			int h = 0;
-			iter.reset();
-			while (iter.hasNext()) {
-				K obj = iter.next();
-				if (obj != null)
-					h += obj.ordinal() * 421;
-			}
-			return h;
-		}
-	}
-
 	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
