@@ -804,15 +804,19 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 
 	/**
 	 * Constructs a single-entry map given one key and one value.
-	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * This is mostly useful as an optimization for {@link #withPrimitive(int, int, int...)}
 	 * when there's no "rest" of the keys or values. This variation requires both the key
 	 * and the value to be primitive {@code int}s.
+	 * <br>
+	 * This method has to be named differently from {@link #with(Number, Number)} to
+	 * disambiguate the two, which would otherwise both be callable with all primitives
+	 * (due to auto-boxing).
 	 *
 	 * @param key0   the first and only key; must not be boxed
 	 * @param value0 the first and only value; must not be boxed
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static IntIntOrderedMap with (int key0, int value0) {
+	public static IntIntOrderedMap withPrimitive (int key0, int value0) {
 		IntIntOrderedMap map = new IntIntOrderedMap(1);
 		map.put(key0, value0);
 		return map;
@@ -824,14 +828,18 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * map conveniently by-hand and have it populated at the start. You can also use
 	 * {@link #IntIntOrderedMap(int[], int[])}, which takes all keys and then all values.
 	 * This needs all keys and all values to be primitive {@code int}s; if any are boxed,
-	 * then you'll actually be calling {@link #with(Number, Number, Number...)}.
+	 * then you should call {@link #with(Number, Number, Number...)}.
+	 * <br>
+	 * This method has to be named differently from {@link #with(Number, Number, Number...)} to
+	 * disambiguate the two, which would otherwise both be callable with all primitives
+	 * (due to auto-boxing).
 	 *
 	 * @param key0   the first key; must not be boxed
 	 * @param value0 the first value; must not be boxed
 	 * @param rest   an array or varargs of primitive int elements
 	 * @return a new map containing the given keys and values
 	 */
-	public static IntIntOrderedMap with (int key0, int value0, int... rest) {
+	public static IntIntOrderedMap withPrimitive (int key0, int value0, int... rest) {
 		IntIntOrderedMap map = new IntIntOrderedMap(1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {

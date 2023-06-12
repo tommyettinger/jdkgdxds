@@ -1495,7 +1495,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	 * @param value the value to be merged with the existing value
 	 *        associated with the key or, if no existing value
 	 *        is associated with the key, to be associated with the key
-	 * @param remappingFunction given a int from this and the int {@code value}, this should return what int to use
+	 * @param remappingFunction given an int from this and the int {@code value}, this should return what int to use
 	 * @return the value now associated with key
 	 */
 	public int combine (long key, int value, IntIntToIntBiFunction remappingFunction) {
@@ -1510,7 +1510,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
 	 * this map, though this depends on the {@code remappingFunction}.
 	 * @param other a non-null LongIntMap (or subclass) with a compatible key type
-	 * @param remappingFunction given a int value from this and a value from other, this should return what int to use
+	 * @param remappingFunction given an int value from this and a value from other, this should return what int to use
 	 */
 	public void combine (LongIntMap other, IntIntToIntBiFunction remappingFunction) {
 		for (LongIntMap.Entry e : other.entrySet()) {
