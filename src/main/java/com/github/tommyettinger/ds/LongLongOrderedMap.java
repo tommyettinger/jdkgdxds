@@ -621,22 +621,12 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 			super(map);
 			keys = map.keys;
 			iter = new EntryIterator(map) {
-				@Override
-				public Iterator<Entry> iterator () {
-					return this;
-				}
 
 				@Override
 				public void reset () {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
-				}
-
-				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					return hasNext;
 				}
 
 				@Override
@@ -661,10 +651,6 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 			};
 		}
 
-		@Override
-		public Iterator<Entry> iterator () {
-			return iter;
-		}
 	}
 
 	public static class OrderedMapKeys extends Keys {
@@ -674,11 +660,6 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 			super(map);
 			keys = map.keys;
 			iter = new KeyIterator(map) {
-				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					return hasNext;
-				}
 
 				@Override
 				public void reset () {
@@ -708,10 +689,6 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 			};
 		}
 
-		@Override
-		public LongIterator iterator () {
-			return iter;
-		}
 	}
 
 	public static class OrderedMapValues extends Values {
@@ -721,11 +698,6 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 			super(map);
 			keys = map.keys;
 			iter = new ValueIterator(map) {
-				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					return hasNext;
-				}
 
 				@Override
 				public void reset () {
@@ -755,10 +727,6 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 			};
 		}
 
-		@Override
-		public LongIterator iterator () {
-			return iter;
-		}
 	}
 
 	/**

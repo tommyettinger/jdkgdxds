@@ -132,22 +132,6 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 		return h;
 	}
 
-	@Override
-	public boolean equals (Object o) {
-		if (o == this)
-			return true;
-		if (!(o instanceof Set))
-			return false;
-		Set<?> s = (Set<?>)o;
-		if (s.size() != size())
-			return false;
-		try {
-			return containsAll(s);
-		} catch (ClassCastException | NullPointerException unused) {
-			return false;
-		}
-	}
-
 	public static CaseInsensitiveSet with (CharSequence item) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(1);
 		set.add(item);

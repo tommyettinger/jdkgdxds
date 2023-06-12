@@ -615,22 +615,12 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 			super(map);
 			keys = map.keys;
 			iter = new EntryIterator<V>(map) {
-				@Override
-				public Iterator<Entry<V>> iterator () {
-					return this;
-				}
 
 				@Override
 				public void reset () {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
-				}
-
-				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					return hasNext;
 				}
 
 				@Override
@@ -655,10 +645,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 			};
 		}
 
-		@Override
-		public Iterator<Entry<V>> iterator () {
-			return iter;
-		}
 	}
 
 	public static class OrderedMapKeys<V> extends Keys<V> {
@@ -668,11 +654,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 			super(map);
 			keys = map.keys;
 			iter = new KeyIterator<V>(map) {
-				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					return hasNext;
-				}
 
 				@Override
 				public void reset () {
@@ -702,10 +683,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 			};
 		}
 
-		@Override
-		public IntIterator iterator () {
-			return iter;
-		}
 	}
 
 	public static class OrderedMapValues<V> extends Values<V> {
@@ -715,11 +692,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 			super(map);
 			keys = map.keys;
 			iter = new ValueIterator<V>(map) {
-				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					return hasNext;
-				}
 
 				@Override
 				public void reset () {
@@ -750,10 +722,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 			};
 		}
 
-		@Override
-		public Iterator<V> iterator () {
-			return iter;
-		}
 	}
 
 	/**

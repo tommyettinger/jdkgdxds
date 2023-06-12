@@ -612,10 +612,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			};
 		}
 
-		@Override
-		public Iterator<Map.Entry<K, V>> iterator () {
-			return iter;
-		}
 	}
 
 	public static class OrderedMapKeys<K, V> extends Keys<K, V> {
@@ -664,10 +660,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			};
 		}
 
-		@Override
-		public Iterator<K> iterator () {
-			return iter;
-		}
 	}
 
 	public static class OrderedMapValues<K, V> extends Values<K, V> {
@@ -717,10 +709,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			};
 		}
 
-		@Override
-		public Iterator<V> iterator () {
-			return iter;
-		}
 	}
 
 	/**

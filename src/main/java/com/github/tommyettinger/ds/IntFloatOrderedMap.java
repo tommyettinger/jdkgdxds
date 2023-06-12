@@ -624,22 +624,12 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 			super(map);
 			keys = map.keys;
 			iter = new EntryIterator(map) {
-				@Override
-				public Iterator<Entry> iterator () {
-					return this;
-				}
 
 				@Override
 				public void reset () {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
-				}
-
-				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					return hasNext;
 				}
 
 				@Override
@@ -664,10 +654,6 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 			};
 		}
 
-		@Override
-		public Iterator<Entry> iterator () {
-			return iter;
-		}
 	}
 
 	public static class OrderedMapKeys extends Keys {
@@ -677,11 +663,6 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 			super(map);
 			keys = map.keys;
 			iter = new KeyIterator(map) {
-				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					return hasNext;
-				}
 
 				@Override
 				public void reset () {
@@ -711,10 +692,6 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 			};
 		}
 
-		@Override
-		public IntIterator iterator () {
-			return iter;
-		}
 	}
 
 	public static class OrderedMapValues extends Values {
@@ -758,10 +735,6 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 			};
 		}
 
-		@Override
-		public FloatIterator iterator () {
-			return iter;
-		}
 	}
 
 	/**

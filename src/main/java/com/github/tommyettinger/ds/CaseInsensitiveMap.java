@@ -209,26 +209,6 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 		}
 
 		@Override
-		public boolean contains (Object o) {
-			return iter.map.containsKey(o);
-		}
-
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
-		@Override
-		public Iterator<CharSequence> iterator () {
-			return iter;
-		}
-
-		@Override
-		public int size () {
-			return iter.map.size;
-		}
-
-		@Override
 		public int hashCode () {
 			int h = 0;
 			iter.reset();
