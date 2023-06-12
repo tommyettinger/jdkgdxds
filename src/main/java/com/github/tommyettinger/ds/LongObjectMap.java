@@ -28,7 +28,6 @@ import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
@@ -1480,6 +1479,17 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 			return true;
 		}
 		return false;
+	}
+
+	@Nullable
+	public V merge (long key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+		int i = locateKey(key);
+		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
+		if (next == null)
+			remove(key);
+		else
+			put(key, next);
+		return next;
 	}
 
 	/**

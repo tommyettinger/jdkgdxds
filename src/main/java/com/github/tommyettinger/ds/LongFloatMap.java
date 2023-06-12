@@ -22,7 +22,6 @@ import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.LongFloatBiConsumer;
 import com.github.tommyettinger.function.LongFloatToFloatBiFunction;
-import com.github.tommyettinger.function.LongLongToLongBiFunction;
 import com.github.tommyettinger.function.LongToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 

@@ -1489,6 +1489,38 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	/**
+	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM), and this
+	 * won't remove entries if the remappingFunction returns null (in that case, it will call {@code put(key, null)}).
+	 * This also uses a functional interface from Funderby instead of the JDK, for RoboVM support.
+	 * @param key key with which the resulting value is to be associated
+	 * @param value the value to be merged with the existing value
+	 *        associated with the key or, if no existing value
+	 *        is associated with the key, to be associated with the key
+	 * @param remappingFunction given a V from this and the V {@code value}, this should return what V to use
+	 * @return the value now associated with key
+	 */
+	@Nullable
+	public V combine (int key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+		int i = locateKey(key);
+		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
+		put(key, next);
+		return next;
+	}
+
+	/**
+	 * Simply calls {@link #combine(int, Object, ObjObjToObjBiFunction)} on this map using every
+	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
+	 * this map, though this depends on the {@code remappingFunction}.
+	 * @param other a non-null Map (or subclass) with compatible key and value types
+	 * @param remappingFunction given a V value from this and a value from other, this should return what V to use
+	 */
+	public void combine (IntObjectMap<? extends V> other, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+		for (IntObjectMap.Entry<? extends V> e : other.entrySet()) {
+			combine(e.getKey(), e.getValue(), remappingFunction);
+		}
+	}
+
+	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will

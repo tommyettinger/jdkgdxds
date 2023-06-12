@@ -1529,11 +1529,36 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		return false;
 	}
 
-	public float merge (int key, float value, FloatFloatToFloatBiFunction remappingFunction) {
+	/**
+	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM),
+	 * this uses primitive values, and this won't remove entries if the remappingFunction returns null (because
+	 * that isn't possible with primitive types).
+	 * This uses a functional interface from Funderby.
+	 * @param key key with which the resulting value is to be associated
+	 * @param value the value to be merged with the existing value
+	 *        associated with the key or, if no existing value
+	 *        is associated with the key, to be associated with the key
+	 * @param remappingFunction given a float from this and the float {@code value}, this should return what float to use
+	 * @return the value now associated with key
+	 */
+	public float combine (int key, float value, FloatFloatToFloatBiFunction remappingFunction) {
 		int i = locateKey(key);
 		float next = (i < 0) ? value : remappingFunction.applyAsFloat(valueTable[i], value);
 		put(key, next);
 		return next;
+	}
+
+	/**
+	 * Simply calls {@link #combine(int, float, FloatFloatToFloatBiFunction)} on this map using every
+	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
+	 * this map, though this depends on the {@code remappingFunction}.
+	 * @param other a non-null IntFloatMap (or subclass) with a compatible key type
+	 * @param remappingFunction given a float value from this and a value from other, this should return what float to use
+	 */
+	public void combine (IntFloatMap other, FloatFloatToFloatBiFunction remappingFunction) {
+		for (IntFloatMap.Entry e : other.entrySet()) {
+			combine(e.key, e.value, remappingFunction);
+		}
 	}
 
 	/**
