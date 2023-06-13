@@ -1516,6 +1516,16 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		}
 	}
 
+	/**
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new map containing nothing
+	 */
+	public static LongLongMap with () {
+		return new LongLongMap(0);
+	}
 
 	/**
 	 * Constructs a single-entry map given one key and one value.
@@ -1555,6 +1565,17 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 			map.put(rest[i - 1].longValue(), rest[i].longValue());
 		}
 		return map;
+	}
+
+	/**
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new map containing nothing
+	 */
+	public static LongLongMap withPrimitive () {
+		return new LongLongMap(0);
 	}
 
 	/**

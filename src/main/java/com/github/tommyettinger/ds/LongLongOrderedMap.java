@@ -730,6 +730,17 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	}
 
 	/**
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new map containing nothing
+	 */
+	public static LongLongOrderedMap with () {
+		return new LongLongOrderedMap(0);
+	}
+
+	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
@@ -767,6 +778,17 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 			map.put(rest[i - 1].longValue(), rest[i].longValue());
 		}
 		return map;
+	}
+
+	/**
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new map containing nothing
+	 */
+	public static LongLongOrderedMap withPrimitive () {
+		return new LongLongOrderedMap(0);
 	}
 
 	/**

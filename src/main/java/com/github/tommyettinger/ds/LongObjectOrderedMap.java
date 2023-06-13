@@ -726,6 +726,18 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	}
 
 	/**
+	 * Constructs an empty map given the value type as a generic type argument.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <V>    the type of values
+	 * @return a new map containing nothing
+	 */
+	public static <V> LongObjectOrderedMap<V> with () {
+		return new LongObjectOrderedMap<>(0);
+	}
+
+	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
