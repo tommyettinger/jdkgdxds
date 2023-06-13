@@ -27,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 
 /**
- * A custom variant on ObjectObjectMap that always uses enum keys, which simplifies some operations.
+ * A custom variant on ObjectFloatOrderedMap that always uses enum keys, which simplifies some operations.
  */
 public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMap<K> {
 
@@ -39,8 +39,8 @@ public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMa
 	}
 
 	/**
-	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
-	 * growing the backing table.
+	 * Creates a new map with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This map will hold initialCapacity items before growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */

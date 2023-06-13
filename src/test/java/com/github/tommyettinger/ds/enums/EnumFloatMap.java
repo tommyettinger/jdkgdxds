@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds.enums;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.ObjectFloatMap;
-import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.Utilities;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -30,7 +29,7 @@ import java.util.Map;
 import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 
 /**
- * A custom variant on ObjectObjectMap that always uses enum keys, which simplifies some operations.
+ * A custom variant on ObjectFloatMap that always uses enum keys, which simplifies some operations.
  */
 public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 
@@ -42,8 +41,8 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	}
 
 	/**
-	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
-	 * growing the backing table.
+	 * Creates a new map with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This map will hold initialCapacity items before growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
@@ -65,7 +64,7 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map an ObjectObjectMap to copy, or a subclass such as this one
+	 * @param map an ObjectFloatMap to copy, or a subclass such as this one
 	 */
 	public EnumFloatMap (ObjectFloatMap<? extends K> map) {
 		super(map);

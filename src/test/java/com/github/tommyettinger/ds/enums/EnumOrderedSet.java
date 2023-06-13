@@ -36,7 +36,8 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	}
 
 	/**
-	 * Creates a new set with a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new set with the specified initial capacity a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This set will hold initialCapacity items before growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
@@ -45,8 +46,8 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	}
 
 	/**
-	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
-	 * growing the backing table.
+	 * Creates a new set with the specified initial capacity and load factor.
+	 * This set will hold initialCapacity items before growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1

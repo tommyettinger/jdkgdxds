@@ -45,7 +45,8 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	}
 
 	/**
-	 * Creates a new set with a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new set with the specified initial capacity a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This set will hold initialCapacity items before growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */

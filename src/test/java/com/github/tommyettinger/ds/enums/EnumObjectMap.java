@@ -40,8 +40,8 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	}
 
 	/**
-	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
-	 * growing the backing table.
+	 * Creates a new map with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This map will hold initialCapacity items before growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
