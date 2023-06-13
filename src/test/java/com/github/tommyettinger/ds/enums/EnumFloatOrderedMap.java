@@ -19,25 +19,22 @@ package com.github.tommyettinger.ds.enums;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.ObjectFloatMap;
-import com.github.tommyettinger.ds.ObjectObjectMap;
+import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.Utilities;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
-import java.util.Map;
-
-import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 
 /**
  * A custom variant on ObjectObjectMap that always uses enum keys, which simplifies some operations.
  */
-public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
+public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMap<K> {
 
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public EnumFloatMap () {
+	public EnumFloatOrderedMap () {
 		super();
 	}
 
@@ -47,7 +44,7 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public EnumFloatMap (int initialCapacity) {
+	public EnumFloatOrderedMap (int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -58,16 +55,25 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public EnumFloatMap (int initialCapacity, float loadFactor) {
+	public EnumFloatOrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map an ObjectObjectMap to copy, or a subclass such as this one
+	 * @param map an ObjectFloatOrderedMap to copy, or a subclass such as this one
 	 */
-	public EnumFloatMap (ObjectFloatMap<? extends K> map) {
+	public EnumFloatOrderedMap (ObjectFloatOrderedMap<? extends K> map) {
+		super(map);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map an ObjectFloatMap to copy, or a subclass
+	 */
+	public EnumFloatOrderedMap (ObjectFloatMap<? extends K> map) {
 		super(map);
 	}
 
@@ -78,7 +84,7 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public EnumFloatMap (K[] keys, float[] values) {
+	public EnumFloatOrderedMap (K[] keys, float[] values) {
 		super(keys, values);
 	}
 
@@ -89,7 +95,7 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public EnumFloatMap (Collection<? extends K> keys, PrimitiveCollection.OfFloat values) {
+	public EnumFloatOrderedMap (Collection<? extends K> keys, PrimitiveCollection.OfFloat values) {
 		super(keys, values);
 	}
 
@@ -126,8 +132,8 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) {return true;}
-		if (!(obj instanceof EnumFloatMap)) {return false;}
-		EnumFloatMap other = (EnumFloatMap)obj;
+		if (!(obj instanceof EnumFloatOrderedMap)) {return false;}
+		EnumFloatOrderedMap other = (EnumFloatOrderedMap)obj;
 		if (other.size != size) {return false;}
 		Enum[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
@@ -150,8 +156,8 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 * @param value0 the first and only value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K extends Enum<K>> EnumFloatMap<K> with (K key0, Number value0) {
-		EnumFloatMap<K> map = new EnumFloatMap<>(1);
+	public static <K extends Enum<K>> EnumFloatOrderedMap<K> with (K key0, Number value0) {
+		EnumFloatOrderedMap<K> map = new EnumFloatOrderedMap<>(1);
 		map.put(key0, value0.floatValue());
 		return map;
 	}
@@ -160,7 +166,7 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
-	 * {@link #EnumFloatMap(Enum[], float[])}, which takes all keys and then all values.
+	 * {@link #EnumFloatOrderedMap(Enum[], float[])}, which takes all keys and then all values.
 	 * This needs all keys to be {@code enum}s and all values to be {@code Number}s. Any keys that
 	 * aren't Enums or values that aren't Numbers have that entry skipped.
 	 *
@@ -171,8 +177,8 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K extends Enum<K>, V> EnumFloatMap<K> with (K key0, Number value0, Object... rest) {
-		EnumFloatMap<K> map = new EnumFloatMap<>(1 + (rest.length >>> 1));
+	public static <K extends Enum<K>, V> EnumFloatOrderedMap<K> with (K key0, Number value0, Object... rest) {
+		EnumFloatOrderedMap<K> map = new EnumFloatOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0.floatValue());
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
