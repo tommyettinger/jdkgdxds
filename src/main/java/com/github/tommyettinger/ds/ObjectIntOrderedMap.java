@@ -694,6 +694,18 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	}
 
 	/**
+	 * Constructs an empty map given the key type as a generic type argument.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <K>    the type of keys
+	 * @return a new map containing nothing
+	 */
+	public static <K> ObjectIntOrderedMap<K> with () {
+		return new ObjectIntOrderedMap<>(0);
+	}
+
+	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will

@@ -1458,6 +1458,19 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	/**
+	 * Constructs an empty map given the types as generic type arguments.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <K>    the type of keys
+	 * @param <V>    the type of values
+	 * @return a new map containing nothing
+	 */
+	public static <K, V> ObjectObjectMap<K, V> with () {
+		return new ObjectObjectMap<>(0);
+	}
+
+	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
 	 * when there's no "rest" of the keys or values.

@@ -1404,6 +1404,18 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	/**
+	 * Constructs an empty map given the key type as a generic type argument.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <K>    the type of keys
+	 * @return a new map containing nothing
+	 */
+	public static <K> ObjectLongMap<K> with () {
+		return new ObjectLongMap<>(0);
+	}
+
+	/**
 	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM),
 	 * this uses primitive values, and this won't remove entries if the remappingFunction returns null (because
 	 * that isn't possible with primitive types).
