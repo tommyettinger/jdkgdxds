@@ -32,8 +32,6 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
-import static com.github.tommyettinger.ds.Utilities.GOOD_MULTIPLIERS;
-
 public class AllGoldenWordHashTest {
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));

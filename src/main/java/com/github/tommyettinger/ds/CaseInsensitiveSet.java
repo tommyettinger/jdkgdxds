@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * A custom variant on ObjectSet that always uses CharSequence keys and compares them as case-insensitive.

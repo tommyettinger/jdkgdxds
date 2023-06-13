@@ -17,14 +17,12 @@
 
 package com.github.tommyettinger.ds.enums;
 
-import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.Utilities;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 
 import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 

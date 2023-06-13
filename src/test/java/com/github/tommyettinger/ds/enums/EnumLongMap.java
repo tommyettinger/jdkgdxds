@@ -17,7 +17,6 @@
 
 package com.github.tommyettinger.ds.enums;
 
-import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.Utilities;

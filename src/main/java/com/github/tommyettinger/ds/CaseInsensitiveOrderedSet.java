@@ -20,7 +20,6 @@ package com.github.tommyettinger.ds;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Set;
 
 /**
  * A custom variant on ObjectOrderedSet that always uses CharSequence keys and compares them as case-insensitive.

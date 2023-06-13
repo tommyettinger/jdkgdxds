@@ -18,7 +18,6 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
