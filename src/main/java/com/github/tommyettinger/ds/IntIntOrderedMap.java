@@ -731,6 +731,17 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	}
 
 	/**
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new map containing nothing
+	 */
+	public static IntIntOrderedMap with () {
+		return new IntIntOrderedMap(0);
+	}
+
+	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
@@ -768,6 +779,17 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 			map.put(rest[i - 1].intValue(), rest[i].intValue());
 		}
 		return map;
+	}
+
+	/**
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new map containing nothing
+	 */
+	public static IntIntOrderedMap withPrimitive () {
+		return new IntIntOrderedMap(0);
 	}
 
 	/**

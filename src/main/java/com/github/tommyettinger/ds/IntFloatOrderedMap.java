@@ -737,6 +737,17 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	}
 
 	/**
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new map containing nothing
+	 */
+	public static IntFloatOrderedMap with () {
+		return new IntFloatOrderedMap(0);
+	}
+
+	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
