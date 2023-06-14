@@ -182,6 +182,19 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	}
 
 	/**
+	 * Constructs an empty map given the types as generic type arguments.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <K>    the type of keys
+	 * @param <V>    the type of values
+	 * @return a new map containing nothing
+	 */
+	public static <K, V> IdentityObjectOrderedMap<K, V> with () {
+		return new IdentityObjectOrderedMap<>(0);
+	}
+
+	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
 	 * when there's no "rest" of the keys or values.
