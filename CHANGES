@@ -1,3 +1,9 @@
+[1.4.0]
+- [BREAKING CHANGE] Optionally-implemented merge() methods on primitive-keyed-and-or-valued map types didn't act according to Map.merge() docs, so they are now renamed to combine(). Calling combine() should always take a funderby functional interface.
+- All maps should be able to be combined with another map of the same type, using combine(). This complements the combine() that merges two values to associate with a single key.
+- No-arg overloads of with() are present on most maps now. Sets could already handle the no-arg case.
+- The test sources have a com.github.tommyettinger.ds.enums package that holds enum-keyed maps and sets, which can be copied into your code if you want them. They're probably slightly more efficient than using an Object-keyed map with enums.
+
 [1.3.2]
 - Updated dependency on digital to 0.3.3 because it has a critical fix for GWT projects. Other targets are unaffected.
 
