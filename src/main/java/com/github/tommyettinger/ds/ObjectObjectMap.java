@@ -1080,7 +1080,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		}
 	}
 
-	protected static abstract class MapIterator<K, V, I> implements Iterable<I>, Iterator<I> {
+	public static abstract class MapIterator<K, V, I> implements Iterable<I>, Iterator<I> {
 		public boolean hasNext;
 
 		protected final ObjectObjectMap<K, V> map;

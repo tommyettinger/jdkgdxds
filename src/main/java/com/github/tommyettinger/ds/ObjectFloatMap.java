@@ -983,7 +983,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		}
 	}
 
-	static protected abstract class MapIterator<K> {
+	public static abstract class MapIterator<K> {
 		public boolean hasNext;
 
 		protected final ObjectFloatMap<K> map;

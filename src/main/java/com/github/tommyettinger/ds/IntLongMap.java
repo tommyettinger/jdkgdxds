@@ -954,7 +954,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		}
 	}
 
-	static protected abstract class MapIterator {
+	public static abstract class MapIterator {
 		static protected final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
 		public boolean hasNext;

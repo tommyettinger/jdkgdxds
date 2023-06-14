@@ -999,7 +999,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		}
 	}
 
-	static protected abstract class MapIterator<K, V, I> implements Iterable<I>, Iterator<I> {
+	public static abstract class MapIterator<K, V, I> implements Iterable<I>, Iterator<I> {
 		public boolean hasNext;
 
 		protected final ObjectObjectQuadMap<K, V> map;

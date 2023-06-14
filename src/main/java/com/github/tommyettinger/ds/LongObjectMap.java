@@ -958,7 +958,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		}
 	}
 
-	static protected abstract class MapIterator<V> {
+	public static abstract class MapIterator<V> {
 		static protected final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
 		public boolean hasNext;

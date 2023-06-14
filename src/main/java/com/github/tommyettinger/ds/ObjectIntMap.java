@@ -942,7 +942,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 	}
 
-	static protected abstract class MapIterator<K> {
+	public static abstract class MapIterator<K> {
 		public boolean hasNext;
 
 		protected final ObjectIntMap<K> map;

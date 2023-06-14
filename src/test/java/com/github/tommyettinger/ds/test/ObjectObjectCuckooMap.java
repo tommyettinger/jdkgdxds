@@ -991,7 +991,7 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 		}
 	}
 
-	static protected abstract class MapIterator<K, V, I> implements Iterable<I>, Iterator<I> {
+	public static abstract class MapIterator<K, V, I> implements Iterable<I>, Iterator<I> {
 		public boolean hasNext;
 
 		final ObjectObjectCuckooMap<K, V> map;

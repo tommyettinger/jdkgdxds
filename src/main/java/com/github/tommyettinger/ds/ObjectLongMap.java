@@ -945,7 +945,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 	}
 
-	static protected abstract class MapIterator<K> {
+	public static abstract class MapIterator<K> {
 		public boolean hasNext;
 
 		protected final ObjectLongMap<K> map;
