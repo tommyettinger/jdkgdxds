@@ -856,6 +856,32 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
+	 * Sorts this ObjectList based on the natural order of its elements; {@code T} must implement {@link Comparable}
+	 * for this to succeed.
+	 * <br>
+	 * This uses the TimSort implementation in {@link java.util.Arrays}, instead of the in-place mergesort used by
+	 * {@link #sort()}. TimSort tends to be faster for many inputs, but uses more memory. Future JDK versions may
+	 * change how {@link ArrayList#sort(Comparator)} works, which would change this as well.
+	 */
+	public void sortJDK () {
+		super.sort(null);
+	}
+
+	/**
+	 * Sorts this ObjectList using the given Comparator. If the Comparator is null, then this sorts based on the
+	 * natural order of its elements, and {@code T} must implement {@link Comparable}.
+	 * <br>
+	 * This uses the TimSort implementation in {@link java.util.Arrays}, instead of the in-place mergesort used by
+	 * {@link #sort()}. TimSort tends to be faster for many inputs, but uses more memory. Future JDK versions may
+	 * change how {@link ArrayList#sort(Comparator)} works, which would change this as well.
+	 *
+	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
+	 */
+	public void sortJDK (@Nullable Comparator<? super T> c) {
+		super.sort(c);
+	}
+
+	/**
 	 * Creates a new ObjectList that holds only the given item, but can be resized.
 	 * @param item one T item
 	 * @return a new ObjectList that holds the given item
