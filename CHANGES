@@ -1,3 +1,8 @@
+[1.4.1]
+- [POSSIBLE BREAKING CHANGE] The dependency on digital was increased to 0.4.0, and that version changes what `Hasher.hash()` and `Hasher.hash64()` return for the same arguments. This doesn't affect jdkgdxds code, but may affect users who rely on digital transitively.
+- New `ObjectList.sortJdk()` method will use the default `List.sort()` method rather than the in-place mergesort used by `ObjectList.sort()`.
+- Updated to Gradle 8.3 and Checker Framework 3.37.0 .
+
 [1.4.0]
 - [BREAKING CHANGE] Optionally-implemented merge() methods on primitive-keyed-and-or-valued map types didn't act according to Map.merge() docs, so they are now renamed to combine(). Calling combine() should always take a funderby functional interface.
 - All maps should be able to be combined with another map of the same type, using combine(). This complements the combine() that merges two values to associate with a single key.

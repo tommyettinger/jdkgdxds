@@ -118,8 +118,8 @@ It does not need any additional repository to be specified in most cases; if it 
 `mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on `digital` (which provides
 common math code meant for use by multiple projects), `funderby` (Java 8 functional interfaces for primitive types), and for
 annotations only, `checker-qual` ([the project GitHub page is here.](https://github.com/typetools/checker-framework)). The
-version for the `digital` dependency is 0.3.3 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.3.3"`). Funderby has only changed a bit since its initial release, and is on version
+version for the `digital` dependency is 0.4.0 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.4.0"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.1 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.1"`). The version for
 `checker-qual` is 3.35.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes.
 Earlier versions of jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to
@@ -129,7 +129,7 @@ mention that JSR305 is currently unmaintained). You can manually specify a `chec
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
-implementation "com.github.tommyettinger:digital:0.3.3:sources"
+implementation "com.github.tommyettinger:digital:0.4.0:sources"
 implementation "com.github.tommyettinger:jdkgdxds:1.4.0:sources"
 ```
 to its
@@ -165,7 +165,7 @@ to a higher value, depending on where it is already; 19 is known to work, and 16
 The dependency (and `inherits` line) on digital is not necessary for jdkgdxds 0.2.8, but is necessary starting in 1.0.3 and later.
 The dependency and `inherits` line for funderby is new in 1.0.4 . Versions 1.0.1 and 1.0.2 also depended on
 [juniper](https://github.com/tommyettinger/juniper) 0.1.0 ; if you intend to use the
-randomized algorithms here (like shuffles), then depending on Juniper (0.3.5) might be a good idea, though it is still optional.
+randomized algorithms here (like shuffles), then depending on Juniper (0.3.8) might be a good idea, though it is still optional.
 The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
 for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
 The version for funderby is expected to stay at or around 0.1.1, since it is a relatively small library and is probably complete.
@@ -179,7 +179,7 @@ on what your other dependencies use, to your project or its core module (if ther
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
-implementation "com.github.tommyettinger:digital:0.3.3:sources"
+implementation "com.github.tommyettinger:digital:0.4.0:sources"
 implementation "com.github.tommyettinger:jdkgdxds:4e8ddbddd7:sources"
 ```
 to its
@@ -280,3 +280,10 @@ respectively. You may also need to change some functional interfaces to use the 
 
 If you get errors about a Java 8 functional interface not being assignable to something in jdkgdxds, it probably should be swapped
 out for something defined by funderby -- jdkgdxds won't use functional interfaces defined anywhere but there or here.
+
+## Updating to 1.4.1
+
+Version 1.4.1 only has very small changes to jdkgdxds, but does update its dependency on `digital`, and digital 0.4.0 has a form
+of breaking change for users who depended on getting the same results from `Hasher` for a given input and seed. None of the
+methods in digital that are affected by the change are used in jdkgdxds, but they could affect transitive usage. There is no
+mitigation or anything you have to do, other than to be aware that `Hasher.hash()` and `Hasher.hash64()` results may be different.
