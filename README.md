@@ -111,7 +111,7 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.4.0'
+api 'com.github.tommyettinger:jdkgdxds:1.4.1'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -124,13 +124,13 @@ version for the `digital` dependency is 0.4.0 (you can specify it manually with 
 `checker-qual` is 3.35.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes.
 Earlier versions of jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to
 mention that JSR305 is currently unmaintained). You can manually specify a `checker-qual` version with
-`api "org.checkerframework:checker-qual:3.35.0"`.
+`api "org.checkerframework:checker-qual:3.37.0"`.
 
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
 implementation "com.github.tommyettinger:digital:0.4.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.4.0:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.4.1:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -153,19 +153,19 @@ android.compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
 android.compileOptions.targetCompatibility JavaVersion.VERSION_1_8
 
 dependencies {
-	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.9'
 }
 ```
 to whatever module uses an `android` or `com.android.application` plugin. The `desugar_jdk_libs` version should only be updated if
 you have checked for compatibility with your Android Gradle Plugin version; see [Android docs](https://developer.android.com/studio/write/java8-support#library-desugaring-versions).
-In short, if you use Android Gradle Plugin 7.3.0, you should use `'com.android.tools:desugar_jdk_libs:1.2.2'`. If you use Android
-Gradle Plugin 7.4.0 or later, you should use `'com.android.tools:desugar_jdk_libs:2.0.0'`. You may need to set the `minSdkVersion`
+In short, if you use Android Gradle Plugin 7.3.0, you should use `'com.android.tools:desugar_jdk_libs:1.2.3'`. If you use Android
+Gradle Plugin 7.4.0 or later, you should use `'com.android.tools:desugar_jdk_libs:2.0.3'`. You may need to set the `minSdkVersion`
 to a higher value, depending on where it is already; 19 is known to work, and 16 probably works.
 
 The dependency (and `inherits` line) on digital is not necessary for jdkgdxds 0.2.8, but is necessary starting in 1.0.3 and later.
 The dependency and `inherits` line for funderby is new in 1.0.4 . Versions 1.0.1 and 1.0.2 also depended on
 [juniper](https://github.com/tommyettinger/juniper) 0.1.0 ; if you intend to use the
-randomized algorithms here (like shuffles), then depending on Juniper (0.3.8) might be a good idea, though it is still optional.
+randomized algorithms here (like shuffles), then depending on Juniper (0.3.9) might be a good idea, though it is still optional.
 The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
 for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
 The version for funderby is expected to stay at or around 0.1.1, since it is a relatively small library and is probably complete.
