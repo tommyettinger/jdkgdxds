@@ -6,7 +6,7 @@ buildscript {
         gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.22.0'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.25.3'
     }
 }
 
@@ -36,8 +36,8 @@ if (JavaVersion.current().isJava8Compatible()) {
     }
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java.sourceCompatibility = 1.8
+java.targetCompatibility = 1.8
 
 if(JavaVersion.current().isJava9Compatible()) {
     compileJava.targetCompatibility = 8
