@@ -69,3 +69,10 @@ and was resolved in 1.1.2 . My apologies to LandoSystem from the
 libGDX Discord, who published his Ludum Dare 52 entry
 ( https://ldjam.com/events/ludum-dare/52/reapo-man-death-who )
 without using jdkgdxds because of that bug.
+
+Thanks to Daniele Conti ( https://github.com/fourlastor ) from the
+libGDX community for somehow, despite all odds against him,
+figuring out how to get Gradle to supply the sources of jdkgdxds'
+dependencies to GWT projects that depend on jdkgdxds. This is
+something I had tried more than once and always failed, every time,
+so huge thanks are in order!
