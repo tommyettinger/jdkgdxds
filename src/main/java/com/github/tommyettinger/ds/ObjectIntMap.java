@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntIntToIntBiFunction;
 import com.github.tommyettinger.function.ObjIntBiConsumer;
@@ -75,7 +76,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	protected int threshold;
 
 	/**
-	 * Used by {@link #place(Object)} typically, this should always equal {@code Long.numberOfLeadingZeros(mask)}.
+	 * Used by {@link #place(Object)} typically, this should always equal {@code com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask)}.
 	 * For a table that could hold 2 items (with 1 bit indices), this would be {@code 64 - 1 == 63}. For a table that
 	 * could hold 256 items (with 8 bit indices), this would be {@code 64 - 8 == 56}.
 	 */
@@ -133,7 +134,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros(mask);
 
 		keyTable = (K[])new Object[tableSize];
 		valueTable = new int[tableSize];
@@ -572,7 +573,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros(mask);
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 		K[] oldKeyTable = keyTable;

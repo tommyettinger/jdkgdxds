@@ -115,7 +115,7 @@ public class ExhaustiveBadStringHashTest {
 						int oldCapacity = keyTable.length;
 						threshold = (int)(newSize * loadFactor);
 						mask = newSize - 1;
-						shift = Long.numberOfLeadingZeros(mask);
+						shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
 
 						hashMultiplier *= ((long)size << 3) ^ 0xF1357AEA2E62A9C5L;
 						hashMul = hashMul * 0x2E62A9C5;

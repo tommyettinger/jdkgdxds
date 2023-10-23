@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongObjBiConsumer;
 import com.github.tommyettinger.function.LongObjToObjBiFunction;
@@ -146,7 +147,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros(mask);
 
 		keyTable = new long[tableSize];
 		valueTable = (V[])new Object[tableSize];
@@ -569,7 +570,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros(mask);
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 		long[] oldKeyTable = keyTable;

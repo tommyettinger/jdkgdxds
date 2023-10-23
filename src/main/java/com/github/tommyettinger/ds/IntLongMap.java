@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.IntLongBiConsumer;
@@ -140,7 +141,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros(mask);
 
 		keyTable = new int[tableSize];
 		valueTable = new long[tableSize];
@@ -577,7 +578,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros(mask);
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 		int[] oldKeyTable = keyTable;

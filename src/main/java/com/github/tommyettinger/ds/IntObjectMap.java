@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntObjBiConsumer;
 import com.github.tommyettinger.function.IntObjToObjBiFunction;
@@ -143,7 +144,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros(mask);
 
 		keyTable = new int[tableSize];
 		valueTable = (V[])new Object[tableSize];
@@ -563,7 +564,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros(mask);
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 		int[] oldKeyTable = keyTable;

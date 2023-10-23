@@ -64,7 +64,7 @@ public class AllGoldenWordHashTest {
 						int oldCapacity = keyTable.length;
 						threshold = (int)(newSize * loadFactor);
 						mask = newSize - 1;
-						shift = Long.numberOfLeadingZeros(mask);
+						shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
 
 //						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 0x1FF];
 						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];

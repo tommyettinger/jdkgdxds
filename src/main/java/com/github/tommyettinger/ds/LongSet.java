@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
@@ -117,7 +118,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros(mask);
 
 		keyTable = new long[tableSize];
 	}
@@ -381,7 +382,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Long.numberOfLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros(mask);
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 		long[] oldKeyTable = keyTable;

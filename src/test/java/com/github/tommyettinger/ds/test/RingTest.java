@@ -1,6 +1,5 @@
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectRing;
 import org.junit.Assert;
 import org.junit.Test;

@@ -339,7 +339,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		for (int word = bits.length - 1; word >= 0; --word) {
 			long bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
-				return (word + 1 << 6) - Long.numberOfLeadingZeros(bitsAtWord) + 1 + offset;
+				return (word + 1 << 6) - BitConversion.countLeadingZeros(bitsAtWord) + 1 + offset;
 			}
 		}
 		return 0;

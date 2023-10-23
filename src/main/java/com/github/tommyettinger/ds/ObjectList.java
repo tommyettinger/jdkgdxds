@@ -195,7 +195,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * <br>
 	 * This matches the behavior of the libGDX {@code Array.removeAll(Array)} method in libGDX 1.10.0 and earlier.
 	 * The method {@link #removeAll(Collection)} here matches the behavior of the JDK
-	 * {@link java.util.List#removeAll(Collection)} method.
+	 * {@link List#removeAll(Collection)} method.
 	 *
 	 * @param able an Iterable of T items to remove one-by-one, such as another ObjectList or an ObjectSet
 	 * @return true if this list was modified.
