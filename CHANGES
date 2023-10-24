@@ -1,3 +1,7 @@
+[1.4.2]
+- The dependency on digital was updated to 0.4.1, which includes a new `BitConversion.countLeadingZeros()` method that we use here to speed things up on GWT a bit.
+- The dependency on checker-qual was updated to 3.39.0, which shouldn't break or really even change anything here.
+
 [1.4.1]
 - [POSSIBLE BREAKING CHANGE] The dependency on digital was increased to 0.4.0, and that version changes what `Hasher.hash()` and `Hasher.hash64()` return for the same arguments. This doesn't affect jdkgdxds code, but may affect users who rely on digital transitively.
 - New `ObjectList.sortJdk()` method will use the default `List.sort()` method rather than the in-place mergesort used by `ObjectList.sort()`.
