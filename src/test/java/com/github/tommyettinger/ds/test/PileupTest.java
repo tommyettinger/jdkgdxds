@@ -151,7 +151,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
 //                hashMultiplier *= size | 0xF1357AEA2E62A9C5L;
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
@@ -242,7 +242,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
                 // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
                 // Pseudorandom Number Generators
@@ -350,7 +350,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
                 // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
                 // Pseudorandom Number Generators
@@ -444,7 +444,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
 ////                 we modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
 ////                 we incorporate the size in here (times 2, so it doesn't make the multiplier even) to randomize things more.
@@ -541,7 +541,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
 //                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
 //                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
@@ -632,7 +632,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
                 // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
                 // Pseudorandom Number Generators
@@ -726,7 +726,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
                 // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
                 // Pseudorandom Number Generators
@@ -910,7 +910,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
                 Object[] oldKeyTable = keyTable;
 
@@ -995,7 +995,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
                 // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
                 // Pseudorandom Number Generators
@@ -1093,7 +1093,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
                 hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 
@@ -1166,7 +1166,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 //
 //                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
 //                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
@@ -1250,7 +1250,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 //
 //                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
 //                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
@@ -1549,7 +1549,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
 //                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
 //                hashMul *= 0x9E3779B9 + size + size;
@@ -1656,7 +1656,7 @@ public class PileupTest {
                         int oldCapacity = keyTable.length;
                         threshold = (int)(newSize * loadFactor);
                         mask = newSize - 1;
-                        shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                        shift = BitConversion.countLeadingZeros((long)mask);
 
 //                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
 //                hashMul *= 0x9E3779B9 + size + size;
@@ -1781,7 +1781,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
 //                hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
 //                hashMul = hashMul * 0x2E62A9C5;
@@ -1884,7 +1884,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
                 // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
                 // Pseudorandom Number Generators
@@ -2013,7 +2013,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
@@ -2110,7 +2110,7 @@ public class PileupTest {
                 int oldCapacity = keyTable.length;
                 threshold = (int)(newSize * loadFactor);
                 mask = newSize - 1;
-                shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                shift = BitConversion.countLeadingZeros((long)mask);
 
 //                // We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
 //                // We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the
@@ -2294,7 +2294,7 @@ public class PileupTest {
                     int oldCapacity = keyTable.length;
                     threshold = (int)(newSize * loadFactor);
                     mask = newSize - 1;
-                    shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                    shift = BitConversion.countLeadingZeros((long)mask);
 
                     hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
                     hashMul = (int)(hashMultiplier & 0x1FFFFFL);
@@ -2426,7 +2426,7 @@ public class PileupTest {
                     int oldCapacity = keyTable.length;
                     threshold = (int)(newSize * loadFactor);
                     mask = newSize - 1;
-                    shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                    shift = BitConversion.countLeadingZeros((long)mask);
 
                     // was using this in many tests
                     // total 1788695, longest 33, average 5.686122731838816, sum 160
@@ -2545,7 +2545,7 @@ public class PileupTest {
                     int oldCapacity = keyTable.length;
                     threshold = (int)(newSize * loadFactor);
                     mask = newSize - 1;
-                    shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                    shift = BitConversion.countLeadingZeros((long)mask);
 
                     // was using this in many tests
                     // total 1788695, longest 33, average 5.686122731838816, sum 160
@@ -2664,7 +2664,7 @@ public class PileupTest {
                     int oldCapacity = keyTable.length;
                     threshold = (int)(newSize * loadFactor);
                     mask = newSize - 1;
-                    shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                    shift = BitConversion.countLeadingZeros((long)mask);
 
                     // was using this in many tests
                     // total 1788695, longest 33, average 5.686122731838816, sum 160
@@ -2871,7 +2871,7 @@ public class PileupTest {
                         int oldCapacity = keyTable.length;
                         threshold = (int)(newSize * loadFactor);
                         mask = newSize - 1;
-                        shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                        shift = BitConversion.countLeadingZeros((long)mask);
 
                         // was using this in many tests
                         // total 1788695, longest 33, average 5.686122731838816, sum 160
@@ -3001,7 +3001,7 @@ public class PileupTest {
                     int oldCapacity = keyTable.length;
                     threshold = (int)(newSize * loadFactor);
                     mask = newSize - 1;
-                    shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                    shift = BitConversion.countLeadingZeros((long)mask);
 
                     hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
                     hashMul = (int)(hashMultiplier & 0x1FFFFFL);
@@ -3133,7 +3133,7 @@ public class PileupTest {
                     int oldCapacity = keyTable.length;
                     threshold = (int)(newSize * loadFactor);
                     mask = newSize - 1;
-                    shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                    shift = BitConversion.countLeadingZeros((long)mask);
 
                     // was using this in many tests
                     // total 1788695, longest 33, average 5.686122731838816, sum 160
@@ -3259,7 +3259,7 @@ public class PileupTest {
                     int oldCapacity = keyTable.length;
                     threshold = (int)(newSize * loadFactor);
                     mask = newSize - 1;
-                    shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                    shift = BitConversion.countLeadingZeros((long)mask);
 
                     // was using this in many tests
                     // total 1788695, longest 33, average 5.686122731838816, sum 160
@@ -3472,7 +3472,7 @@ public class PileupTest {
                         int oldCapacity = keyTable.length;
                         threshold = (int)(newSize * loadFactor);
                         mask = newSize - 1;
-                        shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+                        shift = BitConversion.countLeadingZeros((long)mask);
 
                         // was using this in many tests
                         // total 1788695, longest 33, average 5.686122731838816, sum 160

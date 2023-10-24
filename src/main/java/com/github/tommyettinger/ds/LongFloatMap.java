@@ -140,7 +140,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = BitConversion.countLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros((long)mask);
 
 		keyTable = new long[tableSize];
 		valueTable = new float[tableSize];
@@ -622,7 +622,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = BitConversion.countLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros((long)mask);
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 		long[] oldKeyTable = keyTable;

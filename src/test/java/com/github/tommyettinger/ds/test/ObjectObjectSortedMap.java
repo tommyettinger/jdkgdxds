@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds.test;
 
+import java.io.Serializable;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
@@ -29,7 +30,7 @@ import java.util.Set;
 import java.util.SortedMap;
 
 /**
- * An implementation of {@link java.util.SortedMap} based on skip lists, a data structure first described in 1989
+ * An implementation of {@link SortedMap} based on skip lists, a data structure first described in 1989
  * by William Pugh.
  * <p>
  * The original code is from <a href="https://github.com/MottoX/SkipList">Robin Wang's SkipList repo</a>.
@@ -700,7 +701,7 @@ public class ObjectObjectSortedMap<K, V> extends AbstractMap<K, V> implements So
         }
     }
 
-    private static class SortedSubMap<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>, java.io.Serializable {
+    private static class SortedSubMap<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>, Serializable {
 
         private static final long serialVersionUID = -7244440549791596855L;
 

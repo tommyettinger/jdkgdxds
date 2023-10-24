@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.LongLongOrderedMap;
 import com.github.tommyettinger.ds.ObjectSet;
@@ -64,7 +65,7 @@ public class AllGoldenWordHashTest {
 						int oldCapacity = keyTable.length;
 						threshold = (int)(newSize * loadFactor);
 						mask = newSize - 1;
-						shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+						shift = BitConversion.countLeadingZeros((long)mask);
 
 //						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 0x1FF];
 						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];

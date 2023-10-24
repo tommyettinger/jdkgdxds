@@ -15,10 +15,9 @@ public class RingTest {
 		deque.add("bob");
 		deque.add("alice");
 		deque.add("carol");
-		deque.removeLast();
 		deque.add("billy");
 		System.out.println(deque);
 		Assert.assertEquals("billy", deque.getLast());
-		Assert.assertEquals("theodore", deque.getFirst());
+		Assert.assertEquals("jamie", deque.getFirst());
 	}
 }

@@ -98,7 +98,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		int tableSize = tableSize(51, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = BitConversion.countLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros((long)mask);
 
 		keyTable = (T[])new Object[tableSize];
 		this.extractor = null;
@@ -141,7 +141,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = BitConversion.countLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros((long)mask);
 
 		keyTable = (T[])new Object[tableSize];
 		this.extractor = extractor;
@@ -560,7 +560,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = BitConversion.countLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros((long)mask);
 		T[] oldKeyTable = keyTable;
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];

@@ -134,7 +134,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = BitConversion.countLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros((long)mask);
 
 		keyTable = (K[])new Object[tableSize];
 		valueTable = new int[tableSize];
@@ -573,7 +573,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = BitConversion.countLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros((long)mask);
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 		K[] oldKeyTable = keyTable;

@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.Ordered;
@@ -124,7 +125,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros((long)mask);
 
 		keyTable = (T[])new Object[tableSize];
 	}
@@ -482,7 +483,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+		shift = BitConversion.countLeadingZeros((long)mask);
 
 //		// We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
 //		// We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the

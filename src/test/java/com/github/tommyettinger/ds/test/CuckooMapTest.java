@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.ds.ObjectList;
+import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +32,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class CuckooMapTest extends junit.framework.TestCase {
+public class CuckooMapTest extends TestCase {
 
 	ObjectObjectCuckooMap hm;
 

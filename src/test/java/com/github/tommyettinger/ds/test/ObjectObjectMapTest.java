@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectMap;
+import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class ObjectObjectMapTest extends junit.framework.TestCase {
+public class ObjectObjectMapTest extends TestCase {
 
 	ObjectObjectMap hm;
 

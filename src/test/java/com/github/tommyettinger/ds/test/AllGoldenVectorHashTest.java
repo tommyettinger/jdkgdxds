@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.LongLongOrderedMap;
 import com.github.tommyettinger.ds.LongOrderedSet;
@@ -65,7 +66,7 @@ public class AllGoldenVectorHashTest {
 						int oldCapacity = keyTable.length;
 						threshold = (int)(newSize * loadFactor);
 						mask = newSize - 1;
-						shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+						shift = BitConversion.countLeadingZeros((long)mask);
 
 //						// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
 //						// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.

@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.ObjectSet;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -115,7 +116,7 @@ public class ExhaustiveBadStringHashTest {
 						int oldCapacity = keyTable.length;
 						threshold = (int)(newSize * loadFactor);
 						mask = newSize - 1;
-						shift = com.github.tommyettinger.digital.BitConversion.countLeadingZeros(mask);
+						shift = BitConversion.countLeadingZeros((long)mask);
 
 						hashMultiplier *= ((long)size << 3) ^ 0xF1357AEA2E62A9C5L;
 						hashMul = hashMul * 0x2E62A9C5;
