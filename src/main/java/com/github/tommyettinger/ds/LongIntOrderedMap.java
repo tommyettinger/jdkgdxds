@@ -355,6 +355,18 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 
 	@Override
 	public int getAndIncrement (long key, int defaultValue, int increment) {
+		if (key == 0) {
+			if (hasZeroValue) {
+				int old = zeroValue;
+				zeroValue += increment;
+				return old;
+			}
+			hasZeroValue = true;
+			zeroValue = defaultValue + increment;
+			keys.add(key);
+			size++;
+			return defaultValue;
+		}
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			int oldValue = valueTable[i];

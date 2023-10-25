@@ -353,6 +353,18 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 
 	@Override
 	public long getAndIncrement (long key, long defaultValue, long increment) {
+		if (key == 0) {
+			if (hasZeroValue) {
+				long old = zeroValue;
+				zeroValue += increment;
+				return old;
+			}
+			hasZeroValue = true;
+			zeroValue = defaultValue + increment;
+			keys.add(key);
+			size++;
+			return defaultValue;
+		}
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			long oldValue = valueTable[i];

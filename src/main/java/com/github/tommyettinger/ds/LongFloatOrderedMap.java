@@ -355,6 +355,18 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 
 	@Override
 	public float getAndIncrement (long key, float defaultValue, float increment) {
+		if (key == 0) {
+			if (hasZeroValue) {
+				float old = zeroValue;
+				zeroValue += increment;
+				return old;
+			}
+			hasZeroValue = true;
+			zeroValue = defaultValue + increment;
+			keys.add(key);
+			size++;
+			return defaultValue;
+		}
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
