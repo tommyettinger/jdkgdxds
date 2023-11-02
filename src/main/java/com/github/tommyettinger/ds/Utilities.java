@@ -201,9 +201,9 @@ public final class Utilities {
 	/**
 	 * Sets the load factor that will be used when none is specified during construction (for
 	 * data structures that have a load factor, such as all sets and maps here). The load factor
-	 * will be clamped so it is greater than 0 (the lowest possible is {@link #FLOAT_ROUNDING_ERROR},
-	 * but it should never actually be that low) and less than or equal to 1. The initial value for
-	 * the default load factor is 0.7.
+	 * will be clamped so that it is greater than 0 (the lowest possible is
+	 * {@link #FLOAT_ROUNDING_ERROR}, but it should never actually be that low) and less than or
+	 * equal to 1. The initial value for the default load factor is 0.7.
 	 * <br>
 	 * If multiple libraries and/or your own code depend on jdkgdxds, then they may attempt to set
 	 * the default load factor independently of each other, but this only has one setting at a time.
@@ -316,37 +316,17 @@ public final class Utilities {
 	 * Uses Water hash, which is a variant on <a href="https://github.com/vnmakarov/mum-hash">mum-hash</a> and
 	 * <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a>. This gets the hash as if all cased letters have been
 	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
-	 * Unicode except Georgian. Typically place() methods in Sets and Maps here that want case-insensitive hashing
+	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
 	 * would use this with {@code (int)(longHashCodeIgnoreCase(text) >>> shift)}.
 	 * <br>
 	 * This is very similar to the {@link Hasher#hash64(CharSequence)} method, and shares
 	 * the same constants and mum() method with Hasher.
 	 *
-	 * @param item a non-null CharSequence; often be a String, but this has no trouble with a StringBuilder
+	 * @param data a non-null CharSequence; often a String, but this has no trouble with a StringBuilder
 	 * @return a long hashCode; quality should be similarly good across any bits
 	 */
-	public static long longHashCodeIgnoreCase (final CharSequence item) {
-		long seed = 9069147967908697017L;
-		final int len = item.length();
-		for (int i = 3; i < len; i += 4) {
-			seed = mum(mum(Character.toUpperCase(item.charAt(i - 3)) ^ b1, Character.toUpperCase(item.charAt(i - 2)) ^ b2) + seed, mum(Character.toUpperCase(item.charAt(i - 1)) ^ b3, Character.toUpperCase(item.charAt(i)) ^ b4));
-		}
-		switch (len & 3) {
-		case 0:
-			seed = mum(b1 ^ seed, b4 + seed);
-			break;
-		case 1:
-			seed = mum(seed ^ b3, b4 ^ Character.toUpperCase(item.charAt(len - 1)));
-			break;
-		case 2:
-			seed = mum(seed ^ Character.toUpperCase(item.charAt(len - 2)), b3 ^ Character.toUpperCase(item.charAt(len - 1)));
-			break;
-		case 3:
-			seed = mum(seed ^ Character.toUpperCase(item.charAt(len - 3)) ^ (long)Character.toUpperCase(item.charAt(len - 2)) << 16, b1 ^ Character.toUpperCase(item.charAt(len - 1)));
-			break;
-		}
-		seed = (seed ^ seed << 16) * (len ^ b0);
-		return seed - (seed >>> 31) + (seed << 33);
+	public static long longHashCodeIgnoreCase (final CharSequence data) {
+		return longHashCodeIgnoreCase(data, 9069147967908697017L);
 	}
 
 	/**
@@ -354,37 +334,40 @@ public final class Utilities {
 	 * Uses Water hash, which is a variant on <a href="https://github.com/vnmakarov/mum-hash">mum-hash</a> and
 	 * <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a>. This gets the hash as if all cased letters have been
 	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
-	 * Unicode except Georgian. Typically place() methods in Sets and Maps here that want case-insensitive hashing
+	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
 	 * would use this with {@code (int)(longHashCodeIgnoreCase(text) >>> shift)}.
 	 * <br>
 	 * This is very similar to the {@link Hasher#hash64(CharSequence)} method, and shares
 	 * the same constants and mum() method with Hasher.
 	 *
-	 * @param item a non-null CharSequence; often be a String, but this has no trouble with a StringBuilder
-	 * @param seed any long; must be the same between calls if two equivalent values for {@code item} must be the same
+	 * @param data a non-null CharSequence; often a String, but this has no trouble with a StringBuilder
+	 * @param seed any long; must be the same between calls if two equivalent values for {@code data} must be the same
 	 * @return a long hashCode; quality should be similarly good across any bits
 	 */
-	public static long longHashCodeIgnoreCase (final CharSequence item, long seed) {
-		final int len = item.length();
+	public static long longHashCodeIgnoreCase (final CharSequence data, long seed) {
+		final int len = data.length();
 		for (int i = 3; i < len; i += 4) {
-			seed = mum(mum(Character.toUpperCase(item.charAt(i - 3)) ^ b1, Character.toUpperCase(item.charAt(i - 2)) ^ b2) + seed, mum(Character.toUpperCase(item.charAt(i - 1)) ^ b3, Character.toUpperCase(item.charAt(i)) ^ b4));
+			seed = mum(
+				mum(Character.toUpperCase(data.charAt(i - 3)) ^ b1, Character.toUpperCase(data.charAt(i - 2)) ^ b2) - seed,
+				mum(Character.toUpperCase(data.charAt(i - 1)) ^ b3, Character.toUpperCase(data.charAt(i)) ^ b4));
 		}
+
 		switch (len & 3) {
 		case 0:
-			seed = mum(b1 ^ seed, b4 + seed);
+			seed = mum(b1 - seed, b4 + seed);
 			break;
 		case 1:
-			seed = mum(seed ^ b3, b4 ^ Character.toUpperCase(item.charAt(len - 1)));
+			seed = mum(b5 - seed, b3 ^ Character.toUpperCase(data.charAt(len - 1)));
 			break;
 		case 2:
-			seed = mum(seed ^ Character.toUpperCase(item.charAt(len - 2)), b3 ^ Character.toUpperCase(item.charAt(len - 1)));
+			seed = mum(Character.toUpperCase(data.charAt(len - 2)) - seed, b0 ^ Character.toUpperCase(data.charAt(len - 1)));
 			break;
 		case 3:
-			seed = mum(seed ^ Character.toUpperCase(item.charAt(len - 3)) ^ (long)Character.toUpperCase(item.charAt(len - 2)) << 16, b1 ^ Character.toUpperCase(item.charAt(len - 1)));
+			seed = mum(Character.toUpperCase(data.charAt(len - 3)) - seed, b2 ^ Character.toUpperCase(data.charAt(len - 2))) + mum(b5 ^ seed, b4 ^ Character.toUpperCase(data.charAt(len - 1)));
 			break;
 		}
-		seed = (seed ^ seed << 16) * (len ^ b0);
-		return seed - (seed >>> 31) + (seed << 33);
+		seed = (seed ^ len) * (seed << 16 ^ b0);
+		return (seed ^ (seed << 33 | seed >>> 31) ^ (seed << 19 | seed >>> 45));
 	}
 
 }
