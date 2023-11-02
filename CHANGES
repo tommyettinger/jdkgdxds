@@ -1,3 +1,8 @@
+[1.4.3]
+- The dependency on digital was updated to 0.4.2, which includes `BitConversion.countTrailingZeros()`; we use it in OffsetBitSet.
+- A bug in getAndIncrement() for ordered maps with int and long keys was fixed; before, it didn't handle zero keys correctly.
+- The `Utilities.longHashCodeIgnoreCase()` methods now are much closer to how `Hasher` implements them in digital; the results are different.
+
 [1.4.2]
 - The dependency on digital was updated to 0.4.1, which includes a new `BitConversion.countLeadingZeros()` method that we use here to speed things up on GWT a bit.
 - The dependency on checker-qual was updated to 3.39.0, which shouldn't break or really even change anything here.

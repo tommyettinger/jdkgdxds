@@ -410,9 +410,9 @@ public class IntSet implements PrimitiveCollection.OfInt {
 	 * of how resize() randomizes the multiplier, even inputs such as {@code 1L} and {@code -1L} actually work well.
 	 * <br>
 	 * This is accessible at all mainly so serialization code that has a need to access the hash multiplier can do so, but
-	 * also to provide an "emergency escape route" in case of hash flooding. Using one of the "golden longs" in
-	 * {@link com.github.tommyettinger.digital.MathTools#GOLDEN_LONGS} should usually be fine if you don't know what
-	 * multiplier will work well. Be advised that because this has to call resize(), it isn't especially fast, and it slows
+	 * also to provide an "emergency escape route" in case of hash flooding. Using one of the "known good" longs in
+	 * {@link Utilities#GOOD_MULTIPLIERS} should usually be fine if you don't know what multiplier will work well.
+	 * Be advised that because this has to call resize(), it isn't especially fast, and it slows
 	 * down the more items are in the data structure. If you in a situation where you are worried about hash flooding, you
 	 * also shouldn't permit adversaries to cause this method to be called frequently.
 	 * @param hashMultiplier any odd long; will not be used as-is
