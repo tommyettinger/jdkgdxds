@@ -402,14 +402,14 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		if (bitsAtWord != 0) {
 			long t = BitConversion.lowestOneBit(bitsAtWord); // there's a bug in GWT that requires this instead of (b & -b)
 			if (t != 0)
-				return Long.numberOfTrailingZeros(t) + (word << 6) + offset; // numberOfTrailingZeros() is an intrinsic candidate, and should be extremely fast
+				return BitConversion.countTrailingZeros(t) + (word << 6) + offset; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 		}
 		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
 				long t = BitConversion.lowestOneBit(bitsAtWord);
 				if (t != 0)
-					return Long.numberOfTrailingZeros(t) + (word << 6) + offset;
+					return BitConversion.countTrailingZeros(t) + (word << 6) + offset;
 			}
 		}
 		return offset - 1;
@@ -433,14 +433,14 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		if (bitsAtWord != -1L) {
 			long t = BitConversion.lowestOneBit(~bitsAtWord); // there's a bug in GWT that requires this instead of (b & -b)
 			if (t != 0)
-				return Long.numberOfTrailingZeros(t) + (word << 6) + offset; // numberOfTrailingZeros() is an intrinsic candidate, and should be extremely fast
+				return BitConversion.countTrailingZeros(t) + (word << 6) + offset; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 		}
 		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != -1L) {
 				long t = BitConversion.lowestOneBit(~bitsAtWord);
 				if (t != 0)
-					return Long.numberOfTrailingZeros(t) + (word << 6) + offset;
+					return BitConversion.countTrailingZeros(t) + (word << 6) + offset;
 			}
 		}
 		return (bits.length << 6) + offset;
