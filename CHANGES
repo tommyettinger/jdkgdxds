@@ -1,3 +1,6 @@
+[1.4.4]
+- The dependency on digital was updated again to 0.4.3 because of a break in GWT compilation in digital 0.4.2; it is fine now.
+
 [1.4.3]
 - The dependency on digital was updated to 0.4.2, which includes `BitConversion.countTrailingZeros()`; we use it in OffsetBitSet.
 - A bug in getAndIncrement() for ordered maps with int and long keys was fixed; before, it didn't handle zero keys correctly.
