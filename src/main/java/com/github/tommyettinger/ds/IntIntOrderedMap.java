@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 
 import com.github.tommyettinger.ds.support.util.IntIterator;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Iterator;
 import java.util.Map;
@@ -605,7 +606,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public Iterator<Entry> iterator () {
+	public @NonNull EntryIterator iterator () {
 		return entrySet().iterator();
 	}
 

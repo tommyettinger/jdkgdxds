@@ -610,7 +610,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	}
 
 	@Override
-	public Object[] toArray () {
+	public Object @NonNull [] toArray () {
 		return toArray(new Object[size()]);
 	}
 

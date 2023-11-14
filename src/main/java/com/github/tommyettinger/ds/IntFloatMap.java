@@ -824,7 +824,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public Iterator<Entry> iterator () {
+	public @NonNull EntryIterator iterator () {
 		return entrySet().iterator();
 	}
 

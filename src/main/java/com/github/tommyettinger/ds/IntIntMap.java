@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntIntBiConsumer;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -778,7 +779,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public Iterator<Entry> iterator () {
+	public @NonNull EntryIterator iterator () {
 		return entrySet().iterator();
 	}
 
@@ -1096,7 +1097,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		}
 
 		@Override
-		public Iterator<Entry> iterator () {
+		public @NonNull Iterator<Entry> iterator () {
 			return this;
 		}
 
@@ -1140,7 +1141,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<Entry> iterator () {
+		public @NonNull EntryIterator iterator () {
 			return iter;
 		}
 
