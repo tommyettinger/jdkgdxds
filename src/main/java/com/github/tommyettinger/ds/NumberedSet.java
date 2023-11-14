@@ -76,6 +76,15 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		protected boolean equate (Object left, @Nullable Object right) {
 			return NumberedSet.this.equate(left, right);
 		}
+
+		protected int addOrIndex(final T t) {
+			int index;
+			if ((index = getOrDefault(t, -1)) == -1) {
+				put(t, size);
+				return size - 1;
+			}
+			return index;
+		}
 	}
 
 	protected transient InternalMap map;
@@ -616,7 +625,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	 * @return the index of {@code t} in this Arrangement
 	 */
 	public int addOrIndex (final T t) {
-		return map.putIfAbsent(t, size());
+		return map.addOrIndex(t);
 	}
 
 	/**
