@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -491,7 +492,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * @throws IndexOutOfBoundsException {@inheritDoc}
 	 */
 	@Override
-	public ObjectListIterator<T> listIterator (int index) {
+	public @NonNull ObjectListIterator<T> listIterator (int index) {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this, index);
 			iterator2 = new ObjectListIterator<>(this, index);
@@ -517,7 +518,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * @see #listIterator(int)
 	 */
 	@Override
-	public ObjectListIterator<T> listIterator () {
+	public @NonNull ObjectListIterator<T> listIterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this);
 			iterator2 = new ObjectListIterator<>(this);
@@ -543,7 +544,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * @return an iterator over the elements in this list in proper sequence
 	 */
 	@Override
-	public ObjectListIterator<T> iterator () {
+	public @NonNull ObjectListIterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this);
 			iterator2 = new ObjectListIterator<>(this);
@@ -767,7 +768,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 		 * @return a ListIterator; really this same ObjectListIterator.
 		 */
 		@Override
-		public ObjectListIterator<T> iterator () {
+		public @NonNull ObjectListIterator<T> iterator () {
 			return this;
 		}
 	}

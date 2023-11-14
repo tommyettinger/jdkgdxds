@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -815,7 +816,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * type} is {@code Object}, containing all of the elements in this collection
 	 */
 	@Override
-	public Object[] toArray () {
+	public Object @NonNull [] toArray () {
 		Object[] next = new Object[size];
 		if (head < tail) {
 			System.arraycopy(values, head, next, 0, tail - head);
@@ -854,7 +855,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @throws NullPointerException if the specified array is null
 	 */
 	@Override
-	public <E> E[] toArray (E[] a) {
+	public <E> E @NonNull [] toArray (E[] a) {
 		int oldSize = size;
 		if (a.length < oldSize) {
 			a = Arrays.copyOf(a, oldSize);
@@ -1260,7 +1261,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque)}.
 	 */
 	@Override
-	public ObjectDequeIterator<T> iterator () {
+	public @NonNull ObjectDequeIterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectDequeIterator<>(this);
 			iterator2 = new ObjectDequeIterator<>(this);
@@ -1288,7 +1289,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
 	@Override
-	public ObjectDequeIterator<T> descendingIterator () {
+	public @NonNull ObjectDequeIterator<T> descendingIterator () {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new ObjectDequeIterator<>(this, true);
 			descendingIterator2 = new ObjectDequeIterator<>(this, true);
@@ -1750,7 +1751,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		 * @return a ListIterator; really this same ObjectDequeIterator.
 		 */
 		@Override
-		public ObjectDequeIterator<T> iterator () {
+		public @NonNull ObjectDequeIterator<T> iterator () {
 			return this;
 		}
 	}

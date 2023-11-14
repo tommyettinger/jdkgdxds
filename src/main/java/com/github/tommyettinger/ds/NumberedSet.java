@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Iterator;
@@ -343,7 +344,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	}
 
 	@Override
-	public boolean retainAll (Collection<?> c) {
+	public boolean retainAll (@NonNull Collection<?> c) {
 		boolean modified = false;
 		Iterator<T> it = iterator();
 		while (it.hasNext()) {
@@ -360,7 +361,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	}
 
 	@Override
-	public boolean removeAll (Collection<?> c) {
+	public boolean removeAll (@NonNull Collection<?> c) {
 		boolean modified = false;
 		Iterator<?> it = iterator();
 		while (it.hasNext()) {
@@ -518,7 +519,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	 * @return a ListIterator, or more specifically a {@link NumberedSetIterator} over this set
 	 */
 	@Override
-	public NumberedSetIterator<T> iterator () {
+	public @NonNull NumberedSetIterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new NumberedSetIterator<>(this);
 			iterator2 = new NumberedSetIterator<>(this);
@@ -601,12 +602,12 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	}
 
 	@Override
-	public Object[] toArray () {
+	public Object @NonNull [] toArray () {
 		return map.keySet().toArray();
 	}
 
 	@Override
-	public <T1> T1[] toArray (T1[] a) {
+	public <T1> T1 @NonNull [] toArray (T1 @NonNull [] a) {
 		return map.keySet().toArray(a);
 	}
 
@@ -902,7 +903,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		 * @return a ListIterator; really this same NumberedSetIterator.
 		 */
 		@Override
-		public NumberedSetIterator<T> iterator () {
+		public @NonNull NumberedSetIterator<T> iterator () {
 			return this;
 		}
 	}
