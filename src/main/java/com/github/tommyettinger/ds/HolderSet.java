@@ -132,7 +132,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	@SuppressWarnings("unchecked")
-	public HolderSet (ObjToObjFunction<T, K> extractor, int initialCapacity, float loadFactor) {
+	public HolderSet (@NonNull ObjToObjFunction<T, K> extractor, int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) {
 			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
 		}
@@ -208,7 +208,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 */
-	public void setExtractor (ObjToObjFunction<T, K> extractor) {
+	public void setExtractor (@NonNull ObjToObjFunction<T, K> extractor) {
 		if (this.extractor == null)
 			this.extractor = extractor;
 	}
@@ -630,7 +630,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * @return an array containing all the elements in this set
 	 */
 	@Override
-	public <E> E[] toArray (E[] a) {
+	public <E> E @NonNull [] toArray (E @NonNull [] a) {
 		int size = size();
 		if (a.length < size) {
 			a = Arrays.copyOf(a, size);
@@ -751,7 +751,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * iteration, use {@link HolderSetIterator#HolderSetIterator(HolderSet)}.
 	 */
 	@Override
-	public Iterator<T> iterator () {
+	public @NonNull HolderSetIterator<T, K> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new HolderSetIterator<>(this);
 			iterator2 = new HolderSetIterator<>(this);
@@ -771,9 +771,9 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	public static class HolderSetIterator<T, K> implements Iterable<T>, Iterator<T> {
 		public boolean hasNext;
 
-		final HolderSet<T, K> set;
-		int nextIndex, currentIndex;
-		boolean valid = true;
+		protected final HolderSet<T, K> set;
+		protected int nextIndex, currentIndex;
+		protected boolean valid = true;
 
 		public HolderSetIterator (HolderSet<T, K> set) {
 			this.set = set;
@@ -844,7 +844,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 		}
 
 		@Override
-		public HolderSetIterator<T, K> iterator () {
+		public @NonNull HolderSetIterator<T, K> iterator () {
 			return this;
 		}
 

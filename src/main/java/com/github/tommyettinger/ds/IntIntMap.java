@@ -1047,7 +1047,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		 * Returns a new IntList containing the remaining keys.
 		 */
 		public IntList toList () {
-			IntList list = new IntList(true, map.size);
+			IntList list = new IntList(map.size);
 			while (hasNext) {list.add(nextInt());}
 			return list;
 		}

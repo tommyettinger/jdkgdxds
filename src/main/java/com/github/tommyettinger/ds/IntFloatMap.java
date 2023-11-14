@@ -25,6 +25,7 @@ import com.github.tommyettinger.function.IntFloatToFloatBiFunction;
 import com.github.tommyettinger.function.IntToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -1090,7 +1091,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		 * Returns a new IntList containing the remaining keys.
 		 */
 		public IntList toList () {
-			IntList list = new IntList(true, map.size);
+			IntList list = new IntList(map.size);
 			while (hasNext) {list.add(nextInt());}
 			return list;
 		}
@@ -1139,7 +1140,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		}
 
 		@Override
-		public Iterator<Entry> iterator () {
+		public @NonNull EntryIterator iterator () {
 			return this;
 		}
 
@@ -1182,7 +1183,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<Entry> iterator () {
+		public @NonNull EntryIterator iterator () {
 			return iter;
 		}
 

@@ -721,7 +721,7 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		 * Does not change the position of this iterator.
 		 */
 		public IntList toList () {
-			IntList list = new IntList(true, set.size());
+			IntList list = new IntList(set.size());
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
 			while (hasNext) {

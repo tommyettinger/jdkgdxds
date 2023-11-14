@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractQueue;
 import java.util.Arrays;
@@ -500,7 +501,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	 * @return an iterator over the elements contained in this collection
 	 */
 	@Override
-	public HeapIterator<T> iterator () {
+	public @NonNull HeapIterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new HeapIterator<>(this);
 			iterator2 = new HeapIterator<>(this);

@@ -1051,7 +1051,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		 * Returns a new LongList containing the remaining keys.
 		 */
 		public LongList toList () {
-			LongList list = new LongList(true, map.size);
+			LongList list = new LongList(map.size);
 			while (hasNext) {list.add(nextLong());}
 			return list;
 		}

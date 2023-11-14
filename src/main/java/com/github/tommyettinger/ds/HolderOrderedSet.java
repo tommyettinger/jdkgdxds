@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
@@ -390,7 +391,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public Iterator<T> iterator () {
+	public @NonNull HolderSetIterator<T, K> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new HolderOrderedSetIterator<>(this);
 			iterator2 = new HolderOrderedSetIterator<>(this);
@@ -428,7 +429,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	public static class HolderOrderedSetIterator<T, K> extends HolderSetIterator<T, K> {
-		private final ObjectList<T> items;
+		protected final ObjectList<T> items;
 
 		public HolderOrderedSetIterator (HolderOrderedSet<T, K> set) {
 			super(set);
