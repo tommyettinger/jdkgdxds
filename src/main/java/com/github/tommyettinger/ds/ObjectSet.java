@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -277,7 +278,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	}
 
 	@Override
-	public boolean retainAll (Collection<?> c) {
+	public boolean retainAll (@NonNull Collection<?> c) {
 		boolean modified = false;
 		for (Object o : this) {
 			if (!c.contains(o)) {modified |= remove(o);}
@@ -509,7 +510,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	}
 
 	@Override
-	public Object[] toArray () {
+	public Object @NonNull [] toArray () {
 		return toArray(new Object[size()]);
 	}
 
@@ -529,7 +530,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 * @return an array containing all the elements in this set
 	 */
 	@Override
-	public <E> E[] toArray (E[] a) {
+	public <E> E @NonNull [] toArray (E[] a) {
 		int size = size();
 		if (a.length < size) {
 			a = Arrays.copyOf(a, size);
@@ -640,7 +641,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	 * iteration, use {@link ObjectSetIterator#ObjectSetIterator(ObjectSet)}.
 	 */
 	@Override
-	public ObjectSetIterator<T> iterator () {
+	public @NonNull ObjectSetIterator<T> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectSetIterator<>(this);
 			iterator2 = new ObjectSetIterator<>(this);
@@ -741,7 +742,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		}
 
 		@Override
-		public ObjectSetIterator<T> iterator () {
+		public @NonNull ObjectSetIterator<T> iterator () {
 			return this;
 		}
 

@@ -23,6 +23,7 @@ import com.github.tommyettinger.function.LongLongToLongBiFunction;
 import com.github.tommyettinger.function.ObjLongBiConsumer;
 import com.github.tommyettinger.function.ObjLongToLongBiFunction;
 import com.github.tommyettinger.function.ObjToLongFunction;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.AbstractSet;
@@ -768,7 +769,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public EntryIterator<K> iterator () {
+	public @NonNull EntryIterator<K> iterator () {
 		return entrySet().iterator();
 	}
 
@@ -1006,7 +1007,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public KeyIterator<K> iterator () {
+		public @NonNull KeyIterator<K> iterator () {
 			return this;
 		}
 
@@ -1063,7 +1064,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public EntryIterator<K> iterator () {
+		public @NonNull EntryIterator<K> iterator () {
 			return this;
 		}
 
@@ -1102,7 +1103,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public EntryIterator<K> iterator () {
+		public @NonNull EntryIterator<K> iterator () {
 			return iter;
 		}
 
@@ -1297,7 +1298,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public KeyIterator<K> iterator () {
+		public @NonNull KeyIterator<K> iterator () {
 			return iter;
 		}
 

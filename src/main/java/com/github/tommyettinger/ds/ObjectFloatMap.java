@@ -23,6 +23,7 @@ import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.ObjFloatBiConsumer;
 import com.github.tommyettinger.function.ObjFloatToFloatBiFunction;
 import com.github.tommyettinger.function.ObjToFloatFunction;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.AbstractSet;
@@ -806,7 +807,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public Iterator<Entry<K>> iterator () {
+	public @NonNull EntryIterator<K> iterator () {
 		return entrySet().iterator();
 	}
 
@@ -1043,7 +1044,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		}
 
 		@Override
-		public Iterator<K> iterator () {
+		public @NonNull KeyIterator<K> iterator () {
 			return this;
 		}
 
@@ -1100,7 +1101,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		}
 
 		@Override
-		public Iterator<Entry<K>> iterator () {
+		public @NonNull EntryIterator<K> iterator () {
 			return this;
 		}
 
@@ -1139,7 +1140,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<Entry<K>> iterator () {
+		public @NonNull EntryIterator<K> iterator () {
 			return iter;
 		}
 
@@ -1334,7 +1335,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		}
 
 		@Override
-		public Iterator<K> iterator () {
+		public @NonNull KeyIterator<K> iterator () {
 			return iter;
 		}
 

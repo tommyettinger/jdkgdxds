@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
@@ -554,7 +555,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public Iterator<Entry<K>> iterator () {
+	public @NonNull EntryIterator<K> iterator () {
 		return entrySet().iterator();
 	}
 

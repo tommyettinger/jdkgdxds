@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
@@ -554,7 +555,7 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public ObjectLongMap.EntryIterator<K> iterator () {
+	public @NonNull EntryIterator<K> iterator () {
 		return entrySet().iterator();
 	}
 

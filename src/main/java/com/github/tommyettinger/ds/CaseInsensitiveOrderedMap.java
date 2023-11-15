@@ -180,10 +180,10 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	}
 
 	@Override
-	public ObjectObjectMap. @NonNull Keys<CharSequence, V> keySet () {
+	public @NonNull Keys<CharSequence, V> keySet () {
 		if (keys1 == null || keys2 == null) {
-			keys1 = new Keys<>(this);
-			keys2 = new Keys<>(this);
+			keys1 = new CaseInsensitiveKeys<>(this);
+			keys2 = new CaseInsensitiveKeys<>(this);
 		}
 		if (!keys1.iter.valid) {
 			keys1.iter.reset();
@@ -197,8 +197,8 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 		return keys2;
 	}
 
-	public static class Keys<V> extends OrderedMapKeys<CharSequence, V> {
-		public Keys (ObjectObjectOrderedMap<CharSequence, V> map) {
+	public static class CaseInsensitiveKeys<V> extends OrderedMapKeys<CharSequence, V> {
+		public CaseInsensitiveKeys (ObjectObjectOrderedMap<CharSequence, V> map) {
 			super(map);
 		}
 

@@ -892,7 +892,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public Iterator<Map.Entry<K, V>> iterator () {
+	public @NonNull MapIterator<K, V, Map.Entry<K, V>> iterator () {
 		return entrySet().iterator();
 	}
 
@@ -916,7 +916,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public Keys<K, V> keySet () {
+	public @NonNull Keys<K, V> keySet () {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
@@ -965,7 +965,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public Entries<K, V> entrySet () {
+	public @NonNull Entries<K, V> entrySet () {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);
@@ -1143,7 +1143,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		public Entries (ObjectObjectMap<K, V> map) {
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
-				public MapIterator<K, V, Map.Entry<K, V>> iterator () {
+				public @NonNull MapIterator<K, V, Map.Entry<K, V>> iterator () {
 					return this;
 				}
 
@@ -1183,7 +1183,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<Map.Entry<K, V>> iterator () {
+		public @NonNull MapIterator<K, V, Map.Entry<K, V>> iterator () {
 			return iter;
 		}
 
@@ -1269,7 +1269,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		public Values (ObjectObjectMap<K, V> map) {
 			iter = new MapIterator<K, V, V>(map) {
 				@Override
-				public Iterator<V> iterator () {
+				public @NonNull MapIterator<K, V, V> iterator () {
 					return this;
 				}
 
@@ -1298,7 +1298,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<V> iterator () {
+		public @NonNull MapIterator<K, V, V> iterator () {
 			return iter;
 		}
 
@@ -1365,7 +1365,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		public Keys (ObjectObjectMap<K, V> map) {
 			iter = new MapIterator<K, V, K>(map) {
 				@Override
-				public Iterator<K> iterator () {
+				public @NonNull MapIterator<K, V, K> iterator () {
 					return this;
 				}
 
@@ -1398,7 +1398,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public MapIterator<K, V, K> iterator () {
+		public @NonNull MapIterator<K, V, K> iterator () {
 			return iter;
 		}
 
