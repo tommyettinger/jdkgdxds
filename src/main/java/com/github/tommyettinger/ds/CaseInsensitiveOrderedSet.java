@@ -34,9 +34,14 @@ import java.util.Comparator;
  * algorithms do allocate quite a lot, but it does this by handling case incorrectly for the Georgian alphabet.
  * If I see Georgian text in-the-wild, I may reconsider, but I don't think that particular alphabet is in
  * widespread use. There's also {@link Utilities#equalsIgnoreCase(CharSequence, CharSequence)} for equality
- * comparisons that are similarly case-insensitive, except for Georgian. This is very similar to
- * {@link CaseInsensitiveSet}, except that this class maintains insertion order and can be sorted with
- * {@link #sort()}, {@link #sort(Comparator)}, etc.
+ * comparisons that are similarly case-insensitive, except for Georgian.
+ * <br>
+ * This is very similar to {@link CaseInsensitiveSet},
+ * except that this class maintains insertion order and can be sorted with {@link #sort()}, {@link #sort(Comparator)}, etc.
+ * Note that because each CharSequence is stored in here in its
+ * original form (not modified to make it ignore case), the sorted order might be different than you expect. You
+ * can convert each item to upper case inside a Comparator if you want case to be ignored for comparisons, though
+ * this probably allocates many objects.
  */
 public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
@@ -79,7 +84,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
 	/**
 	 * Creates a new ordered set identical to the specified ordered set.
-	 * Typically this would take another CaseInsensitiveOrderedSet, but you can use an ObjectOrderedSet
+	 * Typically, this would take another CaseInsensitiveOrderedSet, but you can use an ObjectOrderedSet
 	 * or one of its other subclasses as well.
 	 *
 	 * @param set an ObjectOrderedSet or one of its subclasses, such as a CaseInsensitiveOrderedSet
