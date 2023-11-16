@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
@@ -28,7 +27,7 @@ import java.util.Map;
 import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 
 /**
- * A custom variant on ObjectObjectMap that always uses String keys, but only considers any character in an item (for
+ * A custom variant on ObjectObjectOrderedMap that always uses String keys, but only considers any character in an item (for
  * equality and hashing purposes) if that character satisfies a predicate. This can also edit the characters that pass
  * the filter, such as by changing their case during comparisons (and hashing). You will usually want to call
  * {@link #setFilter(CharPredicate)} and/or {@link #setEditor(CharToCharFunction)} to change the behavior of hashing and
@@ -44,14 +43,14 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * <a href="https://github.com/tommyettinger/RegExodus">RegExodus</a> for more cross-platform Unicode support; a method
  * reference to {@code Category.L::contains} acts like {@code Character::isLetter}, but works on GWT.
  */
-public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
+public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, V> {
 	protected CharPredicate filter = c -> true;
 	protected CharToCharFunction editor = c -> c;
 
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public FilteredStringMap () {
+	public FilteredStringOrderedMap () {
 		super();
 	}
 
@@ -61,7 +60,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public FilteredStringMap (int initialCapacity) {
+	public FilteredStringOrderedMap (int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -72,7 +71,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public FilteredStringMap (int initialCapacity, float loadFactor) {
+	public FilteredStringOrderedMap (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -83,7 +82,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param filter a CharPredicate that should return true iff a character should be considered for equality/hashing
 	 * @param editor a CharToCharFunction that will take a char from a key String and return a potentially different char
 	 */
-	public FilteredStringMap (CharPredicate filter, CharToCharFunction editor) {
+	public FilteredStringOrderedMap (CharPredicate filter, CharToCharFunction editor) {
 		super();
 		this.filter = filter;
 		this.editor = editor;
@@ -99,7 +98,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public FilteredStringMap (CharPredicate filter, CharToCharFunction editor, int initialCapacity, float loadFactor) {
+	public FilteredStringOrderedMap (CharPredicate filter, CharToCharFunction editor, int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		this.filter = filter;
 		this.editor = editor;
@@ -108,9 +107,9 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map an FilteredStringMap to copy, or a subclass such as this one
+	 * @param map an FilteredStringOrderedMap to copy
 	 */
-	public FilteredStringMap (FilteredStringMap<? extends V> map) {
+	public FilteredStringOrderedMap (FilteredStringOrderedMap<? extends V> map) {
 		super(map);
 		filter = map.filter;
 		editor = map.editor;
@@ -124,11 +123,12 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param editor a CharToCharFunction that will take a char from a key String and return a potentially different char
 	 * @param map    a Map to copy; ObjectObjectOrderedMap and subclasses of it will be faster to load from
 	 */
-	public FilteredStringMap (CharPredicate filter, CharToCharFunction editor, Map<String, ? extends V> map) {
+	public FilteredStringOrderedMap (CharPredicate filter, CharToCharFunction editor, Map<String, ? extends V> map) {
 		this(filter, editor, map.size(), Utilities.getDefaultLoadFactor());
 		for (String k : map.keySet()) {
 			put(k, map.get(k));
 		}
+
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public FilteredStringMap (CharPredicate filter, CharToCharFunction editor, String[] keys, V[] values) {
+	public FilteredStringOrderedMap (CharPredicate filter, CharToCharFunction editor, String[] keys, V[] values) {
 		this(filter, editor, Math.min(keys.length, values.length), Utilities.getDefaultLoadFactor());
 		putAll(keys, values);
 	}
@@ -156,9 +156,24 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public FilteredStringMap (CharPredicate filter, CharToCharFunction editor, Collection<String> keys, Collection<? extends V> values) {
+	public FilteredStringOrderedMap (CharPredicate filter, CharToCharFunction editor, Collection<String> keys, Collection<? extends V> values) {
 		this(filter, editor, Math.min(keys.size(), values.size()), Utilities.getDefaultLoadFactor());
 		putAll(keys, values);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given ObjectObjectOrderedMap (or a subclass, such as
+	 * CaseInsensitiveOrderedMap), starting at {@code offset} in that Map, into this.
+	 *
+	 * @param filter a CharPredicate that should return true iff a character should be considered for equality/hashing
+	 * @param editor a CharToCharFunction that will take a char from a key String and return a potentially different char
+	 * @param other  another ObjectObjectOrderedMap of the same types (key must be String)
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public FilteredStringOrderedMap (CharPredicate filter, CharToCharFunction editor, ObjectObjectOrderedMap<String, ? extends V> other, int offset, int count) {
+		this(filter, editor, count, Utilities.getDefaultLoadFactor());
+		putAll(0, other, offset, count);
 	}
 
 	public CharPredicate getFilter () {
@@ -176,7 +191,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param filter a CharPredicate that should return true iff a character should be considered for equality/hashing
 	 * @return this, for chaining
 	 */
-	public FilteredStringMap<V> setFilter (CharPredicate filter) {
+	public FilteredStringOrderedMap<V> setFilter (CharPredicate filter) {
 		clear();
 		this.filter = filter;
 		return this;
@@ -198,7 +213,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param editor a CharToCharFunction that will take a char from a key String and return a potentially different char
 	 * @return this, for chaining
 	 */
-	public FilteredStringMap<V> setEditor (CharToCharFunction editor) {
+	public FilteredStringOrderedMap<V> setEditor (CharToCharFunction editor) {
 		clear();
 		this.editor = editor;
 		return this;
@@ -213,7 +228,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @see #setFilter(CharPredicate)
 	 * @see #setEditor(CharToCharFunction)
 	 */
-	public FilteredStringMap<V> setModifiers (CharPredicate filter, CharToCharFunction editor) {
+	public FilteredStringOrderedMap<V> setModifiers (CharPredicate filter, CharToCharFunction editor) {
 		clear();
 		this.filter = filter;
 		this.editor = editor;
@@ -324,8 +339,8 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> FilteredStringMap<V> with (CharPredicate filter, CharToCharFunction editor, String key0, V value0) {
-		FilteredStringMap<V> map = new FilteredStringMap<>(filter, editor, 1, Utilities.getDefaultLoadFactor());
+	public static <V> FilteredStringOrderedMap<V> with (CharPredicate filter, CharToCharFunction editor, String key0, V value0) {
+		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(filter, editor, 1, Utilities.getDefaultLoadFactor());
 		map.put(key0, value0);
 		return map;
 	}
@@ -334,7 +349,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
-	 * {@link #FilteredStringMap(CharPredicate, CharToCharFunction, String[], Object[])},
+	 * {@link #FilteredStringOrderedMap(CharPredicate, CharToCharFunction, String[], Object[])},
 	 * which takes all keys and then all values.
 	 * This needs all keys to be {@code String}s and all values to
 	 * have the same type, because it gets those types from the first value parameter. Any keys that
@@ -349,8 +364,8 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <V> FilteredStringMap<V> with (CharPredicate filter, CharToCharFunction editor, String key0, V value0, Object... rest) {
-		FilteredStringMap<V> map = new FilteredStringMap<>(filter, editor, 1 + (rest.length >>> 1), Utilities.getDefaultLoadFactor());
+	public static <V> FilteredStringOrderedMap<V> with (CharPredicate filter, CharToCharFunction editor, String key0, V value0, Object... rest) {
+		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(filter, editor, 1 + (rest.length >>> 1), Utilities.getDefaultLoadFactor());
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
