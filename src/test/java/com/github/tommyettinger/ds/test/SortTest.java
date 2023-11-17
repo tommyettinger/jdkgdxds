@@ -3,6 +3,7 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.QuickSelect;
 import com.github.tommyettinger.ds.Select;
+import com.github.tommyettinger.ds.support.sort.FilteredStringComparators;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.ds.support.sort.NaturalTextComparator;
 import org.junit.Assert;
@@ -34,6 +35,22 @@ public class SortTest {
 		System.out.println(list);
 		list.addAll(new String[] {"Tommy0", "Tommy3", "Tommy10", "Tommy21", "Satchmo0", "Satchmo9001", "Satchmo10001"});
 		list.sort(NaturalTextComparator.CASE_INSENSITIVE);
+		System.out.println(list);
+	}
+
+	@Test
+	public void testFilteredSort () {
+		Comparator<String> comp = FilteredStringComparators.makeComparator(Character::isLetterOrDigit, Character::toUpperCase);
+		// Tommy is me! Satchmo is my cat!
+		ObjectList<String> list = ObjectList.with("Tommy 2", "tommy    3", "tommy -1", "tommy_0", "TOMMY! 4!!!", "satchmo1", "satchmo9000", "satchmo10000");
+		list.sort(comp);
+		System.out.println(list);
+		list.sort(String.CASE_INSENSITIVE_ORDER);
+		System.out.println(list);
+		list.addAll(new String[] {"Tommy0", "Tommy3", "Tommy10", "Tommy21", "Satchmo0", "Satchmo9001", "Satchmo10001"});
+		list.sort(comp);
+		System.out.println(list);
+		list.sort(String.CASE_INSENSITIVE_ORDER);
 		System.out.println(list);
 	}
 

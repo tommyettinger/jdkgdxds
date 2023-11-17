@@ -42,7 +42,6 @@ public class FilteredStringComparators {
 			while (i < llen || j < rlen) {
 				if (i == llen) {
 					cl = -1;
-					countL--;
 				}
 				else {
 					while (i < llen && !filter.test((char)(cl = l.charAt(i++)))) {
@@ -52,7 +51,6 @@ public class FilteredStringComparators {
 				}
 				if (j == rlen) {
 					cr = -1;
-					countR--;
 				}
 				else {
 					while (j < rlen && !filter.test((char)(cr = r.charAt(j++)))) {
@@ -61,7 +59,7 @@ public class FilteredStringComparators {
 					}
 				}
 				if (cl != cr && (el = editor.applyAsChar((char)cl)) != (er = editor.applyAsChar((char)cr)))
-					return el - er;
+					return (el - er) * ((cl ^ cr) >> 31 | 1);
 			}
 			return countL - countR;
 		};
