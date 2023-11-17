@@ -29,7 +29,7 @@ public class SortTest {
 	@Test
 	public void testNaturalTextSort () {
 		// Tommy is me! Satchmo is my cat!
-		ObjectList<String> list = ObjectList.with("tommy1", "tommy2", "tommy11", "tommy22", "satchmo1", "satchmo9000", "satchmo10000");
+		ObjectList<String> list = ObjectList.with("tommy 1", "tommy 2", "tommy -1", "tommy -2", "satchmo1", "satchmo9000", "satchmo10000");
 		list.sort(NaturalTextComparator.CASE_SENSITIVE);
 		System.out.println(list);
 		list.addAll(new String[] {"Tommy0", "Tommy3", "Tommy10", "Tommy21", "Satchmo0", "Satchmo9001", "Satchmo10001"});
