@@ -37,7 +37,7 @@ public class FilteredComparators {
 
 	}
 
-	public static Comparator<String> makeComparator(final CharPredicate filter, final CharToCharFunction editor) {
+	public static Comparator<String> makeStringComparator(final CharPredicate filter, final CharToCharFunction editor) {
 		return (String l, String r) -> {
 			int llen = l.length(), rlen = r.length(), countL = llen, countR = rlen;
 			int cl = -1, cr = -1;
@@ -69,13 +69,13 @@ public class FilteredComparators {
 		};
 	}
 
-	public static <T extends Comparable<T>> Comparator<Collection<T>> makeComparator(final ObjPredicate<T> filter, final ObjToSameFunction<T> editor) {
+	public static <C  extends Collection<T>, T extends Comparable<T>> Comparator<C> makeComparator(final ObjPredicate<T> filter, final ObjToSameFunction<T> editor) {
 		return makeComparator(null, filter, editor);
 	}
 
-	public static <T> Comparator<Collection<T>> makeComparator(final Comparator<T> baseComparator,
+	public static <C extends Collection<T>, T> Comparator<C> makeComparator(final Comparator<T> baseComparator,
 		final ObjPredicate<T> filter, final ObjToSameFunction<T> editor) {
-		return (Collection<T> l, Collection<T> r) -> {
+		return (C l, C r) -> {
 			int llen = l.size(), rlen = r.size(), countL = llen, countR = rlen;
 			T cl = null, cr = null;
 			Iterator<? extends T> i = l.iterator(), j = r.iterator();

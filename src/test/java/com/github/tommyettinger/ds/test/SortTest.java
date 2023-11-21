@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class SortTest {
 	@Test
@@ -39,8 +40,8 @@ public class SortTest {
 	}
 
 	@Test
-	public void testFilteredSort () {
-		Comparator<String> comp = FilteredComparators.makeComparator(Character::isLetterOrDigit, Character::toUpperCase);
+	public void testFilteredStringSort () {
+		Comparator<String> comp = FilteredComparators.makeStringComparator(Character::isLetterOrDigit, Character::toUpperCase);
 		// Tommy is me! Satchmo is my cat!
 		ObjectList<String> list = ObjectList.with("Tommy 2", "tommy    3", "tommy -1", "tommy_0", "TOMMY! 4!!!", "satchmo1", "satchmo9000", "satchmo10000");
 		list.sort(comp);
