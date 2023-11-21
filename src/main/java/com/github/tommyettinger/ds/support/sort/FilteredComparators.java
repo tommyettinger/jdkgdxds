@@ -21,6 +21,7 @@ import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.tommyettinger.function.ObjToSameFunction;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -69,44 +70,69 @@ public class FilteredComparators {
 		};
 	}
 
-	public static <C  extends Collection<T>, T extends Comparable<T>> Comparator<C> makeComparator(final ObjPredicate<T> filter, final ObjToSameFunction<T> editor) {
-		return makeComparator(null, filter, editor);
+	/**
+	 * Creates a new Comparator that will respect a filter and an editor; it will be able to compare
+	 * any {@link Iterable} of T with any other Iterable of T.  The filter is an {@link ObjPredicate} of T items
+	 * (not Iterable of T items!); the comparison of two Iterable of T will only consider T items for which
+	 * the filter returns true. When two T items need to be compared for equality, they will each have the
+	 * editor applied to that item during the comparison only; the editor is an {@link ObjToSameFunction} of T,
+	 * so it takes a T item and returns a T item.
+	 * <br>
+	 * This overload requires T to be {@link Comparable} to other T items, and does not need another Comparator.
+	 * @param filter this will be called on each T item in consideration; only items where this returns true will be used
+	 * @param editor this will be called on each T item that needs to be compared and can return a different T item to actually compare
+	 * @return a Comparator of Iterable of T, which will use the given filter and editor
+	 * @param <T> the type of items in each Iterable; must be {@link Comparable} to other T items
+	 */
+	public static <T extends Comparable<T>> Comparator<Iterable<T>> makeComparator(final ObjPredicate<T> filter, final ObjToSameFunction<T> editor) {
+		return makeComparator(T::compareTo, filter, editor);
 	}
 
-	public static <C extends Collection<T>, T> Comparator<C> makeComparator(final Comparator<T> baseComparator,
+	/**
+	 * Creates a new Comparator that will respect a filter and an editor; it will be able to compare
+	 * any {@link Iterable} of T with any other Iterable of T.  The filter is an {@link ObjPredicate} of T items
+	 * (not Iterable of T items!); the comparison of two Iterable of T will only consider T items for which
+	 * the filter returns true. When two T items need to be compared for equality, they will each have the
+	 * editor applied to that item during the comparison only; the editor is an {@link ObjToSameFunction} of T,
+	 * so it takes a T item and returns a T item.
+	 * <br>
+	 * This overload allows specifying a
+	 * {@code baseComparator} that can compare T items; this is needed when T is not {@link Comparable}
+	 * or when the order needs to be non-standard even after items are filtered and edited (such as if
+	 * you need reversed sort order, or need to sort based on an item or field in each T).
+	 * @param baseComparator used to compare T items after the filter and editor have been applied
+	 * @param filter this will be called on each T item in consideration; only items where this returns true will be used
+	 * @param editor this will be called on each T item that needs to be compared and can return a different T item to actually compare
+	 * @return a Comparator of Iterable of T, which will use the given filter and editor
+	 * @param <T> the type of items in each Iterable
+	 */
+	public static <T> Comparator<Iterable<T>> makeComparator(final @NonNull Comparator<T> baseComparator,
 		final ObjPredicate<T> filter, final ObjToSameFunction<T> editor) {
-		return (C l, C r) -> {
-			int llen = l.size(), rlen = r.size(), countL = llen, countR = rlen;
-			T cl = null, cr = null;
+		return (Iterable<T> l, Iterable<T> r) -> {
+			int countL = 0, countR = 0;
 			Iterator<? extends T> i = l.iterator(), j = r.iterator();
+			T cl = null, cr = null;
 			T el, er;
 			while (i.hasNext() || j.hasNext()) {
 				if (!i.hasNext()) {
 					cl = null;
 				} else {
-					while (i.hasNext() && !filter.test(cl = i.next())) {
+					boolean found = false;
+					while (i.hasNext() && !(found = filter.test(cl = i.next()))) {
 						cl = null;
-						countL--;
 					}
+					if(found) countL++;
 				}
 				if (!j.hasNext()) {
 					cr = null;
 				} else {
-					while (j.hasNext() && !filter.test(cr = j.next())) {
+					boolean found = false;
+					while (j.hasNext() && !(found = filter.test(cr = j.next()))) {
 						cr = null;
-						countR--;
 					}
+					if(found) countR++;
 				}
 				if (cl != cr && (el = editor.apply(cl)) != (er = editor.apply(cr))) {
-					if (baseComparator == null) {
-						if (er instanceof Comparable && el instanceof Comparable) {
-							if (cl == null || cr == null)
-								return ((Comparable)er).compareTo(el);
-							else
-								return ((Comparable)el).compareTo(er);
-						}
-						throw new UnsupportedOperationException("Items must implement Comparable.");
-					}
 					return cl == null || cr == null ? baseComparator.compare(er, el) : baseComparator.compare(el, er);
 				}
 			}

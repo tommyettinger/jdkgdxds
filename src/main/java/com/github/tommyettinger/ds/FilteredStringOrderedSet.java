@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.sort.FilteredComparators;
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -42,10 +43,10 @@ import java.util.Comparator;
  * <br>
  * This is very similar to {@link FilteredStringSet},
  * except that this class maintains insertion order and can be sorted with {@link #sort()}, {@link #sort(Comparator)}, etc.
- * Note that because each String is stored in here in its
- * original form (not modified to make it ignore case), the sorted order might be different than you expect. You
- * can convert each item to upper case inside a Comparator if you want case to be ignored for comparisons, though
- * this probably allocates many objects.
+ * Note that because each String is stored in here in its original form (not modified to make it use the filter and editor),
+ * the sorted order might be different than you expect.
+ * You can use {@link FilteredComparators#makeStringComparator(CharPredicate, CharToCharFunction)} to create a Comparator
+ * for Strings that uses the same rules this class does.
  */
 public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	protected CharPredicate 		filter = c -> true;

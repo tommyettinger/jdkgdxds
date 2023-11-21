@@ -1,6 +1,8 @@
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.QuickSelect;
 import com.github.tommyettinger.ds.Select;
 import com.github.tommyettinger.ds.support.sort.FilteredComparators;
@@ -9,6 +11,7 @@ import com.github.tommyettinger.ds.support.sort.NaturalTextComparator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -57,11 +60,11 @@ public class SortTest {
 
 	@Test
 	public void testFilteredObjectSort () {
-		Comparator<List<String>> comp = FilteredComparators.makeComparator(String::compareTo, (String s) -> s.matches(".*[er]$"), s -> s);
-		ObjectList<List<String>> list = ObjectList.with(
+		Comparator<Iterable<String>> comp = FilteredComparators.makeComparator(String::compareTo, (String s) -> s.matches(".*[er]$"), s -> s);
+		ObjectList<Collection<String>> list = ObjectList.with(
 			ObjectList.with("whether you're a mother".split(" ")),
-			ObjectList.with("or whether you're a brother".split(" ")),
-			ObjectList.with("you're stayin' alive".split(" ")),
+			ObjectOrderedSet.with("or whether you're a brother".split(" ")),
+			ObjectDeque.with("you're stayin' alive".split(" ")),
 			ObjectList.with("stayin' alive".split(" "))
 			);
 		list.sort(comp);

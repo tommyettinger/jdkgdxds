@@ -17,11 +17,13 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.sort.FilteredComparators;
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 
 import static com.github.tommyettinger.ds.Utilities.neverIdentical;
@@ -42,6 +44,13 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * such as TeaVM, but it isn't clear yet which platforms have full Unicode support. You can consider depending upon
  * <a href="https://github.com/tommyettinger/RegExodus">RegExodus</a> for more cross-platform Unicode support; a method
  * reference to {@code Category.L::contains} acts like {@code Character::isLetter}, but works on GWT.
+ * <br>
+ * This is very similar to {@link FilteredStringMap},
+ * except that this class maintains insertion order and can be sorted with {@link #sort()}, {@link #sort(Comparator)}, etc.
+ * Note that because each String is stored in here in its original form (not modified to make it use the filter and editor),
+ * the sorted order might be different than you expect.
+ * You can use {@link FilteredComparators#makeStringComparator(CharPredicate, CharToCharFunction)} to create a Comparator
+ * for Strings that uses the same rules this class does.
  */
 public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, V> {
 	protected CharPredicate filter = c -> true;
