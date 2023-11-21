@@ -56,6 +56,19 @@ public class SortTest {
 	}
 
 	@Test
+	public void testFilteredObjectSort () {
+		Comparator<List<String>> comp = FilteredComparators.makeComparator(String::compareTo, (String s) -> s.matches(".*[er]$"), s -> s);
+		ObjectList<List<String>> list = ObjectList.with(
+			ObjectList.with("whether you're a mother".split(" ")),
+			ObjectList.with("or whether you're a brother".split(" ")),
+			ObjectList.with("you're stayin' alive".split(" ")),
+			ObjectList.with("stayin' alive".split(" "))
+			);
+		list.sort(comp);
+		System.out.println(list);
+	}
+
+	@Test
 	public void testQuickSelect () {
 		// 20 words, a-t
 		String[] words = {"anteater", "bee", "cat", "dog", "elephant", "frog", "gibbon", "horse", "ibex", "jaguar", "koala", "lemur", "mouse", "nuthatch", "okapi", "penguin", "quahog", "ram", "squirrel", "thrush"};
