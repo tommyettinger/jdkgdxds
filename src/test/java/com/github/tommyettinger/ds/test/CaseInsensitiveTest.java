@@ -4,6 +4,9 @@ import com.github.tommyettinger.ds.CaseInsensitiveMap;
 import com.github.tommyettinger.ds.CaseInsensitiveOrderedMap;
 import com.github.tommyettinger.ds.CaseInsensitiveOrderedSet;
 import com.github.tommyettinger.ds.CaseInsensitiveSet;
+import com.github.tommyettinger.ds.FilteredStringOrderedMap;
+import com.github.tommyettinger.ds.FilteredStringOrderedSet;
+import com.github.tommyettinger.ds.FilteredStringSet;
 import com.github.tommyettinger.ds.ObjectList;
 import org.junit.Assert;
 import org.junit.Test;
@@ -64,6 +67,13 @@ public class CaseInsensitiveTest {
 		for(Map.Entry<CharSequence, String> ent : map){
 			Assert.assertEquals(ent.getKey(), ent.getValue());
 		}
+		FilteredStringOrderedMap<String> fil = new FilteredStringOrderedMap<>(Character::isLetter, Character::toUpperCase,
+			new String[]{"foo", "bar", "baz"},
+			new String[]{"foo", "bar", "baz"}
+		);
+		for(Map.Entry<String, String> ent : fil){
+			Assert.assertEquals(ent.getKey(), ent.getValue());
+		}
 		CaseInsensitiveOrderedMap<ObjectList<String>> synonyms = CaseInsensitiveOrderedMap.with(
 			"intelligence", ObjectList.with("cunning", "acumen", "wits", "wisdom", "intellect"),
 			"strength", ObjectList.with("power", "potency", "brawn", "muscle", "force")
@@ -71,18 +81,26 @@ public class CaseInsensitiveTest {
 		CaseInsensitiveOrderedMap<ObjectList<String>> syn2 =
 			new CaseInsensitiveOrderedMap<>();
 		syn2.putAll(synonyms); // this was a problem due to some generics... messiness.
+		Assert.assertEquals(synonyms, syn2);
 	}
 
 	@Test
 	public void testSet() {
-		CaseInsensitiveSet set = CaseInsensitiveSet.with("FOO", "foo", "BAR", "BAZ", "bar", "baz");
+		String[] items = new String[]{"FOO", "foo", "BAR", "BAZ", "bar", "baz"};
+		CaseInsensitiveSet set = CaseInsensitiveSet.with(items);
 		Assert.assertEquals(set.size(), 3);
+		FilteredStringSet fil = FilteredStringSet.with(Character::isLetter, Character::toUpperCase, items);
+		Assert.assertEquals(fil.size(), 3);
+		Assert.assertEquals(set, fil);
 	}
 
 	@Test
 	public void testOrderedSet() {
-		CaseInsensitiveOrderedSet set = CaseInsensitiveOrderedSet.with("FOO", "foo", "BAR", "BAZ", "bar", "baz");
+		String[] items = new String[]{"FOO", "foo", "BAR", "BAZ", "bar", "baz"};
+		CaseInsensitiveOrderedSet set = CaseInsensitiveOrderedSet.with(items);
 		Assert.assertEquals(set.size(), 3);
-		Assert.assertEquals(set.first(), "FOO");
+		FilteredStringOrderedSet fil = FilteredStringOrderedSet.with(Character::isLetter, Character::toUpperCase, items);
+		Assert.assertEquals(fil.size(), 3);
+		Assert.assertEquals(set, fil);
 	}
 }
