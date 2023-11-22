@@ -312,6 +312,33 @@ public final class Utilities {
 	}
 
 	/**
+	 * Like {@link String#compareToIgnoreCase(String)}, but works for all {@link CharSequence} values, such as
+	 * {@link String}s or {@link StringBuilder}s; this ignores case by upper-casing any cased letters.
+	 * This technique works for all alphabets in Unicode except Georgian.
+	 *
+	 * @param l a non-null CharSequence, such as a String or StringBuilder
+	 * @param r a non-null CharSequence, such as a String or StringBuilder
+	 * @return  ignoring case: 0 if the two {@code CharSequence}s are equal;
+	 *          a negative integer if {@code l}
+	 *          is lexicographically less than {@code r}; or a
+	 *          positive integer if {@code l} is
+	 *          lexicographically greater than {@code r}
+	 */
+	public static int compareIgnoreCase (CharSequence l, CharSequence r) {
+		if (l == r)
+			return 0;
+		for (int i = 0, len = Math.min(l.length(), r.length()); i < len; i++) {
+			char a = Character.toUpperCase(l.charAt(i));
+			char b = Character.toUpperCase(r.charAt(i));
+			if (a != b) {
+				return a - b;
+			}
+		}
+
+		return l.length() - r.length();
+	}
+
+	/**
 	 * Gets a 64-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
 	 * Uses Water hash, which is a variant on <a href="https://github.com/vnmakarov/mum-hash">mum-hash</a> and
 	 * <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a>. This gets the hash as if all cased letters have been

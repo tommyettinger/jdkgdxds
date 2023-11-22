@@ -40,7 +40,9 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * widespread use. There's also {@link Utilities#equalsIgnoreCase(CharSequence, CharSequence)} for equality
  * comparisons that are similarly case-insensitive, except for Georgian. This is very similar to
  * {@link CaseInsensitiveMap}, except that this class maintains insertion order and can be sorted with
- * {@link #sort()}, {@link #sortByValue(Comparator)}, etc.
+ * {@link #sort()}, {@link #sortByValue(Comparator)}, etc. Note that because each CharSequence is stored in here
+ * in its original form (not modified to make it ignore case), the sorted order might be different than you expect.
+ * {@link Utilities#compareIgnoreCase(CharSequence, CharSequence)} can be used to sort this as case-insensitive.
  */
 public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSequence, V> {
 

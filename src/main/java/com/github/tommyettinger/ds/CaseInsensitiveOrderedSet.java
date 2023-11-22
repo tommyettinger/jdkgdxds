@@ -39,9 +39,8 @@ import java.util.Comparator;
  * This is very similar to {@link CaseInsensitiveSet},
  * except that this class maintains insertion order and can be sorted with {@link #sort()}, {@link #sort(Comparator)}, etc.
  * Note that because each CharSequence is stored in here in its
- * original form (not modified to make it ignore case), the sorted order might be different than you expect. You
- * can convert each item to upper case inside a Comparator if you want case to be ignored for comparisons, though
- * this probably allocates many objects.
+ * original form (not modified to make it ignore case), the sorted order might be different than you expect.
+ * {@link Utilities#compareIgnoreCase(CharSequence, CharSequence)} can be used to sort this as case-insensitive.
  */
 public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
