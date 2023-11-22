@@ -26,6 +26,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * Produces {@link Comparator}s that can sort Strings and Collections while filtering out chars/items that don't match a predicate,
@@ -132,7 +133,7 @@ public class FilteredComparators {
 					}
 					if(found) countR++;
 				}
-				if (cl != cr && (el = editor.apply(cl)) != (er = editor.apply(cr))) {
+				if (!Objects.equals(cl, cr) && !Objects.equals((el = editor.apply(cl)), (er = editor.apply(cr)))) {
 					return cl == null || cr == null ? baseComparator.compare(er, el) : baseComparator.compare(el, er);
 				}
 			}
