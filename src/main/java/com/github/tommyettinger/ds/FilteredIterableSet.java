@@ -25,37 +25,33 @@ import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * A customizable variant on ObjectSet that always uses String keys, but only considers any character in an item (for
- * equality and hashing purposes) if that character satisfies a predicate. This can also edit the characters that pass
- * the filter, such as by changing their case during comparisons (and hashing). You will usually want to call
- * {@link #setFilter(ObjPredicate<T>)} and/or {@link #setEditor(ObjToSameFunction<T>)} to change the behavior of hashing and
+ * A customizable variant on ObjectSet that uses Iterable items made of T sub-items, and only considers a sub-item (for
+ * equality and hashing purposes) if that sub-item satisfies a predicate. This can also edit the sub-items that pass
+ * the filter, such as normalize their data during comparisons (and hashing). You will usually want to call
+ * {@link #setFilter(ObjPredicate)} and/or {@link #setEditor(ObjToSameFunction)} to change the behavior of hashing and
  * equality before you enter any items, unless you have specified the filter and/or editor you want in the constructor.
+ * Calling {@link #setModifiers(ObjPredicate, ObjToSameFunction)} is recommended if you need to set both the filter and
+ * the editor; you could also set them in the constructor.
  * <br>
- * You can use this class as a replacement for {@link CaseInsensitiveSet} if you set the editor to a method reference to
- * {@link Character#toUpperCase(char)}. You can go further by setting the editor to make the hashing and equality checks
- * ignore characters that don't satisfy a predicate, such as {@link Character#isLetter(char)}.
- * <br>
- * Be advised that if you use some (most) checks in {@link Character} for properties of a char, and you try to use them
- * on GWT, those checks will not work as expected for non-ASCII characters. Some other platforms might also be affected,
- * such as TeaVM, but it isn't clear yet which platforms have full Unicode support. You can consider depending upon
- * <a href="https://github.com/tommyettinger/RegExodus">RegExodus</a> for more cross-platform Unicode support; a method
- * reference to {@code Category.L::contains} acts like {@code Character::isLetter}, but works on GWT.
+ * This class is related to {@link FilteredStringSet}, which can be seen as using a String as an item and the characters
+ * of that String as its sub-items. That means this is also similar to {@link CaseInsensitiveSet}, which is essentially
+ * a specialized version of FilteredStringSet (which can be useful for serialization).
  */
-public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
+public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> {
 	protected ObjPredicate<T>      filter = c -> true;
 	protected ObjToSameFunction<T> editor = c -> c;
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
-	 * This considers all characters in a String key and does not edit them.
+	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
 	 */
 	public FilteredIterableSet () {
 		super();
 	}
 
 	/**
-	 * Creates a new set with the specified initial capacity a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new set with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This set will hold initialCapacity items before growing the backing table.
-	 * This considers all characters in a String key and does not edit them.
+	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
@@ -66,7 +62,7 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 	/**
 	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
 	 * growing the backing table.
-	 * This considers all characters in a String key and does not edit them.
+	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
@@ -79,11 +75,26 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This uses the specified filter and editor.
 	 *
-	 * @param filter a ObjPredicate<T> that should return true iff a character should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will take a char from a key String and return a potentially different char
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 */
 	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor) {
 		super();
+		this.filter = filter;
+		this.editor = editor;
+	}
+
+	/**
+	 * Creates a new set with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This set will hold initialCapacity items before growing the backing table.
+	 * This uses the specified filter and editor.
+	 *
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, int initialCapacity) {
+		super(initialCapacity);
 		this.filter = filter;
 		this.editor = editor;
 	}
@@ -93,8 +104,8 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 	 * growing the backing table.
 	 * This uses the specified filter and editor.
 	 *
-	 * @param filter a ObjPredicate<T> that should return true iff a character should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will take a char from a key String and return a potentially different char
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
@@ -109,7 +120,7 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 	 *
 	 * @param set another FilteredStringSet to copy
 	 */
-	public FilteredIterableSet (FilteredIterableSet<T> set) {
+	public FilteredIterableSet (FilteredIterableSet<T, ? extends I> set) {
 		super(set);
 		filter = set.filter;
 		editor = set.editor;
@@ -119,11 +130,11 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 * This uses the specified filter and editor, including while it enters the items in coll.
 	 *
-	 * @param filter a ObjPredicate<T> that should return true iff a character should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will take a char from a key String and return a potentially different char
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredStringSet
 	 */
-	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Collection<? extends Iterable<T>> coll) {
+	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Collection<? extends I> coll) {
 		this(filter, editor, coll.size(), Utilities.getDefaultLoadFactor());
 		addAll(coll);
 	}
@@ -132,13 +143,13 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
 	 * This uses the specified filter and editor, including while it enters the items in array.
 	 *
-	 * @param filter a ObjPredicate<T> that should return true iff a character should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will take a char from a key String and return a potentially different char
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 * @param array  an array to draw items from
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Iterable<T>[] array, int offset, int length) {
+	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array, int offset, int length) {
 		this(filter, editor, length, Utilities.getDefaultLoadFactor());
 		addAll(array, offset, length);
 	}
@@ -147,11 +158,11 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 	 * Creates a new set containing all the items in the given array.
 	 * This uses the specified filter and editor, including while it enters the items in array.
 	 *
-	 * @param filter a ObjPredicate<T> that should return true iff a character should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will take a char from a key String and return a potentially different char
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Iterable<T>[] array) {
+	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array) {
 		this(filter, editor, array, 0, array.length);
 	}
 
@@ -160,16 +171,15 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 	}
 
 	/**
-	 * Sets the filter that determines which characters in a String are considered for equality and hashing, then
-	 * returns this object, for chaining. Common ObjPredicate<T> filters you might use could be method references to
-	 * {@link Character#isLetter(char)} or {@link CharList#contains(char)}, for example. If the filter returns true for
-	 * a given character, that character will be used for hashing/equality; otherwise it will be ignored.
+	 * Sets the filter that determines which sub-items in a String are considered for equality and hashing, then
+	 * returns this object, for chaining. ObjPredicate<T> filters could be lambdas or method references that take a
+	 * sub-item and return true if that sub-item will be used for hashing/equality, or return false to ignore it.
 	 * The default filter always returns true. If the filter changes, that invalidates anything previously entered into
 	 * this, so before changing the filter <em>this clears the entire data structure</em>, removing all existing items.
-	 * @param filter a ObjPredicate<T> that should return true iff a character should be considered for equality/hashing
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
 	 * @return this, for chaining
 	 */
-	public FilteredIterableSet<T> setFilter(ObjPredicate<T> filter) {
+	public FilteredIterableSet<T, I> setFilter(ObjPredicate<T> filter) {
 		clear();
 		this.filter = filter;
 		return this;
@@ -180,17 +190,17 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 	}
 
 	/**
-	 * Sets the editor that can alter the characters in a String when they are being used for equality and hashing. This
-	 * does not apply any changes to the Strings in this data structure; it only affects how they are hashed or
-	 * compared. Common ObjToSameFunction<T> editors you might use could be a method reference to
-	 * {@link Character#toUpperCase(char)} (useful for case-insensitivity) or a lambda that could do... anything.
-	 * The default filter returns the char it is passed without changes. If the editor changes, that invalidates
+	 * Sets the editor that can alter the sub-items in an Iterable item when they are being used for equality and
+	 * hashing. This does not apply any changes to the items in this data structure; it only affects how they are
+	 * hashed or compared. An editor could be a lambda or method reference; the only real requirement is that it
+	 * takes a {@code T} item and returns a {@code T} item.
+	 * The default filter returns the sub-item it is passed without changes. If the editor changes, that invalidates
 	 * anything previously entered into this, so before changing the editor <em>this clears the entire data
 	 * structure</em>, removing all existing items.
-	 * @param editor a ObjToSameFunction<T> that will take a char from a key String and return a potentially different char
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 * @return this, for chaining
 	 */
-	public FilteredIterableSet<T> setEditor(ObjToSameFunction<T> editor) {
+	public FilteredIterableSet<T, I> setEditor(ObjToSameFunction<T> editor) {
 		clear();
 		this.editor = editor;
 		return this;
@@ -198,20 +208,20 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 
 	/**
 	 * Equivalent to calling {@code mySet.setFilter(filter).setEditor(editor)}, but only clears the data structure once.
-	 * @see #setFilter(ObjPredicate<T>)
-	 * @see #setEditor(ObjToSameFunction<T>)
-	 * @param filter a ObjPredicate<T> that should return true iff a character should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will take a char from a key String and return a potentially different char
+	 * @see #setFilter(ObjPredicate)
+	 * @see #setEditor(ObjToSameFunction)
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 * @return this, for chaining
 	 */
-	public FilteredIterableSet<T> setModifiers(ObjPredicate<T> filter, ObjToSameFunction<T> editor) {
+	public FilteredIterableSet<T, I> setModifiers(ObjPredicate<T> filter, ObjToSameFunction<T> editor) {
 		clear();
 		this.filter = filter;
 		this.editor = editor;
 		return this;
 	}
 
-	protected long hashHelper(Iterable<T> s) {
+	protected long hashHelper(I s) {
 		long hash = 0x9E3779B97F4A7C15L + hashMultiplier; // golden ratio
 		for (T c : s) {
 			if(filter.test(c)){
@@ -224,7 +234,7 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 	@Override
 	protected int place (Object item) {
 		if (item instanceof Iterable) {
-			return (int)(hashHelper((Iterable<T>) item) >>> shift);
+			return (int)(hashHelper((I) item) >>> shift);
 		}
 		return super.place(item);
 	}
@@ -235,7 +245,7 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 			return true;
 		if(right == null) return false;
 		if ((left instanceof Iterable) && (right instanceof Iterable)) {
-			Iterable<T> l = (Iterable<T>)left, r = (Iterable<T>)right;
+			I l = (I)left, r = (I)right;
 			int countL = 0, countR = 0;
 			Iterator<? extends T> i = l.iterator(), j = r.iterator();
 			T cl = null, cr = null;
@@ -273,19 +283,19 @@ public class FilteredIterableSet<T> extends ObjectSet<Iterable<T>> {
 		Object[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			Object key = keyTable[i];
-			if (key != null) {h += hashHelper((Iterable<T>)key);}
+			if (key != null) {h += hashHelper((I)key);}
 		}
 		return h;
 	}
 
-	public static <T> FilteredIterableSet<T> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Iterable<T> item) {
-		FilteredIterableSet<T> set = new FilteredIterableSet<>(filter, editor, 1, Utilities.getDefaultLoadFactor());
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item) {
+		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 1, Utilities.getDefaultLoadFactor());
 		set.add(item);
 		return set;
 	}
 
 	@SafeVarargs
-	public static <T> FilteredIterableSet<T> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Iterable<T>... array) {
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I... array) {
         return new FilteredIterableSet<>(filter, editor, array);
 	}
 

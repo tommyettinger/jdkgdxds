@@ -84,7 +84,8 @@ public class FilteredComparators {
 	 * @return a Comparator of Iterable of T, which will use the given filter and editor
 	 * @param <T> the type of items in each Iterable; must be {@link Comparable} to other T items
 	 */
-	public static <T extends Comparable<T>> Comparator<Iterable<T>> makeComparator(final ObjPredicate<T> filter, final ObjToSameFunction<T> editor) {
+	public static <T extends Comparable<T>, I extends Iterable<T>> Comparator<I> makeComparator(final ObjPredicate<T> filter,
+		final ObjToSameFunction<T> editor) {
 		return makeComparator(T::compareTo, filter, editor);
 	}
 
@@ -106,9 +107,9 @@ public class FilteredComparators {
 	 * @return a Comparator of Iterable of T, which will use the given filter and editor
 	 * @param <T> the type of items in each Iterable
 	 */
-	public static <T> Comparator<Iterable<T>> makeComparator(final @NonNull Comparator<T> baseComparator,
+	public static <T, I extends Iterable<T>> Comparator<I> makeComparator(final @NonNull Comparator<T> baseComparator,
 		final ObjPredicate<T> filter, final ObjToSameFunction<T> editor) {
-		return (Iterable<T> l, Iterable<T> r) -> {
+		return (I l, I r) -> {
 			int countL = 0, countR = 0;
 			Iterator<? extends T> i = l.iterator(), j = r.iterator();
 			T cl = null, cr = null;
