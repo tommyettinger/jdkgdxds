@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * A customizable variant on ObjectSet that uses Iterable items made of T sub-items, and only considers a sub-item (for
+ * A customizable variant on ObjectOrderedSet that uses Iterable items made of T sub-items, and only considers a sub-item (for
  * equality and hashing purposes) if that sub-item satisfies a predicate. This can also edit the sub-items that pass
  * the filter, such as normalize their data during comparisons (and hashing). You will usually want to call
  * {@link #setFilter(ObjPredicate)} and/or {@link #setEditor(ObjToSameFunction)} to change the behavior of hashing and
@@ -33,18 +33,18 @@ import java.util.Objects;
  * Calling {@link #setModifiers(ObjPredicate, ObjToSameFunction)} is recommended if you need to set both the filter and
  * the editor; you could also set them in the constructor.
  * <br>
- * This class is related to {@link FilteredStringSet}, which can be seen as using a String as an item and the characters
- * of that String as its sub-items. That means this is also similar to {@link CaseInsensitiveSet}, which is essentially
- * a specialized version of FilteredIterableSet (which can be useful for serialization).
+ * This class is related to {@link FilteredStringOrderedSet}, which can be seen as using a String as an item and the characters
+ * of that String as its sub-items. That means this is also similar to {@link CaseInsensitiveOrderedSet}, which is essentially
+ * a specialized version of FilteredIterableOrderedSet (which can be useful for serialization).
  */
-public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> {
+public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends ObjectOrderedSet<I> {
 	protected ObjPredicate<T>      filter = c -> true;
 	protected ObjToSameFunction<T> editor = c -> c;
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
 	 */
-	public FilteredIterableSet () {
+	public FilteredIterableOrderedSet () {
 		super();
 	}
 
@@ -55,7 +55,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public FilteredIterableSet (int initialCapacity) {
+	public FilteredIterableOrderedSet (int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -67,7 +67,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public FilteredIterableSet (int initialCapacity, float loadFactor) {
+	public FilteredIterableOrderedSet (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -78,7 +78,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 */
-	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor) {
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor) {
 		super();
 		this.filter = filter;
 		this.editor = editor;
@@ -93,7 +93,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, int initialCapacity) {
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, int initialCapacity) {
 		super(initialCapacity);
 		this.filter = filter;
 		this.editor = editor;
@@ -109,7 +109,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, int initialCapacity, float loadFactor) {
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		this.filter = filter;
 		this.editor = editor;
@@ -118,9 +118,9 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	/**
 	 * Creates a new set identical to the specified set.
 	 *
-	 * @param set another FilteredIterableSet to copy
+	 * @param set another FilteredIterableOrderedSet to copy
 	 */
-	public FilteredIterableSet (FilteredIterableSet<T, ? extends I> set) {
+	public FilteredIterableOrderedSet (FilteredIterableOrderedSet<T, ? extends I> set) {
 		super(set);
 		filter = set.filter;
 		editor = set.editor;
@@ -132,9 +132,9 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 *
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
-	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredIterableSet
+	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredIterableOrderedSet
 	 */
-	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Collection<? extends I> coll) {
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Collection<? extends I> coll) {
 		this(filter, editor, coll.size(), Utilities.getDefaultLoadFactor());
 		addAll(coll);
 	}
@@ -149,7 +149,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array, int offset, int length) {
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array, int offset, int length) {
 		this(filter, editor, length, Utilities.getDefaultLoadFactor());
 		addAll(array, offset, length);
 	}
@@ -162,7 +162,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array) {
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array) {
 		this(filter, editor, array, 0, array.length);
 	}
 
@@ -179,7 +179,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
 	 * @return this, for chaining
 	 */
-	public FilteredIterableSet<T, I> setFilter(ObjPredicate<T> filter) {
+	public FilteredIterableOrderedSet<T, I> setFilter(ObjPredicate<T> filter) {
 		clear();
 		this.filter = filter;
 		return this;
@@ -200,7 +200,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 * @return this, for chaining
 	 */
-	public FilteredIterableSet<T, I> setEditor(ObjToSameFunction<T> editor) {
+	public FilteredIterableOrderedSet<T, I> setEditor(ObjToSameFunction<T> editor) {
 		clear();
 		this.editor = editor;
 		return this;
@@ -214,7 +214,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
 	 * @return this, for chaining
 	 */
-	public FilteredIterableSet<T, I> setModifiers(ObjPredicate<T> filter, ObjToSameFunction<T> editor) {
+	public FilteredIterableOrderedSet<T, I> setModifiers(ObjPredicate<T> filter, ObjToSameFunction<T> editor) {
 		clear();
 		this.filter = filter;
 		this.editor = editor;
@@ -288,15 +288,15 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 		return h;
 	}
 
-	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item) {
-		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 1, Utilities.getDefaultLoadFactor());
+	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item) {
+		FilteredIterableOrderedSet<T, I> set = new FilteredIterableOrderedSet<>(filter, editor, 1, Utilities.getDefaultLoadFactor());
 		set.add(item);
 		return set;
 	}
 
 	@SafeVarargs
-	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I... array) {
-        return new FilteredIterableSet<>(filter, editor, array);
+	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I... array) {
+        return new FilteredIterableOrderedSet<>(filter, editor, array);
 	}
 
 }
