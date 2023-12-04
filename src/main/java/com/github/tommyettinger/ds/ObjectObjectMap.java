@@ -167,9 +167,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 */
 	public ObjectObjectMap (Map<? extends K, ? extends V> map) {
 		this(map.size());
-		for (K k : map.keySet()) {
-			put(k, map.get(k));
-		}
+		putAll(map);
 	}
 
 	/**

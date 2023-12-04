@@ -245,7 +245,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 			return true;
 		if(right == null) return false;
 		if ((left instanceof Iterable) && (right instanceof Iterable)) {
-			I l = (I)left, r = (I)right;
+			Iterable l = (Iterable)left, r = (Iterable)right;
 			int countL = 0, countR = 0;
 			Iterator<? extends T> i = l.iterator(), j = r.iterator();
 			T cl = null, cr = null;
@@ -289,7 +289,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	}
 
 	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item) {
-		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 1, Utilities.getDefaultLoadFactor());
+		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 1);
 		set.add(item);
 		return set;
 	}

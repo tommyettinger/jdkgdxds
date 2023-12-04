@@ -25,7 +25,7 @@ import org.junit.Test;
 public class FilteredTest {
 	@Test
 	public void testIterableSet() {
-		FilteredIterableSet<String> fil = FilteredIterableSet.with(
+		FilteredIterableSet<String, Iterable<String>> fil = FilteredIterableSet.with(
 			(String s) -> s.length() > 3, String::toUpperCase,
 			ObjectList.with("zzz", "bee", "binturong"),
 			ObjectList.with("hm?", "bee", "BINTURONG"),
