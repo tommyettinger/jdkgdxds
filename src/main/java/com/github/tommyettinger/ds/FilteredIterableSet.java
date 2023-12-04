@@ -76,7 +76,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * This uses the specified filter and editor.
 	 *
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 */
 	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor) {
 		super();
@@ -90,7 +90,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * This uses the specified filter and editor.
 	 *
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, int initialCapacity) {
@@ -105,7 +105,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * This uses the specified filter and editor.
 	 *
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
@@ -131,7 +131,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * This uses the specified filter and editor, including while it enters the items in coll.
 	 *
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredIterableSet
 	 */
 	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Collection<? extends I> coll) {
@@ -144,7 +144,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * This uses the specified filter and editor, including while it enters the items in array.
 	 *
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param array  an array to draw items from
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
@@ -159,7 +159,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * This uses the specified filter and editor, including while it enters the items in array.
 	 *
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
 	public FilteredIterableSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array) {
@@ -193,11 +193,11 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * Sets the editor that can alter the sub-items in an Iterable item when they are being used for equality and
 	 * hashing. This does not apply any changes to the items in this data structure; it only affects how they are
 	 * hashed or compared. An editor could be a lambda or method reference; the only real requirement is that it
-	 * takes a {@code T} item and returns a {@code T} item.
+	 * takes a {@code T} sub-item and returns a {@code T} sub-item.
 	 * The default filter returns the sub-item it is passed without changes. If the editor changes, that invalidates
 	 * anything previously entered into this, so before changing the editor <em>this clears the entire data
 	 * structure</em>, removing all existing items.
-	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @return this, for chaining
 	 */
 	public FilteredIterableSet<T, I> setEditor(ObjToSameFunction<T> editor) {
@@ -211,7 +211,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @see #setFilter(ObjPredicate)
 	 * @see #setEditor(ObjToSameFunction)
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} item
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @return this, for chaining
 	 */
 	public FilteredIterableSet<T, I> setModifiers(ObjPredicate<T> filter, ObjToSameFunction<T> editor) {

@@ -22,36 +22,37 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
 
 /**
- * A customizable variant on ObjectSet that uses Iterable items made of K sub-items, and only considers a sub-item (for
- * equality and hashing purposes) if that sub-item satisfies a predicate. This can also edit the sub-items that pass
- * the filter, such as normalize their data during comparisons (and hashing). You will usually want to call
+ * A customizable variant on ObjectMap that uses Iterable keys made of K sub-keys, and only considers a sub-key (for
+ * equality and hashing purposes) if that sub-key satisfies a predicate. This can also edit the sub-keys that pass
+ * the filter, such as to normalize their data during comparisons (and hashing). You will usually want to call
  * {@link #setFilter(ObjPredicate)} and/or {@link #setEditor(ObjToSameFunction)} to change the behavior of hashing and
- * equality before you enter any items, unless you have specified the filter and/or editor you want in the constructor.
+ * equality before you enter any keys, unless you have specified the filter and/or editor you want in the constructor.
  * Calling {@link #setModifiers(ObjPredicate, ObjToSameFunction)} is recommended if you need to set both the filter and
  * the editor; you could also set them in the constructor.
  * <br>
- * This class is related to {@link FilteredStringSet}, which can be seen as using a String as an item and the characters
- * of that String as its sub-items. That means this is also similar to {@link CaseInsensitiveSet}, which is essentially
- * a specialized version of FilteredIterableSet (which can be useful for serialization).
+ * This class is related to {@link FilteredStringMap}, which can be seen as using a String as a key and the characters
+ * of that String as its sub-keys. That means this is also similar to {@link CaseInsensitiveMap}, which is essentially
+ * a specialized version of FilteredIterableMap (which can be useful for serialization).
  */
 public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObjectMap<I, V> {
 	protected ObjPredicate<K>      filter = c -> true;
 	protected ObjToSameFunction<K> editor = c -> c;
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
-	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
+	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
 	 */
 	public FilteredIterableMap () {
 		super();
 	}
 
 	/**
-	 * Creates a new set with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
-	 * This set will hold initialCapacity items before growing the backing table.
-	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
+	 * Creates a new map with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This set will hold initialCapacity keys before growing the backing table.
+	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
@@ -60,9 +61,9 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
-	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
+	 * Creates a new map with the specified initial capacity and load factor. This set will hold initialCapacity keys before
 	 * growing the backing table.
-	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
+	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
@@ -72,11 +73,11 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This uses the specified filter and editor.
 	 *
-	 * @param filter a ObjPredicate<K> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<K> that will be given a sub-item and may return a potentially different {@code K} item
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 */
 	public FilteredIterableMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor) {
 		super();
@@ -85,12 +86,12 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
-	 * Creates a new set with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
-	 * This set will hold initialCapacity items before growing the backing table.
+	 * Creates a new map with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This set will hold initialCapacity keys before growing the backing table.
 	 * This uses the specified filter and editor.
 	 *
-	 * @param filter a ObjPredicate<K> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<K> that will be given a sub-item and may return a potentially different {@code K} item
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public FilteredIterableMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, int initialCapacity) {
@@ -100,12 +101,12 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
-	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
+	 * Creates a new map with the specified initial capacity and load factor. This set will hold initialCapacity keys before
 	 * growing the backing table.
 	 * This uses the specified filter and editor.
 	 *
-	 * @param filter a ObjPredicate<K> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<K> that will be given a sub-item and may return a potentially different {@code K} item
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
@@ -127,12 +128,26 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
+	 * Creates a new map with the given filter and editor, and attempts to insert every entry from the given {@code map}
+	 * into the new data structure. Not all keys from {@code map} might be entered if the filter and editor consider
+	 * some as equal.
+	 *
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param map a Map to copy
+	 */
+	public FilteredIterableMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, Map<? extends I, ? extends V> map) {
+		this(filter, editor, map.size());
+		putAll(map);
+	}
+
+	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 * This uses the specified filter and editor, including while it enters the items in keys.
+	 * This uses the specified filter and editor, including while it enters the keys and values.
 	 *
-	 * @param filter a ObjPredicate<K> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<K> that will be given a sub-item and may return a potentially different {@code K} item
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param keys a Collection of keys
 	 * @param values a Collection of values
 	 */
@@ -142,11 +157,11 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
-	 * Creates a new map using all the items from the given {@code keys} and {@code values}.
+	 * Creates a new map using all the keys from the given {@code keys} and {@code values}.
 	 * This uses the specified filter and editor, including while it enters the keys and values.
 	 *
-	 * @param filter a ObjPredicate<K> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<K> that will be given a sub-item and may return a potentially different {@code K} item
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param keys  an array to draw keys from
 	 * @param values  an array to draw values from
 	 */
@@ -160,12 +175,12 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
-	 * Sets the filter that determines which sub-items in an Iterable are considered for equality and hashing, then
+	 * Sets the filter that determines which sub-keys in an Iterable are considered for equality and hashing, then
 	 * returns this object, for chaining. ObjPredicate<K> filters could be lambdas or method references that take a
-	 * sub-item and return true if that sub-item will be used for hashing/equality, or return false to ignore it.
+	 * sub-key and return true if that sub-key will be used for hashing/equality, or return false to ignore it.
 	 * The default filter always returns true. If the filter changes, that invalidates anything previously entered into
-	 * this, so before changing the filter <em>this clears the entire data structure</em>, removing all existing items.
-	 * @param filter a ObjPredicate<K> that should return true iff a sub-item should be considered for equality/hashing
+	 * this, so before changing the filter <em>this clears the entire data structure</em>, removing all existing entries.
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @return this, for chaining
 	 */
 	public FilteredIterableMap<K, I, V> setFilter(ObjPredicate<K> filter) {
@@ -179,14 +194,14 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
-	 * Sets the editor that can alter the sub-items in an Iterable item when they are being used for equality and
-	 * hashing. This does not apply any changes to the items in this data structure; it only affects how they are
+	 * Sets the editor that can alter the sub-keys in an Iterable key when they are being used for equality and
+	 * hashing. This does not apply any changes to the keys in this data structure; it only affects how they are
 	 * hashed or compared. An editor could be a lambda or method reference; the only real requirement is that it
-	 * takes a {@code K} item and returns a {@code K} item.
-	 * The default filter returns the sub-item it is passed without changes. If the editor changes, that invalidates
+	 * takes a {@code K} sub-key and returns a {@code K} sub-key.
+	 * The default filter returns the sub-key it is passed without changes. If the editor changes, that invalidates
 	 * anything previously entered into this, so before changing the editor <em>this clears the entire data
-	 * structure</em>, removing all existing items.
-	 * @param editor a ObjToSameFunction<K> that will be given a sub-item and may return a potentially different {@code K} item
+	 * structure</em>, removing all existing entries.
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @return this, for chaining
 	 */
 	public FilteredIterableMap<K, I, V> setEditor(ObjToSameFunction<K> editor) {
@@ -196,11 +211,11 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
-	 * Equivalent to calling {@code mySet.setFilter(filter).setEditor(editor)}, but only clears the data structure once.
+	 * Equivalent to calling {@code myMap.setFilter(filter).setEditor(editor)}, but only clears the data structure once.
 	 * @see #setFilter(ObjPredicate)
 	 * @see #setEditor(ObjToSameFunction)
-	 * @param filter a ObjPredicate<K> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<K> that will be given a sub-item and may return a potentially different {@code K} item
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @return this, for chaining
 	 */
 	public FilteredIterableMap<K, I, V> setModifiers(ObjPredicate<K> filter, ObjToSameFunction<K> editor) {
@@ -290,7 +305,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
-	 * Constructs a map given alternating keys and values.
+	 * Constructs a map given a filter, an editor, and then alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
 	 * {@link #FilteredIterableMap(ObjPredicate, ObjToSameFunction, Iterable[], Object[])},
