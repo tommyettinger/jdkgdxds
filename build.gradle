@@ -17,8 +17,6 @@ def projectName = 'jdkgdxds'
 version "$VERSION_NAME"
 group 'com.github.tommyettinger'
 
-//api "com.github.tommyettinger:jdkgdxds:1.4.2"
-
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
 // Disable JDK 8's doclint
@@ -73,16 +71,12 @@ repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://jitpack.io' }
 }
-java.withSourcesJar()
 
 dependencies {
     api "com.github.tommyettinger:funderby:$funderbyVersion"
     api "com.github.tommyettinger:digital:$digitalVersion"
-    sourcesElements "com.github.tommyettinger:funderby:$funderbyVersion:sources"
-    sourcesElements "com.github.tommyettinger:digital:$digitalVersion:sources"
     api "org.checkerframework:checker-qual:$checkerVersion" // provides nullity annotations
 //    api 'com.google.code.findbugs:jsr305:3.0.2' // may cause issues if JDK9+ modules are used
     testImplementation "com.github.tommyettinger:juniper:$juniperVersion"
     testImplementation "junit:junit:4.13.2"
-    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.9.0'
 }

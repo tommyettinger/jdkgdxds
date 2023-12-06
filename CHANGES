@@ -1,3 +1,11 @@
+[1.4.5]
+- The dependency on digital was updated... again... to 0.4.5, though this time it brings several new features. None used here.
+- Filtered-String sets and maps! These are like the CaseInsensitive ones, but allow configuring how characters are used and modified.
+- Filtered-Iterable sets and maps, too! These are like the Filtered-String ones but work on an Iterable of sub-items instead of a String of characters.
+- FilteredComparators provides ways to sort the ordered filtered types.
+- NumberedSet.addOrIndex() was broken, and now is fixed.
+- Nullity annotations were put in the right places pretty much everywhere.
+
 [1.4.4]
 - The dependency on digital was updated again to 0.4.3 because of a break in GWT compilation in digital 0.4.2; it is fine now.
 
