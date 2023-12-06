@@ -16,11 +16,15 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.sort.FilteredComparators;
+import com.github.tommyettinger.function.CharPredicate;
+import com.github.tommyettinger.function.CharToCharFunction;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.tommyettinger.function.ObjToSameFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -36,6 +40,15 @@ import java.util.Objects;
  * This class is related to {@link FilteredStringOrderedSet}, which can be seen as using a String as an item and the characters
  * of that String as its sub-items. That means this is also similar to {@link CaseInsensitiveOrderedSet}, which is essentially
  * a specialized version of FilteredIterableOrderedSet (which can be useful for serialization).
+ * <br>
+ * This is very similar to {@link FilteredIterableSet},
+ * except that this class maintains insertion order and can be sorted with {@link #sort()}, {@link #sort(Comparator)}, etc.
+ * Note that because each Iterable is stored in here in its original form (not modified to make it use the filter and editor),
+ * the sorted order might be different than you expect.
+ * You can use {@link FilteredComparators#makeComparator(Comparator, ObjPredicate, ObjToSameFunction)} to create a Comparator
+ * for {@code I} Iterable items that uses the same rules this class does.
+ * @param <T> the type of sub-items
+ * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
  */
 public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends ObjectOrderedSet<I> {
 	protected ObjPredicate<T>      filter = c -> true;
@@ -288,15 +301,36 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 		return h;
 	}
 
+	/**
+	 * Constructs a new FilteredIterableOrderedSet with the given filter and editor, inserts {@code item} into it, and returns the set.
+	 *
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param item   the one item to initially include in the set
+	 * @return a new FilteredIterableOrderedSet containing {@code item}
+	 * @param <T> the type of sub-items
+	 * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
+	 */
 	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item) {
 		FilteredIterableOrderedSet<T, I> set = new FilteredIterableOrderedSet<>(filter, editor, 1);
 		set.add(item);
 		return set;
 	}
 
+	/**
+	 * This is the same as {@link #FilteredIterableOrderedSet(ObjPredicate, ObjToSameFunction, Iterable[])}, but
+	 * can take the array argument as either an array or as varargs. It can be useful for code-generation scenarios.
+	 *
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param items  an array or varargs of {@code I} that will be used in the new set
+	 * @return a new FilteredIterableOrderedSet containing the entirety of items, as the filter and editor permit
+	 * @param <T> the type of sub-items
+	 * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
+	 */
 	@SafeVarargs
-	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I... array) {
-        return new FilteredIterableOrderedSet<>(filter, editor, array);
+	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I... items) {
+        return new FilteredIterableOrderedSet<>(filter, editor, items);
 	}
 
 }
