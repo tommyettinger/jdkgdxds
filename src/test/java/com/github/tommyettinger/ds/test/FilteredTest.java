@@ -17,7 +17,9 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.FilteredIterableMap;
 import com.github.tommyettinger.ds.FilteredIterableSet;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,10 +30,45 @@ public class FilteredTest {
 		FilteredIterableSet<String, Iterable<String>> fil = FilteredIterableSet.with(
 			(String s) -> s.length() > 3, String::toUpperCase,
 			ObjectList.with("zzz", "bee", "binturong"),
+			ObjectDeque.with("hm?", "bee", "BINTURONG"),
+			ObjectList.with(":D", "bee", "Aardvark", "bandicoot")
+			);
+		Assert.assertEquals(2, fil.size());
+	}
+
+	/**
+	 * This is a little odd... the key isn't updated but the value is... The keys are considered equivalent, though.
+	 */
+	@Test
+	public void testIterableMap() {
+		FilteredIterableMap<String, Iterable<String>, Integer> fil = FilteredIterableMap.with(
+			(String s) -> s.length() > 3, String::toUpperCase,
+			ObjectList.with("zzz", "bee", "binturong"), -1,
+			ObjectDeque.with("hm?", "bee", "BINTURONG"), 1,
+			ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), 2
+			);
+		System.out.println(fil);
+		Assert.assertEquals(2, fil.size());
+	}
+	@Test
+	public void testIterableSetSubtype() {
+		FilteredIterableSet<String, ObjectList<String>> fil = FilteredIterableSet.with(
+			(String s) -> s.length() > 3, String::toUpperCase,
+			ObjectList.with("zzz", "bee", "binturong"),
 			ObjectList.with("hm?", "bee", "BINTURONG"),
 			ObjectList.with(":D", "bee", "Aardvark", "bandicoot")
 			);
-//		System.out.println(fil);
+		Assert.assertEquals(2, fil.size());
+	}
+	@Test
+	public void testIterableMapSubtype() {
+		FilteredIterableMap<String, ObjectList<String>, Integer> fil = FilteredIterableMap.with(
+			(String s) -> s.length() > 3, String::toUpperCase,
+			ObjectList.with("zzz", "bee", "binturong"), -1,
+			ObjectList.with("hm?", "bee", "BINTURONG"), 1,
+			ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), 2
+		);
+		System.out.println(fil);
 		Assert.assertEquals(2, fil.size());
 	}
 }

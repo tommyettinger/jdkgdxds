@@ -68,11 +68,11 @@ public class CaseInsensitiveTest {
 			Assert.assertEquals(ent.getKey(), ent.getValue());
 		}
 		FilteredStringOrderedMap<String> fil = new FilteredStringOrderedMap<>(Character::isLetter, Character::toUpperCase,
-			new String[]{"foo", "bar", "baz"},
+			new String[]{"foo42", "bar666", "baz9001"},
 			new String[]{"foo", "bar", "baz"}
 		);
 		for(Map.Entry<String, String> ent : fil){
-			Assert.assertEquals(ent.getKey(), ent.getValue());
+			Assert.assertTrue(fil.equate(ent.getKey(), ent.getValue()));
 		}
 		CaseInsensitiveOrderedMap<ObjectList<String>> synonyms = CaseInsensitiveOrderedMap.with(
 			"intelligence", ObjectList.with("cunning", "acumen", "wits", "wisdom", "intellect"),

@@ -230,8 +230,19 @@ public class FilteredStringSet extends ObjectSet<String> {
 		return super.place(item);
 	}
 
+	/**
+	 * Compares two objects for equality by the rules this filtered data structure uses for keys.
+	 * This will return true if the arguments are reference-equivalent or both null. Otherwise, it
+	 * requires that both are {@link String}s and compares them using the {@link #getFilter() filter}
+	 * and {@link #getEditor() editor} of this object.
+	 *
+	 * @param left  must be non-null; typically a key being compared, but not necessarily
+	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
+	 * @return true if left and right are equivalent according to the rules this filtered type uses
+	 */
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	public boolean equate (Object left, @Nullable Object right) {
+
 		if (left == right)
 			return true;
 		if(right == null) return false;
