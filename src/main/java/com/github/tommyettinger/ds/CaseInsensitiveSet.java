@@ -34,6 +34,12 @@ import java.util.Collection;
  * If I see Georgian text in-the-wild, I may reconsider, but I don't think that particular alphabet is in
  * widespread use. There's also {@link Utilities#equalsIgnoreCase(CharSequence, CharSequence)} for equality
  * comparisons that are similarly case-insensitive, except for Georgian.
+ * <br>
+ * This is very similar to {@link FilteredStringSet} when its {@link FilteredStringSet#getEditor() editor}
+ * is {@link Character#toUpperCase(char)}. FilteredStringSet works with Strings rather than CharSequences, which
+ * may be more convenient, and allows filtering some characters out of hashing and equality comparisons. If you want a
+ * case-insensitive set that ignores any non-letter characters in a String, then CaseInsensitiveSet won't do,
+ * but {@code new FilteredStringSet<>(Character::isLetter, Character::toUpperCase)} will work.
  */
 public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	/**

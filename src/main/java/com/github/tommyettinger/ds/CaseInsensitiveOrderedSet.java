@@ -41,6 +41,12 @@ import java.util.Comparator;
  * Note that because each CharSequence is stored in here in its
  * original form (not modified to make it ignore case), the sorted order might be different than you expect.
  * {@link Utilities#compareIgnoreCase(CharSequence, CharSequence)} can be used to sort this as case-insensitive.
+ * <br>
+ * This is also very similar to {@link FilteredStringOrderedSet} when its {@link FilteredStringOrderedSet#getEditor() editor}
+ * is {@link Character#toUpperCase(char)}. FilteredStringOrderedSet works with Strings rather than CharSequences, which
+ * may be more convenient, and allows filtering some characters out of hashing and equality comparisons. If you want a
+ * case-insensitive set that ignores any non-letter characters in a String, then CaseInsensitiveOrderedSet won't do,
+ * but {@code new FilteredStringOrderedSet<>(Character::isLetter, Character::toUpperCase)} will work.
  */
 public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 

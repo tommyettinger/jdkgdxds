@@ -38,6 +38,8 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * You can use this class as a replacement for {@link CaseInsensitiveMap} if you set the editor to a method reference to
  * {@link Character#toUpperCase(char)}. You can go further by setting the editor to make the hashing and equality checks
  * ignore characters that don't satisfy a predicate, such as {@link Character#isLetter(char)}.
+ * CaseInsensitiveOrderedMap does allow taking arbitrary CharSequence types as keys, but it doesn't permit modifying
+ * them, so usually Strings are a good choice anyway.
  * <br>
  * Be advised that if you use some (most) checks in {@link Character} for properties of a char, and you try to use them
  * on GWT, those checks will not work as expected for non-ASCII characters. Some other platforms might also be affected,

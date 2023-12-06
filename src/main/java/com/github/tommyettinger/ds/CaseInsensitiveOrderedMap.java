@@ -38,11 +38,19 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * algorithms do allocate quite a lot, but it does this by handling case incorrectly for the Georgian alphabet.
  * If I see Georgian text in-the-wild, I may reconsider, but I don't think that particular alphabet is in
  * widespread use. There's also {@link Utilities#equalsIgnoreCase(CharSequence, CharSequence)} for equality
- * comparisons that are similarly case-insensitive, except for Georgian. This is very similar to
+ * comparisons that are similarly case-insensitive, except for Georgian.
+ * <br>
+ * This is very similar to
  * {@link CaseInsensitiveMap}, except that this class maintains insertion order and can be sorted with
  * {@link #sort()}, {@link #sortByValue(Comparator)}, etc. Note that because each CharSequence is stored in here
  * in its original form (not modified to make it ignore case), the sorted order might be different than you expect.
  * {@link Utilities#compareIgnoreCase(CharSequence, CharSequence)} can be used to sort this as case-insensitive.
+ * <br>
+ * This is also very similar to {@link FilteredStringOrderedMap} when its {@link FilteredStringOrderedMap#getEditor() editor}
+ * is {@link Character#toUpperCase(char)}. FilteredStringOrderedMap works with Strings rather than CharSequences, which
+ * may be more convenient, and allows filtering some characters out of hashing and equality comparisons. If you want a
+ * case-insensitive map that ignores any non-letter characters in a String, then CaseInsensitiveOrderedMap won't do,
+ * but {@code new FilteredStringOrderedMap<>(Character::isLetter, Character::toUpperCase)} will work.
  */
 public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSequence, V> {
 

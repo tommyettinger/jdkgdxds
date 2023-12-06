@@ -43,9 +43,7 @@ There's `IntFloatMap`, `IntFloatOrderedMap`, `IntIntMap`, `IntIntOrderedMap`, `I
 `IntObjectMap`, `IntObjectOrderedMap`, `LongFloatMap`, `LongFloatOrderedMap`, `LongIntMap`, `LongIntOrderedMap`,
 `LongLongMap`, `LongLongOrderedMap`, `LongObjectMap`, and `LongObjectOrderedMap`, so I hope that's enough. Then again, there's
 still `ObjectFloatMap`, `ObjectFloatOrderedMap`, `ObjectIntMap`, `ObjectIntOrderedMap`, `ObjectLongMap`, and
-`ObjectLongOrderedMap` for the primitive-valued maps with Object keys. There's a `CaseInsensitiveMap` (and a
-`CaseInsensitiveOrderedMap`) that requires `CharSequence` keys (such as String or StringBuilder), but treats them as
-case-insensitive, and allows a generic Object type for its values. There's `IdentityObjectMap` and `IdentityObjectOrderedMap`,
+`ObjectLongOrderedMap` for the primitive-valued maps with Object keys. There's `IdentityObjectMap` and `IdentityObjectOrderedMap`,
 which compare keys by reference identity (not by `equals()`) and hash their keys using their identity hash code. There's the
 unusual `HolderSet` and `HolderOrderedSet`, which take an "extractor" function when constructed and use it to hash items by an
 extracted value; this lets you, for example, make a HolderSet of "Employee" objects and look up a full Employee given only their
@@ -55,6 +53,21 @@ an `ObjectIntOrderedMap` and makes it so that Object keys can be looked up by in
 `getAt()`), but also so that their `indexOf()` method runs in constant time instead of linear time. This is at the expense of
 slower removal from the middle of the NumberedSet; that class doesn't implement insertion in the middle of the NumberedSet either.
 There's also a close relative of libGDX's `BinaryHeap` class, but the one here implements the JDK's `Queue`.
+
+There are some useful varieties of Map and Set here that don't show up very often in libraries. There's a `CaseInsensitiveMap`
+and a `CaseInsensitiveOrderedMap` that require `CharSequence` keys (such as String or StringBuilder), but treat them as
+case-insensitive, and allows a generic Object type for its values. A more generic solution to the same sort of problem lies in
+`FilteredStringSet`, `FilteredStringOrderedSet`, `FilteredStringMap`, and `FilteredStringOrderedMap`. These filtered-String data
+structures contain a filter (a predicate that determines if a char in a String should be read or skipped for hashing and equality
+comparison purposes) and an editor (a function that can change what char is actually used in a hash or equality comparison). These
+data structures can be used to implement the CaseInsensitive maps and sets (except one needs a key to be a String and where the
+other uses a CharSequence) if the editor is `Character::toUpperCase`. In addition, they can do something like filter the Strings
+so only the letter characters are considered (whitespace, punctuation, and numbers could all be skipped) using
+`Character::isLetter` as the filter (or RegExodus' `Category.L::contains` for GWT compatibility). This goes on, to even more
+filtered data structures: `FilteredIterableSet`, `FilteredIterableOrderedSet`, `FilteredIterableMap`, and
+`FilteredIterableOrderedMap`, which act like the filtered-String data structures but work on keys or items that are each an
+Iterable (type `I`) of sub-items/sub-keys (type `T` or `K`). The Iterable must not be modified while it is a key, or at least not
+modified in a way that changes what is considered by the filter and editor.
 
 The library includes expanded interfaces for these to implement, like the aforementioned `Ordered` interface,
 `PrimitiveCollection` is akin to Java 8's `PrimitiveIterator`, some `float`-based versions of primitive specializations where
