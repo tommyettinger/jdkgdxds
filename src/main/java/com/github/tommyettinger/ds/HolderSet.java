@@ -526,6 +526,20 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	}
 
 	/**
+	 * Given a K key that could have been extracted or extractable from a T item in this,
+	 * this returns the T item that holds that key, or {@code defaultValue} if no item holds key.
+	 *
+	 * @param key a K key that could have been extracted from a T item in this
+	 * @param defaultValue the T value to return if key could not be found
+	 * @return the T item that holds the given key, or {@code defaultValue} if none was found
+	 */
+	@Nullable
+	public T getOrDefault (Object key, T defaultValue) {
+		int i = locateKey(key);
+		return i < 0 ? defaultValue : keyTable[i];
+	}
+
+	/**
 	 * Gets the (arbitrarily-chosen) first item in this HolderSet. Which item is "first" can change
 	 * when this resizes, and you can't rely on the order of items in an unordered set like this.
 	 *
