@@ -35,7 +35,7 @@ import java.util.Collection;
  * widespread use. There's also {@link Utilities#equalsIgnoreCase(CharSequence, CharSequence)} for equality
  * comparisons that are similarly case-insensitive, except for Georgian.
  * <br>
- * This is very similar to {@link FilteredStringSet} when its {@link FilteredStringSet#getEditor() editor}
+ * This is very similar to {@link FilteredStringSet} when its {@link CharFilter#getEditor() editor}
  * is {@link Character#toUpperCase(char)}. FilteredStringSet works with Strings rather than CharSequences, which
  * may be more convenient, and allows filtering some characters out of hashing and equality comparisons. If you want a
  * case-insensitive set that ignores any non-letter characters in a String, then CaseInsensitiveSet won't do,

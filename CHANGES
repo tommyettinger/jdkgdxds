@@ -1,3 +1,7 @@
+[1.4.6]
+- [BREAKING CHANGE] The Filtered-String sets and maps now use a CharFilter object to group their filter and editor, allowing them to be serialized and deserialized.
+
+
 [1.4.5]
 - The dependency on digital was updated... again... to 0.4.5, though this time it brings several new features. None used here.
 - Filtered-String sets and maps! These are like the CaseInsensitive ones, but allow configuring how characters are used and modified.

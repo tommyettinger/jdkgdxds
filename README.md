@@ -124,7 +124,7 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.4.5'
+api 'com.github.tommyettinger:jdkgdxds:1.4.6'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -143,7 +143,7 @@ If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
 implementation "com.github.tommyettinger:digital:0.4.5:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.4.5:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.4.6:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -179,7 +179,7 @@ to a higher value, depending on where it is already; 19 is known to work, and 16
 The dependency (and `inherits` line) on digital is not necessary for jdkgdxds 0.2.8, but is necessary starting in 1.0.3 and later.
 The dependency and `inherits` line for funderby is new in 1.0.4 . Versions 1.0.1 and 1.0.2 also depended on
 [juniper](https://github.com/tommyettinger/juniper) 0.1.0 ; if you intend to use the
-randomized algorithms here (like shuffles), then depending on Juniper (0.4.3) might be a good idea, though it is still optional.
+randomized algorithms here (like shuffles), then depending on Juniper (0.5.0) might be a good idea, though it is still optional.
 Another option for random number generation, if you use libGDX, is [cringe](https://github.com/tommyettinger/cringe), which is more closely-integrated with libGDX.
 The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
 for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
@@ -302,3 +302,14 @@ Version 1.4.1 only has very small changes to jdkgdxds, but does update its depen
 of breaking change for users who depended on getting the same results from `Hasher` for a given input and seed. None of the
 methods in digital that are affected by the change are used in jdkgdxds, but they could affect transitive usage. There is no
 mitigation or anything you have to do, other than to be aware that `Hasher.hash()` and `Hasher.hash64()` results may be different.
+
+## Updating to 1.4.6
+
+Version 1.4.5 introduced `FilteredString(Ordered)?(Set|Map)` classes, which each took a CharPredicate filter and a
+CharToCharFunction editor. This turned out to work rather poorly when serializing to JSON, and so version 1.4.6 uses a
+different, somewhat-incompatible approach. Now instead of specifying a filter and editor as individual arguments, they are
+always grouped into a `CharFilter` object, which has a name that can be looked up with `CharFilter.contains()` or
+`CharFilter.get()`. To obtain a CharFilter, you still need a CharPredicate filter and a CharToCharFunction editor, but you
+use `CharFilter.getOrCreate()` to get an existing CharFilter if one can be reused, or create one if the name isn't registered.
+This is only breaking if you updated to 1.4.5 between December 5 and December 7, 2023, since 1.4.6 was released on December 7,
+2023... Plus you would have to be using the new FilteredString types... So, this is unlikely to be a problem.

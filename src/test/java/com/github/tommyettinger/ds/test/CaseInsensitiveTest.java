@@ -68,7 +68,8 @@ public class CaseInsensitiveTest {
 		for(Map.Entry<CharSequence, String> ent : map){
 			Assert.assertEquals(ent.getKey(), ent.getValue());
 		}
-		FilteredStringOrderedMap<String> fil = new FilteredStringOrderedMap<>(Character::isLetter, Character::toUpperCase,
+		FilteredStringOrderedMap<String> fil = new FilteredStringOrderedMap<>(
+			CharFilter.getOrCreate("LetterOnlyCaseInsensitive", Character::isLetter, Character::toUpperCase),
 			new String[]{"foo42", "bar666", "baz9001"},
 			new String[]{"foo", "bar", "baz"}
 		);

@@ -46,7 +46,7 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * in its original form (not modified to make it ignore case), the sorted order might be different than you expect.
  * {@link Utilities#compareIgnoreCase(CharSequence, CharSequence)} can be used to sort this as case-insensitive.
  * <br>
- * This is also very similar to {@link FilteredStringOrderedMap} when its {@link FilteredStringOrderedMap#getEditor() editor}
+ * This is also very similar to {@link FilteredStringOrderedMap} when its {@link CharFilter#getEditor() editor}
  * is {@link Character#toUpperCase(char)}. FilteredStringOrderedMap works with Strings rather than CharSequences, which
  * may be more convenient, and allows filtering some characters out of hashing and equality comparisons. If you want a
  * case-insensitive map that ignores any non-letter characters in a String, then CaseInsensitiveOrderedMap won't do,
