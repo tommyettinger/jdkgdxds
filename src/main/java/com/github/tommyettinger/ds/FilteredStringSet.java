@@ -26,8 +26,8 @@ import java.util.Collection;
  * A customizable variant on ObjectSet that always uses String keys, but only considers any character in an item (for
  * equality and hashing purposes) if that character satisfies a predicate. This can also edit the characters that pass
  * the filter, such as by changing their case during comparisons (and hashing). You will usually want to call
- * {@link #setFilter(CharFilter)} to change the behavior of hashing and
- * equality before you enter any items, unless you have specified the filter and/or editor you want in the constructor.
+ * {@link #setFilter(CharFilter)} to change the behavior of hashing and equality before you enter any items, unless you
+ * have specified the CharFilter you want in the constructor.
  * <br>
  * You can use this class as a replacement for {@link CaseInsensitiveSet} if you set the editor to a method reference to
  * {@link Character#toUpperCase(char)}. You can go further by setting the editor to make the hashing and equality checks
@@ -77,7 +77,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
-	 * This uses the specified filter and editor.
+	 * This uses the specified CharFilter.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 */
@@ -89,7 +89,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	/**
 	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
 	 * growing the backing table.
-	 * This uses the specified filter and editor.
+	 * This uses the specified CharFilter.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
@@ -112,7 +112,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
-	 * This uses the specified filter and editor, including while it enters the items in coll.
+	 * This uses the specified CharFilter, including while it enters the items in coll.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredStringSet
@@ -124,7 +124,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
-	 * This uses the specified filter and editor, including while it enters the items in array.
+	 * This uses the specified CharFilter, including while it enters the items in array.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param array  an array to draw items from
@@ -138,7 +138,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new set containing all the items in the given array.
-	 * This uses the specified filter and editor, including while it enters the items in array.
+	 * This uses the specified CharFilter, including while it enters the items in array.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param array an array that will be used in full, except for duplicate items
@@ -247,5 +247,4 @@ public class FilteredStringSet extends ObjectSet<String> {
 	public static FilteredStringSet with (CharFilter filter, String... array) {
         return new FilteredStringSet(filter, array);
 	}
-
 }
