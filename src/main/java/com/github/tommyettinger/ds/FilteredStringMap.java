@@ -34,7 +34,7 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * have specified the CharFilter you want in the constructor.
  * <br>
  * You can use this class as a replacement for {@link CaseInsensitiveMap} if you set the editor to a method reference to
- * {@link Character#toUpperCase(char)}. You can go further by setting the editor to make the hashing and equality checks
+ * {@link Character#toUpperCase(char)}. You can go further by setting the filter to make the hashing and equality checks
  * ignore characters that don't satisfy a predicate, such as {@link Character#isLetter(char)}.
  * CaseInsensitiveMap does allow taking arbitrary CharSequence types as keys, but it doesn't permit modifying
  * them, so usually Strings are a good choice anyway.
@@ -90,7 +90,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	/**
 	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
 	 * growing the backing table.
-	 * This uses the specified filter and editor.
+	 * This uses the specified CharFilter.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
@@ -113,7 +113,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 
 	/**
 	 * Creates a new map identical to the specified map.
-	 * This uses the specified filter and editor.
+	 * This uses the specified CharFilter.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param map    a Map to copy; ObjectObjectOrderedMap and subclasses of it will be faster to load from
@@ -128,7 +128,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
-	 * This uses the specified filter and editor.
+	 * This uses the specified CharFilter.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param keys   an array of keys
@@ -142,7 +142,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 * This uses the specified filter and editor.
+	 * This uses the specified CharFilter.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param keys   a Collection of keys
@@ -170,7 +170,6 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 		this.filter = filter;
 		return this;
 	}
-
 
 	protected long hashHelper(String s) {
 		long hash = 0x9E3779B97F4A7C15L + hashMultiplier; // golden ratio

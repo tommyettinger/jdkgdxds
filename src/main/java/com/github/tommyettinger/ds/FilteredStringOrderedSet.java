@@ -32,7 +32,7 @@ import java.util.Comparator;
  * have specified the CharFilter you want in the constructor.
  * <br>
  * You can use this class as a replacement for {@link CaseInsensitiveOrderedSet} if you set the editor to a method reference to
- * {@link Character#toUpperCase(char)}. You can go further by setting the editor to make the hashing and equality checks
+ * {@link Character#toUpperCase(char)}. You can go further by setting the filter to make the hashing and equality checks
  * ignore characters that don't satisfy a predicate, such as {@link Character#isLetter(char)}.
  * CaseInsensitiveOrderedSet does allow taking arbitrary CharSequence types as keys, but it doesn't permit modifying
  * them, so usually Strings are a good choice anyway.
