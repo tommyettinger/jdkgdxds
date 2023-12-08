@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
+import com.github.tommyettinger.ds.CharFilter;
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
 import com.github.tommyettinger.function.ObjPredicate;
@@ -36,6 +37,14 @@ public class FilteredComparators {
 
 	private FilteredComparators () {
 
+	}
+
+	public static Comparator<String> makeStringComparator(final CharFilter filter) {
+		return makeStringComparator(filter.filter, filter.editor);
+	}
+
+	public static Comparator<String> makeStringComparator(final CharComparator baseComparator, final CharFilter filter) {
+		return makeStringComparator(baseComparator, filter.filter, filter.editor);
 	}
 
 	public static Comparator<String> makeStringComparator(final CharPredicate filter, final CharToCharFunction editor) {
@@ -65,6 +74,47 @@ public class FilteredComparators {
 				}
 				if (cl != cr && (el = editor.applyAsChar((char)cl)) != (er = editor.applyAsChar((char)cr)))
 					return (el - er) * ((cl ^ cr) >> 31 | 1);
+			}
+			return countL - countR;
+		};
+	}
+
+	/**
+	 * Like {@link #makeStringComparator(CharPredicate, CharToCharFunction)}, but takes a base comparator that compare char items
+	 * in a non-ascending order if needed. Another option could be to call the other makeStringComparator() and reverse the
+	 * Comparator it returns.
+	 * @param baseComparator a CharComparator that will be used to compare individual chars, not Strings
+	 * @param filter          a CharPredicate that should return true iff a character should be considered for equality/hashing
+	 * @param editor          a CharToCharFunction that will take a char from a key String and return a potentially different char
+	 * @return a Comparator for Strings that will respect the given filter, editor, and base comparator
+	 */
+	public static Comparator<String> makeStringComparator(final CharComparator baseComparator, final CharPredicate filter, final CharToCharFunction editor) {
+		return (String l, String r) -> {
+			int llen = l.length(), rlen = r.length(), countL = llen, countR = rlen;
+			int cl = -1, cr = -1;
+			int i = 0, j = 0;
+			char el, er;
+			while (i < llen || j < rlen) {
+				if (i == llen) {
+					cl = -1;
+				}
+				else {
+					while (i < llen && !filter.test((char)(cl = l.charAt(i++)))) {
+						cl = -1;
+						countL--;
+					}
+				}
+				if (j == rlen) {
+					cr = -1;
+				}
+				else {
+					while (j < rlen && !filter.test((char)(cr = r.charAt(j++)))) {
+						cr = -1;
+						countR--;
+					}
+				}
+				if (cl != cr && (el = editor.applyAsChar((char)cl)) != (er = editor.applyAsChar((char)cr)))
+					return baseComparator.compare(el, er) * ((cl ^ cr) >> 31 | 1);
 			}
 			return countL - countR;
 		};
