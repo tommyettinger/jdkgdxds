@@ -148,7 +148,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredIterableOrderedSet
 	 */
 	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Collection<? extends I> coll) {
-		this(filter, editor, coll.size(), Utilities.getDefaultLoadFactor());
+		this(filter, editor, coll.size());
 		addAll(coll);
 	}
 
@@ -163,7 +163,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
 	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array, int offset, int length) {
-		this(filter, editor, length, Utilities.getDefaultLoadFactor());
+		this(filter, editor, length);
 		addAll(array, offset, length);
 	}
 
@@ -235,7 +235,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	}
 
 	protected long hashHelper(I s) {
-		long hash = 0x9E3779B97F4A7C15L + hashMultiplier; // golden ratio
+		long hash = hashMultiplier;
 		for (T c : s) {
 			if(filter.test(c)){
 				hash = (hash + editor.apply(c).hashCode()) * hashMultiplier;

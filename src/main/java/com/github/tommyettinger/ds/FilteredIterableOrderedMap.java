@@ -161,7 +161,7 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * @param values a Collection of values
 	 */
 	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, Collection<? extends I> keys, Collection<? extends V> values) {
-		this(filter, editor, keys.size(), Utilities.getDefaultLoadFactor());
+		this(filter, editor, keys.size());
 		putAll(keys, values);
 	}
 
@@ -175,7 +175,7 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * @param values  an array to draw values from
 	 */
 	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I[] keys, V[] values) {
-		this(filter, editor, Math.min(keys.length, values.length), Utilities.getDefaultLoadFactor());
+		this(filter, editor, Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
 
@@ -235,7 +235,7 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	}
 
 	protected long hashHelper(I s) {
-		long hash = 0x9E3779B97F4A7C15L + hashMultiplier; // golden ratio
+		long hash = hashMultiplier;
 		for (K c : s) {
 			if(filter.test(c)){
 				hash = (hash + editor.apply(c).hashCode()) * hashMultiplier;
