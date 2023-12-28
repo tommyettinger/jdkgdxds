@@ -88,6 +88,19 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	}
 
 	/**
+	 * Creates a new map with the specified initial capacity and the default load factor. This map will hold initialCapacity items
+	 * before growing the backing table.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredStringMap (CharFilter filter, int initialCapacity) {
+		super(initialCapacity);
+		this.filter = filter;
+	}
+
+	/**
 	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
 	 * growing the backing table.
 	 * This uses the specified CharFilter.
@@ -119,7 +132,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param map    a Map to copy; ObjectObjectOrderedMap and subclasses of it will be faster to load from
 	 */
 	public FilteredStringMap (CharFilter filter, Map<String, ? extends V> map) {
-		this(filter, map.size(), Utilities.getDefaultLoadFactor());
+		this(filter, map.size());
 		for (String k : map.keySet()) {
 			put(k, map.get(k));
 		}
@@ -135,7 +148,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param values an array of values
 	 */
 	public FilteredStringMap (CharFilter filter, String[] keys, V[] values) {
-		this(filter, Math.min(keys.length, values.length), Utilities.getDefaultLoadFactor());
+		this(filter, Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
 
@@ -149,7 +162,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param values a Collection of values
 	 */
 	public FilteredStringMap (CharFilter filter, Collection<String> keys, Collection<? extends V> values) {
-		this(filter, Math.min(keys.size(), values.size()), Utilities.getDefaultLoadFactor());
+		this(filter, Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
 
@@ -172,7 +185,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	}
 
 	protected long hashHelper(String s) {
-		long hash = 0x9E3779B97F4A7C15L + hashMultiplier; // golden ratio
+		long hash = hashMultiplier;
 		for (int i = 0, len = s.length(); i < len; i++) {
 			char c = s.charAt(i);
 			if(filter.filter.test(c)){
@@ -283,7 +296,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
 	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0) {
-		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 1, Utilities.getDefaultLoadFactor());
+		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 1);
 		map.put(key0, value0);
 		return map;
 	}
@@ -307,7 +320,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0, Object... rest) {
-		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 1 + (rest.length >>> 1), Utilities.getDefaultLoadFactor());
+		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {
 			try {

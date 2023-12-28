@@ -96,6 +96,19 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	}
 
 	/**
+	 * Creates a new set with the specified initial capacity and the default load factor. This set will hold initialCapacity items
+	 * before growing the backing table.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredStringOrderedSet (CharFilter filter, int initialCapacity) {
+		super(initialCapacity);
+		this.filter = filter;
+	}
+
+	/**
 	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
 	 * growing the backing table.
 	 * This uses the specified CharFilter.
@@ -127,7 +140,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredStringOrderedSet
 	 */
 	public FilteredStringOrderedSet (CharFilter filter, Collection<? extends String> coll) {
-		this(filter, coll.size(), Utilities.getDefaultLoadFactor());
+		this(filter, coll.size());
 		addAll(coll);
 	}
 
@@ -141,7 +154,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
 	public FilteredStringOrderedSet (CharFilter filter, String[] array, int offset, int length) {
-		this(filter, length, Utilities.getDefaultLoadFactor());
+		this(filter, length);
 		addAll(array, offset, length);
 	}
 
@@ -166,7 +179,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 * @param count  how many items to take from ordered; bounds-checking is the responsibility of the using code
 	 */
 	public FilteredStringOrderedSet (CharFilter filter, Ordered<String> ordered, int offset, int count) {
-		this(filter, count, Utilities.getDefaultLoadFactor());
+		this(filter, count);
 		addAll(0, ordered, offset, count);
 	}
 
@@ -188,12 +201,11 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 		return this;
 	}
 
-
 	protected long hashHelper(String s) {
-		long hash = 0x9E3779B97F4A7C15L + hashMultiplier; // golden ratio
+		long hash = hashMultiplier;
 		for (int i = 0, len = s.length(); i < len; i++) {
 			char c = s.charAt(i);
-			if(filter.filter.test(c)){
+			if (filter.filter.test(c)) {
 				hash = (hash + filter.editor.applyAsChar(c)) * hashMultiplier;
 			}
 		}
@@ -262,7 +274,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	}
 
 	public static FilteredStringOrderedSet with (CharFilter filter, String item) {
-		FilteredStringOrderedSet set = new FilteredStringOrderedSet(filter, 1, Utilities.getDefaultLoadFactor());
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(filter, 1);
 		set.add(item);
 		return set;
 	}

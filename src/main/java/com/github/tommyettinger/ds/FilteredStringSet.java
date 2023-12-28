@@ -87,6 +87,19 @@ public class FilteredStringSet extends ObjectSet<String> {
 	}
 
 	/**
+	 * Creates a new set with the specified initial capacity and the default load factor. This set will hold initialCapacity items
+	 * before growing the backing table.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredStringSet (CharFilter filter, int initialCapacity) {
+		super(initialCapacity);
+		this.filter = filter;
+	}
+
+	/**
 	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
 	 * growing the backing table.
 	 * This uses the specified CharFilter.
@@ -118,7 +131,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredStringSet
 	 */
 	public FilteredStringSet (CharFilter filter, Collection<? extends String> coll) {
-		this(filter, coll.size(), Utilities.getDefaultLoadFactor());
+		this(filter, coll.size());
 		addAll(coll);
 	}
 
@@ -132,7 +145,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
 	public FilteredStringSet (CharFilter filter, String[] array, int offset, int length) {
-		this(filter, length, Utilities.getDefaultLoadFactor());
+		this(filter, length);
 		addAll(array, offset, length);
 	}
 
@@ -165,12 +178,22 @@ public class FilteredStringSet extends ObjectSet<String> {
 		return this;
 	}
 
+//	protected long hashHelper(String s) {
+//		long hash = 0x9E3779B97F4A7C15L + hashMultiplier; // golden ratio
+//		for (int i = 0, len = s.length(); i < len; i++) {
+//			char c = s.charAt(i);
+//			if(filter.filter.test(c)){
+//				hash = (hash + filter.editor.applyAsChar(c)) * hashMultiplier;
+//			}
+//		}
+//		return hash;
+//	}
 
 	protected long hashHelper(String s) {
-		long hash = 0x9E3779B97F4A7C15L + hashMultiplier; // golden ratio
+		long hash = hashMultiplier;
 		for (int i = 0, len = s.length(); i < len; i++) {
 			char c = s.charAt(i);
-			if(filter.filter.test(c)){
+			if (filter.filter.test(c)) {
 				hash = (hash + filter.editor.applyAsChar(c)) * hashMultiplier;
 			}
 		}
@@ -239,7 +262,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	}
 
 	public static FilteredStringSet with (CharFilter filter, String item) {
-		FilteredStringSet set = new FilteredStringSet(filter, 1, Utilities.getDefaultLoadFactor());
+		FilteredStringSet set = new FilteredStringSet(filter, 1);
 		set.add(item);
 		return set;
 	}

@@ -97,6 +97,19 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	}
 
 	/**
+	 * Creates a new map with the specified initial capacity and th default load factor. This map will hold initialCapacity items
+	 * before growing the backing table.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredStringOrderedMap (CharFilter filter, int initialCapacity) {
+		super(initialCapacity);
+		this.filter = filter;
+	}
+
+	/**
 	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
 	 * growing the backing table.
 	 * This uses the specified CharFilter.
@@ -128,7 +141,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param map    a Map to copy; ObjectObjectOrderedMap and subclasses of it will be faster to load from
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, Map<String, ? extends V> map) {
-		this(filter, map.size(), Utilities.getDefaultLoadFactor());
+		this(filter, map.size());
 		for (String k : map.keySet()) {
 			put(k, map.get(k));
 		}
@@ -144,7 +157,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param values an array of values
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, String[] keys, V[] values) {
-		this(filter, Math.min(keys.length, values.length), Utilities.getDefaultLoadFactor());
+		this(filter, Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
 
@@ -158,7 +171,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param values a Collection of values
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, Collection<String> keys, Collection<? extends V> values) {
-		this(filter, Math.min(keys.size(), values.size()), Utilities.getDefaultLoadFactor());
+		this(filter, Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
 
@@ -172,7 +185,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param count  how many items to copy from other
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, ObjectObjectOrderedMap<String, ? extends V> other, int offset, int count) {
-		this(filter, count, Utilities.getDefaultLoadFactor());
+		this(filter, count);
 		putAll(0, other, offset, count);
 	}
 
@@ -198,10 +211,10 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	}
 
 	protected long hashHelper(String s) {
-		long hash = 0x9E3779B97F4A7C15L + hashMultiplier; // golden ratio
+		long hash = hashMultiplier;
 		for (int i = 0, len = s.length(); i < len; i++) {
 			char c = s.charAt(i);
-			if(filter.filter.test(c)){
+			if (filter.filter.test(c)) {
 				hash = (hash + filter.editor.applyAsChar(c)) * hashMultiplier;
 			}
 		}
@@ -309,7 +322,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
 	public static <V> FilteredStringOrderedMap<V> with (CharFilter filter, String key0, V value0) {
-		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(filter, 1, Utilities.getDefaultLoadFactor());
+		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(filter, 1);
 		map.put(key0, value0);
 		return map;
 	}
@@ -333,7 +346,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 */
 	@SuppressWarnings("unchecked")
 	public static <V> FilteredStringOrderedMap<V> with (CharFilter filter, String key0, V value0, Object... rest) {
-		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(filter, 1 + (rest.length >>> 1), Utilities.getDefaultLoadFactor());
+		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(filter, 1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
