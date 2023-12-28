@@ -201,15 +201,25 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 		return this;
 	}
 
-	protected long hashHelper(String s) {
-		long hash = hashMultiplier;
-		for (int i = 0, len = s.length(); i < len; i++) {
-			char c = s.charAt(i);
+	/**
+	 * Gets a low-to-moderate quality 64-bit hash code from the given String.
+	 * This operates a little... strangely, internally, and takes advantage of its primary intended use
+	 * (in {@link #place(Object)}) only using the upper 31 bits. It currently is designed to limit the number
+	 * of multiplications required, since those can slow down simple hashes like this if too many are needed.
+	 * @param s a String to hash
+	 * @return a 64-bit hash of {@code s}, with quality emphasized only for the upper 31 bits
+	 */
+	protected long hashHelper (final String s) {
+		final long hm = hashMultiplier;
+		long hash = hm;
+		for (int i = 0, len = s.length(), ctr = len; i < len; i++) {
+			final char c = s.charAt(i);
 			if (filter.filter.test(c)) {
-				hash = (hash + filter.editor.applyAsChar(c)) * hashMultiplier;
+				hash = (hash << 16 | hash >>> 48) ^ filter.editor.applyAsChar(c);
+				if((--ctr & 3) == 0) hash *= hm;
 			}
 		}
-		return hash;
+		return (hash ^ (hash << 23 | hash >>> 41) ^ (hash << 42 | hash >>> 22)) * hm;
 	}
 
 	@Override

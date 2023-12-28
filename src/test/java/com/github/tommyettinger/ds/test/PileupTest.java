@@ -3609,7 +3609,7 @@ public class PileupTest {
 */
 
         @Override
-        protected long hashHelper (String s) {
+        protected long hashHelper (final String s) {
             final long hm = hashMultiplier;
             long hash = hm;
             for (int i = 0, len = s.length(), ctr = len; i < len; i++) {
