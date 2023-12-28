@@ -3559,7 +3559,7 @@ public class PileupTest {
         public MeasuredFilteredStringSet (CharFilter filter) {
             super(filter, 51, PileupTest.LOAD);
         }
-
+/*
         @Override
         protected long hashHelper (String s) {
             long hash = hashMultiplier;
@@ -3602,6 +3602,75 @@ public class PileupTest {
                 }
             }
             return hash;
+        }
+*/
+
+        @Override
+        protected long hashHelper (String s) {
+            final long hm = hashMultiplier;
+            long hash = hm;
+            for (int i = 0, len = s.length(), ctr = len; i < len; i++) {
+                final char c = s.charAt(i);
+                if (filter.filter.test(c)) {
+                    // WITH XRR AND MULTIPLY
+                    //total collisions: 21573, longest pileup: 9
+                    //total of 12 longest pileups: 69
+                    // WITH JUST RETURN HASH
+                    //total collisions: 21879, longest pileup: 12
+                    //total of 12 longest pileups: 76
+                    // WITH XRR ONLY
+                    //total collisions: 21823, longest pileup: 11
+                    //total of 12 longest pileups: 80
+                    // WITH MULTIPLY ONLY
+                    //total collisions: 22152, longest pileup: 11
+                    //total of 12 longest pileups: 74
+                    hash = (hash << 16 | hash >>> 48) ^ filter.editor.applyAsChar(c);
+                    if((--ctr & 3) == 0) hash *= hm;
+                    // WITH XOR HM
+                    //total collisions: 21626, longest pileup: 11
+                    //total of 12 longest pileups: 74
+                    // WITH XOR ORIGINAL
+                    //total collisions: 21959, longest pileup: 11
+                    //total of 12 longest pileups: 69
+//                    hash = (hash << 16 | hash >>> 48) ^ filter.editor.applyAsChar(c);
+//                    if((--ctr & 3) == 0) hash *= (hm += 0x9E3779B97F4A7C16L);
+                    // XRR MULTIPLY
+                    //total collisions: 21773, longest pileup: 11
+                    //total of 12 longest pileups: 70
+                    // WITH JUST RETURN HASH
+                    //total collisions: 21967, longest pileup: 13
+                    //total of 12 longest pileups: 72
+//                    hash = (hash << 16 | hash >>> 48) + filter.editor.applyAsChar(c);
+//                    if((--ctr & 3) == 0) hash *= hm;
+                    // XRR MULTIPLY
+                    //total collisions: 21681, longest pileup: 9
+                    //total of 12 longest pileups: 84
+                    // WITH JUST RETURN HASH
+                    //total collisions: 21706, longest pileup: 10
+                    //total of 12 longest pileups: 77
+//                    hash = (hash << 16 | hash >>> 48) - filter.editor.applyAsChar(c);
+//                    if((--ctr & 3) == 0) hash *= hm;
+                    // XRR MULTIPLY
+                    //total collisions: 21840, longest pileup: 12
+                    //total of 12 longest pileups: 87
+                    // WITH JUST RETURN HASH
+                    //total collisions: 21746, longest pileup: 11
+                    //total of 12 longest pileups: 81
+//                    hash = filter.editor.applyAsChar(c) - (hash << 16 | hash >>> 48);
+//                    if((--ctr & 3) == 0) hash *= hm;
+                    // XRR MULTIPLY
+                    //total collisions: 22401, longest pileup: 10
+                    //total of 12 longest pileups: 68
+//                    hash = (hash << 16 | hash >>> 48) ^ filter.editor.applyAsChar(c);
+//                    if((--ctr & 3) == 0) hash = (hash ^ hash >>> 29) * hm;
+                }
+            }
+            return (hash ^ (hash << 23 | hash >>> 41) ^ (hash << 42 | hash >>> 22)) * hm;
+//            return (hash ^ (hash << 23 | hash >>> 41) ^ (hash << 42 | hash >>> 22));
+//            return hash * hm;
+//            return hash * (hm ^ 0x9E3779B97F4A7C16L);
+//            return hash * (hashMultiplier);
+//            return hash;
         }
 
         @Override
