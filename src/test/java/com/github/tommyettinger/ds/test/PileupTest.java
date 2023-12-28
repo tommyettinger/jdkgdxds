@@ -1614,7 +1614,7 @@ public class PileupTest {
         final ObjectList<String> words = wordSet.order();
         Collections.shuffle(words, new WhiskerRandom(1234567890L));
 
-        for(Set set : new Set[]{new MeasuredFilteredStringSet(filter), new MeasuredCaseInsensitiveSet()}){
+        for(Set set : new Set[]{new MeasuredCaseInsensitiveSet(), new MeasuredFilteredStringSet(filter), }){
             long start = System.nanoTime();
             for (int i = 0; i < words.size(); i++) {
                 set.add(words.get(i));
@@ -3562,7 +3562,46 @@ public class PileupTest {
 
         @Override
         protected long hashHelper (String s) {
-            return super.hashHelper(s);
+            long hash = hashMultiplier;
+            for (int i = 0, len = s.length(); i < len; i++) {
+                char c = s.charAt(i);
+                if (filter.filter.test(c)) {
+                    //total collisions: 22039, longest pileup: 12
+                    //total of 12 longest pileups: 78
+//                    hash = ((hash << 57 | hash >>> 7) + filter.editor.applyAsChar(c)) * hashMultiplier;
+                    //total collisions: 21691, longest pileup: 11
+                    //total of 12 longest pileups: 72
+//                    hash = ((hash << 53 | hash >>> 11) + filter.editor.applyAsChar(c)) * hashMultiplier;
+                    //total collisions: 22262, longest pileup: 11
+                    //total of 12 longest pileups: 82
+//                    hash = ((hash << 49 | hash >>> 15) + filter.editor.applyAsChar(c)) * hashMultiplier;
+                    //total collisions: 21868, longest pileup: 9
+                    //total of 12 longest pileups: 66
+                    hash = ((hash << 47 | hash >>> 17) + filter.editor.applyAsChar(c)) * hashMultiplier;
+                    //total collisions: 21883, longest pileup: 11
+                    //total of 12 longest pileups: 80
+//                    hash = ((hash << 42 | hash >>> 22) + filter.editor.applyAsChar(c)) * hashMultiplier;
+                    //total collisions: 21647, longest pileup: 9
+                    //total of 12 longest pileups: 81
+//                    hash = ((hash << 32 | hash >>> 32) + filter.editor.applyAsChar(c)) * hashMultiplier;
+                    //total collisions: 21634, longest pileup: 10
+                    //total of 12 longest pileups: 74
+//                    hash = ((hash << 17 | hash >>> 47) + filter.editor.applyAsChar(c)) * hashMultiplier;
+                    //total collisions: 21616, longest pileup: 12
+                    //total of 12 longest pileups: 74
+//                    hash = ((hash << 11 | hash >>> 53) + filter.editor.applyAsChar(c)) * hashMultiplier;
+                    //total collisions: 22322, longest pileup: 11
+                    //total of 12 longest pileups: 70
+//                    hash = (hash + filter.editor.applyAsChar(c)) * hashMultiplier;
+                    //total collisions: 22167, longest pileup: 12
+                    //total of 12 longest pileups: 76
+//                    hash = (hash ^ filter.editor.applyAsChar(c)) * hashMultiplier;
+                    //total collisions: 12643054, longest pileup: 395
+                    //total of 12 longest pileups: 934
+//                    hash += filter.editor.applyAsChar(c) * hashMultiplier;
+                }
+            }
+            return hash;
         }
 
         @Override
@@ -3622,6 +3661,8 @@ public class PileupTest {
 
         @Override
         protected int place (Object item) {
+            //total collisions: 21742, longest pileup: 10
+            //total of 12 longest pileups: 69
             return super.place(item);
         }
 
