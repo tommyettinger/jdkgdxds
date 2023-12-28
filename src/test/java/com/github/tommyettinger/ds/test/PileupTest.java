@@ -3,6 +3,7 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.ds.FilteredStringSet;
 import com.github.tommyettinger.ds.IntLongMap;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
@@ -1588,16 +1589,23 @@ public class PileupTest {
                 System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
                 System.out.print("total collisions: " + collisionTotal);
                 System.out.println(", longest pileup: " + longestPileup);
-                System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
+                System.out.println("total of " + pileupChecks + " longest pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
-//        final int limit = (int)(Math.sqrt(LEN));
-//        for (int x = -limit; x < limit; x+=2) {
-//            for (int y = -limit; y < limit; y+=2) {
-//                set.add(new Vector2(x, y));
-//            }
-//        }
+        for (int i = 0; i < words.size(); i++) {
+            set.add(words.get(i));
+        }
+        System.out.println((System.nanoTime() - start) + " ns");
+        set.clear();
+    }
+
+    @Test
+    public void testFilteredStringSetWordList () throws IOException {
+        final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
+        Collections.shuffle(words, new WhiskerRandom(1234567890L));
+        long start = System.nanoTime();
+        ObjectSet set = new MeasuredFilteredStringSet();
         for (int i = 0; i < words.size(); i++) {
             set.add(words.get(i));
         }
@@ -3528,4 +3536,64 @@ public class PileupTest {
         }
     }
 
+    static class MeasuredFilteredStringSet extends FilteredStringSet {
+        long collisionTotal = 0;
+        int longestPileup = 0, allPileups = 0, pileupChecks = 0;
+        double averagePileup = 0;
+
+        public MeasuredFilteredStringSet () {
+            super(51, PileupTest.LOAD);
+        }
+
+        @Override
+        protected long hashHelper (String s) {
+            return super.hashHelper(s);
+        }
+
+        @Override
+        protected int place (Object item) {
+            return super.place(item);
+        }
+
+        @Override
+        protected void addResize (@NonNull String key) {
+            Object[] keyTable = this.keyTable;
+            for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+                if (keyTable[i] == null) {
+                    keyTable[i] = key;
+                    averagePileup += p;
+
+                    return;
+                } else {
+                    collisionTotal++;
+                    longestPileup = Math.max(longestPileup, ++p);
+                }
+            }
+        }
+
+        @Override
+        protected void resize (int newSize) {
+            allPileups += longestPileup;
+            pileupChecks++;
+            collisionTotal = 0;
+            longestPileup = 0;
+            averagePileup = 0.0;
+
+            super.resize(newSize);
+
+            System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+            System.out.print("total collisions: " + collisionTotal);
+            System.out.println(", longest pileup: " + longestPileup);
+            System.out.println("average pileup: " + (averagePileup / size));
+        }
+
+        @Override
+        public void clear () {
+            System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+            System.out.print("total collisions: " + collisionTotal);
+            System.out.println(", longest pileup: " + longestPileup);
+            System.out.println("total of " + pileupChecks + " longest pileups: " + (allPileups + longestPileup));
+            super.clear();
+        }
+    }
 }
