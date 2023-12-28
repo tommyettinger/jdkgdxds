@@ -9,6 +9,7 @@ import com.github.tommyettinger.ds.FilteredStringOrderedSet;
 import com.github.tommyettinger.ds.FilteredStringSet;
 import com.github.tommyettinger.ds.IntLongMap;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
+import com.github.tommyettinger.ds.IntSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.ObjectSet;
@@ -1609,8 +1610,10 @@ public class PileupTest {
     @Test
     public void testVariousSetWordList () throws IOException {
         CharFilter filter = CharFilter.getOrCreate("CaseInsensitive", c -> true, Character::toUpperCase);
+        final IntSet vowels = IntSet.with('A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u');
+        CharFilter noVowels = CharFilter.getOrCreate("NoVowelsCaseInsensitive", c -> !vowels.contains(c), Character::toUpperCase);
 
-        FilteredStringOrderedSet wordSet = new FilteredStringOrderedSet(filter, Files.readAllLines(Paths.get("src/test/resources/word_list.txt")));
+        FilteredStringOrderedSet wordSet = new FilteredStringOrderedSet(noVowels, Files.readAllLines(Paths.get("src/test/resources/word_list.txt")));
         final ObjectList<String> words = wordSet.order();
         Collections.shuffle(words, new WhiskerRandom(1234567890L));
 
