@@ -1,6 +1,7 @@
 [1.4.7]
 - The dependency on digital was updated to 0.4.7, which adds some potentially useful features, and has many more null checks.
 - Filtered sets and maps have the full range of constructors that maps and sets usually have, now.
+- Th Filtered-String sets use a different hashing algorithm now that takes advantage of how small a char is relative to a long.
 
 [1.4.6]
 - [BREAKING CHANGE] The Filtered-String sets and maps now use a CharFilter object to group their filter and editor, allowing them to be serialized and deserialized.

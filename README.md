@@ -124,26 +124,26 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.4.6'
+api 'com.github.tommyettinger:jdkgdxds:1.4.7'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
 `mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on `digital` (which provides
 common math code meant for use by multiple projects), `funderby` (Java 8 functional interfaces for primitive types), and for
 annotations only, `checker-qual` ([the project GitHub page is here.](https://github.com/typetools/checker-framework)). The
-version for the `digital` dependency is 0.4.5 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.4.5"`). Funderby has only changed a bit since its initial release, and is on version
+version for the `digital` dependency is 0.4.7 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.4.7"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.1 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.1"`). The version for
-`checker-qual` is 3.41.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes.
+`checker-qual` is 3.42.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes.
 Earlier versions of jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to
 mention that JSR305 is currently unmaintained). You can manually specify a `checker-qual` version with
-`api "org.checkerframework:checker-qual:3.41.0"`.
+`api "org.checkerframework:checker-qual:3.42.0"`.
 
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
-implementation "com.github.tommyettinger:digital:0.4.5:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.4.6:sources"
+implementation "com.github.tommyettinger:digital:0.4.7:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.4.7:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -194,7 +194,7 @@ on what your other dependencies use, to your project or its core module (if ther
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
-implementation "com.github.tommyettinger:digital:0.4.5:sources"
+implementation "com.github.tommyettinger:digital:0.4.7:sources"
 implementation "com.github.tommyettinger:jdkgdxds:4e8ddbddd7:sources"
 ```
 to its
