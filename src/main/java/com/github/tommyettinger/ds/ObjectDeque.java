@@ -208,7 +208,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final T[] newArray = (T[])new Object[newSize];
+		final T[] newArray = (T[])new Object[Math.max(1, newSize)];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);
@@ -709,6 +709,20 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	}
 
 	/**
+	 * Exactly like {@link #addAll(Collection)}, but takes an array instead of a Collection.
+	 * @see #addAll(Collection)
+	 * @param c the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAll (T[] c) {
+		int oldSize = size;
+		for (T t : c) {
+			addLast(t);
+		}
+		return oldSize != size;
+	}
+
+	/**
 	 * Pushes an element onto the stack represented by this deque (in other
 	 * words, at the head of this deque) if it is possible to do so
 	 * immediately without violating capacity restrictions, throwing an
@@ -899,14 +913,28 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	}
 
 	/**
+	 * Exactly like {@link #containsAll(Collection)}, but takes an array instead of a Collection.
+	 * @see #containsAll(Collection)
+	 * @param c collection to be checked for containment in this collection
+	 * @return {@code true} if this collection contains all the elements
+	 * in the specified collection
+	 */
+	public boolean containsAll (Object[] c) {
+		for (Object o : c) {
+			if (!contains(o))
+				return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Removes all of this collection's elements that are also contained in the
 	 * specified collection (optional operation).  After this call returns,
 	 * this collection will contain no elements in common with the specified
 	 * collection.
 	 *
 	 * @param c collection containing elements to be removed from this collection
-	 * @return {@code true} if this collection changed as a result of the
-	 * call
+	 * @return {@code true} if this collection changed as a result of the call
 	 * @throws UnsupportedOperationException if the {@code removeAll} method
 	 *                                       is not supported by this collection
 	 * @throws ClassCastException            if the types of one or more elements
@@ -923,6 +951,20 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 */
 	@Override
 	public boolean removeAll (Collection<?> c) {
+		int oldSize = size;
+		for (Object o : c) {
+			remove(o);
+		}
+		return oldSize != size;
+	}
+
+	/**
+	 * Exactly like {@link #removeAll(Collection)}, but takes an array instead of a Collection.
+	 * @see #removeAll(Collection)
+	 * @param c collection containing elements to be removed from this collection
+	 * @return {@code true} if this collection changed as a result of the call
+	 */
+	public boolean removeAll (Object[] c) {
 		int oldSize = size;
 		for (Object o : c) {
 			remove(o);
@@ -954,6 +996,24 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 */
 	@Override
 	public boolean retainAll (Collection<?> c) {
+		int oldSize = size;
+		for (Object o : c) {
+			int idx;
+			do {
+				if ((idx = indexOf(o, false)) != -1)
+					removeAt(idx);
+			} while (idx == -1);
+		}
+		return oldSize != size;
+	}
+
+	/**
+	 * Exactly like {@link #retainAll(Collection)}, but takes an array instead of a Collection.
+	 * @see #retainAll(Collection)
+	 * @param c collection containing elements to be retained in this collection
+	 * @return {@code true} if this collection changed as a result of the call
+	 */
+	public boolean retainAll (Object[] c) {
 		int oldSize = size;
 		for (Object o : c) {
 			int idx;
