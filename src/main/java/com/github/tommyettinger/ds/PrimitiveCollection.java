@@ -755,7 +755,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Removes all of the elements of this collection that satisfy the given
+		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
 		 * the predicate are relayed to the caller.
 		 *
@@ -939,7 +939,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Removes all of the elements of this collection that satisfy the given
+		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
 		 * the predicate are relayed to the caller.
 		 *
@@ -1123,7 +1123,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Removes all of the elements of this collection that satisfy the given
+		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
 		 * the predicate are relayed to the caller.
 		 *
@@ -1307,7 +1307,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Removes all of the elements of this collection that satisfy the given
+		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
 		 * the predicate are relayed to the caller.
 		 *
@@ -1491,7 +1491,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Removes all of the elements of this collection that satisfy the given
+		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
 		 * the predicate are relayed to the caller.
 		 *

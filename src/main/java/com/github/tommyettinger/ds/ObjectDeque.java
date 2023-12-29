@@ -58,7 +58,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 
 	/**
 	 * Index of last element. Logically bigger than head. Usually points to an empty position, but points to the head when full
-	 * (size == values.length).
+	 * {@code (size == values.length)}.
 	 */
 	protected int tail = 0;
 
@@ -933,7 +933,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * this collection will contain no elements in common with the specified
 	 * collection.
 	 *
-	 * @param c collection containing elements to be removed from this collection
+	 * @param  other collection containing elements to be removed from this collection
 	 * @return {@code true} if this collection changed as a result of the call
 	 * @throws UnsupportedOperationException if the {@code removeAll} method
 	 *                                       is not supported by this collection
@@ -950,26 +950,69 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @see #contains(Object)
 	 */
 	@Override
-	public boolean removeAll (Collection<?> c) {
-		int oldSize = size;
-		for (Object o : c) {
-			remove(o);
+	public boolean removeAll (Collection<?> other) {
+		ObjectDequeIterator<?> me = iterator();
+		int originalSize = size();
+		for (Object item : other) {
+			me.reset();
+			while (me.hasNext()) {
+				if (Objects.equals(me.next(), item)) {
+					me.remove();
+				}
+			}
 		}
-		return oldSize != size;
+		return originalSize != size();
 	}
 
 	/**
 	 * Exactly like {@link #removeAll(Collection)}, but takes an array instead of a Collection.
 	 * @see #removeAll(Collection)
-	 * @param c collection containing elements to be removed from this collection
+	 * @param other array containing elements to be removed from this collection
 	 * @return {@code true} if this collection changed as a result of the call
 	 */
-	public boolean removeAll (Object[] c) {
-		int oldSize = size;
-		for (Object o : c) {
-			remove(o);
+	public boolean removeAll (Object[] other) {
+		ObjectDequeIterator<?> me = iterator();
+		int originalSize = size();
+		for (Object item : other) {
+			me.reset();
+			while (me.hasNext()) {
+				if (Objects.equals(me.next(), item)) {
+					me.remove();
+				}
+			}
 		}
-		return oldSize != size;
+		return originalSize != size();
+	}
+
+	/**
+	 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+	 * Note that if a value is present more than once in this collection, only one of those occurrences
+	 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+	 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+	 *
+	 * @param other a primitive collection of double items to remove one-by-one, such as a DoubleList or a DoubleSet
+	 * @return true if this collection was modified.
+	 */
+	public boolean removeEach (Collection<?> other) {
+		boolean changed = false;
+		for(Object item : other) {
+			changed |= remove(item);
+		}
+		return changed;
+	}
+
+	/**
+	 * Exactly like {@link #removeEach(Collection)}, but takes an array instead of a Collection.
+	 * @see #removeEach(Collection)
+	 * @param other array containing elements to be removed from this collection
+	 * @return {@code true} if this collection changed as a result of the call
+	 */
+	public boolean removeEach (Object[] other) {
+		boolean changed = false;
+		for(Object item : other) {
+			changed |= remove(item);
+		}
+		return changed;
 	}
 
 	/**
