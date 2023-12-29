@@ -202,7 +202,7 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final long[] newArray = new long[newSize];
+		final long[] newArray = new long[Math.max(1, newSize)];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);

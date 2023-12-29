@@ -203,7 +203,7 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final double[] newArray = new double[newSize];
+		final double[] newArray = new double[Math.max(1, newSize)];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);

@@ -40,8 +40,7 @@ public class ConstructionTest {
 
 		ObjectDeque<String> deque = new ObjectDeque<>(0);
 		deque.add("START");
-		deque.remove();
-		deque.addAll(list);
+		deque.addAll(names);
 		Assert.assertEquals(targetLength, deque.size());
 
 		ObjectSet<String> set = new ObjectSet<>(0);

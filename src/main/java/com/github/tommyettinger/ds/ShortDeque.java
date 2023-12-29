@@ -202,7 +202,7 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final short[] newArray = new short[newSize];
+		final short[] newArray = new short[Math.max(1, newSize)];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);

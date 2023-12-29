@@ -202,7 +202,7 @@ public class BooleanDeque implements PrimitiveCollection.OfBoolean, Arrangeable 
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final boolean[] newArray = new boolean[newSize];
+		final boolean[] newArray = new boolean[Math.max(1, newSize)];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);

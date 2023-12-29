@@ -203,7 +203,7 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final float[] newArray = new float[newSize];
+		final float[] newArray = new float[Math.max(1, newSize)];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);

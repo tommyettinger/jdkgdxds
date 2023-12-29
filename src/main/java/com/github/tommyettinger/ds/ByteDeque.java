@@ -202,7 +202,7 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final byte[] newArray = new byte[newSize];
+		final byte[] newArray = new byte[Math.max(1, newSize)];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);

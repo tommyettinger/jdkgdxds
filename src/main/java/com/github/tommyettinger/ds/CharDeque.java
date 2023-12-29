@@ -202,7 +202,7 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final char[] newArray = new char[newSize];
+		final char[] newArray = new char[Math.max(1, newSize)];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);

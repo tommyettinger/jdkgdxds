@@ -202,7 +202,7 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final int[] newArray = new int[newSize];
+		final int[] newArray = new int[Math.max(1, newSize)];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);
