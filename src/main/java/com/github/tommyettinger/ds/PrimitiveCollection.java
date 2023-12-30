@@ -88,6 +88,18 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean addAll (int[] array) {
+			return addAll(array, 0, array.length);
+		}
+
+		default boolean addAll (int[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= add(array[i]);
+			}
+			return changed;
+		}
+
 		/**
 		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
 		 *
@@ -290,6 +302,18 @@ public interface PrimitiveCollection<T> {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextLong());
+			}
+			return changed;
+		}
+
+		default boolean addAll (long[] array) {
+			return addAll(array, 0, array.length);
+		}
+
+		default boolean addAll (long[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= add(array[i]);
 			}
 			return changed;
 		}
@@ -500,6 +524,18 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean addAll (float[] array) {
+			return addAll(array, 0, array.length);
+		}
+
+		default boolean addAll (float[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= add(array[i]);
+			}
+			return changed;
+		}
+
 		/**
 		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
 		 *
@@ -706,6 +742,18 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean addAll (double[] array) {
+			return addAll(array, 0, array.length);
+		}
+
+		default boolean addAll (double[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= add(array[i]);
+			}
+			return changed;
+		}
+
 		/**
 		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
 		 *
@@ -886,6 +934,18 @@ public interface PrimitiveCollection<T> {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextShort());
+			}
+			return changed;
+		}
+
+		default boolean addAll (short[] array) {
+			return addAll(array, 0, array.length);
+		}
+
+		default boolean addAll (short[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= add(array[i]);
 			}
 			return changed;
 		}
@@ -1074,6 +1134,18 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean addAll (byte[] array) {
+			return addAll(array, 0, array.length);
+		}
+
+		default boolean addAll (byte[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= add(array[i]);
+			}
+			return changed;
+		}
+
 		/**
 		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
 		 *
@@ -1258,6 +1330,18 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean addAll (char[] array) {
+			return addAll(array, 0, array.length);
+		}
+
+		default boolean addAll (char[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= add(array[i]);
+			}
+			return changed;
+		}
+
 		/**
 		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
 		 *
@@ -1438,6 +1522,18 @@ public interface PrimitiveCollection<T> {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextBoolean());
+			}
+			return changed;
+		}
+
+		default boolean addAll (boolean[] array) {
+			return addAll(array, 0, array.length);
+		}
+
+		default boolean addAll (boolean[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= add(array[i]);
 			}
 			return changed;
 		}
