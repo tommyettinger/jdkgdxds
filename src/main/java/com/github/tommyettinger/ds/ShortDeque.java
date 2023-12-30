@@ -607,40 +607,6 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	}
 
 	/**
-	 * Adds all of the elements in the specified collection at the end
-	 * of this deque, as if by calling {@link #addLast} on each one,
-	 * in the order that they are returned by the collection's iterator.
-	 *
-	 * <p>When using a capacity-restricted deque, it is generally preferable
-	 * to call {@link #offer(short) offer} separately on each element.
-	 *
-	 * <p>An exception encountered while trying to add an element may result
-	 * in only some of the elements having been successfully added when
-	 * the associated exception is thrown.
-	 *
-	 * @param c the elements to be inserted into this deque
-	 * @return {@code true} if this deque changed as a result of the call
-	 * @throws IllegalStateException    if not all the elements can be added at
-	 *                                  this time due to insertion restrictions
-	 * @throws ClassCastException       if the class of an element of the specified
-	 *                                  collection prevents it from being added to this deque
-	 * @throws NullPointerException     if the specified collection contains a
-	 *                                  null element and this deque does not permit null elements,
-	 *                                  or if the specified collection is null
-	 * @throws IllegalArgumentException if some property of an element of the
-	 *                                  specified collection prevents it from being added to this deque
-	 */
-	@Override
-	public boolean addAll (OfShort c) {
-		int oldSize = size;
-		ShortIterator it = c.iterator();
-		while (it.hasNext()) {
-			addLast(it.nextShort());
-		}
-		return oldSize != size;
-	}
-
-	/**
 	 * Pushes an element onto the stack represented by this deque (in other
 	 * words, at the head of this deque) if it is possible to do so
 	 * immediately without violating capacity restrictions, throwing an
