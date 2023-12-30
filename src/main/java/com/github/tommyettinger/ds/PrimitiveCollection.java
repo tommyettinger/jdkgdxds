@@ -121,6 +121,25 @@ public interface PrimitiveCollection<T> {
 			return originalSize != size();
 		}
 
+		default boolean removeAll (int[] array) {
+			return removeAll(array, 0, array.length);
+		}
+
+		default boolean removeAll (int[] array, int offset, int length) {
+			IntIterator me;
+			int originalSize = size();
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				int item = array[i];
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextInt() == item) {
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
 		/**
 		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
 		 * Note that if a value is present more than once in this collection, only one of those occurrences
@@ -329,6 +348,25 @@ public interface PrimitiveCollection<T> {
 			int originalSize = size();
 			while (it.hasNext()) {
 				long item = it.nextLong();
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextLong() == item) {
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
+		default boolean removeAll (long[] array) {
+			return removeAll(array, 0, array.length);
+		}
+
+		default boolean removeAll (long[] array, int offset, int length) {
+			LongIterator me;
+			int originalSize = size();
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				long item = array[i];
 				me = iterator();
 				while (me.hasNext()) {
 					if (me.nextLong() == item) {
@@ -557,6 +595,25 @@ public interface PrimitiveCollection<T> {
 			return originalSize != size();
 		}
 
+		default boolean removeAll (float[] array) {
+			return removeAll(array, 0, array.length);
+		}
+
+		default boolean removeAll (float[] array, int offset, int length) {
+			FloatIterator me;
+			int originalSize = size();
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				float item = array[i];
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextFloat() == item) {
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
 		/**
 		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
 		 * Note that if a value is present more than once in this collection, only one of those occurrences
@@ -775,6 +832,25 @@ public interface PrimitiveCollection<T> {
 			return originalSize != size();
 		}
 
+		default boolean removeAll (double[] array) {
+			return removeAll(array, 0, array.length);
+		}
+
+		default boolean removeAll (double[] array, int offset, int length) {
+			DoubleIterator me;
+			int originalSize = size();
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				double item = array[i];
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextDouble() == item) {
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
 		/**
 		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
 		 * Note that if a value is present more than once in this collection, only one of those occurrences
@@ -961,6 +1037,25 @@ public interface PrimitiveCollection<T> {
 			int originalSize = size();
 			while (it.hasNext()) {
 				short item = it.nextShort();
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextShort() == item) {
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
+		default boolean removeAll (short[] array) {
+			return removeAll(array, 0, array.length);
+		}
+
+		default boolean removeAll (short[] array, int offset, int length) {
+			ShortIterator me;
+			int originalSize = size();
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				short item = array[i];
 				me = iterator();
 				while (me.hasNext()) {
 					if (me.nextShort() == item) {
@@ -1167,6 +1262,25 @@ public interface PrimitiveCollection<T> {
 			return originalSize != size();
 		}
 
+		default boolean removeAll (byte[] array) {
+			return removeAll(array, 0, array.length);
+		}
+
+		default boolean removeAll (byte[] array, int offset, int length) {
+			ByteIterator me;
+			int originalSize = size();
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				byte item = array[i];
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextByte() == item) {
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
 		/**
 		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
 		 * Note that if a value is present more than once in this collection, only one of those occurrences
@@ -1363,6 +1477,25 @@ public interface PrimitiveCollection<T> {
 			return originalSize != size();
 		}
 
+		default boolean removeAll (char[] array) {
+			return removeAll(array, 0, array.length);
+		}
+
+		default boolean removeAll (char[] array, int offset, int length) {
+			CharIterator me;
+			int originalSize = size();
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				char item = array[i];
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextChar() == item) {
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
 		/**
 		 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
 		 * Note that if a value is present more than once in this collection, only one of those occurrences
@@ -1549,6 +1682,25 @@ public interface PrimitiveCollection<T> {
 			int originalSize = size();
 			while (it.hasNext()) {
 				boolean item = it.nextBoolean();
+				me = iterator();
+				while (me.hasNext()) {
+					if (me.nextBoolean() == item) {
+						me.remove();
+					}
+				}
+			}
+			return originalSize != size();
+		}
+
+		default boolean removeAll (boolean[] array) {
+			return removeAll(array, 0, array.length);
+		}
+
+		default boolean removeAll (boolean[] array, int offset, int length) {
+			BooleanIterator me;
+			int originalSize = size();
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				boolean item = array[i];
 				me = iterator();
 				while (me.hasNext()) {
 					if (me.nextBoolean() == item) {
