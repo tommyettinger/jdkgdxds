@@ -158,6 +158,18 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean removeEach (int[] array) {
+			return removeEach(array, 0, array.length);
+		}
+
+		default boolean removeEach (int[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= remove(array[i]);
+			}
+			return changed;
+		}
+
 		default boolean containsAll (OfInt other) {
 			IntIterator it = other.iterator();
 			boolean has = true;
@@ -391,6 +403,18 @@ public interface PrimitiveCollection<T> {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextLong());
+			}
+			return changed;
+		}
+
+		default boolean removeEach (long[] array) {
+			return removeEach(array, 0, array.length);
+		}
+
+		default boolean removeEach (long[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= remove(array[i]);
 			}
 			return changed;
 		}
@@ -632,6 +656,18 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean removeEach (float[] array) {
+			return removeEach(array, 0, array.length);
+		}
+
+		default boolean removeEach (float[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= remove(array[i]);
+			}
+			return changed;
+		}
+
 		default boolean containsAll (OfFloat other) {
 			FloatIterator it = other.iterator();
 			boolean has = true;
@@ -869,6 +905,18 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean removeEach (double[] array) {
+			return removeEach(array, 0, array.length);
+		}
+
+		default boolean removeEach (double[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= remove(array[i]);
+			}
+			return changed;
+		}
+
 		default boolean containsAll (OfDouble other) {
 			DoubleIterator it = other.iterator();
 			boolean has = true;
@@ -1080,6 +1128,18 @@ public interface PrimitiveCollection<T> {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextShort());
+			}
+			return changed;
+		}
+
+		default boolean removeEach (short[] array) {
+			return removeEach(array, 0, array.length);
+		}
+
+		default boolean removeEach (short[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= remove(array[i]);
 			}
 			return changed;
 		}
@@ -1299,6 +1359,18 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean removeEach (byte[] array) {
+			return removeEach(array, 0, array.length);
+		}
+
+		default boolean removeEach (byte[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= remove(array[i]);
+			}
+			return changed;
+		}
+
 		default boolean containsAll (OfByte other) {
 			ByteIterator it = other.iterator();
 			boolean has = true;
@@ -1514,6 +1586,18 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean removeEach (char[] array) {
+			return removeEach(array, 0, array.length);
+		}
+
+		default boolean removeEach (char[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= remove(array[i]);
+			}
+			return changed;
+		}
+
 		default boolean containsAll (OfChar other) {
 			CharIterator it = other.iterator();
 			boolean has = true;
@@ -1725,6 +1809,18 @@ public interface PrimitiveCollection<T> {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextBoolean());
+			}
+			return changed;
+		}
+
+		default boolean removeEach (boolean[] array) {
+			return removeEach(array, 0, array.length);
+		}
+
+		default boolean removeEach (boolean[] array, int offset, int length) {
+			boolean changed = false;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				changed |= remove(array[i]);
 			}
 			return changed;
 		}
