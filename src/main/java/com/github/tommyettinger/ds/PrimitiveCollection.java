@@ -172,11 +172,10 @@ public interface PrimitiveCollection<T> {
 
 		default boolean containsAll (OfInt other) {
 			IntIterator it = other.iterator();
-			boolean has = true;
 			while (it.hasNext()) {
-				has &= contains(it.nextInt());
+				if(!contains(it.nextInt())) return false;
 			}
-			return has;
+			return true;
 		}
 
 		default boolean containsAll (int[] array) {
@@ -184,11 +183,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAll (int[] array, int offset, int length) {
-			boolean has = true;
 			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-				has &= contains(array[i]);
+				if(!contains(array[i])) return false;
 			}
-			return has;
+			return true;
 		}
 
 		/**
@@ -433,11 +431,10 @@ public interface PrimitiveCollection<T> {
 
 		default boolean containsAll (OfLong other) {
 			LongIterator it = other.iterator();
-			boolean has = true;
 			while (it.hasNext()) {
-				has &= contains(it.nextLong());
+				if(!contains(it.nextLong())) return false;
 			}
-			return has;
+			return true;
 		}
 
 		default boolean containsAll (long[] array) {
@@ -445,11 +442,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAll (long[] array, int offset, int length) {
-			boolean has = true;
 			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-				has &= contains(array[i]);
+				if(!contains(array[i])) return false;
 			}
-			return has;
+			return true;
 		}
 
 		/**
@@ -694,11 +690,10 @@ public interface PrimitiveCollection<T> {
 
 		default boolean containsAll (OfFloat other) {
 			FloatIterator it = other.iterator();
-			boolean has = true;
 			while (it.hasNext()) {
-				has &= contains(it.nextFloat());
+				if(!contains(it.nextFloat())) return false;
 			}
-			return has;
+			return true;
 		}
 
 		default boolean containsAll (float[] array) {
@@ -706,11 +701,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAll (float[] array, int offset, int length) {
-			boolean has = true;
 			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-				has &= contains(array[i]);
+				if(!contains(array[i])) return false;
 			}
-			return has;
+			return true;
 		}
 
 		/**
@@ -955,11 +949,10 @@ public interface PrimitiveCollection<T> {
 
 		default boolean containsAll (OfDouble other) {
 			DoubleIterator it = other.iterator();
-			boolean has = true;
 			while (it.hasNext()) {
-				has &= contains(it.nextDouble());
+				if(!contains(it.nextDouble())) return false;
 			}
-			return has;
+			return true;
 		}
 
 		default boolean containsAll (double[] array) {
@@ -967,11 +960,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAll (double[] array, int offset, int length) {
-			boolean has = true;
 			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-				has &= contains(array[i]);
+				if(!contains(array[i])) return false;
 			}
-			return has;
+			return true;
 		}
 
 		/**
@@ -1194,11 +1186,10 @@ public interface PrimitiveCollection<T> {
 
 		default boolean containsAll (OfShort other) {
 			ShortIterator it = other.iterator();
-			boolean has = true;
 			while (it.hasNext()) {
-				has &= contains(it.nextShort());
+				if(!contains(it.nextShort())) return false;
 			}
-			return has;
+			return true;
 		}
 
 		default boolean containsAll (short[] array) {
@@ -1206,11 +1197,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAll (short[] array, int offset, int length) {
-			boolean has = true;
 			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-				has &= contains(array[i]);
+				if(!contains(array[i])) return false;
 			}
-			return has;
+			return true;
 		}
 
 		/**
@@ -1433,11 +1423,10 @@ public interface PrimitiveCollection<T> {
 
 		default boolean containsAll (OfByte other) {
 			ByteIterator it = other.iterator();
-			boolean has = true;
 			while (it.hasNext()) {
-				has &= contains(it.nextByte());
+				if(!contains(it.nextByte())) return false;
 			}
-			return has;
+			return true;
 		}
 
 		default boolean containsAll (byte[] array) {
@@ -1445,11 +1434,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAll (byte[] array, int offset, int length) {
-			boolean has = true;
 			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-				has &= contains(array[i]);
+				if(!contains(array[i])) return false;
 			}
-			return has;
+			return true;
 		}
 
 		/**
@@ -1672,11 +1660,10 @@ public interface PrimitiveCollection<T> {
 
 		default boolean containsAll (OfChar other) {
 			CharIterator it = other.iterator();
-			boolean has = true;
 			while (it.hasNext()) {
-				has &= contains(it.nextChar());
+				if(!contains(it.nextChar())) return false;
 			}
-			return has;
+			return true;
 		}
 
 		default boolean containsAll (char[] array) {
@@ -1684,11 +1671,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAll (char[] array, int offset, int length) {
-			boolean has = true;
 			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-				has &= contains(array[i]);
+				if(!contains(array[i])) return false;
 			}
-			return has;
+			return true;
 		}
 
 		/**
@@ -1911,11 +1897,10 @@ public interface PrimitiveCollection<T> {
 
 		default boolean containsAll (OfBoolean other) {
 			BooleanIterator it = other.iterator();
-			boolean has = true;
 			while (it.hasNext()) {
-				has &= contains(it.nextBoolean());
+				if(!contains(it.nextBoolean())) return false;
 			}
-			return has;
+			return true;
 		}
 
 		default boolean containsAll (boolean[] array) {
@@ -1923,11 +1908,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAll (boolean[] array, int offset, int length) {
-			boolean has = true;
 			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-				has &= contains(array[i]);
+				if(!contains(array[i])) return false;
 			}
-			return has;
+			return true;
 		}
 
 		/**
