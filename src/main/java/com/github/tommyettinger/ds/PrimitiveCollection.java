@@ -179,6 +179,18 @@ public interface PrimitiveCollection<T> {
 			return has;
 		}
 
+		default boolean containsAll (int[] array) {
+			return containsAll(array, 0, array.length);
+		}
+
+		default boolean containsAll (int[] array, int offset, int length) {
+			boolean has = true;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				has &= contains(array[i]);
+			}
+			return has;
+		}
+
 		/**
 		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
@@ -424,6 +436,18 @@ public interface PrimitiveCollection<T> {
 			boolean has = true;
 			while (it.hasNext()) {
 				has &= contains(it.nextLong());
+			}
+			return has;
+		}
+
+		default boolean containsAll (long[] array) {
+			return containsAll(array, 0, array.length);
+		}
+
+		default boolean containsAll (long[] array, int offset, int length) {
+			boolean has = true;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				has &= contains(array[i]);
 			}
 			return has;
 		}
@@ -677,6 +701,18 @@ public interface PrimitiveCollection<T> {
 			return has;
 		}
 
+		default boolean containsAll (float[] array) {
+			return containsAll(array, 0, array.length);
+		}
+
+		default boolean containsAll (float[] array, int offset, int length) {
+			boolean has = true;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				has &= contains(array[i]);
+			}
+			return has;
+		}
+
 		/**
 		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
@@ -926,6 +962,18 @@ public interface PrimitiveCollection<T> {
 			return has;
 		}
 
+		default boolean containsAll (double[] array) {
+			return containsAll(array, 0, array.length);
+		}
+
+		default boolean containsAll (double[] array, int offset, int length) {
+			boolean has = true;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				has &= contains(array[i]);
+			}
+			return has;
+		}
+
 		/**
 		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
@@ -1149,6 +1197,18 @@ public interface PrimitiveCollection<T> {
 			boolean has = true;
 			while (it.hasNext()) {
 				has &= contains(it.nextShort());
+			}
+			return has;
+		}
+
+		default boolean containsAll (short[] array) {
+			return containsAll(array, 0, array.length);
+		}
+
+		default boolean containsAll (short[] array, int offset, int length) {
+			boolean has = true;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				has &= contains(array[i]);
 			}
 			return has;
 		}
@@ -1380,6 +1440,18 @@ public interface PrimitiveCollection<T> {
 			return has;
 		}
 
+		default boolean containsAll (byte[] array) {
+			return containsAll(array, 0, array.length);
+		}
+
+		default boolean containsAll (byte[] array, int offset, int length) {
+			boolean has = true;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				has &= contains(array[i]);
+			}
+			return has;
+		}
+
 		/**
 		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
@@ -1607,6 +1679,18 @@ public interface PrimitiveCollection<T> {
 			return has;
 		}
 
+		default boolean containsAll (char[] array) {
+			return containsAll(array, 0, array.length);
+		}
+
+		default boolean containsAll (char[] array, int offset, int length) {
+			boolean has = true;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				has &= contains(array[i]);
+			}
+			return has;
+		}
+
 		/**
 		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
@@ -1830,6 +1914,18 @@ public interface PrimitiveCollection<T> {
 			boolean has = true;
 			while (it.hasNext()) {
 				has &= contains(it.nextBoolean());
+			}
+			return has;
+		}
+
+		default boolean containsAll (boolean[] array) {
+			return containsAll(array, 0, array.length);
+		}
+
+		default boolean containsAll (boolean[] array, int offset, int length) {
+			boolean has = true;
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				has &= contains(array[i]);
 			}
 			return has;
 		}
