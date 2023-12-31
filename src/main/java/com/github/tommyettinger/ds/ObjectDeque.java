@@ -961,7 +961,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * collection.
 	 *
 	 * @param  other collection containing elements to be removed from this collection
-	 * @return {@code true} if this collection changed as a result of the call
+	 * @return {@code true} if this deque changed as a result of the call
 	 * @throws UnsupportedOperationException if the {@code removeAll} method
 	 *                                       is not supported by this collection
 	 * @throws ClassCastException            if the types of one or more elements
@@ -995,12 +995,24 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * Exactly like {@link #removeAll(Collection)}, but takes an array instead of a Collection.
 	 * @see #removeAll(Collection)
 	 * @param other array containing elements to be removed from this collection
-	 * @return {@code true} if this collection changed as a result of the call
+	 * @return {@code true} if this deque changed as a result of the call
 	 */
 	public boolean removeAll (Object[] other) {
+		return removeAll(other, 0, other.length);
+	}
+	/**
+	 * Like {@link #removeAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #removeAll(Object[])
+	 * @param array the elements to be removed from this deque
+	 * @param offset the index of the first item in array to remove
+	 * @param length how many items, at most, to get from array and remove from this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean removeAll (Object[] array, int offset, int length) {
 		ObjectDequeIterator<?> me = iterator();
 		int originalSize = size();
-		for (Object item : other) {
+		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+			Object item = array[i];
 			me.reset();
 			while (me.hasNext()) {
 				if (Objects.equals(me.next(), item)) {
@@ -1017,8 +1029,8 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
 	 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
 	 *
-	 * @param other a primitive collection of double items to remove one-by-one, such as a DoubleList or a DoubleSet
-	 * @return true if this collection was modified.
+	 * @param other a Collection of items to remove one-by-one, such as an ObjectList or an ObjectSet
+	 * @return true if this deque was modified.
 	 */
 	public boolean removeEach (Collection<?> other) {
 		boolean changed = false;
@@ -1031,13 +1043,25 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/**
 	 * Exactly like {@link #removeEach(Collection)}, but takes an array instead of a Collection.
 	 * @see #removeEach(Collection)
-	 * @param other array containing elements to be removed from this collection
-	 * @return {@code true} if this collection changed as a result of the call
+	 * @param array array containing elements to be removed from this collection
+	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean removeEach (Object[] other) {
+	public boolean removeEach (Object[] array) {
+		return removeEach(array, 0, array.length);
+	}
+
+	/**
+	 * Like {@link #removeEach(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #removeEach(Object[])
+	 * @param array the elements to be removed from this deque
+	 * @param offset the index of the first item in array to remove
+	 * @param length how many items, at most, to get from array and remove from this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean removeEach (Object[] array, int offset, int length) {
 		boolean changed = false;
-		for(Object item : other) {
-			changed |= remove(item);
+		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+			changed |= remove(array[i]);
 		}
 		return changed;
 	}
