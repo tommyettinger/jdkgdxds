@@ -3364,6 +3364,24 @@ public class PileupTest {
             ((x, y) -> BitConversion.imul(x, 0xC13FA9A9) + BitConversion.imul(0x91E10DA5, y)), // hash 14 1MS , 2A , 3MA
             ((x, y) -> x * 0xC13F + y * 0x91E1), // hash 15 1MS , 2A , 3MA
             ((x, y) -> x * 0x7587 + y * 0x6A89), // hash 16 1MS , 2A , 3MA
+            ((x, y) -> x * 0xC13FA9A9 + y * 0x91E10DA5), // hash 17 1MS , 2A , 3MA
+            ((x, y) -> {
+                int xs = x >> 31, ys = y >> 31;
+                x ^= xs;
+                y ^= ys;
+                y += ((x + y) * (x + y + 1) >>> 1);
+                return BitConversion.imul(y ^ y >>> 1, 0xD1B54A35) ^ (xs & 0x55555555) ^ (ys & 0xAAAAAAAA);
+            }), // hash 18 1MS , 2A , 3MA
+            ((x, y) -> {
+                int xs = x >> 31, ys = y >> 31;
+                x ^= xs;
+                y ^= ys;
+                y = (x >= y) ? (((x & 1) == 0) ? x * (x + 2) - y : x * x + y) : (((y & 1) == 0) ? y * y + x : y * (y + 2) - x);
+                return BitConversion.imul(y ^ y >>> 1, 0x9E3779B9) ^ (xs & 0x55555555) ^ (ys & 0xAAAAAAAA);
+            }), // hash 19 1MS , 2A , 3MA
+            ((x, y) -> x * 0x3D99C097 + y * 0x3E66C06B), // hash 20 1MS , 2A , 3MA
+            ((x, y) -> (x = x * 0x3D99C097 + y * 0x3E66C06B) ^ x >>> 2), // hash 21 1MS , 2A , 3MA
+            ((x, y) -> (x = x * 0xC13FA9A9 + y * 0x91E10DA5) ^ x >>> 1), // hash 22 1MS , 2A , 3MA
         };
 
         /*
