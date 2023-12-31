@@ -711,13 +711,24 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/**
 	 * Exactly like {@link #addAll(Collection)}, but takes an array instead of a Collection.
 	 * @see #addAll(Collection)
-	 * @param c the elements to be inserted into this deque
+	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (T[] c) {
+	public boolean addAll (T[] array) {
+		return addAll(array, 0, array.length);
+	}
+	/**
+	 * Like {@link #addAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #addAll(Object[])
+	 * @param array the elements to be inserted into this deque
+	 * @param offset the index of the first item in array to add
+	 * @param length how many items, at most, to add from array into this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAll (T[] array, int offset, int length) {
 		int oldSize = size;
-		for (T t : c) {
-			addLast(t);
+		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+			addLast(array[i]);
 		}
 		return oldSize != size;
 	}
@@ -915,14 +926,30 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/**
 	 * Exactly like {@link #containsAll(Collection)}, but takes an array instead of a Collection.
 	 * @see #containsAll(Collection)
-	 * @param c collection to be checked for containment in this collection
+	 * @param array array to be checked for containment in this collection
 	 * @return {@code true} if this collection contains all the elements
 	 * in the specified collection
 	 */
-	public boolean containsAll (Object[] c) {
-		for (Object o : c) {
+	public boolean containsAll (Object[] array) {
+		for (Object o : array) {
 			if (!contains(o))
 				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Like {@link #containsAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #containsAll(Object[])
+	 * @param array array to be checked for containment in this collection
+	 * @param offset the index of the first item in array to check
+	 * @param length how many items, at most, to check from array
+	 * @return {@code true} if this collection contains all the elements
+	 * in the specified collection
+	 */
+	public boolean containsAll (T[] array, int offset, int length) {
+		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+			if(!contains(array[i])) return false;
 		}
 		return true;
 	}
