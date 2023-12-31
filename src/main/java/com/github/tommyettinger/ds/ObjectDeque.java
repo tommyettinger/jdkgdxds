@@ -1104,12 +1104,33 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/**
 	 * Exactly like {@link #retainAll(Collection)}, but takes an array instead of a Collection.
 	 * @see #retainAll(Collection)
-	 * @param c collection containing elements to be retained in this collection
-	 * @return {@code true} if this collection changed as a result of the call
+	 * @param array array containing elements to be retained in this collection
+	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean retainAll (Object[] c) {
+	public boolean retainAll (Object[] array) {
 		int oldSize = size;
-		for (Object o : c) {
+		for (Object o : array) {
+			int idx;
+			do {
+				if ((idx = indexOf(o, false)) != -1)
+					removeAt(idx);
+			} while (idx == -1);
+		}
+		return oldSize != size;
+	}
+
+	/**
+	 * Like {@link #retainAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #retainAll(Object[])
+	 * @param array the elements to be retained in this deque
+	 * @param offset the index of the first item in array to retain
+	 * @param length how many items, at most, to retain from array in this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean retainAll (Object[] array, int offset, int length) {
+		int oldSize = size;
+		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+			Object o = array[i];
 			int idx;
 			do {
 				if ((idx = indexOf(o, false)) != -1)
