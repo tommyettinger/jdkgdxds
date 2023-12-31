@@ -65,18 +65,21 @@ public class Coord {
 	}
 
 	private static int hash(int x, int y, int mask) {
-		return x * 0x17587 + y * 0x16A89 & mask;
+//		return x * 0x17587 + y * 0x16A89 & mask;
+		return (y + ((x + y) * (x + y + 1) >>> 1)) * 0x9E3779B9 & mask;
 	}
 	public static void main(String[] args) {
-		int LIMIT = 512;
+		int LIMIT = 10000;
 		int collisions = 0;
-		IntSet ints = new IntSet(51, 0.7f){
-			@Override
-			protected int place (int item) {
-				return item & mask;
-			}
-		};
-		int mask = MathTools.nextPowerOfTwo((int)(LIMIT * LIMIT / 0.7f)) - 1;
+		IntSet ints = new IntSet(51, 0.5f)
+//		{
+//			@Override
+//			protected int place (int item) {
+//				return item & mask;
+//			}
+//		}
+		;
+		int mask = MathTools.nextPowerOfTwo((int)(LIMIT * LIMIT / 0.5f)) - 1;
 		ints.add(0);
 		int latest;
 		for (int shell = 1; shell < LIMIT; shell++) {
