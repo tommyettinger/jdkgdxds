@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntSet;
 
@@ -66,10 +67,18 @@ public class Coord {
 
 	private static int hash(int x, int y, int mask) {
 //		return x * 0x17587 + y * 0x16A89 & mask;
-		return (y + ((x + y) * (x + y + 1) >>> 1)) * 0x9E3779B9 & mask;
+//		return (y + ((x + y) * (x + y + 1) >>> 1)) * 0x9E3779B9 & mask;
+		int xs = x >> 31, ys = y >> 31;
+		x ^= xs;
+		y ^= ys;
+		y = y + ((x + y) * (x + y + 1) >>> 1) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
+//		y = y + ((x + y) * (x + y + 1) >>> 1) ^ (xs & 0xAE62A9C5) ^ (ys & 0x519D563A);
+//		return y & mask;
+		return (y ^ (y << 16 | y >>> 16) ^ (y << 8 | y >>> 24)) & mask;
+//		return (y + ((x + y) * (x + y + 1) >>> 1)) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555) & mask;
 	}
 	public static void main(String[] args) {
-		int LIMIT = 10000;
+		int LIMIT = 4096;
 		int collisions = 0;
 		IntSet ints = new IntSet(51, 0.5f)
 //		{
@@ -79,19 +88,30 @@ public class Coord {
 //			}
 //		}
 		;
-		int mask = MathTools.nextPowerOfTwo((int)(LIMIT * LIMIT / 0.5f)) - 1;
+		int mask = MathTools.nextPowerOfTwo((int)(LIMIT * LIMIT * 4 / 0.5f)) - 1;
 		ints.add(0);
 		int latest;
 		for (int shell = 1; shell < LIMIT; shell++) {
-			for (int high = 0; high <= shell; high++) {
-				if(!ints.add(latest = hash(shell, high, mask)))
-					System.out.println("Collision #" + (++collisions) + " with hash " + latest + " on x="+shell + ", y="+high);
-			}
-			for (int side = shell - 1; side >= 0; side--) {
-				if(!ints.add(latest = hash(side, shell, mask)))
-					System.out.println("Collision #" + (++collisions) + " with hash " + latest + " on x="+side + ", y="+shell);
+			for (int xorx = -1; xorx <= 0; xorx++) {
+				for (int xory = -1; xory <= 0; xory++) {
+					for (int high = 0; high <= shell; high++) {
+						if (!ints.add(latest = hash(shell ^ xorx, high ^ xory, mask)))
+							System.out.println("Collision #" + (++collisions) + " with hash " + latest + " on x=" + (shell ^ xorx) + ", y=" + (high ^ xory));
+					}
+					for (int side = shell - 1; side >= 0; side--) {
+						if (!ints.add(latest = hash(side ^ xorx, shell ^ xory, mask)))
+							System.out.println("Collision #" + (++collisions) + " with hash " + latest + " on x=" + (side ^ xorx) + ", y=" + (shell ^ xory));
+					}
+				}
 			}
 		}
 		System.out.println("Total collisions: " + collisions);
+
+		System.out.println("Sample hash results:");
+		for (int x = -10; x <= 10; x++) {
+			for (int y = -10; y <= 10; y++) {
+				System.out.println("x="+x+",y="+y+",hash="+ Base.BASE16.unsigned(hash(x, y, -1)));
+			}
+		}
 	}
 }
