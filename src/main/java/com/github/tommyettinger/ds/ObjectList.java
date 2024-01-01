@@ -355,14 +355,71 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
-	 * Returns true if this ObjectList contains any the specified values.
+	 * Exactly like {@link #containsAll(Collection)}, but takes an array instead of a Collection.
+	 * @see #containsAll(Collection)
+	 * @param array array to be checked for containment in this collection
+	 * @return {@code true} if this list contains all the elements in the specified array
+	 */
+	public boolean containsAll (Object[] array) {
+		for (Object o : array) {
+			if (!contains(o))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Like {@link #containsAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #containsAll(Object[])
+	 * @param array array to be checked for containment in this collection
+	 * @param offset the index of the first item in array to check
+	 * @param length how many items, at most, to check from array
+	 * @return {@code true} if this collection contains all the elements in the specified range of array
+	 */
+	public boolean containsAll (Object[] array, int offset, int length) {
+		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+			if(!contains(array[i])) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns true if this ObjectList contains any of the specified values.
 	 *
-	 * @param values May contains nulls.
+	 * @param values may contain nulls, but must not be null itself
 	 * @return true if this ObjectList contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAny (Collection<? extends T> values) {
+	public boolean containsAny (Iterable<? extends T> values) {
 		for (T v : values) {
 			if (contains(v)) {return true;}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if this ObjectList contains any of the specified values.
+	 *
+	 * @param values may contain nulls, but must not be null itself
+	 * @return true if this ObjectList contains any of the items in {@code values}, false otherwise
+	 */
+	public boolean containsAny (Object[] values) {
+		for (Object v : values) {
+			if (contains(v)) {return true;}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if this ObjectList contains any items from the specified range of values.
+	 *
+	 * @param values may contain nulls, but must not be null itself
+	 * @param offset the index to start checking in values
+	 * @param length how many items to check from values
+	 * @return true if this ObjectList contains any of the items in the given range of {@code values}, false otherwise
+	 */
+	public boolean containsAny (Object[] values, int offset, int length) {
+		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
+			if (contains(values[i])) {return true;}
 		}
 		return false;
 	}

@@ -947,11 +947,52 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @return {@code true} if this collection contains all the elements
 	 * in the specified range of array
 	 */
-	public boolean containsAll (T[] array, int offset, int length) {
+	public boolean containsAll (Object[] array, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
 			if(!contains(array[i])) return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Returns true if this ObjectDeque contains any of the specified values.
+	 *
+	 * @param values may contain nulls, but must not be null itself
+	 * @return true if this ObjectDeque contains any of the items in {@code values}, false otherwise
+	 */
+	public boolean containsAny (Iterable<? extends T> values) {
+		for (T v : values) {
+			if (contains(v)) {return true;}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if this ObjectDeque contains any of the specified values.
+	 *
+	 * @param values may contain nulls, but must not be null itself
+	 * @return true if this ObjectDeque contains any of the items in {@code values}, false otherwise
+	 */
+	public boolean containsAny (Object[] values) {
+		for (Object v : values) {
+			if (contains(v)) {return true;}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if this ObjectDeque contains any items from the specified range of values.
+	 *
+	 * @param values may contain nulls, but must not be null itself
+	 * @param offset the index to start checking in values
+	 * @param length how many items to check from values
+	 * @return true if this ObjectDeque contains any of the items in the given range of {@code values}, false otherwise
+	 */
+	public boolean containsAny (Object[] values, int offset, int length) {
+		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
+			if (contains(values[i])) {return true;}
+		}
+		return false;
 	}
 
 	/**
