@@ -928,7 +928,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @see #containsAll(Collection)
 	 * @param array array to be checked for containment in this collection
 	 * @return {@code true} if this collection contains all the elements
-	 * in the specified collection
+	 * in the specified array
 	 */
 	public boolean containsAll (Object[] array) {
 		for (Object o : array) {
@@ -945,7 +945,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @param offset the index of the first item in array to check
 	 * @param length how many items, at most, to check from array
 	 * @return {@code true} if this collection contains all the elements
-	 * in the specified collection
+	 * in the specified range of array
 	 */
 	public boolean containsAll (T[] array, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
@@ -1032,7 +1032,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	 * @param other a Collection of items to remove one-by-one, such as an ObjectList or an ObjectSet
 	 * @return true if this deque was modified.
 	 */
-	public boolean removeEach (Collection<?> other) {
+	public boolean removeEach (Iterable<?> other) {
 		boolean changed = false;
 		for(Object item : other) {
 			changed |= remove(item);
@@ -1041,8 +1041,8 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	}
 
 	/**
-	 * Exactly like {@link #removeEach(Collection)}, but takes an array instead of a Collection.
-	 * @see #removeEach(Collection)
+	 * Exactly like {@link #removeEach(Iterable)}, but takes an array instead of a Collection.
+	 * @see #removeEach(Iterable)
 	 * @param array array containing elements to be removed from this collection
 	 * @return {@code true} if this deque changed as a result of the call
 	 */

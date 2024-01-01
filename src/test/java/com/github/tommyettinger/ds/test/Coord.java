@@ -84,7 +84,7 @@ public class Coord {
 //		{
 //			@Override
 //			protected int place (int item) {
-//				return item & mask;
+//				return item & this.mask;
 //			}
 //		}
 		;

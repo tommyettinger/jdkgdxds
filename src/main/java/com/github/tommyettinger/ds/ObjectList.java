@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -189,23 +190,80 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	}
 
 	/**
+	 * Exactly like {@link #removeAll(Collection)}, but takes an array instead of a Collection.
+	 * @see #removeAll(Collection)
+	 * @param other array containing elements to be removed from this list
+	 * @return {@code true} if this list changed as a result of the call
+	 */
+	public boolean removeAll (Object[] other) {
+		return removeAll(other, 0, other.length);
+	}
+	/**
+	 * Like {@link #removeAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #removeAll(Object[])
+	 * @param array the elements to be removed from this list
+	 * @param offset the index of the first item in array to remove
+	 * @param length how many items, at most, to get from array and remove from this
+	 * @return {@code true} if this list changed as a result of the call
+	 */
+	public boolean removeAll (Object[] array, int offset, int length) {
+		ObjectListIterator<?> me = iterator();
+		int originalSize = size();
+		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+			Object item = array[i];
+			me.reset();
+			while (me.hasNext()) {
+				if (Objects.equals(me.next(), item)) {
+					me.remove();
+				}
+			}
+		}
+		return originalSize != size();
+	}
+
+	/**
 	 * Removes from this ObjectList element-wise occurrences of elements contained in the specified Iterable.
 	 * Note that if a value is present more than once in this ObjectList, only one of those occurrences
-	 * will be removed for each occurrence of that value in {@code able}. If {@code able} has the same
-	 * contents as this ObjectList or has additional items, then removing each of {@code able} will clear this.
+	 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+	 * contents as this ObjectList or has additional items, then removing each of {@code other} will clear this.
 	 * <br>
 	 * This matches the behavior of the libGDX {@code Array.removeAll(Array)} method in libGDX 1.10.0 and earlier.
 	 * The method {@link #removeAll(Collection)} here matches the behavior of the JDK
 	 * {@link List#removeAll(Collection)} method.
 	 *
-	 * @param able an Iterable of T items to remove one-by-one, such as another ObjectList or an ObjectSet
+	 * @param other an Iterable of T items to remove one-by-one, such as another ObjectList or an ObjectSet
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (Iterable<T> able) {
-		Iterator<T> it = able.iterator();
+	public boolean removeEach (Iterable<?> other) {
 		boolean changed = false;
-		while (it.hasNext()) {
-			changed |= remove(it.next());
+		for(Object item : other) {
+			changed |= remove(item);
+		}
+		return changed;
+	}
+
+	/**
+	 * Exactly like {@link #removeEach(Iterable)}, but takes an array instead of a Collection.
+	 * @see #removeEach(Iterable)
+	 * @param array array containing elements to be removed from this list
+	 * @return {@code true} if this list changed as a result of the call
+	 */
+	public boolean removeEach (Object[] array) {
+		return removeEach(array, 0, array.length);
+	}
+
+	/**
+	 * Like {@link #removeEach(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #removeEach(Object[])
+	 * @param array the elements to be removed from this list
+	 * @param offset the index of the first item in array to remove
+	 * @param length how many items, at most, to get from array and remove from this
+	 * @return {@code true} if this list changed as a result of the call
+	 */
+	public boolean removeEach (Object[] array, int offset, int length) {
+		boolean changed = false;
+		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+			changed |= remove(array[i]);
 		}
 		return changed;
 	}
