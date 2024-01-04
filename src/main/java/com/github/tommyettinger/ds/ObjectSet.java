@@ -267,6 +267,13 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		return true;
 	}
 
+	public boolean containsAny (Iterable<?> c) {
+		for (Object o : c) {
+			if (contains(o)) {return true;}
+		}
+		return false;
+	}
+
 	@Override
 	public boolean addAll (Collection<? extends T> coll) {
 		final int length = coll.size();

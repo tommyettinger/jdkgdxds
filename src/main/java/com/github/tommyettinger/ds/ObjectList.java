@@ -389,8 +389,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 	 * @param values may contain nulls, but must not be null itself
 	 * @return true if this ObjectList contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAny (Iterable<? extends T> values) {
-		for (T v : values) {
+	public boolean containsAny (Iterable<?> values) {
+		for (Object v : values) {
 			if (contains(v)) {return true;}
 		}
 		return false;

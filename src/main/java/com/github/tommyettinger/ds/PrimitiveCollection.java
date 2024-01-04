@@ -189,6 +189,25 @@ public interface PrimitiveCollection<T> {
 			return true;
 		}
 
+		default boolean containsAny (OfInt other) {
+			IntIterator it = other.iterator();
+			while (it.hasNext()) {
+				if(contains(it.nextInt())) return true;
+			}
+			return false;
+		}
+
+		default boolean containsAny (int[] array) {
+			return containsAny(array, 0, array.length);
+		}
+
+		default boolean containsAny (int[] array, int offset, int length) {
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				if(contains(array[i])) return true;
+			}
+			return false;
+		}
+
 		/**
 		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
@@ -446,6 +465,25 @@ public interface PrimitiveCollection<T> {
 				if(!contains(array[i])) return false;
 			}
 			return true;
+		}
+
+		default boolean containsAny (OfLong other) {
+			LongIterator it = other.iterator();
+			while (it.hasNext()) {
+				if(contains(it.nextLong())) return true;
+			}
+			return false;
+		}
+
+		default boolean containsAny (long[] array) {
+			return containsAny(array, 0, array.length);
+		}
+
+		default boolean containsAny (long[] array, int offset, int length) {
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				if(contains(array[i])) return true;
+			}
+			return false;
 		}
 
 		/**
@@ -707,6 +745,25 @@ public interface PrimitiveCollection<T> {
 			return true;
 		}
 
+		default boolean containsAny (OfFloat other) {
+			FloatIterator it = other.iterator();
+			while (it.hasNext()) {
+				if(contains(it.nextFloat())) return true;
+			}
+			return false;
+		}
+
+		default boolean containsAny (float[] array) {
+			return containsAny(array, 0, array.length);
+		}
+
+		default boolean containsAny (float[] array, int offset, int length) {
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				if(contains(array[i])) return true;
+			}
+			return false;
+		}
+
 		/**
 		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
@@ -966,6 +1023,25 @@ public interface PrimitiveCollection<T> {
 			return true;
 		}
 
+		default boolean containsAny (OfDouble other) {
+			DoubleIterator it = other.iterator();
+			while (it.hasNext()) {
+				if(contains(it.nextDouble())) return true;
+			}
+			return false;
+		}
+
+		default boolean containsAny (double[] array) {
+			return containsAny(array, 0, array.length);
+		}
+
+		default boolean containsAny (double[] array, int offset, int length) {
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				if(contains(array[i])) return true;
+			}
+			return false;
+		}
+
 		/**
 		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
@@ -1201,6 +1277,25 @@ public interface PrimitiveCollection<T> {
 				if(!contains(array[i])) return false;
 			}
 			return true;
+		}
+
+		default boolean containsAny (OfShort other) {
+			ShortIterator it = other.iterator();
+			while (it.hasNext()) {
+				if(contains(it.nextShort())) return true;
+			}
+			return false;
+		}
+
+		default boolean containsAny (short[] array) {
+			return containsAny(array, 0, array.length);
+		}
+
+		default boolean containsAny (short[] array, int offset, int length) {
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				if(contains(array[i])) return true;
+			}
+			return false;
 		}
 
 		/**
@@ -1440,6 +1535,25 @@ public interface PrimitiveCollection<T> {
 			return true;
 		}
 
+		default boolean containsAny (OfByte other) {
+			ByteIterator it = other.iterator();
+			while (it.hasNext()) {
+				if(contains(it.nextByte())) return true;
+			}
+			return false;
+		}
+
+		default boolean containsAny (byte[] array) {
+			return containsAny(array, 0, array.length);
+		}
+
+		default boolean containsAny (byte[] array, int offset, int length) {
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				if(contains(array[i])) return true;
+			}
+			return false;
+		}
+
 		/**
 		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
@@ -1677,6 +1791,25 @@ public interface PrimitiveCollection<T> {
 			return true;
 		}
 
+		default boolean containsAny (OfChar other) {
+			CharIterator it = other.iterator();
+			while (it.hasNext()) {
+				if(contains(it.nextChar())) return true;
+			}
+			return false;
+		}
+
+		default boolean containsAny (char[] array) {
+			return containsAny(array, 0, array.length);
+		}
+
+		default boolean containsAny (char[] array, int offset, int length) {
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				if(contains(array[i])) return true;
+			}
+			return false;
+		}
+
 		/**
 		 * Removes all the elements of this collection that satisfy the given
 		 * predicate.  Errors or runtime exceptions thrown during iteration or by
@@ -1912,6 +2045,25 @@ public interface PrimitiveCollection<T> {
 				if(!contains(array[i])) return false;
 			}
 			return true;
+		}
+
+		default boolean containsAny (OfBoolean other) {
+			BooleanIterator it = other.iterator();
+			while (it.hasNext()) {
+				if(contains(it.nextBoolean())) return true;
+			}
+			return false;
+		}
+
+		default boolean containsAny (boolean[] array) {
+			return containsAny(array, 0, array.length);
+		}
+
+		default boolean containsAny (boolean[] array, int offset, int length) {
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				if(contains(array[i])) return true;
+			}
+			return false;
 		}
 
 		/**
