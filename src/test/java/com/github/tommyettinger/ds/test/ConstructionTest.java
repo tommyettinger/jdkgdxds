@@ -26,6 +26,7 @@ public class ConstructionTest {
 	@Test
 	public void testObjectEmpty() {
 		final String[] names = ArrayTools.chemicalElements(0, 118, false);
+		final String[] namesUpper = ArrayTools.chemicalElements(0, 118, true);
 		final int targetLength = names.length + 1;
 
 		ObjectList<String> list = new ObjectList<>(0);
@@ -48,5 +49,24 @@ public class ConstructionTest {
 		set.addAll(names);
 		Assert.assertEquals(targetLength, set.size());
 
+		ObjectOrderedSet<String> orderedSet = new ObjectOrderedSet<>(0);
+		orderedSet.add("START");
+		orderedSet.addAll(names);
+		Assert.assertEquals(targetLength, orderedSet.size());
+
+		NumberedSet<String> numberedSet = new NumberedSet<>(0);
+		numberedSet.add("START");
+		numberedSet.addAll(names);
+		Assert.assertEquals(targetLength, numberedSet.size());
+
+		ObjectObjectMap<String, String> map = new ObjectObjectMap<>(0);
+		map.put("start", "START");
+		map.putAll(names, namesUpper);
+		Assert.assertEquals(targetLength, map.size());
+
+		ObjectObjectOrderedMap<String, String> orderedMap = new ObjectObjectOrderedMap<>(0);
+		orderedMap.put("start", "START");
+		orderedMap.putAll(names, namesUpper);
+		Assert.assertEquals(targetLength, orderedMap.size());
 	}
 }
