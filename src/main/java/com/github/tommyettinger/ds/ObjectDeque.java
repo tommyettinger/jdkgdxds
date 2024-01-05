@@ -926,8 +926,8 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/**
 	 * Exactly like {@link #containsAll(Collection)}, but takes an array instead of a Collection.
 	 * @see #containsAll(Collection)
-	 * @param array array to be checked for containment in this collection
-	 * @return {@code true} if this collection contains all the elements
+	 * @param array array to be checked for containment in this deque
+	 * @return {@code true} if this deque contains all the elements
 	 * in the specified array
 	 */
 	public boolean containsAll (Object[] array) {
@@ -941,10 +941,10 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	/**
 	 * Like {@link #containsAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
 	 * @see #containsAll(Object[])
-	 * @param array array to be checked for containment in this collection
+	 * @param array array to be checked for containment in this deque
 	 * @param offset the index of the first item in array to check
 	 * @param length how many items, at most, to check from array
-	 * @return {@code true} if this collection contains all the elements
+	 * @return {@code true} if this deque contains all the elements
 	 * in the specified range of array
 	 */
 	public boolean containsAll (Object[] array, int offset, int length) {

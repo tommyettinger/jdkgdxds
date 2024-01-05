@@ -176,7 +176,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	@Override
-	public boolean remove (Object key) {
+	public boolean remove (@NonNull Object key) {
 		return super.remove(key) && items.remove(key);
 	}
 
@@ -188,7 +188,8 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 */
 	public T removeAt (int index) {
 		T key = items.removeAt(index);
-		super.remove(key);
+		if(key != null)
+			super.remove(key);
 		return key;
 	}
 
