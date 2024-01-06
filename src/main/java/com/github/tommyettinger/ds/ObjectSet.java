@@ -266,7 +266,6 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		return true;
 	}
 
-
 	/**
 	 * Exactly like {@link #containsAll(Collection)}, but takes an array instead of a Collection.
 	 * @see #containsAll(Collection)
@@ -297,7 +296,6 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 		}
 		return true;
 	}
-
 
 	/**
 	 * Returns true if this set contains any of the specified values.
