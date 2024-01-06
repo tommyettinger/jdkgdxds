@@ -270,6 +270,46 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 		return true;
 	}
 
+	public boolean containsAll (Object[] values) {
+		for (Object e : values) {
+			if (!map.containsKey(e))
+				return false;
+		}
+		return true;
+	}
+
+	public boolean containsAll (Object[] values, int offset, int length) {
+		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
+			if (!map.containsKey(values[i]))
+				return false;
+		}
+		return true;
+	}
+
+	public boolean containsAny (Iterable<?> c) {
+		for (Object e : c) {
+			if (map.containsKey(e))
+				return true;
+		}
+		return false;
+	}
+
+	public boolean containsAny (Object[] values) {
+		for (Object e : values) {
+			if (map.containsKey(e))
+				return true;
+		}
+		return false;
+	}
+
+	public boolean containsAny (Object[] values, int offset, int length) {
+		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
+			if (map.containsKey(values[i]))
+				return true;
+		}
+		return false;
+	}
+
 	@Override
 	public boolean addAll (Collection<? extends T> c) {
 		boolean modified = false;
@@ -378,18 +418,41 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	}
 
 	/**
-	 * Bulk-removes each {@code T} item in the given array from this set. If an item appears more
+	 * Bulk-removes each item in the given array from this set. If an item appears more
 	 * than once in {@code arr}, this will be able to quickly verify that it was removed the first
 	 * time it appeared, and won't spend as long processing later items. This calls
 	 * {@link #renumber()} only after all removals were completed, and only if one or more items
 	 * were actually removed.
-	 * @param arr a non-null array of T items to remove from this set
+	 * @param arr a non-null array of items to remove from this set
 	 * @return true if this had one or more items removed, or false if it is unchanged
 	 */
-	public boolean removeAll (T[] arr) {
+	public boolean removeAll (Object[] arr) {
 		int prevSize = size();
 		for (int i = 0, len = arr.length; i < len; i++) {
 			map.remove(arr[i]);
+		}
+		if (prevSize != size()) {
+			renumber();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Bulk-removes each item in the given array from this set. If an item appears more
+	 * than once in {@code values}, this will be able to quickly verify that it was removed the first
+	 * time it appeared, and won't spend as long processing later items. This calls
+	 * {@link #renumber()} only after all removals were completed, and only if one or more items
+	 * were actually removed.
+	 * @param values a non-null array of items to remove from this set
+	 * @param offset the index of the first item in values to remove
+	 * @param length how many items, at most, to get from values and remove from this
+	 * @return true if this had one or more items removed, or false if it is unchanged
+	 */
+	public boolean removeAll (Object[] values, int offset, int length) {
+		int prevSize = size();
+		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
+			map.remove(values[i]);
 		}
 		if (prevSize != size()) {
 			renumber();
