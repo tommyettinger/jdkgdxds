@@ -474,6 +474,86 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 		return false;
 	}
 
+	@Override
+	public boolean containsAll (Collection<@NonNull ?> c) {
+		for (Object o : c) {
+			if (!contains(o)) {return false;}
+		}
+		return true;
+	}
+
+	/**
+	 * Exactly like {@link #containsAll(Collection)}, but takes an array instead of a Collection.
+	 * @see #containsAll(Collection)
+	 * @param array array to be checked for containment in this set
+	 * @return {@code true} if this set contains all the elements
+	 * in the specified array
+	 */
+	public boolean containsAll (@NonNull Object[] array) {
+		for (Object o : array) {
+			if (!contains(o))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Like {@link #containsAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #containsAll(Object[])
+	 * @param array array to be checked for containment in this set
+	 * @param offset the index of the first item in array to check
+	 * @param length how many items, at most, to check from array
+	 * @return {@code true} if this set contains all the elements
+	 * in the specified range of array
+	 */
+	public boolean containsAll (@NonNull Object[] array, int offset, int length) {
+		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+			if(!contains(array[i])) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns true if this set contains any of the specified values.
+	 *
+	 * @param values must not contain nulls, and must not be null itself
+	 * @return true if this set contains any of the items in {@code values}, false otherwise
+	 */
+	public boolean containsAny (Iterable<@NonNull ?> values) {
+		for (Object v : values) {
+			if (contains(v)) {return true;}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if this set contains any of the specified values.
+	 *
+	 * @param values must not contain nulls, and must not be null itself
+	 * @return true if this set contains any of the items in {@code values}, false otherwise
+	 */
+	public boolean containsAny (@NonNull Object[] values) {
+		for (Object v : values) {
+			if (contains(v)) {return true;}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if this set contains any items from the specified range of values.
+	 *
+	 * @param values must not contain nulls, and must not be null itself
+	 * @param offset the index to start checking in values
+	 * @param length how many items to check from values
+	 * @return true if this set contains any of the items in the given range of {@code values}, false otherwise
+	 */
+	public boolean containsAny (@NonNull Object[] values, int offset, int length) {
+		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
+			if (contains(values[i])) {return true;}
+		}
+		return false;
+	}
+
 	/**
 	 * Removes each object in {@code other} from this heap, removing an item once if it appears once, twice if it appears twice,
 	 * and so on. In this respect, this acts like {@link #removeEach(Iterable)} rather than Collection's removeAll().
