@@ -1,3 +1,9 @@
+[1.4.8]
+- Deque types can be initialized with capacity 0, and now won't suddenly crash when an item is added.
+- Almost every type got some new methods, thanks to PrimitiveCollection adding overloads that take arrays or ranges of arrays.
+- The above change was also applied manually to Object-based Collection types.
+- Where appropriate, types have removeAll() and removeEach(), as well as containsAll() and containsAny().
+
 [1.4.7]
 - The dependency on digital was updated to 0.4.7, which adds some potentially useful features, and has many more null checks.
 - Filtered sets and maps have the full range of constructors that maps and sets usually have, now.
