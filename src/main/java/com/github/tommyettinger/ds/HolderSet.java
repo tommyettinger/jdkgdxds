@@ -245,7 +245,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place (Object item) {
+	protected int place (@NonNull Object item) {
 		return (int)(item.hashCode() * hashMultiplier >>> shift);
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
@@ -273,7 +273,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 *
 	 * @param key a non-null Object that should probably be a K
 	 */
-	protected int locateKey (Object key) {
+	protected int locateKey (@NonNull Object key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
@@ -352,7 +352,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * @return true if this Set was modified
 	 */
 	@Override
-	public boolean retainAll (@NonNull Collection<?> c) {
+	public boolean retainAll (@NonNull Collection<@NonNull ?> c) {
 		boolean modified = false;
 		for (Object o : this) {
 			if (!c.contains(o)) {
@@ -369,7 +369,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	 * @param c a Collection that should hold K keys to remove from this
 	 * @return true if this Set was modified
 	 */
-
 	@Override
 	public boolean removeAll (Collection<@NonNull ?> c) {
 		boolean modified = false;

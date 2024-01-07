@@ -18,9 +18,9 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.AbstractQueue;
 import java.util.Arrays;
 import java.util.Collection;
@@ -457,6 +457,102 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 
 		nodes[index] = node;
 		node.index = index;
+	}
+
+	@Override
+	public boolean remove (Object o) {
+		if(o instanceof Node) {
+			if (--size > 0) {
+				Node moved = nodes[size];
+				nodes[size] = null;
+				Node node = (Node)o;
+				nodes[node.index] = moved;
+				if (moved.value < node.value ^ isMaxHeap) {up(node.index);} else {down(node.index);}
+			} else {nodes[0] = null;}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Removes each object in {@code other} from this heap, removing an item once if it appears once, twice if it appears twice,
+	 * and so on. In this respect, this acts like {@link #removeEach(Iterable)} rather than Collection's removeAll().
+	 * @see #removeEach(Iterable)
+	 * @param other collection containing elements to be removed from this collection
+	 * @return true if any elements were removed, or false otherwise
+	 */
+	@Override
+	public boolean removeAll (@NonNull Collection<@NonNull ?> other) {
+		return removeEach(other);
+	}
+
+	/**
+	 * Exactly like {@link #removeAll(Collection)}, but takes an array instead of a Collection.
+	 * This delegates entirely to {@link #removeEach(Object[])}, and does not act like removeAll() does in other
+	 * collections if there are duplicate nodes present in the heap.
+	 * @see #removeAll(Collection)
+	 * @param other array containing elements to be removed from this list
+	 * @return {@code true} if this list changed as a result of the call
+	 */
+	public boolean removeAll (@NonNull Object[] other) {
+		return removeEach(other);
+	}
+	/**
+	 * Like {@link #removeAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * This delegates entirely to {@link #removeEach(Object[], int, int)}, and does not act like removeAll() does in other
+	 * collections if there are duplicate nodes present in the heap.
+	 * @see #removeAll(Object[])
+	 * @see #removeEach(Object[], int, int)
+	 * @param array the elements to be removed from this list
+	 * @param offset the index of the first item in array to remove
+	 * @param length how many items, at most, to get from array and remove from this
+	 * @return {@code true} if this list changed as a result of the call
+	 */
+	public boolean removeAll (@NonNull Object[] array, int offset, int length) {
+		return removeEach(array, offset, length);
+	}
+
+	/**
+	 * Removes from this ObjectList element-wise occurrences of elements contained in the specified Iterable.
+	 * Note that if a value is present more than once in this ObjectList, only one of those occurrences
+	 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+	 * contents as this ObjectList or has additional items, then removing each of {@code other} will clear this.
+	 *
+	 * @param other an Iterable of T items to remove one-by-one, such as another ObjectList or an ObjectSet
+	 * @return true if this list was modified.
+	 */
+	public boolean removeEach (@NonNull Iterable<@NonNull ?> other) {
+		boolean changed = false;
+		for(Object item : other) {
+			changed |= remove(item);
+		}
+		return changed;
+	}
+
+	/**
+	 * Exactly like {@link #removeEach(Iterable)}, but takes an array instead of a Collection.
+	 * @see #removeEach(Iterable)
+	 * @param array array containing elements to be removed from this list
+	 * @return {@code true} if this list changed as a result of the call
+	 */
+	public boolean removeEach (@NonNull Object @NonNull [] array) {
+		return removeEach(array, 0, array.length);
+	}
+
+	/**
+	 * Like {@link #removeEach(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #removeEach(Object[])
+	 * @param array the elements to be removed from this list
+	 * @param offset the index of the first item in array to remove
+	 * @param length how many items, at most, to get from array and remove from this
+	 * @return {@code true} if this list changed as a result of the call
+	 */
+	public boolean removeEach (@NonNull Object @NonNull [] array, int offset, int length) {
+		boolean changed = false;
+		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+			changed |= remove(array[i]);
+		}
+		return changed;
 	}
 
 	@Override
