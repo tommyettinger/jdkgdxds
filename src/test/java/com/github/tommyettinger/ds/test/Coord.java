@@ -44,6 +44,7 @@ public class Coord {
 		this.x = (short)x;
 		this.y = (short)y;
 		hash = this.x * 0x17587 + this.y * 0x16A89;
+//		hash = hash(this.x, this.y, -1);
 	}
 
 	@Override
@@ -71,7 +72,8 @@ public class Coord {
 		int xs = x >> 31, ys = y >> 31;
 		x ^= xs;
 		y ^= ys;
-		y = y + ((x + y) * (x + y + 1) >>> 1) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
+		y = (x >= y ? x * (x + 2) - y : y * y + x) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
+//		y = y + ((x + y) * (x + y + 1) >>> 1) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
 //		y = y + ((x + y) * (x + y + 1) >>> 1) ^ (xs & 0xAE62A9C5) ^ (ys & 0x519D563A);
 //		return y & mask;
 		return (y ^ (y << 16 | y >>> 16) ^ (y << 8 | y >>> 24)) & mask;
