@@ -72,11 +72,16 @@ public class Coord {
 		int xs = x >> 31, ys = y >> 31;
 		x ^= xs;
 		y ^= ys;
-		y = (x >= y ? x * (x + 2) - y : y * y + x) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
+		final int max = Math.max(x, y);
+		return ((max * max + max + x - y) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)) * 0x9E3779B9 & mask;
+
+//		y = (x >= y ? x * (x + 2) - y : y * y + x) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
 //		y = y + ((x + y) * (x + y + 1) >>> 1) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
 //		y = y + ((x + y) * (x + y + 1) >>> 1) ^ (xs & 0xAE62A9C5) ^ (ys & 0x519D563A);
 //		return y & mask;
-		return (y ^ (y << 16 | y >>> 16) ^ (y << 8 | y >>> 24)) & mask;
+//		return y * 0x9E3779B9 & mask;
+//		return (y ^ (y << 3 | y >>> 29) ^ (y << 24 | y >>> 8)) & mask;
+//		return (y ^ (y << 16 | y >>> 16) ^ (y << 8 | y >>> 24)) & mask;
 //		return (y + ((x + y) * (x + y + 1) >>> 1)) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555) & mask;
 	}
 	public static void main(String[] args) {
