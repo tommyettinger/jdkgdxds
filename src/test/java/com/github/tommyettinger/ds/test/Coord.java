@@ -17,7 +17,9 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.digital.AlternateRandom;
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntSet;
 
 public class Coord {
@@ -65,6 +67,7 @@ public class Coord {
 		return hash;
 	}
 
+	public static int collisions = 0;
 	private static int hash(int x, int y) {
 //		return x * 0x17587 + y * 0x16A89 & mask;
 //		return (y + ((x + y) * (x + y + 1) >>> 1)) * 0x9E3779B9 & mask;
@@ -93,35 +96,7 @@ public class Coord {
 		System.out.println();
 
 		int LIMIT = 4096;
-		final int[] collisions = {0};
-		IntSet ints = new IntSet(57, 0.9f)
-		{
-			@Override
-			protected int place (int item) {
-				return item & this.mask;
-			}
-
-			/**
-			 * Returns the index of the key if already present, else {@code ~index} for the next empty index.
-			 *
-			 * @param key
-			 */
-			@Override
-			protected int locateKey (int key) {
-				int[] keyTable = this.keyTable;
-				for (int i = place(key); ; i = i + 1 & mask) {
-					int other = keyTable[i];
-					if (other == 0) {
-						return ~i; // Empty space is available.
-					}
-					System.out.println("Collision #" + ++collisions[0] + " between existing item " + other + " and new item " + key);
-					if (other == key) {
-						return i; // Same key was found.
-					}
-				}
-			}
-		}
-		;
+		IntSet ints = new LoggingIntSet();
 
 		for (int shell = 0; shell < LIMIT; shell++) {
 			for (int xorx = -1; xorx <= 0; xorx++) {
@@ -135,6 +110,67 @@ public class Coord {
 				}
 			}
 		}
-		System.out.println("Total collisions: " + collisions[0]);
+		int totalCollisions = collisions;
+		System.out.println("Collisions, first round: " + collisions + ", total: " + totalCollisions);
+		collisions = 0;
+		AlternateRandom random = new AlternateRandom(1234567890987654321L);
+		IntList list = new IntList(ints);
+		ints = new LoggingIntSet();
+		list.shuffle(random);
+		for (int i = 0, n = list.size(); i < n; i++) {
+			ints.add(list.get(i));
+		}
+		totalCollisions += collisions;
+		System.out.println("Collisions, second round: " + collisions + ", total: " + totalCollisions);
+		collisions = 0;
+		ints = new LoggingIntSet();
+		for (int shell = LIMIT - 1; shell >= 0; shell--) {
+			for (int xorx = -1; xorx <= 0; xorx++) {
+				for (int xory = -1; xory <= 0; xory++) {
+					for (int high = 0; high <= shell; high++) {
+						ints.add(hash(shell ^ xorx, high ^ xory));
+					}
+					for (int side = shell - 1; side >= 0; side--) {
+						ints.add(hash(side ^ xorx, shell ^ xory));
+					}
+				}
+			}
+		}
+		totalCollisions += collisions;
+		System.out.println("Collisions, third round: " + collisions + ", total: " + totalCollisions);
+	}
+
+	private static class LoggingIntSet extends IntSet {
+		public LoggingIntSet () {
+			super(57, 0.99f);
+		}
+		public LoggingIntSet (int capacity, float loadFactor) {
+			super(capacity, loadFactor);
+		}
+
+		@Override
+		protected int place (int item) {
+			return item & this.mask;
+		}
+
+		/**
+		 * Returns the index of the key if already present, else {@code ~index} for the next empty index.
+		 *
+		 * @param key
+		 */
+		@Override
+		protected int locateKey (int key) {
+			int[] keyTable = this.keyTable;
+			for (int i = place(key); ; i = i + 1 & mask) {
+				int other = keyTable[i];
+				if (other == 0) {
+					return ~i; // Empty space is available.
+				}
+				System.out.println("Collision #" + ++collisions + " between existing item " + other + " and new item " + key);
+				if (other == key) {
+					return i; // Same key was found.
+				}
+			}
+		}
 	}
 }
