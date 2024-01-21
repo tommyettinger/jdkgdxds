@@ -18,7 +18,6 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntSet;
 
 public class Coord {
@@ -66,14 +65,14 @@ public class Coord {
 		return hash;
 	}
 
-	private static int hash(int x, int y, int mask) {
+	private static int hash(int x, int y) {
 //		return x * 0x17587 + y * 0x16A89 & mask;
 //		return (y + ((x + y) * (x + y + 1) >>> 1)) * 0x9E3779B9 & mask;
 		int xs = x >> 31, ys = y >> 31;
 		x ^= xs;
 		y ^= ys;
 		final int max = Math.max(x, y);
-		return ((max * max + max + x - y) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)) * 0x9E3779B9 & mask;
+		return ((max * max + max + x - y) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)) * 0x9E3779B9;
 
 //		y = (x >= y ? x * (x + 2) - y : y * y + x) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
 //		y = y + ((x + y) * (x + y + 1) >>> 1) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
@@ -85,40 +84,57 @@ public class Coord {
 //		return (y + ((x + y) * (x + y + 1) >>> 1)) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555) & mask;
 	}
 	public static void main(String[] args) {
+		System.out.println("Sample hash results:");
+		for (int x = -10; x <= 10; x++) {
+			for (int y = -10; y <= 10; y++) {
+				System.out.println("x="+x+",y="+y+",hash="+ Base.BASE16.unsigned(hash(x, y)));
+			}
+		}
+		System.out.println();
+
 		int LIMIT = 4096;
-		int collisions = 0;
-		IntSet ints = new IntSet(51, 0.5f)
-//		{
-//			@Override
-//			protected int place (int item) {
-//				return item & this.mask;
-//			}
-//		}
-		;
-		int mask = MathTools.nextPowerOfTwo((int)(LIMIT * LIMIT * 4 / 0.5f)) - 1;
-		ints.add(0);
-		int latest;
-		for (int shell = 1; shell < LIMIT; shell++) {
-			for (int xorx = -1; xorx <= 0; xorx++) {
-				for (int xory = -1; xory <= 0; xory++) {
-					for (int high = 0; high <= shell; high++) {
-						if (!ints.add(latest = hash(shell ^ xorx, high ^ xory, mask)))
-							System.out.println("Collision #" + (++collisions) + " with hash " + latest + " on x=" + (shell ^ xorx) + ", y=" + (high ^ xory));
+		final int[] collisions = {0};
+		IntSet ints = new IntSet(57, 0.9f)
+		{
+			@Override
+			protected int place (int item) {
+				return item & this.mask;
+			}
+
+			/**
+			 * Returns the index of the key if already present, else {@code ~index} for the next empty index.
+			 *
+			 * @param key
+			 */
+			@Override
+			protected int locateKey (int key) {
+				int[] keyTable = this.keyTable;
+				for (int i = place(key); ; i = i + 1 & mask) {
+					int other = keyTable[i];
+					if (other == 0) {
+						return ~i; // Empty space is available.
 					}
-					for (int side = shell - 1; side >= 0; side--) {
-						if (!ints.add(latest = hash(side ^ xorx, shell ^ xory, mask)))
-							System.out.println("Collision #" + (++collisions) + " with hash " + latest + " on x=" + (side ^ xorx) + ", y=" + (shell ^ xory));
+					System.out.println("Collision #" + ++collisions[0] + " between existing item " + other + " and new item " + key);
+					if (other == key) {
+						return i; // Same key was found.
 					}
 				}
 			}
 		}
-		System.out.println("Total collisions: " + collisions);
+		;
 
-		System.out.println("Sample hash results:");
-		for (int x = -10; x <= 10; x++) {
-			for (int y = -10; y <= 10; y++) {
-				System.out.println("x="+x+",y="+y+",hash="+ Base.BASE16.unsigned(hash(x, y, -1)));
+		for (int shell = 0; shell < LIMIT; shell++) {
+			for (int xorx = -1; xorx <= 0; xorx++) {
+				for (int xory = -1; xory <= 0; xory++) {
+					for (int high = 0; high <= shell; high++) {
+						ints.add(hash(shell ^ xorx, high ^ xory));
+					}
+					for (int side = shell - 1; side >= 0; side--) {
+						ints.add(hash(side ^ xorx, shell ^ xory));
+					}
+				}
 			}
 		}
+		System.out.println("Total collisions: " + collisions[0]);
 	}
 }
