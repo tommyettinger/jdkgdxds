@@ -692,6 +692,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * taken.
 	 */
 	public void truncate (int newSize) {
+		newSize = Math.max(0, newSize);
 		if (size > newSize) {size = newSize;}
 	}
 

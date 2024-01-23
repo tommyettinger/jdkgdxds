@@ -786,6 +786,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * taken.
 	 */
 	public void truncate (int newSize) {
+		newSize = Math.max(0, newSize);
 		if (size > newSize) {size = newSize;}
 	}
 

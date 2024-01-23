@@ -751,6 +751,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 */
 	public void truncate (int newSize) {
 		K[] keyTable = this.keyTable;
+		newSize = Math.max(0, newSize);
 		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
 			if (keyTable[i] != null) {
 				keyTable[i] = null;

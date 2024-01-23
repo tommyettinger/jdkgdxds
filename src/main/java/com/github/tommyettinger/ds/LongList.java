@@ -786,6 +786,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * taken.
 	 */
 	public void truncate (int newSize) {
+		newSize = Math.max(0, newSize);
 		if (size > newSize) {size = newSize;}
 	}
 

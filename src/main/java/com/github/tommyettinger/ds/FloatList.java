@@ -787,6 +787,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * taken.
 	 */
 	public void truncate (int newSize) {
+		newSize = Math.max(0, newSize);
 		if (size > newSize) {size = newSize;}
 	}
 

@@ -40,7 +40,7 @@ public interface Arrangeable {
 	/**
 	 * Pseudo-randomly shuffles the order of this Arrangeable in-place.
 	 *
-	 * @param random any {@link Random} object; e.g. you can use any in juniper
+	 * @param random any {@link Random}, such as {@link com.github.tommyettinger.digital.AlternateRandom} or one from juniper
 	 */
 	default void shuffle (Random random) {
 		for (int i = size() - 1; i > 0; i--) swap(i, random.nextInt(i + 1));

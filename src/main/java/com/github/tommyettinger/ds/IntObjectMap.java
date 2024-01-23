@@ -754,6 +754,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	public void truncate (int newSize) {
 		int[] keyTable = this.keyTable;
 		V[] valTable = this.valueTable;
+		newSize = Math.max(0, newSize);
 		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
 			if (keyTable[i] != 0) {
 				keyTable[i] = 0;

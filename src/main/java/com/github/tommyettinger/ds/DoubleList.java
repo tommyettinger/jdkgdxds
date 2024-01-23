@@ -787,6 +787,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * taken.
 	 */
 	public void truncate (int newSize) {
+		newSize = Math.max(0, newSize);
 		if (size > newSize) {size = newSize;}
 	}
 

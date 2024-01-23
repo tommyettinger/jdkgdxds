@@ -67,7 +67,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * You can seed {@code rng}, the random number generator, with an identical seed to reproduce a shuffle on two
 	 * Ordered with the same {@link #size()}.
 	 *
-	 * @param rng any {@link Random} class, such as one from juniper
+	 * @param rng any {@link Random}, such as {@link com.github.tommyettinger.digital.AlternateRandom} or one from juniper
 	 */
 	@Override
 	default void shuffle (Random rng) {

@@ -511,6 +511,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 	 */
 	public void truncate (int newSize) {
 		long[] keyTable = this.keyTable;
+		newSize = Math.max(0, newSize);
 		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
 			if (keyTable[i] != 0) {
 				keyTable[i] = 0;
