@@ -104,6 +104,82 @@ public class DequeTest {
 		deque.addLast("OMEGA");
 		deque.addLast("CAPTAIN SPECTACULAR");
 		deque.add(17, "PSI");
-		System.out.println(deque.toString());
+		System.out.println(deque);
+	}
+
+	@Test
+	public void testTruncate() {
+		{
+			System.out.println("truncating with head < tail, tail < values.length");
+			ObjectDeque<String> deque = ObjectDeque.with(
+				"alpha", "beta", "gamma", "delta", "epsilon", "zeta",
+				"eta", "theta", "iota", "kappa", "lambda",
+				"mu", "nu", "xi", "omicron", "pi", "rho", "sigma",
+				"tau", "upsilon", "phi", "chi", "psi", "omega"
+			);
+			deque.removeLast();
+			deque.truncate(deque.size - 5);
+			// by now, the last row has been removed, and the first 6 of 24 slots are empty.
+			// the deque should contain eta through omega.
+			System.out.println(deque);
+			deque.addLast("AMBER");
+			deque.addLast("BETTY");
+			deque.addLast("CAROL");
+			// the deque should contain eta through omega, followed by three all-caps names.
+			// the names should be at slots 0, 1, 2, and eta starts at slot 6.
+			System.out.println(deque);
+		}
+		{
+			System.out.println("truncating with tail < head, removing more than tail items (wrapping around)");
+			ObjectDeque<String> deque = ObjectDeque.with(
+				"alpha", "beta", "gamma", "delta", "epsilon", "zeta",
+				"eta", "theta", "iota", "kappa", "lambda",
+				"mu", "nu", "xi", "omicron", "pi", "rho", "sigma",
+				"tau", "upsilon", "phi", "chi", "psi", "omega"
+			);
+			deque.removeFirst();
+			deque.removeFirst();
+			deque.removeFirst();
+			deque.removeFirst();
+			deque.removeFirst();
+			deque.removeFirst();
+			// by now, the first row has been removed, and the first 6 of 24 slots are empty.
+			// the deque should contain eta through omega.
+			System.out.println(deque);
+			deque.addLast("AMBER");
+			deque.addLast("BETTY");
+			deque.addLast("CAROL");
+			// the deque should contain eta through omega, followed by three all-caps names.
+			// the names should be at slots 0, 1, 2, and eta starts at slot 6.
+			System.out.println(deque);
+			deque.truncate(deque.size - 5);
+			System.out.println(deque);
+		}
+		{
+			System.out.println("truncating with tail < head, removing less than tail items (not wrapping)");
+			ObjectDeque<String> deque = ObjectDeque.with(
+				"alpha", "beta", "gamma", "delta", "epsilon", "zeta",
+				"eta", "theta", "iota", "kappa", "lambda",
+				"mu", "nu", "xi", "omicron", "pi", "rho", "sigma",
+				"tau", "upsilon", "phi", "chi", "psi", "omega"
+			);
+			deque.removeFirst();
+			deque.removeFirst();
+			deque.removeFirst();
+			deque.removeFirst();
+			deque.removeFirst();
+			deque.removeFirst();
+			// by now, the first row has been removed, and the first 6 of 24 slots are empty.
+			// the deque should contain eta through omega.
+			System.out.println(deque);
+			deque.addLast("AMBER");
+			deque.addLast("BETTY");
+			deque.addLast("CAROL");
+			// the deque should contain eta through omega, followed by three all-caps names.
+			// the names should be at slots 0, 1, 2, and eta starts at slot 6.
+			System.out.println(deque);
+			deque.truncate(deque.size - 2);
+			System.out.println(deque);
+		}
 	}
 }
