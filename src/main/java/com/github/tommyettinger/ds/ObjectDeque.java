@@ -1182,6 +1182,34 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 	}
 
 	/**
+	 * Reduces the size of the deque to the specified size. If the deque is already smaller than the specified
+	 * size, no action is taken.
+	 */
+	public void truncate (int newSize) {
+		newSize = Math.max(0, newSize);
+		if (size() > newSize) {
+			if(head < tail) {
+				// only removing from tail, near the end, toward head, near the start
+				Arrays.fill(values, head + newSize, tail, null);
+				tail -= size() - newSize;
+				size = newSize;
+			} else if(head + newSize < values.length) {
+				// tail is near the start, but we have to remove elements through the start and into the back
+				Arrays.fill(values, 0, tail, null);
+				tail = head + newSize;
+				Arrays.fill(values, tail, values.length, null);
+				size = newSize;
+			} else {
+				// tail is near the start, but we only have to remove some elements between tail and the start
+				final int newTail = tail - (size() - newSize);
+				Arrays.fill(values, newTail, tail, null);
+				tail = newTail;
+				size = newSize;
+			}
+		}
+	}
+
+	/**
 	 * Returns the index of the first occurrence of value in the queue, or -1 if no such value exists.
 	 * Uses .equals() to compare items.
 	 *
