@@ -720,6 +720,29 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 	}
 
 	/**
+	 * Reduces the size of the deque to the specified size. If the deque is already smaller than the specified
+	 * size, no action is taken.
+	 */
+	public void truncate (int newSize) {
+		newSize = Math.max(0, newSize);
+		if (size() > newSize) {
+			if(head < tail) {
+				// only removing from tail, near the end, toward head, near the start
+				tail -= size() - newSize;
+				size = newSize;
+			} else if(head + newSize < values.length) {
+				// tail is near the start, but we have to remove elements through the start and into the back
+				tail = head + newSize;
+				size = newSize;
+			} else {
+				// tail is near the start, but we only have to remove some elements between tail and the start
+				tail -= size() - newSize;
+				size = newSize;
+			}
+		}
+	}
+
+	/**
 	 * Returns the index of first occurrence of value in the queue, or -1 if no such value exists.
 	 *
 	 * @return An index of first occurrence of value in queue or -1 if no such value exists
