@@ -40,32 +40,125 @@ public class AllGoldenWordHashTest {
 		Collections.shuffle(words, rng);
 		LongLongOrderedMap problems = new LongLongOrderedMap(100);
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
-		for (int a = -1; a < MathTools.GOLDEN_LONGS.length; a++) {
+		for (int a = 0; a < MathTools.GOLDEN_LONGS.length; a++) {
 			final long g = a == -1 ? 1 : MathTools.GOLDEN_LONGS[a];
 			{
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
-					/* // with default behavior, changing hashMultiplier on resize
+					/*
+// with default behavior, changing hashMultiplier on resize
 0 problem multipliers in total.
 Lowest collisions : 33094
 Highest collisions: 34642
 Lowest pileup     : 10
 Highest pileup    : 18
 
+// with each g used verbatim, not changing
+0 problem multipliers in total.
+Lowest collisions : 32779
+Highest collisions: 35127
+Lowest pileup     : 10
+Highest pileup    : 28
+
+
 					 */
-					/** // using below hashMul as an int
+//					/** // using below changing hashMul as an int
+//					 * 0 problem multipliers in total.
+//					 * Lowest collisions : 32959
+//					 * Highest collisions: 34389
+//					 * Lowest pileup     : 10
+//					 * Highest pileup    : 19
+//					 */
+//					int hashMul = (int)((hashMultiplier >>> 32 & -16) | (hashMultiplier & 15));
+					/** // using below unchanging hashMul as an int
 					 * 0 problem multipliers in total.
-					 * Lowest collisions : 32959
-					 * Highest collisions: 34389
-					 * Lowest pileup     : 10
-					 * Highest pileup    : 19
+					 * Lowest collisions : 32797
+					 * Highest collisions: 34922
+					 * Lowest pileup     : 9
+					 * Highest pileup    : 23
 					 */
-					int hashMul = (int)((hashMultiplier >>> 32 & -16) | (hashMultiplier & 15));
+					int hashMul = (int)((g >>> 32 & -16) | (g & 15));
+
 //					@Override
 //					protected int place (Object item) {
 //						return item.hashCode() * hashMul >>> shift;
 //					}
+//					@Override
+//					protected int place (Object item) {
+//						return (int)(item.hashCode() * g >>> shift);
+//					}
+
+					/**
+					 * 0 problem multipliers in total.
+					 * Lowest collisions : 32938
+					 * Highest collisions: 34044
+					 * Lowest pileup     : 10
+					 * Highest pileup    : 29
+					 */
+//					@Override
+//					protected int place (Object item) {
+//						return (int)(item.hashCode() * g & mask);
+//					}
+
+					/**
+					 * 0 problem multipliers in total.
+					 * Lowest collisions : 32975
+					 * Highest collisions: 33994
+					 * Lowest pileup     : 10
+					 * Highest pileup    : 25
+					 */
+//					@Override
+//					protected int place (Object item) {
+//						return (item.hashCode() * hashMul & mask);
+//					}
+
+					/**
+					 * 167 problem multipliers in total.
+					 * Lowest collisions : 33388
+					 * Highest collisions: 42744
+					 * Lowest pileup     : 11
+					 * Highest pileup    : 18
+					 */
+//					@Override
+//					protected int place (Object item) {
+//						final int h = item.hashCode();
+//						return (h ^ (h << hashMul | h >>> -hashMul) ^ (h << -hashMul | h >>> hashMul)) & mask;
+//					}
+
+					/**
+					 * When using -5 and 5:
+					 * 86 problem multipliers in total.
+					 * Lowest collisions : 33368
+					 * Highest collisions: 223274
+					 * Lowest pileup     : 11
+					 * Highest pileup    : 1082
+					 * OUCH.
+					 * When using -6 and 6:
+					 * 0 problem multipliers in total.
+					 * Lowest collisions : 33571
+					 * Highest collisions: 34276
+					 * Lowest pileup     : 12
+					 * Highest pileup    : 21
+					 */
+//					@Override
+//					protected int place (Object item) {
+//						final int h = item.hashCode();
+//						return (h ^ (h << hashMul | h >>> -hashMul) ^ (h << -6-hashMul | h >>> 6+hashMul)) & mask;
+//					}
+
+					/**
+					 * 0 problem multipliers in total.
+					 * Lowest collisions : 32939
+					 * Highest collisions: 34592
+					 * Lowest pileup     : 9
+					 * Highest pileup    : 23
+					 */
+					@Override
+					protected int place (Object item) {
+						final int h = item.hashCode() * hashMul;
+						return (h >>> shift) ^ (h & mask);
+					}
 
 					@Override
 					protected void addResize (@NonNull Object key) {
@@ -90,7 +183,7 @@ Highest pileup    : 18
 
 //						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 0x1FF];
 						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
-						hashMul = (int)((hashMultiplier >>> 32 & -16) | (hashMultiplier & 15));
+//						hashMul = (int)((hashMultiplier >>> 32 & -16) | (hashMultiplier & 15));
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
