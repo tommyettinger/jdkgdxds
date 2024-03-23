@@ -39,12 +39,33 @@ public class AllGoldenWordHashTest {
 		WhiskerRandom rng = new WhiskerRandom(1234567890L);
 		Collections.shuffle(words, rng);
 		LongLongOrderedMap problems = new LongLongOrderedMap(100);
+		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
 		for (int a = -1; a < MathTools.GOLDEN_LONGS.length; a++) {
 			final long g = a == -1 ? 1 : MathTools.GOLDEN_LONGS[a];
 			{
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
+					/* // with default behavior, changing hashMultiplier on resize
+0 problem multipliers in total.
+Lowest collisions : 33094
+Highest collisions: 34642
+Lowest pileup     : 10
+Highest pileup    : 18
+
+					 */
+					/** // using below hashMul as an int
+					 * 0 problem multipliers in total.
+					 * Lowest collisions : 32959
+					 * Highest collisions: 34389
+					 * Lowest pileup     : 10
+					 * Highest pileup    : 19
+					 */
+					int hashMul = (int)((hashMultiplier >>> 32 & -16) | (hashMultiplier & 15));
+//					@Override
+//					protected int place (Object item) {
+//						return item.hashCode() * hashMul >>> shift;
+//					}
 
 					@Override
 					protected void addResize (@NonNull Object key) {
@@ -69,6 +90,7 @@ public class AllGoldenWordHashTest {
 
 //						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 0x1FF];
 						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
+						hashMul = (int)((hashMultiplier >>> 32 & -16) | (hashMultiplier & 15));
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
@@ -90,8 +112,12 @@ public class AllGoldenWordHashTest {
 
 					@Override
 					public void clear () {
-							System.out.print("Original 0x" + Base.BASE16.unsigned(g));
-							System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+						System.out.print("Original 0x" + Base.BASE16.unsigned(g));
+						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+						minMax[0] = Math.min(minMax[0], collisionTotal);
+						minMax[1] = Math.max(minMax[1], collisionTotal);
+						minMax[2] = Math.min(minMax[2], longestPileup);
+						minMax[3] = Math.max(minMax[3], longestPileup);
 						super.clear();
 					}
 				};
@@ -109,9 +135,13 @@ public class AllGoldenWordHashTest {
 			}
 		}
 		problems.sortByValue(LongComparators.NATURAL_COMPARATOR);
+		System.out.println("\n\nnew long[]");
 		System.out.println(problems);
-		System.out.println("\n\nnew long[]{");
-		System.out.println("};\n\n" + problems.size() + " problem multipliers in total.");
+		System.out.println(";\n\n" + problems.size() + " problem multipliers in total.");
+		System.out.println("Lowest collisions : " + minMax[0]);
+		System.out.println("Highest collisions: " + minMax[1]);
+		System.out.println("Lowest pileup     : " + minMax[2]);
+		System.out.println("Highest pileup    : " + minMax[3]);
 
 	}
 

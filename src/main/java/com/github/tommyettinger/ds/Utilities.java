@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 
 import static com.github.tommyettinger.digital.Hasher.*;
@@ -243,7 +244,7 @@ public final class Utilities {
 		if (capacity < 0) {
 			throw new IllegalArgumentException("capacity must be >= 0: " + capacity);
 		}
-		int tableSize = 1 << -Integer.numberOfLeadingZeros(Math.max(2, (int)Math.ceil(capacity / loadFactor)) - 1);
+		int tableSize = 1 << -BitConversion.countLeadingZeros(Math.max(2, (int)Math.ceil(capacity / loadFactor)) - 1);
 		if (tableSize > 1 << 30 || tableSize < 0) {
 			throw new IllegalArgumentException("The required capacity is too large: " + capacity);
 		}
