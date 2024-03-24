@@ -1273,7 +1273,9 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
-			int hc = super.hashCode();
+			int hc = 1;
+			for (V v : this)
+				hc = 421 * hc + (v == null ? 0 : v.hashCode());
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1362,11 +1364,12 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
-			int hc = super.hashCode();
+			long hc = 1;
+			while (iter.hasNext) {hc = 421 * hc + iter.nextLong();}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return hc;
+			return (int)(hc ^ hc >>> 32);
 		}
 
 		/**

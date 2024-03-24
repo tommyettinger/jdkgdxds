@@ -1306,7 +1306,9 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
-			int hc = super.hashCode();
+			int hc = 1;
+			for (V v : this)
+				hc = 421 * hc + (v == null ? 0 : v.hashCode());
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;

@@ -1311,7 +1311,8 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
-			int hc = super.hashCode();
+			int hc = 1;
+			while (iter.hasNext) {hc = 421 * hc + BitConversion.floatToRawIntBits(iter.nextFloat());}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1412,7 +1413,9 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
-			int hc = super.hashCode();
+			int hc = 1;
+			while (iter.hasNext) {hc = 421 * hc + iter.nextInt();}
+
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;

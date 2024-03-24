@@ -1226,11 +1226,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
-			int hc = super.hashCode();
+			long hc = 1;
+			while (iter.hasNext) {hc = 421 * hc + iter.nextLong();}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return hc;
+			return (int)(hc ^ hc >>> 32);
 		}
 
 		/**
