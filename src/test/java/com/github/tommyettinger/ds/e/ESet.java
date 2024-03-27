@@ -18,12 +18,14 @@
 package com.github.tommyettinger.ds.e;
 
 import com.github.tommyettinger.digital.BitConversion;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import com.github.tommyettinger.ds.ObjectList;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -34,6 +36,8 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	protected int size;
 	protected int[] table;
 	protected Enum<?>[] enumValues;
+	@Nullable protected transient ESetIterator iterator1;
+	@Nullable protected transient ESetIterator iterator2;
 
 	/**
 	 * Empty constructor; using this will postpone allocating any internal arrays until {@link #add(Enum)} is first called
@@ -107,15 +111,27 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
-	 * Returns an iterator over the elements in this set.  The elements are
-	 * returned in the order of their {@link Enum#ordinal()} values.
-	 *
-	 * @return an iterator over the elements in this set
+	 * Returns an iterator for the items in the set. The elements are
+	 * returned in the order of their {@link Enum#ordinal()} values. Remove is supported.
+	 * <p>
+	 * Use the {@link ESetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public @NonNull Iterator<Enum<?>> iterator () {
-		// TODO: iterator!
-		return null;
+	public ESetIterator iterator () {
+		if (iterator1 == null || iterator2 == null) {
+			iterator1 = new ESetIterator(this);
+			iterator2 = new ESetIterator(this);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset();
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset();
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
 	}
 
 	/**
@@ -209,6 +225,33 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
+	 * Returns the first ordinal equal to or greater than {@code minOrdinal} of the an Enum contained in the set.
+	 * If no such Enum exists, or if minOrdinal is invalid (such as if it is negative or greater than the highest ordinal in the
+	 * Enum type this holds), then {@code -1} is returned.
+	 * @param minOrdinal the index to start looking at; does not need to have an Enum present there, but must be non-negative
+	 * @return the first ordinal of an Enum contained in the set on or after the specified starting point, or {@code -1} if none can be found
+	 */
+	public int nextOrdinal (int minOrdinal) {
+		if(minOrdinal < 0) return -1;
+		int[] bits = this.table;
+		int word = minOrdinal >>> 5;
+		int bitsLength = bits.length;
+		if (word >= bitsLength)
+			return -1;
+		int bitsAtWord = bits[word] & -1 << minOrdinal; // shift implicitly is masked to bottom 31 bits
+		if (bitsAtWord != 0) {
+			return BitConversion.countTrailingZeros(bitsAtWord) + (word << 5); // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+		}
+		for (word++; word < bitsLength; word++) {
+			bitsAtWord = bits[word];
+			if (bitsAtWord != 0) {
+				return BitConversion.countTrailingZeros(bitsAtWord) + (word << 5);
+			}
+		}
+		return -1;
+	}
+
+	/**
 	 * Returns the first Enum contained in the set with an ordinal equal to or greater than {@code minOrdinal}.
 	 * If no such Enum exists, or if minOrdinal is invalid (such as if it is negative or greater than the highest ordinal in the
 	 * Enum type this holds), then {@code null} is returned.
@@ -222,7 +265,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		int bitsLength = bits.length;
 		if (word >= bitsLength)
 			return null;
-		int bitsAtWord = bits[word] & -1 << minOrdinal; // shift implicitly is masked to bottom 63 bits
+		int bitsAtWord = bits[word] & -1 << minOrdinal; // shift implicitly is masked to bottom 31 bits
 		if (bitsAtWord != 0) {
 			return enumValues[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)]; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 		}
@@ -250,7 +293,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		int bitsLength = bits.length;
 		if (word >= bitsLength)
 			return null;
-		int bitsAtWord = bits[word] & -1 << fromIndex; // shift implicitly is masked to bottom 63 bits
+		int bitsAtWord = bits[word] & -1 << fromIndex; // shift implicitly is masked to bottom 31 bits
 		if (bitsAtWord != 0) {
 			return enumValues[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)]; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 		}
@@ -261,6 +304,97 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 			}
 		}
 		return null;
+	}
+
+	public static class ESetIterator implements Iterator<Enum<?>> {
+		static private final int INDEX_ILLEGAL = -1, INDEX_ZERO = -1;
+
+		public boolean hasNext;
+
+		final ESet set;
+		int nextIndex, currentIndex;
+		boolean valid = true;
+
+		public ESetIterator (ESet set) {
+			this.set = set;
+			reset();
+		}
+
+		public void reset () {
+			currentIndex = INDEX_ILLEGAL;
+			nextIndex = INDEX_ZERO;
+			findNextIndex();
+		}
+
+		void findNextIndex () {
+			nextIndex = set.nextOrdinal(nextIndex + 1);
+			hasNext = nextIndex != INDEX_ILLEGAL;
+		}
+
+		/**
+		 * Returns {@code true} if the iteration has more elements.
+		 * (In other words, returns {@code true} if {@link #next} would
+		 * return an element rather than throwing an exception.)
+		 *
+		 * @return {@code true} if the iteration has more elements
+		 */
+		@Override
+		public boolean hasNext () {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			return hasNext;
+		}
+
+		@Override
+		public void remove () {
+			if (currentIndex < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
+			set.remove(set.enumValues[currentIndex]);
+			currentIndex = INDEX_ILLEGAL;
+		}
+
+		@Override
+		public Enum<?> next () {
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			currentIndex = nextIndex;
+			findNextIndex();
+			return set.enumValues[currentIndex];
+		}
+
+		/**
+		 * Returns a new {@link ObjectList} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 */
+		public ObjectList<Enum<?>> toList () {
+			ObjectList<Enum<?>> list = new ObjectList<Enum<?>>(set.size());
+			int currentIdx = currentIndex, nextIdx = nextIndex;
+			boolean hn = hasNext;
+			while (hasNext) {
+				list.add(next());
+			}
+			currentIndex = currentIdx;
+			nextIndex = nextIdx;
+			hasNext = hn;
+			return list;
+		}
+
+		/**
+		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.OfInt.
+		 * Does not change the position of this iterator.
+		 * @param coll any modifiable PrimitiveCollection.OfInt; may have items appended into it
+		 * @return the given primitive collection
+		 */
+		public Collection<Enum<?>> appendInto(Collection<Enum<?>> coll) {
+			int currentIdx = currentIndex, nextIdx = nextIndex;
+			boolean hn = hasNext;
+			while (hasNext) {coll.add(next());}
+			currentIndex = currentIdx;
+			nextIndex = nextIdx;
+			hasNext = hn;
+			return coll;
+		}
+
 	}
 
 }
