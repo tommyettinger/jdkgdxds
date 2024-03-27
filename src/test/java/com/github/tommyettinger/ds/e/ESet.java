@@ -484,6 +484,53 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 			coll.table[i] = -1;
 		}
 		coll.table[coll.table.length - 1] = -1 >>> -valuesResult.length;
+		coll.size = valuesResult.length;
+		return coll;
+	}
+
+	/**
+	 * Given another ESet, this creates a new ESet with the same universe as {@code other}, but with any elements present in other
+	 * absent in the new set, and any elements absent in other present in the new set.
+	 *
+	 * @param other another ESet that this will copy
+	 * @return a complemented copy of {@code other}
+	 */
+	public static ESet complementOf(ESet other) {
+		ESet coll = new ESet(other);
+		for (int i = 0; i < coll.table.length - 1; i++) {
+			coll.table[i] ^= -1;
+		}
+		coll.table[coll.table.length - 1] ^= -1 >>> -coll.enumValues.length;
+		coll.size = coll.enumValues.length - other.size;
+		return coll;
+	}
+
+	/**
+	 * Creates an ESet holding Enum items between the ordinals of {@code start} and {@code end}. If the ordinal of end is less than
+	 * the ordinal of start, this treats start and end as swapped. If start and end are the same, this just inserts that one Enum.
+	 * @param start the starting inclusive Enum to insert
+	 * @param end the ending inclusive Enum to insert
+	 * @return a new ESet containing start, end, and any Enum constants with ordinals between them
+	 * @param <E> the shared Enum type of both start and end
+	 */
+	public <E extends Enum<E>> ESet range(Enum<E> start, Enum<E> end) {
+		if(start == null || end == null) return null;
+		final int mn = Math.min(start.ordinal(), end.ordinal());
+		final int mx = Math.max(start.ordinal(), end.ordinal());
+		final int upperMin = mn >>> 5;
+		final int upperMax = mx >>> 5;
+		ESet coll = new ESet();
+		coll.add(start);
+		if(upperMin == upperMax){
+			coll.table[upperMin] = (-1 >>> ~mx) ^ (-1 >>> -mn);
+		} else {
+			coll.table[upperMin] = -1 << mn;
+			for (int i = upperMin + 1; i < upperMax; i++) {
+				coll.table[i] = -1;
+			}
+			coll.table[upperMax] = -1 >>> ~mx;
+		}
+		coll.size += mx - mn;
 		return coll;
 	}
 }
