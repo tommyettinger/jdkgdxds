@@ -53,15 +53,43 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * you almost always would obtain valuesResult from calling {@code values()} on an Enum type, but you can share one
 	 * reference to one Enum array across many ESet instances if you don't modify the shared array.
 	 * @param valuesResult almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 * @param ignoredToDistinguish an ignored boolean that differentiates this constructor, which defined a key universe,
+	 *                               from one that takes contents
 	 */
-	public ESet (Enum<?>[] valuesResult) {
+	public ESet (Enum<?>[] valuesResult, boolean ignoredToDistinguish) {
 		super();
 		if(valuesResult == null) return;
 		enumValues = valuesResult;
 		table = new int[valuesResult.length + 31 >>> 5];
 	}
 
+	/**
+	 * Initializes this set so that it holds the given Enum values, with the universe of possible Enum constants this can hold
+	 * determined by the type of the first Enum in {@code contents}.
+	 * <br>
+	 * This is different from {@link #ESet(Enum[], boolean)} in that this takes constants and puts them in the set, while the other
+	 * constructor takes all possible Enum constants, usually from calling {@code values()}.
+	 *
+	 * @param contents an array of Enum items to place into this set
+	 */
+	public ESet(Enum<?>[] contents) {
+		super();
+		if(contents == null) return;
+		addAll(contents);
+	}
 
+
+	/**
+	 * Initializes this set so that it holds the given Enum values, with the universe of possible Enum constants this can hold
+	 * determined by the type of the first Enum in {@code contents}.
+	 *
+	 * @param contents a Collection of Enum items to place into this set
+	 */
+	public ESet(Collection<Enum<?>> contents) {
+		super();
+		if(contents == null) return;
+		addAll(contents);
+	}
 
 	/**
 	 * Returns the number of elements in this set (its cardinality).  If this
@@ -211,11 +239,23 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
-	 * Removes all the elements from this set (optional operation).
-	 * The set will be empty after this call returns.
+	 * Adds all Enum items in the given array to this set. Returns true if this set was modified at all
+	 * in the process (that is, if any items in {@code c} were not already present in this set).
 	 *
-	 * @throws UnsupportedOperationException if the {@code clear} method
-	 *                                       is not supported by this set
+	 * @see #add(Enum)
+	 */
+	public boolean addAll (Enum<?>[] c) {
+		boolean modified = false;
+		for (int i = 0; i < c.length; i++) {
+			modified |= add(c[i]);
+		}
+		return modified;
+	}
+
+	/**
+	 * Removes all the elements from this set.
+	 * The set will be empty after this call returns.
+	 * This does not change the universe of possible Enum items this can hold.
 	 */
 	@Override
 	public void clear () {
@@ -395,6 +435,16 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 			return coll;
 		}
 
+	}
+
+	public static ESet with (Enum<?> item) {
+		ESet set = new ESet();
+		set.add(item);
+		return set;
+	}
+
+	public static ESet with (Enum<?>... array) {
+		return new ESet(array);
 	}
 
 }
