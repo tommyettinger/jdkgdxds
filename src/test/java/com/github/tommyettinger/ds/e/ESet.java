@@ -513,7 +513,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * @return a new ESet containing start, end, and any Enum constants with ordinals between them
 	 * @param <E> the shared Enum type of both start and end
 	 */
-	public <E extends Enum<E>> ESet range(Enum<E> start, Enum<E> end) {
+	public static  <E extends Enum<E>> ESet range(Enum<E> start, Enum<E> end) {
 		if(start == null || end == null) return null;
 		final int mn = Math.min(start.ordinal(), end.ordinal());
 		final int mx = Math.max(start.ordinal(), end.ordinal());
