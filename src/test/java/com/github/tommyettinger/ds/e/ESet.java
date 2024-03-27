@@ -78,7 +78,6 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		addAll(contents);
 	}
 
-
 	/**
 	 * Initializes this set so that it holds the given Enum values, with the universe of possible Enum constants this can hold
 	 * determined by the type of the first Enum in {@code contents}.
@@ -89,6 +88,17 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		super();
 		if(contents == null) return;
 		addAll(contents);
+	}
+
+	/**
+	 * Copy constructor; uses a direct reference to the enum values that may be cached in {@code other}, but copies other fields.
+	 * @param other another ESet that will have most of its data copied, but its cached {@code values()} results will be used directly
+	 */
+	public ESet (ESet other) {
+		this.size = other.size;
+		if(other.table != null)
+			this.table = Arrays.copyOf(other.table, other.table.length);
+		this.enumValues = other.enumValues;
 	}
 
 	/**
@@ -447,4 +457,33 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		return new ESet(array);
 	}
 
+	/**
+	 * Creates a new ESet using the given result of calling {@code values()} on an Enum type, but with no items initially
+	 * stored in the set.
+	 * <br>
+	 * This is the same as calling {@link #ESet(Enum[], boolean)}.
+	 *
+	 * @param valuesResult almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 * @return a new ESet with the specified universe of possible items, but none present in the set
+	 */
+	public static ESet noneOf(Enum<?>[] valuesResult) {
+		return new ESet(valuesResult, true);
+	}
+
+	/**
+	 * Creates a new ESet using the given result of calling {@code values()} on an Enum type, and with all possible items initially
+	 * stored in the set.
+	 *
+	 * @param valuesResult almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 * @return a new ESet with the specified universe of possible items, and all of them present in the set
+	 */
+	public static ESet allOf(Enum<?>[] valuesResult) {
+		ESet coll = new ESet(valuesResult, true);
+
+		for (int i = 0; i < coll.table.length - 1; i++) {
+			coll.table[i] = -1;
+		}
+		coll.table[coll.table.length - 1] = -1 >>> -valuesResult.length;
+		return coll;
+	}
 }
