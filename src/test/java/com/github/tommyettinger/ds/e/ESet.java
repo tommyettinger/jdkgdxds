@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds.e;
 
+import com.github.tommyettinger.digital.BitConversion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.AbstractSet;
@@ -206,4 +207,60 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		if(table != null)
 			Arrays.fill(table, 0);
 	}
+
+	/**
+	 * Returns the first Enum contained in the set with an ordinal equal to or greater than {@code minOrdinal}.
+	 * If no such Enum exists, or if minOrdinal is invalid (such as if it is negative or greater than the highest ordinal in the
+	 * Enum type this holds), then {@code null} is returned.
+	 * @param minOrdinal the index to start looking at; does not need to have an Enum present there, but must be non-negative
+	 * @return the first Enum contained in the set on or after the specified starting point, or null if none can be found
+	 */
+	public Enum<?> nextEnum (int minOrdinal) {
+		if(minOrdinal < 0) return null;
+		int[] bits = this.table;
+		int word = minOrdinal >>> 5;
+		int bitsLength = bits.length;
+		if (word >= bitsLength)
+			return null;
+		int bitsAtWord = bits[word] & -1 << minOrdinal; // shift implicitly is masked to bottom 63 bits
+		if (bitsAtWord != 0) {
+			return enumValues[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)]; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+		}
+		for (word++; word < bitsLength; word++) {
+			bitsAtWord = bits[word];
+			if (bitsAtWord != 0) {
+				return enumValues[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)];
+			}
+		}
+		return null;
+	}
+
+
+	/**
+	 * Returns the first Enum contained in the set on or after the point where the given Enum {@code from} would occur.
+	 * If no such Enum exists then {@code null} is returned.
+	 * @param from the Enum to start looking at; does not need to be present in the set
+	 * @return the first Enum contained in the set on or after the specified starting point, or null if none can be found
+	 */
+	public Enum<?> nextEnum (Enum<?> from) {
+		if(from == null) return null;
+		int fromIndex = from.ordinal();
+		int[] bits = this.table;
+		int word = fromIndex >>> 5;
+		int bitsLength = bits.length;
+		if (word >= bitsLength)
+			return null;
+		int bitsAtWord = bits[word] & -1 << fromIndex; // shift implicitly is masked to bottom 63 bits
+		if (bitsAtWord != 0) {
+			return enumValues[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)]; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+		}
+		for (word++; word < bitsLength; word++) {
+			bitsAtWord = bits[word];
+			if (bitsAtWord != 0) {
+				return enumValues[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)];
+			}
+		}
+		return null;
+	}
+
 }
