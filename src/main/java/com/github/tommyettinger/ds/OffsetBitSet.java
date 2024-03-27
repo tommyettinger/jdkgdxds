@@ -400,16 +400,12 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 			return offset - 1;
 		long bitsAtWord = bits[word] & -1L << fromIndex; // shift implicitly is masked to bottom 63 bits
 		if (bitsAtWord != 0) {
-			long t = BitConversion.lowestOneBit(bitsAtWord); // there's a bug in GWT that requires this instead of (b & -b)
-			if (t != 0)
-				return BitConversion.countTrailingZeros(t) + (word << 6) + offset; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+			return BitConversion.countTrailingZeros(bitsAtWord) + (word << 6) + offset; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 		}
 		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
-				long t = BitConversion.lowestOneBit(bitsAtWord);
-				if (t != 0)
-					return BitConversion.countTrailingZeros(t) + (word << 6) + offset;
+				return BitConversion.countTrailingZeros(bitsAtWord) + (word << 6) + offset;
 			}
 		}
 		return offset - 1;
@@ -431,16 +427,12 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		if (word >= bitsLength) return (bits.length << 6) + offset;
 		long bitsAtWord = bits[word] | (1L << fromIndex) - 1L; // shift implicitly is masked to bottom 63 bits
 		if (bitsAtWord != -1L) {
-			long t = BitConversion.lowestOneBit(~bitsAtWord); // there's a bug in GWT that requires this instead of (b & -b)
-			if (t != 0)
-				return BitConversion.countTrailingZeros(t) + (word << 6) + offset; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+			return BitConversion.countTrailingZeros(~bitsAtWord) + (word << 6) + offset; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 		}
 		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != -1L) {
-				long t = BitConversion.lowestOneBit(~bitsAtWord);
-				if (t != 0)
-					return BitConversion.countTrailingZeros(t) + (word << 6) + offset;
+				return BitConversion.countTrailingZeros(~bitsAtWord) + (word << 6) + offset; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 			}
 		}
 		return (bits.length << 6) + offset;
