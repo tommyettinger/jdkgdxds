@@ -356,65 +356,65 @@ public class ESetTest extends TestCase {
 //        assertFalse("Should return false", result); //$NON-NLS-1$
     }
 
-//    /**
-//     * @tests java.util.ESet#equals(Object)
-//     */
-//    public void test_equals_LObject() {
-//        Set<EnumFoo> set = ESet.noneOf(EnumFoo.class);
-//        Enum[] elements = EnumFoo.class.getEnumConstants();
-//        for(int i = 0; i < elements.length; i++) {
-//            set.add((EnumFoo) elements[i]);
-//        }
-//
-//        assertFalse("Should return false", set.equals(null)); //$NON-NLS-1$
-//        assertFalse(
-//                "Should return false", set.equals(new Object())); //$NON-NLS-1$
-//
-//        Set<EnumFoo> anotherSet = ESet.noneOf(EnumFoo.class);
-//        elements = EnumFoo.class.getEnumConstants();
-//        for(int i = 0; i < elements.length; i++) {
-//            anotherSet.add((EnumFoo) elements[i]);
-//        }
-//        assertTrue("Should return true", set.equals(anotherSet)); //$NON-NLS-1$
-//
-//        anotherSet.remove(EnumFoo.a);
-//        assertFalse(
-//                "Should return false", set.equals(anotherSet)); //$NON-NLS-1$
-//
-//        Set<EnumWithInnerClass> setWithInnerClass = ESet
-//                .noneOf(EnumWithInnerClass.class);
-//        elements = EnumWithInnerClass.class.getEnumConstants();
-//        for(int i = 0; i < elements.length; i++) {
-//            setWithInnerClass.add((EnumWithInnerClass) elements[i]);
-//        }
-//
-//        assertFalse(
-//                "Should return false", set.equals(setWithInnerClass)); //$NON-NLS-1$
-//
-//        setWithInnerClass.clear();
-//        set.clear();
-//        assertTrue("Should be equal", set.equals(setWithInnerClass)); //$NON-NLS-1$
-//
-//        // test enum type with more than 64 elements
-//        Set<HugeEnum> hugeSet = new ESet(HugeEnum.values());
-//        assertTrue(hugeSet.equals(set));
-//
-//        hugeSet = ESet.allOf(HugeEnum.class);
-//        assertFalse(hugeSet.equals(null));
-//        assertFalse(hugeSet.equals(new Object()));
-//
-//        Set<HugeEnum> anotherHugeSet = ESet.allOf(HugeEnum.class);
-//        anotherHugeSet.remove(HugeEnum.a);
-//        assertFalse(hugeSet.equals(anotherHugeSet));
-//
-//        Set<HugeEnumWithInnerClass> hugeSetWithInnerClass = ESet
-//                .allOf(HugeEnumWithInnerClass.class);
-//        assertFalse(hugeSet.equals(hugeSetWithInnerClass));
-//        hugeSetWithInnerClass.clear();
-//        hugeSet.clear();
-//        assertTrue(hugeSet.equals(hugeSetWithInnerClass));
-//    }
-//
+    /**
+     * @tests java.util.ESet#equals(Object)
+     */
+    public void test_equals_LObject() {
+        Set<Enum<?>> set = ESet.noneOf(EnumFoo.values());
+        Enum[] elements = EnumFoo.class.getEnumConstants();
+        for(int i = 0; i < elements.length; i++) {
+            set.add(elements[i]);
+        }
+
+        assertFalse("Should return false", set.equals(null)); //$NON-NLS-1$
+        assertFalse(
+                "Should return false", set.equals(new Object())); //$NON-NLS-1$
+
+        Set<Enum<?>> anotherSet = ESet.noneOf(EnumFoo.values());
+        elements = EnumFoo.class.getEnumConstants();
+        for(int i = 0; i < elements.length; i++) {
+            anotherSet.add(elements[i]);
+        }
+        assertTrue("Should return true", set.equals(anotherSet)); //$NON-NLS-1$
+
+        anotherSet.remove(EnumFoo.a);
+        assertFalse(
+                "Should return false", set.equals(anotherSet)); //$NON-NLS-1$
+
+        Set<Enum<?>> setWithInnerClass = ESet
+                .noneOf(EnumWithInnerClass.values());
+        elements = EnumWithInnerClass.class.getEnumConstants();
+        for(int i = 0; i < elements.length; i++) {
+            setWithInnerClass.add(elements[i]);
+        }
+
+        assertFalse(
+                "Should return false", set.equals(setWithInnerClass)); //$NON-NLS-1$
+
+        setWithInnerClass.clear();
+        set.clear();
+        assertTrue("Should be equal", set.equals(setWithInnerClass)); //$NON-NLS-1$
+
+        // test enum type with more than 64 elements
+        Set<Enum<?>> hugeSet = new ESet(HugeEnum.values(), true);
+        assertTrue(hugeSet.equals(set));
+
+        hugeSet = ESet.allOf(HugeEnum.values());
+        assertFalse(hugeSet.equals(null));
+        assertFalse(hugeSet.equals(new Object()));
+
+        Set<Enum<?>> anotherHugeSet = ESet.allOf(HugeEnum.values());
+        anotherHugeSet.remove(HugeEnum.a);
+        assertFalse(hugeSet.equals(anotherHugeSet));
+
+        Set<Enum<?>> hugeSetWithInnerClass = ESet
+                .allOf(HugeEnumWithInnerClass.values());
+        assertFalse(hugeSet.equals(hugeSetWithInnerClass));
+        hugeSetWithInnerClass.clear();
+        hugeSet.clear();
+        assertTrue(hugeSet.equals(hugeSetWithInnerClass));
+    }
+
 //    /**
 //     * @tests java.util.ESet#clear()
 //     */

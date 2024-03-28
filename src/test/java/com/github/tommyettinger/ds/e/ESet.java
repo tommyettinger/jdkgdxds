@@ -145,7 +145,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		final int ord = e.ordinal(), upper = ord >>> 5;
 		if(table.length <= upper) return false;
 		// (1 << ord) has ord implicitly used modulo 32
-		return (table[upper] & 1 << ord) != 0;
+		return (table[upper] & 1 << ord) != 0 && item.equals(enumValues[ord]);
 	}
 
 	/**
