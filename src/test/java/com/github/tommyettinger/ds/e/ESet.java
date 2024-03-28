@@ -35,7 +35,7 @@ import java.util.Set;
 public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable<Enum<?>> {
 	protected int size;
 	protected int[] table;
-	protected Enum<?>[] enumValues;
+	protected Enum<?>[] universe;
 	@Nullable protected transient ESetIterator iterator1;
 	@Nullable protected transient ESetIterator iterator2;
 
@@ -59,7 +59,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	public ESet (Enum<?>[] valuesResult, boolean ignoredToDistinguish) {
 		super();
 		if(valuesResult == null) return;
-		enumValues = valuesResult;
+		universe = valuesResult;
 		table = new int[valuesResult.length + 31 >>> 5];
 	}
 
@@ -98,7 +98,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		this.size = other.size;
 		if(other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
-		this.enumValues = other.enumValues;
+		this.universe = other.universe;
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		final int ord = e.ordinal(), upper = ord >>> 5;
 		if(table.length <= upper) return false;
 		// (1 << ord) has ord implicitly used modulo 32
-		return (table[upper] & 1 << ord) != 0 && item.equals(enumValues[ord]);
+		return (table[upper] & 1 << ord) != 0 && item.equals(universe[ord]);
 	}
 
 	/**
@@ -205,8 +205,8 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	@Override
 	public boolean add (Enum<?> item) {
 		if(item == null) return false;
-		if(enumValues == null) enumValues = item.getDeclaringClass().getEnumConstants();
-		if(table == null) table = new int[enumValues.length + 31 >>> 5];
+		if(universe == null) universe = item.getDeclaringClass().getEnumConstants();
+		if(table == null) table = new int[universe.length + 31 >>> 5];
 		final int ord = item.ordinal(), upper = ord >>> 5;
 		if(table.length <= upper) return false;
 		// (1 << ord) has ord implicitly used modulo 32
@@ -275,6 +275,31 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
+	 * Removes all the elements from this set and can reset the universe of possible Enum items this can hold.
+	 * The set will be empty after this call returns.
+	 * This changes the universe of possible Enum items this can hold to match {@code universe}.
+	 * If {@code universe} is null, this resets this set to the state it would have after {@link #ESet()} was called.
+	 * If the table this would need is the same size as or smaller than the current table (such as if {@code universe} is the same as
+	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
+	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
+	 * This always uses {@code universe} directly, without copying.
+	 *
+	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
+	 */
+	public void clear (Enum<?>[] universe) {
+		size = 0;
+		if (universe == null) {
+			table = null;
+		} else if(universe.length >>> 5 <= this.universe.length >>> 5) {
+			if(table != null)
+				Arrays.fill(table, 0);
+		} else {
+			table = new int[universe.length + 31 >>> 5];
+		}
+		this.universe = universe;
+	}
+
+	/**
 	 * Returns the first ordinal equal to or greater than {@code minOrdinal} of the an Enum contained in the set.
 	 * If no such Enum exists, or if minOrdinal is invalid (such as if it is negative or greater than the highest ordinal in the
 	 * Enum type this holds), then {@code -1} is returned.
@@ -317,12 +342,12 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 			return null;
 		int bitsAtWord = bits[word] & -1 << minOrdinal; // shift implicitly is masked to bottom 31 bits
 		if (bitsAtWord != 0) {
-			return enumValues[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)]; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+			return universe[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)]; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 		}
 		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
-				return enumValues[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)];
+				return universe[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)];
 			}
 		}
 		return null;
@@ -345,12 +370,12 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 			return null;
 		int bitsAtWord = bits[word] & -1 << fromIndex; // shift implicitly is masked to bottom 31 bits
 		if (bitsAtWord != 0) {
-			return enumValues[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)]; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+			return universe[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)]; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 		}
 		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
-				return enumValues[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)];
+				return universe[BitConversion.countTrailingZeros(bitsAtWord) + (word << 5)];
 			}
 		}
 		return null;
@@ -399,7 +424,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 			if (currentIndex < 0) {
 				throw new IllegalStateException("next must be called before remove.");
 			}
-			set.remove(set.enumValues[currentIndex]);
+			set.remove(set.universe[currentIndex]);
 			currentIndex = INDEX_ILLEGAL;
 		}
 
@@ -409,7 +434,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			currentIndex = nextIndex;
 			findNextIndex();
-			return set.enumValues[currentIndex];
+			return set.universe[currentIndex];
 		}
 
 		/**
@@ -500,8 +525,8 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		for (int i = 0; i < coll.table.length - 1; i++) {
 			coll.table[i] ^= -1;
 		}
-		coll.table[coll.table.length - 1] ^= -1 >>> -coll.enumValues.length;
-		coll.size = coll.enumValues.length - other.size;
+		coll.table[coll.table.length - 1] ^= -1 >>> -coll.universe.length;
+		coll.size = coll.universe.length - other.size;
 		return coll;
 	}
 
