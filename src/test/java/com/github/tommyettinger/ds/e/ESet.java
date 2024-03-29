@@ -56,11 +56,22 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * @param ignoredToDistinguish an ignored boolean that differentiates this constructor, which defined a key universe,
 	 *                               from one that takes contents
 	 */
-	public ESet (Enum<?>[] valuesResult, boolean ignoredToDistinguish) {
+	public ESet (@Nullable Enum<?>[] valuesResult, boolean ignoredToDistinguish) {
 		super();
 		if(valuesResult == null) return;
 		universe = valuesResult;
 		table = new int[valuesResult.length + 31 >>> 5];
+	}
+
+	/**
+	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined by the
+	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #ESet(Enum[], boolean)}
+	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
+	 * if you use {@link #ESet(Enum[], boolean)}, you can reuse an unmodified array to reduce allocations.
+	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
+	 */
+	public ESet(@Nullable Class<? extends Enum<?>> universeClass) {
+		this(universeClass == null ? null : universeClass.getEnumConstants(), true);
 	}
 
 	/**
@@ -491,7 +502,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * @param valuesResult almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 * @return a new ESet with the specified universe of possible items, but none present in the set
 	 */
-	public static ESet noneOf(Enum<?>[] valuesResult) {
+	public static ESet noneOf(@Nullable Enum<?>[] valuesResult) {
 		return new ESet(valuesResult, true);
 	}
 
@@ -502,7 +513,8 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * @param valuesResult almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 * @return a new ESet with the specified universe of possible items, and all of them present in the set
 	 */
-	public static ESet allOf(Enum<?>[] valuesResult) {
+	public static ESet allOf(@Nullable Enum<?>[] valuesResult) {
+		if(valuesResult == null) return new ESet();
 		ESet coll = new ESet(valuesResult, true);
 
 		for (int i = 0; i < coll.table.length - 1; i++) {
@@ -510,6 +522,40 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		}
 		coll.table[coll.table.length - 1] = -1 >>> -valuesResult.length;
 		coll.size = valuesResult.length;
+		return coll;
+	}
+
+	/**
+	 * Creates a new ESet using the constants from the given Class (of an Enum type), but with no items initially
+	 * stored in the set.
+	 * <br>
+	 * This is the same as calling {@link #ESet(Class)}.
+	 *
+	 * @param clazz the Class of any Enum type; you can get this from a constant with {@link Enum#getDeclaringClass()}
+	 * @return a new ESet with the specified universe of possible items, but none present in the set
+	 */
+	public static ESet noneOf(@Nullable Class<? extends Enum<?>> clazz) {
+		if(clazz == null)
+			return new ESet();
+		return new ESet(clazz.getEnumConstants(), true);
+	}
+
+	/**
+	 * Creates a new ESet using the constants from the given Class (of an Enum type), and with all possible items initially
+	 * stored in the set.
+	 *
+	 * @param clazz the Class of any Enum type; you can get this from a constant with {@link Enum#getDeclaringClass()}
+	 * @return a new ESet with the specified universe of possible items, and all of them present in the set
+	 */
+	public static ESet allOf(@Nullable Class<? extends Enum<?>> clazz) {
+		if(clazz == null)
+			return new ESet();
+		ESet coll = new ESet(clazz.getEnumConstants(), true);
+		for (int i = 0; i < coll.table.length - 1; i++) {
+			coll.table[i] = -1;
+		}
+		coll.table[coll.table.length - 1] = -1 >>> -coll.universe.length;
+		coll.size = coll.universe.length;
 		return coll;
 	}
 
