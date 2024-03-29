@@ -461,14 +461,6 @@ public class ESetTest extends TestCase {
      * @tests java.util.ESet#complementOf(java.util.ESet)
      */
     public void test_ComplementOf_LESet() {
-
-        try {
-            ESet.complementOf(null);
-            fail("Should throw NullPointerException"); //$NON-NLS-1$
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
         ESet set = ESet
                 .noneOf(EnumWithInnerClass.values());
         set.add(EnumWithInnerClass.d);
@@ -499,12 +491,6 @@ public class ESetTest extends TestCase {
         complementHugeSet = ESet.complementOf(hugeSet);
         assertEquals(63, complementHugeSet.size());
 
-        try {
-            ESet.complementOf(null);
-            fail("Should throw NullPointerException"); //$NON-NLS-1$
-        } catch (NullPointerException npe) {
-            // expected
-        }
     }
 
     /**
@@ -728,93 +714,54 @@ public class ESetTest extends TestCase {
         assertFalse("Should return false", result); //$NON-NLS-1$
     }
 
-//    /**
-//     * @tests java.util.ESet#copyOf(java.util.Collection)
-//     */
-//    @SuppressWarnings("unchecked")
-//    public void test_CopyOf_LCollection() {
-//        try {
-//            ESet.copyOf((Collection) null);
-//            fail("Should throw NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        Collection collection = new ArrayList();
-//        try {
-//            ESet.copyOf(collection);
-//            fail("Should throw IllegalArgumentException"); //$NON-NLS-1$
-//        } catch (IllegalArgumentException e) {
-//            // expected
-//        }
-//
-//        collection.add(new Object());
-//        try {
-//            ESet.copyOf(collection);
-//            fail("Should throw ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // expected
-//        }
-//
-//        Collection<EnumFoo> enumCollection = new ArrayList<EnumFoo>();
-//        enumCollection.add(EnumFoo.b);
-//
-//        ESet<EnumFoo> copyOfEnumCollection = ESet.copyOf(enumCollection);
-//        assertEquals("Size of copyOfEnumCollection should be 1:", //$NON-NLS-1$
-//                1, copyOfEnumCollection.size());
-//        assertTrue("copyOfEnumCollection should contain EnumFoo.b:", //$NON-NLS-1$
-//                copyOfEnumCollection.contains(EnumFoo.b));
-//
-//        enumCollection.add(null);
-//        assertEquals("Size of enumCollection should be 2:", //$NON-NLS-1$
-//                2, enumCollection.size());
-//
-//        try {
-//            copyOfEnumCollection = ESet.copyOf(enumCollection);
-//            fail("Should throw NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        Collection rawEnumCollection = new ArrayList();
-//        rawEnumCollection.add(EnumFoo.a);
-//        rawEnumCollection.add(EnumWithInnerClass.a);
-//        try {
-//            ESet.copyOf(rawEnumCollection);
-//            fail("Should throw ClassCastException"); //$NON-NLS-1$
-//        } catch(ClassCastException e) {
-//            // expected
-//        }
-//
-//        // test enum type with more than 64 elements
-//        Collection<HugeEnum> hugeEnumCollection = new ArrayList<HugeEnum>();
-//        hugeEnumCollection.add(HugeEnum.b);
-//
-//        ESet<HugeEnum> copyOfHugeEnumCollection = ESet.copyOf(hugeEnumCollection);
-//        assertEquals(1, copyOfHugeEnumCollection.size());
-//        assertTrue(copyOfHugeEnumCollection.contains(HugeEnum.b));
-//
-//        hugeEnumCollection.add(null);
-//        assertEquals(2, hugeEnumCollection.size());
-//
-//        try {
-//            copyOfHugeEnumCollection = ESet.copyOf(hugeEnumCollection);
-//            fail("Should throw NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        rawEnumCollection = new ArrayList();
-//        rawEnumCollection.add(HugeEnum.a);
-//        rawEnumCollection.add(HugeEnumWithInnerClass.a);
-//        try {
-//            ESet.copyOf(rawEnumCollection);
-//            fail("Should throw ClassCastException"); //$NON-NLS-1$
-//        } catch(ClassCastException e) {
-//            // expected
-//        }
-//    }
-//
+    /**
+     * @tests java.util.ESet#copyOf(java.util.Collection)
+     */
+    @SuppressWarnings("unchecked")
+    public void test_CopyOf_LCollection() {
+        Collection collection = new ArrayList();
+
+        collection.add(new Object());
+        try {
+            ESet.copyOf(collection);
+            fail("Should throw ClassCastException"); //$NON-NLS-1$
+        } catch (ClassCastException e) {
+            // expected
+        }
+
+        Collection<EnumFoo> enumCollection = new ArrayList<EnumFoo>();
+        enumCollection.add(EnumFoo.b);
+
+        ESet copyOfEnumCollection = ESet.copyOf(enumCollection);
+        assertEquals("Size of copyOfEnumCollection should be 1:", //$NON-NLS-1$
+                1, copyOfEnumCollection.size());
+        assertTrue("copyOfEnumCollection should contain EnumFoo.b:", //$NON-NLS-1$
+                copyOfEnumCollection.contains(EnumFoo.b));
+
+        enumCollection.add(null);
+        assertEquals("Size of enumCollection should be 2:", //$NON-NLS-1$
+                2, enumCollection.size());
+
+        Collection rawEnumCollection = new ArrayList();
+        rawEnumCollection.add(EnumFoo.a);
+        rawEnumCollection.add(EnumWithInnerClass.a);
+
+        // test enum type with more than 64 elements
+        Collection<HugeEnum> hugeEnumCollection = new ArrayList<HugeEnum>();
+        hugeEnumCollection.add(HugeEnum.b);
+
+        ESet copyOfHugeEnumCollection = ESet.copyOf(hugeEnumCollection);
+        assertEquals(1, copyOfHugeEnumCollection.size());
+        assertTrue(copyOfHugeEnumCollection.contains(HugeEnum.b));
+
+        hugeEnumCollection.add(null);
+        assertEquals(2, hugeEnumCollection.size());
+
+        rawEnumCollection = new ArrayList();
+        rawEnumCollection.add(HugeEnum.a);
+        rawEnumCollection.add(HugeEnumWithInnerClass.a);
+    }
+
 //    /**
 //     * @tests java.util.ESet#copyOf(java.util.ESet)
 //     */

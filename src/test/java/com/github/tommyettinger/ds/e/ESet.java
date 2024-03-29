@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds.e;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.ObjectList;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.AbstractSet;
@@ -83,7 +84,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 *
 	 * @param contents an array of Enum items to place into this set
 	 */
-	public ESet(Enum<?>[] contents) {
+	public ESet(@Nullable Enum<?>[] contents) {
 		super();
 		if(contents == null) return;
 		addAll(contents);
@@ -95,7 +96,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public ESet(Collection<Enum<?>> contents) {
+	public ESet(@Nullable Collection<? extends Enum<?>> contents) {
 		super();
 		if(contents == null) return;
 		addAll(contents);
@@ -105,7 +106,8 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * Copy constructor; uses a direct reference to the enum values that may be cached in {@code other}, but copies other fields.
 	 * @param other another ESet that will have most of its data copied, but its cached {@code values()} results will be used directly
 	 */
-	public ESet (ESet other) {
+	public ESet (@Nullable ESet other) {
+		if(other == null) return;
 		this.size = other.size;
 		if(other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
@@ -166,7 +168,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * Use the {@link ESetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public ESetIterator iterator () {
+	public @NonNull ESetIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ESetIterator(this);
 			iterator2 = new ESetIterator(this);
@@ -297,7 +299,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
-	public void clear (Enum<?>[] universe) {
+	public void clear (@Nullable Enum<?>[] universe) {
 		size = 0;
 		if (universe == null) {
 			table = null;
@@ -308,6 +310,36 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 			table = new int[universe.length + 31 >>> 5];
 		}
 		this.universe = universe;
+	}
+
+
+	/**
+	 * Removes all the elements from this set and can reset the universe of possible Enum items this can hold.
+	 * The set will be empty after this call returns.
+	 * This changes the universe of possible Enum items this can hold to match the Enum constants in {@code universe}.
+	 * If {@code universe} is null, this resets this set to the state it would have after {@link #ESet()} was called.
+	 * If the table this would need is the same size as or smaller than the current table (such as if {@code universe} is the same as
+	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
+	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
+	 * This calls {@link Class#getEnumConstants()} if universe is non-null, which allocates a new array.
+	 *
+	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
+	 */
+	public void clear (@Nullable Class<? extends Enum<?>> universe) {
+		size = 0;
+		if (universe == null) {
+			table = null;
+			this.universe = null;
+		} else {
+			Enum<?>[] cons = universe.getEnumConstants();
+			if(cons.length >>> 5 <= this.universe.length >>> 5) {
+				if(table != null)
+					Arrays.fill(table, 0);
+			} else {
+				table = new int[cons.length + 31 >>> 5];
+			}
+			this.universe = cons;
+		}
 	}
 
 	/**
@@ -567,6 +599,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * @return a complemented copy of {@code other}
 	 */
 	public static ESet complementOf(ESet other) {
+		if(other == null) return new ESet();
 		ESet coll = new ESet(other);
 		for (int i = 0; i < coll.table.length - 1; i++) {
 			coll.table[i] ^= -1;
@@ -574,6 +607,16 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		coll.table[coll.table.length - 1] ^= -1 >>> -coll.universe.length;
 		coll.size = coll.universe.length - other.size;
 		return coll;
+	}
+
+	/**
+	 * Creates an ESet holding any Enum items in the given {@code contents}, which may be any Collection of Enum, including another
+	 * ESet. If given an ESet, this will copy its Enum universe and other information even if it is empty.
+	 * @param contents a Collection of Enum values, which may be another ESet
+	 * @return a new ESet containing the unique items in contents
+	 */
+	public static ESet copyOf(@Nullable Collection<? extends Enum<?>> contents) {
+		return contents == null ? new ESet() : new ESet(contents);
 	}
 
 	/**
