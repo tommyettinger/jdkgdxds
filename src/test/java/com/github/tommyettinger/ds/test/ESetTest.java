@@ -415,103 +415,103 @@ public class ESetTest extends TestCase {
         assertTrue(hugeSet.equals(hugeSetWithInnerClass));
     }
 
-//    /**
-//     * @tests java.util.ESet#clear()
-//     */
-//    public void test_clear() {
-//        Set<EnumFoo> set = ESet.noneOf(EnumFoo.class);
-//        set.add(EnumFoo.a);
-//        set.add(EnumFoo.b);
-//        assertEquals("Size should be 2", 2, set.size()); //$NON-NLS-1$
-//
-//        set.clear();
-//
-//        assertEquals("Size should be 0", 0, set.size()); //$NON-NLS-1$
-//
-//        // test enum type with more than 64 elements
-//        Set<HugeEnum> hugeSet = ESet.allOf(HugeEnum.class);
-//        assertEquals(65, hugeSet.size());
-//
-//        boolean result = hugeSet.contains(HugeEnum.aa);
-//        assertTrue(result);
-//
-//        hugeSet.clear();
-//        assertEquals(0, hugeSet.size());
-//        result = hugeSet.contains(HugeEnum.aa);
-//        assertFalse(result);
-//    }
-//
-//    /**
-//     * @tests java.util.ESet#size()
-//     */
-//    public void test_size() {
-//        Set<EnumFoo> set = ESet.noneOf(EnumFoo.class);
-//        set.add(EnumFoo.a);
-//        set.add(EnumFoo.b);
-//        assertEquals("Size should be 2", 2, set.size()); //$NON-NLS-1$
-//
-//        // test enum type with more than 64 elements
-//        Set<HugeEnum> hugeSet = new ESet(HugeEnum.values());
-//        hugeSet.add(HugeEnum.a);
-//        hugeSet.add(HugeEnum.bb);
-//        assertEquals("Size should be 2", 2, hugeSet.size()); //$NON-NLS-1$
-//    }
-//
-//    /**
-//     * @tests java.util.ESet#complementOf(java.util.ESet)
-//     */
-//    public void test_ComplementOf_LESet() {
-//
-//        try {
-//            ESet.complementOf((ESet<EnumFoo>) null);
-//            fail("Should throw NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        ESet<EnumWithInnerClass> set = ESet
-//                .noneOf(EnumWithInnerClass.class);
-//        set.add(EnumWithInnerClass.d);
-//        set.add(EnumWithInnerClass.e);
-//        set.add(EnumWithInnerClass.f);
-//
-//        assertEquals("Size should be 3:", 3, set.size()); //$NON-NLS-1$
-//
-//        ESet<EnumWithInnerClass> complementOfE = ESet.complementOf(set);
-//        assertTrue(set.contains(EnumWithInnerClass.d));
-//        assertEquals(
-//                "complementOfE should have size 3", 3, complementOfE.size()); //$NON-NLS-1$
-//        assertTrue("complementOfE should contain EnumWithSubclass.a:", //$NON-NLS-1$
-//                complementOfE.contains(EnumWithInnerClass.a));
-//        assertTrue("complementOfE should contain EnumWithSubclass.b:", //$NON-NLS-1$
-//                complementOfE.contains(EnumWithInnerClass.b));
-//        assertTrue("complementOfE should contain EnumWithSubclass.c:", //$NON-NLS-1$
-//                complementOfE.contains(EnumWithInnerClass.c));
-//
-//        // test enum type with more than 64 elements
-//        ESet<HugeEnum> hugeSet = new ESet(HugeEnum.values());
-//        assertEquals(0, hugeSet.size());
-//        Set<HugeEnum> complementHugeSet = ESet.complementOf(hugeSet);
-//        assertEquals(65, complementHugeSet.size());
-//
-//        hugeSet.add(HugeEnum.A);
-//        hugeSet.add(HugeEnum.mm);
-//        complementHugeSet = ESet.complementOf(hugeSet);
-//        assertEquals(63, complementHugeSet.size());
-//
-//        try {
-//            ESet.complementOf((ESet<HugeEnum>) null);
-//            fail("Should throw NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//    }
-//
+    /**
+     * @tests java.util.ESet#clear()
+     */
+    public void test_clear() {
+        Set<Enum<?>> set = ESet.noneOf(EnumFoo.values());
+        set.add(EnumFoo.a);
+        set.add(EnumFoo.b);
+        assertEquals("Size should be 2", 2, set.size()); //$NON-NLS-1$
+
+        set.clear();
+
+        assertEquals("Size should be 0", 0, set.size()); //$NON-NLS-1$
+
+        // test enum type with more than 64 elements
+        Set<Enum<?>> hugeSet = ESet.allOf(HugeEnum.values());
+        assertEquals(65, hugeSet.size());
+
+        boolean result = hugeSet.contains(HugeEnum.aa);
+        assertTrue(result);
+
+        hugeSet.clear();
+        assertEquals(0, hugeSet.size());
+        result = hugeSet.contains(HugeEnum.aa);
+        assertFalse(result);
+    }
+
+    /**
+     * @tests java.util.ESet#size()
+     */
+    public void test_size() {
+        Set<Enum<?>> set = ESet.noneOf(EnumFoo.values());
+        set.add(EnumFoo.a);
+        set.add(EnumFoo.b);
+        assertEquals("Size should be 2", 2, set.size()); //$NON-NLS-1$
+
+        // test enum type with more than 64 elements
+        Set<Enum<?>> hugeSet = new ESet(HugeEnum.values(), true);
+        hugeSet.add(HugeEnum.a);
+        hugeSet.add(HugeEnum.bb);
+        assertEquals("Size should be 2", 2, hugeSet.size()); //$NON-NLS-1$
+    }
+
+    /**
+     * @tests java.util.ESet#complementOf(java.util.ESet)
+     */
+    public void test_ComplementOf_LESet() {
+
+        try {
+            ESet.complementOf(null);
+            fail("Should throw NullPointerException"); //$NON-NLS-1$
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        ESet set = ESet
+                .noneOf(EnumWithInnerClass.values());
+        set.add(EnumWithInnerClass.d);
+        set.add(EnumWithInnerClass.e);
+        set.add(EnumWithInnerClass.f);
+
+        assertEquals("Size should be 3:", 3, set.size()); //$NON-NLS-1$
+
+        ESet complementOfE = ESet.complementOf(set);
+        assertTrue(set.contains(EnumWithInnerClass.d));
+        assertEquals(
+                "complementOfE should have size 3", 3, complementOfE.size()); //$NON-NLS-1$
+        assertTrue("complementOfE should contain EnumWithSubclass.a:", //$NON-NLS-1$
+                complementOfE.contains(EnumWithInnerClass.a));
+        assertTrue("complementOfE should contain EnumWithSubclass.b:", //$NON-NLS-1$
+                complementOfE.contains(EnumWithInnerClass.b));
+        assertTrue("complementOfE should contain EnumWithSubclass.c:", //$NON-NLS-1$
+                complementOfE.contains(EnumWithInnerClass.c));
+
+        // test enum type with more than 64 elements
+        ESet hugeSet = new ESet(HugeEnum.values(), true);
+        assertEquals(0, hugeSet.size());
+        Set<Enum<?>> complementHugeSet = ESet.complementOf(hugeSet);
+        assertEquals(65, complementHugeSet.size());
+
+        hugeSet.add(HugeEnum.A);
+        hugeSet.add(HugeEnum.mm);
+        complementHugeSet = ESet.complementOf(hugeSet);
+        assertEquals(63, complementHugeSet.size());
+
+        try {
+            ESet.complementOf(null);
+            fail("Should throw NullPointerException"); //$NON-NLS-1$
+        } catch (NullPointerException npe) {
+            // expected
+        }
+    }
+
 //    /**
 //     * @tests java.util.ESet#contains(Object)
 //     */
 //    public void test_contains_LObject() {
-//        Set<EnumFoo> set = ESet.noneOf(EnumFoo.class);
+//        Set<Enum<?>> set = ESet.noneOf(EnumFoo.values());
 //        Enum[] elements = EnumFoo.class.getEnumConstants();
 //        for(int i = 0; i < elements.length; i++) {
 //            set.add((EnumFoo)elements[i]);
@@ -553,7 +553,7 @@ public class ESetTest extends TestCase {
 //        assertTrue("Should contain EnumWithSubclass.f", result); //$NON-NLS-1$
 //
 //        // test enum type with more than 64 elements
-//        Set<HugeEnum> hugeSet = ESet.allOf(HugeEnum.class);
+//        Set<Enum<?>> hugeSet = ESet.allOf(HugeEnum.values());
 //        hugeSet.add(HugeEnum.a);
 //        result = hugeSet.contains(HugeEnum.a);
 //        assertTrue(result);
@@ -583,7 +583,7 @@ public class ESetTest extends TestCase {
 //     */
 //    @SuppressWarnings( { "unchecked", "boxing" })
 //    public void test_containsAll_LCollection() {
-//        ESet<EnumFoo> set = ESet.noneOf(EnumFoo.class);
+//        ESet<Enum<?>> set = ESet.noneOf(EnumFoo.values());
 //        Enum[] elements = EnumFoo.class.getEnumConstants();
 //        for(int i = 0; i < elements.length; i++) {
 //            set.add((EnumFoo)elements[i]);
@@ -868,7 +868,7 @@ public class ESetTest extends TestCase {
 //     */
 //    @SuppressWarnings("unchecked")
 //    public void test_removeAll_LCollection() {
-//        Set<EnumFoo> set = ESet.noneOf(EnumFoo.class);
+//        Set<Enum<?>> set = ESet.noneOf(EnumFoo.values());
 //        try {
 //            set.removeAll(null);
 //            fail("Should throw NullPointerException"); //$NON-NLS-1$
@@ -965,7 +965,7 @@ public class ESetTest extends TestCase {
 //        assertTrue("Should return true", result); //$NON-NLS-1$
 //
 //        // test enum type with more than 64 elements
-//        Set<HugeEnum> hugeSet = ESet.allOf(HugeEnum.class);
+//        Set<Enum<?>> hugeSet = ESet.allOf(HugeEnum.values());
 //
 //        Collection<HugeEnum> hugeCollection = new ArrayList<HugeEnum>();
 //        hugeCollection.add(HugeEnum.a);
@@ -1136,7 +1136,7 @@ public class ESetTest extends TestCase {
 //        assertEquals("size should be 0", 0, set.size()); //$NON-NLS-1$
 //
 //        // test enum type with more than 64 elements
-//        Set<HugeEnum> hugeSet = ESet.allOf(HugeEnum.class);
+//        Set<Enum<?>> hugeSet = ESet.allOf(HugeEnum.values());
 //
 //        try {
 //            hugeSet.retainAll(null);
@@ -1230,7 +1230,7 @@ public class ESetTest extends TestCase {
 //     * @tests java.util.ESet#iterator()
 //     */
 //    public void test_iterator() {
-//        Set<EnumFoo> set = ESet.noneOf(EnumFoo.class);
+//        Set<Enum<?>> set = ESet.noneOf(EnumFoo.values());
 //        set.add(EnumFoo.a);
 //        set.add(EnumFoo.b);
 //
