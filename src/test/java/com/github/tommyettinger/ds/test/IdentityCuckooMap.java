@@ -19,20 +19,23 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.Utilities;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.*;
 
 /**
- * Cuckoo hash table based implementation of the <tt>Map</tt> interface. This
- * implementation provides all the optional map operations, and permits
- * <code>null</code> values. This class makes no
+ * A cuckoo hash table based implementation of the <tt>Map</tt> interface, which
+ * compares and hashes keys by identity.
+ * This implementation provides all the optional map operations, and permits
+ * {@code null} values, but not {@code null} keys. This class makes no
  * guarantees as to the order of the map; in particular, it does not guarantee
  * that the order will remain constant over time.
  * <p>
  * This implementation provides constant-time performance for most basic operations
  * (including but not limited to <tt>get</tt> and <tt>put</tt>). Specifically,
  * the implementation guarantees O(1) time performance on <tt>get</tt> calls and
- * amortized O(1) on <tt>put</tt>.
+ * amortized O(1) on <tt>put</tt> (when and only when identity hash codes are
+ * unique).
  * <p>
  * Iterating over the collection requires a time proportional to the capacity
  * of the map. The default capacity of an empty map is 16. The map will resize
@@ -132,12 +135,12 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 
 		int hc = System.identityHashCode(key);
 		int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
-		if (key.equals(keyTable[hr1])) {
+		if (key == keyTable[hr1]) {
 			return true;
 		}
 
 		int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
-		return key.equals(keyTable[hr2]);
+		return key == keyTable[hr2];
 	}
 
 	@Override
@@ -154,12 +157,12 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 
 		int hc = System.identityHashCode(key);
 		int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
-		if (key.equals(keyTable[hr1])) {
+		if (key == keyTable[hr1]) {
 			return valueTable[hr1];
 		}
 
 		int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
-		if (key.equals(keyTable[hr2])) {
+		if (key == keyTable[hr2]) {
 			return valueTable[hr2];
 		}
 
@@ -174,12 +177,12 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		V old = null;
 		int hc = System.identityHashCode(key);
 		int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
-		if (key.equals(keyTable[hr1])) {
+		if (key == keyTable[hr1]) {
 			old = valueTable[hr1];
 			absent = false;
 		} else {
 			int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
-			if (key.equals(keyTable[hr2])) {
+			if (key == keyTable[hr2]) {
 				old = valueTable[hr2];
 				absent = false;
 			}
@@ -217,13 +220,13 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			int hc = System.identityHashCode(key);
 			int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
 			K k1 = keyTable[hr1];
-			if (k1 == null || key.equals(k1)) {
+			if (k1 == null || key == k1) {
 				valueTable[hr1] = value;
 				return null;
 			}
 			int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
 			K k2 = keyTable[hr2];
-			if (k2 == null || key.equals(k2)) {
+			if (k2 == null || key == k2) {
 				valueTable[hr2] = value;
 				return null;
 			}
@@ -248,14 +251,14 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
 		V oldValue = null;
 
-		if (key.equals(keyTable[hr1])) {
+		if (key == keyTable[hr1]) {
 			oldValue = valueTable[hr1];
 			keyTable[hr1] = null;
 			valueTable[hr1] = null;
 			size--;
 		} else {
 			int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
-			if (key.equals(keyTable[hr2])) {
+			if (key == keyTable[hr2]) {
 				oldValue = valueTable[hr2];
 				keyTable[hr2] = null;
 				valueTable[hr2] = null;
@@ -329,7 +332,6 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		long oldH1 = hashMultiplier1;
 		long oldH2 = hashMultiplier2;
 
-		boolean success = true;
 		keyTable = (K[])new Object[oldK.length];
 		valueTable = (V[])new Object[oldV.length];
 
@@ -341,7 +343,6 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			for (int i = 0; i < oldK.length; i++) {
 				if (oldK[i] != null) {
 					if (putSafe(oldK[i], oldV[i]) != null) {
-						success = false;
 						clear();
 						continue RETRIAL;
 					}
@@ -375,7 +376,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public Set<K> keySet () {
+	public @NonNull Set<K> keySet () {
 		Set<K> set = new HashSet<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
@@ -386,7 +387,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public Collection<V> values () {
+	public @NonNull Collection<V> values () {
 		List<V> values = new ArrayList<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
@@ -397,7 +398,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public Set<Entry<K, V>> entrySet () {
+	public @NonNull Set<Entry<K, V>> entrySet () {
 		Set<Entry<K, V>> set = new HashSet<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
