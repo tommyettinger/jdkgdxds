@@ -129,6 +129,16 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		regenHashFunctions(tableSize);
 	}
 
+	public IdentityCuckooMap(IdentityCuckooMap<? extends K, ? extends V> other) {
+		size = other.size;
+		shift = other.shift;
+		loadFactor = other.loadFactor;
+		hashMultiplier1 = other.hashMultiplier1;
+		hashMultiplier2 = other.hashMultiplier2;
+		keyTable = Arrays.copyOf(other.keyTable, other.keyTable.length);
+		valueTable = Arrays.copyOf(other.valueTable, other.valueTable.length);
+	}
+
 	@Override
 	public boolean containsKey (Object key) {
 		if(key == null) return false;
@@ -296,7 +306,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 
 	@SuppressWarnings("unchecked")
 	private boolean grow (final int newSize) {
-		// Save old state as we may need to restore it if the grow fails.
+		// Save old state as we may need to restore it if the grow() operation fails.
 		K[] oldK = keyTable;
 		V[] oldV = valueTable;
 		long oldH1 = hashMultiplier1;
