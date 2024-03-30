@@ -17,15 +17,12 @@
 
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.Utilities;
-
 import java.util.*;
 
 /**
  * Cuckoo hash table based implementation of the <tt>Map</tt> interface. This
- * implementation provides all the optional map operations, and permits
- * <code>null</code> values. This class makes no
+ * implementation provides all of the optional map operations, and permits
+ * <code>null</code> values and the <code>null</code> key. This class makes no
  * guarantees as to the order of the map; in particular, it does not guarantee
  * that the order will remain constant over time.
  * <p>
@@ -50,412 +47,509 @@ import java.util.*;
  * Note that this implementation is not synchronized and not thread safe. If you need
  * thread safety, you'll need to implement your own locking around the map or wrap
  * the instance around a call to {@link Collections#synchronizedMap(Map)}.
- * <p>
- * This is derived from <a href="https://github.com/ivgiuliani/cuckoohash">this Github repo</a>
- * by Ivan Giuliani.
  *
- * @param <K> the type of keys maintained by this map
- * @param <V> the type of mapped values
+ * @param <K>  the type of keys maintained by this map
+ * @param <V>  the type of mapped values
  */
+@SuppressWarnings("WeakerAccess")
 public class CuckooHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
+  // TODO implement Cloneable, Serializable and fail fast iterators.
 
-	protected static final int THRESHOLD_LOOP = 8;
-	protected static final int DEFAULT_START_SIZE = 16;
-	protected static final float DEFAULT_LOAD_FACTOR = 0.45f;
+  private static final int THRESHOLD_LOOP = 8;
+  private static final int DEFAULT_START_SIZE = 16;
+  private static final float DEFAULT_LOAD_FACTOR = 0.45f;
 
-	private float loadFactor;
+  private int defaultStartSize = DEFAULT_START_SIZE;
+  private float loadFactor = DEFAULT_LOAD_FACTOR;
 
-	protected int shift;
-	protected long hashFunction1;
-	protected long hashFunction2;
+  private final HashFunctionFactory hashFunctionFactory;
+  private HashFunction hashFunction1;
+  private HashFunction hashFunction2;
 
-	protected int size = 0;
+  private int size = 0;
 
-	private Map.Entry<K, V>[] T1;
-	private Map.Entry<K, V>[] T2;
+  /**
+   * Immutable container of entries in the map.
+   */
+  private static class MapEntry<V1> {
+    final Object key;
+    final V1 value;
 
-	/**
-	 * Constructs an empty <tt>CuckooHashMap</tt> with the default initial capacity (16).
-	 */
-	public CuckooHashMap () {
-		this(DEFAULT_START_SIZE, DEFAULT_LOAD_FACTOR);
-	}
+    MapEntry(final Object key, final V1 value) {
+      this.key = key;
+      this.value = value;
+    }
+  }
 
-	/**
-	 * Constructs an empty <tt>CuckooHashMap</tt> with the specified initial capacity.
-	 * The given capacity will be rounded to the nearest power of two.
-	 *
-	 * @param initialCapacity the initial capacity.
-	 */
-	public CuckooHashMap (int initialCapacity) {
-		this(initialCapacity, DEFAULT_LOAD_FACTOR);
-	}
+  /**
+   * Used as an internal key in the internal map in place of `null` keys supplied
+   * by the user.
+   *
+   * We're only interested in this object's hashcode. The `equals` method
+   * is used for convenience over implementing the same checks in the actual
+   * hashmap implementation and makes for an elegant implementation.
+   */
+  private static final Object KEY_NULL = new Object() {
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+    @Override
+    public boolean equals(Object obj) {
+      return obj == this || obj == null;
+    }
+  };
 
-	/**
-	 * Constructs an empty <tt>CuckooHashMap</tt> with the specified load factor.
-	 * <p>
-	 * The load factor will cause the Cuckoo hash map to double in size when the number
-	 * of items it contains has filled up more than <tt>loadFactor</tt>% of the available
-	 * space.
-	 *
-	 * @param loadFactor the load factor.
-	 */
-	public CuckooHashMap (float loadFactor) {
-		this(DEFAULT_START_SIZE, loadFactor);
-	}
+  public interface HashFunction {
+    int hash(Object obj);
+  }
 
-	@SuppressWarnings("unchecked")
-	public CuckooHashMap (int initialCapacity, float loadFactor) {
-		if (initialCapacity <= 0) {
-			throw new IllegalArgumentException("initial capacity must be strictly positive");
-		}
-		if (loadFactor <= 0.f || loadFactor > 1.f) {
-			throw new IllegalArgumentException("load factor must be a value in the (0.0f, 1.0f] range.");
-		}
+  public interface HashFunctionFactory {
+    HashFunction generate(int buckets);
+  }
 
-		size = 0;
-		// half the table size used by linear-probing tables, due to ~ instead of -
-		int defaultStartSize = 1 << ~BitConversion.countLeadingZeros(Math.max(2, initialCapacity) - 1);
-		shift = BitConversion.countLeadingZeros(defaultStartSize - 1L);
-		// Capacity is meant to be the total capacity of the two internal tables.
-		T1 = new Map.Entry[defaultStartSize];
-		T2 = new Map.Entry[defaultStartSize];
+  private static class DefaultHashFunctionFactory implements HashFunctionFactory {
+    private static final Random RANDOM = new Random();
 
-		this.loadFactor = loadFactor;
+    /**
+     * From Mikkel Thorup in "String Hashing for Linear Probing."
+     * http://www.diku.dk/summer-school-2014/course-material/mikkel-thorup/hash.pdf_copy
+     */
+    private static class DefaultHashFunction implements HashFunction {
+      final int a;
+      final int b;
+      final int hashBits;
 
-		regenHashFunctions(defaultStartSize);
-	}
+      DefaultHashFunction(int a, int b, int buckets) {
+        if (a == 0 || b == 0) {
+          throw new IllegalArgumentException("a and b cannot be 0");
+        }
 
-	@Override
-	public boolean containsKey (Object key) {
-		return get(key) != null;
-	}
+        this.a = a;
+        this.b = b;
 
-	@Override
-	public V get (Object key) {
-		return get(key, null);
-	}
+        // Find the position of the most-significant bit; this will determine the number of bits
+        // we need to set in the hash function.
+        int lgBuckets = -1;
+        while (buckets > 0) {
+          lgBuckets++;
+          buckets >>>= 1;
+        }
+        hashBits = lgBuckets;
+      }
 
-	@Override
-	public V getOrDefault (Object key, V defaultValue) {
-		return get(key, defaultValue);
-	}
+      @Override
+      public int hash(Object obj) {
+        final int h = obj.hashCode();
+        // Split into two 16 bit words.
+        final int upper = h & 0xFFFF0000;
+        final int lower = h & 0x0000FFFF;
 
-	private V get (Object key, V defaultValue) {
+        // Shift the product down so that only `hashBits` bits remain in the output.
+        return (upper * a + lower * b) >>> (32 - hashBits);
+      }
+    }
 
-		int hc = key.hashCode();
-		Map.Entry<K, V> v1 = T1[(int)(hashFunction1 * hc >>> shift)];
-		if (v1 != null && v1.getKey().equals(key)) {
-			return v1.getValue();
-		}
+    @Override
+    public HashFunction generate(int buckets) {
+      return new DefaultHashFunction(RANDOM.nextInt(), RANDOM.nextInt(), buckets);
+    }
+  }
 
-		Map.Entry<K, V> v2 = T2[(int)(hashFunction2 * hc >>> shift)];
-		if (v2 != null && v2.getKey().equals(key)) {
-			return v2.getValue();
-		}
+  private MapEntry<V>[] T1;
+  private MapEntry<V>[] T2;
 
-		return defaultValue;
-	}
+  /**
+   * Constructs an empty <tt>CuckooHashMap</tt> with the default initial capacity (16).
+   */
+  public CuckooHashMap() {
+    this(DEFAULT_START_SIZE, DEFAULT_LOAD_FACTOR, new DefaultHashFunctionFactory());
+  }
 
-	@Override
-	public V put (K key, V value) {
+  /**
+   * Constructs an empty <tt>CuckooHashMap</tt> with the specified initial capacity.
+   * The given capacity will be rounded to the nearest power of two.
+   *
+   * @param initialCapacity  the initial capacity.
+   */
+  public CuckooHashMap(int initialCapacity) {
+    this(initialCapacity, DEFAULT_LOAD_FACTOR, new DefaultHashFunctionFactory());
+  }
 
-		final V old = get(key);
-		if (old == null) {
-			// If we need to grow after adding this item, it's probably best to grow before we add it.
-			if (size() + 1 >= loadFactor * (T1.length << 1)) {
-				grow();
-			}
-		}
-		K k;
-		while ((k = putSafe(key, value)) != null) {
-			key = k;
-			value = get(k, null);
-			if (!rehash()) {
-				grow();
-			}
-		}
+  /**
+   * Constructs an empty <tt>CuckooHashMap</tt> with the specified load factor.
+   *
+   * The load factor will cause the Cuckoo hash map to double in size when the number
+   * of items it contains has filled up more than <tt>loadFactor</tt>% of the available
+   * space.
+   *
+   * @param loadFactor  the load factor.
+   */
+  public CuckooHashMap(float loadFactor) {
+    this(DEFAULT_START_SIZE, loadFactor, new DefaultHashFunctionFactory());
+  }
 
-		if (old == null) {
-			// Do not increase the size if we're replacing the item.
-			size++;
-		}
+  @SuppressWarnings("unchecked")
+  public CuckooHashMap(int initialCapacity, float loadFactor, HashFunctionFactory hashFunctionFactory) {
+    if (initialCapacity <= 0) {
+      throw new IllegalArgumentException("initial capacity must be strictly positive");
+    }
+    if (loadFactor <= 0.f || loadFactor > 1.f) {
+      throw new IllegalArgumentException("load factor must be a value in the (0.0f, 1.0f] range.");
+    }
 
-		return old;
-	}
+    size = 0;
+    defaultStartSize = roundPowerOfTwo(initialCapacity);
 
-	/**
-	 * @return the key we failed to move because of collisions or <tt>null</tt> if
-	 * successful.
-	 */
-	private K putSafe (K key, V value) {
-		Map.Entry<K, V> newV;
-		int loop = 0;
+    // Capacity is meant to be the total capacity of the two internal tables.
+    T1 = new MapEntry[defaultStartSize / 2];
+    T2 = new MapEntry[defaultStartSize / 2];
 
-		while (loop++ < THRESHOLD_LOOP) {
-			newV = new SimpleEntry<>(key, value);
-			int hc = key.hashCode();
-			int hr1 = (int)(hashFunction1 * hc >>> shift);
-			int hr2 = (int)(hashFunction2 * hc >>> shift);
-			Map.Entry<K, V> t1 = T1[hr1];
-			Map.Entry<K, V> t2 = T2[hr2];
+    this.loadFactor = loadFactor;
+    this.hashFunctionFactory = hashFunctionFactory;
 
-			// Check if we must just update the value first.
-			if (t1 != null && t1.getKey().equals(key)) {
-				T1[hr1] = newV;
-				return null;
-			}
-			if (t2 != null && t2.getKey().equals(key)) {
-				T2[hr2] = newV;
-				return null;
-			}
+    regenHashFunctions(defaultStartSize / 2);
+  }
 
-			// We're intentionally biased towards adding items in T1 since that leads to
-			// slightly faster successful lookups.
-			if (t1 == null) {
-				T1[hr1] = newV;
-				return null;
-			} else if (t2 == null) {
-				T2[hr2] = newV;
-				return null;
-			} else {
-				// Both tables have an item in the required position, we need to move things around.
-				// Prefer always moving from T1 for simplicity.
-				key = t1.getKey();
-				value = t1.getValue();
-				T1[(int)(hashFunction1 * key.hashCode() >>> shift)] = newV;
-			}
-		}
+  @Override
+  public boolean containsKey(Object key) {
+    return get(key) != null;
+  }
 
-		return key;
-	}
+  @Override
+  public V get(Object key) {
+    return get(key, null);
+  }
 
-	@Override
-	public V remove (Object key) {
-		if (key == null)
-			return null;
-		int hc = key.hashCode();
-		int hr1 = (int)(hashFunction1 * hc >>> shift);
-		int hr2 = (int)(hashFunction2 * hc >>> shift);
-		Map.Entry<K, V> v1 = T1[hr1];
-		Map.Entry<K, V> v2 = T2[hr2];
-		V oldValue;
+  @SuppressWarnings("Since15")
+  @Override
+  public V getOrDefault(Object key, V defaultValue) {
+    return get(key, defaultValue);
+  }
 
-		if (v1 != null && v1.getKey().equals(key)) {
-			oldValue = T1[hr1].getValue();
-			T1[hr1] = null;
-			size--;
-			return oldValue;
-		}
+  private V get(Object key, V defaultValue) {
+    Object actualKey = key != null ? key : KEY_NULL;
 
-		if (v2 != null && v2.getKey().equals(key)) {
-			oldValue = T2[hr2].getValue();
-			T2[hr2] = null;
-			size--;
-			return oldValue;
-		}
+    MapEntry<V> v1 = T1[hashFunction1.hash(actualKey)];
+    if (v1 != null && v1.key.equals(actualKey)) {
+      return v1.value;
+    }
 
-		return null;
-	}
+    MapEntry<V> v2 = T2[hashFunction2.hash(actualKey)];
+    if (v2 != null && v2.key.equals(actualKey)) {
+      return v2.value;
+    }
 
-	@Override
-	public void clear () {
-		size = 0;
-		Arrays.fill(T1, null);
-		Arrays.fill(T2, null);
-		regenHashFunctions(T1.length);
-	}
+    return defaultValue;
+  }
 
-	private void regenHashFunctions (final int size) {
-		int idx1 = (int)(-(hashFunction2 ^ ((size + hashFunction2) * hashFunction2 | 5L)) >>> 56);
-		int idx2 = (int)(-(hashFunction1 ^ ((size + hashFunction1) * hashFunction1 | 5L)) >>> 56) | 256;
-		hashFunction1 = Utilities.GOOD_MULTIPLIERS[idx1];
-		hashFunction2 = Utilities.GOOD_MULTIPLIERS[idx2];
-		shift = BitConversion.countLeadingZeros(size - 1L);
-	}
+  @SuppressWarnings("unchecked")
+  @Override
+  public V put(K key, V value) {
+    Object actualKey = (key != null ? key : KEY_NULL);
 
-	/**
-	 * Double the size of the map until we can successfully manage to re-add all the items
-	 * we currently contain.
-	 */
-	private void grow () {
-		int newSize = T1.length;
-		do {
-			newSize <<= 1;
-		} while (!grow(newSize));
-	}
+    final V old = get(actualKey);
+    if (old == null) {
+      // If we need to grow after adding this item, it's probably best to grow before we add it.
+      final float currentLoad = (size() + 1) / (T1.length + T2.length);
+      if (currentLoad >= loadFactor) {
+        grow();
+      }
+    }
 
-	@SuppressWarnings("unchecked")
-	private boolean grow (final int newSize) {
-		// Save old state as we may need to restore it if the grow fails.
-		Map.Entry<K, V>[] oldT1 = T1;
-		Map.Entry<K, V>[] oldT2 = T2;
-		long oldH1 = hashFunction1;
-		long oldH2 = hashFunction2;
+    MapEntry<V> v;
 
-		// Already point T1 and T2 to the new tables since putSafe operates on them.
-		T1 = new Map.Entry[newSize];
-		T2 = new Map.Entry[newSize];
+    while ((v = putSafe(actualKey, value)) != null) {
+      actualKey = v.key;
+      value = v.value;
+      if (!rehash()) {
+        grow();
+      }
+    }
 
-		regenHashFunctions(newSize);
+    if (old == null) {
+      // Do not increase the size if we're replacing the item.
+      size++;
+    }
 
-		for (int i = 0; i < oldT1.length; i++) {
-			if (oldT1[i] != null) {
-				if (putSafe(oldT1[i].getKey(), oldT1[i].getValue()) != null) {
-					T1 = oldT1;
-					T2 = oldT2;
-					hashFunction1 = oldH1;
-					hashFunction2 = oldH2;
-					return false;
-				}
-			}
-			if (oldT2[i] != null) {
-				if (putSafe(oldT2[i].getKey(), oldT2[i].getValue()) != null) {
-					T1 = oldT1;
-					T2 = oldT2;
-					hashFunction1 = oldH1;
-					hashFunction2 = oldH2;
-					return false;
-				}
-			}
-		}
+    return old;
+  }
 
-		return true;
-	}
+  /**
+   * @return the key we failed to move because of collisions or <tt>null</tt> if
+   * successful.
+   */
+  private MapEntry<V> putSafe(Object key, V value) {
+    MapEntry<V> newV, t1, t2;
+    int loop = 0;
 
-	@SuppressWarnings("unchecked")
-	private boolean rehash () {
-		// Save old state as we may need to restore it if the grow fails.
-		Map.Entry<K, V>[] oldT1 = T1;
-		Map.Entry<K, V>[] oldT2 = T2;
-		long oldH1 = hashFunction1;
-		long oldH2 = hashFunction2;
+    while (loop++ < THRESHOLD_LOOP) {
+      newV = new MapEntry<>(key, value);
+      t1 = T1[hashFunction1.hash(key)];
+      t2 = T2[hashFunction2.hash(key)];
 
-		boolean success;
+      // Check if we must just update the value first.
+      if (t1 != null && t1.key.equals(key)) {
+        T1[hashFunction1.hash(key)] = newV;
+        return null;
+      }
+      if (t2 != null && t2.key.equals(key)) {
+        T2[hashFunction2.hash(key)] = newV;
+        return null;
+      }
 
-		for (int threshold = 0; threshold < THRESHOLD_LOOP; threshold++) {
-			success = true;
-			regenHashFunctions(T1.length);
+      // We're intentionally biased towards adding items in T1 since that leads to
+      // slightly faster successful lookups.
+      if (t1 == null) {
+        T1[hashFunction1.hash(key)] = newV;
+        return null;
+      } else if (t2 == null) {
+        T2[hashFunction2.hash(key)] = newV;
+        return null;
+      } else {
+        // Both tables have an item in the required position, we need to move things around.
+        // Prefer always moving from T1 for simplicity.
+        key = t1.key;
+        value= t1.value;
+        T1[hashFunction1.hash(key)] = newV;
+      }
+    }
 
-			// Already point T1 and T2 to the new tables since putSafe operates on them.
-			T1 = new Map.Entry[oldT1.length];
-			T2 = new Map.Entry[oldT2.length];
+    return new MapEntry<>(key, value);
+  }
 
-			for (int i = 0; i < oldT1.length; i++) {
-				if (oldT1[i] != null) {
-					if (putSafe(oldT1[i].getKey(), oldT1[i].getValue()) != null) {
-						// Restore state, we need to change hash function.
-						T1 = oldT1;
-						T2 = oldT2;
-						hashFunction1 = oldH1;
-						hashFunction2 = oldH2;
-						success = false;
-						break;
-					}
-				}
-				if (oldT2[i] != null) {
-					if (putSafe(oldT2[i].getKey(), oldT2[i].getValue()) != null) {
-						// Restore state, we need to change hash function.
-						T1 = oldT1;
-						T2 = oldT2;
-						hashFunction1 = oldH1;
-						hashFunction2 = oldH2;
-						success = false;
-						break;
-					}
-				}
-			}
+  @Override
+  public V remove(Object key) {
+    // TODO halve the size of the hashmap when we delete enough keys.
+    Object actualKey = (key != null ? key : KEY_NULL);
 
-			if (success) {
-				return true;
-			}
-		}
+    MapEntry<V> v1 = T1[hashFunction1.hash(actualKey)];
+    MapEntry<V> v2 = T2[hashFunction2.hash(actualKey)];
+    V oldValue;
 
-		return false;
-	}
+    if (v1 != null && v1.key.equals(actualKey)) {
+      oldValue = T1[hashFunction1.hash(actualKey)].value;
+      T1[hashFunction1.hash(actualKey)] = null;
+      size--;
+      return oldValue;
+    }
 
-	@Override
-	public int size () {
-		return size;
-	}
+    if (v2 != null && v2.key.equals(actualKey)) {
+      oldValue = T2[hashFunction2.hash(actualKey)].value;
+      T2[hashFunction2.hash(actualKey)] = null;
+      size--;
+      return oldValue;
+    }
 
-	@Override
-	public boolean isEmpty () {
-		return size == 0;
-	}
+    return null;
+  }
 
-	@Override
-	public void putAll (Map<? extends K, ? extends V> m) {
-		for (Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
-			put(entry.getKey(), entry.getValue());
-		}
-	}
+  @SuppressWarnings("unchecked")
+  @Override
+  public void clear() {
+    size = 0;
+    T1 = new MapEntry[defaultStartSize / 2];
+    T2 = new MapEntry[defaultStartSize / 2];
+    regenHashFunctions(defaultStartSize / 2);
+  }
 
-	@Override
-	public Set<K> keySet () {
-		Set<K> set = new HashSet<>(size);
-		for (int i = 0; i < T1.length; i++) {
-			if (T1[i] != null) {
-				set.add(T1[i].getKey());
-			}
-		}
-		for (int i = 0; i < T2.length; i++) {
-			if (T2[i] != null) {
-				set.add(T2[i].getKey());
-			}
-		}
-		return set;
-	}
+  private void regenHashFunctions(final int size) {
+    hashFunction1 = hashFunctionFactory.generate(size);
+    hashFunction2 = hashFunctionFactory.generate(size);
+  }
 
-	@Override
-	public Collection<V> values () {
-		List<V> values = new ArrayList<>(size);
+  /**
+   * Double the size of the map until we can successfully manage to re-add all the items
+   * we currently contain.
+   */
+  private void grow() {
+    int newSize = T1.length;
+    do {
+      newSize <<= 1;
+    } while (!grow(newSize));
+  }
 
-		// Since we must not return the values in a specific order, it's more efficient to
-		// iterate over each array individually so that we can exploit cache locality rather than
-		// reuse the index over T1 and T2.
-		for (int i = 0; i < T1.length; i++) {
-			if (T1[i] != null) {
-				values.add(T1[i].getValue());
-			}
-		}
-		for (int i = 0; i < T2.length; i++) {
-			if (T2[i] != null) {
-				values.add(T2[i].getValue());
-			}
-		}
-		return values;
-	}
+  @SuppressWarnings("unchecked")
+  private boolean grow(final int newSize) {
+    // Save old state as we may need to restore it if the grow fails.
+    MapEntry<V>[] oldT1 = T1;
+    MapEntry<V>[] oldT2 = T2;
+    HashFunction oldH1 = hashFunction1;
+    HashFunction oldH2 = hashFunction2;
 
-	@Override
-	public Set<Entry<K, V>> entrySet () {
-		Set<Entry<K, V>> set = new HashSet<>(size);
-		for (int i = 0; i < T1.length; i++) {
-			if (T1[i] != null) {
-				set.add(new SimpleImmutableEntry<>(T1[i]));
-			}
-		}
-		for (int i = 0; i < T2.length; i++) {
-			if (T2[i] != null) {
-				set.add(new SimpleImmutableEntry<>(T2[i]));
-			}
-		}
-		return set;
-	}
+    // Already point T1 and T2 to the new tables since putSafe operates on them.
+    T1 = new MapEntry[newSize];
+    T2 = new MapEntry[newSize];
 
-	@Override
-	public boolean containsValue (Object value) {
-		for (int i = 0; i < T1.length; i++) {
-			if (T1[i] != null && T1[i].getValue().equals(value)) {
-				return true;
-			}
-		}
-		for (int i = 0; i < T2.length; i++) {
-			if (T2[i] != null && T2[i].getValue().equals(value)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    regenHashFunctions(newSize);
 
+    for (int i = 0; i < oldT1.length; i++) {
+      if (oldT1[i] != null) {
+        if (putSafe(oldT1[i].key, oldT1[i].value) != null) {
+          T1 = oldT1;
+          T2 = oldT2;
+          hashFunction1 = oldH1;
+          hashFunction2 = oldH2;
+          return false;
+        }
+      }
+      if (oldT2[i] != null) {
+        if (putSafe(oldT2[i].key, oldT2[i].value) != null) {
+          T1 = oldT1;
+          T2 = oldT2;
+          hashFunction1 = oldH1;
+          hashFunction2 = oldH2;
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  @SuppressWarnings("unchecked")
+  private boolean rehash() {
+    // Save old state as we may need to restore it if the grow fails.
+    MapEntry<V>[] oldT1 = T1;
+    MapEntry<V>[] oldT2 = T2;
+    HashFunction oldH1 = hashFunction1;
+    HashFunction oldH2 = hashFunction2;
+
+    boolean success;
+
+    for (int threshold = 0; threshold < THRESHOLD_LOOP; threshold++) {
+      success = true;
+      hashFunction1 = hashFunctionFactory.generate(T1.length);
+      hashFunction2 = hashFunctionFactory.generate(T1.length);
+
+      // Already point T1 and T2 to the new tables since putSafe operates on them.
+      T1 = new MapEntry[oldT1.length];
+      T2 = new MapEntry[oldT2.length];
+
+      for (int i = 0; i < oldT1.length; i++) {
+        if (oldT1[i] != null) {
+          if (putSafe(oldT1[i].key, oldT1[i].value) != null) {
+            // Restore state, we need to change hash function.
+            T1 = oldT1;
+            T2 = oldT2;
+            hashFunction1 = oldH1;
+            hashFunction2 = oldH2;
+            success = false;
+            break;
+          }
+        }
+        if (oldT2[i] != null) {
+          if (putSafe(oldT2[i].key, oldT2[i].value) != null) {
+            // Restore state, we need to change hash function.
+            T1 = oldT1;
+            T2 = oldT2;
+            hashFunction1 = oldH1;
+            hashFunction2 = oldH2;
+            success = false;
+            break;
+          }
+        }
+      }
+
+      if (success) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  @Override
+  public int size() {
+    return size;
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return size == 0;
+  }
+
+  @Override
+  public void putAll(Map<? extends K, ? extends V> m) {
+    for (Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
+      put(entry.getKey(), entry.getValue());
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Set<K> keySet() {
+    Set<K> set = new HashSet<>(size);
+    for (int i = 0; i < T1.length; i++) {
+      if (T1[i] != null) {
+        if (KEY_NULL.equals(T1[i].key)) {
+          set.add(null);
+        } else {
+          set.add((K) T1[i].key);
+        }
+      }
+      if (T2[i] != null) {
+        if (KEY_NULL.equals(T2[i].key)) {
+          set.add(null);
+        } else {
+          set.add((K) T2[i].key);
+        }
+      }
+    }
+    return set;
+  }
+
+  @Override
+  public Collection<V> values() {
+    List<V> values = new ArrayList<>(size);
+
+    // Since we must not return the values in a specific order, it's more efficient to
+    // iterate over each array individually so we can exploit cache locality rather than
+    // reuse the index over T1 and T2.
+    for (int i = 0; i < T1.length; i++) {
+      if (T1[i] != null) {
+        values.add(T1[i].value);
+      }
+    }
+    for (int i = 0; i < T2.length; i++) {
+      if (T2[i] != null) {
+        values.add(T2[i].value);
+      }
+    }
+    return values;
+  }
+
+  @Override
+  public Set<Entry<K, V>> entrySet() {
+    Set<Entry<K, V>> entrySet = new HashSet<>(size);
+    for (K key : keySet()) {
+      entrySet.add(new SimpleEntry<>(key, get(key)));
+    }
+
+    return entrySet;
+  }
+
+  @Override
+  public boolean containsValue(Object value) {
+    for (int i = 0; i < T1.length; i++) {
+      if (T1[i] != null && T1[i].value.equals(value)) {
+        return true;
+      }
+    }
+    for (int i = 0; i < T2.length; i++) {
+      if (T2[i] != null && T2[i].value.equals(value)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static int roundPowerOfTwo(int n) {
+    n--;
+
+    n |= n >>> 1;
+    n |= n >>> 2;
+    n |= n >>> 4;
+    n |= n >>> 8;
+    n |= n >>> 16;
+
+    return (n < 0) ? 1 : n + 1;
+  }
 }
