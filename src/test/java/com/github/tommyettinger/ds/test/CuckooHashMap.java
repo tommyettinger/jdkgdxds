@@ -17,11 +17,21 @@
 
 package com.github.tommyettinger.ds.test;
 
-import java.util.*;
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.random.AceRandom;
+
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Cuckoo hash table based implementation of the <tt>Map</tt> interface. This
- * implementation provides all of the optional map operations, and permits
+ * implementation provides all the optional map operations, and permits
  * <code>null</code> values and the <code>null</code> key. This class makes no
  * guarantees as to the order of the map; in particular, it does not guarantee
  * that the order will remain constant over time.
@@ -106,44 +116,37 @@ public class CuckooHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
   }
 
   private static class DefaultHashFunctionFactory implements HashFunctionFactory {
-    private static final Random RANDOM = new Random();
+    private static final AceRandom RANDOM = new AceRandom();
 
     /**
-     * From Mikkel Thorup in "String Hashing for Linear Probing."
-     * http://www.diku.dk/summer-school-2014/course-material/mikkel-thorup/hash.pdf_copy
-     */
+	 * From Mikkel Thorup in "String Hashing for Linear Probing."
+	 * <a href="http://www.diku.dk/summer-school-2014/course-material/mikkel-thorup/hash.pdf_copy">...</a>
+	 */
     private static class DefaultHashFunction implements HashFunction {
       final int a;
       final int b;
       final int hashBits;
 
       DefaultHashFunction(int a, int b, int buckets) {
-        if (a == 0 || b == 0) {
-          throw new IllegalArgumentException("a and b cannot be 0");
-        }
-
-        this.a = a;
-        this.b = b;
+        this.a = a == 0 ? 12345 : a;
+        this.b = b == 0 ? 56789 : b;
 
         // Find the position of the most-significant bit; this will determine the number of bits
         // we need to set in the hash function.
-        int lgBuckets = -1;
-        while (buckets > 0) {
-          lgBuckets++;
-          buckets >>>= 1;
-        }
-        hashBits = lgBuckets;
+        // This only works when buckets is a power of two, but that's every time here.
+        hashBits = -BitConversion.countTrailingZeros(buckets);
       }
 
       @Override
-      public int hash(Object obj) {
+      public int hash(final Object obj) {
+        // The Cuckoo hashing this uses fails egregiously if two hashes collide over all bits.
+        // Using identity hash codes would give us a much better chance of avoiding that.
+//        final int h = System.identityHashCode(obj);
+
         final int h = obj.hashCode();
-        // Split into two 16 bit words.
-        final int upper = h & 0xFFFF0000;
-        final int lower = h & 0x0000FFFF;
 
         // Shift the product down so that only `hashBits` bits remain in the output.
-        return (upper * a + lower * b) >>> (32 - hashBits);
+        return BitConversion.imul(h, a) + BitConversion.imul((h << 16 | h >>> 16), b) >>> hashBits;
       }
     }
 
@@ -196,7 +199,7 @@ public class CuckooHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     }
 
     size = 0;
-    defaultStartSize = roundPowerOfTwo(initialCapacity);
+    defaultStartSize = Math.max(2, 0x80000000 >>> BitConversion.countLeadingZeros(initialCapacity));
 
     // Capacity is meant to be the total capacity of the two internal tables.
     T1 = new MapEntry[defaultStartSize / 2];

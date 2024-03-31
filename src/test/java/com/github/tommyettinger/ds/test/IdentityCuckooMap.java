@@ -18,6 +18,8 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.IdentitySet;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.Utilities;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -62,10 +64,10 @@ import java.util.*;
  */
 public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 
-	protected static final int THRESHOLD_LOOP = 8;
 	protected static final int DEFAULT_START_SIZE = 16;
 	protected static final float DEFAULT_LOAD_FACTOR = 0.45f;
 
+	protected int thresholdLoop;
 	protected float loadFactor;
 
 	protected int shift;
@@ -121,17 +123,18 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		size = 0;
 		int tableSize = Utilities.tableSize(initialCapacity, loadFactor);
 		shift = BitConversion.countLeadingZeros(tableSize - 1L);
-
+		thresholdLoop = BitConversion.countTrailingZeros(tableSize) + 4;
 		keyTable = (K[])new Object[tableSize];
 		valueTable = (V[])new Object[tableSize];
 		this.loadFactor = loadFactor;
 
-		regenHashFunctions(tableSize);
+		regenHashMultipliers(tableSize);
 	}
 
 	public IdentityCuckooMap(IdentityCuckooMap<? extends K, ? extends V> other) {
 		size = other.size;
 		shift = other.shift;
+		thresholdLoop = other.thresholdLoop;
 		loadFactor = other.loadFactor;
 		hashMultiplier1 = other.hashMultiplier1;
 		hashMultiplier2 = other.hashMultiplier2;
@@ -141,28 +144,18 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 
 	@Override
 	public boolean containsKey (Object key) {
-		if(key == null) return false;
+		final int hc = System.identityHashCode(key);
 
-		int hc = System.identityHashCode(key);
-		int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
-		if (key == keyTable[hr1]) {
-			return true;
-		}
-
-		int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
-		return key == keyTable[hr2];
+		return key != null && (key == keyTable[(int)(hashMultiplier1 * hc >>> shift) | 1] ||
+			key == keyTable[(int)(hashMultiplier2 * hc >>> shift) & -2]);
 	}
 
 	@Override
 	public V get (Object key) {
-		return get(key, null);
+		return getOrDefault(key, null);
 	}
 
 	public V getOrDefault (Object key, V defaultValue) {
-		return get(key, defaultValue);
-	}
-
-	private V get (Object key, V defaultValue) {
 		if(key == null) return defaultValue;
 
 		int hc = System.identityHashCode(key);
@@ -226,7 +219,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	 */
 	private K putSafe (K key, V value) {
 		int loop = 0;
-		while (loop++ < THRESHOLD_LOOP) {
+		while (loop++ < thresholdLoop) {
 			int hc = System.identityHashCode(key);
 			int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
 			K k1 = keyTable[hr1];
@@ -286,7 +279,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		Arrays.fill(valueTable, null);
 	}
 
-	private void regenHashFunctions (int newSize) {
+	private void regenHashMultipliers (int newSize) {
 		int idx1 = (int)(-(hashMultiplier2 ^ ((newSize + hashMultiplier2) * hashMultiplier2 | 5L)) >>> 56);
 		int idx2 = (int)(-(hashMultiplier1 ^ ((newSize + hashMultiplier1) * hashMultiplier1 | 7L)) >>> 56) | 256;
 		hashMultiplier1 = Utilities.GOOD_MULTIPLIERS[idx1];
@@ -312,12 +305,12 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		long oldH1 = hashMultiplier1;
 		long oldH2 = hashMultiplier2;
 		shift = BitConversion.countLeadingZeros(newSize - 1L);
-
+		thresholdLoop = BitConversion.countTrailingZeros(newSize) + 4;
 		// Already point keyTable and valueTable to the new tables since putSafe operates on them.
 		keyTable = (K[])new Object[newSize];
 		valueTable = (V[])new Object[newSize];
 
-		regenHashFunctions(newSize);
+		regenHashMultipliers(newSize);
 
 		for (int i = 0; i < oldK.length; i++) {
 			if (oldK[i] != null) {
@@ -326,11 +319,12 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 					valueTable = oldV;
 					hashMultiplier1 = oldH1;
 					hashMultiplier2 = oldH2;
+					shift = BitConversion.countLeadingZeros(keyTable.length - 1L);
+					thresholdLoop = BitConversion.countTrailingZeros(keyTable.length) + 4;
 					return false;
 				}
 			}
 		}
-
 		return true;
 	}
 
@@ -346,10 +340,8 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		valueTable = (V[])new Object[oldV.length];
 
 		RETRIAL:
-		for (int threshold = 0; threshold < THRESHOLD_LOOP; threshold++) {
-
-			regenHashFunctions(keyTable.length + threshold);
-
+		for (int threshold = 0; threshold < thresholdLoop; threshold++) {
+			regenHashMultipliers(keyTable.length + threshold);
 			for (int i = 0; i < oldK.length; i++) {
 				if (oldK[i] != null) {
 					if (putSafe(oldK[i], oldV[i]) != null) {
@@ -360,7 +352,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			}
 			return true;
 		}
-		// Restore state; we need to change back the hash multipliers.
+		// Restore state; we need to revert the hash multipliers.
 		keyTable = oldK;
 		valueTable = oldV;
 		hashMultiplier1 = oldH1;
@@ -387,7 +379,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 
 	@Override
 	public @NonNull Set<K> keySet () {
-		Set<K> set = new HashSet<>(size);
+		Set<K> set = new IdentitySet<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
 				set.add(keyTable[i]);
@@ -398,7 +390,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 
 	@Override
 	public @NonNull Collection<V> values () {
-		List<V> values = new ArrayList<>(size);
+		List<V> values = new ObjectList<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
 				values.add(valueTable[i]);
@@ -409,7 +401,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 
 	@Override
 	public @NonNull Set<Entry<K, V>> entrySet () {
-		Set<Entry<K, V>> set = new HashSet<>(size);
+		Set<Entry<K, V>> set = new IdentitySet<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
 				set.add(new SimpleImmutableEntry<>(keyTable[i], valueTable[i]));
