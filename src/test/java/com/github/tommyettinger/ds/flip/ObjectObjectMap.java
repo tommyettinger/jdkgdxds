@@ -15,7 +15,7 @@
  *
  */
 
-package com.github.tommyettinger.ds.test;
+package com.github.tommyettinger.ds.flip;
 
 
 import com.github.tommyettinger.digital.BitConversion;
@@ -23,9 +23,11 @@ import com.github.tommyettinger.ds.Utilities;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -82,7 +84,7 @@ import java.util.Set;
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
  */
-public class FlipMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
+public class ObjectObjectMap<K, V> implements Map<K, V> {
 
 	protected static final int DEFAULT_START_SIZE = 16;
 	protected static final float DEFAULT_LOAD_FACTOR = 0.45f;
@@ -149,33 +151,38 @@ public class FlipMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 	protected transient V displacedValue;
 
 	/**
-	 * Holds a cached entrySet(). Note that AbstractMap fields (which we cannot access) are used
-	 * to cache keySet() and values().
+	 * Holds a cached entrySet().
 	 */
 	@Nullable
 	protected transient Set<Map.Entry<K,V>> entrySet;
 
+	@Nullable
+	protected transient Set<K> keySet;
+
+	@Nullable
+	protected transient Collection<V> values;
+
 	/**
-	 * Constructs an empty {@code FlipMap} with the default initial capacity (16)
+	 * Constructs an empty {@code ObjectObjectMap} with the default initial capacity (16)
 	 * and the default load factor of {@code 0.45}.
 	 */
-	public FlipMap() {
+	public ObjectObjectMap () {
 		this(DEFAULT_START_SIZE, DEFAULT_LOAD_FACTOR);
 	}
 
 	/**
-	 * Constructs an empty {@code FlipMap} with the specified initial capacity
+	 * Constructs an empty {@code ObjectObjectMap} with the specified initial capacity
 	 * and the default load factor of {@code 0.45}.
 	 * The given capacity will be rounded to the nearest power of two.
 	 *
 	 * @param initialCapacity the initial capacity
 	 */
-	public FlipMap(int initialCapacity) {
+	public ObjectObjectMap (int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
 	/**
-	 * Constructs an empty {@code FlipMap} with the specified load factor and an initial
+	 * Constructs an empty {@code ObjectObjectMap} with the specified load factor and an initial
 	 * capacity of 16.
 	 * <p>
 	 * The load factor will cause the map to double in size when the number
@@ -184,12 +191,12 @@ public class FlipMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 	 *
 	 * @param loadFactor the load factor
 	 */
-	public FlipMap(float loadFactor) {
+	public ObjectObjectMap (float loadFactor) {
 		this(DEFAULT_START_SIZE, loadFactor);
 	}
 
 	/**
-	 * Constructs an empty {@code FlipMap} with the specified load factor and initial
+	 * Constructs an empty {@code ObjectObjectMap} with the specified load factor and initial
 	 * capacity.
 	 * <p>
 	 * The load factor will cause the map to double in size when the number
@@ -200,7 +207,7 @@ public class FlipMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 	 * @param loadFactor the load factor
 	 */
 	@SuppressWarnings("unchecked")
-	public FlipMap(int initialCapacity, float loadFactor) {
+	public ObjectObjectMap (int initialCapacity, float loadFactor) {
 		if (initialCapacity <= 0) {
 			throw new IllegalArgumentException("initial capacity must be strictly positive");
 		}
@@ -222,7 +229,7 @@ public class FlipMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 		regenHashMultipliers(tableSize);
 	}
 
-	public FlipMap(FlipMap<? extends K, ? extends V> other) {
+	public ObjectObjectMap (ObjectObjectMap<? extends K, ? extends V> other) {
 		size = other.size;
 		mask = other.mask;
 		shift = other.shift;
@@ -289,7 +296,7 @@ public class FlipMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 
 	@Override
 	public V put (K key, V value) {
-		if(key == null) throw new NullPointerException("FlipMap does not permit null keys.");
+		if(key == null) throw new NullPointerException("ObjectObjectMap does not permit null keys.");
 
 		if(flipThreshold == 0) {
 			int i = locateKey(key);
@@ -760,8 +767,8 @@ public class FlipMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 	 */
 	public static class EntrySet<K, V> extends AbstractSet<Map.Entry<K, V>> {
 
-		protected final FlipMap<K, V> map;
-		public EntrySet(FlipMap<K, V> map) {
+		protected final ObjectObjectMap<K, V> map;
+		public EntrySet(ObjectObjectMap<K, V> map) {
 			this.map = map;
 		}
 		/**
@@ -784,12 +791,12 @@ public class FlipMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 	public static class EntryIterator<K, V> implements Iterable<Map.Entry<K, V>>, Iterator<Map.Entry<K, V>> {
 		public boolean hasNext;
 
-		protected final FlipMap<K, V> map;
+		protected final ObjectObjectMap<K, V> map;
 		protected final Entry<K, V> entry;
 		protected int nextIndex, currentIndex;
 		public boolean valid = true;
 
-		public EntryIterator(FlipMap<K, V> map) {
+		public EntryIterator(ObjectObjectMap<K, V> map) {
 			this.map = map;
 			entry = new Entry<>();
 			reset();
@@ -896,4 +903,110 @@ public class FlipMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 			return this;
 		}
 	}
+
+	public static class KeySet<K> extends AbstractSet<K> {
+		ObjectObjectMap<K, ?> map;
+		public KeySet(ObjectObjectMap<K, ?> map) {
+			this.map = map;
+		}
+
+		public @NonNull Iterator<K> iterator() {
+			return new Iterator<K>() {
+				private final Iterator<? extends Map.Entry<K, ?>> i = map.entrySet().iterator();
+
+				public boolean hasNext() {
+					return i.hasNext();
+				}
+
+				public K next() {
+					return i.next().getKey();
+				}
+
+				public void remove() {
+					i.remove();
+				}
+			};
+		}
+
+		public int size() {
+			return map.size();
+		}
+
+		public boolean isEmpty() {
+			return map.isEmpty();
+		}
+
+		public void clear() {
+			map.clear();
+		}
+
+		public boolean contains(Object k) {
+			return map.containsKey(k);
+		}
+
+
+	}
+
+    public @NonNull Set<K> keySet() {
+        Set<K> ks = keySet;
+        if (ks == null) {
+            ks = new KeySet<>(this);
+			keySet = ks;
+        }
+        return ks;
+    }
+
+
+	public static class ValueCollection<V> extends AbstractCollection<V> {
+		ObjectObjectMap<?, V> map;
+		public ValueCollection(ObjectObjectMap<?, V> map) {
+			this.map = map;
+		}
+
+		public @NonNull Iterator<V> iterator() {
+			return new Iterator<V>() {
+				private final Iterator<? extends Map.Entry<?, V>> i = map.entrySet().iterator();
+
+				public boolean hasNext() {
+					return i.hasNext();
+				}
+
+				public V next() {
+					return i.next().getValue();
+				}
+
+				public void remove() {
+					i.remove();
+				}
+			};
+		}
+
+		public int size() {
+			return map.size();
+		}
+
+		public boolean isEmpty() {
+			return map.isEmpty();
+		}
+
+		public void clear() {
+			map.clear();
+		}
+
+		public boolean contains(Object v) {
+			return map.containsValue(v);
+		}
+
+
+	}
+
+	public @NonNull Collection<V> values() {
+        Collection<V> vals = values;
+        if (vals == null) {
+            vals = new ValueCollection<>(this);
+            values = vals;
+        }
+        return vals;
+    }
+
 }
