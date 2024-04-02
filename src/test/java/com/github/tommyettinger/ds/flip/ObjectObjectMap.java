@@ -24,7 +24,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.AbstractCollection;
-import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
@@ -151,14 +150,20 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	protected transient V displacedValue;
 
 	/**
-	 * Holds a cached entrySet().
+	 * Holds a cached {@link #entrySet()}.
 	 */
 	@Nullable
 	protected transient Set<Map.Entry<K,V>> entrySet;
 
+	/**
+	 * Holds a cached {@link #keySet()}.
+	 */
 	@Nullable
 	protected transient Set<K> keySet;
 
+	/**
+	 * Holds a cached {@link #values()}.
+	 */
 	@Nullable
 	protected transient Collection<V> values;
 
@@ -911,21 +916,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 
 		public @NonNull Iterator<K> iterator() {
-			return new Iterator<K>() {
-				private final Iterator<? extends Map.Entry<K, ?>> i = map.entrySet().iterator();
-
-				public boolean hasNext() {
-					return i.hasNext();
-				}
-
-				public K next() {
-					return i.next().getKey();
-				}
-
-				public void remove() {
-					i.remove();
-				}
-			};
+			return new KeyIterator<>(map);
 		}
 
 		public int size() {
@@ -943,8 +934,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		public boolean contains(Object k) {
 			return map.containsKey(k);
 		}
-
-
 	}
 
     public @NonNull Set<K> keySet() {
@@ -964,21 +953,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 
 		public @NonNull Iterator<V> iterator() {
-			return new Iterator<V>() {
-				private final Iterator<? extends Map.Entry<?, V>> i = map.entrySet().iterator();
-
-				public boolean hasNext() {
-					return i.hasNext();
-				}
-
-				public V next() {
-					return i.next().getValue();
-				}
-
-				public void remove() {
-					i.remove();
-				}
-			};
+			return new ValueIterator<>(map);
 		}
 
 		public int size() {
@@ -996,8 +971,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		public boolean contains(Object v) {
 			return map.containsValue(v);
 		}
-
-
 	}
 
 	public @NonNull Collection<V> values() {
@@ -1008,5 +981,65 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
         }
         return vals;
     }
+
+
+	protected static class KeyIterator<K> implements Iterable<K>, Iterator<K> {
+		protected final Iterator<? extends Map.Entry<K, ?>> iter;
+
+		public KeyIterator(ObjectObjectMap<K, ?> map) {
+			iter = map.entrySet().iterator();
+		}
+
+		public boolean hasNext() {
+			return iter.hasNext();
+		}
+
+		public K next() {
+			return iter.next().getKey();
+		}
+
+		public void remove() {
+			iter.remove();
+		}
+
+		/**
+		 * Returns an iterator over elements of type {@code K}.
+		 *
+		 * @return an Iterator.
+		 */
+		@Override
+		public @NonNull Iterator<K> iterator () {
+			return this;
+		}
+	}
+	protected static class ValueIterator<V> implements Iterator<V>, Iterable<V> {
+		protected final Iterator<? extends Map.Entry<?, V>> iter;
+
+		public ValueIterator(ObjectObjectMap<?, V> map) {
+			iter = map.entrySet().iterator();
+		}
+
+		public boolean hasNext() {
+			return iter.hasNext();
+		}
+
+		public V next() {
+			return iter.next().getValue();
+		}
+
+		public void remove() {
+			iter.remove();
+		}
+
+		/**
+		 * Returns an iterator over elements of type {@code V}.
+		 *
+		 * @return an Iterator.
+		 */
+		@Override
+		public @NonNull Iterator<V> iterator () {
+			return this;
+		}
+	}
 
 }
