@@ -1481,17 +1481,11 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable {
 
 		if (head < tail) {
 			// Continuous
-			for (int i = head; i < tail; i++) {
-				values[i] = null;
-			}
+			Utilities.clear(values, head, tail - head);
 		} else {
 			// Wrapped
-			for (int i = head; i < values.length; i++) {
-				values[i] = null;
-			}
-			for (int i = 0; i < tail; i++) {
-				values[i] = null;
-			}
+			Utilities.clear(values, head, values.length - head);
+			Utilities.clear(values, 0, tail);
 		}
 		this.head = 0;
 		this.tail = 0;

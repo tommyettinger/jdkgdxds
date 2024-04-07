@@ -372,7 +372,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 	 */
 	@Override
 	public void clear () {
-		Arrays.fill(nodes, 0, size, null);
+		Utilities.clear(nodes, 0, size);
 		size = 0;
 	}
 

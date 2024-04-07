@@ -518,7 +518,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	public void clear () {
 		if (size == 0) {return;}
 		size = 0;
-		Arrays.fill(keyTable, null);
+		Utilities.clear(keyTable);
 	}
 
 	public boolean containsKey (Object key) {

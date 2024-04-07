@@ -583,7 +583,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 			return;
 		}
 		size = 0;
-		Arrays.fill(keyTable, null);
+		Utilities.clear(keyTable);
 	}
 
 	/**

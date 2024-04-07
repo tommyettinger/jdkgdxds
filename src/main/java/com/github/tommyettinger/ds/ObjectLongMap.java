@@ -519,7 +519,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	public void clear () {
 		if (size == 0) {return;}
 		size = 0;
-		Arrays.fill(keyTable, null);
+		Utilities.clear(keyTable);
 	}
 
 	/**

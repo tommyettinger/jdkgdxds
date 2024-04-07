@@ -512,7 +512,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		zeroValue = null;
 		size = 0;
 		Arrays.fill(keyTable, 0);
-		Arrays.fill(valueTable, null);
+		Utilities.clear(valueTable);
 	}
 
 	/**

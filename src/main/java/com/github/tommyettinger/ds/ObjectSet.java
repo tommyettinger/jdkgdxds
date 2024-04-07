@@ -502,7 +502,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 	public void clear () {
 		if (size == 0) {return;}
 		size = 0;
-		Arrays.fill(keyTable, null);
+		Utilities.clear(keyTable);
 	}
 
 	@Override

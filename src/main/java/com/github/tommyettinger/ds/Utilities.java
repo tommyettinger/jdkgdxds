@@ -20,6 +20,8 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 
+import java.util.Arrays;
+
 import static com.github.tommyettinger.digital.Hasher.*;
 
 /**
@@ -191,6 +193,10 @@ public final class Utilities {
 		0xF26D8B7221C57113L, 0xE8B920F29261309BL, 0xD39011984C254301L, 0xCDE0D80E809155D9L,
 	};
 
+	private static final int COPY_THRESHOLD = 128;
+	private static final int NIL_ARRAY_SIZE = 1024;
+	private static final Object[] NIL_ARRAY = new Object[NIL_ARRAY_SIZE];
+
 	/**
 	 * Not instantiable.
 	 */
@@ -244,11 +250,44 @@ public final class Utilities {
 		if (capacity < 0) {
 			throw new IllegalArgumentException("capacity must be >= 0: " + capacity);
 		}
-		int tableSize = 1 << -Integer.numberOfLeadingZeros(Math.max(2, (int)Math.ceil(capacity / loadFactor)) - 1);
+		int tableSize = 1 << -BitConversion.countLeadingZeros(Math.max(2, (int)Math.ceil(capacity / loadFactor)) - 1);
 		if (tableSize > 1 << 30 || tableSize < 0) {
 			throw new IllegalArgumentException("The required capacity is too large: " + capacity);
 		}
 		return tableSize;
+	}
+
+	/**
+	 * Set all elements in {@code objects} to null.
+	 * This method is faster than {@link Arrays#fill} for large arrays (> 128).
+	 * <br>
+	 * From Apache Fury's ObjectArray class.
+	 */
+	public static void clear(Object[] objects) {
+		clear(objects, 0, objects.length);
+	}
+
+	/**
+	 * Set all {@code size} elements in {@code objects}, starting at index {@code start}, to null.
+	 * This method is faster than {@link Arrays#fill} for large arrays (> 128).
+	 * <br>
+	 * From Apache Fury's ObjectArray class.
+	 */
+	public static void clear(Object[] objects, int start, int size) {
+		if (size < COPY_THRESHOLD) {
+			Arrays.fill(objects, start, size, null);
+		} else {
+			if (size < NIL_ARRAY_SIZE) {
+				System.arraycopy(NIL_ARRAY, 0, objects, start, size);
+			} else {
+				while (size > NIL_ARRAY_SIZE) {
+					System.arraycopy(NIL_ARRAY, 0, objects, start, NIL_ARRAY_SIZE);
+					size -= NIL_ARRAY_SIZE;
+					start += NIL_ARRAY_SIZE;
+				}
+				System.arraycopy(NIL_ARRAY, 0, objects, start, size);
+			}
+		}
 	}
 
 	/**

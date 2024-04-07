@@ -557,8 +557,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	public void clear () {
 		if (size == 0) {return;}
 		size = 0;
-		Arrays.fill(keyTable, null);
-		Arrays.fill(valueTable, null);
+		Utilities.clear(keyTable);
+		Utilities.clear(valueTable);
 	}
 
 	/**
