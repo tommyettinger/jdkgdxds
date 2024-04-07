@@ -662,8 +662,11 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
 			if (key != null) {
-				int value = valueTable[i];
-				if (value != other.get(key)) {return false;}
+				int otherValue = other.getOrDefault(key, Integer.MIN_VALUE);
+				if (otherValue == Integer.MIN_VALUE && !other.containsKey(key))
+					return false;
+				if (otherValue != valueTable[i])
+					return false;
 			}
 		}
 		return true;

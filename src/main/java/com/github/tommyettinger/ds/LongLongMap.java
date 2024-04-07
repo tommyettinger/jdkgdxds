@@ -670,8 +670,11 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			long key = keyTable[i];
 			if (key != 0) {
-				long value = valueTable[i];
-				if (value != other.get(key)) {return false;}
+				long otherValue = other.getOrDefault(key, Long.MIN_VALUE);
+				if (otherValue == Long.MIN_VALUE && !other.containsKey(key))
+					return false;
+				if (otherValue != valueTable[i])
+					return false;
 			}
 		}
 		return true;

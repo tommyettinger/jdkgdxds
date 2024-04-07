@@ -702,8 +702,11 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
 			if (key != null) {
-				float value = valueTable[i];
-				if (value != other.get(key)) {return false;}
+				float otherValue = other.getOrDefault(key, Float.NEGATIVE_INFINITY);
+				if (otherValue == Float.NEGATIVE_INFINITY && !other.containsKey(key))
+					return false;
+				if (otherValue != valueTable[i])
+					return false;
 			}
 		}
 		return true;

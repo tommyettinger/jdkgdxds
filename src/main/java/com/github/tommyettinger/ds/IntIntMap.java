@@ -667,8 +667,11 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			int key = keyTable[i];
 			if (key != 0) {
-				int value = valueTable[i];
-				if (value != other.get(key)) {return false;}
+				int otherValue = other.getOrDefault(key, Integer.MIN_VALUE);
+				if (otherValue == Integer.MIN_VALUE && !other.containsKey(key))
+					return false;
+				if (otherValue != valueTable[i])
+					return false;
 			}
 		}
 		return true;

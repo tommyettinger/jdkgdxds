@@ -713,8 +713,11 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			long key = keyTable[i];
 			if (key != 0) {
-				float value = valueTable[i];
-				if (value != other.get(key)) {return false;}
+				float otherValue = other.getOrDefault(key, Float.NEGATIVE_INFINITY);
+				if (otherValue == Float.NEGATIVE_INFINITY && !other.containsKey(key))
+					return false;
+				if (otherValue != valueTable[i])
+					return false;
 			}
 		}
 		return true;
