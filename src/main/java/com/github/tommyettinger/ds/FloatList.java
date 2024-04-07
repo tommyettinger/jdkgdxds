@@ -436,8 +436,9 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	public boolean contains (float value) {
 		int i = size - 1;
 		float[] items = this.items;
+		final int valueBits = BitConversion.floatToRawIntBits(value);
 		while (i >= 0) {
-			if (BitConversion.floatToRawIntBits(items[i--]) == BitConversion.floatToRawIntBits(value)) {
+			if (BitConversion.floatToRawIntBits(items[i--]) == valueBits) {
 				return true;
 			}
 		}
@@ -468,8 +469,9 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	public int indexOf (float value) {
 		float[] items = this.items;
+		final int valueBits = BitConversion.floatToRawIntBits(value);
 		for (int i = 0, n = size; i < n; i++) {
-			if (BitConversion.floatToRawIntBits(items[i]) == BitConversion.floatToRawIntBits(value)) {
+			if (BitConversion.floatToRawIntBits(items[i]) == valueBits) {
 				return i;
 			}
 		}
@@ -484,8 +486,9 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	public int lastIndexOf (float value) {
 		float[] items = this.items;
+		final int valueBits = BitConversion.floatToRawIntBits(value);
 		for (int i = size - 1; i >= 0; i--) {
-			if (BitConversion.floatToRawIntBits(items[i]) == BitConversion.floatToRawIntBits(value)) {
+			if (BitConversion.floatToRawIntBits(items[i]) == valueBits) {
 				return i;
 			}
 		}
@@ -503,8 +506,9 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	@Override
 	public boolean remove (float value) {
 		float[] items = this.items;
+		final int valueBits = BitConversion.floatToRawIntBits(value);
 		for (int i = 0, n = size; i < n; i++) {
-			if (BitConversion.floatToRawIntBits(items[i]) == BitConversion.floatToRawIntBits(value)) {
+			if (BitConversion.floatToRawIntBits(items[i]) == valueBits) {
 				removeAt(i);
 				return true;
 			}
@@ -559,9 +563,9 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		float[] items = this.items;
 		FloatIterator it = c.iterator();
 		for (int i = 0, n = c.size(); i < n; i++) {
-			float item = it.nextFloat();
+			int item = BitConversion.floatToRawIntBits(it.nextFloat());
 			for (int ii = 0; ii < size; ii++) {
-				if (BitConversion.floatToRawIntBits(items[ii]) == BitConversion.floatToRawIntBits(item)) {
+				if (BitConversion.floatToRawIntBits(items[ii]) == item) {
 					removeAt(ii--);
 					size--;
 				}
@@ -585,9 +589,9 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		float[] items = this.items;
 		FloatIterator it = c.iterator();
 		for (int i = 0, n = c.size(); i < n; i++) {
-			float item = it.nextFloat();
+			int item = BitConversion.floatToRawIntBits(it.nextFloat());
 			for (int ii = 0; ii < size; ii++) {
-				if (BitConversion.floatToRawIntBits(items[ii]) == BitConversion.floatToRawIntBits(item)) {
+				if (BitConversion.floatToRawIntBits(items[ii]) == item) {
 					removeAt(ii);
 					size--;
 					break;

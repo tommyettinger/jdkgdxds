@@ -753,17 +753,17 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		if (size == 0)
 			return -1;
 		float[] values = this.values;
-		final int head = this.head, tail = this.tail;
+		final int head = this.head, tail = this.tail, valueBits = BitConversion.floatToRawIntBits(value);
 		if (head < tail) {
 			for (int i = head; i < tail; i++)
-				if (values[i] == value)
+				if (BitConversion.floatToRawIntBits(values[i]) == valueBits)
 					return i - head;
 		} else {
 			for (int i = head, n = values.length; i < n; i++)
-				if (values[i] == value)
+				if (BitConversion.floatToRawIntBits(values[i]) == valueBits)
 					return i - head;
 			for (int i = 0; i < tail; i++)
-				if (values[i] == value)
+				if (BitConversion.floatToRawIntBits(values[i]) == valueBits)
 					return i + values.length - head;
 		}
 		return -1;
@@ -778,17 +778,17 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		if (size == 0)
 			return -1;
 		float[] values = this.values;
-		final int head = this.head, tail = this.tail;
+		final int head = this.head, tail = this.tail, valueBits = BitConversion.floatToRawIntBits(value);
 		if (head < tail) {
 			for (int i = tail - 1; i >= head; i--)
-				if (values[i] == value)
+				if (BitConversion.floatToRawIntBits(values[i]) == valueBits)
 					return i - head;
 		} else {
 			for (int i = tail - 1; i >= 0; i--)
-				if (values[i] == value)
+				if (BitConversion.floatToRawIntBits(values[i]) == valueBits)
 					return i + values.length - head;
 			for (int i = values.length - 1; i >= head; i--)
-				if (values[i] == value)
+				if (BitConversion.floatToRawIntBits(values[i]) == valueBits)
 					return i - head;
 		}
 		return -1;
@@ -1085,10 +1085,39 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		int myIndex = head;
 		int itsIndex = q.head;
 		for (int s = 0; s < size; s++) {
-			float myValue = myValues[myIndex];
-			float itsValue = itsValues[itsIndex];
+			if (BitConversion.floatToRawIntBits(myValues[myIndex]) != BitConversion.floatToRawIntBits(itsValues[itsIndex]))
+				return false;
+			myIndex++;
+			itsIndex++;
+			if (myIndex == myBackingLength)
+				myIndex = 0;
+			if (itsIndex == itsBackingLength)
+				itsIndex = 0;
+		}
+		return true;
+	}
 
-			if (myValue != itsValue)
+	public boolean equals (Object o, float tolerance) {
+		if (this == o)
+			return true;
+		if (!(o instanceof FloatDeque))
+			return false;
+
+		FloatDeque q = (FloatDeque)o;
+		final int size = this.size;
+
+		if (q.size != size)
+			return false;
+
+		final float[] myValues = this.values;
+		final int myBackingLength = myValues.length;
+		final float[] itsValues = q.values;
+		final int itsBackingLength = itsValues.length;
+
+		int myIndex = head;
+		int itsIndex = q.head;
+		for (int s = 0; s < size; s++) {
+			if (!Utilities.isEqual(myValues[myIndex], itsValues[itsIndex], tolerance))
 				return false;
 			myIndex++;
 			itsIndex++;
