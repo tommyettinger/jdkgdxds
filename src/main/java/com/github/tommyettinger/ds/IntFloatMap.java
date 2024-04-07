@@ -541,7 +541,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
 	 *
-	 * @param value the float value to check for; will be compared with {@link Utilities#isEqual(float, float)}
+	 * @param value the float value to check for; will be compared by exact bits, not float equality
 	 * @return true if this map contains the given value, false otherwise
 	 */
 	public boolean containsValue (float value) {
@@ -549,7 +549,9 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		float[] valueTable = this.valueTable;
 		int[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && Utilities.isEqual(valueTable[i], value)) {return true;}
+			if (keyTable[i] != 0 && BitConversion.floatToRawIntBits(valueTable[i]) == BitConversion.floatToRawIntBits(value)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -715,7 +717,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 				float otherValue = other.getOrDefault(key, Float.NEGATIVE_INFINITY);
 				if (otherValue == Float.NEGATIVE_INFINITY && !other.containsKey(key))
 					return false;
-				if (otherValue != valueTable[i])
+				if (BitConversion.floatToRawIntBits(otherValue) != BitConversion.floatToRawIntBits(valueTable[i]))
 					return false;
 			}
 		}
