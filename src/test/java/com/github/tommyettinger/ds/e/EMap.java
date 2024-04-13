@@ -1057,13 +1057,13 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		}
 	}
 
-	public static class Values<Enum<?>, V> extends AbstractCollection<V> {
-		protected MapIterator<Enum<?>, V, V> iter;
+	public static class Values<V> extends AbstractCollection<V> {
+		protected MapIterator<V, V> iter;
 
 		public Values (EMap<V> map) {
-			iter = new MapIterator<Enum<?>, V, V>(map) {
+			iter = new MapIterator<V, V>(map) {
 				@Override
-				public @NonNull MapIterator<Enum<?>, V, V> iterator () {
+				public @NonNull MapIterator<V, V> iterator () {
 					return this;
 				}
 
@@ -1077,7 +1077,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 				public V next () {
 					if (!hasNext) {throw new NoSuchElementException();}
 					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					V value = map.valueTable[nextIndex];
+					V value = map.release(map.valueTable[nextIndex]);
 					currentIndex = nextIndex;
 					findNextIndex();
 					return value;
@@ -1092,7 +1092,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull MapIterator<Enum<?>, V, V> iterator () {
+		public @NonNull MapIterator<V, V> iterator () {
 			return iter;
 		}
 
@@ -1155,13 +1155,14 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		}
 	}
 
-	public static class Keys<Enum<?>, V> extends AbstractSet<Enum<?>> {
-		protected MapIterator<Enum<?>, V, Enum<?>> iter;
+	public static class Keys extends AbstractSet<Enum<?>> {
+		protected MapIterator<?, Enum<?>> iter;
 
-		public Keys (EMap<V> map) {
-			iter = new MapIterator<Enum<?>, V, Enum<?>>(map) {
+		@SuppressWarnings("rawtypes")
+		public Keys (EMap map) {
+			iter = new MapIterator<Object, Enum<?>>(map) {
 				@Override
-				public @NonNull MapIterator<Enum<?>, V, Enum<?>> iterator () {
+				public @NonNull MapIterator<?, Enum<?>> iterator () {
 					return this;
 				}
 
@@ -1175,7 +1176,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 				public Enum<?> next () {
 					if (!hasNext) {throw new NoSuchElementException();}
 					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					Enum<?> key = map.keyTable[nextIndex];
+					Enum<?> key = map.universe[nextIndex];
 					currentIndex = nextIndex;
 					findNextIndex();
 					return key;
@@ -1194,7 +1195,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull MapIterator<Enum<?>, V, Enum<?>> iterator () {
+		public @NonNull MapIterator<?, Enum<?>> iterator () {
 			return iter;
 		}
 
@@ -1260,27 +1261,25 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <K>    the type of keys
 	 * @param <V>    the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <Enum<?>, V> EMap<V> with () {
-		return new EMap<>(0);
+	public static <V> EMap<V> with () {
+		return new EMap<>();
 	}
 
 	/**
 	 * Constructs a single-entry map given one key and one value.
-	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * This is mostly useful as an optimization for {@link #with(Enum, Object, Object...)}
 	 * when there's no "rest" of the keys or values.
 	 *
 	 * @param key0   the first and only key
 	 * @param value0 the first and only value
-	 * @param <K>    the type of key0
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <Enum<?>, V> EMap<V> with (Enum<?> key0, V value0) {
-		EMap<V> map = new EMap<>(1);
+	public static <V> EMap<V> with (Enum<?> key0, V value0) {
+		EMap<V> map = new EMap<>();
 		map.put(key0, value0);
 		return map;
 	}
@@ -1289,7 +1288,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
-	 * {@link #EMap(Object[], Object[])}, which takes all keys and then all values.
+	 * {@link #EMap(Enum[], Object[])}, which takes all keys and then all values.
 	 * This needs all keys to have the same type and all values to have the same type, because
 	 * it gets those types from the first key parameter and first value parameter. Any keys that don't
 	 * have K as their type or values that don't have V as their type have that entry skipped.
@@ -1297,13 +1296,12 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	 * @param key0   the first key; will be used to determine the type of all keys
 	 * @param value0 the first value; will be used to determine the type of all values
 	 * @param rest   an array or varargs of alternating K, V, K, V... elements
-	 * @param <K>    the type of keys, inferred from key0
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <Enum<?>, V> EMap<V> with (Enum<?> key0, V value0, Object... rest) {
-		EMap<V> map = new EMap<>(1 + (rest.length >>> 1));
+	public static <V> EMap<V> with (Enum<?> key0, V value0, Object... rest) {
+		EMap<V> map = new EMap<>();
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
