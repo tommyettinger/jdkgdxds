@@ -308,6 +308,23 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
+	 * Returns true if this ESet contains all items in the given Collection, or false otherwise.
+	 * @param c usually another ESet, but not required to be
+	 */
+	@Override
+	public boolean containsAll (Collection<?> c) {
+		if(!(c instanceof ESet))
+			return super.containsAll(c);
+		ESet es = (ESet)c;
+		if(es.size == 0 || es.universe == null || es.universe.length == 0) return true;
+		if(size < es.size || universe == null || universe.length != es.universe.length) return false;
+		for (int i = 0; i < table.length; i++) {
+			if((~table[i] & es.table[i]) != 0) return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Adds all Enum items in the given array to this set. Returns true if this set was modified at all
 	 * in the process (that is, if any items in {@code c} were not already present in this set).
 	 *
