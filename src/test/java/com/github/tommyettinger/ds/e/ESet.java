@@ -58,7 +58,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * @param ignoredToDistinguish an ignored boolean that differentiates this constructor, which defined a key universe,
 	 *                               from one that takes contents
 	 */
-	public ESet (@Nullable Enum<?>[] universe, boolean ignoredToDistinguish) {
+	public ESet (Enum<?>@Nullable [] universe, boolean ignoredToDistinguish) {
 		super();
 		if(universe == null) return;
 		this.universe = universe;
@@ -85,7 +85,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 *
 	 * @param contents an array of Enum items to place into this set
 	 */
-	public ESet(@Nullable Enum<?>[] contents) {
+	public ESet(Enum<?>@Nullable [] contents) {
 		super();
 		if(contents == null) return;
 		addAll(contents);
@@ -351,7 +351,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 *
 	 * @see #add(Enum)
 	 */
-	public boolean addAll (@NonNull Enum<?>[] c) {
+	public boolean addAll (Enum<?>@NonNull [] c) {
 		boolean modified = false;
 		for (int i = 0; i < c.length; i++) {
 			modified |= add(c[i]);
@@ -385,7 +385,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
-	public void clearToUniverse (@Nullable Enum<?>[] universe) {
+	public void clearToUniverse (Enum<?>@Nullable [] universe) {
 		size = 0;
 		if (universe == null) {
 			table = null;
@@ -616,34 +616,34 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
-	 * Creates a new ESet using the given result of calling {@code values()} on an Enum type, but with no items initially
-	 * stored in the set.
+	 * Creates a new ESet using the given result of calling {@code values()} on an Enum type (the universe), but with no items
+	 * initially stored in the set. You can reuse the universe between ESet instances as long as it is not modified.
 	 * <br>
 	 * This is the same as calling {@link #ESet(Enum[], boolean)}.
 	 *
-	 * @param valuesResult almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 * @return a new ESet with the specified universe of possible items, but none present in the set
 	 */
-	public static ESet noneOf(@Nullable Enum<?>[] valuesResult) {
-		return new ESet(valuesResult, true);
+	public static ESet noneOf(Enum<?>@Nullable [] universe) {
+		return new ESet(universe, true);
 	}
 
 	/**
-	 * Creates a new ESet using the given result of calling {@code values()} on an Enum type, and with all possible items initially
-	 * stored in the set.
+	 * Creates a new ESet using the given result of calling {@code values()} on an Enum type (the universe), and with all possible
+	 * items initially stored in the set. You can reuse the universe between ESet instances as long as it is not modified.
 	 *
-	 * @param valuesResult almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 * @return a new ESet with the specified universe of possible items, and all of them present in the set
 	 */
-	public static ESet allOf(@Nullable Enum<?>[] valuesResult) {
-		if(valuesResult == null) return new ESet();
-		ESet coll = new ESet(valuesResult, true);
+	public static ESet allOf(Enum<?>@Nullable [] universe) {
+		if(universe == null) return new ESet();
+		ESet coll = new ESet(universe, true);
 
 		for (int i = 0; i < coll.table.length - 1; i++) {
 			coll.table[i] = -1;
 		}
-		coll.table[coll.table.length - 1] = -1 >>> -valuesResult.length;
-		coll.size = valuesResult.length;
+		coll.table[coll.table.length - 1] = -1 >>> -universe.length;
+		coll.size = universe.length;
 		return coll;
 	}
 
