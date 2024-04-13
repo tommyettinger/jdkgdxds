@@ -551,13 +551,13 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	@Override
 	public int hashCode () {
 		int h = size;
-		Object keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {
-			Enum<?> key = keyTable[i];
+		Enum<?>[] universe = this.universe;
+		Object[] valueTable = this.valueTable;
+		for (int i = 0, n = universe.length; i < n; i++) {
+			Enum<?> key = universe[i];
 			if (key != null) {
 				h ^= key.hashCode();
-				V value = valueTable[i];
+				V value = release(valueTable[i]);
 				if (value != null) {h ^= value.hashCode();}
 			}
 		}
@@ -571,13 +571,13 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		if (!(obj instanceof Map)) {return false;}
 		Map other = (Map)obj;
 		if (other.size() != size) {return false;}
-		Object[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
+		Enum<?>[] universe = this.universe;
+		Object[] valueTable = this.valueTable;
 		try {
-			for (int i = 0, n = keyTable.length; i < n; i++) {
-				Object key = keyTable[i];
+			for (int i = 0, n = universe.length; i < n; i++) {
+				Object key = universe[i];
 				if (key != null) {
-					V value = valueTable[i];
+					V value = release(valueTable[i]);
 					if (value == null) {
 						if (other.getOrDefault(key, neverIdentical) != null) {return false;}
 					} else {
@@ -600,11 +600,11 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		if (!(obj instanceof EMap)) {return false;}
 		EMap other = (EMap)obj;
 		if (other.size != size) {return false;}
-		Enum<?>[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {
-			Enum<?> key = keyTable[i];
-			if (key != null && valueTable[i] != other.getOrDefault(key, neverIdentical)) {return false;}
+		Enum<?>[] universe = this.universe;
+		Object[] valueTable = this.valueTable;
+		for (int i = 0, n = universe.length; i < n; i++) {
+			Enum<?> key = universe[i];
+			if (key != null && release(valueTable[i]) != other.getOrDefault(key, neverIdentical)) {return false;}
 		}
 		return true;
 	}
@@ -622,62 +622,38 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		if (size == 0) {return braces ? "{}" : "";}
 		StringBuilder buffer = new StringBuilder(32);
 		if (braces) {buffer.append('{');}
-		Enum<?>[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
-		int i = keyTable.length;
+		Enum<?>[] universe = this.universe;
+		Object[] valueTable = this.valueTable;
+		int i = universe.length;
 		while (i-- > 0) {
-			Enum<?> key = keyTable[i];
+			Enum<?> key = universe[i];
 			if (key == null) {continue;}
-			buffer.append(key == this ? "(this)" : key);
+			buffer.append(key);
 			buffer.append('=');
-			V value = valueTable[i];
+			V value = release(valueTable[i]);
 			buffer.append(value == this ? "(this)" : value);
 			break;
 		}
 		while (i-- > 0) {
-			Enum<?> key = keyTable[i];
+			Enum<?> key = universe[i];
 			if (key == null) {continue;}
 			buffer.append(separator);
-			buffer.append(key == this ? "(this)" : key);
+			buffer.append(key);
 			buffer.append('=');
-			V value = valueTable[i];
+			V value = release(valueTable[i]);
 			buffer.append(value == this ? "(this)" : value);
 		}
 		if (braces) {buffer.append('}');}
 		return buffer.toString();
 	}
 
-	/**
-	 * Reduces the size of the map to the specified size. If the map is already smaller than the specified
-	 * size, no action is taken. This indiscriminately removes items from the backing array until the
-	 * requested newSize is reached, or until the full backing array has had its elements removed.
-	 * <br>
-	 * This tries to remove from the end of the iteration order, but because the iteration order is not
-	 * guaranteed by an unordered map, this can remove essentially any item(s) from the map if it is larger
-	 * than newSize.
-	 *
-	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
-	 */
-	public void truncate (int newSize) {
-		Object keyTable = this.keyTable;
-		V[] valTable = this.valueTable;
-		newSize = Math.max(0, newSize);
-		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
-			if (keyTable[i] != null) {
-				keyTable[i] = null;
-				valTable[i] = null;
-				--size;
-			}
-		}
-	}
-
 	@Override
 	@Nullable
 	public V replace (Enum<?> key, V value) {
-		int i = locateKey(key);
-		if (i >= 0) {
-			V oldValue = valueTable[i];
-			valueTable[i] = value;
+		int i = key.ordinal();
+		if (i < universe.length) {
+			V oldValue = release(valueTable[i]);
+			valueTable[i] = hold(value);
 			return oldValue;
 		}
 		return defaultValue;
@@ -695,9 +671,9 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	 * @return the value now associated with key
 	 */
 	@Nullable
-	public V combine (Object key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-		int i = locateKey(key);
-		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
+	public V combine (Enum<?> key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+		int i = key.ordinal();
+		V next = (valueTable[i] == null) ? value : remappingFunction.apply(release(valueTable[i]), value);
 		put(key, next);
 		return next;
 	}
