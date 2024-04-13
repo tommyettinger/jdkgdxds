@@ -679,14 +679,14 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	}
 
 	/**
-	 * Simply calls {@link #combine(Object, Object, ObjObjToObjBiFunction)} on this map using every
+	 * Simply calls {@link #combine(Enum, Object, ObjObjToObjBiFunction)} on this map using every
 	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
 	 * this map, though this depends on the {@code remappingFunction}.
 	 * @param other a non-null Map (or subclass) with compatible key and value types
 	 * @param remappingFunction given a V value from this and a value from other, this should return what V to use
 	 */
 	public void combine (Map<? extends Enum<?>, ? extends V> other, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-		for (Map.Entry<? extends Object, ? extends V> e : other.entrySet()) {
+		for (Map.Entry<? extends Enum<?>, ? extends V> e : other.entrySet()) {
 			combine(e.getKey(), e.getValue(), remappingFunction);
 		}
 	}
@@ -700,7 +700,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull MapIterator<Object, V, Map.Entry<Object, V>> iterator () {
+	public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator () {
 		return entrySet().iterator();
 	}
 
@@ -724,10 +724,10 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NonNull Keys<Object, V> keySet () {
+	public @NonNull Keys keySet () {
 		if (keys1 == null || keys2 == null) {
-			keys1 = new Keys<>(this);
-			keys2 = new Keys<>(this);
+			keys1 = new Keys(this);
+			keys2 = new Keys(this);
 		}
 		if (!keys1.iter.valid) {
 			keys1.iter.reset();
@@ -748,7 +748,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NonNull Values<Object, V> values () {
+	public @NonNull Values<V> values () {
 		if (values1 == null || values2 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
@@ -773,7 +773,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NonNull Entries<Object, V> entrySet () {
+	public @NonNull Entries<V> entrySet () {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);
@@ -790,7 +790,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		return entries2;
 	}
 
-	public static class Entry<Enum<?>, V> implements Map.Entry<Enum<?>, V> {
+	public static class Entry<V> implements Map.Entry<Enum<?>, V> {
 		@Nullable public Enum<?> key;
 		@Nullable public V value;
 
@@ -876,7 +876,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 			if (this == o) {return true;}
 			if (o == null || getClass() != o.getClass()) {return false;}
 
-			Entry<?, ?> entry = (Entry<?, ?>)o;
+			Entry<?> entry = (Entry<?>)o;
 
 			if (!Objects.equals(key, entry.key)) {return false;}
 			return Objects.equals(value, entry.value);
@@ -890,7 +890,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		}
 	}
 
-	public static abstract class MapIterator<Enum<?>, V, I> implements Iterable<I>, Iterator<I> {
+	public static abstract class MapIterator<V, I> implements Iterable<I>, Iterator<I> {
 		public boolean hasNext;
 
 		protected final EMap<V> map;
@@ -909,9 +909,9 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		}
 
 		protected void findNextIndex () {
-			Enum<?>[] keyTable = map.keyTable;
-			for (int n = keyTable.length; ++nextIndex < n; ) {
-				if (keyTable[nextIndex] != null) {
+			Object[] valueTable = map.valueTable;
+			for (int n = map.universe.length; ++nextIndex < n; ) {
+				if (valueTable[nextIndex] != null) {
 					hasNext = true;
 					return;
 				}
@@ -923,35 +923,21 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		public void remove () {
 			int i = currentIndex;
 			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
-			Enum<?>[] keyTable = map.keyTable;
-			V[] valueTable = map.valueTable;
-			int mask = map.mask, next = i + 1 & mask;
-			Enum<?> key;
-			while ((key = keyTable[next]) != null) {
-				int placement = map.place(key);
-				if ((next - placement & mask) > (i - placement & mask)) {
-					keyTable[i] = key;
-					valueTable[i] = valueTable[next];
-					i = next;
-				}
-				next = next + 1 & mask;
-			}
-			keyTable[i] = null;
+			Object[] valueTable = map.valueTable;
 			valueTable[i] = null;
 			map.size--;
-			if (i != currentIndex) {--nextIndex;}
 			currentIndex = -1;
 		}
 	}
 
-	public static class Entries<Enum<?>, V> extends AbstractSet<Map.Entry<Enum<?>, V>> {
-		protected Entry<Enum<?>, V> entry = new Entry<>();
-		protected MapIterator<Enum<?>, V, Map.Entry<Enum<?>, V>> iter;
+	public static class Entries<V> extends AbstractSet<Map.Entry<Enum<?>, V>> {
+		protected Entry<V> entry = new Entry<>();
+		protected MapIterator<V, Map.Entry<Enum<?>, V>> iter;
 
 		public Entries (EMap<V> map) {
-			iter = new MapIterator<Enum<?>, V, Map.Entry<Enum<?>, V>>(map) {
+			iter = new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
 				@Override
-				public @NonNull MapIterator<Enum<?>, V, Map.Entry<Enum<?>, V>> iterator () {
+				public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator () {
 					return this;
 				}
 
@@ -964,9 +950,9 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 				public Map.Entry<Enum<?>, V> next () {
 					if (!hasNext) {throw new NoSuchElementException();}
 					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					Enum<?>[] keyTable = map.keyTable;
-					entry.key = keyTable[nextIndex];
-					entry.value = map.valueTable[nextIndex];
+					Enum<?>[] universe = map.universe;
+					entry.key = universe[nextIndex];
+					entry.value = map.release(map.valueTable[nextIndex]);
 					currentIndex = nextIndex;
 					findNextIndex();
 					return entry;
@@ -991,7 +977,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull MapIterator<Enum<?>, V, Map.Entry<Enum<?>, V>> iterator () {
+		public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator () {
 			return iter;
 		}
 
