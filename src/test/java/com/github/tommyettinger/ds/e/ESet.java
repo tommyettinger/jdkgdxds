@@ -50,18 +50,19 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 
 	/**
 	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined in
-	 * {@code valuesResult}, assuming valuesResult stores every possible constant in one Enum type. As the name suggests,
-	 * you almost always would obtain valuesResult from calling {@code values()} on an Enum type, but you can share one
-	 * reference to one Enum array across many ESet instances if you don't modify the shared array.
-	 * @param valuesResult almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 * {@code universe}, assuming universe stores every possible constant in one Enum type.
+	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
+	 * reference to one Enum array across many ESet instances if you don't modify the shared array. Sharing the same
+	 * universe helps save some memory if you have (very) many ESet instances.
+	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 * @param ignoredToDistinguish an ignored boolean that differentiates this constructor, which defined a key universe,
 	 *                               from one that takes contents
 	 */
-	public ESet (@Nullable Enum<?>[] valuesResult, boolean ignoredToDistinguish) {
+	public ESet (@Nullable Enum<?>[] universe, boolean ignoredToDistinguish) {
 		super();
-		if(valuesResult == null) return;
-		universe = valuesResult;
-		table = new int[valuesResult.length + 31 >>> 5];
+		if(universe == null) return;
+		this.universe = universe;
+		table = new int[universe.length + 31 >>> 5];
 	}
 
 	/**
@@ -262,6 +263,25 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
+	 * Removes all items from this unless they are also in the given Collection {@code c}.
+	 *
+	 * @param c usually another ESet, but not required to be
+	 */
+	@Override
+	public boolean retainAll (Collection<?> c) {
+		if(table == null || universe == null || universe.length == 0) return false;
+		if(!(c instanceof ESet))
+			return super.retainAll(c);
+		ESet es = (ESet)c;
+		if(es.table == null || es.universe == null || es.universe.length != universe.length) return false;
+		boolean changed = false;
+		for (int i = 0; i < table.length; i++) {
+			changed |= table[i] != (table[i] &= es.table[i]);
+		}
+		return changed;
+	}
+
+	/**
 	 * Adds all Enum items in the given array to this set. Returns true if this set was modified at all
 	 * in the process (that is, if any items in {@code c} were not already present in this set).
 	 *
@@ -296,10 +316,12 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This always uses {@code universe} directly, without copying.
+	 * <br>
+	 * This can be useful to allow an ESet that was created with {@link #ESet()} to share a universe with other ESets.
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
-	public void clear (@Nullable Enum<?>[] universe) {
+	public void clearToUniverse (@Nullable Enum<?>[] universe) {
 		size = 0;
 		if (universe == null) {
 			table = null;
@@ -322,10 +344,14 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This calls {@link Class#getEnumConstants()} if universe is non-null, which allocates a new array.
+	 * <br>
+	 * You may want to prefer calling {@link #clearToUniverse(Enum[])} (the overload that takes an array), because it can be used to
+	 * share one universe array between many ESet instances. This overload, given a Class, has to call {@link Class#getEnumConstants()}
+	 * and thus allocate a new array each time this is called.
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
 	 */
-	public void clear (@Nullable Class<? extends Enum<?>> universe) {
+	public void clearToUniverse (@Nullable Class<? extends Enum<?>> universe) {
 		size = 0;
 		if (universe == null) {
 			table = null;
@@ -343,7 +369,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
-	 * Returns the first ordinal equal to or greater than {@code minOrdinal} of the an Enum contained in the set.
+	 * Returns the first ordinal equal to or greater than the {@code minOrdinal} of an Enum contained in the set.
 	 * If no such Enum exists, or if minOrdinal is invalid (such as if it is negative or greater than the highest ordinal in the
 	 * Enum type this holds), then {@code -1} is returned.
 	 * @param minOrdinal the index to start looking at; does not need to have an Enum present there, but must be non-negative
