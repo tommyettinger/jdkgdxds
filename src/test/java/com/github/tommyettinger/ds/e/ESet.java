@@ -268,17 +268,43 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * @param c usually another ESet, but not required to be
 	 */
 	@Override
-	public boolean retainAll (Collection<?> c) {
+	public boolean retainAll (@NonNull Collection<?> c) {
 		if(table == null || universe == null || universe.length == 0) return false;
 		if(!(c instanceof ESet))
 			return super.retainAll(c);
 		ESet es = (ESet)c;
-		if(es.table == null || es.universe == null || es.universe.length != universe.length) return false;
-		boolean changed = false;
-		for (int i = 0; i < table.length; i++) {
-			changed |= table[i] != (table[i] &= es.table[i]);
+		if(es.table == null || es.universe == null || es.universe.length != universe.length || es.size == 0) {
+			clear();
+			return true;
 		}
-		return changed;
+		int oldSize = size;
+		size = 0;
+		for (int i = 0; i < table.length; i++) {
+			oldSize += Integer.bitCount(table[i] &= es.table[i]);
+		}
+		return size != oldSize;
+	}
+
+	/**
+	 * Adds all the elements in the specified collection to this collection.
+	 *
+	 * @param c usually another ESet, but not required to be
+	 */
+	@Override
+	public boolean addAll (@NonNull Collection<? extends Enum<?>> c) {
+		if(!(c instanceof ESet))
+			return super.addAll(c);
+		ESet es = (ESet)c;
+		if(es.universe == null || es.universe.length == 0) return false;
+		if(universe == null) universe = es.universe;
+		if(table == null) table = new int[universe.length + 31 >>> 5];
+		if(es.universe.length != universe.length) return false;
+		int oldSize = size;
+		size = 0;
+		for (int i = 0; i < table.length; i++) {
+			oldSize += Integer.bitCount(table[i] |= es.table[i]);
+		}
+		return size != oldSize;
 	}
 
 	/**
