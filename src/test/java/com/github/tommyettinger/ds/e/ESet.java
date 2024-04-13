@@ -312,7 +312,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * @param c usually another ESet, but not required to be
 	 */
 	@Override
-	public boolean containsAll (Collection<?> c) {
+	public boolean containsAll (@NonNull Collection<?> c) {
 		if(!(c instanceof ESet))
 			return super.containsAll(c);
 		ESet es = (ESet)c;
@@ -325,12 +325,33 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
+	 * Removes from this ESet every element in the given Collection.
+	 * @param c usually another ESet, but not required to be
+	 * @return {@code true} if this set changed as a result of the call
+	 */
+	@Override
+	public boolean removeAll (@NonNull Collection<?> c) {
+		if(table == null || universe == null || universe.length == 0) return false;
+		if(!(c instanceof ESet))
+			return super.removeAll(c);
+		ESet es = (ESet)c;
+		if(es.table == null || es.universe == null || es.universe.length != universe.length || es.size == 0)
+			return false;
+		int oldSize = size;
+		size = 0;
+		for (int i = 0; i < table.length; i++) {
+			oldSize += Integer.bitCount(table[i] &= ~es.table[i]);
+		}
+		return size != oldSize;
+	}
+
+	/**
 	 * Adds all Enum items in the given array to this set. Returns true if this set was modified at all
 	 * in the process (that is, if any items in {@code c} were not already present in this set).
 	 *
 	 * @see #add(Enum)
 	 */
-	public boolean addAll (Enum<?>[] c) {
+	public boolean addAll (@NonNull Enum<?>[] c) {
 		boolean modified = false;
 		for (int i = 0; i < c.length; i++) {
 			modified |= add(c[i]);
