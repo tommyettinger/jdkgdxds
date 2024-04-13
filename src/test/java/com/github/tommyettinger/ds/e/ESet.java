@@ -207,18 +207,10 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * @param item element to be added to this set
 	 * @return {@code true} if this set did not already contain the specified
 	 * element
-	 * @throws UnsupportedOperationException if the {@code add} operation
-	 *                                       is not supported by this set
-	 * @throws ClassCastException            if the class of the specified element
-	 *                                       prevents it from being added to this set
-	 * @throws NullPointerException          if the specified element is null and this
-	 *                                       set does not permit null elements
-	 * @throws IllegalArgumentException      if some property of the specified element
-	 *                                       prevents it from being added to this set
 	 */
 	@Override
 	public boolean add (Enum<?> item) {
-		if(item == null) return false;
+		if(item == null) throw new NullPointerException("Items added to an ESet must not be null.");
 		if(universe == null) universe = item.getDeclaringClass().getEnumConstants();
 		if(table == null) table = new int[universe.length + 31 >>> 5];
 		final int ord = item.ordinal(), upper = ord >>> 5;
