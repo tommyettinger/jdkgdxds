@@ -17,9 +17,7 @@
 
 package com.github.tommyettinger.ds.e;
 
-import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.Ordered;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
@@ -37,25 +35,26 @@ import java.util.Objects;
 import java.util.Set;
 
 import static com.github.tommyettinger.ds.Utilities.neverIdentical;
-import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * An unordered map where the keys and values are objects. Null keys are not allowed. No allocation is done except when growing
- * the table size.
- * <p>
- * This class performs fast contains and remove (typically O(1), worst case O(n) but that is rare in practice). Add may be
- * slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors
- * greater than 0.91 greatly increase the chances to resize to the next higher POT size.
- * <p>
- * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with {@link Ordered} types like
- * ObjectOrderedSet and ObjectObjectOrderedMap.
- * <p>
- * This implementation uses linear probing with the backward shift algorithm for removal.
- * It tries different hashes from a simple family, with the hash changing on resize.
- * Linear probing continues to work even when all hashCodes collide; it just works more slowly in that case.
+ * An unordered map where the keys are {@code Enum}s and values are objects. Null keys are not allowed; null values are permitted.
+ * No allocation is done unless this is changing its table size and/or key universe.
+ * <br>
+ * This class never actually hashes keys in its primary operations (get(), put(), remove(), containsKey(), etc.), since it can
+ * rely on keys having an Enum type, and so having {@link Enum#ordinal()} available. The ordinal allows constant-time access
+ * to a guaranteed-unique {@code int} that will always be non-negative and less than the size of the key universe. The table of
+ * possible values always starts sized to fit exactly as many values as there are keys in the key universe.
+ * <br>
+ * The key universe is an important concept here; it is simply an array of all possible Enum values the EMap can use as keys, in
+ * the specific order they are declared. You almost always get a key universe by calling {@code MyEnum.values()}, but you
+ * can also use {@link Class#getEnumConstants()} for an Enum class. You can and generally should reuse key universes in order to
+ * avoid allocations and/or save memory; the constructor {@link #EMap(Enum[])} (with no values given) creates an empty EMap with
+ * a given key universe. If you need to use the zero-argument constructor, you can, and the key universe will be obtained from the
+ * first key placed into the EMap. You can also set the key universe with {@link #clearToUniverse(Enum[])}, in the process of
+ * clearing the map.
  *
- * @author Nathan Sweet
- * @author Tommy Ettinger
+ * @author Nathan Sweet (Keys, Values, Entries, and MapIterator, as well as general structure)
+ * @author Tommy Ettinger (Enum-related adaptation)
  */
 public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>> {
 
@@ -74,13 +73,13 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 
 	/**
 	 * Returned by {@link #get(Object)} when no value exists for the given key, as well as some other methods to indicate that
-	 * no value in the Map could be returned.
+	 * no value in the Map could be returned. Defaults to {@code null}.
 	 */
 	@Nullable public V defaultValue = null;
 
 	/**
-	 * Empty constructor; using this will postpone allocating any internal arrays until {@link #put} is first called
-	 * (potentially indirectly).
+	 * Empty constructor; using this will postpone creating the key universe and allocating the value table until {@link #put} is
+	 * first called (potentially indirectly). You can also use {@link #clearToUniverse} to set the key universe and value table.
 	 */
 	public EMap () {
 	}
@@ -112,9 +111,9 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	}
 
 	/**
-	 * Creates a new map identical to the specified map.
+	 * Creates a new map identical to the specified EMap. This will share a key universe with the given EMap, if non-null.
 	 *
-	 * @param map an ObjectObjectMap to copy
+	 * @param map an EMap to copy
 	 */
 	public EMap (EMap<? extends V> map) {
 		universe = map.universe;
@@ -126,7 +125,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map a Map to copy; ObjectObjectMap or its subclasses will be faster
+	 * @param map a Map to copy; EMap or its subclasses will be faster
 	 */
 	public EMap (Map<? extends Enum<?>, ? extends V> map) {
 		this();
@@ -134,11 +133,11 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	}
 
 	/**
-	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
-	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 * Given two side-by-side arrays, one of Enum keys, one of V values, this constructs a map and inserts each pair of key and
+	 * value into it. If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
-	 * @param keys   an array of keys
-	 * @param values an array of values
+	 * @param keys   an array of Enum keys
+	 * @param values an array of V values
 	 */
 	public EMap (Enum<?>[] keys, V[] values) {
 		this();
@@ -146,33 +145,47 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	}
 
 	/**
-	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
-	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * Given two side-by-side collections, one of Enum keys, one of V values, this constructs a map and inserts each pair of key
+	 * and value into it. If keys and values have different lengths, this only uses the length of the smaller collection.
 	 *
-	 * @param keys   a Collection of keys
-	 * @param values a Collection of values
+	 * @param keys   a Collection of Enum keys
+	 * @param values a Collection of V values
 	 */
 	public EMap (Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
 		this();
 		putAll(keys, values);
 	}
 
+	/**
+	 * If the given Object is {@code null}, this replaces it with a placeholder value ({@link Utilities#neverIdentical});
+	 * otherwise, it returns the given Object as-is.
+	 * @param o any Object; will be returned as-is unless it is null
+	 * @return the given Object or {@link Utilities#neverIdentical}
+	 */
 	protected Object hold(Object o){
 		return o == null ? neverIdentical : o;
 	}
 
+	/**
+	 * If the given Object is {@link Utilities#neverIdentical}, this "releases its hold" on that placeholder value and returns
+	 * null; otherwise, it returns the given Object (cast to V if non-null).
+	 * @param o any Object, but should be the placeholder {@link Utilities#neverIdentical} or a V instance
+	 * @return the V passed in, or null if it is the placeholder
+	 */
 	@SuppressWarnings("unchecked")
+	@Nullable
 	protected V release(Object o) {
-		if(o == neverIdentical)
+		if(o == neverIdentical || o == null)
 			return null;
 		return (V) o;
 	}
 
 	/**
-	 * Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().
+	 * Given two side-by-side collections, one of Enum keys, one of V values, this inserts each pair of key and
+	 * value into this map with put().
 	 *
-	 * @param keys   a Collection of keys
-	 * @param values a Collection of values
+	 * @param keys   a Collection of Enum keys
+	 * @param values a Collection of V values
 	 */
 	public void putAll (Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
 		Enum<?> key;
@@ -188,6 +201,12 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
+	 * If this EMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
+	 * from now on for this EMap.
+	 *
+	 * @param key the Enum key to try to place into this EMap
+	 * @param value the V value to associate with {@code key}
+	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	@Override
 	@Nullable
@@ -207,6 +226,14 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		return defaultValue;
 	}
 
+	/**
+	 * Acts like {@link #put(Enum, Object)}, but uses the specified {@code defaultValue} instead of
+	 * {@link #getDefaultValue() the default value for this EMap}.
+	 * @param key the Enum key to try to place into this EMap
+	 * @param value the V value to associate with {@code key}
+	 * @param defaultValue the V value to return if {@code key} was not already present
+	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
+	 */
 	@Nullable
 	public V putOrDefault (Enum<?> key, @Nullable V value, @Nullable V defaultValue) {
 		if(key == null) throw new NullPointerException("Keys added to an EMap must not be null.");
@@ -226,17 +253,23 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 
 	/**
 	 * Puts every key-value pair in the given map into this, with the values from the given map
-	 * overwriting the previous values if two keys are identical.
+	 * overwriting the previous values if two keys are identical. If this EMap doesn't yet have
+	 * a key universe, it will now share a key universe with the given {@code map}. Even if the
+	 * given EMap is empty, it can still be used to obtain a key universe for this EMap
+	 * (assuming it has a key universe).
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
 	public void putAll (@NonNull EMap<? extends V> map) {
-		if(map.size == 0) return;
+		if(map.universe == null) return;
 		if(universe == null) universe = map.universe;
 		if(valueTable == null) valueTable = new Object[universe.length];
+		if(map.size == 0) return;
+		final int n = map.valueTable.length;
+		if(this.valueTable.length != n) return;
 		Object[] valueTable = map.valueTable;
 		Object value;
-		for (int i = 0, n = valueTable.length; i < n; i++) {
+		for (int i = 0; i < n; i++) {
 			value = valueTable[i];
 			if (value != null) {
 				if(this.valueTable[i] == null) ++size;
@@ -247,6 +280,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
+	 * Delegates to {@link #putAll(Enum[], int, Object[], int, int)}.
 	 *
 	 * @param keys   an array of keys
 	 * @param values an array of values
@@ -257,17 +291,19 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
+	 * Delegates to {@link #putAll(Enum[], int, Object[], int, int)}.
 	 *
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
 	public void putAll (Enum<?>[] keys, V[] values, int length) {
-		putAll(keys, 0, values, 0, length);
+		putAll(keys, 0, values, 0, Math.min(length, Math.min(keys.length, values.length)));
 	}
 
 	/**
-	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
+	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with
+	 * {@link #put(Enum, Object)}.
 	 *
 	 * @param keys        an array of keys
 	 * @param keyOffset   the first index in keys to insert
@@ -694,7 +730,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	/**
 	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
 	 * does not permit nested iteration. Iterate over {@link Entries#Entries(EMap)} if you
-	 * need nested or multithreaded iteration. You can remove an Entry from this ObjectObjectMap
+	 * need nested or multithreaded iteration. You can remove an Entry from this EMap
 	 * using this Iterator.
 	 *
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
@@ -1227,6 +1263,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
+		 * @return a new ObjectList containing the remaining items
 		 */
 		public ObjectList<Enum<?>> toList () {
 			ObjectList<Enum<?>> list = new ObjectList<>(iter.map.size);
@@ -1240,10 +1277,27 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		}
 
 		/**
+		 * Returns a new {@link ESet} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 * The ESet this returns will share a key universe with the map linked to this key set.
+		 * @return a new ESet containing the remaining items, sharing a universe with this key set
+		 */
+		public ESet toESet() {
+			ESet es = new ESet(iter.map.universe, true);
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {es.add(iter.next());}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return es;
+		}
+
+		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
 		 * @param coll any modifiable Collection; may have items appended into it
-		 * @return the given collection
+		 * @return the given collection, potentially after modifications
 		 */
 		public Collection<Enum<?>> appendInto(Collection<Enum<?>> coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1291,11 +1345,11 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	 * {@link #EMap(Enum[], Object[])}, which takes all keys and then all values.
 	 * This needs all keys to have the same type and all values to have the same type, because
 	 * it gets those types from the first key parameter and first value parameter. Any keys that don't
-	 * have K as their type or values that don't have V as their type have that entry skipped.
+	 * have Enum as their type or values that don't have V as their type have that entry skipped.
 	 *
-	 * @param key0   the first key; will be used to determine the type of all keys
+	 * @param key0   the first key (an Enum)
 	 * @param value0 the first value; will be used to determine the type of all values
-	 * @param rest   an array or varargs of alternating K, V, K, V... elements
+	 * @param rest   an array or varargs of alternating Enum, V, Enum, V... elements
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
