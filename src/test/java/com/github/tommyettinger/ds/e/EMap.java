@@ -914,12 +914,12 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		@Override
 		public boolean equals (@Nullable Object o) {
 			if (this == o) {return true;}
-			if (o == null || getClass() != o.getClass()) {return false;}
+			if (!(o instanceof Map.Entry)) {return false;}
 
-			Entry<?> entry = (Entry<?>)o;
+			Map.Entry entry = (Map.Entry)o;
 
-			if (!Objects.equals(key, entry.key)) {return false;}
-			return Objects.equals(value, entry.value);
+			if (!Objects.equals(key, entry.getKey())) {return false;}
+			return Objects.equals(value, entry.getValue());
 		}
 
 		@Override
@@ -1008,7 +1008,98 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 
 		@Override
 		public boolean contains (Object o) {
-			return iter.map.containsKey(o);
+			if(o instanceof Map.Entry) {
+				Map.Entry ent = ((Map.Entry)o);
+				if(ent.getKey() instanceof Enum<?>){
+					Enum<?> e = (Enum<?>)ent.getKey();
+					int ord = e.ordinal();
+					return (ord < iter.map.universe.length && iter.map.universe[ord] == e
+						&& iter.map.valueTable[ord] != null && iter.map.valueTable[ord].equals(iter.map.hold(ent.getValue())));
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public boolean remove (Object o) {
+			if(o instanceof Map.Entry) {
+				Map.Entry ent = ((Map.Entry)o);
+				if(ent.getKey() instanceof Enum<?>){
+					Enum<?> e = (Enum<?>)ent.getKey();
+					int ord = e.ordinal();
+					if (ord < iter.map.universe.length && iter.map.universe[ord] == e
+						&& iter.map.valueTable[ord] != null && iter.map.valueTable[ord].equals(iter.map.hold(ent.getValue()))){
+						iter.map.remove(e);
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Removes from this set all of its elements that are contained in the
+		 * specified collection (optional operation).  If the specified
+		 * collection is also a set, this operation effectively modifies this
+		 * set so that its value is the <i>asymmetric set difference</i> of
+		 * the two sets.
+		 *
+		 * @param c collection containing elements to be removed from this set
+		 * @return {@code true} if this set changed as a result of the call
+		 */
+		@Override
+		public boolean removeAll (Collection<?> c) {
+			iter.reset();
+			boolean res = false;
+			for(Object o : c) {
+				if (remove(o)) {
+					iter.reset();
+					res = true;
+				}
+			}
+			return res;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @param c
+		 * @implSpec This implementation iterates over this collection, checking each
+		 * element returned by the iterator in turn to see if it's contained
+		 * in the specified collection.  If it's not so contained, it's removed
+		 * from this collection with the iterator's {@code remove} method.
+		 */
+		@Override
+		public boolean retainAll (Collection<?> c) {
+			Objects.requireNonNull(c);
+			iter.reset();
+			boolean modified = false;
+			while (iter.hasNext) {
+				Map.Entry<Enum<?>, V> n = iter.next();
+				if (!c.contains(n)) {
+					iter.remove();
+					modified = true;
+				}
+			}
+			iter.reset();
+			return modified;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @param c
+		 * @throws ClassCastException   {@inheritDoc}
+		 * @throws NullPointerException {@inheritDoc}
+		 * @implSpec This implementation iterates over the specified collection,
+		 * checking each element returned by the iterator in turn to see
+		 * if it's contained in this collection.  If all elements are so
+		 * contained {@code true} is returned, otherwise {@code false}.
+		 * @see #contains(Object)
+		 */
+		@Override
+		public boolean containsAll (Collection<?> c) {
+			return super.containsAll(c);
 		}
 
 		/**
@@ -1036,6 +1127,50 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return hc;
+		}
+
+		@Override
+		public boolean equals (Object other) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			boolean res = super.equals(other);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return res;
+		}
+
+		@Override
+		public String toString () {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			String res = super.toString();
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return res;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @throws UnsupportedOperationException {@inheritDoc}
+		 * @implSpec This implementation iterates over this collection, removing each
+		 * element using the {@code Iterator.remove} operation.  Most
+		 * implementations will probably choose to override this method for
+		 * efficiency.
+		 *
+		 * <p>Note that this implementation will throw an
+		 * {@code UnsupportedOperationException} if the iterator returned by this
+		 * collection's {@code iterator} method does not implement the
+		 * {@code remove} method and this collection is non-empty.
+		 */
+		@Override
+		public void clear () {
+			iter.map.clear();
+			iter.reset();
 		}
 
 		/**
