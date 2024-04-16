@@ -1182,6 +1182,46 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		}
 
 		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Object @NonNull [] toArray () {
+			Object[] a = new Object[iter.map.size];
+			int i = 0;
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {
+				a[i++] = new Entry<>(iter.next());
+			}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+
+			return a;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @param a
+		 */
+		@Override
+		public <T> T @NonNull [] toArray (T[] a) {
+			if(a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
+			int i = 0;
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {
+				a[i++] = (T)new Entry<>(iter.next());
+			}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+
+			return a;
+		}
+
+		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
