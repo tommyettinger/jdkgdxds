@@ -76,164 +76,89 @@ public class EMapTest extends TestCase {
         }
     }
 
-//    @SuppressWarnings({ "unchecked", "boxing" })
-//    public void test_ConstructorLjava_lang_Class() {
-//        try {
-//            new EMap((Class) null);
-//            fail("Expected NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException e) {
-//            // Expected
-//        }
-//
-//
-//        try {
-//            new EMap(Size.Big.getClass());
-//            fail("Expected NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException e) {
-//            // Expected
-//        }
-//
-//        try {
-//            new EMap(Integer.class);
-//            fail("Expected NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException e) {
-//            // Expected
-//        }
-//
-//        EMap enumColorMap = new EMap<Double>(Color.class);
-//        assertNull("Return non-null for non mapped key", enumColorMap.put( //$NON-NLS-1$
-//                Color.Green, 2));
-//        assertEquals("Get returned incorrect value for given key", 2, //$NON-NLS-1$
-//                enumColorMap.get(Color.Green));
-//
-//        EMap enumEmptyMap = new EMap<Double>(Empty.class);
-//        try {
-//            enumEmptyMap.put(Color.Red, 2);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//
-//        EMap enumSizeMap = new EMap(Size.class);
-//        assertNull("Return non-null for non mapped key", enumSizeMap.put( //$NON-NLS-1$
-//                Size.Big, 2));
-//        assertEquals("Get returned incorrect value for given key", 2, //$NON-NLS-1$
-//                enumSizeMap.get(Size.Big));
-//        try {
-//            enumSizeMap.put(Color.Red, 2);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//
-//        enumSizeMap = new EMap(Size.Middle.getClass());
-//        assertNull("Return non-null for non mapped key", enumSizeMap.put( //$NON-NLS-1$
-//                Size.Small, 1));
-//        assertEquals("Get returned incorrect value for given key", 1, //$NON-NLS-1$
-//                enumSizeMap.get(Size.Small));
-//        try {
-//            enumSizeMap.put(Color.Red, 2);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//    }
-//
-//    /**
-//     * @tests java.util.EMap#EMap(EMap)
-//     */
-//    @SuppressWarnings({ "unchecked", "boxing" })
-//    public void test_ConstructorLjava_util_EnumMap() {
-//        EMap enumMap;
-//        EMap enumColorMap = null;
-//        try {
-//            enumMap = new EMap(enumColorMap);
-//            fail("Expected NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException e) {
-//            // Expected
-//        }
-//
-//        enumColorMap = new EMap<Double>(Color.class);
-//        Double double1 = new Double(1);
-//        enumColorMap.put(Color.Green, 2);
-//        enumColorMap.put(Color.Blue, double1);
-//
-//        enumMap = new EMap(enumColorMap);
-//        assertEquals("Constructor fails", 2, enumMap.get(Color.Green)); //$NON-NLS-1$
-//        assertSame("Constructor fails", double1, enumMap.get(Color.Blue)); //$NON-NLS-1$
-//        assertNull("Constructor fails", enumMap.get(Color.Red)); //$NON-NLS-1$
-//        enumMap.put(Color.Red, 1);
-//        assertEquals("Wrong value", 1, enumMap.get(Color.Red)); //$NON-NLS-1$
-//
-//        try {
-//            enumMap.put(Size.Middle, 2);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//    }
-//
-//    /**
-//     * @tests java.util.EMap#EMap(Map)
-//     */
-//    @SuppressWarnings({ "unchecked", "boxing" })
-//    public void test_ConstructorLjava_util_Map() {
-//        EMap enumMap;
-//        Map enumColorMap = null;
-//        try {
-//            enumMap = new EMap(enumColorMap);
-//            fail("Expected NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException e) {
-//            // Expected
-//        }
-//        enumColorMap = new EMap<Double>(Color.class);
-//        enumMap = new EMap(enumColorMap);
-//        enumColorMap.put(Color.Blue, 3);
-//        enumMap = new EMap(enumColorMap);
-//
-//        HashMap hashColorMap = null;
-//        try {
-//            enumMap = new EMap(hashColorMap);
-//            fail("Expected NullPointerException");//$NON-NLS-1$
-//        } catch (NullPointerException e) {
-//            // Expected
-//        }
-//
-//        hashColorMap = new HashMap();
-//        try {
-//            enumMap = new EMap(hashColorMap);
-//            fail("Expected IllegalArgumentException"); //$NON-NLS-1$
-//        } catch (IllegalArgumentException e) {
-//            // Expected
-//        }
-//
-//        hashColorMap.put(Color.Green, 2);
-//        enumMap = new EMap(hashColorMap);
-//        assertEquals("Constructor fails", 2, enumMap.get(Color.Green)); //$NON-NLS-1$
-//        assertNull("Constructor fails", enumMap.get(Color.Red)); //$NON-NLS-1$
-//        enumMap.put(Color.Red, 1);
-//        assertEquals("Wrong value", 1, enumMap.get(Color.Red)); //$NON-NLS-1$
-//        hashColorMap.put(Size.Big, 3);
-//        try {
-//            enumMap = new EMap(hashColorMap);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//
-//        hashColorMap = new HashMap();
-//        hashColorMap.put(new Integer(1), 1);
-//        try {
-//            enumMap = new EMap(hashColorMap);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//    }
+    @SuppressWarnings({ "unchecked", "boxing" })
+    public void test_ConstructorLjava_lang_Class() {
 
-    /**
-     * @tests java.util.EMap#clear()
-     */
+        EMap enumColorMap = new EMap<Double>(Color.class);
+        assertNull("Return non-null for non mapped key", enumColorMap.put( //$NON-NLS-1$
+                Color.Green, 2));
+        assertEquals("Get returned incorrect value for given key", 2, //$NON-NLS-1$
+                enumColorMap.get(Color.Green));
+
+        EMap enumSizeMap = new EMap(Size.class);
+        assertNull("Return non-null for non mapped key", enumSizeMap.put( //$NON-NLS-1$
+                Size.Big, 2));
+        assertEquals("Get returned incorrect value for given key", 2, //$NON-NLS-1$
+                enumSizeMap.get(Size.Big));
+
+        enumSizeMap = new EMap(Size.Middle.getClass());
+        assertNull("Return non-null for non mapped key", enumSizeMap.put( //$NON-NLS-1$
+                Size.Small, 1));
+        assertEquals("Get returned incorrect value for given key", 1, //$NON-NLS-1$
+                enumSizeMap.get(Size.Small));
+    }
+
+    @SuppressWarnings({ "unchecked", "boxing" })
+    public void test_ConstructorLjava_util_EnumMap() {
+        EMap enumMap;
+        EMap enumColorMap = null;
+        try {
+            enumMap = new EMap(enumColorMap);
+            fail("Expected NullPointerException"); //$NON-NLS-1$
+        } catch (NullPointerException e) {
+            // Expected
+        }
+
+        enumColorMap = new EMap<Double>(Color.class);
+        Double double1 = new Double(1);
+        enumColorMap.put(Color.Green, 2);
+        enumColorMap.put(Color.Blue, double1);
+
+        enumMap = new EMap(enumColorMap);
+        assertEquals("Constructor fails", 2, enumMap.get(Color.Green)); //$NON-NLS-1$
+        assertSame("Constructor fails", double1, enumMap.get(Color.Blue)); //$NON-NLS-1$
+        assertNull("Constructor fails", enumMap.get(Color.Red)); //$NON-NLS-1$
+        enumMap.put(Color.Red, 1);
+        assertEquals("Wrong value", 1, enumMap.get(Color.Red)); //$NON-NLS-1$
+    }
+
+    @SuppressWarnings({ "unchecked", "boxing" })
+    public void test_ConstructorLjava_util_Map() {
+        EMap enumMap;
+        Map enumColorMap = null;
+        try {
+            enumMap = new EMap(enumColorMap);
+            fail("Expected NullPointerException"); //$NON-NLS-1$
+        } catch (NullPointerException e) {
+            // Expected
+        }
+        enumColorMap = new EMap<Double>(Color.class);
+        enumMap = new EMap(enumColorMap);
+        enumColorMap.put(Color.Blue, 3);
+        enumMap = new EMap(enumColorMap);
+
+        HashMap hashColorMap = null;
+        try {
+            enumMap = new EMap(hashColorMap);
+            fail("Expected NullPointerException");//$NON-NLS-1$
+        } catch (NullPointerException e) {
+            // Expected
+        }
+
+        hashColorMap = new HashMap();
+
+        hashColorMap.put(Color.Green, 2);
+        enumMap = new EMap(hashColorMap);
+        assertEquals("Constructor fails", 2, enumMap.get(Color.Green)); //$NON-NLS-1$
+        assertNull("Constructor fails", enumMap.get(Color.Red)); //$NON-NLS-1$
+        enumMap.put(Color.Red, 1);
+        assertEquals("Wrong value", 1, enumMap.get(Color.Red)); //$NON-NLS-1$
+        hashColorMap.put(Size.Big, 3);
+
+        hashColorMap = new HashMap();
+        hashColorMap.put(new Integer(1), 1);
+    }
+
     @SuppressWarnings({ "unchecked", "boxing" })
     public void test_clear() {
         EMap enumSizeMap = new EMap(Size.class);
