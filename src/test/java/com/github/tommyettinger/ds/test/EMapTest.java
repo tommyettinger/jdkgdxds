@@ -167,26 +167,26 @@ public class EMapTest extends TestCase {
         assertNull("Failed to clear all elements", enumSizeMap.get(Size.Small)); //$NON-NLS-1$
     }
 
-//    @SuppressWarnings( { "unchecked", "boxing" })
-//    public void test_containsKeyLjava_lang_Object() {
-//        EMap enumSizeMap = new EMap(Size.class);
-//        assertFalse("Returned true for uncontained key", enumSizeMap //$NON-NLS-1$
-//                .containsKey(Size.Small));
-//        enumSizeMap.put(Size.Small, 1);
-//        assertTrue("Returned false for contained key", enumSizeMap //$NON-NLS-1$
-//                .containsKey(Size.Small));
-//
-//        enumSizeMap.put(Size.Big, null);
-//        assertTrue("Returned false for contained key", enumSizeMap //$NON-NLS-1$
-//                .containsKey(Size.Big));
-//
-//        assertFalse("Returned true for uncontained key", enumSizeMap //$NON-NLS-1$
-//                .containsKey(Color.Red));
-//        assertFalse("Returned true for uncontained key", enumSizeMap //$NON-NLS-1$
-//                .containsKey(new Integer("3"))); //$NON-NLS-1$
-//        assertFalse("Returned true for uncontained key", enumSizeMap //$NON-NLS-1$
-//                .containsKey(null));
-//    }
+    @SuppressWarnings( { "unchecked", "boxing" })
+    public void test_containsKeyLjava_lang_Object() {
+        EMap enumSizeMap = new EMap(Size.class);
+        assertFalse("Returned true for uncontained key", enumSizeMap //$NON-NLS-1$
+                .containsKey(Size.Small));
+        enumSizeMap.put(Size.Small, 1);
+        assertTrue("Returned false for contained key", enumSizeMap //$NON-NLS-1$
+                .containsKey(Size.Small));
+
+        enumSizeMap.put(Size.Big, null);
+        assertTrue("Returned false for contained key", enumSizeMap //$NON-NLS-1$
+                .containsKey(Size.Big));
+
+        assertFalse("Returned true for uncontained key", enumSizeMap //$NON-NLS-1$
+                .containsKey(Color.Red));
+        assertFalse("Returned true for uncontained key", enumSizeMap //$NON-NLS-1$
+                .containsKey(new Integer("3"))); //$NON-NLS-1$
+        assertFalse("Returned true for uncontained key", enumSizeMap //$NON-NLS-1$
+                .containsKey(null));
+    }
 
     @SuppressWarnings( { "unchecked", "boxing" })
     public void test_clone() {

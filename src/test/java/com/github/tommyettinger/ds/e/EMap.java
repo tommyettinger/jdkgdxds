@@ -335,8 +335,11 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	public V get (Object key) {
 		if(size == 0 || !(key instanceof Enum<?>))
 			return defaultValue;
-		Enum<?> e = (Enum<?>)key;
-		Object o = valueTable[e.ordinal()];
+		final Enum<?> e = (Enum<?>)key;
+		final int ord = e.ordinal();
+		if(ord >= universe.length || universe[ord] != e)
+			return defaultValue;
+		Object o = valueTable[ord];
 		return o == null ? defaultValue : release(o);
 	}
 
@@ -537,8 +540,9 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	public boolean containsKey (Object key) {
 		if(size == 0 || !(key instanceof Enum<?>))
 			return false;
-		Enum<?> e = (Enum<?>)key;
-		return e.ordinal() < universe.length && valueTable[e.ordinal()] != null;
+		final Enum<?> e = (Enum<?>)key;
+		final int ord = e.ordinal();
+		return ord < universe.length && universe[ord] == e && valueTable[ord] != null;
 	}
 
 	/**
