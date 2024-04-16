@@ -611,13 +611,13 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		Object[] valueTable = this.valueTable;
 		try {
 			for (int i = 0, n = universe.length; i < n; i++) {
-				Object key = universe[i];
-				if (key != null) {
-					V value = release(valueTable[i]);
+				Object rawValue = valueTable[i];
+				if (rawValue != null) {
+					V value = release(rawValue);
 					if (value == null) {
-						if (other.getOrDefault(key, neverIdentical) != null) {return false;}
+						if (other.getOrDefault(universe[i], neverIdentical) != null) {return false;}
 					} else {
-						if (!value.equals(other.get(key))) {return false;}
+						if (!value.equals(other.get(universe[i]))) {return false;}
 					}
 				}
 			}
@@ -929,11 +929,11 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	public static abstract class MapIterator<V, I> implements Iterable<I>, Iterator<I> {
 		public boolean hasNext;
 
-		protected final EMap<V> map;
+		protected final EMap<? extends V> map;
 		protected int nextIndex, currentIndex;
 		public boolean valid = true;
 
-		public MapIterator (EMap<V> map) {
+		public MapIterator (EMap<? extends V> map) {
 			this.map = map;
 			reset();
 		}
@@ -1194,8 +1194,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 	public static class Keys extends AbstractSet<Enum<?>> {
 		protected MapIterator<?, Enum<?>> iter;
 
-		@SuppressWarnings("rawtypes")
-		public Keys (EMap map) {
+		public Keys (EMap<?> map) {
 			iter = new MapIterator<Object, Enum<?>>(map) {
 				@Override
 				public @NonNull MapIterator<?, Enum<?>> iterator () {
