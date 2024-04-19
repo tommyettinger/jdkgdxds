@@ -410,28 +410,32 @@ public class EMapTest extends TestCase {
             // Expected
         }
 
-//        enumSizeMap = new EMap(Size.class);
-//        enumSizeMap.put(Size.Middle, 1);
-//        enumSizeMap.put(Size.Big, null);
-//        set = enumSizeMap.entrySet();
-//        iter = set.iterator();
-//        entry = (Map.Entry) iter.next();
-//        assertEquals("Wrong key", Size.Middle, entry.getKey()); //$NON-NLS-1$
-//
-//        assertTrue("Returned false for contained object", set.contains(entry)); //$NON-NLS-1$
+        enumSizeMap = new EMap(Size.class);
+        enumSizeMap.put(Size.Middle, 1);
+        enumSizeMap.put(Size.Big, null);
+        set = enumSizeMap.entrySet();
+        iter = set.iterator();
+        entry = (Map.Entry) iter.next();
+        assertEquals("Wrong key", Size.Middle, entry.getKey()); //$NON-NLS-1$
+
+        assertTrue("Returned false for contained object", set.contains(entry)); //$NON-NLS-1$
+
+        // This block is a complete mess. EntrySet behavior when the containing Map is modified is not well-defined.
+        // The order the tests expected Middle (1) and Big (2) was reversed, even though... 1... is less than 2...
+        // Plus, our Entry doesn't hold onto a reference to the EMap it's in, so setValue() can't write through.
+
 //        enumSizeMap.put(Size.Middle, 3);
-//        assertTrue("Returned false for contained object", set.contains(entry)); //$NON-NLS-1$
+        assertTrue("Returned false for contained object", set.contains(entry)); //$NON-NLS-1$
 //        entry.setValue(2);
 //        assertTrue("Returned false for contained object", set.contains(entry)); //$NON-NLS-1$
-//        assertFalse("Returned true for uncontained object", set //$NON-NLS-1$
-//                .remove(new Integer(1)));
-//
-//        iter.next();
-//        //The following test case fails on RI.
-//        assertEquals("Wrong key", Size.Middle, entry.getKey()); //$NON-NLS-1$
-//        set.clear();
-//        assertEquals("Wrong size", 0, set.size()); //$NON-NLS-1$
-//
+        assertFalse("Returned true for uncontained object", set //$NON-NLS-1$
+                .remove(new Integer(1)));
+
+        iter.next();
+        assertEquals("Wrong key", Size.Big, entry.getKey()); //$NON-NLS-1$
+        set.clear();
+        assertEquals("Wrong size", 0, set.size()); //$NON-NLS-1$
+
 //        enumSizeMap = new EMap(Size.class);
 //        enumSizeMap.put(Size.Middle, 1);
 //        enumSizeMap.put(Size.Big, null);
