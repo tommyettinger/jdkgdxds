@@ -156,10 +156,12 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	public boolean contains (Object item) {
 		if(table == null || item == null || size == 0 || !(item instanceof Enum<?>)) return false;
 		final Enum<?> e = (Enum<?>)item;
-		final int ord = e.ordinal(), upper = ord >>> 5;
+		final int ord = e.ordinal();
+		if(ord >= universe.length || universe[ord] != item) return false;
+		final int upper = ord >>> 5;
 		if(table.length <= upper) return false;
 		// (1 << ord) has ord implicitly used modulo 32
-		return (table[upper] & 1 << ord) != 0 && item.equals(universe[ord]);
+		return (table[upper] & 1 << ord) != 0;
 	}
 
 	/**
@@ -213,7 +215,9 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		if(item == null) throw new NullPointerException("Items added to an ESet must not be null.");
 		if(universe == null) universe = item.getDeclaringClass().getEnumConstants();
 		if(table == null) table = new int[universe.length + 31 >>> 5];
-		final int ord = item.ordinal(), upper = ord >>> 5;
+		final int ord = item.ordinal();
+		if(ord >= universe.length || universe[ord] != item) throw new ClassCastException("Incompatible item for this ESet: " + item);
+		final int upper = ord >>> 5;
 		if(table.length <= upper) return false;
 		// (1 << ord) has ord implicitly used modulo 32
 		boolean changed = (table[upper]) != (table[upper] |= 1 << ord);
@@ -246,7 +250,9 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	public boolean remove (Object item) {
 		if(table == null || item == null || size == 0 || !(item instanceof Enum<?>)) return false;
 		final Enum<?> e = (Enum<?>)item;
-		final int ord = e.ordinal(), upper = ord >>> 5;
+		final int ord = e.ordinal();
+		if(ord >= universe.length || universe[ord] != e) return false;
+		final int upper = ord >>> 5;
 		if(table.length <= upper) return false;
 		// (1 << ord) has ord implicitly used modulo 32
 		final boolean changed = (table[upper]) != (table[upper] &= ~(1 << ord));
@@ -261,11 +267,11 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 */
 	@Override
 	public boolean retainAll (@NonNull Collection<?> c) {
-		if(table == null || universe == null || universe.length == 0) return false;
+		if(size == 0 || table == null || universe == null || universe.length == 0) return false;
 		if(!(c instanceof ESet))
 			return super.retainAll(c);
 		ESet es = (ESet)c;
-		if(es.table == null || es.universe == null || es.universe.length != universe.length || es.size == 0) {
+		if(es.table == null || es.universe == null || es.size == 0 || universe[0] != es.universe[0]) {
 			clear();
 			return true;
 		}
@@ -290,7 +296,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		if(es.universe == null || es.universe.length == 0) return false;
 		if(universe == null) universe = es.universe;
 		if(table == null) table = new int[universe.length + 31 >>> 5];
-		if(es.universe.length != universe.length) return false;
+		if(es.universe.length != universe.length || universe[0] != es.universe[0]) return false;
 		int oldSize = size;
 		size = 0;
 		for (int i = 0; i < table.length; i++) {
@@ -630,11 +636,12 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	public static ESet allOf(Enum<?>@Nullable [] universe) {
 		if(universe == null) return new ESet();
 		ESet coll = new ESet(universe, true);
+		if(universe.length == 0) return coll;
 
 		for (int i = 0; i < coll.table.length - 1; i++) {
 			coll.table[i] = -1;
 		}
-		coll.table[coll.table.length - 1] = -1 >>> -universe.length;
+		coll.table[coll.table.length - 1] = -1 >>> 32 - universe.length;
 		coll.size = universe.length;
 		return coll;
 	}
@@ -665,10 +672,12 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		if(clazz == null)
 			return new ESet();
 		ESet coll = new ESet(clazz.getEnumConstants(), true);
+		if(coll.universe.length == 0) return coll;
+
 		for (int i = 0; i < coll.table.length - 1; i++) {
 			coll.table[i] = -1;
 		}
-		coll.table[coll.table.length - 1] = -1 >>> -coll.universe.length;
+		coll.table[coll.table.length - 1] = -1 >>> 32 - coll.universe.length;
 		coll.size = coll.universe.length;
 		return coll;
 	}
