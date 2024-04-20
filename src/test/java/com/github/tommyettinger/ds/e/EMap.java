@@ -1323,6 +1323,27 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 			return res;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @param c
+		 * @throws UnsupportedOperationException {@inheritDoc}
+		 * @throws ClassCastException            {@inheritDoc}
+		 * @throws NullPointerException          {@inheritDoc}
+		 */
+		@Override
+		public boolean removeAll (@NonNull Collection<?> c) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			boolean res = super.removeAll(c);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return res;
+
+		}
+
 		@Override
 		public boolean retainAll (@NonNull Collection<?> c) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1395,6 +1416,18 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		 */
 		public void resetIterator () {
 			iter.reset();
+		}
+
+		@Override
+		public String toString () {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			String res = super.toString();
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return res;
 		}
 
 		@Override

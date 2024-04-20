@@ -976,83 +976,83 @@ public class EMapTest extends TestCase {
         assertEquals("Wrong length", 1, array.length); //$NON-NLS-1$
         assertEquals("Wrong key", 1, array[0]); //$NON-NLS-1$
 
-//        enumColorMap = new EMap<Double>(Color.class);
-//        enumColorMap.put(Color.Red, 1);
-//        enumColorMap.put(Color.Blue, null);
-//        collection = enumColorMap.values();
-//
-//        assertEquals("Wrong size", 2, collection.size()); //$NON-NLS-1$
-//        assertFalse("Returned true when the object can not be removed", //$NON-NLS-1$
-//                collection.remove(new Integer("10"))); //$NON-NLS-1$
-//
-//        Iterator iter = enumColorMap.values().iterator();
-//        Object value = iter.next();
-//        assertTrue("Returned false for contained object", collection //$NON-NLS-1$
-//                .contains(value));
-//        value = iter.next();
-//        assertTrue("Returned false for contained object", collection //$NON-NLS-1$
-//                .contains(value));
-//
-//        enumColorMap.put(Color.Green, 1);
-//        enumColorMap.remove(Color.Blue);
-//        assertFalse("Returned true for uncontained object", collection //$NON-NLS-1$
-//                .contains(value));
-//        iter.remove();
-//        try {
-//            iter.remove();
-//            fail("Should throw IllegalStateException"); //$NON-NLS-1$
-//        } catch (IllegalStateException e) {
-//            // Expected
-//        }
-//        assertFalse("Returned true for uncontained object", collection //$NON-NLS-1$
-//                .contains(value));
-//
-//        iter = enumColorMap.values().iterator();
-//        value = iter.next();
-//        assertTrue("Returned false for contained object", collection //$NON-NLS-1$
-//                .contains(value));
-//        enumColorMap.put(Color.Green, 3);
-//        assertTrue("Returned false for contained object", collection //$NON-NLS-1$
-//                .contains(value));
-//        assertTrue("Returned false for contained object", collection //$NON-NLS-1$
-//                .remove(new Integer("1"))); //$NON-NLS-1$
-//        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
-//        collection.clear();
-//        assertEquals("Wrong size", 0, collection.size()); //$NON-NLS-1$
-//
-//        enumColorMap = new EMap<Double>(Color.class);
-//        Integer integer1 = new Integer(1);
-//        enumColorMap.put(Color.Green, integer1);
-//        enumColorMap.put(Color.Blue, null);
-//        collection = enumColorMap.values();
-//        iter = enumColorMap.values().iterator();
-//        try {
-//            iter.remove();
-//            fail("Should throw IllegalStateException"); //$NON-NLS-1$
-//        } catch (IllegalStateException e) {
-//            // Expected
-//        }
-//        value = iter.next();
-//        assertEquals("Wrong value", integer1, value); //$NON-NLS-1$
-//        assertSame("Wrong value", integer1, value); //$NON-NLS-1$
-//        assertFalse("Returned true for unequal object", iter.equals(value)); //$NON-NLS-1$
-//        iter.remove();
-//        assertFalse("Returned true for unequal object", iter.equals(value)); //$NON-NLS-1$
-//        try {
-//            iter.remove();
-//            fail("Should throw IllegalStateException"); //$NON-NLS-1$
-//        } catch (IllegalStateException e) {
-//            // Expected
-//        }
-//        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
-//        value = iter.next();
-//        assertFalse("Returned true for unequal object", iter.equals(value)); //$NON-NLS-1$
-//        iter.remove();
-//        try {
-//            iter.next();
-//            fail("Should throw NoSuchElementException"); //$NON-NLS-1$
-//        } catch (NoSuchElementException e) {
-//            // Expected
-//        }
+        enumColorMap = new EMap<Double>(Color.class);
+        enumColorMap.put(Color.Red, 1);
+        enumColorMap.put(Color.Blue, null);
+        collection = enumColorMap.values();
+
+        assertEquals("Wrong size", 2, collection.size()); //$NON-NLS-1$
+        assertFalse("Returned true when the object can not be removed", //$NON-NLS-1$
+                collection.remove(new Integer("10"))); //$NON-NLS-1$
+
+        Iterator iter = enumColorMap.values().iterator();
+        Object value = iter.next();
+        assertTrue("Returned false for contained object", collection //$NON-NLS-1$
+                .contains(value));
+        value = iter.next();
+        assertTrue("Returned false for contained object", collection //$NON-NLS-1$
+                .contains(value));
+
+        enumColorMap.put(Color.Green, 1);
+        enumColorMap.remove(Color.Blue);
+        assertFalse("Returned true for uncontained object", collection //$NON-NLS-1$
+                .contains(value));
+        iter.remove();
+        try {
+            iter.remove();
+            fail("Should throw IllegalStateException"); //$NON-NLS-1$
+        } catch (IllegalStateException e) {
+            // Expected
+        }
+        assertFalse("Returned true for uncontained object", collection //$NON-NLS-1$
+                .contains(value));
+
+        iter = enumColorMap.values().iterator();
+        value = iter.next();
+        assertTrue("Returned false for contained object", collection //$NON-NLS-1$
+                .contains(value));
+        enumColorMap.put(Color.Green, 3);
+        assertTrue("Returned false for contained object", collection //$NON-NLS-1$
+                .contains(value));
+        assertTrue("Returned false for contained object", collection //$NON-NLS-1$
+                .remove(new Integer("1"))); //$NON-NLS-1$
+        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
+        collection.clear();
+        assertEquals("Wrong size", 0, collection.size()); //$NON-NLS-1$
+
+        enumColorMap = new EMap<Double>(Color.class);
+        Integer integer1 = new Integer(1);
+        enumColorMap.put(Color.Green, integer1);
+        enumColorMap.put(Color.Blue, null);
+        collection = enumColorMap.values();
+        iter = enumColorMap.values().iterator();
+        try {
+            iter.remove();
+            fail("Should throw IllegalStateException"); //$NON-NLS-1$
+        } catch (IllegalStateException e) {
+            // Expected
+        }
+        value = iter.next();
+        assertEquals("Wrong value", integer1, value); //$NON-NLS-1$
+        assertSame("Wrong value", integer1, value); //$NON-NLS-1$
+        assertFalse("Returned true for unequal object", iter.equals(value)); //$NON-NLS-1$
+        iter.remove();
+        assertFalse("Returned true for unequal object", iter.equals(value)); //$NON-NLS-1$
+        try {
+            iter.remove();
+            fail("Should throw IllegalStateException"); //$NON-NLS-1$
+        } catch (IllegalStateException e) {
+            // Expected
+        }
+        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
+        value = iter.next();
+        assertFalse("Returned true for unequal object", iter.equals(value)); //$NON-NLS-1$
+        iter.remove();
+        try {
+            iter.next();
+            fail("Should throw NoSuchElementException"); //$NON-NLS-1$
+        } catch (NoSuchElementException e) {
+            // Expected
+        }
     }
 }
