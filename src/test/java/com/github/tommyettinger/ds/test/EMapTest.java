@@ -436,45 +436,45 @@ public class EMapTest extends TestCase {
         set.clear();
         assertEquals("Wrong size", 0, set.size()); //$NON-NLS-1$
 
-//        enumSizeMap = new EMap(Size.class);
-//        enumSizeMap.put(Size.Middle, 1);
-//        enumSizeMap.put(Size.Big, null);
-//        set = enumSizeMap.entrySet();
-//        iter = set.iterator();
-//        mockEntry = new MockEntry(Size.Middle, 1);
-//
-//        assertFalse("Wrong result", entry.equals(mockEntry)); //$NON-NLS-1$
-//        try {
-//            iter.remove();
-//            fail("Should throw IllegalStateException"); //$NON-NLS-1$
-//        } catch (IllegalStateException e) {
-//            // Expected
-//        }
-//        entry = (Map.Entry) iter.next();
-//        assertEquals("Wrong key", Size.Middle, entry.getKey()); //$NON-NLS-1$
-//        assertTrue("Should return true", entry.equals(mockEntry)); //$NON-NLS-1$
-//        assertEquals("Should be equal", mockEntry.hashCode(), entry.hashCode()); //$NON-NLS-1$
-//        mockEntry = new MockEntry(Size.Big, 1);
-//        assertFalse("Wrong result", entry.equals(mockEntry)); //$NON-NLS-1$
-//
-//        entry = (Map.Entry) iter.next();
-//        assertFalse("Wrong result", entry.equals(mockEntry)); //$NON-NLS-1$
-//        assertEquals("Wrong key", Size.Big, entry.getKey()); //$NON-NLS-1$
-//        iter.remove();
-//        assertFalse("Wrong result", entry.equals(mockEntry)); //$NON-NLS-1$
-//        assertEquals("Wrong size", 1, set.size()); //$NON-NLS-1$
-//        try {
-//            iter.remove();
-//            fail("Should throw IllegalStateException"); //$NON-NLS-1$
-//        } catch (IllegalStateException e) {
-//            // Expected
-//        }
-//        try {
-//            iter.next();
-//            fail("Should throw NoSuchElementException"); //$NON-NLS-1$
-//        } catch (NoSuchElementException e) {
-//            // Expected
-//        }
+        enumSizeMap = new EMap(Size.class);
+        enumSizeMap.put(Size.Middle, 1);
+        enumSizeMap.put(Size.Big, null);
+        set = enumSizeMap.entrySet();
+        iter = set.iterator();
+        mockEntry = new MockEntry(Size.Middle, 1);
+
+        assertFalse("Wrong result", entry.equals(mockEntry)); //$NON-NLS-1$
+        try {
+            iter.remove();
+            fail("Should throw IllegalStateException"); //$NON-NLS-1$
+        } catch (IllegalStateException e) {
+            // Expected
+        }
+        entry = (Map.Entry) iter.next();
+        assertEquals("Wrong key", Size.Middle, entry.getKey()); //$NON-NLS-1$
+        assertTrue("Should return true", entry.equals(mockEntry)); //$NON-NLS-1$
+        assertEquals("Should be equal", mockEntry.hashCode(), entry.hashCode()); //$NON-NLS-1$
+        mockEntry = new MockEntry(Size.Big, 1);
+        assertFalse("Wrong result", entry.equals(mockEntry)); //$NON-NLS-1$
+
+        entry = (Map.Entry) iter.next();
+        assertFalse("Wrong result", entry.equals(mockEntry)); //$NON-NLS-1$
+        assertEquals("Wrong key", Size.Big, entry.getKey()); //$NON-NLS-1$
+        iter.remove();
+        assertFalse("Wrong result", entry.equals(mockEntry)); //$NON-NLS-1$
+        assertEquals("Wrong size", 1, set.size()); //$NON-NLS-1$
+        try {
+            iter.remove();
+            fail("Should throw IllegalStateException"); //$NON-NLS-1$
+        } catch (IllegalStateException e) {
+            // Expected
+        }
+        try {
+            iter.next();
+            fail("Should throw NoSuchElementException"); //$NON-NLS-1$
+        } catch (NoSuchElementException e) {
+            // Expected
+        }
     }
 
     /**

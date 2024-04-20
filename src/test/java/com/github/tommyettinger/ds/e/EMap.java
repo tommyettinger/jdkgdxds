@@ -909,9 +909,7 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 
 		@Override
 		public int hashCode () {
-			int result = key != null ? key.hashCode() : 0;
-			result = 31 * result + (value != null ? value.hashCode() : 0);
-			return result;
+			return (key != null ? key.hashCode() : 0) ^ (value != null ? value.hashCode() : 0);
 		}
 	}
 
