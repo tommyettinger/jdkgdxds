@@ -1291,6 +1291,42 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		}
 
 		@Override
+		public boolean contains (Object o) {
+			return iter.map.containsValue(o);
+		}
+
+		@Override
+		public final boolean equals (Object o) {
+			if (this == o)
+				return true;
+			if (!(o instanceof Collection))
+				return false;
+
+			Collection<?> values = (Collection<?>)o;
+			if(size() != values.size()) return false;
+
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			boolean res = true;
+			for (Object obj : values) {
+				if (!iter.hasNext) {
+					res = false;
+					break;
+				}
+				Object mine = iter.next();
+				if (!Objects.equals(mine, obj)) {
+					res = false;
+					break;
+				}
+			}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return res;
+		}
+
+		@Override
 		public int hashCode () {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
@@ -1468,6 +1504,18 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		@Override
 		public int size () {
 			return iter.map.size;
+		}
+
+		@Override
+		public boolean equals (Object other) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			boolean res = super.equals(other);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return res;
 		}
 
 		@Override

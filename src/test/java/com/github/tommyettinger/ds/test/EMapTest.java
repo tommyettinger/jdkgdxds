@@ -759,72 +759,72 @@ public class EMapTest extends TestCase {
                 new Double(4)));
     }
 
-//    /**
-//     * @tests java.util.EMap#putAll(Map)
-//     */
-//    @SuppressWarnings({ "unchecked", "boxing" })
-//    public void test_putAllLjava_util_Map() {
-//        EMap enumColorMap = new EMap<Double>(Color.class);
-//        enumColorMap.put(Color.Green, 2);
-//
-//        EMap enumSizeMap = new EMap(Size.class);
-//        enumColorMap.putAll(enumSizeMap);
-//
-//        enumSizeMap.put(Size.Big, 1);
-//        try {
-//            enumColorMap.putAll(enumSizeMap);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//
-//        EMap enumColorMap1 = new EMap<Double>(Color.class);
-//        enumColorMap1.put(Color.Blue, 3);
-//        enumColorMap.putAll(enumColorMap1);
-//        assertEquals("Get returned incorrect value for given key", 3, //$NON-NLS-1$
-//                enumColorMap.get(Color.Blue));
-//        assertEquals("Wrong Size", 2, enumColorMap.size()); //$NON-NLS-1$
-//
-//        enumColorMap = new EMap<Double>(Color.class);
-//
-//        HashMap hashColorMap = null;
-//        try {
-//            enumColorMap.putAll(hashColorMap);
-//            fail("Expected NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException e) {
-//            // Expected
-//        }
-//
-//        hashColorMap = new HashMap();
-//        enumColorMap.putAll(hashColorMap);
-//
-//        hashColorMap.put(Color.Green, 2);
-//        enumColorMap.putAll(hashColorMap);
-//        assertEquals("Get returned incorrect value for given key", 2, //$NON-NLS-1$
-//                enumColorMap.get(Color.Green));
-//        assertNull("Get returned non-null for non mapped key", enumColorMap //$NON-NLS-1$
-//                .get(Color.Red));
-//        hashColorMap.put(Color.Red, new Integer(1));
-//        enumColorMap.putAll(hashColorMap);
-//        assertEquals("Get returned incorrect value for given key", new Integer(//$NON-NLS-1$
-//                2), enumColorMap.get(Color.Green));
-//        hashColorMap.put(Size.Big, 3);
-//        try {
-//            enumColorMap.putAll(hashColorMap);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//
-//        hashColorMap = new HashMap();
-//        hashColorMap.put(new Integer(1), 1);
-//        try {
-//            enumColorMap.putAll(hashColorMap);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//    }
+    /**
+     * @tests java.util.EMap#putAll(Map)
+     */
+    @SuppressWarnings({ "unchecked", "boxing" })
+    public void test_putAllLjava_util_Map() {
+        EMap enumColorMap = new EMap<Double>(Color.class);
+        enumColorMap.put(Color.Green, 2);
+
+        EMap enumSizeMap = new EMap(Size.class);
+        enumColorMap.putAll(enumSizeMap);
+
+        enumSizeMap.put(Size.Big, 1);
+        try {
+            enumColorMap.putAll(enumSizeMap);
+            fail("Expected ClassCastException"); //$NON-NLS-1$
+        } catch (ClassCastException e) {
+            // Expected
+        }
+
+        EMap enumColorMap1 = new EMap<Double>(Color.class);
+        enumColorMap1.put(Color.Blue, 3);
+        enumColorMap.putAll(enumColorMap1);
+        assertEquals("Get returned incorrect value for given key", 3, //$NON-NLS-1$
+                enumColorMap.get(Color.Blue));
+        assertEquals("Wrong Size", 2, enumColorMap.size()); //$NON-NLS-1$
+
+        enumColorMap = new EMap<Double>(Color.class);
+
+        HashMap hashColorMap = null;
+        try {
+            enumColorMap.putAll(hashColorMap);
+            fail("Expected NullPointerException"); //$NON-NLS-1$
+        } catch (NullPointerException e) {
+            // Expected
+        }
+
+        hashColorMap = new HashMap();
+        enumColorMap.putAll(hashColorMap);
+
+        hashColorMap.put(Color.Green, 2);
+        enumColorMap.putAll(hashColorMap);
+        assertEquals("Get returned incorrect value for given key", 2, //$NON-NLS-1$
+                enumColorMap.get(Color.Green));
+        assertNull("Get returned non-null for non mapped key", enumColorMap //$NON-NLS-1$
+                .get(Color.Red));
+        hashColorMap.put(Color.Red, new Integer(1));
+        enumColorMap.putAll(hashColorMap);
+        assertEquals("Get returned incorrect value for given key", new Integer(//$NON-NLS-1$
+                2), enumColorMap.get(Color.Green));
+        hashColorMap.put(Size.Big, 3);
+        try {
+            enumColorMap.putAll(hashColorMap);
+            fail("Expected ClassCastException"); //$NON-NLS-1$
+        } catch (ClassCastException e) {
+            // Expected
+        }
+
+        hashColorMap = new HashMap();
+        hashColorMap.put(new Integer(1), 1);
+        try {
+            enumColorMap.putAll(hashColorMap);
+            fail("Expected ClassCastException"); //$NON-NLS-1$
+        } catch (ClassCastException e) {
+            // Expected
+        }
+    }
 
     @SuppressWarnings({ "unchecked", "boxing" })
     public void test_removeLjava_lang_Object() {
@@ -864,67 +864,67 @@ public class EMapTest extends TestCase {
                 .get(Color.Green));
     }
 
-//    @SuppressWarnings({ "unchecked", "boxing" })
-//    public void test_size() {
-//        EMap enumSizeMap = new EMap(Size.class);
-//        assertEquals("Wrong size", 0, enumSizeMap.size()); //$NON-NLS-1$
-//        enumSizeMap.put(Size.Small, 1);
-//        assertEquals("Wrong size", 1, enumSizeMap.size()); //$NON-NLS-1$
-//        enumSizeMap.put(Size.Small, 0);
-//        assertEquals("Wrong size", 1, enumSizeMap.size()); //$NON-NLS-1$
-//        try {
-//            enumSizeMap.put(Color.Red, 2);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//        assertEquals("Wrong size", 1, enumSizeMap.size()); //$NON-NLS-1$
-//
-//        enumSizeMap.put(Size.Middle, null);
-//        assertEquals("Wrong size", 2, enumSizeMap.size()); //$NON-NLS-1$
-//        enumSizeMap.remove(Size.Big);
-//        assertEquals("Wrong size", 2, enumSizeMap.size()); //$NON-NLS-1$
-//        enumSizeMap.remove(Size.Middle);
-//        assertEquals("Wrong size", 1, enumSizeMap.size()); //$NON-NLS-1$
-//        enumSizeMap.remove(Color.Green);
-//        assertEquals("Wrong size", 1, enumSizeMap.size()); //$NON-NLS-1$
-//
-//        EMap enumColorMap = new EMap<Double>(Color.class);
-//        enumColorMap.put(Color.Green, 2);
-//        assertEquals("Wrong size", 1, enumColorMap.size()); //$NON-NLS-1$
-//        enumColorMap.remove(Color.Green);
-//        assertEquals("Wrong size", 0, enumColorMap.size()); //$NON-NLS-1$
-//
-//        EMap enumEmptyMap = new EMap<Double>(Empty.class);
-//        assertEquals("Wrong size", 0, enumEmptyMap.size()); //$NON-NLS-1$
-//    }
-//
-//    /**
-//     * @tests java.util.EMap#values()
-//     */
-//    @SuppressWarnings( { "unchecked", "boxing" })
-//    public void test_values() {
-//        EMap enumColorMap = new EMap<Double>(Color.class);
-//        enumColorMap.put(Color.Red, 1);
-//        enumColorMap.put(Color.Blue, null);
-//        Collection collection = enumColorMap.values();
-//
-//        Collection collection1 = enumColorMap.values();
-//        assertSame("Should be same", collection1, collection); //$NON-NLS-1$
-//        try {
-//            collection.add(new Integer(1));
-//            fail("Should throw UnsupportedOperationException"); //$NON-NLS-1$
-//        } catch (UnsupportedOperationException e) {
-//            // Expected
-//        }
-//
-//        assertTrue("Returned false for contained object", collection//$NON-NLS-1$
-//                .contains(1));
-//        assertTrue("Returned false for contained object", collection//$NON-NLS-1$
-//                .contains(null));
-//        assertFalse("Returned true for uncontained object", collection //$NON-NLS-1$
-//                .contains(2));
-//
+    @SuppressWarnings({ "unchecked", "boxing" })
+    public void test_size() {
+        EMap enumSizeMap = new EMap(Size.class);
+        assertEquals("Wrong size", 0, enumSizeMap.size()); //$NON-NLS-1$
+        enumSizeMap.put(Size.Small, 1);
+        assertEquals("Wrong size", 1, enumSizeMap.size()); //$NON-NLS-1$
+        enumSizeMap.put(Size.Small, 0);
+        assertEquals("Wrong size", 1, enumSizeMap.size()); //$NON-NLS-1$
+        try {
+            enumSizeMap.put(Color.Red, 2);
+            fail("Expected ClassCastException"); //$NON-NLS-1$
+        } catch (ClassCastException e) {
+            // Expected
+        }
+        assertEquals("Wrong size", 1, enumSizeMap.size()); //$NON-NLS-1$
+
+        enumSizeMap.put(Size.Middle, null);
+        assertEquals("Wrong size", 2, enumSizeMap.size()); //$NON-NLS-1$
+        enumSizeMap.remove(Size.Big);
+        assertEquals("Wrong size", 2, enumSizeMap.size()); //$NON-NLS-1$
+        enumSizeMap.remove(Size.Middle);
+        assertEquals("Wrong size", 1, enumSizeMap.size()); //$NON-NLS-1$
+        enumSizeMap.remove(Color.Green);
+        assertEquals("Wrong size", 1, enumSizeMap.size()); //$NON-NLS-1$
+
+        EMap enumColorMap = new EMap<Double>(Color.class);
+        enumColorMap.put(Color.Green, 2);
+        assertEquals("Wrong size", 1, enumColorMap.size()); //$NON-NLS-1$
+        enumColorMap.remove(Color.Green);
+        assertEquals("Wrong size", 0, enumColorMap.size()); //$NON-NLS-1$
+
+        EMap enumEmptyMap = new EMap<Double>(Empty.class);
+        assertEquals("Wrong size", 0, enumEmptyMap.size()); //$NON-NLS-1$
+    }
+
+    /**
+     * @tests java.util.EMap#values()
+     */
+    @SuppressWarnings( { "unchecked", "boxing" })
+    public void test_values() {
+        EMap enumColorMap = new EMap<Double>(Color.class);
+        enumColorMap.put(Color.Red, 1);
+        enumColorMap.put(Color.Blue, null);
+        Collection collection = enumColorMap.values();
+
+        Collection collection1 = new EMap.Values(enumColorMap);
+        assertEquals("Should be equal", collection1, collection); //$NON-NLS-1$
+        try {
+            collection.add(new Integer(1));
+            fail("Should throw UnsupportedOperationException"); //$NON-NLS-1$
+        } catch (UnsupportedOperationException e) {
+            // Expected
+        }
+
+        assertTrue("Returned false for contained object", collection//$NON-NLS-1$
+                .contains(1));
+        assertTrue("Returned false for contained object", collection//$NON-NLS-1$
+                .contains(null));
+        assertFalse("Returned true for uncontained object", collection //$NON-NLS-1$
+                .contains(2));
+
 //        assertTrue("Returned false when the object can be removed", collection //$NON-NLS-1$
 //                .remove(null));
 //        assertFalse("Returned true for uncontained object", collection //$NON-NLS-1$
@@ -1053,5 +1053,5 @@ public class EMapTest extends TestCase {
 //        } catch (NoSuchElementException e) {
 //            // Expected
 //        }
-//    }
+    }
 }
