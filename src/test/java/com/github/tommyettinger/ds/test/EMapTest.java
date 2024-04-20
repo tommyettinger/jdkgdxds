@@ -717,48 +717,48 @@ public class EMapTest extends TestCase {
                 enumColorMap.get(Color.Green));
     }
 
-//    @SuppressWarnings( { "unchecked", "boxing" })
-//    public void test_putLjava_lang_ObjectLjava_lang_Object() {
-//        EMap enumSizeMap = new EMap(Size.class);
-//        try {
-//            enumSizeMap.put(Color.Red, 2);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//        assertNull("Return non-null for non mapped key", enumSizeMap.put( //$NON-NLS-1$
-//                Size.Small, 1));
-//
-//        EMap enumColorMap = new EMap<Double>(Color.class);
-//        try {
-//            enumColorMap.put(Size.Big, 2);
-//            fail("Expected ClassCastException"); //$NON-NLS-1$
-//        } catch (ClassCastException e) {
-//            // Expected
-//        }
-//        try {
-//            enumColorMap.put(null, 2);
-//            fail("Expected NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException e) {
-//            // Expected
-//        }
-//        assertNull("Return non-null for non mapped key", enumColorMap.put( //$NON-NLS-1$
-//                Color.Green, 2));
-//        assertEquals("Return wrong value", 2, enumColorMap.put(Color.Green, //$NON-NLS-1$
-//                new Double(4)));
-//        assertEquals("Return wrong value", new Double(4), enumColorMap.put( //$NON-NLS-1$
-//                Color.Green, new Integer("3")));//$NON-NLS-1$
-//        assertEquals("Return wrong value", new Integer("3"), enumColorMap.put( //$NON-NLS-1$//$NON-NLS-2$
-//                Color.Green, null));
-//        Float f = new Float("3.4");//$NON-NLS-1$
-//        assertNull("Return non-null for non mapped key", enumColorMap.put( //$NON-NLS-1$
-//                Color.Green, f));
-//        assertNull("Return non-null for non mapped key", enumColorMap.put( //$NON-NLS-1$
-//                Color.Blue, 2));
-//        assertEquals("Return wrong value", 2, enumColorMap.put(Color.Blue, //$NON-NLS-1$
-//                new Double(4)));
-//    }
-//
+    @SuppressWarnings( { "unchecked", "boxing" })
+    public void test_putLjava_lang_ObjectLjava_lang_Object() {
+        EMap enumSizeMap = new EMap(Size.class);
+        try {
+            enumSizeMap.put(Color.Red, 2);
+            fail("Expected ClassCastException"); //$NON-NLS-1$
+        } catch (ClassCastException e) {
+            // Expected
+        }
+        assertNull("Return non-null for non mapped key", enumSizeMap.put( //$NON-NLS-1$
+                Size.Small, 1));
+
+        EMap enumColorMap = new EMap<Double>(Color.class);
+        try {
+            enumColorMap.put(Size.Big, 2);
+            fail("Expected ClassCastException"); //$NON-NLS-1$
+        } catch (ClassCastException e) {
+            // Expected
+        }
+        try {
+            enumColorMap.put(null, 2);
+            fail("Expected NullPointerException"); //$NON-NLS-1$
+        } catch (NullPointerException e) {
+            // Expected
+        }
+        assertNull("Return non-null for non mapped key", enumColorMap.put( //$NON-NLS-1$
+                Color.Green, 2));
+        assertEquals("Return wrong value", 2, enumColorMap.put(Color.Green, //$NON-NLS-1$
+                new Double(4)));
+        assertEquals("Return wrong value", new Double(4), enumColorMap.put( //$NON-NLS-1$
+                Color.Green, new Integer("3")));//$NON-NLS-1$
+        assertEquals("Return wrong value", new Integer("3"), enumColorMap.put( //$NON-NLS-1$//$NON-NLS-2$
+                Color.Green, null));
+        Float f = new Float("3.4");//$NON-NLS-1$
+        assertNull("Return non-null for non mapped key", enumColorMap.put( //$NON-NLS-1$
+                Color.Green, f));
+        assertNull("Return non-null for non mapped key", enumColorMap.put( //$NON-NLS-1$
+                Color.Blue, 2));
+        assertEquals("Return wrong value", 2, enumColorMap.put(Color.Blue, //$NON-NLS-1$
+                new Double(4)));
+    }
+
 //    /**
 //     * @tests java.util.EMap#putAll(Map)
 //     */

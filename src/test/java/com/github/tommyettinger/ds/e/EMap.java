@@ -215,7 +215,8 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		if(universe == null) universe = key.getDeclaringClass().getEnumConstants();
 		if(valueTable == null) valueTable = new Object[universe.length];
 		int i = key.ordinal();
-		if(i >= valueTable.length) return defaultValue;
+		if(i >= valueTable.length || universe[i] != key)
+			throw new ClassCastException("Incompatible key for the EMap's universe.");
 		Object oldValue = valueTable[i];
 		valueTable[i] = hold(value);
 		if (oldValue != null) {
@@ -240,7 +241,8 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		if(universe == null) universe = key.getDeclaringClass().getEnumConstants();
 		if(valueTable == null) valueTable = new Object[universe.length];
 		int i = key.ordinal();
-		if(i >= valueTable.length) return defaultValue;
+		if(i >= valueTable.length || universe[i] != key)
+			throw new ClassCastException("Incompatible key for the EMap's universe.");
 		Object oldValue = valueTable[i];
 		valueTable[i] = hold(value);
 		if (oldValue != null) {
@@ -270,6 +272,8 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		Object[] valueTable = map.valueTable;
 		Object value;
 		for (int i = 0; i < n; i++) {
+			if(universe[i] != map.universe[i])
+				throw new ClassCastException("Incompatible key for the EMap's universe.");
 			value = valueTable[i];
 			if (value != null) {
 				if(this.valueTable[i] == null) ++size;
