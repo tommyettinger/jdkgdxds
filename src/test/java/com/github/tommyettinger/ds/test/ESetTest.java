@@ -152,8 +152,12 @@ public class ESetTest extends TestCase {
         set.add(EnumFoo.a);
         set.add(EnumFoo.b);
 
-        if(set.add(null))
-            throw new IllegalStateException("WHOOPS! Adding null shouldn't modify an ESet!");
+        try {
+            set.add(null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException ignored) {
+            // expected
+        }
 
         set = new ESet(EnumFoo.values(), true);
         boolean result = set.add(EnumFoo.a);
@@ -762,227 +766,227 @@ public class ESetTest extends TestCase {
         rawEnumCollection.add(HugeEnumWithInnerClass.a);
     }
 
-//    /**
-//     * @tests java.util.ESet#copyOf(java.util.ESet)
-//     */
-//    @SuppressWarnings("unchecked")
-//    public void test_CopyOf_LESet() {
-//        ESet<EnumWithInnerClass> enumSet = ESet
-//                .noneOf(EnumWithInnerClass.class);
-//        enumSet.add(EnumWithInnerClass.a);
-//        enumSet.add(EnumWithInnerClass.f);
-//        ESet<EnumWithInnerClass> copyOfE = ESet.copyOf(enumSet);
-//        assertEquals("Size of enumSet and copyOfE should be equal", //$NON-NLS-1$
-//                enumSet.size(), copyOfE.size());
-//
-//        assertTrue("EnumWithSubclass.a should be contained in copyOfE", //$NON-NLS-1$
-//                copyOfE.contains(EnumWithInnerClass.a));
-//        assertTrue("EnumWithSubclass.f should be contained in copyOfE", //$NON-NLS-1$
-//                copyOfE.contains(EnumWithInnerClass.f));
-//
-//        Object[] enumValue = copyOfE.toArray();
-//        assertSame("enumValue[0] should be identical with EnumWithSubclass.a", //$NON-NLS-1$
-//                enumValue[0], EnumWithInnerClass.a);
-//        assertSame("enumValue[1] should be identical with EnumWithSubclass.f", //$NON-NLS-1$
-//                enumValue[1], EnumWithInnerClass.f);
-//
-//        try {
-//            ESet.copyOf((ESet) null);
-//            fail("Should throw NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        // test enum type with more than 64 elements
-//        ESet<HugeEnumWithInnerClass> hugeESet = ESet
-//            .noneOf(HugeEnumWithInnerClass.class);
-//        hugeESet.add(HugeEnumWithInnerClass.a);
-//        hugeESet.add(HugeEnumWithInnerClass.f);
-//        ESet<HugeEnumWithInnerClass> copyOfHugeEnum = ESet.copyOf(hugeESet);
-//        assertEquals(enumSet.size(), copyOfE.size());
-//
-//        assertTrue(copyOfHugeEnum.contains(HugeEnumWithInnerClass.a));
-//        assertTrue(copyOfHugeEnum.contains(HugeEnumWithInnerClass.f));
-//
-//        Object[] hugeEnumValue = copyOfHugeEnum.toArray();
-//        assertSame(hugeEnumValue[0], HugeEnumWithInnerClass.a);
-//        assertSame(hugeEnumValue[1], HugeEnumWithInnerClass.f);
-//    }
-//
-//    /**
-//     * @tests java.util.ESet#removeAll(Collection)
-//     */
-//    @SuppressWarnings("unchecked")
-//    public void test_removeAll_LCollection() {
-//        Set<Enum<?>> set = ESet.noneOf(EnumFoo.values());
-//        try {
-//            set.removeAll(null);
-//            fail("Should throw NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException e) {
-//            // expected
-//        }
-//
-//        set = ESet.allOf(EnumFoo.class);
-//        assertEquals("Size of set should be 64:", 64, set.size()); //$NON-NLS-1$
-//
-//        try {
-//            set.removeAll(null);
-//            fail("Should throw NullPointerException"); //$NON-NLS-1$
-//        } catch (NullPointerException e) {
-//            // expected
-//        }
-//
-//        Collection<EnumFoo> collection = new ArrayList<EnumFoo>();
-//        collection.add(EnumFoo.a);
-//
-//        boolean result = set.removeAll(collection);
-//        assertTrue("Should return true", result); //$NON-NLS-1$
-//        assertEquals("Size of set should be 63", 63, set.size()); //$NON-NLS-1$
-//
-//        collection = new ArrayList();
-//        result = set.removeAll(collection);
-//        assertFalse("Should return false", result); //$NON-NLS-1$
-//
-//        Set<EmptyEnum> emptySet = ESet.noneOf(EmptyEnum.class);
-//        result = set.removeAll(emptySet);
-//        assertFalse("Should return false", result); //$NON-NLS-1$
-//
-//        ESet<EnumFoo> emptyFooSet = ESet.noneOf(EnumFoo.class);
-//        result = set.removeAll(emptyFooSet);
-//        assertFalse("Should return false", result); //$NON-NLS-1$
-//
-//        emptyFooSet.add(EnumFoo.a);
-//        result = set.removeAll(emptyFooSet);
-//        assertFalse("Should return false", result); //$NON-NLS-1$
-//
-//        Set<Enum<?>> setWithSubclass = ESet
-//                .noneOf(EnumWithInnerClass.class);
-//        result = set.removeAll(setWithSubclass);
-//        assertFalse("Should return false", result); //$NON-NLS-1$
-//
-//        setWithSubclass.add(EnumWithInnerClass.a);
-//        result = set.removeAll(setWithSubclass);
-//        assertFalse("Should return false", result); //$NON-NLS-1$
-//
-//        Set<EnumFoo> anotherSet = ESet.noneOf(EnumFoo.class);
-//        anotherSet.add(EnumFoo.a);
-//
-//        set = ESet.allOf(EnumFoo.class);
-//        result = set.removeAll(anotherSet);
-//        assertTrue("Should return true", result); //$NON-NLS-1$
-//        assertEquals("Size of set should be 63:", 63, set.size()); //$NON-NLS-1$
-//
-//        Set<Enum<?>> setWithInnerClass = ESet
-//                .noneOf(EnumWithInnerClass.class);
-//        setWithInnerClass.add(EnumWithInnerClass.a);
-//        setWithInnerClass.add(EnumWithInnerClass.b);
-//
-//        Set<Enum<?>> anotherSetWithInnerClass = ESet
-//                .noneOf(EnumWithInnerClass.class);
-//        anotherSetWithInnerClass.add(EnumWithInnerClass.c);
-//        anotherSetWithInnerClass.add(EnumWithInnerClass.d);
-//        result = anotherSetWithInnerClass.removeAll(setWithInnerClass);
-//        assertFalse("Should return false", result); //$NON-NLS-1$
-//
-//        anotherSetWithInnerClass.add(EnumWithInnerClass.a);
-//        result = anotherSetWithInnerClass.removeAll(setWithInnerClass);
-//        assertTrue("Should return true", result); //$NON-NLS-1$
-//        assertEquals("Size of anotherSetWithInnerClass should remain 2", //$NON-NLS-1$
-//                2, anotherSetWithInnerClass.size());
-//
-//        anotherSetWithInnerClass.remove(EnumWithInnerClass.c);
-//        anotherSetWithInnerClass.remove(EnumWithInnerClass.d);
-//        result = anotherSetWithInnerClass.remove(setWithInnerClass);
-//        assertFalse("Should return false", result); //$NON-NLS-1$
-//
-//        Set rawSet = ESet.allOf(EnumWithAllInnerClass.class);
-//        result = rawSet.removeAll(ESet.allOf(EnumFoo.class));
-//        assertFalse("Should return false", result); //$NON-NLS-1$
-//
-//        setWithInnerClass = ESet.allOf(EnumWithInnerClass.class);
-//        anotherSetWithInnerClass = ESet.allOf(EnumWithInnerClass.class);
-//        setWithInnerClass.remove(EnumWithInnerClass.a);
-//        anotherSetWithInnerClass.remove(EnumWithInnerClass.f);
-//        result = setWithInnerClass.removeAll(anotherSetWithInnerClass);
-//        assertTrue("Should return true", result); //$NON-NLS-1$
-//        assertEquals("Size of setWithInnerClass should be 1", 1, setWithInnerClass.size()); //$NON-NLS-1$
-//
-//        result = setWithInnerClass.contains(EnumWithInnerClass.f);
-//        assertTrue("Should return true", result); //$NON-NLS-1$
-//
-//        // test enum type with more than 64 elements
-//        Set<Enum<?>> hugeSet = ESet.allOf(HugeEnum.values());
-//
-//        Collection<HugeEnum> hugeCollection = new ArrayList<HugeEnum>();
-//        hugeCollection.add(HugeEnum.a);
-//
-//        result = hugeSet.removeAll(hugeCollection);
-//        assertTrue(result);
-//        assertEquals(64, hugeSet.size());
-//
-//        collection = new ArrayList();
-//        result = hugeSet.removeAll(collection);
-//        assertFalse(result);
-//
-//        Set<Enum<?>> emptyHugeSet = new ESet(HugeEnum.values());
-//        result = hugeSet.removeAll(emptyHugeSet);
-//        assertFalse(result);
-//
-//        Set<HugeEnumWithInnerClass> hugeSetWithSubclass = ESet
-//                .noneOf(HugeEnumWithInnerClass.class);
-//        result = hugeSet.removeAll(hugeSetWithSubclass);
-//        assertFalse(result);
-//
-//        hugeSetWithSubclass.add(HugeEnumWithInnerClass.a);
-//        result = hugeSet.removeAll(hugeSetWithSubclass);
-//        assertFalse(result);
-//
-//        Set<Enum<?>> anotherHugeSet = new ESet(HugeEnum.values());
-//        anotherHugeSet.add(HugeEnum.a);
-//
-//        hugeSet = ESet.allOf(HugeEnum.class);
-//        result = hugeSet.removeAll(anotherHugeSet);
-//        assertTrue(result);
-//        assertEquals(63, set.size());
-//
-//        Set<HugeEnumWithInnerClass> hugeSetWithInnerClass = ESet
-//                .noneOf(HugeEnumWithInnerClass.class);
-//        hugeSetWithInnerClass.add(HugeEnumWithInnerClass.a);
-//        hugeSetWithInnerClass.add(HugeEnumWithInnerClass.b);
-//
-//        Set<HugeEnumWithInnerClass> anotherHugeSetWithInnerClass = ESet
-//                .noneOf(HugeEnumWithInnerClass.class);
-//        anotherHugeSetWithInnerClass.add(HugeEnumWithInnerClass.c);
-//        anotherHugeSetWithInnerClass.add(HugeEnumWithInnerClass.d);
-//        result = anotherHugeSetWithInnerClass.removeAll(setWithInnerClass);
-//        assertFalse("Should return false", result); //$NON-NLS-1$
-//
-//        anotherHugeSetWithInnerClass.add(HugeEnumWithInnerClass.a);
-//        result = anotherHugeSetWithInnerClass.removeAll(hugeSetWithInnerClass);
-//        assertTrue(result);
-//        assertEquals(2, anotherHugeSetWithInnerClass.size());
-//
-//        anotherHugeSetWithInnerClass.remove(HugeEnumWithInnerClass.c);
-//        anotherHugeSetWithInnerClass.remove(HugeEnumWithInnerClass.d);
-//        result = anotherHugeSetWithInnerClass.remove(hugeSetWithInnerClass);
-//        assertFalse(result);
-//
-//        rawSet = ESet.allOf(HugeEnumWithInnerClass.class);
-//        result = rawSet.removeAll(ESet.allOf(HugeEnum.class));
-//        assertFalse(result);
-//
-//        hugeSetWithInnerClass = ESet.allOf(HugeEnumWithInnerClass.class);
-//        anotherHugeSetWithInnerClass = ESet.allOf(HugeEnumWithInnerClass.class);
-//        hugeSetWithInnerClass.remove(HugeEnumWithInnerClass.a);
-//        anotherHugeSetWithInnerClass.remove(HugeEnumWithInnerClass.f);
-//        result = hugeSetWithInnerClass.removeAll(anotherHugeSetWithInnerClass);
-//        assertTrue(result);
-//        assertEquals(1, hugeSetWithInnerClass.size());
-//
-//        result = hugeSetWithInnerClass.contains(HugeEnumWithInnerClass.f);
-//        assertTrue(result);
-//    }
-//
+    /**
+     * @tests java.util.ESet#copyOf(java.util.ESet)
+     */
+    @SuppressWarnings("unchecked")
+    public void test_CopyOf_LESet() {
+        ESet enumSet = ESet
+                .noneOf(EnumWithInnerClass.class);
+        enumSet.add(EnumWithInnerClass.a);
+        enumSet.add(EnumWithInnerClass.f);
+        ESet copyOfE = ESet.copyOf(enumSet);
+        assertEquals("Size of enumSet and copyOfE should be equal", //$NON-NLS-1$
+                enumSet.size(), copyOfE.size());
+
+        assertTrue("EnumWithSubclass.a should be contained in copyOfE", //$NON-NLS-1$
+                copyOfE.contains(EnumWithInnerClass.a));
+        assertTrue("EnumWithSubclass.f should be contained in copyOfE", //$NON-NLS-1$
+                copyOfE.contains(EnumWithInnerClass.f));
+
+        Object[] enumValue = copyOfE.toArray();
+        assertSame("enumValue[0] should be identical with EnumWithSubclass.a", //$NON-NLS-1$
+                enumValue[0], EnumWithInnerClass.a);
+        assertSame("enumValue[1] should be identical with EnumWithSubclass.f", //$NON-NLS-1$
+                enumValue[1], EnumWithInnerClass.f);
+
+        try {
+            ESet.copyOf((ESet) null);
+            fail("Should throw NullPointerException"); //$NON-NLS-1$
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        // test enum type with more than 64 elements
+        ESet hugeESet = ESet
+            .noneOf(HugeEnumWithInnerClass.class);
+        hugeESet.add(HugeEnumWithInnerClass.a);
+        hugeESet.add(HugeEnumWithInnerClass.f);
+        ESet copyOfHugeEnum = ESet.copyOf(hugeESet);
+        assertEquals(enumSet.size(), copyOfE.size());
+
+        assertTrue(copyOfHugeEnum.contains(HugeEnumWithInnerClass.a));
+        assertTrue(copyOfHugeEnum.contains(HugeEnumWithInnerClass.f));
+
+        Object[] hugeEnumValue = copyOfHugeEnum.toArray();
+        assertSame(hugeEnumValue[0], HugeEnumWithInnerClass.a);
+        assertSame(hugeEnumValue[1], HugeEnumWithInnerClass.f);
+    }
+
+    /**
+     * @tests java.util.ESet#removeAll(Collection)
+     */
+    @SuppressWarnings("unchecked")
+    public void test_removeAll_LCollection() {
+        Set<Enum<?>> set = ESet.noneOf(EnumFoo.values());
+        try {
+            set.removeAll(null);
+            fail("Should throw NullPointerException"); //$NON-NLS-1$
+        } catch (NullPointerException e) {
+            // expected
+        }
+
+        set = ESet.allOf(EnumFoo.class);
+        assertEquals("Size of set should be 64:", 64, set.size()); //$NON-NLS-1$
+
+        try {
+            set.removeAll(null);
+            fail("Should throw NullPointerException"); //$NON-NLS-1$
+        } catch (NullPointerException e) {
+            // expected
+        }
+
+        Collection<EnumFoo> collection = new ArrayList<EnumFoo>();
+        collection.add(EnumFoo.a);
+
+        boolean result = set.removeAll(collection);
+        assertTrue("Should return true", result); //$NON-NLS-1$
+        assertEquals("Size of set should be 63", 63, set.size()); //$NON-NLS-1$
+
+        collection = new ArrayList();
+        result = set.removeAll(collection);
+        assertFalse("Should return false", result); //$NON-NLS-1$
+
+        ESet emptySet = ESet.noneOf(EmptyEnum.class);
+        result = set.removeAll(emptySet);
+        assertFalse("Should return false", result); //$NON-NLS-1$
+
+        ESet emptyFooSet = ESet.noneOf(EnumFoo.class);
+        result = set.removeAll(emptyFooSet);
+        assertFalse("Should return false", result); //$NON-NLS-1$
+
+        emptyFooSet.add(EnumFoo.a);
+        result = set.removeAll(emptyFooSet);
+        assertFalse("Should return false", result); //$NON-NLS-1$
+
+        Set<Enum<?>> setWithSubclass = ESet
+                .noneOf(EnumWithInnerClass.class);
+        result = set.removeAll(setWithSubclass);
+        assertFalse("Should return false", result); //$NON-NLS-1$
+
+        setWithSubclass.add(EnumWithInnerClass.a);
+        result = set.removeAll(setWithSubclass);
+        assertFalse("Should return false", result); //$NON-NLS-1$
+
+        ESet anotherSet = ESet.noneOf(EnumFoo.class);
+        anotherSet.add(EnumFoo.a);
+
+        set = ESet.allOf(EnumFoo.class);
+        result = set.removeAll(anotherSet);
+        assertTrue("Should return true", result); //$NON-NLS-1$
+        assertEquals("Size of set should be 63:", 63, set.size()); //$NON-NLS-1$
+
+        Set<Enum<?>> setWithInnerClass = ESet
+                .noneOf(EnumWithInnerClass.class);
+        setWithInnerClass.add(EnumWithInnerClass.a);
+        setWithInnerClass.add(EnumWithInnerClass.b);
+
+        Set<Enum<?>> anotherSetWithInnerClass = ESet
+                .noneOf(EnumWithInnerClass.class);
+        anotherSetWithInnerClass.add(EnumWithInnerClass.c);
+        anotherSetWithInnerClass.add(EnumWithInnerClass.d);
+        result = anotherSetWithInnerClass.removeAll(setWithInnerClass);
+        assertFalse("Should return false", result); //$NON-NLS-1$
+
+        anotherSetWithInnerClass.add(EnumWithInnerClass.a);
+        result = anotherSetWithInnerClass.removeAll(setWithInnerClass);
+        assertTrue("Should return true", result); //$NON-NLS-1$
+        assertEquals("Size of anotherSetWithInnerClass should remain 2", //$NON-NLS-1$
+                2, anotherSetWithInnerClass.size());
+
+        anotherSetWithInnerClass.remove(EnumWithInnerClass.c);
+        anotherSetWithInnerClass.remove(EnumWithInnerClass.d);
+        result = anotherSetWithInnerClass.remove(setWithInnerClass);
+        assertFalse("Should return false", result); //$NON-NLS-1$
+
+        Set rawSet = ESet.allOf(EnumWithAllInnerClass.class);
+        result = rawSet.removeAll(ESet.allOf(EnumFoo.class));
+        assertFalse("Should return false", result); //$NON-NLS-1$
+
+        setWithInnerClass = ESet.allOf(EnumWithInnerClass.class);
+        anotherSetWithInnerClass = ESet.allOf(EnumWithInnerClass.class);
+        setWithInnerClass.remove(EnumWithInnerClass.a);
+        anotherSetWithInnerClass.remove(EnumWithInnerClass.f);
+        result = setWithInnerClass.removeAll(anotherSetWithInnerClass);
+        assertTrue("Should return true", result); //$NON-NLS-1$
+        assertEquals("Size of setWithInnerClass should be 1", 1, setWithInnerClass.size()); //$NON-NLS-1$
+
+        result = setWithInnerClass.contains(EnumWithInnerClass.f);
+        assertTrue("Should return true", result); //$NON-NLS-1$
+
+        // test enum type with more than 64 elements
+        Set<Enum<?>> hugeSet = ESet.allOf(HugeEnum.values());
+
+        Collection<HugeEnum> hugeCollection = new ArrayList<HugeEnum>();
+        hugeCollection.add(HugeEnum.a);
+
+        result = hugeSet.removeAll(hugeCollection);
+        assertTrue(result);
+        assertEquals(64, hugeSet.size());
+
+        collection = new ArrayList();
+        result = hugeSet.removeAll(collection);
+        assertFalse(result);
+
+        Set<Enum<?>> emptyHugeSet = new ESet(HugeEnum.values(), true);
+        result = hugeSet.removeAll(emptyHugeSet);
+        assertFalse(result);
+
+        ESet hugeSetWithSubclass = ESet
+                .noneOf(HugeEnumWithInnerClass.class);
+        result = hugeSet.removeAll(hugeSetWithSubclass);
+        assertFalse(result);
+
+        hugeSetWithSubclass.add(HugeEnumWithInnerClass.a);
+        result = hugeSet.removeAll(hugeSetWithSubclass);
+        assertFalse(result);
+
+        Set<Enum<?>> anotherHugeSet = new ESet(HugeEnum.values(), true);
+        anotherHugeSet.add(HugeEnum.a);
+
+        hugeSet = ESet.allOf(HugeEnum.class);
+        result = hugeSet.removeAll(anotherHugeSet);
+        assertTrue(result);
+        assertEquals(63, set.size());
+
+        ESet hugeSetWithInnerClass = ESet
+                .noneOf(HugeEnumWithInnerClass.class);
+        hugeSetWithInnerClass.add(HugeEnumWithInnerClass.a);
+        hugeSetWithInnerClass.add(HugeEnumWithInnerClass.b);
+
+        ESet anotherHugeSetWithInnerClass = ESet
+                .noneOf(HugeEnumWithInnerClass.class);
+        anotherHugeSetWithInnerClass.add(HugeEnumWithInnerClass.c);
+        anotherHugeSetWithInnerClass.add(HugeEnumWithInnerClass.d);
+        result = anotherHugeSetWithInnerClass.removeAll(setWithInnerClass);
+        assertFalse("Should return false", result); //$NON-NLS-1$
+
+        anotherHugeSetWithInnerClass.add(HugeEnumWithInnerClass.a);
+        result = anotherHugeSetWithInnerClass.removeAll(hugeSetWithInnerClass);
+        assertTrue(result);
+        assertEquals(2, anotherHugeSetWithInnerClass.size());
+
+        anotherHugeSetWithInnerClass.remove(HugeEnumWithInnerClass.c);
+        anotherHugeSetWithInnerClass.remove(HugeEnumWithInnerClass.d);
+        result = anotherHugeSetWithInnerClass.remove(hugeSetWithInnerClass);
+        assertFalse(result);
+
+        rawSet = ESet.allOf(HugeEnumWithInnerClass.class);
+        result = rawSet.removeAll(ESet.allOf(HugeEnum.class));
+        assertFalse(result);
+
+        hugeSetWithInnerClass = ESet.allOf(HugeEnumWithInnerClass.class);
+        anotherHugeSetWithInnerClass = ESet.allOf(HugeEnumWithInnerClass.class);
+        hugeSetWithInnerClass.remove(HugeEnumWithInnerClass.a);
+        anotherHugeSetWithInnerClass.remove(HugeEnumWithInnerClass.f);
+        result = hugeSetWithInnerClass.removeAll(anotherHugeSetWithInnerClass);
+        assertTrue(result);
+        assertEquals(1, hugeSetWithInnerClass.size());
+
+        result = hugeSetWithInnerClass.contains(HugeEnumWithInnerClass.f);
+        assertTrue(result);
+    }
+
 //    /**
 //     * @tests java.util.ESet#retainAll(Collection)
 //     */
@@ -1401,7 +1405,7 @@ public class ESetTest extends TestCase {
 //     * @tests java.util.ESet#of(E)
 //     */
 //    public void test_Of_E() {
-//        ESet<EnumWithInnerClass> enumSet = ESet.of(EnumWithInnerClass.a);
+//        ESet enumSet = ESet.of(EnumWithInnerClass.a);
 //        assertEquals("enumSet should have length 1:", 1, enumSet.size()); //$NON-NLS-1$
 //
 //        assertTrue("enumSet should contain EnumWithSubclass.a:", //$NON-NLS-1$
@@ -1415,7 +1419,7 @@ public class ESetTest extends TestCase {
 //        }
 //
 //        // test enum type with more than 64 elements
-//        ESet<HugeEnumWithInnerClass> hugeESet = ESet.of(HugeEnumWithInnerClass.a);
+//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a);
 //        assertEquals(1, hugeESet.size());
 //
 //        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
@@ -1425,7 +1429,7 @@ public class ESetTest extends TestCase {
 //     * @tests java.util.ESet#of(E, E)
 //     */
 //    public void test_Of_EE() {
-//        ESet<EnumWithInnerClass> enumSet = ESet.of(EnumWithInnerClass.a,
+//        ESet enumSet = ESet.of(EnumWithInnerClass.a,
 //                EnumWithInnerClass.b);
 //        assertEquals("enumSet should have length 2:", 2, enumSet.size()); //$NON-NLS-1$
 //
@@ -1460,7 +1464,7 @@ public class ESetTest extends TestCase {
 //                1, enumSet.size());
 //
 //        // test enum type with more than 64 elements
-//        ESet<HugeEnumWithInnerClass> hugeESet = ESet.of(HugeEnumWithInnerClass.a,
+//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
 //                HugeEnumWithInnerClass.b);
 //        assertEquals(2, hugeESet.size());
 //
@@ -1496,7 +1500,7 @@ public class ESetTest extends TestCase {
 //     * @tests java.util.ESet#of(E, E, E)
 //     */
 //    public void test_Of_EEE() {
-//        ESet<EnumWithInnerClass> enumSet = ESet.of(EnumWithInnerClass.a,
+//        ESet enumSet = ESet.of(EnumWithInnerClass.a,
 //                EnumWithInnerClass.b, EnumWithInnerClass.c);
 //        assertEquals("Size of enumSet should be 3:", 3, enumSet.size()); //$NON-NLS-1$
 //
@@ -1516,7 +1520,7 @@ public class ESetTest extends TestCase {
 //        assertEquals("enumSet should contain 2 elements:", 2, enumSet.size()); //$NON-NLS-1$
 //
 //        // test enum type with more than 64 elements
-//        ESet<HugeEnumWithInnerClass> hugeESet = ESet.of(HugeEnumWithInnerClass.a,
+//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
 //                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c);
 //        assertEquals(3, hugeESet.size());
 //
@@ -1539,7 +1543,7 @@ public class ESetTest extends TestCase {
 //     * @tests java.util.ESet#of(E, E, E, E)
 //     */
 //    public void test_Of_EEEE() {
-//        ESet<EnumWithInnerClass> enumSet = ESet.of(EnumWithInnerClass.a,
+//        ESet enumSet = ESet.of(EnumWithInnerClass.a,
 //                EnumWithInnerClass.b, EnumWithInnerClass.c,
 //                EnumWithInnerClass.d);
 //        assertEquals("Size of enumSet should be 4", 4, enumSet.size()); //$NON-NLS-1$
@@ -1557,7 +1561,7 @@ public class ESetTest extends TestCase {
 //        }
 //
 //        // test enum type with more than 64 elements
-//        ESet<HugeEnumWithInnerClass> hugeESet = ESet.of(HugeEnumWithInnerClass.a,
+//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
 //                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c,
 //                HugeEnumWithInnerClass.d);
 //        assertEquals(4, hugeESet.size());
@@ -1577,7 +1581,7 @@ public class ESetTest extends TestCase {
 //     * @tests java.util.ESet#of(E, E, E, E, E)
 //     */
 //    public void test_Of_EEEEE() {
-//        ESet<EnumWithInnerClass> enumSet = ESet.of(EnumWithInnerClass.a,
+//        ESet enumSet = ESet.of(EnumWithInnerClass.a,
 //                EnumWithInnerClass.b, EnumWithInnerClass.c,
 //                EnumWithInnerClass.d, EnumWithInnerClass.e);
 //        assertEquals("Size of enumSet should be 5:", 5, enumSet.size()); //$NON-NLS-1$
@@ -1593,7 +1597,7 @@ public class ESetTest extends TestCase {
 //        }
 //
 //        // test enum with more than 64 elements
-//        ESet<HugeEnumWithInnerClass> hugeESet = ESet.of(HugeEnumWithInnerClass.a,
+//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
 //                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c,
 //                HugeEnumWithInnerClass.d, HugeEnumWithInnerClass.e);
 //        assertEquals(5, hugeESet.size());
@@ -1615,7 +1619,7 @@ public class ESetTest extends TestCase {
 //    public void test_Of_EEArray() {
 //        EnumWithInnerClass[] enumArray = new EnumWithInnerClass[] {
 //                EnumWithInnerClass.b, EnumWithInnerClass.c };
-//        ESet<EnumWithInnerClass> enumSet = ESet.of(EnumWithInnerClass.a,
+//        ESet enumSet = ESet.of(EnumWithInnerClass.a,
 //                enumArray);
 //        assertEquals("Should be equal", 3, enumSet.size()); //$NON-NLS-1$
 //
@@ -1630,7 +1634,7 @@ public class ESetTest extends TestCase {
 //        }
 //
 //        EnumFoo[] foos = {EnumFoo.a, EnumFoo.c, EnumFoo.d};
-//        ESet<EnumFoo> set = ESet.of(EnumFoo.c, foos);
+//        ESet set = ESet.of(EnumFoo.c, foos);
 //        assertEquals("size of set should be 1", 3, set.size()); //$NON-NLS-1$
 //        assertTrue("Should contain EnumFoo.a", set.contains(EnumFoo.a)); //$NON-NLS-1$
 //        assertTrue("Should contain EnumFoo.c", set.contains(EnumFoo.c)); //$NON-NLS-1$
@@ -1639,7 +1643,7 @@ public class ESetTest extends TestCase {
 //        // test enum type with more than 64 elements
 //        HugeEnumWithInnerClass[] hugeEnumArray = new HugeEnumWithInnerClass[] {
 //                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c };
-//        ESet<HugeEnumWithInnerClass> hugeESet = ESet.of(HugeEnumWithInnerClass.a,
+//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
 //                hugeEnumArray);
 //        assertEquals(3, hugeESet.size());
 //
@@ -1654,7 +1658,7 @@ public class ESetTest extends TestCase {
 //        }
 //
 //        HugeEnumWithInnerClass[] huges = {HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.c, HugeEnumWithInnerClass.d};
-//        ESet<HugeEnumWithInnerClass> hugeSet = ESet.of(HugeEnumWithInnerClass.c, huges);
+//        ESet hugeSet = ESet.of(HugeEnumWithInnerClass.c, huges);
 //        assertEquals(3, hugeSet.size());
 //        assertTrue(hugeSet.contains(HugeEnumWithInnerClass.a));
 //        assertTrue(hugeSet.contains(HugeEnumWithInnerClass.c));
@@ -1693,7 +1697,7 @@ public class ESetTest extends TestCase {
 //            // expected
 //        }
 //
-//        ESet<EnumWithInnerClass> enumSet = ESet.range(
+//        ESet enumSet = ESet.range(
 //                EnumWithInnerClass.a, EnumWithInnerClass.a);
 //        assertEquals("Size of enumSet should be 1", 1, enumSet.size()); //$NON-NLS-1$
 //
@@ -1730,7 +1734,7 @@ public class ESetTest extends TestCase {
 //            // expected
 //        }
 //
-//        ESet<HugeEnumWithInnerClass> hugeESet = ESet.range(
+//        ESet hugeESet = ESet.range(
 //                HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.a);
 //        assertEquals(1, hugeESet.size());
 //

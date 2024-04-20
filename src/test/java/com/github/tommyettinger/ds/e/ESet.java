@@ -272,7 +272,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		int oldSize = size;
 		size = 0;
 		for (int i = 0; i < table.length; i++) {
-			oldSize += Integer.bitCount(table[i] &= es.table[i]);
+			size += Integer.bitCount(table[i] &= es.table[i]);
 		}
 		return size != oldSize;
 	}
@@ -294,7 +294,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		int oldSize = size;
 		size = 0;
 		for (int i = 0; i < table.length; i++) {
-			oldSize += Integer.bitCount(table[i] |= es.table[i]);
+			size += Integer.bitCount(table[i] |= es.table[i]);
 		}
 		return size != oldSize;
 	}
@@ -309,7 +309,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 			return super.containsAll(c);
 		ESet es = (ESet)c;
 		if(es.size == 0 || es.universe == null || es.universe.length == 0) return true;
-		if(size < es.size || universe == null || universe.length != es.universe.length) return false;
+		if(size < es.size || universe == null || universe.length != es.universe.length || universe[0] != es.universe[0]) return false;
 		for (int i = 0; i < table.length; i++) {
 			if((~table[i] & es.table[i]) != 0) return false;
 		}
@@ -327,12 +327,12 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 		if(!(c instanceof ESet))
 			return super.removeAll(c);
 		ESet es = (ESet)c;
-		if(es.table == null || es.universe == null || es.universe.length != universe.length || es.size == 0)
+		if(es.table == null || es.universe == null || es.universe.length != universe.length || es.size == 0 || universe[0] != es.universe[0])
 			return false;
 		int oldSize = size;
 		size = 0;
 		for (int i = 0; i < table.length; i++) {
-			oldSize += Integer.bitCount(table[i] &= ~es.table[i]);
+			size += Integer.bitCount(table[i] &= ~es.table[i]);
 		}
 		return size != oldSize;
 	}
@@ -697,8 +697,9 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * @param contents a Collection of Enum values, which may be another ESet
 	 * @return a new ESet containing the unique items in contents
 	 */
-	public static ESet copyOf(@Nullable Collection<? extends Enum<?>> contents) {
-		return contents == null ? new ESet() : new ESet(contents);
+	public static ESet copyOf(Collection<? extends Enum<?>> contents) {
+		if(contents == null) throw new NullPointerException("Cannot copy a null ESet.");
+		return new ESet(contents);
 	}
 
 	/**
