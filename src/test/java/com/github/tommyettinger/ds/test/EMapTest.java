@@ -925,56 +925,57 @@ public class EMapTest extends TestCase {
         assertFalse("Returned true for uncontained object", collection //$NON-NLS-1$
                 .contains(2));
 
-//        assertTrue("Returned false when the object can be removed", collection //$NON-NLS-1$
-//                .remove(null));
-//        assertFalse("Returned true for uncontained object", collection //$NON-NLS-1$
-//                .contains(null));
-//        assertFalse("Returned true when the object can not be removed", //$NON-NLS-1$
-//                collection.remove(null));
-//
-//        // The set is backed by the map so changes to one are reflected by the
-//        // other.
-//        enumColorMap.put(Color.Blue, 3);
-//        assertTrue("Returned false for contained object", collection//$NON-NLS-1$
-//                .contains(3));
-//        enumColorMap.remove(Color.Blue);
-//        assertFalse("Returned true for uncontained object", collection//$NON-NLS-1$
-//                .contains(3));
-//
-//        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
-//        collection.clear();
-//        assertEquals("Wrong size", 0, collection.size()); //$NON-NLS-1$
-//
-//        enumColorMap = new EMap<Double>(Color.class);
-//        enumColorMap.put(Color.Red, 1);
-//        enumColorMap.put(Color.Blue, null);
-//        collection = enumColorMap.values();
-//        Collection c = new ArrayList();
-//        c.add(new Integer(1));
-//        assertTrue("Should return true", collection.containsAll(c)); //$NON-NLS-1$
-//        c.add(new Double(3.4));
-//        assertFalse("Should return false", collection.containsAll(c)); //$NON-NLS-1$
-//        assertTrue("Should return true", collection.removeAll(c)); //$NON-NLS-1$
-//        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
-//        assertFalse("Should return false", collection.removeAll(c)); //$NON-NLS-1$
-//        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
-//        try {
-//            collection.addAll(c);
-//            fail("Should throw UnsupportedOperationException"); //$NON-NLS-1$
-//        } catch (UnsupportedOperationException e) {
-//            // Expected
-//        }
-//
-//        enumColorMap.put(Color.Red, 1);
-//        assertEquals("Wrong size", 2, collection.size()); //$NON-NLS-1$
-//        assertTrue("Should return true", collection.retainAll(c)); //$NON-NLS-1$
-//        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
-//        assertFalse("Should return false", collection.retainAll(c)); //$NON-NLS-1$
-//        assertEquals(1, collection.size());
-//        Object[] array = collection.toArray();
-//        assertEquals("Wrong length", 1, array.length); //$NON-NLS-1$
-//        assertEquals("Wrong key", 1, array[0]); //$NON-NLS-1$
-//
+        assertTrue("Returned false when the object can be removed", collection //$NON-NLS-1$
+                .remove(null));
+        assertFalse("Returned true for uncontained object", collection //$NON-NLS-1$
+                .contains(null));
+        assertFalse("Returned true when the object can not be removed", //$NON-NLS-1$
+                collection.remove(null));
+
+        // The set is backed by the map so changes to one are reflected by the
+        // other.
+        enumColorMap.put(Color.Blue, 3);
+        assertTrue("Returned false for contained object", collection//$NON-NLS-1$
+                .contains(3));
+        enumColorMap.remove(Color.Blue);
+        assertFalse("Returned true for uncontained object", collection//$NON-NLS-1$
+                .contains(3));
+
+        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
+        collection.clear();
+        assertEquals("Wrong size", 0, collection.size()); //$NON-NLS-1$
+
+        enumColorMap = new EMap<Double>(Color.class);
+        enumColorMap.put(Color.Red, 1);
+        enumColorMap.put(Color.Blue, null);
+        collection = enumColorMap.values();
+        Collection c = new ArrayList();
+        c.add(new Integer(1));
+        assertTrue("Should return true", collection.containsAll(c)); //$NON-NLS-1$
+        c.add(new Double(3.4));
+        assertFalse("Should return false", collection.containsAll(c)); //$NON-NLS-1$
+        assertTrue("Should return true", collection.removeAll(c)); //$NON-NLS-1$
+        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
+        assertFalse("Should return false", collection.removeAll(c)); //$NON-NLS-1$
+        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
+        try {
+            collection.addAll(c);
+            fail("Should throw UnsupportedOperationException"); //$NON-NLS-1$
+        } catch (UnsupportedOperationException e) {
+            // Expected
+        }
+
+        enumColorMap.put(Color.Red, 1);
+        assertEquals("Wrong size", 2, collection.size()); //$NON-NLS-1$
+        assertTrue("Should return true", collection.retainAll(c)); //$NON-NLS-1$
+        assertEquals("Wrong size", 1, collection.size()); //$NON-NLS-1$
+        assertFalse("Should return false", collection.retainAll(c)); //$NON-NLS-1$
+        assertEquals(1, collection.size());
+        ((EMap.Values<?>)collection).resetIterator();
+        Object[] array = collection.toArray();
+        assertEquals("Wrong length", 1, array.length); //$NON-NLS-1$
+        assertEquals("Wrong key", 1, array[0]); //$NON-NLS-1$
+
 //        enumColorMap = new EMap<Double>(Color.class);
 //        enumColorMap.put(Color.Red, 1);
 //        enumColorMap.put(Color.Blue, null);

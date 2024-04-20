@@ -1295,6 +1295,55 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 			return iter.map.containsValue(o);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @param o
+		 * @throws UnsupportedOperationException {@inheritDoc}
+		 * @throws ClassCastException            {@inheritDoc}
+		 * @throws NullPointerException          {@inheritDoc}
+		 * @implSpec This implementation iterates over the collection looking for the
+		 * specified element.  If it finds the element, it removes the element
+		 * from the collection using the iterator's remove method.
+		 *
+		 * <p>Note that this implementation throws an
+		 * {@code UnsupportedOperationException} if the iterator returned by this
+		 * collection's iterator method does not implement the {@code remove}
+		 * method and this collection contains the specified object.
+		 */
+		@Override
+		public boolean remove (Object o) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			boolean res = super.remove(o);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return res;
+		}
+
+		@Override
+		public boolean retainAll (@NonNull Collection<?> c) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			iter.reset();
+			boolean res = super.retainAll(c);
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return res;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void clear () {
+			iter.map.clear();
+			iter.reset();
+		}
+
 		@Override
 		public final boolean equals (Object o) {
 			if (this == o)
@@ -1351,6 +1400,45 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		@Override
 		public int size () {
 			return iter.map.size;
+		}
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Object @NonNull [] toArray () {
+			Object[] a = new Object[iter.map.size];
+			int i = 0;
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {
+				a[i++] = iter.next();
+			}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+
+			return a;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @param a
+		 */
+		@Override
+		public <T> T @NonNull [] toArray (T[] a) {
+			if(a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
+			int i = 0;
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {
+				a[i++] = (T)iter.next();
+			}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+
+			return a;
 		}
 
 		/**
