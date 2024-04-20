@@ -1138,17 +1138,6 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 
 		/**
 		 * {@inheritDoc}
-		 *
-		 * @throws UnsupportedOperationException {@inheritDoc}
-		 * @implSpec This implementation iterates over this collection, removing each
-		 * element using the {@code Iterator.remove} operation.  Most
-		 * implementations will probably choose to override this method for
-		 * efficiency.
-		 *
-		 * <p>Note that this implementation will throw an
-		 * {@code UnsupportedOperationException} if the iterator returned by this
-		 * collection's {@code iterator} method does not implement the
-		 * {@code remove} method and this collection is non-empty.
 		 */
 		@Override
 		public void clear () {
@@ -1387,6 +1376,36 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		}
 
 		/**
+		 * {@inheritDoc}
+		 *
+		 * @param o
+		 * @throws UnsupportedOperationException {@inheritDoc}
+		 * @throws ClassCastException            {@inheritDoc}
+		 * @throws NullPointerException          {@inheritDoc}
+		 * @implSpec This implementation iterates over the collection looking for the
+		 * specified element.  If it finds the element, it removes the element
+		 * from the collection using the iterator's remove method.
+		 *
+		 * <p>Note that this implementation throws an
+		 * {@code UnsupportedOperationException} if the iterator returned by this
+		 * collection's iterator method does not implement the {@code remove}
+		 * method and this collection contains the specified object.
+		 */
+		@Override
+		public boolean remove (Object o) {
+			if(o instanceof Enum<?>){
+				Enum<?> e = (Enum<?>)o;
+				int ord = e.ordinal();
+				if (ord < iter.map.universe.length && iter.map.universe[ord] == e
+					&& iter.map.valueTable[ord] != null){
+					iter.map.remove(e);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/**
 		 * Returns an iterator over the elements contained in this collection.
 		 *
 		 * @return an iterator over the elements contained in this collection
@@ -1395,6 +1414,16 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 		public @NonNull MapIterator<?, Enum<?>> iterator () {
 			return iter;
 		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void clear () {
+			iter.map.clear();
+			iter.reset();
+		}
+
 
 		@Override
 		public int size () {
