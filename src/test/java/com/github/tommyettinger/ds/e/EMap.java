@@ -947,8 +947,10 @@ public class EMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>>
 			int i = currentIndex;
 			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
 			Object[] valueTable = map.valueTable;
+			// This condition can happen if the map had this the current item removed without using this method.
+			if(valueTable[i] != null)
+				map.size--;
 			valueTable[i] = null;
-			map.size--;
 			currentIndex = -1;
 		}
 	}
