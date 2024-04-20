@@ -571,7 +571,9 @@ public class EMapTest extends TestCase {
         assertTrue("Should return true", set.containsAll(c)); //$NON-NLS-1$
         c.add(Size.Small);
         assertFalse("Should return false", set.containsAll(c)); //$NON-NLS-1$
+        System.out.println(set);
         assertTrue("Should return true", set.removeAll(c)); //$NON-NLS-1$
+        System.out.println(set);
         assertEquals("Wrong size", 1, set.size()); //$NON-NLS-1$
         assertFalse("Should return false", set.removeAll(c)); //$NON-NLS-1$
         assertEquals("Wrong size", 1, set.size()); //$NON-NLS-1$
@@ -582,16 +584,17 @@ public class EMapTest extends TestCase {
             // Expected
         }
 
-//        enumSizeMap.put(Size.Big, null);
-//        assertEquals("Wrong size", 2, set.size()); //$NON-NLS-1$
-//        assertTrue("Should return true", set.retainAll(c)); //$NON-NLS-1$
-//        assertEquals("Wrong size", 1, set.size()); //$NON-NLS-1$
-//        assertFalse("Should return false", set.retainAll(c)); //$NON-NLS-1$
-//        assertEquals(1, set.size());
-//        Object[] array = set.toArray();
-//        assertEquals("Wrong length", 1, array.length); //$NON-NLS-1$
-//        assertEquals("Wrong key", Size.Big, array[0]); //$NON-NLS-1$
-//
+        enumSizeMap.put(Size.Big, null);
+        assertEquals("Wrong size", 2, set.size()); //$NON-NLS-1$
+        assertTrue("Should return true", set.retainAll(c)); //$NON-NLS-1$
+        assertEquals("Wrong size", 1, set.size()); //$NON-NLS-1$
+        assertFalse("Should return false", set.retainAll(c)); //$NON-NLS-1$
+        assertEquals(1, set.size());
+        ((EMap.Keys)set).resetIterator();
+        Object[] array = set.toArray();
+        assertEquals("Wrong length", 1, array.length); //$NON-NLS-1$
+        assertEquals("Wrong key", Size.Big, array[0]); //$NON-NLS-1$
+
 //        enumSizeMap = new EMap(Size.class);
 //        enumSizeMap.put(Size.Middle, 1);
 //        enumSizeMap.put(Size.Big, null);
