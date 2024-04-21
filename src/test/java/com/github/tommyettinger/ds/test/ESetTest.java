@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -1137,228 +1138,228 @@ public class ESetTest extends TestCase {
         assertEquals(0, hugeSet.size());
     }
 
-//    public void test_iterator() {
-//        Set<Enum<?>> set = ESet.noneOf(EnumFoo.values());
-//        set.add(EnumFoo.a);
-//        set.add(EnumFoo.b);
-//
-//        Iterator<EnumFoo> iterator = set.iterator();
-//        Iterator<EnumFoo> anotherIterator = set.iterator();
-//        assertNotSame("Should not be same", iterator, anotherIterator);
-//        try {
-//            iterator.remove();
-//            fail("Should throw IllegalStateException");
-//        } catch (IllegalStateException e) {
-//            // expectedd
-//        }
-//
-//        assertTrue("Should has next element:", iterator.hasNext());
-//        assertSame("Should be identical", EnumFoo.a, iterator.next());
-//        iterator.remove();
-//        assertTrue("Should has next element:", iterator.hasNext());
-//        assertSame("Should be identical", EnumFoo.b, iterator.next());
-//        assertFalse("Should not has next element:", iterator.hasNext());
-//        assertFalse("Should not has next element:", iterator.hasNext());
-//
-//        assertEquals("Size should be 1:", 1, set.size());
-//
-//        try {
-//            iterator.next();
-//            fail("Should throw NoSuchElementException");
-//        } catch (NoSuchElementException e) {
-//            // expected
-//        }
-//        set = ESet.noneOf(EnumFoo.class);
-//        set.add(EnumFoo.a);
-//        iterator = set.iterator();
-//        assertEquals("Should be equal", EnumFoo.a, iterator.next());
-//        iterator.remove();
-//        try {
-//            iterator.remove();
-//            fail("Should throw IllegalStateException");
-//        } catch(IllegalStateException e) {
-//            // expected
-//        }
-//
-//        Set<Enum<?>> emptySet = ESet.allOf(EmptyEnum.class);
-//        Iterator<EmptyEnum> emptyIterator = emptySet.iterator();
-//        try {
-//            emptyIterator.next();
-//            fail("Should throw NoSuchElementException");
-//        } catch (NoSuchElementException e) {
-//            // expected
-//        }
-//
-//        Set<Enum<?>> setWithSubclass = ESet
-//                .allOf(EnumWithInnerClass.class);
-//        setWithSubclass.remove(EnumWithInnerClass.e);
-//        Iterator<EnumWithInnerClass> iteratorWithSubclass = setWithSubclass
-//                .iterator();
-//        assertSame("Should be same", EnumWithInnerClass.a, iteratorWithSubclass.next());
-//
-//        assertTrue("Should return true", iteratorWithSubclass.hasNext());
-//        assertSame("Should be same", EnumWithInnerClass.b, iteratorWithSubclass.next());
-//
-//        setWithSubclass.remove(EnumWithInnerClass.c);
-//        assertTrue("Should return true", iteratorWithSubclass.hasNext());
-//        assertSame("Should be same", EnumWithInnerClass.c, iteratorWithSubclass.next());
-//
-//        assertTrue("Should return true", iteratorWithSubclass.hasNext());
-//        assertSame("Should be same", EnumWithInnerClass.d, iteratorWithSubclass.next());
-//
-//        setWithSubclass.add(EnumWithInnerClass.e);
-//        assertTrue("Should return true", iteratorWithSubclass.hasNext());
-//        assertSame("Should be same", EnumWithInnerClass.f, iteratorWithSubclass.next());
-//
-//        set = ESet.noneOf(EnumFoo.class);
-//        iterator = set.iterator();
-//        try {
-//            iterator.next();
-//            fail("Should throw NoSuchElementException");
-//        } catch (NoSuchElementException e) {
-//            // expected
-//        }
-//
-//        set.add(EnumFoo.a);
-//        iterator = set.iterator();
-//        assertEquals("Should return EnumFoo.a", EnumFoo.a, iterator.next());
-//        assertEquals("Size of set should be 1", 1, set.size());
-//        iterator.remove();
-//        assertEquals("Size of set should be 0", 0, set.size());
-//        assertFalse("Should return false", set.contains(EnumFoo.a));
-//
-//        set.add(EnumFoo.a);
-//        set.add(EnumFoo.b);
-//        iterator = set.iterator();
-//        assertEquals("Should be equals", EnumFoo.a, iterator.next());
-//        iterator.remove();
-//        try {
-//            iterator.remove();
-//            fail("Should throw IllegalStateException");
-//        } catch(IllegalStateException e) {
-//            // expected
-//        }
-//
-//        assertTrue("Should have next element", iterator.hasNext());
-//        try {
-//            iterator.remove();
-//            fail("Should throw IllegalStateException");
-//        } catch (IllegalStateException e) {
-//            // expected
-//        }
-//        assertEquals("Size of set should be 1", 1, set.size());
-//        assertTrue("Should have next element", iterator.hasNext());
-//        assertEquals("Should return EnumFoo.b", EnumFoo.b, iterator.next());
-//        set.remove(EnumFoo.b);
-//        assertEquals("Size of set should be 0", 0, set.size());
-//        iterator.remove();
-//        assertFalse("Should return false", set.contains(EnumFoo.a));
-//
-//        // RI's bug, EnumFoo.b should not exist at the moment.
-//        assertFalse("Should return false", set.contains(EnumFoo.b));
-//
-//        // test enum type with more than 64 elements
-//        Set<Enum<?>> hugeSet = new ESet(HugeEnum.values());
-//        hugeSet.add(HugeEnum.a);
-//        hugeSet.add(HugeEnum.b);
-//
-//        Iterator<HugeEnum> hIterator = hugeSet.iterator();
-//        Iterator<HugeEnum> anotherHugeIterator = hugeSet.iterator();
-//        assertNotSame(hIterator, anotherHugeIterator);
-//        try {
-//            hIterator.remove();
-//            fail("Should throw IllegalStateException");
-//        } catch (IllegalStateException e) {
-//            // expectedd
-//        }
-//
-//        assertTrue(hIterator.hasNext());
-//        assertSame(HugeEnum.a, hIterator.next());
-//        hIterator.remove();
-//        assertTrue(hIterator.hasNext());
-//        assertSame(HugeEnum.b, hIterator.next());
-//        assertFalse(hIterator.hasNext());
-//        assertFalse(hIterator.hasNext());
-//
-//        assertEquals(1, hugeSet.size());
-//
-//        try {
-//            hIterator.next();
-//            fail("Should throw NoSuchElementException");
-//        } catch (NoSuchElementException e) {
-//            // expected
-//        }
-//
-//        Set<Enum<?>> hugeSetWithSubclass = ESet
-//                .allOf(HugeEnumWithInnerClass.class);
-//        hugeSetWithSubclass.remove(HugeEnumWithInnerClass.e);
-//        Iterator<HugeEnumWithInnerClass> hugeIteratorWithSubclass = hugeSetWithSubclass
-//                .iterator();
-//        assertSame(HugeEnumWithInnerClass.a, hugeIteratorWithSubclass.next());
-//
-//        assertTrue(hugeIteratorWithSubclass.hasNext());
-//        assertSame(HugeEnumWithInnerClass.b, hugeIteratorWithSubclass.next());
-//
-//        setWithSubclass.remove(HugeEnumWithInnerClass.c);
-//        assertTrue(hugeIteratorWithSubclass.hasNext());
-//        assertSame(HugeEnumWithInnerClass.c, hugeIteratorWithSubclass.next());
-//
-//        assertTrue(hugeIteratorWithSubclass.hasNext());
-//        assertSame(HugeEnumWithInnerClass.d, hugeIteratorWithSubclass.next());
-//
-//        hugeSetWithSubclass.add(HugeEnumWithInnerClass.e);
-//        assertTrue(hugeIteratorWithSubclass.hasNext());
-//        assertSame(HugeEnumWithInnerClass.f, hugeIteratorWithSubclass.next());
-//
-//        hugeSet = new ESet(HugeEnum.values());
-//        hIterator = hugeSet.iterator();
-//        try {
-//            hIterator.next();
-//            fail("Should throw NoSuchElementException");
-//        } catch (NoSuchElementException e) {
-//            // expected
-//        }
-//
-//        hugeSet.add(HugeEnum.a);
-//        hIterator = hugeSet.iterator();
-//        assertEquals(HugeEnum.a, hIterator.next());
-//        assertEquals(1, hugeSet.size());
-//        hIterator.remove();
-//        assertEquals(0, hugeSet.size());
-//        assertFalse(hugeSet.contains(HugeEnum.a));
-//
-//        hugeSet.add(HugeEnum.a);
-//        hugeSet.add(HugeEnum.b);
-//        hIterator = hugeSet.iterator();
-//        hIterator.next();
-//        hIterator.remove();
-//
-//        assertTrue(hIterator.hasNext());
-//        try {
-//            hIterator.remove();
-//            fail("Should throw IllegalStateException");
-//        } catch (IllegalStateException e) {
-//            // expected
-//        }
-//        assertEquals(1, hugeSet.size());
-//        assertTrue(hIterator.hasNext());
-//        assertEquals(HugeEnum.b, hIterator.next());
-//        hugeSet.remove(HugeEnum.b);
-//        assertEquals(0, hugeSet.size());
-//        hIterator.remove();
-//        assertFalse(hugeSet.contains(HugeEnum.a));
-//        // RI's bug, EnumFoo.b should not exist at the moment.
-//        assertFalse("Should return false", set.contains(EnumFoo.b));
-//
-//        // Regression for HARMONY-4728
-//        hugeSet = ESet.allOf(HugeEnum.class);
-//        hIterator = hugeSet.iterator();
-//        for( int i = 0; i < 63; i++) {
-//            hIterator.next();
-//        }
-//        assertSame(HugeEnum.ll, hIterator.next());
-//    }
-//
+    public void test_iterator() {
+        ESet set = ESet.noneOf(EnumFoo.values());
+        set.add(EnumFoo.a);
+        set.add(EnumFoo.b);
+
+        Iterator<Enum<?>> iterator = set.iterator();
+        Iterator<Enum<?>> anotherIterator = new ESet.ESetIterator(set);
+        assertNotSame("Should not be same", iterator, anotherIterator);
+        try {
+            iterator.remove();
+            fail("Should throw IllegalStateException");
+        } catch (IllegalStateException e) {
+            // expected
+        }
+
+        assertTrue("Should has next element:", iterator.hasNext());
+        assertSame("Should be identical", EnumFoo.a, iterator.next());
+        iterator.remove();
+        assertTrue("Should has next element:", iterator.hasNext());
+        assertSame("Should be identical", EnumFoo.b, iterator.next());
+        assertFalse("Should not has next element:", iterator.hasNext());
+        assertFalse("Should not has next element:", iterator.hasNext());
+
+        assertEquals("Size should be 1:", 1, set.size());
+
+        try {
+            iterator.next();
+            fail("Should throw NoSuchElementException");
+        } catch (NoSuchElementException e) {
+            // expected
+        }
+        set = ESet.noneOf(EnumFoo.class);
+        set.add(EnumFoo.a);
+        iterator = set.iterator();
+        assertEquals("Should be equal", EnumFoo.a, iterator.next());
+        iterator.remove();
+        try {
+            iterator.remove();
+            fail("Should throw IllegalStateException");
+        } catch(IllegalStateException e) {
+            // expected
+        }
+
+        Set<Enum<?>> emptySet = ESet.allOf(EmptyEnum.class);
+        Iterator<Enum<?>> emptyIterator = emptySet.iterator();
+        try {
+            emptyIterator.next();
+            fail("Should throw NoSuchElementException");
+        } catch (NoSuchElementException e) {
+            // expected
+        }
+
+        Set<Enum<?>> setWithSubclass = ESet
+                .allOf(EnumWithInnerClass.class);
+        setWithSubclass.remove(EnumWithInnerClass.e);
+        Iterator<Enum<?>> iteratorWithSubclass = setWithSubclass
+                .iterator();
+        assertSame("Should be same", EnumWithInnerClass.a, iteratorWithSubclass.next());
+
+        assertTrue("Should return true", iteratorWithSubclass.hasNext());
+        assertSame("Should be same", EnumWithInnerClass.b, iteratorWithSubclass.next());
+
+        setWithSubclass.remove(EnumWithInnerClass.c);
+        assertTrue("Should return true", iteratorWithSubclass.hasNext());
+        assertSame("Should be same", EnumWithInnerClass.c, iteratorWithSubclass.next());
+
+        assertTrue("Should return true", iteratorWithSubclass.hasNext());
+        assertSame("Should be same", EnumWithInnerClass.d, iteratorWithSubclass.next());
+
+        setWithSubclass.add(EnumWithInnerClass.e);
+        assertTrue("Should return true", iteratorWithSubclass.hasNext());
+        assertSame("Should be same", EnumWithInnerClass.f, iteratorWithSubclass.next());
+
+        set = ESet.noneOf(EnumFoo.class);
+        iterator = set.iterator();
+        try {
+            iterator.next();
+            fail("Should throw NoSuchElementException");
+        } catch (NoSuchElementException e) {
+            // expected
+        }
+
+        set.add(EnumFoo.a);
+        iterator = set.iterator();
+        assertEquals("Should return EnumFoo.a", EnumFoo.a, iterator.next());
+        assertEquals("Size of set should be 1", 1, set.size());
+        iterator.remove();
+        assertEquals("Size of set should be 0", 0, set.size());
+        assertFalse("Should return false", set.contains(EnumFoo.a));
+
+        set.add(EnumFoo.a);
+        set.add(EnumFoo.b);
+        iterator = set.iterator();
+        assertEquals("Should be equals", EnumFoo.a, iterator.next());
+        iterator.remove();
+        try {
+            iterator.remove();
+            fail("Should throw IllegalStateException");
+        } catch(IllegalStateException e) {
+            // expected
+        }
+
+        assertTrue("Should have next element", iterator.hasNext());
+        try {
+            iterator.remove();
+            fail("Should throw IllegalStateException");
+        } catch (IllegalStateException e) {
+            // expected
+        }
+        assertEquals("Size of set should be 1", 1, set.size());
+        assertTrue("Should have next element", iterator.hasNext());
+        assertEquals("Should return EnumFoo.b", EnumFoo.b, iterator.next());
+        set.remove(EnumFoo.b);
+        assertEquals("Size of set should be 0", 0, set.size());
+        iterator.remove();
+        assertFalse("Should return false", set.contains(EnumFoo.a));
+
+        // RI's bug, EnumFoo.b should not exist at the moment.
+        assertFalse("Should return false", set.contains(EnumFoo.b));
+
+        // test enum type with more than 64 elements
+        ESet hugeSet = new ESet(HugeEnum.values(), true);
+        hugeSet.add(HugeEnum.a);
+        hugeSet.add(HugeEnum.b);
+
+        Iterator<Enum<?>> hIterator = hugeSet.iterator();
+        Iterator<Enum<?>> anotherHugeIterator = new ESet.ESetIterator(hugeSet);
+        assertNotSame(hIterator, anotherHugeIterator);
+        try {
+            hIterator.remove();
+            fail("Should throw IllegalStateException");
+        } catch (IllegalStateException e) {
+            // expectedd
+        }
+
+        assertTrue(hIterator.hasNext());
+        assertSame(HugeEnum.a, hIterator.next());
+        hIterator.remove();
+        assertTrue(hIterator.hasNext());
+        assertSame(HugeEnum.b, hIterator.next());
+        assertFalse(hIterator.hasNext());
+        assertFalse(hIterator.hasNext());
+
+        assertEquals(1, hugeSet.size());
+
+        try {
+            hIterator.next();
+            fail("Should throw NoSuchElementException");
+        } catch (NoSuchElementException e) {
+            // expected
+        }
+
+        Set<Enum<?>> hugeSetWithSubclass = ESet
+                .allOf(HugeEnumWithInnerClass.class);
+        hugeSetWithSubclass.remove(HugeEnumWithInnerClass.e);
+        Iterator<Enum<?>> hugeIteratorWithSubclass = hugeSetWithSubclass
+                .iterator();
+        assertSame(HugeEnumWithInnerClass.a, hugeIteratorWithSubclass.next());
+
+        assertTrue(hugeIteratorWithSubclass.hasNext());
+        assertSame(HugeEnumWithInnerClass.b, hugeIteratorWithSubclass.next());
+
+        setWithSubclass.remove(HugeEnumWithInnerClass.c);
+        assertTrue(hugeIteratorWithSubclass.hasNext());
+        assertSame(HugeEnumWithInnerClass.c, hugeIteratorWithSubclass.next());
+
+        assertTrue(hugeIteratorWithSubclass.hasNext());
+        assertSame(HugeEnumWithInnerClass.d, hugeIteratorWithSubclass.next());
+
+        hugeSetWithSubclass.add(HugeEnumWithInnerClass.e);
+        assertTrue(hugeIteratorWithSubclass.hasNext());
+        assertSame(HugeEnumWithInnerClass.f, hugeIteratorWithSubclass.next());
+
+        hugeSet = new ESet(HugeEnum.values(), true);
+        hIterator = hugeSet.iterator();
+        try {
+            hIterator.next();
+            fail("Should throw NoSuchElementException");
+        } catch (NoSuchElementException e) {
+            // expected
+        }
+
+        hugeSet.add(HugeEnum.a);
+        hIterator = hugeSet.iterator();
+        assertEquals(HugeEnum.a, hIterator.next());
+        assertEquals(1, hugeSet.size());
+        hIterator.remove();
+        assertEquals(0, hugeSet.size());
+        assertFalse(hugeSet.contains(HugeEnum.a));
+
+        hugeSet.add(HugeEnum.a);
+        hugeSet.add(HugeEnum.b);
+        hIterator = hugeSet.iterator();
+        hIterator.next();
+        hIterator.remove();
+
+        assertTrue(hIterator.hasNext());
+        try {
+            hIterator.remove();
+            fail("Should throw IllegalStateException");
+        } catch (IllegalStateException e) {
+            // expected
+        }
+        assertEquals(1, hugeSet.size());
+        assertTrue(hIterator.hasNext());
+        assertEquals(HugeEnum.b, hIterator.next());
+        hugeSet.remove(HugeEnum.b);
+        assertEquals(0, hugeSet.size());
+        hIterator.remove();
+        assertFalse(hugeSet.contains(HugeEnum.a));
+        // RI's bug, EnumFoo.b should not exist at the moment.
+        assertFalse("Should return false", set.contains(EnumFoo.b));
+
+        // Regression for HARMONY-4728
+        hugeSet = ESet.allOf(HugeEnum.class);
+        hIterator = hugeSet.iterator();
+        for( int i = 0; i < 63; i++) {
+            hIterator.next();
+        }
+        assertSame(HugeEnum.ll, hIterator.next());
+    }
+
 //    /**
 //     * @tests java.util.ESet#of(E)
 //     */
