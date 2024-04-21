@@ -15,10 +15,9 @@
  *
  */
 
-package com.github.tommyettinger.ds.e;
+package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.ObjectList;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -31,9 +30,23 @@ import java.util.Set;
 
 /**
  * A Set of Enum items. Unlike {@link java.util.EnumSet}, this does not require a Class at construction time, which can be
- * useful for serialization purposes.
+ * useful for serialization purposes. Instead of storing a Class, this holds a "key universe" (which is almost always the
+ * same as an array returned by calling {@code values()} on an Enum type), and key universes are ideally shared between
+ * compatible EnumSets.
+ * <br>
+ * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumSet can use as keys, in
+ * the specific order they are declared. You almost always get a key universe by calling {@code MyEnum.values()}, but you
+ * can also use {@link Class#getEnumConstants()} for an Enum class. You can and generally should reuse key universes in order to
+ * avoid allocations and/or save memory; the method {@link #noneOf(Enum[])} creates an empty EnumSet with
+ * a given key universe. If you need to use the zero-argument constructor, you can, and the key universe will be obtained from the
+ * first key placed into the EnumSet, though it won't be shared at first. You can also set the key universe with
+ * {@link #clearToUniverse(Enum[])}, in the process of clearing the map.
+ * <br>
+ * This class tries to be as compatible as possible with {@link java.util.EnumSet}, though this extends that where possible.
+ *
+ * @author Tommy Ettinger
  */
-public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable<Enum<?>> {
+public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable<Enum<?>> {
 	protected int size;
 	protected int[] table;
 	protected Enum<?>[] universe;
@@ -44,7 +57,7 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * Empty constructor; using this will postpone allocating any internal arrays until {@link #add(Enum)} is first called
 	 * (potentially indirectly).
 	 */
-	public ESet () {
+	public EnumSet () {
 		super();
 	}
 
@@ -52,13 +65,17 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined in
 	 * {@code universe}, assuming universe stores every possible constant in one Enum type.
 	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
-	 * reference to one Enum array across many ESet instances if you don't modify the shared array. Sharing the same
-	 * universe helps save some memory if you have (very) many ESet instances.
+	 * reference to one Enum array across many EnumSet instances if you don't modify the shared array. Sharing the same
+	 * universe helps save some memory if you have (very) many EnumSet instances.
+	 * <br>
+	 * Because the {@code boolean} parameter here is easy to forget, you may want to prefer calling {@link #noneOf(Enum[])}
+	 * instead of using this directly.
+	 *
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 * @param ignoredToDistinguish an ignored boolean that differentiates this constructor, which defined a key universe,
 	 *                               from one that takes contents
 	 */
-	public ESet (Enum<?>@Nullable [] universe, boolean ignoredToDistinguish) {
+	public EnumSet (Enum<?>@Nullable [] universe, boolean ignoredToDistinguish) {
 		super();
 		if(universe == null) return;
 		this.universe = universe;
@@ -67,12 +84,14 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 
 	/**
 	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined by the
-	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #ESet(Enum[], boolean)}
+	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumSet(Enum[], boolean)}
 	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
-	 * if you use {@link #ESet(Enum[], boolean)}, you can reuse an unmodified array to reduce allocations.
+	 * if you use {@link #EnumSet(Enum[], boolean)} (or its equivalent, {@link #noneOf(Enum[])}), you can reuse an
+	 * unmodified array to reduce allocations.
+	 *
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
-	public ESet(@Nullable Class<? extends Enum<?>> universeClass) {
+	public EnumSet (@Nullable Class<? extends Enum<?>> universeClass) {
 		this(universeClass == null ? null : universeClass.getEnumConstants(), true);
 	}
 
@@ -80,14 +99,15 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * Initializes this set so that it holds the given Enum values, with the universe of possible Enum constants this can hold
 	 * determined by the type of the first Enum in {@code contents}.
 	 * <br>
-	 * This is different from {@link #ESet(Enum[], boolean)} in that this takes constants and puts them in the set, while the other
-	 * constructor takes all possible Enum constants, usually from calling {@code values()}.
+	 * This is different from {@link #EnumSet(Enum[], boolean)} in that this takes constants and puts them in the set, while the other
+	 * constructor takes all possible Enum constants, usually from calling {@code values()}. You can also specify the contents of a
+	 * new EnumSet conveniently using {@link #with(Enum[])}, which allows passing items as varargs.
 	 *
 	 * @param contents an array of Enum items to place into this set
 	 */
-	public ESet(Enum<?>[] contents) {
+	public EnumSet (Enum<?>[] contents) {
 		super();
-		if(contents == null) throw new NullPointerException("ESet cannot be constructed with a null array.");
+		if(contents == null) throw new NullPointerException("EnumSet cannot be constructed with a null array.");
 		addAll(contents);
 	}
 
@@ -97,18 +117,18 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public ESet(Collection<? extends Enum<?>> contents) {
+	public EnumSet (Collection<? extends Enum<?>> contents) {
 		super();
-		if(contents == null) throw new NullPointerException("ESet cannot be constructed with a null Collection.");
+		if(contents == null) throw new NullPointerException("EnumSet cannot be constructed with a null Collection.");
 		addAll(contents);
 	}
 
 	/**
 	 * Copy constructor; uses a direct reference to the enum values that may be cached in {@code other}, but copies other fields.
-	 * @param other another ESet that will have most of its data copied, but its cached {@code values()} results will be used directly
+	 * @param other another EnumSet that will have most of its data copied, but its cached {@code values()} results will be used directly
 	 */
-	public ESet (ESet other) {
-		if(other == null) throw new NullPointerException("ESet cannot be constructed from a null ESet.");
+	public EnumSet (EnumSet other) {
+		if(other == null) throw new NullPointerException("EnumSet cannot be constructed from a null EnumSet.");
 		this.size = other.size;
 		if(other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
@@ -212,11 +232,11 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 */
 	@Override
 	public boolean add (Enum<?> item) {
-		if(item == null) throw new NullPointerException("Items added to an ESet must not be null.");
+		if(item == null) throw new NullPointerException("Items added to an EnumSet must not be null.");
 		if(universe == null) universe = item.getDeclaringClass().getEnumConstants();
 		if(table == null) table = new int[universe.length + 31 >>> 5];
 		final int ord = item.ordinal();
-		if(ord >= universe.length || universe[ord] != item) throw new ClassCastException("Incompatible item for this ESet: " + item);
+		if(ord >= universe.length || universe[ord] != item) throw new ClassCastException("Incompatible item for this EnumSet: " + item);
 		final int upper = ord >>> 5;
 		if(table.length <= upper) return false;
 		// (1 << ord) has ord implicitly used modulo 32
@@ -263,14 +283,14 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	/**
 	 * Removes all items from this unless they are also in the given Collection {@code c}.
 	 *
-	 * @param c usually another ESet, but not required to be
+	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
 	public boolean retainAll (@NonNull Collection<?> c) {
 		if(size == 0 || table == null || universe == null || universe.length == 0) return false;
-		if(!(c instanceof ESet))
+		if(!(c instanceof EnumSet))
 			return super.retainAll(c);
-		ESet es = (ESet)c;
+		EnumSet es = (EnumSet)c;
 		if(es.table == null || es.universe == null || es.size == 0 || universe[0] != es.universe[0]) {
 			clear();
 			return true;
@@ -286,13 +306,13 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	/**
 	 * Adds all the elements in the specified collection to this collection.
 	 *
-	 * @param c usually another ESet, but not required to be
+	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
 	public boolean addAll (@NonNull Collection<? extends Enum<?>> c) {
-		if(!(c instanceof ESet))
+		if(!(c instanceof EnumSet))
 			return super.addAll(c);
-		ESet es = (ESet)c;
+		EnumSet es = (EnumSet)c;
 		if(es.universe == null || es.universe.length == 0) return false;
 		if(universe == null) universe = es.universe;
 		if(table == null) table = new int[universe.length + 31 >>> 5];
@@ -306,14 +326,14 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
-	 * Returns true if this ESet contains all items in the given Collection, or false otherwise.
-	 * @param c usually another ESet, but not required to be
+	 * Returns true if this EnumSet contains all items in the given Collection, or false otherwise.
+	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
 	public boolean containsAll (@NonNull Collection<?> c) {
-		if(!(c instanceof ESet))
+		if(!(c instanceof EnumSet))
 			return super.containsAll(c);
-		ESet es = (ESet)c;
+		EnumSet es = (EnumSet)c;
 		if(es.size == 0 || es.universe == null || es.universe.length == 0) return true;
 		if(size < es.size || universe == null || universe.length != es.universe.length || universe[0] != es.universe[0]) return false;
 		for (int i = 0; i < table.length; i++) {
@@ -323,16 +343,16 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
-	 * Removes from this ESet every element in the given Collection.
-	 * @param c usually another ESet, but not required to be
+	 * Removes from this EnumSet every element in the given Collection.
+	 * @param c usually another EnumSet, but not required to be
 	 * @return {@code true} if this set changed as a result of the call
 	 */
 	@Override
 	public boolean removeAll (@NonNull Collection<?> c) {
 		if(table == null || universe == null || universe.length == 0) return false;
-		if(!(c instanceof ESet))
+		if(!(c instanceof EnumSet))
 			return super.removeAll(c);
-		ESet es = (ESet)c;
+		EnumSet es = (EnumSet)c;
 		if(es.table == null || es.universe == null || es.universe.length != universe.length || es.size == 0 || universe[0] != es.universe[0])
 			return false;
 		int oldSize = size;
@@ -373,13 +393,13 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * Removes all the elements from this set and can reset the universe of possible Enum items this can hold.
 	 * The set will be empty after this call returns.
 	 * This changes the universe of possible Enum items this can hold to match {@code universe}.
-	 * If {@code universe} is null, this resets this set to the state it would have after {@link #ESet()} was called.
+	 * If {@code universe} is null, this resets this set to the state it would have after {@link #EnumSet()} was called.
 	 * If the table this would need is the same size as or smaller than the current table (such as if {@code universe} is the same as
 	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This always uses {@code universe} directly, without copying.
 	 * <br>
-	 * This can be useful to allow an ESet that was created with {@link #ESet()} to share a universe with other ESets.
+	 * This can be useful to allow an EnumSet that was created with {@link #EnumSet()} to share a universe with other ESets.
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
@@ -401,14 +421,14 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * Removes all the elements from this set and can reset the universe of possible Enum items this can hold.
 	 * The set will be empty after this call returns.
 	 * This changes the universe of possible Enum items this can hold to match the Enum constants in {@code universe}.
-	 * If {@code universe} is null, this resets this set to the state it would have after {@link #ESet()} was called.
+	 * If {@code universe} is null, this resets this set to the state it would have after {@link #EnumSet()} was called.
 	 * If the table this would need is the same size as or smaller than the current table (such as if {@code universe} is the same as
 	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This calls {@link Class#getEnumConstants()} if universe is non-null, which allocates a new array.
 	 * <br>
 	 * You may want to prefer calling {@link #clearToUniverse(Enum[])} (the overload that takes an array), because it can be used to
-	 * share one universe array between many ESet instances. This overload, given a Class, has to call {@link Class#getEnumConstants()}
+	 * share one universe array between many EnumSet instances. This overload, given a Class, has to call {@link Class#getEnumConstants()}
 	 * and thus allocate a new array each time this is called.
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
@@ -517,11 +537,11 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 
 		public boolean hasNext;
 
-		final ESet set;
+		final EnumSet set;
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public ESetIterator (ESet set) {
+		public ESetIterator (EnumSet set) {
 			this.set = set;
 			reset();
 		}
@@ -604,66 +624,66 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
-	 * Builds an ESet that contains only the given element.
-	 * @param item the one item to initialize the ESet with
-	 * @return a new ESet containing {@code item}
+	 * Builds an EnumSet that contains only the given element.
+	 * @param item the one item to initialize the EnumSet with
+	 * @return a new EnumSet containing {@code item}
 	 */
-	public static ESet with (Enum<?> item) {
-		ESet set = new ESet();
+	public static EnumSet with (Enum<?> item) {
+		EnumSet set = new EnumSet();
 		set.add(item);
 		return set;
 	}
 
 	/**
-	 * Builds an ESet that contains the unique elements from the given {@code array} or varargs.
+	 * Builds an EnumSet that contains the unique elements from the given {@code array} or varargs.
 	 * @param array an array or varargs of Enum constants, which should all have the same Enum type
-	 * @return a new ESet containing each unique item from {@code array}
+	 * @return a new EnumSet containing each unique item from {@code array}
 	 */
-	public static ESet with (Enum<?>... array) {
-		return new ESet(array);
+	public static EnumSet with (Enum<?>... array) {
+		return new EnumSet(array);
 	}
 
 	/**
 	 * Alias of {@link #with(Enum)} for compatibility.
-	 * @param item the one item to initialize the ESet with
-	 * @return a new ESet containing {@code item}
+	 * @param item the one item to initialize the EnumSet with
+	 * @return a new EnumSet containing {@code item}
 	 */
-	public static ESet of (Enum<?> item) {
+	public static EnumSet of (Enum<?> item) {
 		return with(item);
 	}
 
 	/**
 	 * Alias of {@link #with(Enum[])} for compatibility.
 	 * @param array an array or varargs of Enum constants, which should all have the same Enum type
-	 * @return a new ESet containing each unique item from {@code array}
+	 * @return a new EnumSet containing each unique item from {@code array}
 	 */
-	public static ESet of (Enum<?>... array) {
+	public static EnumSet of (Enum<?>... array) {
 		return with(array);
 	}
 
 	/**
-	 * Creates a new ESet using the given result of calling {@code values()} on an Enum type (the universe), but with no items
-	 * initially stored in the set. You can reuse the universe between ESet instances as long as it is not modified.
+	 * Creates a new EnumSet using the given result of calling {@code values()} on an Enum type (the universe), but with no items
+	 * initially stored in the set. You can reuse the universe between EnumSet instances as long as it is not modified.
 	 * <br>
-	 * This is the same as calling {@link #ESet(Enum[], boolean)}.
+	 * This is the same as calling {@link #EnumSet(Enum[], boolean)}.
 	 *
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
-	 * @return a new ESet with the specified universe of possible items, but none present in the set
+	 * @return a new EnumSet with the specified universe of possible items, but none present in the set
 	 */
-	public static ESet noneOf(Enum<?>@Nullable [] universe) {
-		return new ESet(universe, true);
+	public static EnumSet noneOf(Enum<?>@Nullable [] universe) {
+		return new EnumSet(universe, true);
 	}
 
 	/**
-	 * Creates a new ESet using the given result of calling {@code values()} on an Enum type (the universe), and with all possible
-	 * items initially stored in the set. You can reuse the universe between ESet instances as long as it is not modified.
+	 * Creates a new EnumSet using the given result of calling {@code values()} on an Enum type (the universe), and with all possible
+	 * items initially stored in the set. You can reuse the universe between EnumSet instances as long as it is not modified.
 	 *
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
-	 * @return a new ESet with the specified universe of possible items, and all of them present in the set
+	 * @return a new EnumSet with the specified universe of possible items, and all of them present in the set
 	 */
-	public static ESet allOf(Enum<?>@Nullable [] universe) {
-		if(universe == null) return new ESet();
-		ESet coll = new ESet(universe, true);
+	public static EnumSet allOf(Enum<?>@Nullable [] universe) {
+		if(universe == null) return new EnumSet();
+		EnumSet coll = new EnumSet(universe, true);
 		if(universe.length == 0) return coll;
 
 		for (int i = 0; i < coll.table.length - 1; i++) {
@@ -675,31 +695,31 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
-	 * Creates a new ESet using the constants from the given Class (of an Enum type), but with no items initially
+	 * Creates a new EnumSet using the constants from the given Class (of an Enum type), but with no items initially
 	 * stored in the set.
 	 * <br>
-	 * This is the same as calling {@link #ESet(Class)}.
+	 * This is the same as calling {@link #EnumSet(Class)}.
 	 *
 	 * @param clazz the Class of any Enum type; you can get this from a constant with {@link Enum#getDeclaringClass()}
-	 * @return a new ESet with the specified universe of possible items, but none present in the set
+	 * @return a new EnumSet with the specified universe of possible items, but none present in the set
 	 */
-	public static ESet noneOf(@Nullable Class<? extends Enum<?>> clazz) {
+	public static EnumSet noneOf(@Nullable Class<? extends Enum<?>> clazz) {
 		if(clazz == null)
-			return new ESet();
-		return new ESet(clazz.getEnumConstants(), true);
+			return new EnumSet();
+		return new EnumSet(clazz.getEnumConstants(), true);
 	}
 
 	/**
-	 * Creates a new ESet using the constants from the given Class (of an Enum type), and with all possible items initially
+	 * Creates a new EnumSet using the constants from the given Class (of an Enum type), and with all possible items initially
 	 * stored in the set.
 	 *
 	 * @param clazz the Class of any Enum type; you can get this from a constant with {@link Enum#getDeclaringClass()}
-	 * @return a new ESet with the specified universe of possible items, and all of them present in the set
+	 * @return a new EnumSet with the specified universe of possible items, and all of them present in the set
 	 */
-	public static ESet allOf(@Nullable Class<? extends Enum<?>> clazz) {
+	public static EnumSet allOf(@Nullable Class<? extends Enum<?>> clazz) {
 		if(clazz == null)
-			return new ESet();
-		ESet coll = new ESet(clazz.getEnumConstants(), true);
+			return new EnumSet();
+		EnumSet coll = new EnumSet(clazz.getEnumConstants(), true);
 		if(coll.universe.length == 0) return coll;
 
 		for (int i = 0; i < coll.table.length - 1; i++) {
@@ -711,15 +731,15 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
-	 * Given another ESet, this creates a new ESet with the same universe as {@code other}, but with any elements present in other
+	 * Given another EnumSet, this creates a new EnumSet with the same universe as {@code other}, but with any elements present in other
 	 * absent in the new set, and any elements absent in other present in the new set.
 	 *
-	 * @param other another ESet that this will copy
+	 * @param other another EnumSet that this will copy
 	 * @return a complemented copy of {@code other}
 	 */
-	public static ESet complementOf(ESet other) {
-		if(other == null) return new ESet();
-		ESet coll = new ESet(other);
+	public static EnumSet complementOf(EnumSet other) {
+		if(other == null) return new EnumSet();
+		EnumSet coll = new EnumSet(other);
 		for (int i = 0; i < coll.table.length - 1; i++) {
 			coll.table[i] ^= -1;
 		}
@@ -729,35 +749,35 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	}
 
 	/**
-	 * Creates an ESet holding any Enum items in the given {@code contents}, which may be any Collection of Enum, including another
-	 * ESet. If given an ESet, this will copy its Enum universe and other information even if it is empty.
-	 * @param contents a Collection of Enum values, which may be another ESet
-	 * @return a new ESet containing the unique items in contents
+	 * Creates an EnumSet holding any Enum items in the given {@code contents}, which may be any Collection of Enum, including another
+	 * EnumSet. If given an EnumSet, this will copy its Enum universe and other information even if it is empty.
+	 * @param contents a Collection of Enum values, which may be another EnumSet
+	 * @return a new EnumSet containing the unique items in contents
 	 */
-	public static ESet copyOf(Collection<? extends Enum<?>> contents) {
-		if(contents == null) throw new NullPointerException("Cannot copy a null ESet.");
-		return new ESet(contents);
+	public static EnumSet copyOf(Collection<? extends Enum<?>> contents) {
+		if(contents == null) throw new NullPointerException("Cannot copy a null EnumSet.");
+		return new EnumSet(contents);
 	}
 
 	/**
-	 * Creates an ESet holding Enum items between the ordinals of {@code start} and {@code end}. If the ordinal of end is less than
+	 * Creates an EnumSet holding Enum items between the ordinals of {@code start} and {@code end}. If the ordinal of end is less than
 	 * the ordinal of start, this throws an {@link IllegalArgumentException}.
 	 * If start and end are the same, this just inserts that one Enum.
 	 *
 	 * @param start the starting inclusive Enum to insert
 	 * @param end the ending inclusive Enum to insert
-	 * @return a new ESet containing start, end, and any Enum constants with ordinals between them
+	 * @return a new EnumSet containing start, end, and any Enum constants with ordinals between them
 	 * @param <E> the shared Enum type of both start and end
 	 * @throws IllegalArgumentException if the {@link Enum#ordinal() ordinal} of end is less than the ordinal of start
 	 */
-	public static  <E extends Enum<E>> ESet range(Enum<E> start, Enum<E> end) {
+	public static  <E extends Enum<E>> EnumSet range(Enum<E> start, Enum<E> end) {
 		final int mn = start.ordinal();
 		final int mx = end.ordinal();
 		if(mx < mn) throw new IllegalArgumentException("The ordinal of " + end + " (" + mx +
 			") must be at least equal to the ordinal of " + start + " ("+mn+")");
 		final int upperMin = mn >>> 5;
 		final int upperMax = mx >>> 5;
-		ESet coll = new ESet();
+		EnumSet coll = new EnumSet();
 		coll.add(start);
 		if(upperMin == upperMax){
 			coll.table[upperMin] = (-1 >>> ~mx) ^ (-1 >>> -mn);
