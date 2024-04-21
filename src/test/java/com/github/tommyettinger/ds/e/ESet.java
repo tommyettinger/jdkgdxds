@@ -85,9 +85,9 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 *
 	 * @param contents an array of Enum items to place into this set
 	 */
-	public ESet(Enum<?>@Nullable [] contents) {
+	public ESet(Enum<?>[] contents) {
 		super();
-		if(contents == null) return;
+		if(contents == null) throw new NullPointerException("ESet cannot be constructed with a null array.");
 		addAll(contents);
 	}
 
@@ -97,9 +97,9 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public ESet(@Nullable Collection<? extends Enum<?>> contents) {
+	public ESet(Collection<? extends Enum<?>> contents) {
 		super();
-		if(contents == null) return;
+		if(contents == null) throw new NullPointerException("ESet cannot be constructed with a null Collection.");
 		addAll(contents);
 	}
 
@@ -107,8 +107,8 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 	 * Copy constructor; uses a direct reference to the enum values that may be cached in {@code other}, but copies other fields.
 	 * @param other another ESet that will have most of its data copied, but its cached {@code values()} results will be used directly
 	 */
-	public ESet (@Nullable ESet other) {
-		if(other == null) return;
+	public ESet (ESet other) {
+		if(other == null) throw new NullPointerException("ESet cannot be constructed from a null ESet.");
 		this.size = other.size;
 		if(other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
@@ -603,14 +603,42 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 
 	}
 
+	/**
+	 * Builds an ESet that contains only the given element.
+	 * @param item the one item to initialize the ESet with
+	 * @return a new ESet containing {@code item}
+	 */
 	public static ESet with (Enum<?> item) {
 		ESet set = new ESet();
 		set.add(item);
 		return set;
 	}
 
+	/**
+	 * Builds an ESet that contains the unique elements from the given {@code array} or varargs.
+	 * @param array an array or varargs of Enum constants, which should all have the same Enum type
+	 * @return a new ESet containing each unique item from {@code array}
+	 */
 	public static ESet with (Enum<?>... array) {
 		return new ESet(array);
+	}
+
+	/**
+	 * Alias of {@link #with(Enum)} for compatibility.
+	 * @param item the one item to initialize the ESet with
+	 * @return a new ESet containing {@code item}
+	 */
+	public static ESet of (Enum<?> item) {
+		return with(item);
+	}
+
+	/**
+	 * Alias of {@link #with(Enum[])} for compatibility.
+	 * @param array an array or varargs of Enum constants, which should all have the same Enum type
+	 * @return a new ESet containing each unique item from {@code array}
+	 */
+	public static ESet of (Enum<?>... array) {
+		return with(array);
 	}
 
 	/**

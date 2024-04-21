@@ -1360,270 +1360,261 @@ public class ESetTest extends TestCase {
         assertSame(HugeEnum.ll, hIterator.next());
     }
 
-//    /**
-//     * @tests java.util.ESet#of(E)
-//     */
-//    public void test_Of_E() {
-//        ESet enumSet = ESet.of(EnumWithInnerClass.a);
-//        assertEquals("enumSet should have length 1:", 1, enumSet.size());
-//
-//        assertTrue("enumSet should contain EnumWithSubclass.a:",
-//                enumSet.contains(EnumWithInnerClass.a));
-//
-//        try {
-//            ESet.of((EnumWithInnerClass) null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        // test enum type with more than 64 elements
-//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a);
-//        assertEquals(1, hugeESet.size());
-//
-//        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
-//    }
-//
-//    /**
-//     * @tests java.util.ESet#of(E, E)
-//     */
-//    public void test_Of_EE() {
-//        ESet enumSet = ESet.of(EnumWithInnerClass.a,
-//                EnumWithInnerClass.b);
-//        assertEquals("enumSet should have length 2:", 2, enumSet.size());
-//
-//        assertTrue("enumSet should contain EnumWithSubclass.a:",
-//                enumSet.contains(EnumWithInnerClass.a));
-//        assertTrue("enumSet should contain EnumWithSubclass.b:",
-//                enumSet.contains(EnumWithInnerClass.b));
-//
-//        try {
-//            ESet.of((EnumWithInnerClass) null, EnumWithInnerClass.a);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        try {
-//            ESet.of( EnumWithInnerClass.a, (EnumWithInnerClass) null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        try {
-//            ESet.of( (EnumWithInnerClass) null, (EnumWithInnerClass) null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        enumSet = ESet.of(EnumWithInnerClass.a, EnumWithInnerClass.a);
-//        assertEquals("Size of enumSet should be 1",
-//                1, enumSet.size());
-//
-//        // test enum type with more than 64 elements
-//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
-//                HugeEnumWithInnerClass.b);
-//        assertEquals(2, hugeESet.size());
-//
-//        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
-//        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.b));
-//
-//        try {
-//            ESet.of((HugeEnumWithInnerClass) null, HugeEnumWithInnerClass.a);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        try {
-//            ESet.of( HugeEnumWithInnerClass.a, (HugeEnumWithInnerClass) null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        try {
-//            ESet.of( (HugeEnumWithInnerClass) null, (HugeEnumWithInnerClass) null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        hugeESet = ESet.of(HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.a);
-//        assertEquals(1, hugeESet.size());
-//    }
-//
-//    /**
-//     * @tests java.util.ESet#of(E, E, E)
-//     */
-//    public void test_Of_EEE() {
-//        ESet enumSet = ESet.of(EnumWithInnerClass.a,
-//                EnumWithInnerClass.b, EnumWithInnerClass.c);
-//        assertEquals("Size of enumSet should be 3:", 3, enumSet.size());
-//
-//        assertTrue(
-//                "enumSet should contain EnumWithSubclass.a:", enumSet.contains(EnumWithInnerClass.a));
-//        assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.c));
-//
-//        try {
-//            ESet.of((EnumWithInnerClass) null, null, null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        enumSet = ESet.of(EnumWithInnerClass.a, EnumWithInnerClass.b,
-//                EnumWithInnerClass.b);
-//        assertEquals("enumSet should contain 2 elements:", 2, enumSet.size());
-//
-//        // test enum type with more than 64 elements
-//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
-//                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c);
-//        assertEquals(3, hugeESet.size());
-//
-//        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
-//        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.c));
-//
-//        try {
-//            ESet.of((HugeEnumWithInnerClass) null, null, null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        hugeESet = ESet.of(HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.b,
-//                HugeEnumWithInnerClass.b);
-//        assertEquals(2, hugeESet.size());
-//    }
-//
-//    /**
-//     * @tests java.util.ESet#of(E, E, E, E)
-//     */
-//    public void test_Of_EEEE() {
-//        ESet enumSet = ESet.of(EnumWithInnerClass.a,
-//                EnumWithInnerClass.b, EnumWithInnerClass.c,
-//                EnumWithInnerClass.d);
-//        assertEquals("Size of enumSet should be 4", 4, enumSet.size());
-//
-//        assertTrue(
-//                "enumSet should contain EnumWithSubclass.a:", enumSet.contains(EnumWithInnerClass.a));
-//        assertTrue("enumSet should contain EnumWithSubclass.d:", enumSet
-//                .contains(EnumWithInnerClass.d));
-//
-//        try {
-//            ESet.of((EnumWithInnerClass) null, null, null, null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        // test enum type with more than 64 elements
-//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
-//                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c,
-//                HugeEnumWithInnerClass.d);
-//        assertEquals(4, hugeESet.size());
-//
-//        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
-//        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.d));
-//
-//        try {
-//            ESet.of((HugeEnumWithInnerClass) null, null, null, null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//    }
-//
-//    /**
-//     * @tests java.util.ESet#of(E, E, E, E, E)
-//     */
-//    public void test_Of_EEEEE() {
-//        ESet enumSet = ESet.of(EnumWithInnerClass.a,
-//                EnumWithInnerClass.b, EnumWithInnerClass.c,
-//                EnumWithInnerClass.d, EnumWithInnerClass.e);
-//        assertEquals("Size of enumSet should be 5:", 5, enumSet.size());
-//
-//        assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.a));
-//        assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.e));
-//
-//        try {
-//            ESet.of((EnumWithInnerClass) null, null, null, null, null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        // test enum with more than 64 elements
-//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
-//                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c,
-//                HugeEnumWithInnerClass.d, HugeEnumWithInnerClass.e);
-//        assertEquals(5, hugeESet.size());
-//
-//        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
-//        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.e));
-//
-//        try {
-//            ESet.of((HugeEnumWithInnerClass) null, null, null, null, null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//    }
-//
-//    /**
-//     * @tests java.util.ESet#of(E, E...)
-//     */
-//    public void test_Of_EEArray() {
-//        EnumWithInnerClass[] enumArray = new EnumWithInnerClass[] {
-//                EnumWithInnerClass.b, EnumWithInnerClass.c };
-//        ESet enumSet = ESet.of(EnumWithInnerClass.a,
-//                enumArray);
-//        assertEquals("Should be equal", 3, enumSet.size());
-//
-//        assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.a));
-//        assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.c));
-//
-//        try {
-//            ESet.of(EnumWithInnerClass.a, (EnumWithInnerClass[])null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        EnumFoo[] foos = {EnumFoo.a, EnumFoo.c, EnumFoo.d};
-//        ESet set = ESet.of(EnumFoo.c, foos);
-//        assertEquals("size of set should be 1", 3, set.size());
-//        assertTrue("Should contain EnumFoo.a", set.contains(EnumFoo.a));
-//        assertTrue("Should contain EnumFoo.c", set.contains(EnumFoo.c));
-//        assertTrue("Should contain EnumFoo.d", set.contains(EnumFoo.d));
-//
-//        // test enum type with more than 64 elements
-//        HugeEnumWithInnerClass[] hugeEnumArray = new HugeEnumWithInnerClass[] {
-//                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c };
-//        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
-//                hugeEnumArray);
-//        assertEquals(3, hugeESet.size());
-//
-//        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
-//        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.c));
-//
-//        try {
-//            ESet.of(HugeEnumWithInnerClass.a, (HugeEnumWithInnerClass[])null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException npe) {
-//            // expected
-//        }
-//
-//        HugeEnumWithInnerClass[] huges = {HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.c, HugeEnumWithInnerClass.d};
-//        ESet hugeSet = ESet.of(HugeEnumWithInnerClass.c, huges);
-//        assertEquals(3, hugeSet.size());
-//        assertTrue(hugeSet.contains(HugeEnumWithInnerClass.a));
-//        assertTrue(hugeSet.contains(HugeEnumWithInnerClass.c));
-//        assertTrue(hugeSet.contains(HugeEnumWithInnerClass.d));
-//    }
-//
+    public void test_Of_E() {
+        ESet enumSet = ESet.with(EnumWithInnerClass.a);
+        assertEquals("enumSet should have length 1:", 1, enumSet.size());
+
+        assertTrue("enumSet should contain EnumWithSubclass.a:",
+                enumSet.contains(EnumWithInnerClass.a));
+
+        try {
+            ESet.of((EnumWithInnerClass) null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        // test enum type with more than 64 elements
+        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a);
+        assertEquals(1, hugeESet.size());
+
+        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
+    }
+
+    /**
+     * @tests java.util.ESet#of(E, E)
+     */
+    public void test_Of_EE() {
+        ESet enumSet = ESet.of(EnumWithInnerClass.a,
+                EnumWithInnerClass.b);
+        assertEquals("enumSet should have length 2:", 2, enumSet.size());
+
+        assertTrue("enumSet should contain EnumWithSubclass.a:",
+                enumSet.contains(EnumWithInnerClass.a));
+        assertTrue("enumSet should contain EnumWithSubclass.b:",
+                enumSet.contains(EnumWithInnerClass.b));
+
+        try {
+            ESet.of((EnumWithInnerClass) null, EnumWithInnerClass.a);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        try {
+            ESet.of( EnumWithInnerClass.a, (EnumWithInnerClass) null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        try {
+            ESet.of( (EnumWithInnerClass) null, (EnumWithInnerClass) null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        enumSet = ESet.of(EnumWithInnerClass.a, EnumWithInnerClass.a);
+        assertEquals("Size of enumSet should be 1",
+                1, enumSet.size());
+
+        // test enum type with more than 64 elements
+        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
+                HugeEnumWithInnerClass.b);
+        assertEquals(2, hugeESet.size());
+
+        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
+        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.b));
+
+        try {
+            ESet.of((HugeEnumWithInnerClass) null, HugeEnumWithInnerClass.a);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        try {
+            ESet.of( HugeEnumWithInnerClass.a, (HugeEnumWithInnerClass) null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        try {
+            ESet.of( (HugeEnumWithInnerClass) null, (HugeEnumWithInnerClass) null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        hugeESet = ESet.of(HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.a);
+        assertEquals(1, hugeESet.size());
+    }
+
+    /**
+     * @tests java.util.ESet#of(E, E, E)
+     */
+    public void test_Of_EEE() {
+        ESet enumSet = ESet.of(EnumWithInnerClass.a,
+                EnumWithInnerClass.b, EnumWithInnerClass.c);
+        assertEquals("Size of enumSet should be 3:", 3, enumSet.size());
+
+        assertTrue(
+                "enumSet should contain EnumWithSubclass.a:", enumSet.contains(EnumWithInnerClass.a));
+        assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.c));
+
+        try {
+            ESet.of((EnumWithInnerClass) null, null, null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        enumSet = ESet.of(EnumWithInnerClass.a, EnumWithInnerClass.b,
+                EnumWithInnerClass.b);
+        assertEquals("enumSet should contain 2 elements:", 2, enumSet.size());
+
+        // test enum type with more than 64 elements
+        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
+                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c);
+        assertEquals(3, hugeESet.size());
+
+        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
+        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.c));
+
+        try {
+            ESet.of((HugeEnumWithInnerClass) null, null, null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        hugeESet = ESet.of(HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.b,
+                HugeEnumWithInnerClass.b);
+        assertEquals(2, hugeESet.size());
+    }
+
+    /**
+     * @tests java.util.ESet#of(E, E, E, E)
+     */
+    public void test_Of_EEEE() {
+        ESet enumSet = ESet.of(EnumWithInnerClass.a,
+                EnumWithInnerClass.b, EnumWithInnerClass.c,
+                EnumWithInnerClass.d);
+        assertEquals("Size of enumSet should be 4", 4, enumSet.size());
+
+        assertTrue(
+                "enumSet should contain EnumWithSubclass.a:", enumSet.contains(EnumWithInnerClass.a));
+        assertTrue("enumSet should contain EnumWithSubclass.d:", enumSet
+                .contains(EnumWithInnerClass.d));
+
+        try {
+            ESet.of((EnumWithInnerClass) null, null, null, null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        // test enum type with more than 64 elements
+        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
+                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c,
+                HugeEnumWithInnerClass.d);
+        assertEquals(4, hugeESet.size());
+
+        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
+        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.d));
+
+        try {
+            ESet.of((HugeEnumWithInnerClass) null, null, null, null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+    }
+
+    /**
+     * @tests java.util.ESet#of(E, E, E, E, E)
+     */
+    public void test_Of_EEEEE() {
+        ESet enumSet = ESet.of(EnumWithInnerClass.a,
+                EnumWithInnerClass.b, EnumWithInnerClass.c,
+                EnumWithInnerClass.d, EnumWithInnerClass.e);
+        assertEquals("Size of enumSet should be 5:", 5, enumSet.size());
+
+        assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.a));
+        assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.e));
+
+        try {
+            ESet.of((EnumWithInnerClass) null, null, null, null, null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        // test enum with more than 64 elements
+        ESet hugeESet = ESet.of(HugeEnumWithInnerClass.a,
+                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c,
+                HugeEnumWithInnerClass.d, HugeEnumWithInnerClass.e);
+        assertEquals(5, hugeESet.size());
+
+        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
+        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.e));
+
+        try {
+            ESet.of((HugeEnumWithInnerClass) null, null, null, null, null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+    }
+
+    /**
+     * @tests java.util.ESet#of(E, E...)
+     */
+    public void test_Of_EEArray() {
+        ESet enumSet = ESet.of(EnumWithInnerClass.a, EnumWithInnerClass.b, EnumWithInnerClass.c);
+        assertEquals("Should be equal", 3, enumSet.size());
+
+        assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.a));
+        assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.c));
+
+        try {
+            ESet.of((EnumWithInnerClass[])null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        ESet set = ESet.of(EnumFoo.c, EnumFoo.a, EnumFoo.c, EnumFoo.d);
+        assertEquals("size of set should be 1", 3, set.size());
+        assertTrue("Should contain EnumFoo.a", set.contains(EnumFoo.a));
+        assertTrue("Should contain EnumFoo.c", set.contains(EnumFoo.c));
+        assertTrue("Should contain EnumFoo.d", set.contains(EnumFoo.d));
+
+        // test enum type with more than 64 elements
+        HugeEnumWithInnerClass[] hugeEnumArray = new HugeEnumWithInnerClass[] {
+            HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c };
+        ESet hugeESet = ESet.of(hugeEnumArray);
+        assertEquals(3, hugeESet.size());
+
+        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.a));
+        assertTrue(hugeESet.contains(HugeEnumWithInnerClass.c));
+
+        try {
+            ESet.of((HugeEnumWithInnerClass[])null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException npe) {
+            // expected
+        }
+
+        ESet hugeSet = ESet.of(HugeEnumWithInnerClass.c, HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.c, HugeEnumWithInnerClass.d);
+        assertEquals(3, hugeSet.size());
+        assertTrue(hugeSet.contains(HugeEnumWithInnerClass.a));
+        assertTrue(hugeSet.contains(HugeEnumWithInnerClass.c));
+        assertTrue(hugeSet.contains(HugeEnumWithInnerClass.d));
+    }
+
 //    /**
 //     * @tests java.util.ESet#range(E, E)
 //     */
