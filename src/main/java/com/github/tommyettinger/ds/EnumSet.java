@@ -32,7 +32,7 @@ import java.util.Set;
  * A Set of Enum items. Unlike {@link java.util.EnumSet}, this does not require a Class at construction time, which can be
  * useful for serialization purposes. Instead of storing a Class, this holds a "key universe" (which is almost always the
  * same as an array returned by calling {@code values()} on an Enum type), and key universes are ideally shared between
- * compatible EnumSets.
+ * compatible EnumSets. No allocation is done unless this is changing its table size and/or key universe.
  * <br>
  * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumSet can use as keys, in
  * the specific order they are declared. You almost always get a key universe by calling {@code MyEnum.values()}, but you
@@ -42,7 +42,7 @@ import java.util.Set;
  * first key placed into the EnumSet, though it won't be shared at first. You can also set the key universe with
  * {@link #clearToUniverse(Enum[])}, in the process of clearing the map.
  * <br>
- * This class tries to be as compatible as possible with {@link java.util.EnumSet}, though this extends that where possible.
+ * This class tries to be as compatible as possible with {@link java.util.EnumSet}, though this expands on that where possible.
  *
  * @author Tommy Ettinger
  */

@@ -35,25 +35,28 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 
 /**
  * An unordered map where the keys are {@code Enum}s and values are objects. Null keys are not allowed; null values are permitted.
- * No allocation is done unless this is changing its table size and/or key universe.
+ * Unlike {@link java.util.EnumMap}, this does not require a Class at construction time, which can be useful for serialization
+ * purposes. No allocation is done unless this is changing its table size and/or key universe.
  * <br>
  * This class never actually hashes keys in its primary operations (get(), put(), remove(), containsKey(), etc.), since it can
  * rely on keys having an Enum type, and so having {@link Enum#ordinal()} available. The ordinal allows constant-time access
  * to a guaranteed-unique {@code int} that will always be non-negative and less than the size of the key universe. The table of
  * possible values always starts sized to fit exactly as many values as there are keys in the key universe.
  * <br>
- * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumObjectMap can use as keys, in
+ * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumMap can use as keys, in
  * the specific order they are declared. You almost always get a key universe by calling {@code MyEnum.values()}, but you
  * can also use {@link Class#getEnumConstants()} for an Enum class. You can and generally should reuse key universes in order to
- * avoid allocations and/or save memory; the constructor {@link #EnumObjectMap(Enum[])} (with no values given) creates an empty EnumObjectMap with
+ * avoid allocations and/or save memory; the constructor {@link #EnumMap(Enum[])} (with no values given) creates an empty EnumMap with
  * a given key universe. If you need to use the zero-argument constructor, you can, and the key universe will be obtained from the
- * first key placed into the EnumObjectMap. You can also set the key universe with {@link #clearToUniverse(Enum[])}, in the process of
+ * first key placed into the EnumMap. You can also set the key universe with {@link #clearToUniverse(Enum[])}, in the process of
  * clearing the map.
+ * <br>
+ * This class tries to be as compatible as possible with {@link java.util.EnumMap}, though this expands on that where possible.
  *
  * @author Nathan Sweet (Keys, Values, Entries, and MapIterator, as well as general structure)
  * @author Tommy Ettinger (Enum-related adaptation)
  */
-public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>> {
+public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, V>> {
 
 	protected int size;
 
@@ -78,18 +81,18 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	 * Empty constructor; using this will postpone creating the key universe and allocating the value table until {@link #put} is
 	 * first called (potentially indirectly). You can also use {@link #clearToUniverse} to set the key universe and value table.
 	 */
-	public EnumObjectMap () {
+	public EnumMap () {
 	}
 
 	/**
 	 * Initializes this map so that it has exactly enough capacity as needed to contain each Enum constant defined in
 	 * {@code universe}, assuming universe stores every possible constant in one Enum type. This map will start empty.
 	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
-	 * reference to one Enum array across many EnumObjectMap instances if you don't modify the shared array. Sharing the same
-	 * universe helps save some memory if you have (very) many EnumObjectMap instances.
+	 * reference to one Enum array across many EnumMap instances if you don't modify the shared array. Sharing the same
+	 * universe helps save some memory if you have (very) many EnumMap instances.
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 */
-	public EnumObjectMap (@Nullable Enum<?>[] universe) {
+	public EnumMap (@Nullable Enum<?>[] universe) {
 		super();
 		if(universe == null) return;
 		this.universe = universe;
@@ -98,21 +101,21 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 
 	/**
 	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined by the
-	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumObjectMap(Enum[])}
+	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumMap(Enum[])}
 	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
-	 * if you use {@link #EnumObjectMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
+	 * if you use {@link #EnumMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
-	public EnumObjectMap (@Nullable Class<? extends Enum<?>> universeClass) {
+	public EnumMap (@Nullable Class<? extends Enum<?>> universeClass) {
 		this(universeClass == null ? null : universeClass.getEnumConstants());
 	}
 
 	/**
-	 * Creates a new map identical to the specified EnumObjectMap. This will share a key universe with the given EnumObjectMap, if non-null.
+	 * Creates a new map identical to the specified EnumMap. This will share a key universe with the given EnumMap, if non-null.
 	 *
-	 * @param map an EnumObjectMap to copy
+	 * @param map an EnumMap to copy
 	 */
-	public EnumObjectMap (EnumObjectMap<? extends V> map) {
+	public EnumMap (EnumMap<? extends V> map) {
 		universe = map.universe;
 		valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
 		size = map.size;
@@ -122,9 +125,9 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map a Map to copy; EnumObjectMap or its subclasses will be faster
+	 * @param map a Map to copy; EnumMap or its subclasses will be faster
 	 */
-	public EnumObjectMap (Map<? extends Enum<?>, ? extends V> map) {
+	public EnumMap (Map<? extends Enum<?>, ? extends V> map) {
 		this();
 		putAll(map);
 	}
@@ -136,7 +139,7 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	 * @param keys   an array of Enum keys
 	 * @param values an array of V values
 	 */
-	public EnumObjectMap (Enum<?>[] keys, V[] values) {
+	public EnumMap (Enum<?>[] keys, V[] values) {
 		this();
 		putAll(keys, values);
 	}
@@ -148,7 +151,7 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	 * @param keys   a Collection of Enum keys
 	 * @param values a Collection of V values
 	 */
-	public EnumObjectMap (Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
+	public EnumMap (Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
 		this();
 		putAll(keys, values);
 	}
@@ -198,22 +201,22 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
-	 * If this EnumObjectMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
-	 * from now on for this EnumObjectMap.
+	 * If this EnumMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
+	 * from now on for this EnumMap.
 	 *
-	 * @param key the Enum key to try to place into this EnumObjectMap
+	 * @param key the Enum key to try to place into this EnumMap
 	 * @param value the V value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	@Override
 	@Nullable
 	public V put (Enum<?> key, @Nullable V value) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumObjectMap must not be null.");
+		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
 		if(universe == null) universe = key.getDeclaringClass().getEnumConstants();
 		if(valueTable == null) valueTable = new Object[universe.length];
 		int i = key.ordinal();
 		if(i >= valueTable.length || universe[i] != key)
-			throw new ClassCastException("Incompatible key for the EnumObjectMap's universe.");
+			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
 		Object oldValue = valueTable[i];
 		valueTable[i] = hold(value);
 		if (oldValue != null) {
@@ -226,20 +229,20 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 
 	/**
 	 * Acts like {@link #put(Enum, Object)}, but uses the specified {@code defaultValue} instead of
-	 * {@link #getDefaultValue() the default value for this EnumObjectMap}.
-	 * @param key the Enum key to try to place into this EnumObjectMap
+	 * {@link #getDefaultValue() the default value for this EnumMap}.
+	 * @param key the Enum key to try to place into this EnumMap
 	 * @param value the V value to associate with {@code key}
 	 * @param defaultValue the V value to return if {@code key} was not already present
 	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
 	 */
 	@Nullable
 	public V putOrDefault (Enum<?> key, @Nullable V value, @Nullable V defaultValue) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumObjectMap must not be null.");
+		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
 		if(universe == null) universe = key.getDeclaringClass().getEnumConstants();
 		if(valueTable == null) valueTable = new Object[universe.length];
 		int i = key.ordinal();
 		if(i >= valueTable.length || universe[i] != key)
-			throw new ClassCastException("Incompatible key for the EnumObjectMap's universe.");
+			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
 		Object oldValue = valueTable[i];
 		valueTable[i] = hold(value);
 		if (oldValue != null) {
@@ -252,14 +255,14 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 
 	/**
 	 * Puts every key-value pair in the given map into this, with the values from the given map
-	 * overwriting the previous values if two keys are identical. If this EnumObjectMap doesn't yet have
+	 * overwriting the previous values if two keys are identical. If this EnumMap doesn't yet have
 	 * a key universe, it will now share a key universe with the given {@code map}. Even if the
-	 * given EnumObjectMap is empty, it can still be used to obtain a key universe for this EnumObjectMap
+	 * given EnumMap is empty, it can still be used to obtain a key universe for this EnumMap
 	 * (assuming it has a key universe).
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (@NonNull EnumObjectMap<? extends V> map) {
+	public void putAll (@NonNull EnumMap<? extends V> map) {
 		if(map.universe == null) return;
 		if(universe == null) universe = map.universe;
 		if(valueTable == null) valueTable = new Object[universe.length];
@@ -270,7 +273,7 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 		Object value;
 		for (int i = 0; i < n; i++) {
 			if(universe[i] != map.universe[i])
-				throw new ClassCastException("Incompatible key for the EnumObjectMap's universe.");
+				throw new ClassCastException("Incompatible key for the EnumMap's universe.");
 			value = valueTable[i];
 			if (value != null) {
 				if(this.valueTable[i] == null) ++size;
@@ -378,7 +381,7 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	 * specified map.  The behavior of this operation is undefined if the
 	 * specified map is modified while the operation is in progress.
 	 * <br>
-	 * Note that {@link #putAll(EnumObjectMap)} is more specific and can be
+	 * Note that {@link #putAll(EnumMap)} is more specific and can be
 	 * more efficient by using the internal details of this class.
 	 *
 	 * @param m mappings to be stored in this map
@@ -462,13 +465,13 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	 * Removes all the elements from this map and can reset the universe of possible Enum items this can hold.
 	 * The map will be empty after this call returns.
 	 * This changes the universe of possible Enum items this can hold to match {@code universe}.
-	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumObjectMap()} was called.
+	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumMap()} was called.
 	 * If the table this would need is the same size as or smaller than the current table (such as if {@code universe} is the same as
 	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This always uses {@code universe} directly, without copying.
 	 * <br>
-	 * This can be useful to allow an EnumObjectMap that was created with {@link #EnumObjectMap()} to share a universe with other EMaps.
+	 * This can be useful to allow an EnumMap that was created with {@link #EnumMap()} to share a universe with other EMaps.
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
@@ -490,14 +493,14 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	 * Removes all the elements from this map and can reset the universe of possible Enum items this can hold.
 	 * The map will be empty after this call returns.
 	 * This changes the universe of possible Enum items this can hold to match the Enum constants in {@code universe}.
-	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumObjectMap()} was called.
+	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumMap()} was called.
 	 * If the table this would need is the same size as or smaller than the current table (such as if {@code universe} is the same as
 	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This calls {@link Class#getEnumConstants()} if universe is non-null, which allocates a new array.
 	 * <br>
 	 * You may want to prefer calling {@link #clearToUniverse(Enum[])} (the overload that takes an array), because it can be used to
-	 * share one universe array between many EnumObjectMap instances. This overload, given a Class, has to call {@link Class#getEnumConstants()}
+	 * share one universe array between many EnumMap instances. This overload, given a Class, has to call {@link Class#getEnumConstants()}
 	 * and thus allocate a new array each time this is called.
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
@@ -638,8 +641,8 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	 */
 	public boolean equalsIdentity (@Nullable Object obj) {
 		if (obj == this) {return true;}
-		if (!(obj instanceof EnumObjectMap)) {return false;}
-		EnumObjectMap other = (EnumObjectMap)obj;
+		if (!(obj instanceof EnumMap)) {return false;}
+		EnumMap other = (EnumMap)obj;
 		if (other.size != size) {return false;}
 		Enum<?>[] universe = this.universe;
 		Object[] valueTable = this.valueTable;
@@ -734,8 +737,8 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 
 	/**
 	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
-	 * does not permit nested iteration. Iterate over {@link Entries#Entries(EnumObjectMap)} if you
-	 * need nested or multithreaded iteration. You can remove an Entry from this EnumObjectMap
+	 * does not permit nested iteration. Iterate over {@link Entries#Entries(EnumMap)} if you
+	 * need nested or multithreaded iteration. You can remove an Entry from this EnumMap
 	 * using this Iterator.
 	 *
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
@@ -885,7 +888,7 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 		}
 
 		/**
-		 * Sets the value of this Entry, but does <em>not</em> write through to the containing EnumObjectMap.
+		 * Sets the value of this Entry, but does <em>not</em> write through to the containing EnumMap.
 		 * @param value the new V value to use
 		 * @return the old value this held, before modification
 		 */
@@ -917,11 +920,11 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	public static abstract class MapIterator<V, I> implements Iterable<I>, Iterator<I> {
 		public boolean hasNext;
 
-		protected final EnumObjectMap<? extends V> map;
+		protected final EnumMap<? extends V> map;
 		protected int nextIndex, currentIndex;
 		public boolean valid = true;
 
-		public MapIterator (EnumObjectMap<? extends V> map) {
+		public MapIterator (EnumMap<? extends V> map) {
 			this.map = map;
 			reset();
 		}
@@ -960,7 +963,7 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 		protected Entry<V> entry = new Entry<>();
 		protected MapIterator<V, Map.Entry<Enum<?>, V>> iter;
 
-		public Entries (EnumObjectMap<V> map) {
+		public Entries (EnumMap<V> map) {
 			iter = new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
 				@Override
 				public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator () {
@@ -1251,7 +1254,7 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	public static class Values<V> extends AbstractCollection<V> {
 		protected MapIterator<V, V> iter;
 
-		public Values (EnumObjectMap<V> map) {
+		public Values (EnumMap<V> map) {
 			iter = new MapIterator<V, V>(map) {
 				@Override
 				public @NonNull MapIterator<V, V> iterator () {
@@ -1302,11 +1305,6 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 		 * @implSpec This implementation iterates over the collection looking for the
 		 * specified element.  If it finds the element, it removes the element
 		 * from the collection using the iterator's remove method.
-		 *
-		 * <p>Note that this implementation throws an
-		 * {@code UnsupportedOperationException} if the iterator returned by this
-		 * collection's iterator method does not implement the {@code remove}
-		 * method and this collection contains the specified object.
 		 */
 		@Override
 		public boolean remove (Object o) {
@@ -1506,7 +1504,7 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	public static class Keys extends AbstractSet<Enum<?>> {
 		protected MapIterator<?, Enum<?>> iter;
 
-		public Keys (EnumObjectMap<?> map) {
+		public Keys (EnumMap<?> map) {
 			iter = new MapIterator<Object, Enum<?>>(map) {
 				@Override
 				public @NonNull MapIterator<?, Enum<?>> iterator () {
@@ -1754,8 +1752,8 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	 * @param <V>    the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> EnumObjectMap<V> with () {
-		return new EnumObjectMap<>();
+	public static <V> EnumMap<V> with () {
+		return new EnumMap<>();
 	}
 
 	/**
@@ -1768,8 +1766,8 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> EnumObjectMap<V> with (Enum<?> key0, V value0) {
-		EnumObjectMap<V> map = new EnumObjectMap<>();
+	public static <V> EnumMap<V> with (Enum<?> key0, V value0) {
+		EnumMap<V> map = new EnumMap<>();
 		map.put(key0, value0);
 		return map;
 	}
@@ -1778,7 +1776,7 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
-	 * {@link #EnumObjectMap(Enum[], Object[])}, which takes all keys and then all values.
+	 * {@link #EnumMap(Enum[], Object[])}, which takes all keys and then all values.
 	 * This needs all keys to have the same type and all values to have the same type, because
 	 * it gets those types from the first key parameter and first value parameter. Any keys that don't
 	 * have Enum as their type or values that don't have V as their type have that entry skipped.
@@ -1790,8 +1788,8 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <V> EnumObjectMap<V> with (Enum<?> key0, V value0, Object... rest) {
-		EnumObjectMap<V> map = new EnumObjectMap<>();
+	public static <V> EnumMap<V> with (Enum<?> key0, V value0, Object... rest) {
+		EnumMap<V> map = new EnumMap<>();
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
@@ -1800,5 +1798,40 @@ public class EnumObjectMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enu
 			}
 		}
 		return map;
+	}
+
+	/**
+	 * Constructs an empty map given the types as generic type arguments; an alias for {@link #with()}.
+	 *
+	 * @param <V>    the type of values
+	 * @return a new map containing nothing
+	 */
+	public static <V> EnumMap<V> of () {
+		return with();
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value; an alias for {@link #with(Enum, Object)}.
+	 *
+	 * @param key0   the first and only key
+	 * @param value0 the first and only value
+	 * @param <V>    the type of value0
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static <V> EnumMap<V> of (Enum<?> key0, V value0) {
+		return with(key0, value0);
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values; an alias for {@link #with(Enum, Object, Object...)}.
+	 *
+	 * @param key0   the first key (an Enum)
+	 * @param value0 the first value; will be used to determine the type of all values
+	 * @param rest   an array or varargs of alternating Enum, V, Enum, V... elements
+	 * @param <V>    the type of values, inferred from value0
+	 * @return a new map containing the given keys and values
+	 */
+	public static <V> EnumMap<V> of (Enum<?> key0, V value0, Object... rest) {
+		return with(key0, value0, rest);
 	}
 }

@@ -26,14 +26,14 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
-import com.github.tommyettinger.ds.EnumObjectMap;
+import com.github.tommyettinger.ds.EnumMap;
 import junit.framework.TestCase;
 
 /**
  * Brought from the defunct Apache Harmony project.
  * <a href="https://raw.githubusercontent.com/apache/harmony-classlib/ee663b95e84093405985d9557a925b651a0f69b3/modules/luni/src/test/api/common/org/apache/harmony/luni/tests/java/util/EnumMapTest.java">Original here</a>.
  */
-public class EnumObjectMapTest extends TestCase {
+public class EnumMapTest extends TestCase {
     enum Size {
         Small, Middle, Big {}
     }
@@ -91,19 +91,19 @@ public class EnumObjectMapTest extends TestCase {
     @SuppressWarnings({ "unchecked", "boxing" })
     public void test_ConstructorLjava_lang_Class() {
 
-        EnumObjectMap enumColorMap = new EnumObjectMap<Double>(Color.class);
+        EnumMap enumColorMap = new EnumMap<Double>(Color.class);
         assertNull("Return non-null for non mapped key", enumColorMap.put(
                 Color.Green, 2));
         assertEquals("Get returned incorrect value for given key", 2,
                 enumColorMap.get(Color.Green));
 
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         assertNull("Return non-null for non mapped key", enumSizeMap.put(
                 Size.Big, 2));
         assertEquals("Get returned incorrect value for given key", 2,
                 enumSizeMap.get(Size.Big));
 
-        enumSizeMap = new EnumObjectMap(Size.Middle.getClass());
+        enumSizeMap = new EnumMap(Size.Middle.getClass());
         assertNull("Return non-null for non mapped key", enumSizeMap.put(
                 Size.Small, 1));
         assertEquals("Get returned incorrect value for given key", 1,
@@ -112,21 +112,21 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings({ "unchecked", "boxing" })
     public void test_ConstructorLjava_util_EnumMap() {
-        EnumObjectMap enumMap;
-        EnumObjectMap enumColorMap = null;
+        EnumMap enumMap;
+        EnumMap enumColorMap = null;
         try {
-            enumMap = new EnumObjectMap(enumColorMap);
+            enumMap = new EnumMap(enumColorMap);
             fail("Expected NullPointerException");
         } catch (NullPointerException e) {
             // Expected
         }
 
-        enumColorMap = new EnumObjectMap<Double>(Color.class);
+        enumColorMap = new EnumMap<Double>(Color.class);
         Double double1 = new Double(1);
         enumColorMap.put(Color.Green, 2);
         enumColorMap.put(Color.Blue, double1);
 
-        enumMap = new EnumObjectMap(enumColorMap);
+        enumMap = new EnumMap(enumColorMap);
         assertEquals("Constructor fails", 2, enumMap.get(Color.Green));
         assertSame("Constructor fails", double1, enumMap.get(Color.Blue));
         assertNull("Constructor fails", enumMap.get(Color.Red));
@@ -136,22 +136,22 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings({ "unchecked", "boxing" })
     public void test_ConstructorLjava_util_Map() {
-        EnumObjectMap enumMap;
+        EnumMap enumMap;
         Map enumColorMap = null;
         try {
-            enumMap = new EnumObjectMap(enumColorMap);
+            enumMap = new EnumMap(enumColorMap);
             fail("Expected NullPointerException");
         } catch (NullPointerException e) {
             // Expected
         }
-        enumColorMap = new EnumObjectMap<Double>(Color.class);
-        enumMap = new EnumObjectMap(enumColorMap);
+        enumColorMap = new EnumMap<Double>(Color.class);
+        enumMap = new EnumMap(enumColorMap);
         enumColorMap.put(Color.Blue, 3);
-        enumMap = new EnumObjectMap(enumColorMap);
+        enumMap = new EnumMap(enumColorMap);
 
         HashMap hashColorMap = null;
         try {
-            enumMap = new EnumObjectMap(hashColorMap);
+            enumMap = new EnumMap(hashColorMap);
             fail("Expected NullPointerException");
         } catch (NullPointerException e) {
             // Expected
@@ -160,7 +160,7 @@ public class EnumObjectMapTest extends TestCase {
         hashColorMap = new HashMap();
 
         hashColorMap.put(Color.Green, 2);
-        enumMap = new EnumObjectMap(hashColorMap);
+        enumMap = new EnumMap(hashColorMap);
         assertEquals("Constructor fails", 2, enumMap.get(Color.Green));
         assertNull("Constructor fails", enumMap.get(Color.Red));
         enumMap.put(Color.Red, 1);
@@ -173,7 +173,7 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings({ "unchecked", "boxing" })
     public void test_clear() {
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Small, 1);
         enumSizeMap.clear();
         assertNull("Failed to clear all elements", enumSizeMap.get(Size.Small));
@@ -181,7 +181,7 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings( { "unchecked", "boxing" })
     public void test_containsKeyLjava_lang_Object() {
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         assertFalse("Returned true for uncontained key", enumSizeMap
                 .containsKey(Size.Small));
         enumSizeMap.put(Size.Small, 1);
@@ -202,12 +202,12 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings( { "unchecked", "boxing" })
     public void test_clone() {
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         Integer integer = new Integer("3");
         enumSizeMap.put(Size.Small, integer);
-        EnumObjectMap enumSizeMapClone = new EnumObjectMap(enumSizeMap);
+        EnumMap enumSizeMapClone = new EnumMap(enumSizeMap);
         assertNotSame("Should not be same", enumSizeMap, enumSizeMapClone);
-        assertEquals("Clone answered unequal EnumObjectMap", enumSizeMap,
+        assertEquals("Clone answered unequal EnumMap", enumSizeMap,
                 enumSizeMapClone);
 
         assertSame("Should be same", enumSizeMap.get(Size.Small),
@@ -221,7 +221,7 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings( { "unchecked", "boxing" })
     public void test_containsValueLjava_lang_Object() {
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         Double double1 = new Double(3);
         Double double2 = new Double(3);
 
@@ -247,13 +247,13 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings({ "unchecked", "boxing" })
     public void test_entrySet() {
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 1);
         enumSizeMap.put(Size.Big, null);
         MockEntry mockEntry = new MockEntry(Size.Middle, 1);
-        EnumObjectMap.Entries set = enumSizeMap.entrySet();
+        EnumMap.Entries set = enumSizeMap.entrySet();
 
-        Set set1 = new EnumObjectMap.Entries(enumSizeMap);
+        Set set1 = new EnumMap.Entries(enumSizeMap);
 
         assertEquals("Should be equal", set1, set);
         try {
@@ -305,7 +305,7 @@ public class EnumObjectMapTest extends TestCase {
         set.clear();
         assertEquals("Wrong size", 0, set.size());
 
-        enumSizeMap = new EnumObjectMap(Size.class);
+        enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 1);
         enumSizeMap.put(Size.Big, null);
         set = enumSizeMap.entrySet();
@@ -320,19 +320,19 @@ public class EnumObjectMapTest extends TestCase {
         assertFalse("Should return false", set.removeAll(c));
         assertEquals("Wrong size", 1, set.size());
 
-        enumSizeMap = new EnumObjectMap(Size.class);
+        enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 1);
         enumSizeMap.put(Size.Big, null);
         set = enumSizeMap.entrySet();
         c = new ArrayList<Map.Entry<?, ?>>();
-        c.add(new EnumObjectMap.Entry(Size.Middle, 1));
-        c.add(new EnumObjectMap.Entry(Size.Big, 3));
+        c.add(new EnumMap.Entry(Size.Middle, 1));
+        c.add(new EnumMap.Entry(Size.Big, 3));
 
         assertTrue("Retain does not succeed", set.retainAll(c));
         assertEquals("Wrong size", 1, set.size());
         assertFalse("Should return false", set.retainAll(c));
 
-        enumSizeMap = new EnumObjectMap(Size.class);
+        enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 1);
         enumSizeMap.put(Size.Big, null);
 
@@ -371,7 +371,7 @@ public class EnumObjectMapTest extends TestCase {
         assertTrue("Returned false when the object can be removed", set
                 .remove(entry));
 
-        enumSizeMap = new EnumObjectMap(Size.class);
+        enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 1);
         enumSizeMap.put(Size.Big, null);
         set = enumSizeMap.entrySet();
@@ -405,7 +405,7 @@ public class EnumObjectMapTest extends TestCase {
             // Expected
         }
 
-        enumSizeMap = new EnumObjectMap(Size.class);
+        enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 1);
         enumSizeMap.put(Size.Big, null);
         set = enumSizeMap.entrySet();
@@ -417,7 +417,7 @@ public class EnumObjectMapTest extends TestCase {
 
         // This block is a complete mess. EntrySet behavior when the containing Map is modified is not well-defined.
         // The order the tests expected Middle (1) and Big (2) was reversed, even though... 1... is less than 2...
-        // Plus, our Entry doesn't hold onto a reference to the EnumObjectMap it's in, so setValue() can't write through.
+        // Plus, our Entry doesn't hold onto a reference to the EnumMap it's in, so setValue() can't write through.
 
 //        enumSizeMap.put(Size.Middle, 3);
         assertTrue("Returned false for contained object", set.contains(entry));
@@ -431,7 +431,7 @@ public class EnumObjectMapTest extends TestCase {
         set.clear();
         assertEquals("Wrong size", 0, set.size());
 
-        enumSizeMap = new EnumObjectMap(Size.class);
+        enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 1);
         enumSizeMap.put(Size.Big, null);
         set = enumSizeMap.entrySet();
@@ -474,36 +474,36 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings( { "unchecked", "boxing" })
     public void test_equalsLjava_lang_Object() {
-        EnumObjectMap enumMap = new EnumObjectMap(Size.class);
+        EnumMap enumMap = new EnumMap(Size.class);
         enumMap.put(Size.Small, 1);
 
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
-        assertFalse("Returned true for unequal EnumObjectMap", enumSizeMap
+        EnumMap enumSizeMap = new EnumMap(Size.class);
+        assertFalse("Returned true for unequal EnumMap", enumSizeMap
                 .equals(enumMap));
         enumSizeMap.put(Size.Small, 1);
-        assertTrue("Returned false for equal EnumObjectMap", enumSizeMap
+        assertTrue("Returned false for equal EnumMap", enumSizeMap
                 .equals(enumMap));
         enumSizeMap.put(Size.Big, null);
-        assertFalse("Returned true for unequal EnumObjectMap", enumSizeMap
+        assertFalse("Returned true for unequal EnumMap", enumSizeMap
                 .equals(enumMap));
 
         enumMap.put(Size.Middle, null);
-        assertFalse("Returned true for unequal EnumObjectMap", enumSizeMap
+        assertFalse("Returned true for unequal EnumMap", enumSizeMap
                 .equals(enumMap));
         enumMap.remove(Size.Middle);
         enumMap.put(Size.Big, 3);
-        assertFalse("Returned true for unequal EnumObjectMap", enumSizeMap
+        assertFalse("Returned true for unequal EnumMap", enumSizeMap
                 .equals(enumMap));
         enumMap.put(Size.Big, null);
-        assertTrue("Returned false for equal EnumObjectMap", enumSizeMap
+        assertTrue("Returned false for equal EnumMap", enumSizeMap
                 .equals(enumMap));
 
         HashMap hashMap = new HashMap();
         hashMap.put(Size.Small, 1);
-        assertFalse("Returned true for unequal EnumObjectMap", hashMap
+        assertFalse("Returned true for unequal EnumMap", hashMap
                 .equals(enumMap));
         hashMap.put(Size.Big, null);
-        assertTrue("Returned false for equal EnumObjectMap", enumMap.equals(hashMap));
+        assertTrue("Returned false for equal EnumMap", enumMap.equals(hashMap));
 
         assertFalse("Should return false", enumSizeMap
                 .equals(new Integer(1)));
@@ -511,12 +511,12 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings( { "unchecked", "boxing" })
     public void test_keySet() {
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 2);
         enumSizeMap.put(Size.Big, null);
         Set set = enumSizeMap.keySet();
 
-        Set set1 = new EnumObjectMap.Keys(enumSizeMap);
+        Set set1 = new EnumMap.Keys(enumSizeMap);
         assertEquals("Should be same", set1, set);
         try {
             set.add(Size.Big);
@@ -555,7 +555,7 @@ public class EnumObjectMapTest extends TestCase {
         set.clear();
         assertEquals("Wrong size", 0, set.size());
 
-        enumSizeMap = new EnumObjectMap(Size.class);
+        enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 1);
         enumSizeMap.put(Size.Big, null);
         set = enumSizeMap.keySet();
@@ -581,12 +581,12 @@ public class EnumObjectMapTest extends TestCase {
         assertEquals("Wrong size", 1, set.size());
         assertFalse("Should return false", set.retainAll(c));
         assertEquals(1, set.size());
-        ((EnumObjectMap.Keys)set).resetIterator();
+        ((EnumMap.Keys)set).resetIterator();
         Object[] array = set.toArray();
         assertEquals("Wrong length", 1, array.length);
         assertEquals("Wrong key", Size.Big, array[0]);
 
-        enumSizeMap = new EnumObjectMap(Size.class);
+        enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 1);
         enumSizeMap.put(Size.Big, null);
         set = enumSizeMap.keySet();
@@ -597,7 +597,7 @@ public class EnumObjectMapTest extends TestCase {
         assertTrue("Should return true", set.retainAll(c));
         assertEquals("Wrong size", 0, set.size());
 
-        enumSizeMap = new EnumObjectMap(Size.class);
+        enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 1);
         enumSizeMap.put(Size.Big, null);
         set = enumSizeMap.keySet();
@@ -622,14 +622,14 @@ public class EnumObjectMapTest extends TestCase {
                 .contains(enumKey));
 
         iter = set.iterator();
-        ((EnumObjectMap.MapIterator)iter).reset();
+        ((EnumMap.MapIterator)iter).reset();
         enumKey = (Enum) iter.next();
         boolean result = set.contains(enumKey);
         assertTrue("Returned false for contained object", result);
         enumSizeMap.put(Size.Middle, 3);
         assertTrue("Returned false for contained object", set.contains(enumKey));
 
-        enumSizeMap = new EnumObjectMap(Size.class);
+        enumSizeMap = new EnumMap(Size.class);
         enumSizeMap.put(Size.Middle, 1);
         enumSizeMap.put(Size.Big, null);
         set = enumSizeMap.keySet();
@@ -668,7 +668,7 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings({ "unchecked", "boxing" })
     public void test_getLjava_lang_Object() {
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         assertNull("Get returned non-null for non mapped key", enumSizeMap
                 .get(Size.Big));
         enumSizeMap.put(Size.Big, 1);
@@ -684,7 +684,7 @@ public class EnumObjectMapTest extends TestCase {
         assertNull("Get returned non-null for non existent key", enumSizeMap
                 .get(null));
 
-        EnumObjectMap enumColorMap = new EnumObjectMap<Double>(Color.class);
+        EnumMap enumColorMap = new EnumMap<Double>(Color.class);
         assertNull("Get returned non-null for non mapped key", enumColorMap
                 .get(Color.Green));
         enumColorMap.put(Color.Green, 2);
@@ -709,7 +709,7 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings( { "unchecked", "boxing" })
     public void test_putLjava_lang_ObjectLjava_lang_Object() {
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         try {
             enumSizeMap.put(Color.Red, 2);
             fail("Expected ClassCastException");
@@ -719,7 +719,7 @@ public class EnumObjectMapTest extends TestCase {
         assertNull("Return non-null for non mapped key", enumSizeMap.put(
                 Size.Small, 1));
 
-        EnumObjectMap enumColorMap = new EnumObjectMap<Double>(Color.class);
+        EnumMap enumColorMap = new EnumMap<Double>(Color.class);
         try {
             enumColorMap.put(Size.Big, 2);
             fail("Expected ClassCastException");
@@ -751,10 +751,10 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings({ "unchecked", "boxing" })
     public void test_putAllLjava_util_Map() {
-        EnumObjectMap enumColorMap = new EnumObjectMap<Double>(Color.class);
+        EnumMap enumColorMap = new EnumMap<Double>(Color.class);
         enumColorMap.put(Color.Green, 2);
 
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         enumColorMap.putAll(enumSizeMap);
 
         enumSizeMap.put(Size.Big, 1);
@@ -765,14 +765,14 @@ public class EnumObjectMapTest extends TestCase {
             // Expected
         }
 
-        EnumObjectMap enumColorMap1 = new EnumObjectMap<Double>(Color.class);
+        EnumMap enumColorMap1 = new EnumMap<Double>(Color.class);
         enumColorMap1.put(Color.Blue, 3);
         enumColorMap.putAll(enumColorMap1);
         assertEquals("Get returned incorrect value for given key", 3,
                 enumColorMap.get(Color.Blue));
         assertEquals("Wrong Size", 2, enumColorMap.size());
 
-        enumColorMap = new EnumObjectMap<Double>(Color.class);
+        enumColorMap = new EnumMap<Double>(Color.class);
 
         HashMap hashColorMap = null;
         try {
@@ -815,7 +815,7 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings({ "unchecked", "boxing" })
     public void test_removeLjava_lang_Object() {
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         assertNull("Remove of non-mapped key returned non-null", enumSizeMap
                 .remove(Size.Big));
         enumSizeMap.put(Size.Big, 3);
@@ -836,7 +836,7 @@ public class EnumObjectMapTest extends TestCase {
         assertNull("Remove of non-existent key returned non-null", enumSizeMap
                 .remove(null));
 
-        EnumObjectMap enumColorMap = new EnumObjectMap<Double>(Color.class);
+        EnumMap enumColorMap = new EnumMap<Double>(Color.class);
         assertNull("Get returned non-null for non mapped key", enumColorMap
                 .get(Color.Green));
         enumColorMap.put(Color.Green, new Double(4));
@@ -853,7 +853,7 @@ public class EnumObjectMapTest extends TestCase {
 
     @SuppressWarnings({ "unchecked", "boxing" })
     public void test_size() {
-        EnumObjectMap enumSizeMap = new EnumObjectMap(Size.class);
+        EnumMap enumSizeMap = new EnumMap(Size.class);
         assertEquals("Wrong size", 0, enumSizeMap.size());
         enumSizeMap.put(Size.Small, 1);
         assertEquals("Wrong size", 1, enumSizeMap.size());
@@ -876,24 +876,24 @@ public class EnumObjectMapTest extends TestCase {
         enumSizeMap.remove(Color.Green);
         assertEquals("Wrong size", 1, enumSizeMap.size());
 
-        EnumObjectMap enumColorMap = new EnumObjectMap<Double>(Color.class);
+        EnumMap enumColorMap = new EnumMap<Double>(Color.class);
         enumColorMap.put(Color.Green, 2);
         assertEquals("Wrong size", 1, enumColorMap.size());
         enumColorMap.remove(Color.Green);
         assertEquals("Wrong size", 0, enumColorMap.size());
 
-        EnumObjectMap enumEmptyMap = new EnumObjectMap<Double>(Empty.class);
+        EnumMap enumEmptyMap = new EnumMap<Double>(Empty.class);
         assertEquals("Wrong size", 0, enumEmptyMap.size());
     }
 
     @SuppressWarnings( { "unchecked", "boxing" })
     public void test_values() {
-        EnumObjectMap enumColorMap = new EnumObjectMap<Double>(Color.class);
+        EnumMap enumColorMap = new EnumMap<Double>(Color.class);
         enumColorMap.put(Color.Red, 1);
         enumColorMap.put(Color.Blue, null);
         Collection collection = enumColorMap.values();
 
-        Collection collection1 = new EnumObjectMap.Values(enumColorMap);
+        Collection collection1 = new EnumMap.Values(enumColorMap);
         assertEquals("Should be equal", collection1, collection);
         try {
             collection.add(new Integer(1));
@@ -929,7 +929,7 @@ public class EnumObjectMapTest extends TestCase {
         collection.clear();
         assertEquals("Wrong size", 0, collection.size());
 
-        enumColorMap = new EnumObjectMap<Double>(Color.class);
+        enumColorMap = new EnumMap<Double>(Color.class);
         enumColorMap.put(Color.Red, 1);
         enumColorMap.put(Color.Blue, null);
         collection = enumColorMap.values();
@@ -955,12 +955,12 @@ public class EnumObjectMapTest extends TestCase {
         assertEquals("Wrong size", 1, collection.size());
         assertFalse("Should return false", collection.retainAll(c));
         assertEquals(1, collection.size());
-        ((EnumObjectMap.Values<?>)collection).resetIterator();
+        ((EnumMap.Values<?>)collection).resetIterator();
         Object[] array = collection.toArray();
         assertEquals("Wrong length", 1, array.length);
         assertEquals("Wrong key", 1, array[0]);
 
-        enumColorMap = new EnumObjectMap<Double>(Color.class);
+        enumColorMap = new EnumMap<Double>(Color.class);
         enumColorMap.put(Color.Red, 1);
         enumColorMap.put(Color.Blue, null);
         collection = enumColorMap.values();
@@ -1004,7 +1004,7 @@ public class EnumObjectMapTest extends TestCase {
         collection.clear();
         assertEquals("Wrong size", 0, collection.size());
 
-        enumColorMap = new EnumObjectMap<Double>(Color.class);
+        enumColorMap = new EnumMap<Double>(Color.class);
         Integer integer1 = new Integer(1);
         enumColorMap.put(Color.Green, integer1);
         enumColorMap.put(Color.Blue, null);
