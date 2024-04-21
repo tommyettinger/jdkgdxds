@@ -1615,89 +1615,89 @@ public class ESetTest extends TestCase {
         assertTrue(hugeSet.contains(HugeEnumWithInnerClass.d));
     }
 
-//    /**
-//     * @tests java.util.ESet#range(E, E)
-//     */
-//    public void test_Range_EE() {
-//        try {
-//            ESet.range(EnumWithInnerClass.c, null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException e) {
-//            // expected
-//        }
-//
-//        try {
-//            ESet.range(null, EnumWithInnerClass.c);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException e) {
-//            // expected
-//        }
-//
-//        try {
-//            ESet.range(null, (EnumWithInnerClass) null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException e) {
-//            // expected
-//        }
-//
-//        try {
-//            ESet.range(EnumWithInnerClass.b, EnumWithInnerClass.a);
-//            fail("Should throw IllegalArgumentException");
-//        } catch (IllegalArgumentException e) {
-//            // expected
-//        }
-//
-//        ESet enumSet = ESet.range(
-//                EnumWithInnerClass.a, EnumWithInnerClass.a);
-//        assertEquals("Size of enumSet should be 1", 1, enumSet.size());
-//
-//        enumSet = ESet.range(
-//                EnumWithInnerClass.a, EnumWithInnerClass.c);
-//        assertEquals("Size of enumSet should be 3", 3, enumSet.size());
-//
-//        // test enum with more than 64 elements
-//        try {
-//            ESet.range(HugeEnumWithInnerClass.c, null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException e) {
-//            // expected
-//        }
-//
-//        try {
-//            ESet.range(null, HugeEnumWithInnerClass.c);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException e) {
-//            // expected
-//        }
-//
-//        try {
-//            ESet.range(null, (HugeEnumWithInnerClass) null);
-//            fail("Should throw NullPointerException");
-//        } catch (NullPointerException e) {
-//            // expected
-//        }
-//
-//        try {
-//            ESet.range(HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.a);
-//            fail("Should throw IllegalArgumentException");
-//        } catch (IllegalArgumentException e) {
-//            // expected
-//        }
-//
-//        ESet hugeESet = ESet.range(
-//                HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.a);
-//        assertEquals(1, hugeESet.size());
-//
-//        hugeESet = ESet.range(
-//                HugeEnumWithInnerClass.c, HugeEnumWithInnerClass.aa);
-//        assertEquals(51, hugeESet.size());
-//
-//        hugeESet = ESet.range(
-//                HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.mm);
-//        assertEquals(65, hugeESet.size());
-//
-//        hugeESet = ESet.range(
-//                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.mm);
-//        assertEquals(64, hugeESet.size());
-//    }
+    /**
+     * @tests java.util.ESet#range(E, E)
+     */
+    public void test_Range_EE() {
+        try {
+            ESet.range(EnumWithInnerClass.c, null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException e) {
+            // expected
+        }
+
+        try {
+            ESet.range(null, EnumWithInnerClass.c);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException e) {
+            // expected
+        }
+
+        try {
+            ESet.range(null, (EnumWithInnerClass) null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException e) {
+            // expected
+        }
+
+        try {
+            ESet.range(EnumWithInnerClass.b, EnumWithInnerClass.a);
+            fail("Should throw IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
+
+        ESet enumSet = ESet.range(
+                EnumWithInnerClass.a, EnumWithInnerClass.a);
+        assertEquals("Size of enumSet should be 1", 1, enumSet.size());
+
+        enumSet = ESet.range(
+                EnumWithInnerClass.a, EnumWithInnerClass.c);
+        assertEquals("Size of enumSet should be 3", 3, enumSet.size());
+
+        // test enum with more than 64 elements
+        try {
+            ESet.range(HugeEnumWithInnerClass.c, null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException e) {
+            // expected
+        }
+
+        try {
+            ESet.range(null, HugeEnumWithInnerClass.c);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException e) {
+            // expected
+        }
+
+        try {
+            ESet.range(null, (HugeEnumWithInnerClass) null);
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException e) {
+            // expected
+        }
+
+        try {
+            ESet.range(HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.a);
+            fail("Should throw IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
+
+        ESet hugeESet = ESet.range(
+                HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.a);
+        assertEquals(1, hugeESet.size());
+
+        hugeESet = ESet.range(
+                HugeEnumWithInnerClass.c, HugeEnumWithInnerClass.aa);
+        assertEquals(51, hugeESet.size());
+
+        hugeESet = ESet.range(
+                HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.mm);
+        assertEquals(65, hugeESet.size());
+
+        hugeESet = ESet.range(
+                HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.mm);
+        assertEquals(64, hugeESet.size());
+    }
 }

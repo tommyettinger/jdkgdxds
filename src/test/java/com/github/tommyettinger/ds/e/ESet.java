@@ -741,16 +741,20 @@ public class ESet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable
 
 	/**
 	 * Creates an ESet holding Enum items between the ordinals of {@code start} and {@code end}. If the ordinal of end is less than
-	 * the ordinal of start, this treats start and end as swapped. If start and end are the same, this just inserts that one Enum.
+	 * the ordinal of start, this throws an {@link IllegalArgumentException}.
+	 * If start and end are the same, this just inserts that one Enum.
+	 *
 	 * @param start the starting inclusive Enum to insert
 	 * @param end the ending inclusive Enum to insert
 	 * @return a new ESet containing start, end, and any Enum constants with ordinals between them
 	 * @param <E> the shared Enum type of both start and end
+	 * @throws IllegalArgumentException if the {@link Enum#ordinal() ordinal} of end is less than the ordinal of start
 	 */
 	public static  <E extends Enum<E>> ESet range(Enum<E> start, Enum<E> end) {
-		if(start == null || end == null) return null;
-		final int mn = Math.min(start.ordinal(), end.ordinal());
-		final int mx = Math.max(start.ordinal(), end.ordinal());
+		final int mn = start.ordinal();
+		final int mx = end.ordinal();
+		if(mx < mn) throw new IllegalArgumentException("The ordinal of " + end + " (" + mx +
+			") must be at least equal to the ordinal of " + start + " ("+mn+")");
 		final int upperMin = mn >>> 5;
 		final int upperMax = mx >>> 5;
 		ESet coll = new ESet();
