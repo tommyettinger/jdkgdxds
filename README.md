@@ -22,22 +22,25 @@ You use jdkgdxds much like the standard JDK collections, just extended for primi
 here are lists (array-backed, like `ArrayList`), deques (double-ended queues, like `ArrayDeque` but also allowing access inside
 the deque), sets (allowing only unique items, and coming in unordered and insertion-ordered varieties), maps (allowing unique keys
 associated with values, and also coming in unordered and insertion-ordered varieties), bags (unordered lists, with fast removal
-but unpredictable iteration order) and some extra types. The Object-based
-classes are generic, centered around `com.github.tommyettinger.ds.ObjectList`, `com.github.tommyettinger.ds.ObjectDeque`,
-`com.github.tommyettinger.ds.ObjectSet`, and `com.github.tommyettinger.ds.ObjectObjectMap`; `ObjectOrderedSet` and
-`ObjectObjectOrderedMap` are also here and extend the other Set and Map. These are effectively replacements for
-`com.badlogic.gdx.utils.Array`, `com.badlogic.gdx.utils.Queue`, `com.badlogic.gdx.utils.ObjectSet`,
-`com.badlogic.gdx.utils.ObjectMap`, `com.badlogic.gdx.utils.OrderedSet`, and `com.badlogic.gdx.utils.OrderedMap`. As nice as it
-would be to just call these by the same names (except Array, that one's just confusing), we have other kinds of Object-keyed Maps,
-and other kinds of insertion-ordered Maps, so `ObjectMap` is now `ObjectObjectMap` because it has Object keys and Object values,
-while `OrderedMap` is now `ObjectObjectOrderedMap`, because of the same reason. Primitive-backed collections support `int`
-and `long` keys, and `int`, `long`, or `float` values; all primitive types are available for lists, deques, and bags. So, there's
-`IntSet` and `LongSet`, with ordered variants `IntOrderedSet` and `LongOrderedSet`, while their map counterparts are more
-numerous. Most of the primitive lists are very similar, only changing the numeric type, but there are some small changes for
-`CharList` (which doesn't define math operations on its items) and `BooleanList` (which defines logical operations but not math
-ones). The deques don't currently implement math operations on their items. Each of the bag classes extends a list class, and
-changes its behavior on certain operations (like `remove()`, which takes `O(1)` time instead of `O(n)`, but rearranges the items),
-while keeping the other operations mostly the same. As for the maps...
+but unpredictable iteration order) and some extra types. The Object-based classes are generic, centered around
+`com.github.tommyettinger.ds.ObjectList`, `com.github.tommyettinger.ds.ObjectDeque`,`com.github.tommyettinger.ds.ObjectSet`, and
+`com.github.tommyettinger.ds.ObjectObjectMap`; `ObjectOrderedSet` and `ObjectObjectOrderedMap` are also here and extend the other
+Set and Map. These are effectively replacements for `com.badlogic.gdx.utils.Array`, `com.badlogic.gdx.utils.Queue`,
+`com.badlogic.gdx.utils.ObjectSet`, `com.badlogic.gdx.utils.ObjectMap`, `com.badlogic.gdx.utils.OrderedSet`, and
+`com.badlogic.gdx.utils.OrderedMap`. As nice as it would be to just call these by the same names (except Array and Queue, those
+are just confusing), we have other kinds of Object-keyed Maps, and other kinds of insertion-ordered Maps, so `ObjectMap` is now
+`ObjectObjectMap` because it has Object keys and Object values, while `OrderedMap` is now `ObjectObjectOrderedMap`, because of the
+same reason.
+
+Primitive-backed collections support `int` and `long` keys, and `int`, `long`, or `float` values; all primitive types are
+available for lists, deques, and bags. So, there's `IntSet` and `LongSet`, with ordered variants `IntOrderedSet` and
+`LongOrderedSet`, while their map counterparts are more numerous. Most of the primitive lists are very similar, only changing the
+numeric type, but there are some small changes for `CharList` (which doesn't define math operations on its items) and
+`BooleanList` (which defines logical operations but not math ones). The deques don't currently implement math operations on their
+items. Each of the bag classes extends a list class, and  changes its behavior on certain operations (like `remove()`, which takes
+`O(1)` time instead of `O(n)`, but rearranges the items), while keeping the other operations mostly the same. A minor point to
+note is that libGDX also supplies primitive arrays for all types, *except* that it doesn't have `DoubleArray`, where this library
+does provide `DoubleList` (as well as `DoubleBag` and `DoubleQueue`). As for the maps...
 
 There's `IntFloatMap`, `IntFloatOrderedMap`, `IntIntMap`, `IntIntOrderedMap`, `IntLongMap`, `IntLongOrderedMap`,
 `IntObjectMap`, `IntObjectOrderedMap`, `LongFloatMap`, `LongFloatOrderedMap`, `LongIntMap`, `LongIntOrderedMap`,
@@ -68,6 +71,16 @@ filtered data structures: `FilteredIterableSet`, `FilteredIterableOrderedSet`, `
 `FilteredIterableOrderedMap`, which act like the filtered-String data structures but work on keys or items that are each an
 Iterable (type `I`) of sub-items/sub-keys (type `T` or `K`). The Iterable must not be modified while it is a key, or at least not
 modified in a way that changes what is considered by the filter and editor.
+
+New in version 1.5.0 are nearly-drop-in replacements for `java.util.EnumSet` and `java.util.EnumMap`, named, ah, `EnumSet` and
+`EnumMap`. The main difference with these versions is that they can be constructed with a zero-argument constructor (and that is
+vital for serialization done without using `java.io.Serializable`). Other than that, they are very similar to the `java.util`
+classes, except that where the `java.util` types need a `Class` of an enum type when they are constructed, the types here can
+take the result of calling `values()` on an enum type when constructed, or can figure out those values when an enum constant is
+added to the Set or Map. Both the `EnumSet` here and in the standard library are very memory-efficient; the one here uses a bitset
+made from a simple `int[]` (for better GWT performance). `EnumMap` is also rather efficient; the one here only needs to store the
+key universe (another name for the result of `values()` mentioned above) and exactly as many value slots as there are items in the
+key universe. `EnumMap` does also store a default value, which is usually `null`, and some other data.
 
 The library includes expanded interfaces for these to implement, like the aforementioned `Ordered` interface,
 `PrimitiveCollection` is akin to Java 8's `PrimitiveIterator`, some `float`-based versions of primitive specializations where
@@ -124,15 +137,15 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.4.8'
+api 'com.github.tommyettinger:jdkgdxds:1.5.0'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
 `mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on `digital` (which provides
 common math code meant for use by multiple projects), `funderby` (Java 8 functional interfaces for primitive types), and for
 annotations only, `checker-qual` ([the project GitHub page is here.](https://github.com/typetools/checker-framework)). The
-version for the `digital` dependency is 0.4.7 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.4.7"`). Funderby has only changed a bit since its initial release, and is on version
+version for the `digital` dependency is 0.4.8 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.4.8"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.1 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.1"`). The version for
 `checker-qual` is 3.42.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes.
 Earlier versions of jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to
@@ -142,8 +155,8 @@ mention that JSR305 is currently unmaintained). You can manually specify a `chec
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
-implementation "com.github.tommyettinger:digital:0.4.7:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.4.8:sources"
+implementation "com.github.tommyettinger:digital:0.4.8:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.5.0:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -179,7 +192,7 @@ to a higher value, depending on where it is already; 19 is known to work, and 16
 The dependency (and `inherits` line) on digital is not necessary for jdkgdxds 0.2.8, but is necessary starting in 1.0.3 and later.
 The dependency and `inherits` line for funderby is new in 1.0.4 . Versions 1.0.1 and 1.0.2 also depended on
 [juniper](https://github.com/tommyettinger/juniper) 0.1.0 ; if you intend to use the
-randomized algorithms here (like shuffles), then depending on Juniper (0.5.0) might be a good idea, though it is still optional.
+randomized algorithms here (like shuffles), then depending on Juniper (0.6.0) might be a good idea, though it is still optional.
 Another option for random number generation, if you use libGDX, is [cringe](https://github.com/tommyettinger/cringe), which is more closely-integrated with libGDX.
 The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
 for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
@@ -194,7 +207,7 @@ on what your other dependencies use, to your project or its core module (if ther
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
-implementation "com.github.tommyettinger:digital:0.4.7:sources"
+implementation "com.github.tommyettinger:digital:0.4.8:sources"
 implementation "com.github.tommyettinger:jdkgdxds:4e8ddbddd7:sources"
 ```
 to its

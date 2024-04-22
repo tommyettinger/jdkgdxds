@@ -195,26 +195,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	/**
-	 * Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 *
-	 * @param keys   a Collection of keys
-	 * @param values a Collection of values
-	 */
-	public void putAll (Collection<? extends K> keys, Collection<? extends V> values) {
-		int length = Math.min(keys.size(), values.size());
-		ensureCapacity(length);
-		K key;
-		Iterator<? extends K> ki = keys.iterator();
-		Iterator<? extends V> vi = values.iterator();
-		while (ki.hasNext() && vi.hasNext()) {
-			key = ki.next();
-			if (key != null) {
-				put(key, vi.next());
-			}
-		}
-	}
-
-	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}, mixed.
 	 * <p>
 	 * The default behavior uses a basic hash mixing family; it simply gets the
@@ -320,6 +300,34 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	/**
+	 * Copies all the mappings from the specified map to this map
+	 * (optional operation).  The effect of this call is equivalent to that
+	 * of calling {@link #put(Object, Object) put(k, v)} on this map once
+	 * for each mapping from key {@code k} to value {@code v} in the
+	 * specified map.  The behavior of this operation is undefined if the
+	 * specified map is modified while the operation is in progress.
+	 * <br>
+	 * Note that {@link #putAll(ObjectObjectMap)} is more specific and can be
+	 * more efficient by using the internal details of this class.
+	 *
+	 * @param m mappings to be stored in this map
+	 * @throws UnsupportedOperationException if the {@code putAll} operation
+	 *                                       is not supported by this map
+	 * @throws ClassCastException            if the class of a key or value in the
+	 *                                       specified map prevents it from being stored in this map
+	 * @throws NullPointerException          if the specified map is null, or if
+	 *                                       this map does not permit null keys or values, and the
+	 *                                       specified map contains null keys or values
+	 * @throws IllegalArgumentException      if some property of a key or value in
+	 *                                       the specified map prevents it from being stored in this map
+	 */
+	@Override
+	public void putAll (Map<? extends K, ? extends V> m) {
+		ensureCapacity(m.size());
+		for (Map.Entry<? extends K, ? extends V> kv : m.entrySet()) {put(kv.getKey(), kv.getValue());}
+	}
+
+	/**
 	 * Puts every key-value pair in the given map into this, with the values from the given map
 	 * overwriting the previous values if two keys are identical.
 	 *
@@ -333,6 +341,26 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
 			if (key != null) {put(key, valueTable[i]);}
+		}
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this inserts each pair of key and value into this map with put().
+	 *
+	 * @param keys   a Collection of keys
+	 * @param values a Collection of values
+	 */
+	public void putAll (Collection<? extends K> keys, Collection<? extends V> values) {
+		int length = Math.min(keys.size(), values.size());
+		ensureCapacity(length);
+		K key;
+		Iterator<? extends K> ki = keys.iterator();
+		Iterator<? extends V> vi = values.iterator();
+		while (ki.hasNext() && vi.hasNext()) {
+			key = ki.next();
+			if (key != null) {
+				put(key, vi.next());
+			}
 		}
 	}
 
@@ -414,7 +442,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	/**
 	 * Returns the value for the specified key, or the given default value if the key is not in the map.
 	 */
-	@Override
 	@Nullable
 	public V getOrDefault (Object key, @Nullable V defaultValue) {
 		K[] keyTable = this.keyTable;
@@ -450,34 +477,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		valueTable[i] = null;
 		size--;
 		return oldValue;
-	}
-
-	/**
-	 * Copies all the mappings from the specified map to this map
-	 * (optional operation).  The effect of this call is equivalent to that
-	 * of calling {@link #put(Object, Object) put(k, v)} on this map once
-	 * for each mapping from key {@code k} to value {@code v} in the
-	 * specified map.  The behavior of this operation is undefined if the
-	 * specified map is modified while the operation is in progress.
-	 * <br>
-	 * Note that {@link #putAll(ObjectObjectMap)} is more specific and can be
-	 * more efficient by using the internal details of this class.
-	 *
-	 * @param m mappings to be stored in this map
-	 * @throws UnsupportedOperationException if the {@code putAll} operation
-	 *                                       is not supported by this map
-	 * @throws ClassCastException            if the class of a key or value in the
-	 *                                       specified map prevents it from being stored in this map
-	 * @throws NullPointerException          if the specified map is null, or if
-	 *                                       this map does not permit null keys or values, and the
-	 *                                       specified map contains null keys or values
-	 * @throws IllegalArgumentException      if some property of a key or value in
-	 *                                       the specified map prevents it from being stored in this map
-	 */
-	@Override
-	public void putAll (Map<? extends K, ? extends V> m) {
-		ensureCapacity(m.size());
-		for (Map.Entry<? extends K, ? extends V> kv : m.entrySet()) {put(kv.getKey(), kv.getValue());}
 	}
 
 	/**
