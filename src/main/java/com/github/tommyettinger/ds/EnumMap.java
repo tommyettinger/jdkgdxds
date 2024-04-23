@@ -937,10 +937,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 
 		protected void findNextIndex () {
 			Object[] valueTable = map.valueTable;
-			for (int n = map.universe.length; ++nextIndex < n; ) {
-				if (valueTable[nextIndex] != null) {
-					hasNext = true;
-					return;
+			if(valueTable != null) {
+				for (int n = map.universe.length; ++nextIndex < n; ) {
+					if (valueTable[nextIndex] != null) {
+						hasNext = true;
+						return;
+					}
 				}
 			}
 			hasNext = false;
@@ -951,6 +953,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 			int i = currentIndex;
 			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
 			Object[] valueTable = map.valueTable;
+			if(valueTable == null) return;
 			// This condition can happen if the map had this the current item removed without using this method.
 			if(valueTable[i] != null)
 				map.size--;
