@@ -460,6 +460,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	public int nextOrdinal (int minOrdinal) {
 		if(minOrdinal < 0) return -1;
 		int[] bits = this.table;
+		if(bits == null) return -1;
 		int word = minOrdinal >>> 5;
 		int bitsLength = bits.length;
 		if (word >= bitsLength)
@@ -487,6 +488,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	public Enum<?> nextEnum (int minOrdinal) {
 		if(minOrdinal < 0) return null;
 		int[] bits = this.table;
+		if(bits == null) return null;
 		int word = minOrdinal >>> 5;
 		int bitsLength = bits.length;
 		if (word >= bitsLength)
@@ -515,6 +517,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		if(from == null) return null;
 		int fromIndex = from.ordinal();
 		int[] bits = this.table;
+		if(bits == null) return null;
 		int word = fromIndex >>> 5;
 		int bitsLength = bits.length;
 		if (word >= bitsLength)
