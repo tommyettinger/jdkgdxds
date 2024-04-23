@@ -511,7 +511,7 @@ public class EnumMapTest extends TestCase {
 
     public void test_iterator() {
         EnumMap enumSizeMap = new EnumMap();
-        for(Object ent : enumSizeMap){
+        for(Object ignored : enumSizeMap){
             fail("There should not be any items in an empty map.");
         }
         assertEquals(0, enumSizeMap.size());
