@@ -617,6 +617,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		if (other.size() != size) {return false;}
 		Enum<?>[] universe = this.universe;
 		Object[] valueTable = this.valueTable;
+		if(universe == null || valueTable == null || size == 0) return other.isEmpty();
 		try {
 			for (int i = 0, n = universe.length; i < n; i++) {
 				Object rawValue = valueTable[i];
