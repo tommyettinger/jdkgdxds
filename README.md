@@ -72,7 +72,7 @@ filtered data structures: `FilteredIterableSet`, `FilteredIterableOrderedSet`, `
 Iterable (type `I`) of sub-items/sub-keys (type `T` or `K`). The Iterable must not be modified while it is a key, or at least not
 modified in a way that changes what is considered by the filter and editor.
 
-New in version 1.5.1 are nearly-drop-in replacements for `java.util.EnumSet` and `java.util.EnumMap`, named, ah, `EnumSet` and
+New in version 1.5.2 are nearly-drop-in replacements for `java.util.EnumSet` and `java.util.EnumMap`, named, ah, `EnumSet` and
 `EnumMap`. The main difference with these versions is that they can be constructed with a zero-argument constructor (and that is
 vital for serialization done without using `java.io.Serializable`). Other than that, they are very similar to the `java.util`
 classes, except that where the `java.util` types need a `Class` of an enum type when they are constructed, the types here can
@@ -137,7 +137,7 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.5.1'
+api 'com.github.tommyettinger:jdkgdxds:1.5.2'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -156,7 +156,7 @@ If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.1:sources"
 implementation "com.github.tommyettinger:digital:0.4.8:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.5.1:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.5.2:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add

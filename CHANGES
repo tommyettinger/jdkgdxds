@@ -1,3 +1,13 @@
+[1.5.2]
+- New EnumMap and EnumSet types are meant to be serializable more easily than their JDK counterparts.
+- Updated digital dependency to 0.4.8 .
+
+[1.5.1]
+- Almost immediately replaced by 1.5.2.
+
+[1.5.0]
+- Almost immediately replaced by 1.5.2.
+
 [1.4.8]
 - Deque types can be initialized with capacity 0, and now won't suddenly crash when an item is added.
 - Almost every type got some new methods, thanks to PrimitiveCollection adding overloads that take arrays or ranges of arrays.
