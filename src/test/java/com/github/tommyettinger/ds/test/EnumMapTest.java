@@ -509,6 +509,14 @@ public class EnumMapTest extends TestCase {
                 .equals(new Integer(1)));
     }
 
+    public void test_iterator() {
+        EnumMap enumSizeMap = new EnumMap();
+        for(Object ent : enumSizeMap){
+            fail("There should not be any items in an empty map.");
+        }
+        assertEquals(0, enumSizeMap.size());
+    }
+
     @SuppressWarnings( { "unchecked", "boxing" })
     public void test_keySet() {
         EnumMap enumSizeMap = new EnumMap(Size.class);

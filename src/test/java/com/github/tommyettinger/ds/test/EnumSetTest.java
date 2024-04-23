@@ -1358,6 +1358,12 @@ public class EnumSetTest extends TestCase {
             hIterator.next();
         }
         assertSame(HugeEnum.ll, hIterator.next());
+
+        hugeSet = new EnumSet();
+        for(Enum<?> e : hugeSet) {
+            fail("There should not be any items in an empty set.");
+        }
+        assertEquals(0, hugeSet.size());
     }
 
     public void test_Of_E() {
