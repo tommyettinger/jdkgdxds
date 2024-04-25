@@ -1,3 +1,6 @@
+[1.5.3]
+- Fixed a bug that affected ObjectDeque.clear(), and could have resulted in crashes.
+
 [1.5.2]
 - New EnumMap and EnumSet types are meant to be serializable more easily than their JDK counterparts.
 - Updated digital dependency to 0.4.8 .
