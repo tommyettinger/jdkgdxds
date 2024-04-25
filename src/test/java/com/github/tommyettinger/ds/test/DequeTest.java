@@ -105,6 +105,12 @@ public class DequeTest {
 		deque.addLast("CAPTAIN SPECTACULAR");
 		deque.add(17, "PSI");
 		System.out.println(deque);
+		deque.clear();
+		deque.addFirst("wombat");
+		deque.addLast("kangaroo");
+		deque.addFirst("boomerang");
+		deque.addLast("didgeridoo");
+		deque.clear();
 	}
 
 	@Test
