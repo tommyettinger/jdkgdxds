@@ -275,7 +275,7 @@ public final class Utilities {
 	 */
 	public static void clear(Object[] objects, int start, int size) {
 		if (size < COPY_THRESHOLD) {
-			Arrays.fill(objects, start, size, null);
+			Arrays.fill(objects, start, start + size, null);
 		} else {
 			if (size < NIL_ARRAY_SIZE) {
 				System.arraycopy(NIL_ARRAY, 0, objects, start, size);
@@ -299,7 +299,7 @@ public final class Utilities {
 	/**
 	 * A float that is meant to be used as the smallest reasonable tolerance for methods like {@link #isEqual(float, float, float)}.
 	 */
-	public static final float FLOAT_ROUNDING_ERROR = 0.000001f;
+	public static final float FLOAT_ROUNDING_ERROR = 1E-6f;
 
 	/**
 	 * Equivalent to libGDX's isEqual() method in MathUtils; this compares two floats for equality and allows just enough
