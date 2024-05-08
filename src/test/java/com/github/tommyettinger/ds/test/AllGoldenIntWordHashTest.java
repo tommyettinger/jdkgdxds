@@ -36,7 +36,7 @@ import java.util.List;
 public class AllGoldenIntWordHashTest {
 	public static void main(String[] args) throws IOException {
 		final int[] GOOD = new int[]{
-			0x9E3779B9, 0x91E10DA5, 0xD1B54A33, 0xABC98389, 0x8CB92BA7, 0xDB4F0B91, 0xBBE05633, 0x89E18285,
+			0x9E3779B7, 0x91E10DA5, 0xD1B54A33, 0xABC98389, 0x8CB92BA7, 0xDB4F0B91, 0xBBE05633, 0x89E18285,
 			0xC6D1D6C9, 0xAF36D01F, 0x9A69443F, 0x881403B9, 0xCEBD76D9, 0xB9C9AA3B, 0xA6F5777F, 0x86D516E5,
 			0xE95E1DD1, 0xD4BC74E1, 0xC1EDBC5B, 0xB0C8AC51, 0xA127A31D, 0x92E852C9, 0x85EB75C3, 0xEBEDEED9,
 			0xC862B36D, 0xB8ACD90D, 0xAA324F91, 0x9CDA5E69, 0x908E3D2D, 0x8538ECB5, 0xBF25C1FB, 0xB1AF5C05,
@@ -116,7 +116,7 @@ public class AllGoldenIntWordHashTest {
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
-					int hm = 0x9E3779B7;//(int)((g >>> 32 & -16) | (g & 15));
+					int hm = 0xB7AD9447;// 0x9E3779B7;
 
 					@Override
 					protected int place (Object item) {
@@ -142,9 +142,9 @@ public class AllGoldenIntWordHashTest {
 						int oldCapacity = keyTable.length;
 						threshold = (int)(newSize * loadFactor);
 						mask = newSize - 1;
-						shift = BitConversion.countLeadingZeros((long)mask);
+						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-						hashMultiplier = hm = GOOD[BitConversion.imul(shift, hm) >>> 23];
+//						hashMultiplier = hm = GOOD[BitConversion.imul(shift, hm) >>> 23];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];

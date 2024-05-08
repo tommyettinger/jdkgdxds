@@ -35,7 +35,7 @@ public class AllGoldenIntVectorHashTest {
 
 	public static void main(String[] args) throws IOException {
 		final int[] GOOD = new int[]{
-			0x9E3779B9, 0x91E10DA5, 0xD1B54A33, 0xABC98389, 0x8CB92BA7, 0xDB4F0B91, 0xBBE05633, 0x89E18285,
+			0x9E3779B7, 0x91E10DA5, 0xD1B54A33, 0xABC98389, 0x8CB92BA7, 0xDB4F0B91, 0xBBE05633, 0x89E18285,
 			0xC6D1D6C9, 0xAF36D01F, 0x9A69443F, 0x881403B9, 0xCEBD76D9, 0xB9C9AA3B, 0xA6F5777F, 0x86D516E5,
 			0xE95E1DD1, 0xD4BC74E1, 0xC1EDBC5B, 0xB0C8AC51, 0xA127A31D, 0x92E852C9, 0x85EB75C3, 0xEBEDEED9,
 			0xC862B36D, 0xB8ACD90D, 0xAA324F91, 0x9CDA5E69, 0x908E3D2D, 0x8538ECB5, 0xBF25C1FB, 0xB1AF5C05,
@@ -110,6 +110,7 @@ public class AllGoldenIntVectorHashTest {
 		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
 		IntLongOrderedMap problems = new IntLongOrderedMap(100);
 		IntOrderedSet good = IntOrderedSet.with(GOLDEN_INTS);
+		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
 		for (int a = -1; a < GOLDEN_INTS.length; a++) {
 			final int g = a == -1 ? 1 : GOLDEN_INTS[a];
 			{
@@ -117,7 +118,7 @@ public class AllGoldenIntVectorHashTest {
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
-					int hm = 0x9E3779B7;
+					int hm = 0xB7AD9447;//0xF1042721;// 0x9E3779B7;
 
 					@Override
 					protected int place (Object item) {
@@ -143,7 +144,7 @@ public class AllGoldenIntVectorHashTest {
 						int oldCapacity = keyTable.length;
 						threshold = (int)(newSize * loadFactor);
 						mask = newSize - 1;
-						shift = BitConversion.countLeadingZeros(mask);
+						shift = BitConversion.countLeadingZeros(mask) + 32;
 
 //						// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
 //						// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
@@ -168,7 +169,7 @@ public class AllGoldenIntVectorHashTest {
 						// this means the shift on hashMultiplier is between 17 and 47, which is a good random-ish range for these.
 //						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511]; // 0 problems, worst collisions nope
 
-						hashMultiplier = hm = GOOD[BitConversion.imul(shift, hm) >>> 23];
+//						hashMultiplier = hm = GOOD[BitConversion.imul(shift, hm) >>> 23];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
@@ -194,6 +195,10 @@ public class AllGoldenIntVectorHashTest {
 					public void clear () {
 						System.out.print("Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+						minMax[0] = Math.min(minMax[0], collisionTotal);
+						minMax[1] = Math.max(minMax[1], collisionTotal);
+						minMax[2] = Math.min(minMax[2], longestPileup);
+						minMax[3] = Math.max(minMax[3], longestPileup);
 						super.clear();
 					}
 
@@ -227,6 +232,10 @@ public class AllGoldenIntVectorHashTest {
 		}
 		System.out.println("};\n");
 		System.out.println(problems.size() + " problem multipliers in total, " + good.size() + " likely good multipliers in total.");
+		System.out.println("Lowest collisions : " + minMax[0]);
+		System.out.println("Highest collisions: " + minMax[1]);
+		System.out.println("Lowest pileup     : " + minMax[2]);
+		System.out.println("Highest pileup    : " + minMax[3]);
 	}
 
 }
