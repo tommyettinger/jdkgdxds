@@ -24,15 +24,16 @@ import com.github.tommyettinger.ds.IntOrderedSet;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
+import com.github.tommyettinger.random.WhiskerRandom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
 
-import static com.github.tommyettinger.ds.test.PileupTest.LEN;
-import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
-
-public class AllGoldenIntVectorHashTest {
-
+public class AllGoldenIntWordHashTest {
 	public static void main(String[] args) throws IOException {
 		final int[] GOOD = new int[]{
 			0x9E3779B9, 0x91E10DA5, 0xD1B54A33, 0xABC98389, 0x8CB92BA7, 0xDB4F0B91, 0xBBE05633, 0x89E18285,
@@ -102,26 +103,24 @@ public class AllGoldenIntVectorHashTest {
 		};
 
 		int[] GOLDEN_INTS = GOOD;
-//		int[] GOLDEN_INTS = new int[MathTools.GOLDEN_LONGS.length];
-//		for (int i = 0; i < GOLDEN_INTS.length; i++) {
-//			GOLDEN_INTS[i] = (int)(MathTools.GOLDEN_LONGS[i] >>> 32) | 1;
-//		}
-		final Vector2[] spiral = generateVectorSpiral(LEN);
-		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
+
+		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
+		WhiskerRandom rng = new WhiskerRandom(1234567890L);
+		Collections.shuffle(words, rng);
 		IntLongOrderedMap problems = new IntLongOrderedMap(100);
 		IntOrderedSet good = IntOrderedSet.with(GOLDEN_INTS);
-		for (int a = -1; a < GOLDEN_INTS.length; a++) {
+		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
+		for (int a = 0; a < GOLDEN_INTS.length; a++) {
 			final int g = a == -1 ? 1 : GOLDEN_INTS[a];
 			{
-				int finalA = a;
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
-					int hm = 0x9E3779B7;
+					int hm = 0x9E3779B7;//(int)((g >>> 32 & -16) | (g & 15));
 
 					@Override
 					protected int place (Object item) {
-						return BitConversion.imul(item.hashCode(), hm) >>> shift;
+						return item.hashCode() * hm >>> shift;
 					}
 
 					@Override
@@ -143,30 +142,7 @@ public class AllGoldenIntVectorHashTest {
 						int oldCapacity = keyTable.length;
 						threshold = (int)(newSize * loadFactor);
 						mask = newSize - 1;
-						shift = BitConversion.countLeadingZeros(mask);
-
-//						// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
-//						// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-//						hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
-//						hashMultiplier += 0x6A09E667F3BCC90AL ^ size + size; // fractional part of the silver ratio, times 2 to the 64
-//						hashMultiplier ^= size + size; // 86 problems, worst collisions 68609571
-//						hashMultiplier ^= hashMultiplier * hashMultiplier * 0x6A09E667F3BCC90AL;
-//						hashMultiplier = ~((hashMultiplier ^ -(hashMultiplier * hashMultiplier | 5L)) << 1);
-//						hashMultiplier *= 0xD413CCCFE7799215L + size + size; // 113 problems, worst collisions 109417377
-//						hashMultiplier += 0xD413CCCFE7799216L + size + size; // 118 problems, worst collisions 296284292
-//						hashMultiplier += 0xD413CCCFE7799216L * size; // 137 problems, worst collisions 290750405
-//						hashMultiplier ^= 0xD413CCCFEL * size; // 105 problems, worst collisions 87972280
-//						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier >>> 40) % MathTools.GOLDEN_LONGS.length]; // 99 problems, worst collisions 68917443
-//						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier & 0xFF)]; // 39 problems, worst collisions 9800516
-//						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier & 0x7F)]; // 0 problems, worst collisions nope
-//						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier >>> 29 & 0xF8) | 7]; // 163 problems, worst collisions 2177454
-//						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 0x1FF]; // 0 problems, worst collisions nope
-
-						// this next one deserves some explanation...
-						// shift is always between 33 and 63 or so, so adding 48 to it moves it to the 85 to 115 range.
-						// but, shifts are always implicitly masked to use only their lowest 6 bits (when shifting longs).
-						// this means the shift on hashMultiplier is between 17 and 47, which is a good random-ish range for these.
-//						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511]; // 0 problems, worst collisions nope
+						shift = BitConversion.countLeadingZeros((long)mask);
 
 						hashMultiplier = hm = GOOD[BitConversion.imul(shift, hm) >>> 23];
 						Object[] oldKeyTable = keyTable;
@@ -182,8 +158,7 @@ public class AllGoldenIntVectorHashTest {
 								if (key != null) {addResize(key);}
 							}
 						}
-						if (collisionTotal > THRESHOLD) {
-							System.out.printf("  WHOOPS!!!  Multiplier %016X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
+						if(collisionTotal > 40000) {
 							problems.put(g, collisionTotal);
 							good.remove(g);
 //							throw new RuntimeException();
@@ -192,22 +167,26 @@ public class AllGoldenIntVectorHashTest {
 
 					@Override
 					public void clear () {
-						System.out.print("Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
+						System.out.print("Original 0x" + Base.BASE16.unsigned(g));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+						minMax[0] = Math.min(minMax[0], collisionTotal);
+						minMax[1] = Math.max(minMax[1], collisionTotal);
+						minMax[2] = Math.min(minMax[2], longestPileup);
+						minMax[3] = Math.max(minMax[3], longestPileup);
 						super.clear();
 					}
-
 					@Override
 					public void setHashMultiplier (long hashMultiplier) {
 						super.setHashMultiplier(hashMultiplier);
 						hm = (int)hashMultiplier;
 					}
+
 				};
 				if(a != -1)
 					set.setHashMultiplier(g);
 				try {
-					for (int i = 0, n = spiral.length; i < n; i++) {
-						set.add(spiral[i]);
+					for (int i = 0, n = words.size(); i < n; i++) {
+						set.add(words.get(i));
 					}
 				}catch (RuntimeException ignored){
 					System.out.println(g + " FAILURE");
@@ -216,8 +195,8 @@ public class AllGoldenIntVectorHashTest {
 				set.clear();
 			}
 		}
-		System.out.println("This used a threshold of " + THRESHOLD);
 		problems.sortByValue(LongComparators.NATURAL_COMPARATOR);
+		System.out.println("\n\nnew long[]");
 		System.out.println(problems.toStringUnsigned(", ", false, Base.BASE16));
 		System.out.println("\n\nnew int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
@@ -226,7 +205,14 @@ public class AllGoldenIntVectorHashTest {
 				System.out.println();
 		}
 		System.out.println("};\n");
+
 		System.out.println(problems.size() + " problem multipliers in total, " + good.size() + " likely good multipliers in total.");
+		System.out.println("Lowest collisions : " + minMax[0]);
+		System.out.println("Highest collisions: " + minMax[1]);
+		System.out.println("Lowest pileup     : " + minMax[2]);
+		System.out.println("Highest pileup    : " + minMax[3]);
+
+
 	}
 
 }

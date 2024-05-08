@@ -89,7 +89,9 @@ public class AllGoldenVectorHashTest {
 						// shift is always between 33 and 63 or so, so adding 48 to it moves it to the 85 to 115 range.
 						// but, shifts are always implicitly masked to use only their lowest 6 bits (when shifting longs).
 						// this means the shift on hashMultiplier is between 17 and 47, which is a good random-ish range for these.
-						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511]; // 0 problems, worst collisions nope
+//						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511]; // 0 problems, worst collisions nope
+
+						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier >>> 48 + shift) & 511];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
