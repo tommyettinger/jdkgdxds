@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongIterator;
@@ -716,6 +717,46 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 			buffer.append('=');
 			long value = valueTable[i];
 			buffer.append(value);
+		}
+		if (braces) {buffer.append('}');}
+		return buffer.toString();
+	}
+
+	/**
+	 * Creates a String from the contents of this IntLongMap, but uses the given {@link Base} to convert each
+	 * key and each value to their unsigned String representations in that base. For example, if you give this
+	 * {@link Base#BASE16} as its base, keys will look like {@code 0000BEEF} and values will look like
+	 * {@code 0123456789ABCDEF} .
+	 * @param separator how to separate entries, such as {@code ", "}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param base a {@link Base} from digital, such as {@link Base#BASE16} (recommended)
+	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 */
+	public String toStringUnsigned (String separator, boolean braces, Base base) {
+		if (size == 0) {return braces ? "{}" : "";}
+		StringBuilder buffer = new StringBuilder(32);
+		if (braces) {buffer.append('{');}
+		if (hasZeroValue) {
+			base.appendUnsigned(buffer, 0).append('=');
+			base.appendUnsigned(buffer, zeroValue);
+			if (size > 1) {buffer.append(separator);}
+		}
+		int[] keyTable = this.keyTable;
+		long[] valueTable = this.valueTable;
+		int i = keyTable.length;
+		while (i-- > 0) {
+			int key = keyTable[i];
+			if (key == 0) {continue;}
+			base.appendUnsigned(buffer, key).append('=');
+			base.appendUnsigned(buffer, valueTable[i]);
+			break;
+		}
+		while (i-- > 0) {
+			int key = keyTable[i];
+			if (key == 0) {continue;}
+			buffer.append(separator);
+			base.appendUnsigned(buffer, key).append('=');
+			base.appendUnsigned(buffer, valueTable[i]);
 		}
 		if (braces) {buffer.append('}');}
 		return buffer.toString();
