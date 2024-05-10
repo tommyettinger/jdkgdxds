@@ -689,13 +689,16 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		return toString(", ", true);
 	}
 
-	protected String toString (String separator, boolean braces) {
-		if (size == 0) {return braces ? "{}" : "";}
-		StringBuilder buffer = new StringBuilder(32);
-		if (braces) {buffer.append('{');}
+	public String toString (String separator, boolean braces) {
+		return appendAsString(new StringBuilder(32), separator, braces).toString();
+	}
+
+	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		if (braces) {sb.append('{');}
 		if (hasZeroValue) {
-			buffer.append("0=").append(zeroValue);
-			if (size > 1) {buffer.append(separator);}
+			sb.append("0=").append(zeroValue);
+			if (size > 1) {sb.append(separator);}
 		}
 		int[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
@@ -703,23 +706,23 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		while (i-- > 0) {
 			int key = keyTable[i];
 			if (key == 0) {continue;}
-			buffer.append(key);
-			buffer.append('=');
+			sb.append(key);
+			sb.append('=');
 			long value = valueTable[i];
-			buffer.append(value);
+			sb.append(value);
 			break;
 		}
 		while (i-- > 0) {
 			int key = keyTable[i];
 			if (key == 0) {continue;}
-			buffer.append(separator);
-			buffer.append(key);
-			buffer.append('=');
+			sb.append(separator);
+			sb.append(key);
+			sb.append('=');
 			long value = valueTable[i];
-			buffer.append(value);
+			sb.append(value);
 		}
-		if (braces) {buffer.append('}');}
-		return buffer.toString();
+		if (braces) {sb.append('}');}
+		return sb;
 	}
 
 	/**
@@ -748,6 +751,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	public String toStringUnsigned (String separator, boolean braces, Base base) {
 		return toStringUnsigned(separator, "=", braces, base, "", "", "", "");
 	}
+
 	/**
 	 * Creates a String from the contents of this IntLongMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. For example, if you give this
@@ -767,13 +771,35 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 */
 	public String toStringUnsigned (String entrySeparator, String keyValueSeparator, boolean braces, Base base,
 		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
-		if (size == 0) {return braces ? "{}" : "";}
-		StringBuilder buffer = new StringBuilder(32);
-		if (braces) {buffer.append('{');}
+		return appendUnsigned(new StringBuilder(32), entrySeparator, keyValueSeparator, braces, base, keyPrefix, keySuffix, valuePrefix, valueSuffix).toString();
+	}
+
+	/**
+	 * Appends to a StringBuilder from the contents of this IntLongMap, but uses the given {@link Base} to convert each
+	 * key and each value to their unsigned String representations in that base. For example, if you give this
+	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "", "L")}, keys will look like {@code 0x0000BEEF}
+	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
+	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
+	 *
+	 * @param sb a StringBuilder that this can append to
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
+	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
+	 * @param keySuffix a String that will be at the end of each key ({@code ""} is suggested)
+	 * @param valuePrefix a String that will be at the start of each value ({@code ""} is suggested)
+	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
+	 * @return {@code sb}, with the unsigned keys and unsigned values of this map
+	 */
+	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
+		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		if (braces) {sb.append('{');}
 		if (hasZeroValue) {
-			base.appendUnsigned(buffer.append(keyPrefix),   0).append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(buffer.append(valuePrefix), zeroValue).append(valueSuffix);
-			if (size > 1) {buffer.append(entrySeparator);}
+			base.appendUnsigned(sb.append(keyPrefix),   0).append(keySuffix).append(keyValueSeparator);
+			base.appendUnsigned(sb.append(valuePrefix), zeroValue).append(valueSuffix);
+			if (size > 1) {sb.append(entrySeparator);}
 		}
 		int[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
@@ -781,19 +807,19 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		while (i-- > 0) {
 			int key = keyTable[i];
 			if (key == 0) {continue;}
-			base.appendUnsigned(buffer.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(buffer.append(valuePrefix), valueTable[i]).append(valueSuffix);
+			base.appendUnsigned(sb.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
+			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
 			break;
 		}
 		while (i-- > 0) {
 			int key = keyTable[i];
 			if (key == 0) {continue;}
-			buffer.append(entrySeparator);
-			base.appendUnsigned(buffer.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(buffer.append(valuePrefix), valueTable[i]).append(valueSuffix);
+			sb.append(entrySeparator);
+			base.appendUnsigned(sb.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
+			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
 		}
-		if (braces) {buffer.append('}');}
-		return buffer.toString();
+		if (braces) {sb.append('}');}
+		return sb;
 	}
 
 	/**
@@ -808,6 +834,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	public StringBuilder appendReadable () {
 		return appendReadable(new StringBuilder(32), false);
 	}
+	
 	/**
 	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
 	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys
