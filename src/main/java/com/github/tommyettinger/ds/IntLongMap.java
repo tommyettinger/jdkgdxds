@@ -834,7 +834,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	public StringBuilder appendReadable () {
 		return appendReadable(new StringBuilder(32), false);
 	}
-	
+
 	/**
 	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
 	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys

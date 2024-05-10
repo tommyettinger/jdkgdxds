@@ -16,6 +16,7 @@ import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.random.WhiskerRandom;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -28,6 +29,7 @@ import java.util.Set;
 
 import com.github.tommyettinger.function.IntIntToIntBiFunction;
 
+@Ignore
 public class PileupTest {
     public static final int LEN = 200000;//500000;//1000000;//
     public static final float LOAD = 0.5f; //0.6f

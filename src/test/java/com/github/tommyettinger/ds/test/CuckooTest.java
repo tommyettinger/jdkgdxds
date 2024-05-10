@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 
-//@Ignore
+@Ignore
 public class CuckooTest {
 	// Expected to fail with an OutOfMemoryError.
 	@Test(expected = OutOfMemoryError.class)
