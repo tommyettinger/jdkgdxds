@@ -723,22 +723,52 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	}
 
 	/**
+	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#BASE10} to convert each
+	 * key and each value to their unsigned String representations in base-10. For example, keys will look like
+	 * {@code 1234512345} and values will look like {@code 12345123451234512345} . This will not apply any
+	 * prefixes or suffixes around keys or values.
+	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 */
+	public String toStringUnsigned () {
+		return toStringUnsigned(", ", true, Base.BASE10, "", "", "", "");
+	}
+
+	/**
 	 * Creates a String from the contents of this IntLongMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. For example, if you give this
 	 * {@link Base#BASE16} as its base, keys will look like {@code 0000BEEF} and values will look like
-	 * {@code 0123456789ABCDEF} .
+	 * {@code 0123456789ABCDEF} . This will not apply any prefixes or suffixes around keys or values.
 	 * @param separator how to separate entries, such as {@code ", "}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param base a {@link Base} from digital, such as {@link Base#BASE16} (recommended)
+	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
 	 * @return the String representation of the unsigned keys and unsigned values of this map
 	 */
 	public String toStringUnsigned (String separator, boolean braces, Base base) {
+		return toStringUnsigned(separator, braces, base, "", "", "", "");
+	}
+	/**
+	 * Creates a String from the contents of this IntLongMap, but uses the given {@link Base} to convert each
+	 * key and each value to their unsigned String representations in that base. For example, if you give this
+	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "", "L")}, keys will look like {@code 0x0000BEEF}
+	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
+	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
+	 * @param separator how to separate entries, such as {@code ", "}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
+	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
+	 * @param keySuffix a String that will be at the end of each key ({@code ""} is suggested)
+	 * @param valuePrefix a String that will be at the start of each value ({@code ""} is suggested)
+	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
+	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 */
+	public String toStringUnsigned (String separator, boolean braces, Base base,
+		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
 		if (size == 0) {return braces ? "{}" : "";}
 		StringBuilder buffer = new StringBuilder(32);
 		if (braces) {buffer.append('{');}
 		if (hasZeroValue) {
-			base.appendUnsigned(buffer, 0).append('=');
-			base.appendUnsigned(buffer, zeroValue);
+			base.appendUnsigned(buffer.append(keyPrefix),   0).append(keySuffix).append('=');
+			base.appendUnsigned(buffer.append(valuePrefix), zeroValue).append(valueSuffix);
 			if (size > 1) {buffer.append(separator);}
 		}
 		int[] keyTable = this.keyTable;
@@ -747,16 +777,16 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		while (i-- > 0) {
 			int key = keyTable[i];
 			if (key == 0) {continue;}
-			base.appendUnsigned(buffer, key).append('=');
-			base.appendUnsigned(buffer, valueTable[i]);
+			base.appendUnsigned(buffer.append(keyPrefix),   key).append(keySuffix).append('=');
+			base.appendUnsigned(buffer.append(valuePrefix), valueTable[i]).append(valueSuffix);
 			break;
 		}
 		while (i-- > 0) {
 			int key = keyTable[i];
 			if (key == 0) {continue;}
 			buffer.append(separator);
-			base.appendUnsigned(buffer, key).append('=');
-			base.appendUnsigned(buffer, valueTable[i]);
+			base.appendUnsigned(buffer.append(keyPrefix),   key).append(keySuffix).append('=');
+			base.appendUnsigned(buffer.append(valuePrefix), valueTable[i]).append(valueSuffix);
 		}
 		if (braces) {buffer.append('}');}
 		return buffer.toString();
