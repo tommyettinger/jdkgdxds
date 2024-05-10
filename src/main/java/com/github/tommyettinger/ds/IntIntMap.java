@@ -706,7 +706,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 			if (key == 0) {continue;}
 			sb.append(key);
 			sb.append('=');
-			long value = valueTable[i];
+			int value = valueTable[i];
 			sb.append(value);
 			break;
 		}
@@ -716,7 +716,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 			sb.append(separator);
 			sb.append(key);
 			sb.append('=');
-			long value = valueTable[i];
+			int value = valueTable[i];
 			sb.append(value);
 		}
 		if (braces) {sb.append('}');}

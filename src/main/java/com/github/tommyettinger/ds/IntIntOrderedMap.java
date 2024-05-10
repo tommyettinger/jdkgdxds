@@ -625,7 +625,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 			if (i > 0) {sb.append(separator);}
 			sb.append(key);
 			sb.append('=');
-			long value = get(key);
+			int value = get(key);
 			sb.append(value);
 		}
 		if (braces) {sb.append('}');}
