@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
@@ -611,22 +612,190 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 		return entrySet().iterator();
 	}
 
-	@Override
-	protected String toString (String separator, boolean braces) {
-		if (size == 0) {return braces ? "{}" : "";}
-		StringBuilder buffer = new StringBuilder(32);
-		if (braces) {buffer.append('{');}
-		LongList keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			long key = keys.get(i);
-			if (i > 0) {buffer.append(separator);}
-			buffer.append(key);
-			buffer.append('=');
-			float value = get(key);
-			buffer.append(value);
+	public String toString (String separator, boolean braces) {
+		return appendAsString(new StringBuilder(32), separator, braces).toString();
+	}
+
+	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		if (braces) {sb.append('{');}
+		if (hasZeroValue) {
+			sb.append("0=").append(zeroValue);
+			if (size > 1) {sb.append(separator);}
 		}
-		if (braces) {buffer.append('}');}
-		return buffer.toString();
+		long[] keyTable = this.keyTable;
+		float[] valueTable = this.valueTable;
+		int i = keyTable.length;
+		while (i-- > 0) {
+			long key = keyTable[i];
+			if (key == 0) {continue;}
+			sb.append(key);
+			sb.append('=');
+			sb.append(valueTable[i]);
+			break;
+		}
+		while (i-- > 0) {
+			long key = keyTable[i];
+			if (key == 0) {continue;}
+			sb.append(separator);
+			sb.append(key);
+			sb.append('=');
+			sb.append(valueTable[i]);
+		}
+		if (braces) {sb.append('}');}
+		return sb;
+	}
+
+	/**
+	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#BASE10} to convert each
+	 * key and each value to their unsigned String representations in base-10. For example, keys will look like
+	 * {@code 1234512345} and values will look like {@code 12345123451234512345} . This will not apply any
+	 * prefixes or suffixes around keys or values.
+	 *
+	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 */
+	public String toStringUnsigned () {
+		return toStringUnsigned(", ", "=", true, Base.BASE10, "", "", "", "");
+	}
+
+	/**
+	 * Creates a String from the contents of this IntLongMap, but uses the given {@link Base} to convert each
+	 * key and each value to their unsigned String representations in that base. For example, if you give this
+	 * {@link Base#BASE16} as its base, keys will look like {@code 0000BEEF} and values will look like
+	 * {@code 0123456789ABCDEF} . This will not apply any prefixes or suffixes around keys or values.
+	 *
+	 * @param separator how to separate entries, such as {@code ", "}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
+	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 */
+	public String toStringUnsigned (String separator, boolean braces, Base base) {
+		return toStringUnsigned(separator, "=", braces, base, "", "", "", "");
+	}
+
+	/**
+	 * Creates a String from the contents of this IntLongMap, but uses the given {@link Base} to convert each
+	 * key and each value to their unsigned String representations in that base. For example, if you give this
+	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "", "L")}, keys will look like {@code 0x0000BEEF}
+	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
+	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
+	 *
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
+	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
+	 * @param keySuffix a String that will be at the end of each key ({@code ""} is suggested)
+	 * @param valuePrefix a String that will be at the start of each value ({@code ""} is suggested)
+	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
+	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 */
+	public String toStringUnsigned (String entrySeparator, String keyValueSeparator, boolean braces, Base base,
+		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+		return appendUnsigned(new StringBuilder(32), entrySeparator, keyValueSeparator, braces, base, keyPrefix, keySuffix, valuePrefix, valueSuffix).toString();
+	}
+
+	/**
+	 * Appends to a StringBuilder from the contents of this IntLongMap, but uses the given {@link Base} to convert each
+	 * key and each value to their unsigned String representations in that base. For example, if you give this
+	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "", "L")}, keys will look like {@code 0x0000BEEF}
+	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
+	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
+	 *
+	 * @param sb a StringBuilder that this can append to
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
+	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
+	 * @param keySuffix a String that will be at the end of each key ({@code ""} is suggested)
+	 * @param valuePrefix a String that will be at the start of each value ({@code ""} is suggested)
+	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
+	 * @return {@code sb}, with the unsigned keys and unsigned values of this map
+	 */
+	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
+		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		if (braces) {sb.append('{');}
+		if (hasZeroValue) {
+			base.appendUnsigned(sb.append(keyPrefix),   0).append(keySuffix).append(keyValueSeparator);
+			base.appendUnsigned(sb.append(valuePrefix), zeroValue).append(valueSuffix);
+			if (size > 1) {sb.append(entrySeparator);}
+		}
+		long[] keyTable = this.keyTable;
+		float[] valueTable = this.valueTable;
+		int i = keyTable.length;
+		while (i-- > 0) {
+			long key = keyTable[i];
+			if (key == 0) {continue;}
+			base.appendUnsigned(sb.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
+			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
+			break;
+		}
+		while (i-- > 0) {
+			long key = keyTable[i];
+			if (key == 0) {continue;}
+			sb.append(entrySeparator);
+			base.appendUnsigned(sb.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
+			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
+		}
+		if (braces) {sb.append('}');}
+		return sb;
+	}
+
+	/**
+	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
+	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys
+	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This allows the output to be
+	 * copied into source code that calls {@link #with(Number, Number, Number...)}. This does not wrap the output in
+	 * any braces, and allocates a new StringBuilder on each call.
+	 *
+	 * @return a new StringBuilder with any keys and values separated by {@code ", "}, written so Java can read them
+	 */
+	public StringBuilder appendReadable () {
+		return appendReadable(new StringBuilder(32), false);
+	}
+
+	/**
+	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
+	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys
+	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This allows the output to be
+	 * copied into source code that calls {@link #with(Number, Number, Number...)}. If {@code braces} is true, then
+	 * the output will be surrounded by curly braces; it should be false if you want to paste output directly into a
+	 * call to with().
+	 *
+	 * @param sb a StringBuilder that this can append to
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @return {@code sb}, with any keys and values separated by {@code ", "}, written so Java can read them
+	 */
+	public StringBuilder appendReadable (final StringBuilder sb, boolean braces) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		final String separator = ", ";
+		if (braces) {sb.append('{');}
+		if (hasZeroValue) {
+			Base.appendReadable(sb, 0).append(", ");
+			Base.appendReadable(sb, zeroValue);
+			if (size > 1) {sb.append(separator);}
+		}
+		long[] keyTable = this.keyTable;
+		float[] valueTable = this.valueTable;
+		int i = keyTable.length;
+		while (i-- > 0) {
+			long key = keyTable[i];
+			if (key == 0) {continue;}
+			Base.appendReadable(sb, key).append(", ");
+			Base.appendReadable(sb, valueTable[i]);
+			break;
+		}
+		while (i-- > 0) {
+			long key = keyTable[i];
+			if (key == 0) {continue;}
+			sb.append(separator);
+			Base.appendReadable(sb, key).append(", ");
+			Base.appendReadable(sb, valueTable[i]);
+		}
+		if (braces) {sb.append('}');}
+		return sb;
 	}
 
 	public static class OrderedMapEntries extends Entries {
