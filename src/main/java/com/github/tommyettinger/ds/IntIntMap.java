@@ -763,8 +763,8 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
 	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
 	 * @param keySuffix a String that will be at the end of each key ({@code ""} is suggested)
-	 * @param valuePrefix a String that will be at the start of each value ({@code ""} is suggested)
-	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
+	 * @param valuePrefix a String that will be at the start of each value ({@code "0x"} is suggested)
+	 * @param valueSuffix a String that will be at the end of each value ({@code ""} is suggested)
 	 * @return the String representation of the unsigned keys and unsigned values of this map
 	 */
 	public String toStringUnsigned (String entrySeparator, String keyValueSeparator, boolean braces, Base base,
@@ -786,8 +786,8 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
 	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
 	 * @param keySuffix a String that will be at the end of each key ({@code ""} is suggested)
-	 * @param valuePrefix a String that will be at the start of each value ({@code ""} is suggested)
-	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
+	 * @param valuePrefix a String that will be at the start of each value ({@code "0x"} is suggested)
+	 * @param valueSuffix a String that will be at the end of each value ({@code ""} is suggested)
 	 * @return {@code sb}, with the unsigned keys and unsigned values of this map
 	 */
 	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,

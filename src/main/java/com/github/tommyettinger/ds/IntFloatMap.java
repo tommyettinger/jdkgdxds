@@ -771,7 +771,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	}
 
 	/**
-	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#BASE10} to convert each
+	 * Creates a String from the contents of this IntFloatMap, but uses {@link Base#BASE10} to convert each
 	 * key and each value to their unsigned String representations in base-10. Unsigned floats are never readable
 	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}. This will not apply any
 	 * prefixes or suffixes around keys or values.
@@ -783,7 +783,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	}
 
 	/**
-	 * Creates a String from the contents of this IntLongMap, but uses the given {@link Base} to convert each
+	 * Creates a String from the contents of this IntFloatMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. Unsigned floats are never readable
 	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}.
 	 * This will not apply any prefixes or suffixes around keys or values.
@@ -798,7 +798,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	}
 
 	/**
-	 * Creates a String from the contents of this IntLongMap, but uses the given {@link Base} to convert each
+	 * Creates a String from the contents of this IntFloatMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. Unsigned floats are never readable
 	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}.
 	 *
@@ -806,10 +806,10 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
 	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
-	 * @param keySuffix a String that will be at the end of each key ({@code ""} is suggested)
-	 * @param valuePrefix a String that will be at the start of each value ({@code ""} is suggested)
-	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
+	 * @param keyPrefix a String that will be at the start of each key
+	 * @param keySuffix a String that will be at the end of each key
+	 * @param valuePrefix a String that will be at the start of each value
+	 * @param valueSuffix a String that will be at the end of each value
 	 * @return the String representation of the unsigned keys and unsigned values of this map
 	 */
 	public String toStringUnsigned (String entrySeparator, String keyValueSeparator, boolean braces, Base base,
@@ -818,7 +818,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this IntLongMap, but uses the given {@link Base} to convert each
+	 * Appends to a StringBuilder from the contents of this IntFloatMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. Unsigned floats are never readable
 	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}.
 	 *
@@ -827,10 +827,10 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
 	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
-	 * @param keySuffix a String that will be at the end of each key ({@code ""} is suggested)
-	 * @param valuePrefix a String that will be at the start of each value ({@code ""} is suggested)
-	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
+	 * @param keyPrefix a String that will be at the start of each key
+	 * @param keySuffix a String that will be at the end of each key
+	 * @param valuePrefix a String that will be at the start of each value
+	 * @param valueSuffix a String that will be at the end of each value
 	 * @return {@code sb}, with the unsigned keys and unsigned values of this map
 	 */
 	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
@@ -864,7 +864,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	}
 
 	/**
-	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
+	 * Creates a String from the contents of this IntFloatMap, but uses {@link Base#appendReadable(StringBuilder, int)}
 	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys
 	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This allows the output to be
 	 * copied into source code that calls {@link #with(Number, Number, Number...)}. This does not wrap the output in
@@ -877,7 +877,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	}
 
 	/**
-	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
+	 * Creates a String from the contents of this IntFloatMap, but uses {@link Base#appendReadable(StringBuilder, int)}
 	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys
 	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This allows the output to be
 	 * copied into source code that calls {@link #with(Number, Number, Number...)}. If {@code braces} is true, then

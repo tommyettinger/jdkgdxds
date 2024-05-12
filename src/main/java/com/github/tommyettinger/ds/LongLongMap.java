@@ -726,9 +726,9 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	}
 
 	/**
-	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#BASE10} to convert each
-	 * key and each value to their unsigned String representations in base-10. Unsigned longs are never readable
-	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}. This will not apply any
+	 * Creates a String from the contents of this LongLongMap, but uses {@link Base#BASE10} to convert each
+	 * key and each value to their unsigned String representations in base-10. r example, keys will look like
+	 * {@code 17659876598765987651} and values will look like {@code 12345123451234512345} . This will not apply any
 	 * prefixes or suffixes around keys or values.
 	 *
 	 * @return the String representation of the unsigned keys and unsigned values of this map
@@ -738,10 +738,10 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	}
 
 	/**
-	 * Creates a String from the contents of this IntLongMap, but uses the given {@link Base} to convert each
-	 * key and each value to their unsigned String representations in that base. Unsigned longs are never readable
-	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}.
-	 * This will not apply any prefixes or suffixes around keys or values.
+	 * Creates a String from the contents of this LongLongMap, but uses the given {@link Base} to convert each
+	 * key and each value to their unsigned String representations in that base. For example, if you give this
+	 * {@link Base#BASE16} as its base, keys will look like {@code 0000DEAD0000BEEF} and values will look like
+	 * {@code 0123456789ABCDEF} . This will not apply any prefixes or suffixes around keys or values.
 	 *
 	 * @param separator how to separate entries, such as {@code ", "}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
@@ -753,11 +753,11 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	}
 
 	/**
-	 * Creates a String from the contents of this IntLongMap, but uses the given {@link Base} to convert each
+	 * Creates a String from the contents of this LongLongMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. For example, if you give this
-	 * 	 * the parameters {@code (", ", false, Base.BASE16, "0x", "L", "0x", "L")}, keys will look like {@code 0x0000DEAD0000BEEFL}
-	 * 	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
-	 * 	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
+	 * the parameters {@code (", ", false, Base.BASE16, "0x", "L", "0x", "L")}, keys will look like {@code 0x0000DEAD0000BEEFL}
+	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
+	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
 	 *
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
@@ -775,7 +775,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this IntLongMap, but uses the given {@link Base} to convert each
+	 * Appends to a StringBuilder from the contents of this LongLongMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. For example, if you give this
 	 * the parameters {@code (", ", false, Base.BASE16, "0x", "L", "0x", "L")}, keys will look like {@code 0x0000DEAD0000BEEFL}
 	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
@@ -823,7 +823,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	}
 
 	/**
-	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
+	 * Creates a String from the contents of this LongLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
 	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys
 	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This allows the output to be
 	 * copied into source code that calls {@link #with(Number, Number, Number...)}. This does not wrap the output in
@@ -836,7 +836,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	}
 
 	/**
-	 * Creates a String from the contents of this IntLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
+	 * Creates a String from the contents of this LongLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
 	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys
 	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This allows the output to be
 	 * copied into source code that calls {@link #with(Number, Number, Number...)}. If {@code braces} is true, then
