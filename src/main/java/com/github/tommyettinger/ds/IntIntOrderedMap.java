@@ -611,11 +611,6 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 		return entrySet().iterator();
 	}
 
-	@Override
-	public String toString (String separator, boolean braces) {
-		return appendAsString(new StringBuilder(32), separator, braces).toString();
-	}
-
 	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
