@@ -755,7 +755,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	/**
 	 * Creates a String from the contents of this IntLongMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. For example, if you give this
-	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "", "L")}, keys will look like {@code 0x0000BEEF}
+	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "0x", "L")}, keys will look like {@code 0x0000BEEF}
 	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
 	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
 	 *
@@ -777,7 +777,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	/**
 	 * Appends to a StringBuilder from the contents of this IntLongMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. For example, if you give this
-	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "", "L")}, keys will look like {@code 0x0000BEEF}
+	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "0x", "L")}, keys will look like {@code 0x0000BEEF}
 	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
 	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
 	 *

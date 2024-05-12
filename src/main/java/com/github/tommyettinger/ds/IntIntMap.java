@@ -726,7 +726,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	/**
 	 * Creates a String from the contents of this IntIntMap, but uses {@link Base#BASE10} to convert each
 	 * key and each value to their unsigned String representations in base-10. For example, keys will look like
-	 * {@code 1234512345} and values will look like {@code 12345123451234512345} . This will not apply any
+	 * {@code 1234512345} and values will look like {@code 9876598765} . This will not apply any
 	 * prefixes or suffixes around keys or values.
 	 *
 	 * @return the String representation of the unsigned keys and unsigned values of this map
@@ -739,7 +739,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * Creates a String from the contents of this IntIntMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. For example, if you give this
 	 * {@link Base#BASE16} as its base, keys will look like {@code 0000BEEF} and values will look like
-	 * {@code 0123456789ABCDEF} . This will not apply any prefixes or suffixes around keys or values.
+	 * {@code 89ABCDEF} . This will not apply any prefixes or suffixes around keys or values.
 	 *
 	 * @param separator how to separate entries, such as {@code ", "}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
@@ -753,8 +753,8 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	/**
 	 * Creates a String from the contents of this IntIntMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. For example, if you give this
-	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "", "L")}, keys will look like {@code 0x0000BEEF}
-	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
+	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "0x", "")}, keys will look like {@code 0x0000BEEF}
+	 * and values will look like {@code 0x89ABCDEF} , which makes both readable in Java sources. The
 	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
 	 *
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
@@ -775,8 +775,8 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	/**
 	 * Appends to a StringBuilder from the contents of this IntIntMap, but uses the given {@link Base} to convert each
 	 * key and each value to their unsigned String representations in that base. For example, if you give this
-	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "", "L")}, keys will look like {@code 0x0000BEEF}
-	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
+	 * the parameters {@code (", ", false, Base.BASE16, "0x", "", "0x", "")}, keys will look like {@code 0x0000BEEF}
+	 * and values will look like {@code 0x89ABCDEF} , which makes both readable in Java sources. The
 	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
 	 *
 	 * @param sb a StringBuilder that this can append to
