@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
@@ -723,33 +724,170 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		return toString(", ", true);
 	}
 
-	protected String toString (String separator, boolean braces) {
-		if (size == 0) {return braces ? "{}" : "";}
-		StringBuilder buffer = new StringBuilder(32);
-		if (braces) {buffer.append('{');}
-		K[] keyTable = this.keyTable;
+	public String toString (String separator, boolean braces) {
+		return appendAsString(new StringBuilder(32), separator, braces).toString();
+	}
+
+	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		if (braces) {sb.append('{');}
+		Object[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
-			K key = keyTable[i];
+			Object key = keyTable[i];
 			if (key == null) {continue;}
-			buffer.append(key == this ? "(this)" : key);
-			buffer.append('=');
-			float value = valueTable[i];
-			buffer.append(value);
+			sb.append(key == this ? "(this)" : key);
+			sb.append('=');
+			sb.append(valueTable[i]);
 			break;
 		}
 		while (i-- > 0) {
-			K key = keyTable[i];
+			Object key = keyTable[i];
 			if (key == null) {continue;}
-			buffer.append(separator);
-			buffer.append(key == this ? "(this)" : key);
-			buffer.append('=');
+			sb.append(separator);
+			sb.append(key == this ? "(this)" : key);
+			sb.append('=');
 			float value = valueTable[i];
-			buffer.append(value);
+			sb.append(value);
 		}
-		if (braces) {buffer.append('}');}
-		return buffer.toString();
+		if (braces) {sb.append('}');}
+		return sb;
+	}
+
+	/**
+	 * Creates a String from the contents of this ObjectFloatMap, but uses {@link Base#BASE10} to convert each
+	 * value to their unsigned String representations in base-10. Unsigned floats are never readable
+	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}. This will not apply any
+	 * prefixes or suffixes around keys or values.
+	 *
+	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 */
+	public String toStringUnsigned () {
+		return toStringUnsigned(", ", "=", true, Base.BASE10, "", "", "", "");
+	}
+
+	/**
+	 * Creates a String from the contents of this ObjectFloatMap, but uses the given {@link Base} to convert each
+	 * value to their unsigned String representations in that base. Unsigned floats are never readable
+	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}.
+	 * This will not apply any prefixes or suffixes around keys or values.
+	 *
+	 * @param separator how to separate entries, such as {@code ", "}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
+	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 */
+	public String toStringUnsigned (String separator, boolean braces, Base base) {
+		return toStringUnsigned(separator, "=", braces, base, "", "", "", "");
+	}
+
+	/**
+	 * Creates a String from the contents of this ObjectFloatMap, but uses the given {@link Base} to convert each
+	 * value to their unsigned String representations in that base. Unsigned floats are never readable
+	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}.
+	 *
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
+	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
+	 * @param keySuffix a String that will be at the end of each key ({@code ""} is suggested)
+	 * @param valuePrefix a String that will be at the start of each value ({@code ""} is suggested)
+	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
+	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 */
+	public String toStringUnsigned (String entrySeparator, String keyValueSeparator, boolean braces, Base base,
+		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+		return appendUnsigned(new StringBuilder(32), entrySeparator, keyValueSeparator, braces, base, keyPrefix, keySuffix, valuePrefix, valueSuffix).toString();
+	}
+
+	/**
+	 * Appends to a StringBuilder from the contents of this ObjectFloatMap, but uses the given {@link Base} to convert each
+	 * value to their unsigned String representations in that base. Unsigned floats are never readable
+	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}.
+	 *
+	 * @param sb a StringBuilder that this can append to
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
+	 * @param keyPrefix a String that will be at the start of each key
+	 * @param keySuffix a String that will be at the end of each key
+	 * @param valuePrefix a String that will be at the start of each value
+	 * @param valueSuffix a String that will be at the end of each value
+	 * @return {@code sb}, with the unsigned keys and unsigned values of this map
+	 */
+	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
+		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		if (braces) {sb.append('{');}
+		Object[] keyTable = this.keyTable;
+		float[] valueTable = this.valueTable;
+		int i = keyTable.length;
+		while (i-- > 0) {
+			Object key = keyTable[i];
+			if (key == null) {continue;}
+			sb.append(keyPrefix).append(key == this ? "(this)" : key).append(keySuffix).append(keyValueSeparator);
+			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
+			break;
+		}
+		while (i-- > 0) {
+			Object key = keyTable[i];
+			if (key == null) {continue;}
+			sb.append(entrySeparator);
+			sb.append(keyPrefix).append(key == this ? "(this)" : key).append(keySuffix).append(keyValueSeparator);
+			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
+		}
+		if (braces) {sb.append('}');}
+		return sb;
+	}
+
+	/**
+	 * Creates a String from the contents of this ObjectFloatMap, but uses {@link Base#appendReadable(StringBuilder, int)}
+	 * to convert each value to Java-readable String representations in base-10. This will separate keys
+	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This does not wrap the output in
+	 * any braces, and allocates a new StringBuilder on each call.
+	 *
+	 * @return a new StringBuilder with any keys and values separated by {@code ", "}, written so Java can read them
+	 */
+	public StringBuilder appendReadable () {
+		return appendReadable(new StringBuilder(32), false);
+	}
+
+	/**
+	 * Creates a String from the contents of this ObjectFloatMap, but uses {@link Base#appendReadable(StringBuilder, int)}
+	 * to convert each value to Java-readable String representations in base-10. This will separate keys
+	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. If {@code braces} is true, then
+	 * the output will be surrounded by curly braces.
+	 *
+	 * @param sb a StringBuilder that this can append to
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @return {@code sb}, with any keys and values separated by {@code ", "}, written so Java can read them
+	 */
+	public StringBuilder appendReadable (final StringBuilder sb, boolean braces) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		final String separator = ", ";
+		if (braces) {sb.append('{');}
+		Object[] keyTable = this.keyTable;
+		float[] valueTable = this.valueTable;
+		int i = keyTable.length;
+		while (i-- > 0) {
+			Object key = keyTable[i];
+			if (key == null) {continue;}
+			sb.append(key).append(", ");
+			Base.appendReadable(sb, valueTable[i]);
+			break;
+		}
+		while (i-- > 0) {
+			Object key = keyTable[i];
+			if (key == null) {continue;}
+			sb.append(separator);
+			sb.append(key).append(", ");
+			Base.appendReadable(sb, valueTable[i]);
+		}
+		if (braces) {sb.append('}');}
+		return sb;
 	}
 
 	/**

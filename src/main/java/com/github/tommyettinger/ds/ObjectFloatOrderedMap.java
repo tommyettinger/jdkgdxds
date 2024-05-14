@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 
@@ -558,22 +559,55 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		return entrySet().iterator();
 	}
 
-	@Override
-	protected String toString (String separator, boolean braces) {
-		if (size == 0) {return braces ? "{}" : "";}
-		StringBuilder buffer = new StringBuilder(32);
-		if (braces) {buffer.append('{');}
+	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		if (braces) {sb.append('{');}
 		ObjectList<K> keys = this.keys;
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			K key = keys.get(i);
-			if (i > 0) {buffer.append(separator);}
-			buffer.append(key == this ? "(this)" : key);
-			buffer.append('=');
-			float value = get(key);
-			buffer.append(value);
+			if (i > 0) {sb.append(separator);}
+			sb.append(key);
+			sb.append('=');
+			sb.append(get(key));
 		}
-		if (braces) {buffer.append('}');}
-		return buffer.toString();
+		if (braces) {sb.append('}');}
+		return sb;
+	}
+
+	@Override
+	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
+		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		if (braces) {sb.append('{');}
+		ObjectList<K> keys = this.keys;
+		for (int i = 0, n = keys.size(); i < n; i++) {
+			K key = keys.get(i);
+			if (i > 0)
+				sb.append(entrySeparator);
+			sb.append(keyPrefix).append(key).append(keySuffix).append(keyValueSeparator);
+			base.appendUnsigned(sb.append(valuePrefix), get(key)).append(valueSuffix);
+		}
+		if (braces) {sb.append('}');}
+		return sb;
+	}
+
+	@Override
+	public StringBuilder appendReadable (StringBuilder sb, boolean braces) {
+		if (size == 0)
+			return braces ? sb.append("{}") : sb;
+		if (braces)
+			sb.append('{');
+		ObjectList<K> keys = this.keys;
+		for (int i = 0, n = keys.size(); i < n; i++) {
+			K key = keys.get(i);
+			if (i > 0)
+				sb.append(", ");
+			sb.append(key).append(", ");
+			Base.appendReadable(sb, get(key));
+		}
+		if (braces)
+			sb.append('}');
+		return sb;
 	}
 
 	public static class OrderedMapEntries<K> extends Entries<K> {
