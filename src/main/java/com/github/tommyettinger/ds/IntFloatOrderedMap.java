@@ -637,7 +637,7 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 			int key = keys.get(i);
 			if (i > 0)
 				sb.append(entrySeparator);
-			base.appendUnsigned(sb.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
+			base.appendUnsigned(sb.append(keyPrefix), key).append(keySuffix).append(keyValueSeparator);
 			base.appendUnsigned(sb.append(valuePrefix), get(key)).append(valueSuffix);
 		}
 		if (braces) {sb.append('}');}

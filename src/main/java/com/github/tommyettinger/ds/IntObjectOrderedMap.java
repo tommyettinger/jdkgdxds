@@ -617,7 +617,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 			int key = keys.get(i);
 			if (i > 0)
 				sb.append(entrySeparator);
-			base.appendUnsigned(sb.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
+			base.appendUnsigned(sb.append(keyPrefix), key).append(keySuffix).append(keyValueSeparator);
 			sb.append(valuePrefix).append(get(key)).append(valueSuffix);
 		}
 		if (braces) {sb.append('}');}
