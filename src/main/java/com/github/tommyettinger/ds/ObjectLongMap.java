@@ -24,6 +24,7 @@ import com.github.tommyettinger.function.LongLongToLongBiFunction;
 import com.github.tommyettinger.function.ObjLongBiConsumer;
 import com.github.tommyettinger.function.ObjLongToLongBiFunction;
 import com.github.tommyettinger.function.ObjToLongFunction;
+import com.github.tommyettinger.function.ObjToObjFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -780,23 +781,54 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 */
 	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
 		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+		return appendUnsigned(sb, entrySeparator, keyValueSeparator, braces, base, keyPrefix, keySuffix, valuePrefix, valueSuffix, sb::append);
+	}
+	/**
+	 * Appends to a StringBuilder from the contents of this ObjectLongMap, but uses the given {@link Base} to convert each
+	 * value to their unsigned String representations in that base. This also uses {@code keyAppender} to process keys, appending
+	 * them to {@code sb}, typically. A method reference such as {@code sb::append} works well, as would a lambda. One use for
+	 * this function is to append a serialized String rather than the result of {@link Object#toString}, so reading is easier.
+	 * For example, values will look like {@code 12345123451234512345} .
+	 * This will apply the given prefixes or suffixes around keys or values; if a
+	 * prefix/suffix is {@code null}, then this will insert the literal text {@code "null"}.
+	 *
+	 * @param sb a StringBuilder that this can append to
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
+	 * @param keyPrefix a String that will be at the start of each key
+	 * @param keySuffix a String that will be at the end of each key
+	 * @param valuePrefix a String that will be at the start of each value
+	 * @param valueSuffix a String that will be at the end of each value
+	 * @param keyAppender a function such as {@code sb::append}, which can take a {@code K} object and return it appended to a StringBuilder
+	 * @return {@code sb}, with the keys processed by {@code keyAppender} and the unsigned values of this map
+	 */
+	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
+		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix, ObjToObjFunction<K, StringBuilder> keyAppender) {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
-		Object[] keyTable = this.keyTable;
+		K[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
-			Object key = keyTable[i];
+			K key = keyTable[i];
 			if (key == null) {continue;}
-			sb.append(keyPrefix).append(key == this ? "(this)" : key).append(keySuffix).append(keyValueSeparator);
+			sb.append(keyPrefix);
+			if(key == this) sb.append("(this)");
+			else keyAppender.apply(key);
+			sb.append(keySuffix).append(keyValueSeparator);
 			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
 			break;
 		}
 		while (i-- > 0) {
-			Object key = keyTable[i];
+			K key = keyTable[i];
 			if (key == null) {continue;}
 			sb.append(entrySeparator);
-			sb.append(keyPrefix).append(key == this ? "(this)" : key).append(keySuffix).append(keyValueSeparator);
+			sb.append(keyPrefix);
+			if(key == this) sb.append("(this)");
+			else keyAppender.apply(key);
+			sb.append(keySuffix).append(keyValueSeparator);
 			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
 		}
 		if (braces) {sb.append('}');}
