@@ -716,7 +716,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	/**
-	 * Creates a String from the contents of this ObjectFloatMap, but uses {@link Base#BASE10} to convert each
+	 * Creates a String from the contents of this ObjectLongMap, but uses {@link Base#BASE10} to convert each
 	 * value to their unsigned String representations in base-10. For example, values will look like
 	 * {@code 12345123451234512345} . This will not apply any prefixes or suffixes around keys or values.
 	 *
@@ -727,7 +727,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	/**
-	 * Creates a String from the contents of this ObjectFloatMap, but uses the given {@link Base} to convert each
+	 * Creates a String from the contents of this ObjectLongMap, but uses the given {@link Base} to convert each
 	 * value to their unsigned String representations in that base. For example, values will look like
 	 * {@code 12345123451234512345} . This will not apply any prefixes or suffixes around keys or values.
 	 *
@@ -741,7 +741,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	/**
-	 * Creates a String from the contents of this ObjectFloatMap, but uses the given {@link Base} to convert each
+	 * Creates a String from the contents of this ObjectLongMap, but uses the given {@link Base} to convert each
 	 * value to their unsigned String representations in that base. For example, values will look like
 	 * {@code 12345123451234512345} . This will apply the given prefixes or suffixes around keys or values; if a
 	 * prefix/suffix is {@code null}, then this will insert the literal text {@code "null"}.
@@ -762,7 +762,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this ObjectFloatMap, but uses the given {@link Base} to convert each
+	 * Appends to a StringBuilder from the contents of this ObjectLongMap, but uses the given {@link Base} to convert each
 	 * value to their unsigned String representations in that base. For example, values will look like
 	 * {@code 12345123451234512345} . This will apply the given prefixes or suffixes around keys or values; if a
 	 * prefix/suffix is {@code null}, then this will insert the literal text {@code "null"}.
@@ -804,7 +804,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	/**
-	 * Creates a String from the contents of this ObjectFloatMap, but uses {@link Base#appendReadable(StringBuilder, int)}
+	 * Creates a String from the contents of this ObjectLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
 	 * to convert each value to Java-readable String representations in base-10. This will separate keys
 	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This does not wrap the output in
 	 * any braces, and allocates a new StringBuilder on each call.
@@ -816,7 +816,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	/**
-	 * Creates a String from the contents of this ObjectFloatMap, but uses {@link Base#appendReadable(StringBuilder, int)}
+	 * Creates a String from the contents of this ObjectLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
 	 * to convert each value to Java-readable String representations in base-10. This will separate keys
 	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. If {@code braces} is true, then
 	 * the output will be surrounded by curly braces.
