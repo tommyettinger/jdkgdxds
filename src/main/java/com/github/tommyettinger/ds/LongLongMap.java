@@ -727,7 +727,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 
 	/**
 	 * Creates a String from the contents of this LongLongMap, but uses {@link Base#BASE10} to convert each
-	 * key and each value to their unsigned String representations in base-10. r example, keys will look like
+	 * key and each value to their unsigned String representations in base-10. For example, keys will look like
 	 * {@code 17659876598765987651} and values will look like {@code 12345123451234512345} . This will not apply any
 	 * prefixes or suffixes around keys or values.
 	 *
