@@ -720,6 +720,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * Creates a String from the contents of this ObjectLongMap, but uses {@link Base#BASE10} to convert each
 	 * value to their unsigned String representations in base-10. For example, values will look like
 	 * {@code 12345123451234512345} . This will not apply any prefixes or suffixes around keys or values.
+	 * If an Object is this map (making it self-recursive), this inserts the text {@code "(this)"} .
 	 *
 	 * @return the String representation of the unsigned keys and unsigned values of this map
 	 */
@@ -731,6 +732,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * Creates a String from the contents of this ObjectLongMap, but uses the given {@link Base} to convert each
 	 * value to their unsigned String representations in that base. For example, values will look like
 	 * {@code 12345123451234512345} . This will not apply any prefixes or suffixes around keys or values.
+	 * If an Object is this map (making it self-recursive), this inserts the text {@code "(this)"} .
 	 *
 	 * @param separator how to separate entries, such as {@code ", "}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
@@ -746,6 +748,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * value to their unsigned String representations in that base. For example, values will look like
 	 * {@code 12345123451234512345} . This will apply the given prefixes or suffixes around keys or values; if a
 	 * prefix/suffix is {@code null}, then this will insert the literal text {@code "null"}.
+	 * If an Object is this map (making it self-recursive), this inserts the text {@code "(this)"} .
 	 *
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
@@ -767,6 +770,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * value to their unsigned String representations in that base. For example, values will look like
 	 * {@code 12345123451234512345} . This will apply the given prefixes or suffixes around keys or values; if a
 	 * prefix/suffix is {@code null}, then this will insert the literal text {@code "null"}.
+	 * If an Object is this map (making it self-recursive), this inserts the text {@code "(this)"} .
 	 *
 	 * @param sb a StringBuilder that this can append to
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
@@ -791,6 +795,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * For example, values will look like {@code 12345123451234512345} .
 	 * This will apply the given prefixes or suffixes around keys or values; if a
 	 * prefix/suffix is {@code null}, then this will insert the literal text {@code "null"}.
+	 * If an Object is this map (making it self-recursive), this inserts the text {@code "(this)"} .
 	 *
 	 * @param sb a StringBuilder that this can append to
 	 * @param entrySeparator how to separate entries, such as {@code ", "}

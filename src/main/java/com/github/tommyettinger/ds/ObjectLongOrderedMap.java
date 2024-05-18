@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 
+import com.github.tommyettinger.function.ObjToObjFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
@@ -566,7 +567,7 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			K key = keys.get(i);
 			if (i > 0) {sb.append(separator);}
-			sb.append(key);
+			sb.append(key == this ? "(this)" : key);
 			sb.append('=');
 			sb.append(get(key));
 		}
@@ -576,7 +577,7 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 
 	@Override
 	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix, ObjToObjFunction<K, StringBuilder> keyAppender) {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
 		ObjectList<K> keys = this.keys;
@@ -584,7 +585,10 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 			K key = keys.get(i);
 			if (i > 0)
 				sb.append(entrySeparator);
-			sb.append(keyPrefix).append(key).append(keySuffix).append(keyValueSeparator);
+			sb.append(keyPrefix);
+			if(key == this) sb.append("(this)");
+			else keyAppender.apply(key);
+			sb.append(keySuffix).append(keyValueSeparator);
 			base.appendUnsigned(sb.append(valuePrefix), get(key)).append(valueSuffix);
 		}
 		if (braces) {sb.append('}');}
@@ -602,7 +606,7 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 			K key = keys.get(i);
 			if (i > 0)
 				sb.append(", ");
-			sb.append(key).append(", ");
+			sb.append(key == this ? "(this)" : key).append(", ");
 			Base.appendReadable(sb, get(key));
 		}
 		if (braces)
