@@ -36,7 +36,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * A {@link LongIntMap} that also stores keys in a {@link LongList} using the insertion order. No
  * allocation is done except when growing the table size.
  * <p>
- * Iteration over the {@link #entrySet()} ()}, {@link #keySet()} ()}, and {@link #values()} is ordered and faster than an unordered map. Keys
+ * Iteration over the {@link #entrySet()}, {@link #keySet()}, and {@link #values()} is ordered and faster than an unordered map. Keys
  * can also be accessed and the order changed using {@link #order()}. There is some additional overhead for put and remove.
  * <p>
  * This class performs fast contains (typically O(1), worst case O(n) but that is rare in practice). Remove is somewhat slower due
