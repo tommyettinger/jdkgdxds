@@ -23,6 +23,8 @@ import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 
+import com.github.tommyettinger.ds.support.util.FloatAppender;
+import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -612,55 +614,38 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 		return entrySet().iterator();
 	}
 
-	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
-		LongList keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			long key = keys.get(i);
-			if (i > 0) {sb.append(separator);}
-			sb.append(key);
-			sb.append('=');
-			sb.append(get(key));
-		}
-		if (braces) {sb.append('}');}
-		return sb;
-	}
-
+	/**
+	 * Appends to a StringBuilder from the contents of this LongFloatOrderedMap, but uses the given {@link LongAppender} and
+	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
+	 * to a StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendFriendly(StringBuilder, float)}.
+	 *
+	 * @param sb                a StringBuilder that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyPrefix         a String that will be at the start of each key
+	 * @param keySuffix         a String that will be at the end of each key
+	 * @param valuePrefix       a String that will be at the start of each value
+	 * @param valueSuffix       a String that will be at the end of each value
+	 * @param keyAppender       a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a float, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended keys and values of this map
+	 */
 	@Override
-	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
-		LongList keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			long key = keys.get(i);
-			if (i > 0)
-				sb.append(entrySeparator);
-			base.appendUnsigned(sb.append(keyPrefix), key).append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(sb.append(valuePrefix), get(key)).append(valueSuffix);
-		}
-		if (braces) {sb.append('}');}
-		return sb;
-	}
-
-	@Override
-	public StringBuilder appendReadable (StringBuilder sb, boolean braces) {
-		if (size == 0)
-			return braces ? sb.append("{}") : sb;
-		if (braces)
-			sb.append('{');
-		LongList keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			long key = keys.get(i);
-			if (i > 0)
-				sb.append(", ");
-			Base.appendReadable(sb, key).append(", ");
-			Base.appendReadable(sb, get(key));
-		}
-		if (braces)
-			sb.append('}');
-		return sb;
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix, LongAppender keyAppender, FloatAppender valueAppender) {
+			if (size == 0) {return braces ? sb.append("{}") : sb;}
+			if (braces) {sb.append('{');}
+			LongList keys = this.keys;
+			for (int i = 0, n = keys.size(); i < n; i++) {
+				long key = keys.get(i);
+				if (i > 0)
+					sb.append(entrySeparator);
+				keyAppender.apply(sb.append(keyPrefix), key).append(keySuffix).append(keyValueSeparator);
+				valueAppender.apply(sb.append(valuePrefix), get(key)).append(valueSuffix);
+			}
+			if (braces) {sb.append('}');}
+			return sb;
 	}
 
 	public static class OrderedMapEntries extends Entries {

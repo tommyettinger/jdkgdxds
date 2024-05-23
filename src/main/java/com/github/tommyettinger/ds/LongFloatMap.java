@@ -19,13 +19,19 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.util.FloatAppender;
+import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
+import com.github.tommyettinger.function.FloatToObjFunction;
 import com.github.tommyettinger.function.LongFloatBiConsumer;
 import com.github.tommyettinger.function.LongFloatToFloatBiFunction;
 import com.github.tommyettinger.function.LongToFloatFunction;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
+import com.github.tommyettinger.function.LongToObjFunction;
+import com.github.tommyettinger.function.ObjFloatToObjBiFunction;
+import com.github.tommyettinger.function.ObjLongToObjBiFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.AbstractSet;
@@ -739,35 +745,8 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		return appendAsString(new StringBuilder(32), separator, braces).toString();
 	}
 
-	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
-		if (hasZeroValue) {
-			sb.append("0=").append(zeroValue);
-			if (size > 1) {sb.append(separator);}
-		}
-		long[] keyTable = this.keyTable;
-		float[] valueTable = this.valueTable;
-		int i = keyTable.length;
-		while (i-- > 0) {
-			long key = keyTable[i];
-			if (key == 0) {continue;}
-			sb.append(key);
-			sb.append('=');
-			sb.append(valueTable[i]);
-			break;
-		}
-		while (i-- > 0) {
-			long key = keyTable[i];
-			if (key == 0) {continue;}
-			sb.append(separator);
-			sb.append(key);
-			sb.append('=');
-			float value = valueTable[i];
-			sb.append(value);
-		}
-		if (braces) {sb.append('}');}
-		return sb;
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, boolean braces) {
+		return appendAsString(sb, entrySeparator, "=", braces, "", "", "", "", StringBuilder::append, StringBuilder::append);
 	}
 
 	/**
@@ -835,11 +814,37 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 */
 	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
 		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+		return appendAsString(sb, entrySeparator, keyValueSeparator, braces, keyPrefix, keySuffix, valuePrefix, valueSuffix,
+			base::appendUnsigned, base::appendUnsigned);
+	}
+	/**
+	 * Appends to a StringBuilder from the contents of this LongFloatMap, but uses the given {@link LongAppender} and
+	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
+	 * to a StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendFriendly(StringBuilder, float)}.
+	 *
+	 * @param sb a StringBuilder that this can append to
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param keyPrefix a String that will be at the start of each key
+	 * @param keySuffix a String that will be at the end of each key
+	 * @param valuePrefix a String that will be at the start of each value
+	 * @param valueSuffix a String that will be at the end of each value
+	 * @param keyAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @param valueAppender a function that takes a StringBuilder and a float, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended keys and values of this map
+	 */
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix,
+		LongAppender keyAppender, FloatAppender valueAppender) {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
 		if (hasZeroValue) {
-			base.appendUnsigned(sb.append(keyPrefix),   0).append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(sb.append(valuePrefix), zeroValue).append(valueSuffix);
+			sb.append(keyPrefix);
+			keyAppender.apply(sb, 0).append(keySuffix).append(keyValueSeparator);
+			sb.append(valuePrefix);
+			valueAppender.apply(sb, zeroValue).append(valueSuffix);
 			if (size > 1) {sb.append(entrySeparator);}
 		}
 		long[] keyTable = this.keyTable;
@@ -848,16 +853,20 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		while (i-- > 0) {
 			long key = keyTable[i];
 			if (key == 0) {continue;}
-			base.appendUnsigned(sb.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
+			sb.append(keyPrefix);
+			keyAppender.apply(sb, key).append(keySuffix).append(keyValueSeparator);
+			sb.append(valuePrefix);
+			valueAppender.apply(sb, valueTable[i]).append(valueSuffix);
 			break;
 		}
 		while (i-- > 0) {
 			long key = keyTable[i];
 			if (key == 0) {continue;}
 			sb.append(entrySeparator);
-			base.appendUnsigned(sb.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
+			sb.append(keyPrefix);
+			keyAppender.apply(sb, key).append(keySuffix).append(keyValueSeparator);
+			sb.append(valuePrefix);
+			valueAppender.apply(sb, valueTable[i]).append(valueSuffix);
 		}
 		if (braces) {sb.append('}');}
 		return sb;
@@ -889,33 +898,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @return {@code sb}, with any keys and values separated by {@code ", "}, written so Java can read them
 	 */
 	public StringBuilder appendReadable (final StringBuilder sb, boolean braces) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		final String separator = ", ";
-		if (braces) {sb.append('{');}
-		if (hasZeroValue) {
-			Base.appendReadable(sb, 0).append(", ");
-			Base.appendReadable(sb, zeroValue);
-			if (size > 1) {sb.append(separator);}
-		}
-		long[] keyTable = this.keyTable;
-		float[] valueTable = this.valueTable;
-		int i = keyTable.length;
-		while (i-- > 0) {
-			long key = keyTable[i];
-			if (key == 0) {continue;}
-			Base.appendReadable(sb, key).append(", ");
-			Base.appendReadable(sb, valueTable[i]);
-			break;
-		}
-		while (i-- > 0) {
-			long key = keyTable[i];
-			if (key == 0) {continue;}
-			sb.append(separator);
-			Base.appendReadable(sb, key).append(", ");
-			Base.appendReadable(sb, valueTable[i]);
-		}
-		if (braces) {sb.append('}');}
-		return sb;
+		return appendAsString(sb, ", ", ", ", braces, "", "", "", "", Base::appendReadable, Base::appendReadable);
 	}
 
 	/**
