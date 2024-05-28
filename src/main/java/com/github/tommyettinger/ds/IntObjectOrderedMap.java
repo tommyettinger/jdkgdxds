@@ -622,7 +622,12 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 			if (i > 0)
 				sb.append(entrySeparator);
 			keyAppender.apply(sb, key).append(keyValueSeparator);
-			valueAppender.apply(sb, get(key));
+			V value = get(key);
+			if(value == this)
+				sb.append("(this)");
+			else
+				valueAppender.apply(sb, value);
+
 		}
 		if (braces) {sb.append('}');}
 		return sb;

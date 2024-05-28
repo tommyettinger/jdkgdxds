@@ -20,7 +20,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.Appender;
-import com.github.tommyettinger.ds.support.util.FloatAppender;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntObjBiConsumer;
@@ -692,6 +691,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	public String toString (String entrySeparator, boolean braces) {
 		return appendAsString(new StringBuilder(32), entrySeparator, braces).toString();
 	}
+
 	/**
 	 * Makes a String from the contents of this IntObjectMap, but uses the given {@link IntAppender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
@@ -738,6 +738,11 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		if (hasZeroValue) {
 			keyAppender.apply(sb, 0).append(keyValueSeparator);
 			valueAppender.apply(sb, zeroValue);
+			if(zeroValue == this)
+				sb.append("(this)");
+			else
+				valueAppender.apply(sb, zeroValue);
+
 			if (size > 1) {sb.append(entrySeparator);}
 		}
 		int[] keyTable = this.keyTable;
@@ -747,7 +752,11 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			int key = keyTable[i];
 			if (key == 0) {continue;}
 			keyAppender.apply(sb, key).append(keyValueSeparator);
-			valueAppender.apply(sb, valueTable[i]);
+			V value = valueTable[i];
+			if(value == this)
+				sb.append("(this)");
+			else
+				valueAppender.apply(sb, value);
 			break;
 		}
 		while (i-- > 0) {
@@ -755,12 +764,16 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			if (key == 0) {continue;}
 			sb.append(entrySeparator);
 			keyAppender.apply(sb, key).append(keyValueSeparator);
-			valueAppender.apply(sb, valueTable[i]);
+			V value = valueTable[i];
+			if(value == this)
+				sb.append("(this)");
+			else
+				valueAppender.apply(sb, value);
+
 		}
 		if (braces) {sb.append('}');}
 		return sb;
 	}
-
 
 	/**
 	 * Performs the given action for each entry in this map until all entries
