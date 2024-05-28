@@ -739,6 +739,8 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 
 	/**
 	 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without braces.
+	 * This is different from {@link #toString()}, which includes braces by default.
+	 *
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @return a new String representing this map
 	 */
@@ -754,7 +756,8 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendFriendly(StringBuilder, float)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
+	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
 	 *
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
@@ -776,7 +779,8 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendFriendly(StringBuilder, float)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
+	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
 	 *
 	 * @param sb a StringBuilder that this can append to
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
@@ -814,35 +818,6 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		}
 		if (braces) {sb.append('}');}
 		return sb;
-	}
-
-	/**
-	 * Creates a String from the contents of this LongFloatMap, but uses {@link Base#appendReadable(StringBuilder, int)}
-	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys
-	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This allows the output to be
-	 * copied into source code that calls {@link #with(Number, Number, Number...)}. This does not wrap the output in
-	 * any braces, and allocates a new StringBuilder on each call.
-	 *
-	 * @return a new StringBuilder with any keys and values separated by {@code ", "}, written so Java can read them
-	 */
-	public StringBuilder appendReadable () {
-		return appendReadable(new StringBuilder(32), false);
-	}
-
-	/**
-	 * Creates a String from the contents of this LongFloatMap, but uses {@link Base#appendReadable(StringBuilder, int)}
-	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys
-	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This allows the output to be
-	 * copied into source code that calls {@link #with(Number, Number, Number...)}. If {@code braces} is true, then
-	 * the output will be surrounded by curly braces; it should be false if you want to paste output directly into a
-	 * call to with().
-	 *
-	 * @param sb a StringBuilder that this can append to
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @return {@code sb}, with any keys and values separated by {@code ", "}, written so Java can read them
-	 */
-	public StringBuilder appendReadable (final StringBuilder sb, boolean braces) {
-		return appendAsString(sb, ", ", ", ", braces, Base::appendReadable, Base::appendReadable);
 	}
 
 	/**
