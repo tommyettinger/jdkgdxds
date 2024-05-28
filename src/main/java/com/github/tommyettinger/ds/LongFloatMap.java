@@ -732,119 +732,67 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		return true;
 	}
 
-	public String toString (String separator) {
-		return toString(separator, false);
-	}
-
 	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
 
-	public String toString (String separator, boolean braces) {
-		return appendAsString(new StringBuilder(32), separator, braces).toString();
+	/**
+	 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without braces.
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @return a new String representing this map
+	 */
+	public String toString (String entrySeparator) {
+		return toString(entrySeparator, false);
 	}
 
+	public String toString (String entrySeparator, boolean braces) {
+		return appendAsString(new StringBuilder(32), entrySeparator, braces).toString();
+	}
+	/**
+	 * Makes a String from the contents of this LongFloatMap, but uses the given {@link LongAppender} and
+	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
+	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendFriendly(StringBuilder, float)}. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 *
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @param valueAppender a function that takes a StringBuilder and a float, and returns the modified StringBuilder
+	 * @return a new String representing this map
+	 */
+	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
+		LongAppender keyAppender, FloatAppender valueAppender){
+		return appendAsString(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+	}
 	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, boolean braces) {
-		return appendAsString(sb, entrySeparator, "=", braces, "", "", "", "", StringBuilder::append, StringBuilder::append);
+		return appendAsString(sb, entrySeparator, "=", braces, StringBuilder::append, StringBuilder::append);
 	}
 
-	/**
-	 * Creates a String from the contents of this LongFloatMap, but uses {@link Base#BASE10} to convert each
-	 * key and each value to their unsigned String representations in base-10. Unsigned floats are never readable
-	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}. This will not apply any
-	 * prefixes or suffixes around keys or values.
-	 *
-	 * @return the String representation of the unsigned keys and unsigned values of this map
-	 */
-	public String toStringUnsigned () {
-		return toStringUnsigned(", ", "=", true, Base.BASE10, "", "", "", "");
-	}
-
-	/**
-	 * Creates a String from the contents of this LongFloatMap, but uses the given {@link Base} to convert each
-	 * key and each value to their unsigned String representations in that base. Unsigned floats are never readable
-	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}.
-	 * This will not apply any prefixes or suffixes around keys or values.
-	 *
-	 * @param separator how to separate entries, such as {@code ", "}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @return the String representation of the unsigned keys and unsigned values of this map
-	 */
-	public String toStringUnsigned (String separator, boolean braces, Base base) {
-		return toStringUnsigned(separator, "=", braces, base, "", "", "", "");
-	}
-
-	/**
-	 * Creates a String from the contents of this LongFloatMap, but uses the given {@link Base} to convert each
-	 * key and each value to their unsigned String representations in that base. Unsigned floats are never readable
-	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}.
-	 *
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
-	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
-	 * @param keySuffix a String that will be at the end of each key ({@code ""} is suggested)
-	 * @param valuePrefix a String that will be at the start of each value ({@code ""} is suggested)
-	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
-	 * @return the String representation of the unsigned keys and unsigned values of this map
-	 */
-	public String toStringUnsigned (String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
-		return appendUnsigned(new StringBuilder(32), entrySeparator, keyValueSeparator, braces, base, keyPrefix, keySuffix, valuePrefix, valueSuffix).toString();
-	}
-
-	/**
-	 * Appends to a StringBuilder from the contents of this LongFloatMap, but uses the given {@link Base} to convert each
-	 * key and each value to their unsigned String representations in that base. Unsigned floats are never readable
-	 * in Java sources, but can be read in by {@link Base#readFloatExact(CharSequence)}.
-	 *
-	 * @param sb a StringBuilder that this can append to
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
-	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @param keyPrefix a String that will be at the start of each key
-	 * @param keySuffix a String that will be at the end of each key
-	 * @param valuePrefix a String that will be at the start of each value
-	 * @param valueSuffix a String that will be at the end of each value
-	 * @return {@code sb}, with the unsigned keys and unsigned values of this map
-	 */
-	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
-		return appendAsString(sb, entrySeparator, keyValueSeparator, braces, keyPrefix, keySuffix, valuePrefix, valueSuffix,
-			base::appendUnsigned, base::appendUnsigned);
-	}
 	/**
 	 * Appends to a StringBuilder from the contents of this LongFloatMap, but uses the given {@link LongAppender} and
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendFriendly(StringBuilder, float)}.
+	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendFriendly(StringBuilder, float)}. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
 	 *
 	 * @param sb a StringBuilder that this can append to
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyPrefix a String that will be at the start of each key
-	 * @param keySuffix a String that will be at the end of each key
-	 * @param valuePrefix a String that will be at the start of each value
-	 * @param valueSuffix a String that will be at the end of each value
 	 * @param keyAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
 	 * @param valueAppender a function that takes a StringBuilder and a float, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix,
 		LongAppender keyAppender, FloatAppender valueAppender) {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
 		if (hasZeroValue) {
-			sb.append(keyPrefix);
-			keyAppender.apply(sb, 0).append(keySuffix).append(keyValueSeparator);
-			sb.append(valuePrefix);
-			valueAppender.apply(sb, zeroValue).append(valueSuffix);
+			keyAppender.apply(sb, 0).append(keyValueSeparator);
+			valueAppender.apply(sb, zeroValue);
 			if (size > 1) {sb.append(entrySeparator);}
 		}
 		long[] keyTable = this.keyTable;
@@ -853,20 +801,16 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		while (i-- > 0) {
 			long key = keyTable[i];
 			if (key == 0) {continue;}
-			sb.append(keyPrefix);
-			keyAppender.apply(sb, key).append(keySuffix).append(keyValueSeparator);
-			sb.append(valuePrefix);
-			valueAppender.apply(sb, valueTable[i]).append(valueSuffix);
+			keyAppender.apply(sb, key).append(keyValueSeparator);
+			valueAppender.apply(sb, valueTable[i]);
 			break;
 		}
 		while (i-- > 0) {
 			long key = keyTable[i];
 			if (key == 0) {continue;}
 			sb.append(entrySeparator);
-			sb.append(keyPrefix);
-			keyAppender.apply(sb, key).append(keySuffix).append(keyValueSeparator);
-			sb.append(valuePrefix);
-			valueAppender.apply(sb, valueTable[i]).append(valueSuffix);
+			keyAppender.apply(sb, key).append(keyValueSeparator);
+			valueAppender.apply(sb, valueTable[i]);
 		}
 		if (braces) {sb.append('}');}
 		return sb;
@@ -898,7 +842,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @return {@code sb}, with any keys and values separated by {@code ", "}, written so Java can read them
 	 */
 	public StringBuilder appendReadable (final StringBuilder sb, boolean braces) {
-		return appendAsString(sb, ", ", ", ", braces, "", "", "", "", Base::appendReadable, Base::appendReadable);
+		return appendAsString(sb, ", ", ", ", braces, Base::appendReadable, Base::appendReadable);
 	}
 
 	/**

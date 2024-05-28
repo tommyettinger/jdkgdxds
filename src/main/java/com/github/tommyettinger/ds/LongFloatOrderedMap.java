@@ -624,16 +624,13 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyPrefix         a String that will be at the start of each key
-	 * @param keySuffix         a String that will be at the end of each key
-	 * @param valuePrefix       a String that will be at the start of each value
-	 * @param valueSuffix       a String that will be at the end of each value
 	 * @param keyAppender       a function that takes a StringBuilder and a long, and returns the modified StringBuilder
 	 * @param valueAppender     a function that takes a StringBuilder and a float, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	@Override
-	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix, LongAppender keyAppender, FloatAppender valueAppender) {
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+		LongAppender keyAppender, FloatAppender valueAppender) {
 			if (size == 0) {return braces ? sb.append("{}") : sb;}
 			if (braces) {sb.append('{');}
 			LongList keys = this.keys;
@@ -641,8 +638,8 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 				long key = keys.get(i);
 				if (i > 0)
 					sb.append(entrySeparator);
-				keyAppender.apply(sb.append(keyPrefix), key).append(keySuffix).append(keyValueSeparator);
-				valueAppender.apply(sb.append(valuePrefix), get(key)).append(valueSuffix);
+				keyAppender.apply(sb, key).append(keyValueSeparator);
+				valueAppender.apply(sb, get(key));
 			}
 			if (braces) {sb.append('}');}
 			return sb;
