@@ -710,6 +710,10 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendUnsigned(StringBuilder, long)}. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
+	 * <br>
+	 * Using {@code Base::appendReadable}, if you separate keys
+	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
+	 * copied into source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
 	 *
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
@@ -736,7 +740,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 * <br>
 	 * Using {@code Base::appendReadable}, if you separate keys
 	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
-	 * copied longo source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
+	 * copied into source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
 	 *
 	 * @param sb a StringBuilder that this can append to
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
