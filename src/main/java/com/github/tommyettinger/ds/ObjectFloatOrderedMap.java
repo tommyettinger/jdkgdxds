@@ -21,7 +21,8 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 
-import com.github.tommyettinger.function.ObjToObjFunction;
+import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.FloatAppender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
@@ -560,57 +561,38 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		return entrySet().iterator();
 	}
 
-	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
+	/**
+	 * Appends to a StringBuilder from the contents of this LongFloatMap, but uses the given {@link Appender} and
+	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
+	 * to a StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendFriendly(StringBuilder, float)}. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
+	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
+	 *
+	 * @param sb                a StringBuilder that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and an Object, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a float, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended keys and values of this map
+	 */
+	@Override
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<K> keyAppender, FloatAppender valueAppender) {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
 		ObjectList<K> keys = this.keys;
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			K key = keys.get(i);
-			if (i > 0) {sb.append(separator);}
-			sb.append(key == this ? "(this)" : key);
-			sb.append('=');
+			if (i > 0) {sb.append(entrySeparator);}
+			if(key == this)
+				sb.append("(this)");
+			else
+				keyAppender.apply(sb, key);
+			sb.append(keyValueSeparator);
 			sb.append(get(key));
 		}
 		if (braces) {sb.append('}');}
-		return sb;
-	}
-
-	@Override
-	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix, ObjToObjFunction<K, StringBuilder> keyAppender) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
-		ObjectList<K> keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			K key = keys.get(i);
-			if (i > 0)
-				sb.append(entrySeparator);
-			sb.append(keyPrefix);
-			if(key == this) sb.append("(this)");
-			else keyAppender.apply(key);
-			sb.append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(sb.append(valuePrefix), get(key)).append(valueSuffix);
-		}
-		if (braces) {sb.append('}');}
-		return sb;
-	}
-
-	@Override
-	public StringBuilder appendReadable (StringBuilder sb, boolean braces) {
-		if (size == 0)
-			return braces ? sb.append("{}") : sb;
-		if (braces)
-			sb.append('{');
-		ObjectList<K> keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			K key = keys.get(i);
-			if (i > 0)
-				sb.append(", ");
-			sb.append(key == this ? "(this)" : key).append(", ");
-			Base.appendReadable(sb, get(key));
-		}
-		if (braces)
-			sb.append('}');
 		return sb;
 	}
 
