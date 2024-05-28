@@ -20,6 +20,9 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 
+import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.FloatAppender;
+import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -592,24 +595,25 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 		return entrySet().iterator();
 	}
 
-	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
-		IntList keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			int key = keys.get(i);
-			if (i > 0) {sb.append(separator);}
-			sb.append(key);
-			sb.append('=');
-			sb.append(get(key));
-		}
-		if (braces) {sb.append('}');}
-		return sb;
-	}
-
+	/**
+	 * Appends to a StringBuilder from the contents of this IntFloatOrderedMap, but uses the given {@link IntAppender} and
+	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
+	 * to a StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendReadable(StringBuilder, int)} and {@link Base#appendUnsigned(StringBuilder, int)}. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
+	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the keyAppender.
+	 *
+	 * @param sb                a StringBuilder that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended keys and values of this map
+	 */
 	@Override
-	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+		IntAppender keyAppender, Appender<V> valueAppender) {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
 		IntList keys = this.keys;
@@ -617,29 +621,10 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 			int key = keys.get(i);
 			if (i > 0)
 				sb.append(entrySeparator);
-			base.appendUnsigned(sb.append(keyPrefix), key).append(keySuffix).append(keyValueSeparator);
-			sb.append(valuePrefix).append(get(key)).append(valueSuffix);
+			keyAppender.apply(sb, key).append(keyValueSeparator);
+			valueAppender.apply(sb, get(key));
 		}
 		if (braces) {sb.append('}');}
-		return sb;
-	}
-
-	@Override
-	public StringBuilder appendReadable (StringBuilder sb, boolean braces) {
-		if (size == 0)
-			return braces ? sb.append("{}") : sb;
-		if (braces)
-			sb.append('{');
-		IntList keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			int key = keys.get(i);
-			if (i > 0)
-				sb.append(", ");
-			Base.appendReadable(sb, key).append(", ");
-			sb.append(get(key));
-		}
-		if (braces)
-			sb.append('}');
 		return sb;
 	}
 
