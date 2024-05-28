@@ -197,7 +197,7 @@ public class AllGoldenIntWordHashTest {
 		}
 		problems.sortByValue(LongComparators.NATURAL_COMPARATOR);
 		System.out.println("\n\nnew long[]");
-		System.out.println(problems.toStringUnsigned(", ", false, Base.BASE16));
+		System.out.println(problems.toString(", ", ": ", false, Base.BASE16::appendUnsigned, Base.BASE16::appendUnsigned));
 		System.out.println("\n\nnew int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
 			System.out.print("0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
