@@ -791,7 +791,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
 		if (hasZeroValue) {
-			keyAppender.apply(sb, 0).append(keyValueSeparator);
+			keyAppender.apply(sb, 0L).append(keyValueSeparator);
 			valueAppender.apply(sb, zeroValue);
 			if (size > 1) {sb.append(entrySeparator);}
 		}

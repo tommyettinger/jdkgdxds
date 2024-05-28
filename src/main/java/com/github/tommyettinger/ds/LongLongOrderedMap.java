@@ -21,6 +21,8 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 
+import com.github.tommyettinger.ds.support.util.FloatAppender;
+import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -609,25 +611,26 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	public @NonNull EntryIterator iterator () {
 		return entrySet().iterator();
 	}
-
-	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
-		LongList keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			long key = keys.get(i);
-			if (i > 0) {sb.append(separator);}
-			sb.append(key);
-			sb.append('=');
-			sb.append(get(key));
-		}
-		if (braces) {sb.append('}');}
-		return sb;
-	}
-
+	
+	/**
+	 * Appends to a StringBuilder from the contents of this LongLongOrderedMap, but uses the given {@link LongAppender} and
+	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
+	 * to a StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendUnsigned(StringBuilder, long)} and {@link Base#appendUnsigned(StringBuilder, long)}. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
+	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
+	 *
+	 * @param sb                a StringBuilder that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended keys and values of this map
+	 */
 	@Override
-	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+		LongAppender keyAppender, LongAppender valueAppender) {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
 		LongList keys = this.keys;
@@ -635,29 +638,10 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 			long key = keys.get(i);
 			if (i > 0)
 				sb.append(entrySeparator);
-			base.appendUnsigned(sb.append(keyPrefix), key).append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(sb.append(valuePrefix), get(key)).append(valueSuffix);
+			keyAppender.apply(sb, key).append(keyValueSeparator);
+			valueAppender.apply(sb, get(key));
 		}
 		if (braces) {sb.append('}');}
-		return sb;
-	}
-
-	@Override
-	public StringBuilder appendReadable (StringBuilder sb, boolean braces) {
-		if (size == 0)
-			return braces ? sb.append("{}") : sb;
-		if (braces)
-			sb.append('{');
-		LongList keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			long key = keys.get(i);
-			if (i > 0)
-				sb.append(", ");
-			Base.appendReadable(sb, key).append(", ");
-			Base.appendReadable(sb, get(key));
-		}
-		if (braces)
-			sb.append('}');
 		return sb;
 	}
 

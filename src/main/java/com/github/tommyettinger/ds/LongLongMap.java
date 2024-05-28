@@ -19,6 +19,9 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.util.FloatAppender;
+import com.github.tommyettinger.ds.support.util.IntAppender;
+import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongLongBiConsumer;
 
@@ -680,125 +683,76 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		}
 		return true;
 	}
-
-	public String toString (String separator) {
-		return toString(separator, false);
-	}
-
+	
 	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
 
-	public String toString (String separator, boolean braces) {
-		return appendAsString(new StringBuilder(32), separator, braces).toString();
-	}
-
-	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
-		if (hasZeroValue) {
-			sb.append("0=").append(zeroValue);
-			if (size > 1) {sb.append(separator);}
-		}
-		long[] keyTable = this.keyTable;
-		long[] valueTable = this.valueTable;
-		int i = keyTable.length;
-		while (i-- > 0) {
-			long key = keyTable[i];
-			if (key == 0) {continue;}
-			sb.append(key);
-			sb.append('=');
-			sb.append(valueTable[i]);
-			break;
-		}
-		while (i-- > 0) {
-			long key = keyTable[i];
-			if (key == 0) {continue;}
-			sb.append(separator);
-			sb.append(key);
-			sb.append('=');
-			long value = valueTable[i];
-			sb.append(value);
-		}
-		if (braces) {sb.append('}');}
-		return sb;
-	}
-
 	/**
-	 * Creates a String from the contents of this LongLongMap, but uses {@link Base#BASE10} to convert each
-	 * key and each value to their unsigned String representations in base-10. For example, keys will look like
-	 * {@code 17659876598765987651} and values will look like {@code 12345123451234512345} . This will not apply any
-	 * prefixes or suffixes around keys or values.
+	 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without braces.
+	 * This is different from {@link #toString()}, which includes braces by default.
 	 *
-	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @return a new String representing this map
 	 */
-	public String toStringUnsigned () {
-		return toStringUnsigned(", ", "=", true, Base.BASE10, "", "", "", "");
+	public String toString (String entrySeparator) {
+		return toString(entrySeparator, false);
 	}
 
-	/**
-	 * Creates a String from the contents of this LongLongMap, but uses the given {@link Base} to convert each
-	 * key and each value to their unsigned String representations in that base. For example, if you give this
-	 * {@link Base#BASE16} as its base, keys will look like {@code 0000DEAD0000BEEF} and values will look like
-	 * {@code 0123456789ABCDEF} . This will not apply any prefixes or suffixes around keys or values.
-	 *
-	 * @param separator how to separate entries, such as {@code ", "}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @return the String representation of the unsigned keys and unsigned values of this map
-	 */
-	public String toStringUnsigned (String separator, boolean braces, Base base) {
-		return toStringUnsigned(separator, "=", braces, base, "", "", "", "");
+	public String toString (String entrySeparator, boolean braces) {
+		return appendAsString(new StringBuilder(32), entrySeparator, braces).toString();
 	}
-
 	/**
-	 * Creates a String from the contents of this LongLongMap, but uses the given {@link Base} to convert each
-	 * key and each value to their unsigned String representations in that base. For example, if you give this
-	 * the parameters {@code (", ", false, Base.BASE16, "0x", "L", "0x", "L")}, keys will look like {@code 0x0000DEAD0000BEEFL}
-	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
-	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
+	 * Makes a String from the contents of this LongLongMap, but uses the given {@link LongAppender} and
+	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
+	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendUnsigned(StringBuilder, long)}. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
+	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
 	 *
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
-	 * @param keySuffix a String that will be at the end of each key ({@code "L"} is suggested)
-	 * @param valuePrefix a String that will be at the start of each value ({@code "0x"} is suggested)
-	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
-	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 * @param keyAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @param valueAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @return a new String representing this map
 	 */
-	public String toStringUnsigned (String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
-		return appendUnsigned(new StringBuilder(32), entrySeparator, keyValueSeparator, braces, base, keyPrefix, keySuffix, valuePrefix, valueSuffix).toString();
+	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
+		LongAppender keyAppender, LongAppender valueAppender){
+		return appendAsString(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+	}
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, boolean braces) {
+		return appendAsString(sb, entrySeparator, "=", braces, StringBuilder::append, StringBuilder::append);
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this LongLongMap, but uses the given {@link Base} to convert each
-	 * key and each value to their unsigned String representations in that base. For example, if you give this
-	 * the parameters {@code (", ", false, Base.BASE16, "0x", "L", "0x", "L")}, keys will look like {@code 0x0000DEAD0000BEEFL}
-	 * and values will look like {@code 0x0123456789ABCDEFL} , which makes both readable in Java sources. The
-	 * resulting String could be pasted into code calling {@link #with(Number, Number, Number...)}.
+	 * Appends to a StringBuilder from the contents of this LongLongMap, but uses the given {@link LongAppender} and
+	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
+	 * to a StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendUnsigned(StringBuilder, long)}. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
+	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
+	 * <br>
+	 * Using {@code Base::appendReadable}, if you separate keys
+	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
+	 * copied longo source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
 	 *
 	 * @param sb a StringBuilder that this can append to
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
-	 * @param keySuffix a String that will be at the end of each key ({@code "L"} is suggested)
-	 * @param valuePrefix a String that will be at the start of each value ({@code "0x"} is suggested)
-	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
-	 * @return {@code sb}, with the unsigned keys and unsigned values of this map
+	 * @param keyAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @param valueAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+		LongAppender keyAppender, LongAppender valueAppender) {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
 		if (hasZeroValue) {
-			base.appendUnsigned(sb.append(keyPrefix),   0).append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(sb.append(valuePrefix), zeroValue).append(valueSuffix);
+			keyAppender.apply(sb, 0L).append(keyValueSeparator);
+			valueAppender.apply(sb, zeroValue);
 			if (size > 1) {sb.append(entrySeparator);}
 		}
 		long[] keyTable = this.keyTable;
@@ -807,71 +761,16 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		while (i-- > 0) {
 			long key = keyTable[i];
 			if (key == 0) {continue;}
-			base.appendUnsigned(sb.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
+			keyAppender.apply(sb, key).append(keyValueSeparator);
+			valueAppender.apply(sb, valueTable[i]);
 			break;
 		}
 		while (i-- > 0) {
 			long key = keyTable[i];
 			if (key == 0) {continue;}
 			sb.append(entrySeparator);
-			base.appendUnsigned(sb.append(keyPrefix),   key).append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
-		}
-		if (braces) {sb.append('}');}
-		return sb;
-	}
-
-	/**
-	 * Creates a String from the contents of this LongLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
-	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys
-	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This allows the output to be
-	 * copied into source code that calls {@link #with(Number, Number, Number...)}. This does not wrap the output in
-	 * any braces, and allocates a new StringBuilder on each call.
-	 *
-	 * @return a new StringBuilder with any keys and values separated by {@code ", "}, written so Java can read them
-	 */
-	public StringBuilder appendReadable () {
-		return appendReadable(new StringBuilder(32), false);
-	}
-
-	/**
-	 * Creates a String from the contents of this LongLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
-	 * to convert each key and each value to Java-readable String representations in base-10. This will separate keys
-	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This allows the output to be
-	 * copied into source code that calls {@link #with(Number, Number, Number...)}. If {@code braces} is true, then
-	 * the output will be surrounded by curly braces; it should be false if you want to paste output directly into a
-	 * call to with().
-	 *
-	 * @param sb a StringBuilder that this can append to
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @return {@code sb}, with any keys and values separated by {@code ", "}, written so Java can read them
-	 */
-	public StringBuilder appendReadable (final StringBuilder sb, boolean braces) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		final String separator = ", ";
-		if (braces) {sb.append('{');}
-		if (hasZeroValue) {
-			Base.appendReadable(sb, 0).append(", ");
-			Base.appendReadable(sb, zeroValue);
-			if (size > 1) {sb.append(separator);}
-		}
-		long[] keyTable = this.keyTable;
-		long[] valueTable = this.valueTable;
-		int i = keyTable.length;
-		while (i-- > 0) {
-			long key = keyTable[i];
-			if (key == 0) {continue;}
-			Base.appendReadable(sb, key).append(", ");
-			Base.appendReadable(sb, valueTable[i]);
-			break;
-		}
-		while (i-- > 0) {
-			long key = keyTable[i];
-			if (key == 0) {continue;}
-			sb.append(separator);
-			Base.appendReadable(sb, key).append(", ");
-			Base.appendReadable(sb, valueTable[i]);
+			keyAppender.apply(sb, key).append(keyValueSeparator);
+			valueAppender.apply(sb, valueTable[i]);
 		}
 		if (braces) {sb.append('}');}
 		return sb;
