@@ -19,6 +19,9 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.FloatAppender;
+import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongLongToLongBiFunction;
 import com.github.tommyettinger.function.ObjLongBiConsumer;
@@ -675,141 +678,66 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		return true;
 	}
 
-	public String toString (String separator) {
-		return toString(separator, false);
-	}
-
 	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
 
-	public String toString (String separator, boolean braces) {
-		return appendAsString(new StringBuilder(32), separator, braces).toString();
-	}
-
-	public StringBuilder appendAsString (StringBuilder sb, String separator, boolean braces) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
-		Object[] keyTable = this.keyTable;
-		long[] valueTable = this.valueTable;
-		int i = keyTable.length;
-		while (i-- > 0) {
-			Object key = keyTable[i];
-			if (key == null) {continue;}
-			sb.append(key == this ? "(this)" : key);
-			sb.append('=');
-			sb.append(valueTable[i]);
-			break;
-		}
-		while (i-- > 0) {
-			Object key = keyTable[i];
-			if (key == null) {continue;}
-			sb.append(separator);
-			sb.append(key == this ? "(this)" : key);
-			sb.append('=');
-			long value = valueTable[i];
-			sb.append(value);
-		}
-		if (braces) {sb.append('}');}
-		return sb;
-	}
-
 	/**
-	 * Creates a String from the contents of this ObjectLongMap, but uses {@link Base#BASE10} to convert each
-	 * value to their unsigned String representations in base-10. For example, values will look like
-	 * {@code 12345123451234512345} . This will not apply any prefixes or suffixes around keys or values.
-	 * If an Object is this map (making it self-recursive), this inserts the text {@code "(this)"} .
+	 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without braces.
+	 * This is different from {@link #toString()}, which includes braces by default.
 	 *
-	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @return a new String representing this map
 	 */
-	public String toStringUnsigned () {
-		return toStringUnsigned(", ", "=", true, Base.BASE10, "", "", "", "");
+	public String toString (String entrySeparator) {
+		return toString(entrySeparator, false);
 	}
 
-	/**
-	 * Creates a String from the contents of this ObjectLongMap, but uses the given {@link Base} to convert each
-	 * value to their unsigned String representations in that base. For example, values will look like
-	 * {@code 12345123451234512345} . This will not apply any prefixes or suffixes around keys or values.
-	 * If an Object is this map (making it self-recursive), this inserts the text {@code "(this)"} .
-	 *
-	 * @param separator how to separate entries, such as {@code ", "}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @return the String representation of the unsigned keys and unsigned values of this map
-	 */
-	public String toStringUnsigned (String separator, boolean braces, Base base) {
-		return toStringUnsigned(separator, "=", braces, base, "", "", "", "");
+	public String toString (String entrySeparator, boolean braces) {
+		return appendAsString(new StringBuilder(32), entrySeparator, braces).toString();
 	}
-
 	/**
-	 * Creates a String from the contents of this ObjectLongMap, but uses the given {@link Base} to convert each
-	 * value to their unsigned String representations in that base. For example, values will look like
-	 * {@code 12345123451234512345} . This will apply the given prefixes or suffixes around keys or values; if a
-	 * prefix/suffix is {@code null}, then this will insert the literal text {@code "null"}.
-	 * If an Object is this map (making it self-recursive), this inserts the text {@code "(this)"} .
+	 * Makes a String from the contents of this ObjectLongMap, but uses the given {@link Appender} and
+	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
+	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendUnsigned(StringBuilder, long)}. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
+	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
 	 *
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @param keyPrefix a String that will be at the start of each key ({@code "0x"} is suggested)
-	 * @param keySuffix a String that will be at the end of each key ({@code ""} is suggested)
-	 * @param valuePrefix a String that will be at the start of each value ({@code ""} is suggested)
-	 * @param valueSuffix a String that will be at the end of each value ({@code "L"} is suggested)
-	 * @return the String representation of the unsigned keys and unsigned values of this map
+	 * @param keyAppender a function that takes a StringBuilder and a K, and returns the modified StringBuilder
+	 * @param valueAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @return a new String representing this map
 	 */
-	public String toStringUnsigned (String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
-		return appendUnsigned(new StringBuilder(32), entrySeparator, keyValueSeparator, braces, base, keyPrefix, keySuffix, valuePrefix, valueSuffix).toString();
+	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
+		Appender<K> keyAppender, LongAppender valueAppender){
+		return appendAsString(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+	}
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, boolean braces) {
+		return appendAsString(sb, entrySeparator, "=", braces, StringBuilder::append, StringBuilder::append);
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this ObjectLongMap, but uses the given {@link Base} to convert each
-	 * value to their unsigned String representations in that base. For example, values will look like
-	 * {@code 12345123451234512345} . This will apply the given prefixes or suffixes around keys or values; if a
-	 * prefix/suffix is {@code null}, then this will insert the literal text {@code "null"}.
-	 * If an Object is this map (making it self-recursive), this inserts the text {@code "(this)"} .
+	 * Appends to a StringBuilder from the contents of this ObjectLongMap, but uses the given {@link Appender} and
+	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
+	 * to a StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendUnsigned(StringBuilder, long)}. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
+	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
 	 *
 	 * @param sb a StringBuilder that this can append to
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @param keyPrefix a String that will be at the start of each key
-	 * @param keySuffix a String that will be at the end of each key
-	 * @param valuePrefix a String that will be at the start of each value
-	 * @param valueSuffix a String that will be at the end of each value
-	 * @return {@code sb}, with the unsigned keys and unsigned values of this map
+	 * @param keyAppender a function that takes a StringBuilder and a K, and returns the modified StringBuilder
+	 * @param valueAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix) {
-		return appendUnsigned(sb, entrySeparator, keyValueSeparator, braces, base, keyPrefix, keySuffix, valuePrefix, valueSuffix, sb::append);
-	}
-	/**
-	 * Appends to a StringBuilder from the contents of this ObjectLongMap, but uses the given {@link Base} to convert each
-	 * value to their unsigned String representations in that base. This also uses {@code keyAppender} to process keys, appending
-	 * them to {@code sb}, typically. A method reference such as {@code sb::append} works well, as would a lambda. One use for
-	 * this function is to append a serialized String rather than the result of {@link Object#toString}, so reading is easier.
-	 * For example, values will look like {@code 12345123451234512345} .
-	 * This will apply the given prefixes or suffixes around keys or values; if a
-	 * prefix/suffix is {@code null}, then this will insert the literal text {@code "null"}.
-	 * If an Object is this map (making it self-recursive), this inserts the text {@code "(this)"} .
-	 *
-	 * @param sb a StringBuilder that this can append to
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
-	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param base a {@link Base} from digital to use for both keys and values ({@link Base#BASE16} is suggested)
-	 * @param keyPrefix a String that will be at the start of each key
-	 * @param keySuffix a String that will be at the end of each key
-	 * @param valuePrefix a String that will be at the start of each value
-	 * @param valueSuffix a String that will be at the end of each value
-	 * @param keyAppender a function such as {@code sb::append}, which can take a {@code K} object and return it appended to a StringBuilder
-	 * @return {@code sb}, with the keys processed by {@code keyAppender} and the unsigned values of this map
-	 */
-	public StringBuilder appendUnsigned (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Base base,
-		String keyPrefix, String keySuffix, String valuePrefix, String valueSuffix, ObjToObjFunction<K, StringBuilder> keyAppender) {
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+		Appender<K> keyAppender, LongAppender valueAppender) {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
 		K[] keyTable = this.keyTable;
@@ -818,69 +746,20 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		while (i-- > 0) {
 			K key = keyTable[i];
 			if (key == null) {continue;}
-			sb.append(keyPrefix);
 			if(key == this) sb.append("(this)");
-			else keyAppender.apply(key);
-			sb.append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
+			else keyAppender.apply(sb, key);
+			sb.append(keyValueSeparator);
+			valueAppender.apply(sb, valueTable[i]);
 			break;
 		}
 		while (i-- > 0) {
 			K key = keyTable[i];
 			if (key == null) {continue;}
 			sb.append(entrySeparator);
-			sb.append(keyPrefix);
 			if(key == this) sb.append("(this)");
-			else keyAppender.apply(key);
-			sb.append(keySuffix).append(keyValueSeparator);
-			base.appendUnsigned(sb.append(valuePrefix), valueTable[i]).append(valueSuffix);
-		}
-		if (braces) {sb.append('}');}
-		return sb;
-	}
-
-	/**
-	 * Creates a String from the contents of this ObjectLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
-	 * to convert each value to Java-readable String representations in base-10. This will separate keys
-	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. This does not wrap the output in
-	 * any braces, and allocates a new StringBuilder on each call.
-	 *
-	 * @return a new StringBuilder with any keys and values separated by {@code ", "}, written so Java can read them
-	 */
-	public StringBuilder appendReadable () {
-		return appendReadable(new StringBuilder(32), false);
-	}
-
-	/**
-	 * Creates a String from the contents of this ObjectLongMap, but uses {@link Base#appendReadable(StringBuilder, int)}
-	 * to convert each value to Java-readable String representations in base-10. This will separate keys
-	 * from values with {@code ", "}, and will also separate entries with {@code ", "}. If {@code braces} is true, then
-	 * the output will be surrounded by curly braces.
-	 *
-	 * @param sb a StringBuilder that this can append to
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @return {@code sb}, with any keys and values separated by {@code ", "}, written so Java can read them
-	 */
-	public StringBuilder appendReadable (final StringBuilder sb, boolean braces) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		final String separator = ", ";
-		if (braces) {sb.append('{');}
-		Object[] keyTable = this.keyTable;
-		long[] valueTable = this.valueTable;
-		int i = keyTable.length;
-		while (i-- > 0) {
-			Object key = keyTable[i];
-			if (key == null) {continue;}
-			sb.append(key).append(", ");
-			Base.appendReadable(sb, valueTable[i]);
-			break;
-		}
-		while (i-- > 0) {
-			Object key = keyTable[i];
-			if (key == null) {continue;}
-			sb.append(separator);
-			sb.append(key).append(", ");
-			Base.appendReadable(sb, valueTable[i]);
+			else keyAppender.apply(sb, key);
+			sb.append(keyValueSeparator);
+			valueAppender.apply(sb, valueTable[i]);
 		}
 		if (braces) {sb.append('}');}
 		return sb;

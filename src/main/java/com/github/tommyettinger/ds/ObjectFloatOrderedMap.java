@@ -562,7 +562,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this LongFloatMap, but uses the given {@link Appender} and
+	 * Appends to a StringBuilder from the contents of this ObjectFloatOrderedMap, but uses the given {@link Appender} and
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendFriendly(StringBuilder, float)}. To use
