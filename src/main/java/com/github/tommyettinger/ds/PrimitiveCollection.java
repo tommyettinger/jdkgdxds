@@ -610,23 +610,27 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Compares this PrimitiveCollection.OfLong with another PrimitiveCollection.OfLong by checking their identity,
-		 * their types (both must implement PrimitiveCollection.OfLong), and their sizes, before checking if other
-		 * contains each item in this PrimitiveCollection.OfLong, in any order or quantity. This is most useful for
-		 * the key "set" or value collection in a primitive-backed map, since quantity doesn't matter for keys and
-		 * order doesn't matter for either. Many implementations may need to reset the iterator on this
-		 * PrimitiveCollection.OfLong, but that isn't necessary for {@code other}.
-		 * @param other another Object that should be a PrimitiveCollection.OfLong
-		 * @return true if other is another PrimitiveCollection.OfLong with exactly the same items, false otherwise
+		 * Compares this PrimitiveCollection.OfLong with a PrimitiveSet.SetOfLong by checking their identity,
+		 * their types (both must implement PrimitiveCollection.OfLong, and other must implement PrimitiveSet.SetOfLong),
+		 * and their sizes, before checking if other contains each item in this PrimitiveCollection.OfLong, in any order
+		 * or quantity. This is most useful for the key "set" or value collection in a primitive-backed map, since
+		 * quantity doesn't matter for keys and order doesn't matter for either. Many implementations may need to reset
+		 * the iterator on this PrimitiveCollection.OfLong, but that isn't necessary for {@code other}.
+		 * <br>
+		 * This is not meant for general object equality, but instead for equality following Set semantics. Classes that
+		 * implement PrimitiveCollection that are not Set-like should usually not use this.
+		 *
+		 * @param other another Object that should be a PrimitiveSet.SetOfLong
+		 * @return true if other is a PrimitiveSet.SetOfLong with exactly the same items, false otherwise
 		 */
-		default boolean areEqual (Object other) {
+		default boolean equalContents (Object other) {
 			if(this == other) return true;
-			if(!(other instanceof PrimitiveCollection.OfLong)) return false;
-			PrimitiveCollection.OfLong pc = (PrimitiveCollection.OfLong) other;
-			if(size() != pc.size()) return false;
+			if(!(other instanceof PrimitiveSet.SetOfLong)) return false;
+			PrimitiveSet.SetOfLong o = (PrimitiveSet.SetOfLong) other;
+			if(size() != o.size()) return false;
 			LongIterator it = iterator();
 			while (it.hasNext()) {
-				if(pc.contains(it.nextLong())) return false;
+				if(!o.contains(it.nextLong())) return false;
 			}
 			return true;
 		}

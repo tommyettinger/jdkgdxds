@@ -80,4 +80,28 @@ public interface PrimitiveSet<T> extends PrimitiveCollection<T> {
 			return true;
 		}
 	}
+
+	interface SetOfLong extends PrimitiveCollection.OfLong, PrimitiveSet<Long> {
+		/**
+		 * Compares this PrimitiveSet.SetOfLong with another PrimitiveSet.SetOfLong by checking their identity,
+		 * their types (both must implement PrimitiveSet.SetOfLong), and their sizes, before checking if other
+		 * contains each item in this PrimitiveSet.SetOfLong, in any order or quantity. This is most useful for
+		 * the key "set" or value collection in a primitive-backed map, since quantity doesn't matter for keys and
+		 * order doesn't matter for either. Many implementations may need to reset the iterator on this
+		 * PrimitiveSet.SetOfLong, but that isn't necessary for {@code other}.
+		 * @param other another Object that should be a PrimitiveSet.SetOfLong
+		 * @return true if other is another PrimitiveSet.SetOfLong with exactly the same items, false otherwise
+		 */
+		default boolean equalContents (Object other) {
+			if(this == other) return true;
+			if(!(other instanceof PrimitiveSet.SetOfLong)) return false;
+			OfLong o = (OfLong) other;
+			if(size() != o.size()) return false;
+			LongIterator it = iterator();
+			while (it.hasNext()) {
+				if(!o.contains(it.nextLong())) return false;
+			}
+			return true;
+		}
+	}
 }

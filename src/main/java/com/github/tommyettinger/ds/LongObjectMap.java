@@ -1386,7 +1386,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		}
 	}
 
-	public static class Keys<V> implements PrimitiveCollection.OfLong {
+	public static class Keys<V> implements PrimitiveSet.SetOfLong {
 		protected KeyIterator<V> iter;
 
 		public Keys (LongObjectMap<V> map) {
@@ -1480,7 +1480,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			boolean eq = PrimitiveCollection.OfLong.super.areEqual(other);
+			boolean eq = SetOfLong.super.equalContents(other);
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;

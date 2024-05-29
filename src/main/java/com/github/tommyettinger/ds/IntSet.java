@@ -448,18 +448,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 
 	@Override
 	public boolean equals (Object o) {
-		if (o == this)
-			return true;
-		if (!(o instanceof IntSet))
-			return false;
-		IntSet s = (IntSet)o;
-		if (s.size() != size())
-			return false;
-		try {
-			return containsAll(s);
-		} catch (ClassCastException | NullPointerException unused) {
-			return false;
-		}
+		return SetOfInt.super.equalContents(o);
 	}
 
 	public StringBuilder appendTo (StringBuilder builder) {

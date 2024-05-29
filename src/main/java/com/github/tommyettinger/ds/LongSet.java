@@ -41,7 +41,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class LongSet implements PrimitiveCollection.OfLong {
+public class LongSet implements PrimitiveSet.SetOfLong {
 
 	protected int size;
 
@@ -456,18 +456,7 @@ public class LongSet implements PrimitiveCollection.OfLong {
 
 	@Override
 	public boolean equals (Object o) {
-		if (o == this)
-			return true;
-		if (!(o instanceof LongSet))
-			return false;
-		LongSet s = (LongSet)o;
-		if (s.size() != size())
-			return false;
-		try {
-			return containsAll(s);
-		} catch (ClassCastException | NullPointerException unused) {
-			return false;
-		}
+		return SetOfLong.super.equalContents(o);
 	}
 
 	public StringBuilder appendTo (StringBuilder builder) {
