@@ -1383,7 +1383,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 	}
 
-	public static class Keys<V> implements PrimitiveCollection.OfInt {
+	public static class Keys<V> implements PrimitiveSet.SetOfInt {
 		protected KeyIterator<V> iter;
 
 		public Keys (IntObjectMap<V> map) {
@@ -1477,7 +1477,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		public boolean equals (Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			boolean eq = OfInt.super.areEqual(other);
+			boolean eq = SetOfInt.super.equalContents(other);
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;

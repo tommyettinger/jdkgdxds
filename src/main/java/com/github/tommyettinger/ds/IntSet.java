@@ -41,7 +41,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class IntSet implements PrimitiveCollection.OfInt {
+public class IntSet implements PrimitiveSet.SetOfInt {
 
 	protected int size;
 

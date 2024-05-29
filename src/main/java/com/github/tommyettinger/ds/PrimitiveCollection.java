@@ -328,23 +328,27 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Compares this PrimitiveCollection.OfInt with another PrimitiveCollection.OfInt by checking their identity,
-		 * their types (both must implement PrimitiveCollection.OfInt), and their sizes, before checking if other
-		 * contains each item in this PrimitiveCollection.OfInt, in any order or quantity. This is most useful for
-		 * the key "set" or value collection in a primitive-backed map, since quantity doesn't matter for keys and
-		 * order doesn't matter for either. Many implementations may need to reset the iterator on this
-		 * PrimitiveCollection.OfInt, but that isn't necessary for {@code other}.
-		 * @param other another Object that should be a PrimitiveCollection.OfInt
-		 * @return true if other is another PrimitiveCollection.OfInt with exactly the same items, false otherwise
+		 * Compares this PrimitiveCollection.OfInt with a PrimitiveSet.SetOfInt by checking their identity,
+		 * their types (both must implement PrimitiveCollection.OfInt, and other must implement PrimitiveSet.SetOfInt),
+		 * and their sizes, before checking if other contains each item in this PrimitiveCollection.OfInt, in any order
+		 * or quantity. This is most useful for the key "set" or value collection in a primitive-backed map, since
+		 * quantity doesn't matter for keys and order doesn't matter for either. Many implementations may need to reset
+		 * the iterator on this PrimitiveCollection.OfInt, but that isn't necessary for {@code other}.
+		 * <br>
+		 * This is not meant for general object equality, but instead for equality following Set semantics. Classes that
+		 * implement PrimitiveCollection that are not Set-like should usually not use this.
+		 *
+		 * @param other another Object that should be a PrimitiveSet.SetOfInt
+		 * @return true if other is a PrimitiveSet.SetOfInt with exactly the same items, false otherwise
 		 */
-		default boolean areEqual (Object other) {
+		default boolean equalContents (Object other) {
 			if(this == other) return true;
-			if(!(other instanceof PrimitiveCollection.OfInt)) return false;
-			PrimitiveCollection.OfInt pc = (PrimitiveCollection.OfInt) other;
-			if(size() != pc.size()) return false;
+			if(!(other instanceof PrimitiveSet.SetOfInt)) return false;
+			PrimitiveSet.SetOfInt o = (PrimitiveSet.SetOfInt) other;
+			if(size() != o.size()) return false;
 			IntIterator it = iterator();
 			while (it.hasNext()) {
-				if(pc.contains(it.nextInt())) return false;
+				if(!o.contains(it.nextInt())) return false;
 			}
 			return true;
 		}
