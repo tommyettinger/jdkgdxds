@@ -741,12 +741,12 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendFriendly(StringBuilder, float)}. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
-	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
+	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
 	 *
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and an Object, and returns the modified StringBuilder
+	 * @param keyAppender a function that takes a StringBuilder and a K, and returns the modified StringBuilder
 	 * @param valueAppender a function that takes a StringBuilder and a float, and returns the modified StringBuilder
 	 * @return a new String representing this map
 	 */
@@ -764,13 +764,13 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendFriendly(StringBuilder, float)}. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
-	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
+	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
 	 *
 	 * @param sb a StringBuilder that this can append to
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and an Object, and returns the modified StringBuilder
+	 * @param keyAppender a function that takes a StringBuilder and a K, and returns the modified StringBuilder
 	 * @param valueAppender a function that takes a StringBuilder and a float, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
@@ -784,7 +784,9 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		while (i-- > 0) {
 			K key = keyTable[i];
 			if (key == null) {continue;}
-			keyAppender.apply(sb, key).append(keyValueSeparator);
+			if(key == this) sb.append("(this)");
+			else keyAppender.apply(sb, key);
+			sb.append(keyValueSeparator);
 			valueAppender.apply(sb, valueTable[i]);
 			break;
 		}
@@ -792,7 +794,9 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 			K key = keyTable[i];
 			if (key == null) {continue;}
 			sb.append(entrySeparator);
-			keyAppender.apply(sb, key).append(keyValueSeparator);
+			if(key == this) sb.append("(this)");
+			else keyAppender.apply(sb, key);
+			sb.append(keyValueSeparator);
 			valueAppender.apply(sb, valueTable[i]);
 		}
 		if (braces) {sb.append('}');}

@@ -573,7 +573,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and an Object, and returns the modified StringBuilder
+	 * @param keyAppender       a function that takes a StringBuilder and a K, and returns the modified StringBuilder
 	 * @param valueAppender     a function that takes a StringBuilder and a float, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
@@ -590,7 +590,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 			else
 				keyAppender.apply(sb, key);
 			sb.append(keyValueSeparator);
-			sb.append(get(key));
+			valueAppender.apply(sb, get(key));
 		}
 		if (braces) {sb.append('}');}
 		return sb;
