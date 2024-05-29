@@ -1368,19 +1368,6 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 			iter = new ValueIterator(map);
 		}
 
-		@Override
-		public int hashCode () {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = 1;
-			while (iter.hasNext) {hc = 421 * hc + BitConversion.floatToRawIntBits(iter.nextFloat());}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
-		}
-
 		/**
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
@@ -1418,18 +1405,6 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return coll;
-		}
-
-		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-		@Override
-		public boolean equals (Object other) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			boolean eq = PrimitiveCollection.OfFloat.super.areEqual(other);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return eq;
 		}
 	}
 

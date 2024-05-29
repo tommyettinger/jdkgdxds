@@ -1350,20 +1350,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			return iter;
 		}
 
-		@Override
-		public int hashCode () {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = 1;
-			for (V v : this)
-				hc = 421 * hc + (v == null ? 0 : v.hashCode());
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
-		}
-
 		/**
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.

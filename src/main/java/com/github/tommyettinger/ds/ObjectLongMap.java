@@ -1275,19 +1275,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			iter = new ValueIterator<>(map);
 		}
 
-		@Override
-		public int hashCode () {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			long hc = 1;
-			while (iter.hasNext) {hc = 421 * hc + iter.nextLong();}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return (int)(hc ^ hc >>> 32);
-		}
-
 		/**
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
@@ -1325,18 +1312,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return coll;
-		}
-
-		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-		@Override
-		public boolean equals (Object other) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			boolean eq = PrimitiveCollection.OfLong.super.areEqual(other);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return eq;
 		}
 	}
 
