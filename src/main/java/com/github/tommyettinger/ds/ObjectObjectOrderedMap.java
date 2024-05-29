@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.Appender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
@@ -546,22 +547,42 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		return entrySet().iterator();
 	}
 
+	/**
+	 * Appends to a StringBuilder from the contents of this ObjectObjectOrderedMap, but uses the given {@link Appender} and
+	 * {@link Appender} to convert each key and each value to a customizable representation and append them
+	 * to a StringBuilder. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 *
+	 * @param sb                a StringBuilder that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and a K, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended keys and values of this map
+	 */
 	@Override
-	protected String toString (String separator, boolean braces) {
-		if (size == 0) {return braces ? "{}" : "";}
-		StringBuilder buffer = new StringBuilder(32);
-		if (braces) {buffer.append('{');}
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<K> keyAppender, Appender<V> valueAppender) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		if (braces) {sb.append('{');}
 		ObjectList<K> keys = this.keys;
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			K key = keys.get(i);
-			if (i > 0) {buffer.append(separator);}
-			buffer.append(key == this ? "(this)" : key);
-			buffer.append('=');
+			if (i > 0) {sb.append(entrySeparator);}
+			if(key == this)
+				sb.append("(this)");
+			else
+				keyAppender.apply(sb, key);
+			sb.append(keyValueSeparator);
 			V value = get(key);
-			buffer.append(value == this ? "(this)" : value);
+			if(value == this)
+				sb.append("(this)");
+			else
+				valueAppender.apply(sb, value);
+
 		}
-		if (braces) {buffer.append('}');}
-		return buffer.toString();
+		if (braces) {sb.append('}');}
+		return sb;
 	}
 
 	public static class OrderedMapEntries<K, V> extends Entries<K, V> {

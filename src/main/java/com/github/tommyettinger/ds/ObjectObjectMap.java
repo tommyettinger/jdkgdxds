@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -775,42 +776,91 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		return true;
 	}
 
-	public String toString (String separator) {
-		return toString(separator, false);
-	}
-
 	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
 
-	protected String toString (String separator, boolean braces) {
-		if (size == 0) {return braces ? "{}" : "";}
-		StringBuilder buffer = new StringBuilder(32);
-		if (braces) {buffer.append('{');}
+	/**
+	 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without braces.
+	 * This is different from {@link #toString()}, which includes braces by default.
+	 *
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @return a new String representing this map
+	 */
+	public String toString (String entrySeparator) {
+		return toString(entrySeparator, false);
+	}
+
+	public String toString (String entrySeparator, boolean braces) {
+		return appendAsString(new StringBuilder(32), entrySeparator, braces).toString();
+	}
+	/**
+	 * Makes a String from the contents of this ObjectObjectMap, but uses the given {@link Appender} and
+	 * {@link Appender} to convert each key and each value to a customizable representation and append them
+	 * to a temporary StringBuilder. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 *
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender a function that takes a StringBuilder and a K, and returns the modified StringBuilder
+	 * @param valueAppender a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @return a new String representing this map
+	 */
+	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
+		Appender<K> keyAppender, Appender<V> valueAppender){
+		return appendAsString(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+	}
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, boolean braces) {
+		return appendAsString(sb, entrySeparator, "=", braces, StringBuilder::append, StringBuilder::append);
+	}
+
+	/**
+	 * Appends to a StringBuilder from the contents of this ObjectObjectMap, but uses the given {@link Appender} and
+	 * {@link Appender} to convert each key and each value to a customizable representation and append them
+	 * to a StringBuilder. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 *
+	 * @param sb a StringBuilder that this can append to
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender a function that takes a StringBuilder and a K, and returns the modified StringBuilder
+	 * @param valueAppender a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended keys and values of this map
+	 */
+	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+		Appender<K> keyAppender, Appender<V> valueAppender) {
+		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		if (braces) {sb.append('{');}
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			K key = keyTable[i];
 			if (key == null) {continue;}
-			buffer.append(key == this ? "(this)" : key);
-			buffer.append('=');
+			if(key == this) sb.append("(this)");
+			else keyAppender.apply(sb, key);
+			sb.append(keyValueSeparator);
 			V value = valueTable[i];
-			buffer.append(value == this ? "(this)" : value);
+			if(value == this) sb.append("(this)");
+			else valueAppender.apply(sb, value);
 			break;
 		}
 		while (i-- > 0) {
 			K key = keyTable[i];
 			if (key == null) {continue;}
-			buffer.append(separator);
-			buffer.append(key == this ? "(this)" : key);
-			buffer.append('=');
+			sb.append(entrySeparator);
+			if(key == this) sb.append("(this)");
+			else keyAppender.apply(sb, key);
+			sb.append(keyValueSeparator);
 			V value = valueTable[i];
-			buffer.append(value == this ? "(this)" : value);
+			if(value == this) sb.append("(this)");
+			else valueAppender.apply(sb, value);
 		}
-		if (braces) {buffer.append('}');}
-		return buffer.toString();
+		if (braces) {sb.append('}');}
+		return sb;
 	}
 
 	/**
