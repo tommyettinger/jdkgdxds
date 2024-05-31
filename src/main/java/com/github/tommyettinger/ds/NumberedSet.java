@@ -767,7 +767,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	}
 
 	public String toString (String entrySeparator, boolean braces) {
-		return map.appendAsString(new StringBuilder(32), entrySeparator, braces).toString();
+		return map.appendTo(new StringBuilder(32), entrySeparator, braces).toString();
 	}
 	/**
 	 * Makes a String from the contents of this NumberedSet, but uses the given {@link Appender} and
@@ -786,10 +786,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	 */
 	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
 		Appender<T> keyAppender, IntAppender valueAppender){
-		return map.appendAsString(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+		return map.appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
-	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, boolean braces) {
-		return map.appendAsString(sb, entrySeparator, "=", braces, StringBuilder::append, StringBuilder::append);
+	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
+		return map.appendTo(sb, entrySeparator, "=", braces, StringBuilder::append, StringBuilder::append);
 	}
 
 	/**
@@ -808,9 +808,9 @@ public class NumberedSet<T> implements Set<T>, Ordered<T> {
 	 * @param valueAppender a function that takes a StringBuilder and an int, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
 		Appender<T> keyAppender, IntAppender valueAppender) {
-		return map.appendAsString(sb, entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender);
+		return map.appendTo(sb, entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender);
 	}
 
 	/**

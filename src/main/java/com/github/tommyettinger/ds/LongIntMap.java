@@ -700,7 +700,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	}
 
 	public String toString (String entrySeparator, boolean braces) {
-		return appendAsString(new StringBuilder(32), entrySeparator, braces).toString();
+		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
 	}
 	/**
 	 * Makes a String from the contents of this LongIntMap, but uses the given {@link LongAppender} and
@@ -723,10 +723,10 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	 */
 	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
 		LongAppender keyAppender, IntAppender valueAppender){
-		return appendAsString(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
-	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, boolean braces) {
-		return appendAsString(sb, entrySeparator, "=", braces, StringBuilder::append, StringBuilder::append);
+	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
+		return appendTo(sb, entrySeparator, "=", braces, StringBuilder::append, StringBuilder::append);
 	}
 
 	/**
@@ -749,7 +749,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	 * @param valueAppender a function that takes a StringBuilder and a int, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendAsString (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
 		LongAppender keyAppender, IntAppender valueAppender) {
 		if (size == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}

@@ -649,7 +649,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default String toString (String entrySeparator, boolean brackets) {
-			return appendAsString(new StringBuilder(32), entrySeparator, brackets).toString();
+			return appendTo(new StringBuilder(32), entrySeparator, brackets).toString();
 		}
 
 		/**
@@ -664,11 +664,11 @@ public interface PrimitiveCollection<T> {
 		 */
 		default String toString (String separator, boolean brackets,
 			LongAppender appender){
-			return appendAsString(new StringBuilder(), separator, brackets, appender).toString();
+			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
 		}
 
-		default StringBuilder appendAsString (StringBuilder sb, String separator, boolean brackets) {
-			return appendAsString(sb, separator, brackets, StringBuilder::append);
+		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
+			return appendTo(sb, separator, brackets, StringBuilder::append);
 		}
 
 		/**
@@ -682,7 +682,7 @@ public interface PrimitiveCollection<T> {
 		 * @param appender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
 		 */
-		default StringBuilder appendAsString (StringBuilder sb, String separator, boolean brackets, LongAppender appender) {
+		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, LongAppender appender) {
 			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
 			if (brackets) {sb.append('[');}
 			LongIterator it = iterator();
