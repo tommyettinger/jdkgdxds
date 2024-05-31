@@ -1406,6 +1406,11 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			iter.hasNext = hn;
 			return coll;
 		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
+		}
 	}
 
 	public static class Keys implements PrimitiveSet.SetOfInt {
