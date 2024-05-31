@@ -484,7 +484,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 
 	@Override
 	public String toString () {
-		return appendTo(new StringBuilder(32)).toString();
+		return toString(", ", true);
 	}
 
 	/**

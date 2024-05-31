@@ -346,11 +346,6 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		return buffer.toString();
 	}
 
-	@Override
-	public String toString () {
-		return toString(", ");
-	}
-
 	/**
 	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
 	 * size, no action is taken.
