@@ -524,6 +524,16 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	}
 
 	/**
+	 * Gets the current key universe; this is a technically-mutable array, but should never be modified.
+	 * To set the universe on an existing EnumMap (with existing contents), you can use {@link #clearToUniverse(Enum[])}.
+	 * If an EnumMap has not been initialized, just adding a key will set the key universe to match the given item.
+	 * @return the current key universe
+	 */
+	public Enum<?>[] getUniverse () {
+		return universe;
+	}
+
+	/**
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
 	 *

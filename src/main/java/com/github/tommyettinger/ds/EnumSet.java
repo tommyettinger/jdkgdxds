@@ -451,6 +451,16 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	}
 
 	/**
+	 * Gets the current key universe; this is a technically-mutable array, but should never be modified.
+	 * To set the universe on an existing EnumSet (with existing contents), you can use {@link #clearToUniverse(Enum[])}.
+	 * If an EnumSet has not been initialized, just adding an item will set its key universe to match the given item.
+	 * @return the current key universe
+	 */
+	public Enum<?>[] getUniverse () {
+		return universe;
+	}
+
+	/**
 	 * Returns the first ordinal equal to or greater than the {@code minOrdinal} of an Enum contained in the set.
 	 * If no such Enum exists, or if minOrdinal is invalid (such as if it is negative or greater than the highest ordinal in the
 	 * Enum type this holds), then {@code -1} is returned.
