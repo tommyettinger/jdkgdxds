@@ -1415,7 +1415,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 			boolean hn = iter.hasNext;
 			iter.reset();
 			long hc = 1;
-			while (iter.hasNext) {hc = 421 * hc + iter.nextLong();}
+			while (iter.hasNext) {hc += iter.nextLong();}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1471,6 +1471,11 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return eq;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 	}
 

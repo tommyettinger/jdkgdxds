@@ -1412,7 +1412,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			boolean hn = iter.hasNext;
 			iter.reset();
 			int hc = 1;
-			while (iter.hasNext) {hc = 421 * hc + iter.nextInt();}
+			while (iter.hasNext) {hc += iter.nextInt();}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1469,6 +1469,12 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			iter.hasNext = hn;
 			return eq;
 		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
+		}
+
 	}
 
 	@Nullable

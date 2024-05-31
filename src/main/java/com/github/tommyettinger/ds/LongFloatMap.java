@@ -1451,7 +1451,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 			boolean hn = iter.hasNext;
 			iter.reset();
 			long hc = 1;
-			while (iter.hasNext) {hc = 421 * hc + iter.nextLong();}
+			while (iter.hasNext) {hc += iter.nextLong();}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1507,6 +1507,11 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return eq;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 	}
 

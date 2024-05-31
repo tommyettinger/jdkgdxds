@@ -1451,7 +1451,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			boolean hn = iter.hasNext;
 			iter.reset();
 			int hc = 1;
-			while (iter.hasNext) {hc = 421 * hc + iter.nextInt();}
+			while (iter.hasNext) {hc += iter.nextInt();}
 
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1508,6 +1508,11 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return eq;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 	}
 

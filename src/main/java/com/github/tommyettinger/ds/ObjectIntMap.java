@@ -1309,6 +1309,12 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 			iter.hasNext = hn;
 			return coll;
 		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
+		}
+
 	}
 
 	public static class Keys<K> extends AbstractSet<K> {
