@@ -17,32 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.util.BooleanIterator;
-import com.github.tommyettinger.ds.support.util.ByteIterator;
-import com.github.tommyettinger.ds.support.util.CharIterator;
-import com.github.tommyettinger.ds.support.util.DoubleIterator;
-import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongIterator;
-import com.github.tommyettinger.ds.support.util.ShortIterator;
-import com.github.tommyettinger.function.BooleanConsumer;
-import com.github.tommyettinger.function.BooleanPredicate;
-import com.github.tommyettinger.function.ByteConsumer;
-import com.github.tommyettinger.function.BytePredicate;
-import com.github.tommyettinger.function.CharConsumer;
-import com.github.tommyettinger.function.CharPredicate;
-import com.github.tommyettinger.function.DoubleConsumer;
-import com.github.tommyettinger.function.DoublePredicate;
-import com.github.tommyettinger.function.FloatConsumer;
-import com.github.tommyettinger.function.FloatPredicate;
-import com.github.tommyettinger.function.IntConsumer;
-import com.github.tommyettinger.function.IntPredicate;
-import com.github.tommyettinger.function.LongConsumer;
-import com.github.tommyettinger.function.LongPredicate;
-import com.github.tommyettinger.function.ShortConsumer;
-import com.github.tommyettinger.function.ShortPredicate;
-
-import java.util.Iterator;
 
 /**
  * Analogous to {@link java.util.Set} but for a primitive type, this extends {@link PrimitiveCollection} and the
