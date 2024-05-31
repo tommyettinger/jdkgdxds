@@ -446,6 +446,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		return h;
 	}
 
+	@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 	@Override
 	public boolean equals (Object o) {
 		return SetOfInt.super.equalContents(o);
@@ -476,7 +477,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 
 	@Override
 	public String toString () {
-		return appendTo(new StringBuilder(32)).toString();
+		return toString(", ", true);
 	}
 
 	/**

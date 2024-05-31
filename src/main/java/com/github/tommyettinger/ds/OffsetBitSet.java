@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 
+import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
@@ -645,9 +646,34 @@ public class OffsetBitSet implements PrimitiveCollection.OfInt {
 		return appendContents(builder.append('['), ", ").append(']');
 	}
 
+	/**
+	 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link IntAppender}
+	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 *
+	 * @param sb        a StringBuilder that this can append to
+	 * @param separator how to separate items, such as {@code ", "}
+	 * @param brackets  true to wrap the output in square brackets, or false to omit them
+	 * @param appender  a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended items of this PrimitiveCollection
+	 */
+	@Override
+	public StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, IntAppender appender) {
+		if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
+		if (brackets) {sb.append('[');}
+		int curr = nextSetBit(offset);
+		appender.apply(sb, curr);
+		while ((curr = nextSetBit(curr+1)) != offset - 1) {
+			sb.append(separator);
+			appender.apply(sb, curr);
+		}
+		if (brackets) {sb.append(']');}
+		return sb;
+	}
+
 	@Override
 	public String toString () {
-		return appendTo(new StringBuilder(32)).toString();
+		return toString(", ", true);
 	}
 
 

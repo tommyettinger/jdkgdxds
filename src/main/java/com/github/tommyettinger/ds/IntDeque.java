@@ -1006,41 +1006,9 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 		return descendingIterator2;
 	}
 
+	@Override
 	public String toString () {
-		if (size == 0) {
-			return "[]";
-		}
-		final int[] values = this.values;
-		final int head = this.head;
-		final int tail = this.tail;
-
-		StringBuilder sb = new StringBuilder(64);
-		sb.append('[');
-		sb.append(values[head]);
-		for (int i = (head + 1) % values.length; i != tail;) {
-			sb.append(", ").append(values[i]);
-			if(++i == tail) break;
-			if(i == values.length) i = 0;
-		}
-		sb.append(']');
-		return sb.toString();
-	}
-
-	public String toString (String separator) {
-		if (size == 0)
-			return "";
-		final int[] values = this.values;
-		final int head = this.head;
-		final int tail = this.tail;
-
-		StringBuilder sb = new StringBuilder(64);
-		sb.append(values[head]);
-		for (int i = (head + 1) % values.length; i != tail;) {
-			sb.append(separator).append(values[i]);
-			if(++i == tail) break;
-			if(i == values.length) i = 0;
-		}
-		return sb.toString();
+		return toString(", ", true);
 	}
 
 	public int hashCode () {

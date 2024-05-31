@@ -341,23 +341,9 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 		return iterator2;
 	}
 
-	public String toString (String separator) {
-		if (size == 0) {return "{}";}
-		IntList items = this.items;
-		StringBuilder buffer = new StringBuilder(32);
-		buffer.append('{');
-		buffer.append(items.get(0));
-		for (int i = 1; i < size; i++) {
-			buffer.append(separator);
-			buffer.append(items.get(i));
-		}
-		buffer.append('}');
-		return buffer.toString();
-	}
-
 	@Override
 	public String toString () {
-		return toString(", ");
+		return toString(", ", true);
 	}
 
 	public static class IntOrderedSetIterator extends IntSetIterator {
