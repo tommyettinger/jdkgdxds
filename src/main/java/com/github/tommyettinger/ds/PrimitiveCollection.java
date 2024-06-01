@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.ByteAppender;
 import com.github.tommyettinger.ds.support.util.DoubleAppender;
 import com.github.tommyettinger.ds.support.util.DoubleIterator;
 import com.github.tommyettinger.ds.support.util.FloatAppender;
@@ -24,6 +25,7 @@ import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
+import com.github.tommyettinger.ds.support.util.ShortAppender;
 import com.github.tommyettinger.function.BooleanConsumer;
 import com.github.tommyettinger.function.BooleanPredicate;
 import com.github.tommyettinger.function.ByteConsumer;
@@ -1638,6 +1640,64 @@ public interface PrimitiveCollection<T> {
 				return it.nextShort();
 			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
 		}
+
+		// STRING CONVERSION
+
+		/**
+		 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without brackets.
+		 *
+		 * @param entrySeparator how to separate entries, such as {@code ", "}
+		 * @return a new String representing this map
+		 */
+		default String toString (String entrySeparator) {
+			return toString(entrySeparator, false);
+		}
+
+		default String toString (String entrySeparator, boolean brackets) {
+			return appendTo(new StringBuilder(32), entrySeparator, brackets).toString();
+		}
+
+		/**
+		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link ShortAppender}
+		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 *
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets true to wrap the output in square brackets, or false to omit them
+		 * @param appender a function that takes a StringBuilder and a short, and returns the modified StringBuilder
+		 * @return a new String representing this PrimitiveCollection
+		 */
+		default String toString (String separator, boolean brackets,
+			ShortAppender appender){
+			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+		}
+
+		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
+			return appendTo(sb, separator, brackets, StringBuilder::append);
+		}
+
+		/**
+		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link ShortAppender}
+		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 *
+		 * @param sb a StringBuilder that this can append to
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets true to wrap the output in square brackets, or false to omit them
+		 * @param appender a function that takes a StringBuilder and a short, and returns the modified StringBuilder
+		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 */
+		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, ShortAppender appender) {
+			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
+			if (brackets) {sb.append('[');}
+			ShortIterator it = iterator();
+			while (it.hasNext()) {
+				appender.apply(sb, it.nextShort());
+				if(it.hasNext()) sb.append(separator);
+			}
+			if (brackets) {sb.append(']');}
+			return sb;
+		}
 	}
 
 	interface OfByte extends PrimitiveCollection<Byte> {
@@ -1893,6 +1953,64 @@ public interface PrimitiveCollection<T> {
 			if (it.hasNext())
 				return it.nextByte();
 			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
+		}
+
+		// STRING CONVERSION
+
+		/**
+		 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without brackets.
+		 *
+		 * @param entrySeparator how to separate entries, such as {@code ", "}
+		 * @return a new String representing this map
+		 */
+		default String toString (String entrySeparator) {
+			return toString(entrySeparator, false);
+		}
+
+		default String toString (String entrySeparator, boolean brackets) {
+			return appendTo(new StringBuilder(32), entrySeparator, brackets).toString();
+		}
+
+		/**
+		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link ByteAppender}
+		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 *
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets true to wrap the output in square brackets, or false to omit them
+		 * @param appender a function that takes a StringBuilder and a byte, and returns the modified StringBuilder
+		 * @return a new String representing this PrimitiveCollection
+		 */
+		default String toString (String separator, boolean brackets,
+			ByteAppender appender){
+			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+		}
+
+		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
+			return appendTo(sb, separator, brackets, StringBuilder::append);
+		}
+
+		/**
+		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link ByteAppender}
+		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 *
+		 * @param sb a StringBuilder that this can append to
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets true to wrap the output in square brackets, or false to omit them
+		 * @param appender a function that takes a StringBuilder and a byte, and returns the modified StringBuilder
+		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 */
+		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, ByteAppender appender) {
+			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
+			if (brackets) {sb.append('[');}
+			ByteIterator it = iterator();
+			while (it.hasNext()) {
+				appender.apply(sb, it.nextByte());
+				if(it.hasNext()) sb.append(separator);
+			}
+			if (brackets) {sb.append(']');}
+			return sb;
 		}
 	}
 
