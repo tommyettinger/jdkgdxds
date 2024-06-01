@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
 
@@ -1007,41 +1008,10 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 		return descendingIterator2;
 	}
 
+
+	@Override
 	public String toString () {
-		if (size == 0) {
-			return "[]";
-		}
-		final double[] values = this.values;
-		final int head = this.head;
-		final int tail = this.tail;
-
-		StringBuilder sb = new StringBuilder(64);
-		sb.append('[');
-		sb.append(values[head]);
-		for (int i = (head + 1) % values.length; i != tail;) {
-			sb.append(", ").append(values[i]);
-			if(++i == tail) break;
-			if(i == values.length) i = 0;
-		}
-		sb.append(']');
-		return sb.toString();
-	}
-
-	public String toString (String separator) {
-		if (size == 0)
-			return "";
-		final double[] values = this.values;
-		final int head = this.head;
-		final int tail = this.tail;
-
-		StringBuilder sb = new StringBuilder(64);
-		sb.append(values[head]);
-		for (int i = (head + 1) % values.length; i != tail;) {
-			sb.append(separator).append(values[i]);
-			if(++i == tail) break;
-			if(i == values.length) i = 0;
-		}
-		return sb.toString();
+		return toString(", ", true);
 	}
 
 	public int hashCode () {
@@ -1052,10 +1022,7 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 
 		int hash = size + 1;
 		for (int s = 0; s < size; s++) {
-			final int value = BitConversion.doubleToMixedIntBits(values[index]);
-
-			hash *= 421;
-			hash += value ^ value >>> 16;
+			hash = hash * 421 + BitConversion.doubleToMixedIntBits(values[index]);
 			index++;
 			if (index == backingLength)
 				index = 0;
@@ -1088,6 +1055,42 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 			double itsValue = itsValues[itsIndex];
 
 			if (myValue != itsValue)
+				return false;
+			myIndex++;
+			itsIndex++;
+			if (myIndex == myBackingLength)
+				myIndex = 0;
+			if (itsIndex == itsBackingLength)
+				itsIndex = 0;
+		}
+		return true;
+	}
+
+
+	public boolean equals (Object o, double tolerance) {
+		if (this == o)
+			return true;
+		if (!(o instanceof DoubleDeque))
+			return false;
+
+		DoubleDeque q = (DoubleDeque)o;
+		final int size = this.size;
+
+		if (q.size != size)
+			return false;
+
+		final double[] myValues = this.values;
+		final int myBackingLength = myValues.length;
+		final double[] itsValues = q.values;
+		final int itsBackingLength = itsValues.length;
+
+		int myIndex = head;
+		int itsIndex = q.head;
+		for (int s = 0; s < size; s++) {
+			double myValue = myValues[myIndex];
+			double itsValue = itsValues[itsIndex];
+
+			if (!MathTools.isEqual(myValue, itsValue, tolerance))
 				return false;
 			myIndex++;
 			itsIndex++;

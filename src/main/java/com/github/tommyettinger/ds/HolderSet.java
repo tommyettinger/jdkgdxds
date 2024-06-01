@@ -38,8 +38,6 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * Some operations are different here from a normal Set; {@link #contains(Object)} expects a K key, and
  * {@link #remove(Object)} does as well. You can use {@link #get(Object)} to go back to a T value from a
  * K key.
- * <br>
- * This class is currently a work in progress, and documentation may be inaccurate.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
@@ -714,7 +712,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 	}
 
 	/**
-	 * Returns an array containing all of the elements in this set; the
+	 * Returns an array containing all the elements in this set; the
 	 * runtime type of the returned array is that of the specified array.
 	 * If the set fits in the specified array, it is returned therein.
 	 * Otherwise, a new array is allocated with the runtime type of the

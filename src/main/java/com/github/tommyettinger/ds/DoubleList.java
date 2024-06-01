@@ -832,12 +832,12 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	public int hashCode () {
 		double[] items = this.items;
 
-		long h = 0xC13FA9A902A6328FL;
+		int h = 1;
 		for (int i = 0, n = size; i < n; i++) {
-			h = h * 0x9E3779B97F4A7C15L + BitConversion.doubleToRawLongBits(items[i]);
+			h = h * 421 + BitConversion.doubleToMixedIntBits(items[i]);
 		}
 
-		return (int)(h ^ h >>> 32);
+		return h;
 	}
 
 	@Override
@@ -868,29 +868,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	@Override
 	public String toString () {
-		if (size == 0) {return "[]";}
-		double[] items = this.items;
-		StringBuilder buffer = new StringBuilder(32);
-		buffer.append('[');
-		buffer.append(items[0]);
-		for (int i = 1; i < size; i++) {
-			buffer.append(", ");
-			buffer.append(items[i]);
-		}
-		buffer.append(']');
-		return buffer.toString();
-	}
-
-	public String toString (String separator) {
-		if (size == 0) {return "";}
-		double[] items = this.items;
-		StringBuilder buffer = new StringBuilder(32);
-		buffer.append(items[0]);
-		for (int i = 1; i < size; i++) {
-			buffer.append(separator);
-			buffer.append(items[i]);
-		}
-		return buffer.toString();
+		return toString(", ", true);
 	}
 
 	/**
