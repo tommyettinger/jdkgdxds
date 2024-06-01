@@ -18,11 +18,11 @@
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.function.ObjLongToObjBiFunction;
+import com.github.tommyettinger.function.ObjBooleanToObjBiFunction;
 
 /**
- * A convenience wrapper around an {@link ObjLongToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code boolean}.
+ * A convenience wrapper around an {@link ObjBooleanToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code boolean}.
  * This is not typically a method reference to anything in {@link Base}, which is different from other Appender types.
  */
-public interface BooleanAppender extends ObjLongToObjBiFunction<StringBuilder, StringBuilder> {
+public interface BooleanAppender extends ObjBooleanToObjBiFunction<StringBuilder, StringBuilder> {
 }

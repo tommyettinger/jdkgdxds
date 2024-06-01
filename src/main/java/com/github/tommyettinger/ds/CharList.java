@@ -740,29 +740,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	@Override
 	public String toString () {
-		if (size == 0) {return "[]";}
-		char[] items = this.items;
-		StringBuilder buffer = new StringBuilder(32);
-		buffer.append("['");
-		buffer.append(items[0]);
-		for (int i = 1; i < size; i++) {
-			buffer.append("', '");
-			buffer.append(items[i]);
-		}
-		buffer.append("']");
-		return buffer.toString();
-	}
-
-	public String toString (String separator) {
-		if (size == 0) {return "";}
-		char[] items = this.items;
-		StringBuilder buffer = new StringBuilder(32);
-		buffer.append(items[0]);
-		for (int i = 1; i < size; i++) {
-			buffer.append(separator);
-			buffer.append(items[i]);
-		}
-		return buffer.toString();
+		return toString(", ", true);
 	}
 
 	/**

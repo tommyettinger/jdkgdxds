@@ -17,7 +17,9 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.BooleanAppender;
 import com.github.tommyettinger.ds.support.util.ByteAppender;
+import com.github.tommyettinger.ds.support.util.CharAppender;
 import com.github.tommyettinger.ds.support.util.DoubleAppender;
 import com.github.tommyettinger.ds.support.util.DoubleIterator;
 import com.github.tommyettinger.ds.support.util.FloatAppender;
@@ -2268,6 +2270,64 @@ public interface PrimitiveCollection<T> {
 				return it.nextChar();
 			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
 		}
+		
+		// STRING CONVERSION
+
+		/**
+		 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without brackets.
+		 *
+		 * @param entrySeparator how to separate entries, such as {@code ", "}
+		 * @return a new String representing this map
+		 */
+		default String toString (String entrySeparator) {
+			return toString(entrySeparator, false);
+		}
+
+		default String toString (String entrySeparator, boolean brackets) {
+			return appendTo(new StringBuilder(32), entrySeparator, brackets).toString();
+		}
+
+		/**
+		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link CharAppender}
+		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 *
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets true to wrap the output in square brackets, or false to omit them
+		 * @param appender a function that takes a StringBuilder and a char, and returns the modified StringBuilder
+		 * @return a new String representing this PrimitiveCollection
+		 */
+		default String toString (String separator, boolean brackets,
+			CharAppender appender){
+			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+		}
+
+		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
+			return appendTo(sb, separator, brackets, StringBuilder::append);
+		}
+
+		/**
+		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link CharAppender}
+		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 *
+		 * @param sb a StringBuilder that this can append to
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets true to wrap the output in square brackets, or false to omit them
+		 * @param appender a function that takes a StringBuilder and a char, and returns the modified StringBuilder
+		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 */
+		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, CharAppender appender) {
+			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
+			if (brackets) {sb.append('[');}
+			CharIterator it = iterator();
+			while (it.hasNext()) {
+				appender.apply(sb, it.nextChar());
+				if(it.hasNext()) sb.append(separator);
+			}
+			if (brackets) {sb.append(']');}
+			return sb;
+		}
 	}
 
 	interface OfBoolean extends PrimitiveCollection<Boolean> {
@@ -2523,6 +2583,64 @@ public interface PrimitiveCollection<T> {
 			if (it.hasNext())
 				return it.nextBoolean();
 			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
+		}
+
+		// STRING CONVERSION
+
+		/**
+		 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without brackets.
+		 *
+		 * @param entrySeparator how to separate entries, such as {@code ", "}
+		 * @return a new String representing this map
+		 */
+		default String toString (String entrySeparator) {
+			return toString(entrySeparator, false);
+		}
+
+		default String toString (String entrySeparator, boolean brackets) {
+			return appendTo(new StringBuilder(32), entrySeparator, brackets).toString();
+		}
+
+		/**
+		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link BooleanAppender}
+		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 *
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets true to wrap the output in square brackets, or false to omit them
+		 * @param appender a function that takes a StringBuilder and a boolean, and returns the modified StringBuilder
+		 * @return a new String representing this PrimitiveCollection
+		 */
+		default String toString (String separator, boolean brackets,
+			BooleanAppender appender){
+			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+		}
+
+		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
+			return appendTo(sb, separator, brackets, StringBuilder::append);
+		}
+
+		/**
+		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link BooleanAppender}
+		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 *
+		 * @param sb a StringBuilder that this can append to
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets true to wrap the output in square brackets, or false to omit them
+		 * @param appender a function that takes a StringBuilder and a boolean, and returns the modified StringBuilder
+		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 */
+		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, BooleanAppender appender) {
+			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
+			if (brackets) {sb.append('[');}
+			BooleanIterator it = iterator();
+			while (it.hasNext()) {
+				appender.apply(sb, it.nextBoolean());
+				if(it.hasNext()) sb.append(separator);
+			}
+			if (brackets) {sb.append(']');}
+			return sb;
 		}
 	}
 }
