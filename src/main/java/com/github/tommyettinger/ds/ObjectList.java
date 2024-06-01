@@ -45,7 +45,7 @@ import java.util.Random;
  * @author Tommy Ettinger
  * @see ObjectBag ObjectBag is an unordered variant on ObjectList.
  */
-public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
+public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedCollection<T> {
 
 	@Nullable protected transient ObjectListIterator<T> iterator1;
 	@Nullable protected transient ObjectListIterator<T> iterator2;
@@ -556,32 +556,10 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T> {
 
 	@Override
 	public String toString () {
-		int n = size();
-		if (n == 0) {return "[]";}
-		StringBuilder buffer = new StringBuilder(32);
-		buffer.append('[');
-		buffer.append(get(0));
-		for (int i = 1; i < n; i++) {
-			buffer.append(", ");
-			buffer.append(get(i));
-		}
-		buffer.append(']');
-		return buffer.toString();
+		return toString(", ", true);
 	}
 
-	public String toString (String separator) {
-		int n = size();
-		if (n == 0) {return "";}
-		StringBuilder builder = new StringBuilder(32);
-		builder.append(get(0));
-		for (int i = 1; i < n; i++) {
-			builder.append(separator);
-			builder.append(get(i));
-		}
-		return builder.toString();
-	}
-
-	public StringBuilder builderAppend (StringBuilder builder, String separator) {
+	public StringBuilder appendTo (StringBuilder builder, String separator) {
 		int n = size();
 		if (n == 0) {return builder;}
 		builder.append(get(0));

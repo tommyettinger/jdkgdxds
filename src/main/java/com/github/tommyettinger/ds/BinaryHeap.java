@@ -37,7 +37,7 @@ import java.util.NoSuchElementException;
  * @author Tommy Ettinger
  */
 @SuppressWarnings("unchecked")
-public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
+public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> implements EnhancedCollection<T> {
 	public int size;
 
 	private Node[] nodes;
@@ -657,17 +657,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> {
 
 	@Override
 	public String toString () {
-		if (size == 0) {return "[]";}
-		Node[] nodes = this.nodes;
-		StringBuilder buffer = new StringBuilder(32);
-		buffer.append('[');
-		buffer.append(nodes[0].value);
-		for (int i = 1; i < size; i++) {
-			buffer.append(", ");
-			buffer.append(nodes[i].value);
-		}
-		buffer.append(']');
-		return buffer.toString();
+		return toString(", ", true);
 	}
 
 	/**

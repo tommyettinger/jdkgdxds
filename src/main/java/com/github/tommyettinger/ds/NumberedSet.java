@@ -40,7 +40,7 @@ import java.util.Set;
  *
  * @param <T> the type of items; should implement {@link Object#equals(Object)} and {@link Object#hashCode()}
  */
-public class NumberedSet<T> implements Set<T>, Ordered<T> {
+public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T> {
 
 	protected class InternalMap extends ObjectIntOrderedMap<T> {
 		public InternalMap () {

@@ -42,7 +42,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class HolderSet<T, K> implements Iterable<T>, Set<T> {
+public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<T>{
 
 	protected int size;
 
@@ -791,33 +791,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T> {
 
 	@Override
 	public String toString () {
-		return '{' + toString(", ") + '}';
-	}
-
-	public String toString (String separator) {
-		if (size == 0) {
-			return "";
-		}
-		StringBuilder buffer = new StringBuilder(32);
-		T[] keyTable = this.keyTable;
-		int i = keyTable.length;
-		while (i-- > 0) {
-			T key = keyTable[i];
-			if (key == null) {
-				continue;
-			}
-			buffer.append(key == this ? "(this)" : key);
-			break;
-		}
-		while (i-- > 0) {
-			T key = keyTable[i];
-			if (key == null) {
-				continue;
-			}
-			buffer.append(separator);
-			buffer.append(key == this ? "(this)" : key);
-		}
-		return buffer.toString();
+		return toString(", ", true);
 	}
 
 	/**

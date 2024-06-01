@@ -50,7 +50,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
-public class ObjectSet<T> implements Iterable<T>, Set<T> {
+public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> {
 
 	protected int size;
 
@@ -695,11 +695,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T> {
 
 	@Override
 	public String toString () {
-		return appendTo(new StringBuilder(32).append('['), ", ").append(']').toString();
-	}
-
-	public String toString (String separator) {
-		return appendTo(new StringBuilder(32), separator).toString();
+		return toString(", ", true);
 	}
 
 	/**

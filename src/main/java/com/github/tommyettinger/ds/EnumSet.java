@@ -46,7 +46,7 @@ import java.util.Set;
  *
  * @author Tommy Ettinger
  */
-public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable<Enum<?>> {
+public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable<Enum<?>>, EnhancedCollection<Enum<?>> {
 	protected int size;
 	protected int[] table;
 	protected Enum<?>[] universe;
@@ -543,6 +543,11 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String toString () {
+		return toString(", ", true);
 	}
 
 	public static class ESetIterator implements Iterator<Enum<?>> {
