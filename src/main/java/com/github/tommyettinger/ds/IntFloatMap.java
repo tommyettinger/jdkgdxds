@@ -1233,7 +1233,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		}
 	}
 
-	public static class Entries extends AbstractSet<Entry> {
+	public static class Entries extends AbstractSet<Entry> implements EnhancedCollection<Entry> {
 		protected EntryIterator iter;
 
 		public Entries (IntFloatMap map) {
@@ -1265,6 +1265,11 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return hc;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 
 		/**
