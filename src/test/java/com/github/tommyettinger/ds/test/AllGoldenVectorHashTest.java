@@ -32,6 +32,13 @@ import java.io.IOException;
 import static com.github.tommyettinger.ds.test.PileupTest.LEN;
 import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
 
+/**
+ * 0 problem multipliers in total, 1275 likely good multipliers in total.
+ * Lowest collisions : 607466
+ * Highest collisions: 675394
+ * Lowest pileup     : 19
+ * Highest pileup    : 42
+ */
 public class AllGoldenVectorHashTest {
 
 	public static void main(String[] args) throws IOException {
@@ -39,8 +46,10 @@ public class AllGoldenVectorHashTest {
 		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
 		LongLongOrderedMap problems = new LongLongOrderedMap(100);
 		LongOrderedSet good = LongOrderedSet.with(MathTools.GOLDEN_LONGS);
-		for (int a = -1; a < MathTools.GOLDEN_LONGS.length; a++) {
-			final long g = a == -1 ? 1 : MathTools.GOLDEN_LONGS[a];
+		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
+		short[] chosen = new short[Utilities.GOOD_MULTIPLIERS.length];
+		for (int a = 0; a < MathTools.GOLDEN_LONGS.length; a++) {
+			final long g = MathTools.GOLDEN_LONGS[a];
 			{
 				int finalA = a;
 				ObjectSet set = new ObjectSet(51, 0.6f) {
@@ -91,7 +100,10 @@ public class AllGoldenVectorHashTest {
 						// this means the shift on hashMultiplier is between 17 and 47, which is a good random-ish range for these.
 //						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511]; // 0 problems, worst collisions nope
 
-						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier >>> 48 + shift) & 511];
+//						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier >>> 48 + shift) & 511];
+						int index = (int)(hashMultiplier >>> 48 + shift) & 511;
+						chosen[index]++;
+						hashMultiplier = Utilities.GOOD_MULTIPLIERS[index];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
@@ -117,11 +129,14 @@ public class AllGoldenVectorHashTest {
 					public void clear () {
 						System.out.print("Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hashMultiplier));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+						minMax[0] = Math.min(minMax[0], collisionTotal);
+						minMax[1] = Math.max(minMax[1], collisionTotal);
+						minMax[2] = Math.min(minMax[2], longestPileup);
+						minMax[3] = Math.max(minMax[3], longestPileup);
 						super.clear();
 					}
 				};
-				if(a != -1)
-					set.setHashMultiplier(g);
+				set.setHashMultiplier(g);
 				try {
 					for (int i = 0, n = spiral.length; i < n; i++) {
 						set.add(spiral[i]);
@@ -134,15 +149,27 @@ public class AllGoldenVectorHashTest {
 			}
 		}
 		System.out.println("This used a threshold of " + THRESHOLD);
+		System.out.println("Indices used: ");
+		for (int y = 0, idx = 0; y < 32; y++) {
+			for (int x = 0; x < 16; x++) {
+				System.out.print(Base.BASE16.unsigned(chosen[idx++]) + " ");
+			}
+			System.out.println();
+		}
 		problems.sortByValue(LongComparators.NATURAL_COMPARATOR);
-		System.out.println(problems);
-		System.out.println("\n\nnew long[]{");
+		System.out.println(problems.toString(", ", ": ", false, Base.BASE16::appendUnsigned, Base.BASE16::appendUnsigned));
+		System.out.println("\n\nnew int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
-			System.out.print("0x"+Base.BASE16.unsigned(good.getAt(i))+"L, ");
-			if((i & 3) == 3)
+			System.out.print("0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
+			if((i & 7) == 7)
 				System.out.println();
 		}
-		System.out.println("};\n\n" + problems.size() + " problem multipliers in total, " + good.size() + " likely good multipliers in total.");
+		System.out.println("};\n");
+		System.out.println(problems.size() + " problem multipliers in total, " + good.size() + " likely good multipliers in total.");
+		System.out.println("Lowest collisions : " + minMax[0]);
+		System.out.println("Highest collisions: " + minMax[1]);
+		System.out.println("Lowest pileup     : " + minMax[2]);
+		System.out.println("Highest pileup    : " + minMax[3]);
 	}
 
 }
