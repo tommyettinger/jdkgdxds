@@ -1197,7 +1197,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		}
 	}
 
-	public static class Entries<V> extends AbstractSet<Entry<V>> {
+	public static class Entries<V> extends AbstractSet<Entry<V>> implements EnhancedCollection<Entry<V>> {
 		protected EntryIterator<V> iter;
 
 		public Entries (LongObjectMap<V> map) {
@@ -1229,6 +1229,11 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return hc;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 
 		/**
@@ -1290,7 +1295,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		}
 	}
 
-	public static class Values<V> extends AbstractCollection<V> {
+	public static class Values<V> extends AbstractCollection<V> implements EnhancedCollection<V> {
 		protected ValueIterator<V> iter;
 
 		@Override
@@ -1326,6 +1331,11 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		@Override
 		public int size () {
 			return iter.map.size;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 
 		public Values (LongObjectMap<V> map) {

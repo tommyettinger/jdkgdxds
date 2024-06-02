@@ -1186,7 +1186,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		}
 	}
 
-	public static class Entries extends AbstractSet<Entry> {
+	public static class Entries extends AbstractSet<Entry> implements EnhancedCollection<Entry> {
 		protected EntryIterator iter;
 
 		public Entries (LongLongMap map) {
@@ -1218,6 +1218,11 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return hc;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 
 		/**

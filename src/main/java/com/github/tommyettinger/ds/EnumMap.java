@@ -1023,7 +1023,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 	}
 
-	public static class Entries<V> extends AbstractSet<Map.Entry<Enum<?>, V>> {
+	public static class Entries<V> extends AbstractSet<Map.Entry<Enum<?>, V>> implements EnhancedCollection<Map.Entry<Enum<?>, V>> {
 		protected Entry<V> entry = new Entry<>();
 		protected MapIterator<V, Map.Entry<Enum<?>, V>> iter;
 
@@ -1195,16 +1195,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 			return res;
 		}
 
+
 		@Override
 		public String toString () {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			String res = super.toString();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return res;
+			return toString(", ", true);
 		}
 
 		/**
@@ -1315,7 +1309,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 	}
 
-	public static class Values<V> extends AbstractCollection<V> {
+	public static class Values<V> extends AbstractCollection<V> implements EnhancedCollection<V> {
 		protected MapIterator<V, V> iter;
 
 		public Values (EnumMap<V> map) {
@@ -1462,7 +1456,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 			iter.reset();
 			int hc = 1;
 			for (V v : this)
-				hc = 421 * hc + (v == null ? 0 : v.hashCode());
+				hc += (v == null ? 0 : v.hashCode());
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1477,16 +1471,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 			iter.reset();
 		}
 
+
 		@Override
 		public String toString () {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			String res = super.toString();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return res;
+			return toString(", ", true);
 		}
 
 		@Override
@@ -1565,7 +1553,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 	}
 
-	public static class Keys extends AbstractSet<Enum<?>> {
+	public static class Keys extends AbstractSet<Enum<?>> implements EnhancedCollection<Enum<?>> {
 		protected MapIterator<?, Enum<?>> iter;
 
 		public Keys (EnumMap<?> map) {
@@ -1669,16 +1657,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 			iter.reset();
 		}
 
+
 		@Override
 		public String toString () {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			String res = super.toString();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return res;
+			return toString(", ", true);
 		}
 
 		@Override
