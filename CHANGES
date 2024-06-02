@@ -1,3 +1,11 @@
+[1.5.4]
+- [BREAKING, SORT OF] PrimitiveCollection.areEqual() was broken, apparently since it was created, and has either been removed where it wasn't properly applicable, or changed to equalContents() for set-like types.
+- Massive addition of toString() and related appendTo() code to nearly all classes here.
+- PrimitiveSet is a new interface that, like Set in the JDK, marks a PrimitiveCollection as behaving like a Set rather than a List, Deque, or plain Collection.
+- EnumMap and EnumSet now allow you to call getUniverse() to get their key universe, most likely to pass it to another EnumMap or EnumSet.
+- Updated funderby dependency to 0.1.2 .
+- Internally, updated Gradle to 8.8 .
+
 [1.5.3]
 - Fixed a bug that affected ObjectDeque.clear(), and could have resulted in crashes.
 
