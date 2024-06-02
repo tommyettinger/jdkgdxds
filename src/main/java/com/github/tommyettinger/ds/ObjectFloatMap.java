@@ -1183,7 +1183,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		}
 	}
 
-	public static class Entries<K> extends AbstractSet<Entry<K>> {
+	public static class Entries<K> extends AbstractSet<Entry<K>> implements EnhancedCollection<Entry<K>> {
 		protected EntryIterator<K> iter;
 
 		public Entries (ObjectFloatMap<K> map) {
@@ -1215,6 +1215,11 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return hc;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 
 		/**
@@ -1359,7 +1364,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		}
 	}
 
-	public static class Keys<K> extends AbstractSet<K> {
+	public static class Keys<K> extends AbstractSet<K> implements EnhancedCollection<K> {
 		protected KeyIterator<K> iter;
 
 		public Keys (ObjectFloatMap<K> map) {
@@ -1391,6 +1396,11 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return hc;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 
 		/**

@@ -1141,7 +1141,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 	}
 
-	public static class Entries<K> extends AbstractSet<Entry<K>> {
+	public static class Entries<K> extends AbstractSet<Entry<K>> implements EnhancedCollection<Entry<K>> {
 		protected EntryIterator<K> iter;
 
 		public Entries (ObjectIntMap<K> map) {
@@ -1162,6 +1162,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		public int size () {
 			return iter.map.size;
 		}
+
 		@Override
 		public int hashCode () {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1172,6 +1173,11 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return hc;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 
 		/**
@@ -1317,7 +1323,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 
 	}
 
-	public static class Keys<K> extends AbstractSet<K> {
+	public static class Keys<K> extends AbstractSet<K> implements EnhancedCollection<K> {
 		protected KeyIterator<K> iter;
 
 		public Keys (ObjectIntMap<K> map) {
@@ -1349,6 +1355,11 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return hc;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 
 		/**

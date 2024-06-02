@@ -1184,7 +1184,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		}
 	}
 
-	public static class Entries<K, V> extends AbstractSet<Map.Entry<K, V>> {
+	public static class Entries<K, V> extends AbstractSet<Map.Entry<K, V>> implements EnhancedCollection<Map.Entry<K, V>> {
 		protected Entry<K, V> entry = new Entry<>();
 		protected MapIterator<K, V, Map.Entry<K, V>> iter;
 
@@ -1252,6 +1252,11 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			return hc;
 		}
 
+		@Override
+		public String toString () {
+			return toString(", ", true);
+		}
+
 		/**
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
@@ -1311,7 +1316,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		}
 	}
 
-	public static class Values<K, V> extends AbstractCollection<V> {
+	public static class Values<K, V> extends AbstractCollection<V> implements EnhancedCollection<V> {
 		protected MapIterator<K, V, V> iter;
 
 		public Values (ObjectObjectMap<K, V> map) {
@@ -1363,6 +1368,11 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			return iter.map.size;
 		}
 
+		@Override
+		public String toString () {
+			return toString(", ", true);
+		}
+
 		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
@@ -1395,7 +1405,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		}
 	}
 
-	public static class Keys<K, V> extends AbstractSet<K> {
+	public static class Keys<K, V> extends AbstractSet<K> implements EnhancedCollection<K> {
 		protected MapIterator<K, V, K> iter;
 
 		public Keys (ObjectObjectMap<K, V> map) {
@@ -1453,6 +1463,11 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return hc;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 
 		/**

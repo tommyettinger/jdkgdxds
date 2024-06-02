@@ -1144,7 +1144,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 	}
 
-	public static class Entries<K> extends AbstractSet<Entry<K>> {
+	public static class Entries<K> extends AbstractSet<Entry<K>> implements EnhancedCollection<Entry<K>> {
 		protected EntryIterator<K> iter;
 
 		public Entries (ObjectLongMap<K> map) {
@@ -1176,6 +1176,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return hc;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 
 		/**
@@ -1320,7 +1325,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 	}
 
-	public static class Keys<K> extends AbstractSet<K> {
+	public static class Keys<K> extends AbstractSet<K> implements EnhancedCollection<K> {
 		protected KeyIterator<K> iter;
 
 		public Keys (ObjectLongMap<K> map) {
@@ -1352,6 +1357,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return hc;
+		}
+
+		@Override
+		public String toString () {
+			return toString(", ", true);
 		}
 
 		/**
