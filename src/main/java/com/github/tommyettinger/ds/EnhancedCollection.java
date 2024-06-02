@@ -193,7 +193,9 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		if (brackets) {sb.append('[');}
 		Iterator<T> it = iterator();
 		while (it.hasNext()) {
-			appender.apply(sb, it.next());
+			T next = it.next();
+			if(next == this) sb.append("(this)");
+			else appender.apply(sb, next);
 			if(it.hasNext()) sb.append(separator);
 		}
 		if (brackets) {sb.append(']');}

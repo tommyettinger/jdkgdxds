@@ -553,7 +553,7 @@ public class EnumSetTest extends TestCase {
             set.add(elements[i]);
         }
         try {
-            set.containsAll(null);
+            set.containsAll((Collection<?>)null);
             fail("Should throw NullPointerException");
         } catch (NullPointerException e) {
             // expected
@@ -599,7 +599,7 @@ public class EnumSetTest extends TestCase {
 
         set.clear();
         try {
-            set.containsAll(null);
+            set.containsAll((Collection<?>)null);
             fail("Should throw NullPointerException");
         } catch (NullPointerException e) {
             // expected
