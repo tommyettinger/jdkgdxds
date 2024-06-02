@@ -33,6 +33,13 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 33198
+ * Highest collisions: 34707
+ * Lowest pileup     : 10
+ * Highest pileup    : 20
+ */
 public class AllGoldenIntWordHashTest {
 	public static void main(String[] args) throws IOException {
 		final int[] GOOD = new int[]{
@@ -104,23 +111,30 @@ public class AllGoldenIntWordHashTest {
 
 		int[] GOLDEN_INTS = GOOD;
 
+		final int THRESHOLD = 40000;
+
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		WhiskerRandom rng = new WhiskerRandom(1234567890L);
 		Collections.shuffle(words, rng);
 		IntLongOrderedMap problems = new IntLongOrderedMap(100);
 		IntOrderedSet good = IntOrderedSet.with(GOLDEN_INTS);
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
+		short[] chosen = new short[GOOD.length];
 		for (int a = 0; a < GOLDEN_INTS.length; a++) {
-			final int g = a == -1 ? 1 : GOLDEN_INTS[a];
+			final int finalA = a;
+			final int g = GOLDEN_INTS[a];
 			{
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
-					int hm = 0xB7AD9447;// 0x9E3779B7;
+					int hm = 0xB7AD9447;//0xF1042721;// 0x9E3779B7;
 
 					@Override
 					protected int place (Object item) {
-						return item.hashCode() * hm >>> shift;
+//						final int h = BitConversion.imul(item.hashCode(), hm);
+//						return (h ^ h << 16) >>> shift;
+//						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS
+						return BitConversion.imul(item.hashCode(), hm) >>> shift;
 					}
 
 					@Override
@@ -144,7 +158,9 @@ public class AllGoldenIntWordHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-//						hashMultiplier = hm = GOOD[BitConversion.imul(shift, hm) >>> 23];
+						int index = (hm ^ hm >>> 17 ^ shift) & 511;
+						chosen[index]++;
+						hashMultiplier = hm = GOOD[index];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
@@ -158,7 +174,8 @@ public class AllGoldenIntWordHashTest {
 								if (key != null) {addResize(key);}
 							}
 						}
-						if(collisionTotal > 40000) {
+						if (collisionTotal > THRESHOLD) {
+							System.out.printf("  WHOOPS!!!  Multiplier %08X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
 							problems.put(g, collisionTotal);
 							good.remove(g);
 //							throw new RuntimeException();
@@ -167,7 +184,7 @@ public class AllGoldenIntWordHashTest {
 
 					@Override
 					public void clear () {
-						System.out.print("Original 0x" + Base.BASE16.unsigned(g));
+						System.out.print("Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						minMax[0] = Math.min(minMax[0], collisionTotal);
 						minMax[1] = Math.max(minMax[1], collisionTotal);
@@ -175,15 +192,15 @@ public class AllGoldenIntWordHashTest {
 						minMax[3] = Math.max(minMax[3], longestPileup);
 						super.clear();
 					}
+
 					@Override
 					public void setHashMultiplier (long hashMultiplier) {
-						super.setHashMultiplier(hashMultiplier);
-						hm = (int)hashMultiplier;
+						this.hashMultiplier = hashMultiplier | 1L;
+						hm = (int)this.hashMultiplier;
+						resize(keyTable.length);
 					}
-
 				};
-				if(a != -1)
-					set.setHashMultiplier(g);
+				set.setHashMultiplier(g);
 				try {
 					for (int i = 0, n = words.size(); i < n; i++) {
 						set.add(words.get(i));
@@ -195,10 +212,18 @@ public class AllGoldenIntWordHashTest {
 				set.clear();
 			}
 		}
+		System.out.println("This used a threshold of " + THRESHOLD);
+		System.out.println("Indices used: ");
+		for (int y = 0, idx = 0; y < 32; y++) {
+			for (int x = 0; x < 16; x++) {
+				System.out.print(Base.BASE16.unsigned(chosen[idx++]) + " ");
+			}
+			System.out.println();
+		}
 		problems.sortByValue(LongComparators.NATURAL_COMPARATOR);
-		System.out.println("\n\nnew long[]");
+		System.out.println("\n\nint[] problems = new int[]");
 		System.out.println(problems.toString(", ", ": ", false, Base.BASE16::appendUnsigned, Base.BASE16::appendUnsigned));
-		System.out.println("\n\nnew int[]{");
+		System.out.println("\n\nint[] good = new int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
 			System.out.print("0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
 			if((i & 7) == 7)
@@ -212,7 +237,7 @@ public class AllGoldenIntWordHashTest {
 		System.out.println("Lowest pileup     : " + minMax[2]);
 		System.out.println("Highest pileup    : " + minMax[3]);
 
-
+		System.out.println("\n" + words.size() + " total words.");
 	}
 
 }
