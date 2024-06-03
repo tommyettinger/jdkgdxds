@@ -19,10 +19,9 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.IntLongOrderedMap;
-import com.github.tommyettinger.ds.IntOrderedSet;
+import com.github.tommyettinger.ds.IntIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectSet;
-import com.github.tommyettinger.ds.support.sort.LongComparators;
+import com.github.tommyettinger.ds.support.sort.IntComparators;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.IOException;
@@ -107,18 +106,25 @@ public class AllGoldenIntVectorHashTest {
 			0xD1F55367, 0xCE35346F, 0xCA863C03, 0xC6E81BB7, 0xBFDD30C1, 0xBC6FD021, 0xB9121BAF, 0xB5C3CBBD,
 		};
 
-		int[] GOLDEN_INTS = GOOD;
+
 //		int[] GOLDEN_INTS = new int[MathTools.GOLDEN_LONGS.length];
 //		for (int i = 0; i < GOLDEN_INTS.length; i++) {
 //			GOLDEN_INTS[i] = (int)(MathTools.GOLDEN_LONGS[i] >>> 32) | 1;
 //		}
 		final Vector2[] spiral = generateVectorSpiral(LEN);
 		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
-		IntLongOrderedMap problems = new IntLongOrderedMap(100);
-		IntOrderedSet good = IntOrderedSet.with(GOLDEN_INTS);
+//		IntLongOrderedMap problems = new IntLongOrderedMap(100);
+		final int[] problems = {0};
+		IntIntOrderedMap good = new IntIntOrderedMap(512);
+		for (int x = 0; x < 512; x++) {
+			good.put(GOOD[x], 0);
+		}
+//		int[] GOLDEN_INTS = good.keySet().toArray();
+		int[] GOLDEN_INTS = GOOD;
+		final int COUNT = GOLDEN_INTS.length;
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
-		short[] chosen = new short[GOOD.length];
-		for (int a = 0; a < GOLDEN_INTS.length; a++) {
+		short[] chosen = new short[512];
+		for (int a = 0; a < COUNT; a++) {
 			final int g = GOLDEN_INTS[a];
 			{
 				final int finalA = a;
@@ -147,6 +153,7 @@ public class AllGoldenIntVectorHashTest {
 							} else {
 								collisionTotal++;
 								longestPileup = Math.max(longestPileup, ++p);
+								good.put(g, p);
 							}
 						}
 					}
@@ -158,9 +165,9 @@ public class AllGoldenIntVectorHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-						int index = (hm ^ hm >>> 17 ^ shift) & 511;
-						chosen[index]++;
-						hashMultiplier = hm = GOOD[index];
+//						int index = (hm ^ hm >>> 17 ^ shift) & 511;
+//						chosen[index]++;
+//						hashMultiplier = hm = GOOD[index];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
@@ -175,16 +182,16 @@ public class AllGoldenIntVectorHashTest {
 							}
 						}
 						if (collisionTotal > THRESHOLD) {
-							System.out.printf("  WHOOPS!!!  Multiplier %08X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
-							problems.put(g, collisionTotal);
-							good.remove(g);
-//							throw new RuntimeException();
+//							System.out.printf("  WHOOPS!!!  Multiplier %08X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
+							problems[0]++;
+//							good.remove(g);
+							throw new RuntimeException();
 						}
 					}
 
 					@Override
 					public void clear () {
-						System.out.print("Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
+						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						minMax[0] = Math.min(minMax[0], collisionTotal);
 						minMax[1] = Math.max(minMax[1], collisionTotal);
@@ -220,16 +227,16 @@ public class AllGoldenIntVectorHashTest {
 			}
 			System.out.println();
 		}
-		problems.sortByValue(LongComparators.NATURAL_COMPARATOR);
-		System.out.println(problems.toString(", ", ": ", false, Base.BASE16::appendUnsigned, Base.BASE16::appendUnsigned));
-		System.out.println("\n\nnew int[]{");
+		good.sortByValue(IntComparators.NATURAL_COMPARATOR);
+		
+		System.out.println("\n\nint[] GOOD_MULTIPLIERS = new int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
-			System.out.print("0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
+			System.out.print("0x"+Base.BASE16.unsigned(good.keyAt(i))+"=0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
 			if((i & 7) == 7)
 				System.out.println();
 		}
 		System.out.println("};\n");
-		System.out.println(problems.size() + " problem multipliers in total, " + good.size() + " likely good multipliers in total.");
+		System.out.println(problems[0] + " problem multipliers in total, " + good.size() + " likely good multipliers in total.");
 		System.out.println("Lowest collisions : " + minMax[0]);
 		System.out.println("Highest collisions: " + minMax[1]);
 		System.out.println("Lowest pileup     : " + minMax[2]);
