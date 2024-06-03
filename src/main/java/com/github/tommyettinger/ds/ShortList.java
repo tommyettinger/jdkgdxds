@@ -527,7 +527,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 */
 	public void removeRange (int start, int end) {
 		int n = size;
-		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
+		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
 		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
 		int count = end - start;
 		System.arraycopy(items, start + count, items, start, n - (start + count));

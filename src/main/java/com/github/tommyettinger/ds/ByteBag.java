@@ -159,7 +159,7 @@ public class ByteBag extends ByteList {
 	@Override
 	public void removeRange (int start, int end) {
 		int n = size;
-		if (end >= n) {throw new IndexOutOfBoundsException("end can't be >= size: " + end + " >= " + size);}
+		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
 		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
 		int count = end - start, lastIndex = n - count;
 		int i = Math.max(lastIndex, end);
