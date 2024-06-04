@@ -76,7 +76,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * This only needs to be serialized if the full key table is serialized, or if the iteration order should be
 	 * the same before and after serialization. Iteration order is better handled by using {@link LongOrderedSet}.
 	 */
-	protected long hashMultiplier = 0xD1B54A32D192ED03L;
+	protected int hashMultiplier = 0xB7AD9447;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
@@ -174,7 +174,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (long item) {
-		return (int)((item ^ item >>> 32) * hashMultiplier >>> shift);
+		return BitConversion.imul((int)(item ^ item >>> 32), hashMultiplier) >>> shift;
 	}
 
 	/**
@@ -384,7 +384,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros((long)mask);
 
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];
 		long[] oldKeyTable = keyTable;
 
 		keyTable = new long[newSize];
@@ -401,9 +401,9 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * Gets the current hash multiplier as used by {@link #place(long)}; for specific advanced usage only.
 	 * The hash multiplier changes whenever {@link #resize(int)} is called, though its value before the resize
 	 * affects its value after.
-	 * @return the current hash multiplier, which should always be a large odd long
+	 * @return the current hash multiplier, which should always be a large odd int
 	 */
-	public long getHashMultiplier () {
+	public int getHashMultiplier () {
 		return hashMultiplier;
 	}
 
@@ -425,8 +425,8 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * also shouldn't permit adversaries to cause this method to be called frequently.
 	 * @param hashMultiplier any odd long; will not be used as-is
 	 */
-	public void setHashMultiplier (long hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 1L;
+	public void setHashMultiplier (int hashMultiplier) {
+		this.hashMultiplier = hashMultiplier | 1;
 		resize(keyTable.length);
 	}
 
