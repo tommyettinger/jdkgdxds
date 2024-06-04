@@ -166,7 +166,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 * @return the current hash multiplier
 	 */
 	@Override
-	public long getHashMultiplier () {
+	public int getHashMultiplier () {
 		return hashMultiplier;
 	}
 
@@ -177,8 +177,8 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 * @param hashMultiplier will not be used, but will be treated as odd and stored in case some other code needs it
 	 */
 	@Override
-	public void setHashMultiplier (long hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 1L;
+	public void setHashMultiplier (int hashMultiplier) {
+		this.hashMultiplier = hashMultiplier | 1;
 	}
 
 	/**

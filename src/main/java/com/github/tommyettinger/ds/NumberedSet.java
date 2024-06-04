@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -189,7 +190,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @return an index between 0 and {@link InternalMap#mask} (both inclusive)
 	 */
 	protected int place (Object item) {
-		return (int)(item.hashCode() * map.hashMultiplier >>> map.shift);
+		return BitConversion.imul(item.hashCode(), map.hashMultiplier) >>> map.shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
 	}
@@ -481,11 +482,11 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		map.ensureCapacity(additionalCapacity);
 	}
 
-	public long getHashMultiplier () {
+	public int getHashMultiplier () {
 		return map.getHashMultiplier();
 	}
 
-	public void setHashMultiplier (long hashMultiplier) {
+	public void setHashMultiplier (int hashMultiplier) {
 		map.setHashMultiplier(hashMultiplier);
 	}
 

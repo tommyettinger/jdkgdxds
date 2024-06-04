@@ -89,7 +89,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
 	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectFloatOrderedMap}.
 	 */
-	protected long hashMultiplier = 0xD1B54A32D192ED03L;
+	protected int hashMultiplier = 0xB7AD9447;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
@@ -233,7 +233,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (Object item) {
-		return (int)(item.hashCode() * hashMultiplier >>> shift);
+		return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
 	}
@@ -619,7 +619,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros((long)mask);
 
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];
 		K[] oldKeyTable = keyTable;
 		float[] oldValueTable = valueTable;
 
@@ -638,9 +638,9 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * Gets the current hash multiplier as used by {@link #place(Object)}; for specific advanced usage only.
 	 * The hash multiplier changes whenever {@link #resize(int)} is called, though its value before the resize
 	 * affects its value after.
-	 * @return the current hash multiplier, which should always be a large odd long
+	 * @return the current hash multiplier, which should always be a large odd int
 	 */
-	public long getHashMultiplier () {
+	public int getHashMultiplier () {
 		return hashMultiplier;
 	}
 
@@ -662,8 +662,8 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * also shouldn't permit adversaries to cause this method to be called frequently.
 	 * @param hashMultiplier any odd long; will not be used as-is
 	 */
-	public void setHashMultiplier (long hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 1L;
+	public void setHashMultiplier (int hashMultiplier) {
+		this.hashMultiplier = hashMultiplier | 1;
 		resize(keyTable.length);
 	}
 
