@@ -72,8 +72,8 @@ public class AllPoorWordHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros((long)mask);
 
-//						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 511];
-						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
+//						hashMultiplier = LongUtilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 511];
+						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
@@ -97,7 +97,7 @@ public class AllPoorWordHashTest {
 						super.clear();
 					}
 				};
-				set.setHashMultiplier(g);
+				set.setHashMultiplier((int)g);
 				try {
 					for (int i = 0, n = words.size(); i < n; i++) {
 						set.add(words.get(i));

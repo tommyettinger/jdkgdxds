@@ -374,7 +374,7 @@ public class PileupTest {
 
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;
 
-                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
+                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];
 
                 Object[] oldKeyTable = keyTable;
 
@@ -979,7 +979,7 @@ public class PileupTest {
             double averagePileup = 0;
 
             {
-                hashMultiplier = 0x9E3779B97F4A7C15L; // total collisions: 69101, longest pileup: 15
+//                hashMultiplier = 0x9E3779B97F4A7C15L; // total collisions: 69101, longest pileup: 15
 //                hashMultiplier = 0x769C3DC968DB6A07L; // total collisions: 74471, longest pileup: 14
 //                hashMultiplier = 0xD1B54A32D192ED03L; // total collisions: 68210, longest pileup: 19
             }
@@ -1235,9 +1235,9 @@ public class PileupTest {
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
 
-            {
-                hashMultiplier = 0xD1B54A32D192ED03L;
-            }
+//            {
+//                hashMultiplier = 0xD1B54A32D192ED03L;
+//            }
 
             @Override
             protected void addResize (@NonNull Object key) {
@@ -1510,7 +1510,7 @@ public class PileupTest {
 //                hashMultiplier = 0x9E3779B97F4A7C15L >>> shift + 32 | 1L; //total collisions: 34124, longest pileup: 13
 //                hashMultiplier = 0xD1B54A32D192ED03L >>> shift + 32 | 1L; //total collisions: 33579, longest pileup: 12
 //                hashMultiplier = 0xF1357AEA2E62A9C5L >>> shift + 32 | 1L; //total collisions: 34430, longest pileup: 11
-                hashMultiplier = CONSTANT >>> shift + 32 | 1L; //total collisions: 34430, longest pileup: 11
+//                hashMultiplier = CONSTANT >>> shift + 32 | 1L; //total collisions: 34430, longest pileup: 11
 //                hashMultiplier = 0x769C3DC968DB6A07L;
                 hashMul = (int)(hashMultiplier >>> 32);
             }
@@ -1568,7 +1568,7 @@ public class PileupTest {
 //                hashMul =  hashMul * 0x9E377 & 0xFFFFF;
 //                hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-                hashMultiplier = CONSTANT >>> shift + 32 | 1L;
+//                hashMultiplier = CONSTANT >>> shift + 32 | 1L;
                 hashMul = (int)(hashMultiplier >>> 32);
 
                 Object[] oldKeyTable = keyTable;
@@ -1756,8 +1756,8 @@ public class PileupTest {
             // 0x1A36A9;
 
             {
-                hashMultiplier =
-                    0x9E3779B97F4A7C15L;
+//                hashMultiplier =
+//                    0x9E3779B97F4A7C15L;
 //                    0x769C3DC968DB6A07L;
 //                    0xD1B54A32D192ED03L;//long: total collisions: 33579, longest pileup: 12
 //                    0xF1357AEA2E62A9C5L;//long: total collisions: 34430, longest pileup: 11
@@ -1885,9 +1885,9 @@ public class PileupTest {
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
 
-            {
-                hashMultiplier = 0xD1B54A32D192ED03L;
-            }
+//            {
+//                hashMultiplier = 0xD1B54A32D192ED03L;
+//            }
             @Override
             protected void addResize (@NonNull Object key) {
                 Object[] keyTable = this.keyTable;
@@ -2004,9 +2004,9 @@ public class PileupTest {
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
 
-            {
-                hashMultiplier = 0x9E3779B97F4A7C15L;
-            }
+//            {
+//                hashMultiplier = 0x9E3779B97F4A7C15L;
+//            }
 
             @Override
             protected int place (Object item) {
@@ -2040,9 +2040,10 @@ public class PileupTest {
                 mask = newSize - 1;
                 shift = BitConversion.countLeadingZeros((long)mask);
 
+                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
-                hashMultiplier = (size + size ^ hashMultiplier) * 0xD1342543DE82EF95L + 0xF1357AEA2E62A9C5L;
+//                hashMultiplier = (size + size ^ hashMultiplier) * 0xD1342543DE82EF95L + 0xF1357AEA2E62A9C5L;
 
 //                hashMultiplier = (hashMultiplier) * 0xD1342543DE82EF95L + 0xF1357AEA2E62A9C5L ^ size + size;
 

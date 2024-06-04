@@ -83,7 +83,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
 	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectOrderedSet}.
 	 */
-	protected long hashMultiplier = 0x9E3779B97F4A7C15L;
+	protected int hashMultiplier = 0x9E3779B7;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
@@ -491,7 +491,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 //		// set the bit 0x100000, so we know there will at least be some bits moved to the upper third or so.
 //		hashMultiplier = ((hashMultiplier + size << 3 ^ 0xC79E7B1D) * 0x13C6EB + 0xAF36D01E & 0xFFFFF) | 0x100000;
 
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];
 		T[] oldKeyTable = keyTable;
 
 		keyTable = (T[])new Object[newSize];

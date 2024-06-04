@@ -72,7 +72,7 @@ public class ExhaustiveWordHashTest {
 					int originalMul, originalAdd;
 					int hashMul = 0x9E377, hashAdd = 0xD192ED03;
 					{
-						hashMultiplier = 0xD1B54A32D192ED03L;
+						long hashMultiplier = 0xD1B54A32D192ED03L;
 						long ctr = hashMultiplier << 1;
 						for (int i = 0; i < hashShiftA; i++) {
 							hashMultiplier = hashMultiplier * hashMultiplier + (ctr += 0x9E3779B97F4A7C16L);

@@ -181,8 +181,8 @@ Highest pileup    : 28
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros((long)mask);
 
-//						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 0x1FF];
-						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
+//						hashMultiplier = LongUtilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 0x1FF];
+						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];
 //						hashMul = (int)((hashMultiplier >>> 32 & -16) | (hashMultiplier & 15));
 						Object[] oldKeyTable = keyTable;
 
@@ -215,7 +215,7 @@ Highest pileup    : 28
 					}
 				};
 				if(a != -1)
-					set.setHashMultiplier(g);
+					set.setHashMultiplier((int)g);
 				try {
 					for (int i = 0, n = words.size(); i < n; i++) {
 						set.add(words.get(i));

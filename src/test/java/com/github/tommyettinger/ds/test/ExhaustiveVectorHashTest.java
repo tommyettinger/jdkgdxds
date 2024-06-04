@@ -77,7 +77,7 @@ public class ExhaustiveVectorHashTest {
 					int originalMultiplier;
 					int hashAddend = 0x9E3779B9;
 					{
-						hashMultiplier = 0xD1B54A32D192ED03L;
+						long hashMultiplier = 0xD1B54A32D192ED03L;
 						long ctr = hashMultiplier << 1;
 						for (int i = 0; i < hashShiftA; i++) {
 							hashAddend = hashAddend * hashAddend + (int)(ctr += 0x9E3779B97F4A7C16L);

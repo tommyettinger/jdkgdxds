@@ -47,7 +47,7 @@ public class AllGoldenVectorHashTest {
 		LongLongOrderedMap problems = new LongLongOrderedMap(100);
 		LongOrderedSet good = LongOrderedSet.with(MathTools.GOLDEN_LONGS);
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
-		short[] chosen = new short[Utilities.GOOD_MULTIPLIERS.length];
+		short[] chosen = new short[512];
 		for (int a = 0; a < MathTools.GOLDEN_LONGS.length; a++) {
 			final long g = MathTools.GOLDEN_LONGS[a];
 			{
@@ -98,7 +98,7 @@ public class AllGoldenVectorHashTest {
 						// shift is always between 33 and 63 or so, so adding 48 to it moves it to the 85 to 115 range.
 						// but, shifts are always implicitly masked to use only their lowest 6 bits (when shifting longs).
 						// this means the shift on hashMultiplier is between 17 and 47, which is a good random-ish range for these.
-//						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511]; // 0 problems, worst collisions nope
+//						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511]; // 0 problems, worst collisions nope
 
 //						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier >>> 48 + shift) & 511];
 						int index = (int)(hashMultiplier >>> 48 + shift) & 511;
@@ -136,7 +136,7 @@ public class AllGoldenVectorHashTest {
 						super.clear();
 					}
 				};
-				set.setHashMultiplier(g);
+				set.setHashMultiplier((int)g);
 				try {
 					for (int i = 0, n = spiral.length; i < n; i++) {
 						set.add(spiral[i]);

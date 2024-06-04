@@ -68,7 +68,7 @@ public class ExhaustiveBadStringHashTest {
 					int originalMultiplier, originalAddend;
 					int hashMul = 0x9E3779B9, hashAdd = 0xD192ED03;
 					{
-						hashMultiplier = 0xD1B54A32D192ED03L;
+						long hashMultiplier = 0xD1B54A32D192ED03L;
 						long ctr = hashMultiplier << 1;
 						for (int i = 0; i < hashShiftA; i++) {
 							hashMul = hashMul * hashMul + (int)(ctr += 0x9E3779B97F4A7C16L);

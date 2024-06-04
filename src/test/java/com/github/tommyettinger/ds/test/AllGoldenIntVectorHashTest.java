@@ -274,9 +274,9 @@ public class AllGoldenIntVectorHashTest {
 					}
 
 					@Override
-					public void setHashMultiplier (long hashMultiplier) {
-						this.hashMultiplier = hashMultiplier | 1L;
-						hm = (int)this.hashMultiplier;
+					public void setHashMultiplier (int hashMultiplier) {
+						this.hashMultiplier = hashMultiplier | 1;
+						hm = this.hashMultiplier;
 						resize(keyTable.length);
 					}
 				};
