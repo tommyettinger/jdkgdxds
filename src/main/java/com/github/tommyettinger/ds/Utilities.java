@@ -31,23 +31,24 @@ import static com.github.tommyettinger.digital.Hasher.*;
  */
 public final class Utilities {
 	/**
-	 * A final array of 512 long multipliers that have been tested to work on at least some large
+	 * A final array of 512 int multipliers that have been tested to work on at least some large
 	 * input sets without excessively high collision rates. The initial value passed to a
-	 * {@link ObjectSet#setHashMultiplier(long)} method (on any hashed data structure here) is used
-	 * to choose one of these based on that long value (actually 11 of its middle bits). All hashed
-	 * data structures here currently start with a multiplier of 0xD1B54A32D192ED03L, which is not
+	 * {@link ObjectSet#setHashMultiplier(int)} method (on any hashed data structure here) is used
+	 * to choose one of these based on that int value (actually 18 of its bits, as well as the current
+	 * shift value). All hashed
+	 * data structures here currently start with a multiplier of 0xB7AD9447, which is not
 	 * in this array by default, but is still a pretty good multiplier.
 	 * <br>
 	 * You can mutate this array, but you should only do so if you encounter high collision rates or
 	 * resizes with a particular multiplier from this table. Any long you set into this array must
 	 * be an odd number, should be very large (typically the most significant bit is set), and should
 	 * ideally have an "unpredictable" bit pattern. This last quality is the hardest to define, but
-	 * generally dividing 2 to the 64 by an irrational number using BigDecimal math gets such an
+	 * generally dividing 2 to the 32 by an irrational number using BigDecimal math gets such an
 	 * unpredictable pattern. Not all irrational numbers work; some are pathologically non-random
 	 * when viewed as bits, but usually that only happens when the number was specifically constructed
 	 * as a counter-example or an oddity. As always, <a href="http://oeis.org/search?q=decimal+expansion">The OEIS</a>
 	 * proves a useful resource for getting long sequences of irrational digits, and if you make a
-	 * BigDecimal with about 25 irrational digits, and divide (or multiply) it by 2 to the 64, convert
+	 * BigDecimal with about 25 irrational digits, and divide (or multiply) it by 2 to the 32, convert
 	 * it to a {@code long}, and if even, add 1, you'll have a good number to substitute in here...
 	 * most of the time. Using the golden ratio (phi) does startlingly poorly here, even though
 	 * mathematically it should be the absolute best multiplier.
@@ -374,4 +375,72 @@ public final class Utilities {
 		return (seed ^ (seed << 33 | seed >>> 31) ^ (seed << 19 | seed >>> 45));
 	}
 
+	/**
+	 * Gets a 32-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
+	 * Uses <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a> version 4.2, but shrunk down to work on 16-bit
+	 * char values instead of 64-bit long values. This gets the hash as if all cased letters have been
+	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
+	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
+	 * would use this with {@code (hashCodeIgnoreCase(text) >>> shift)}.
+	 *
+	 * @param data a non-null CharSequence; often a String, but this has no trouble with a StringBuilder
+	 * @return an int hashCode; quality should be similarly good across any bits
+	 */
+	public static int hashCodeIgnoreCase (final CharSequence data) {
+		return hashCodeIgnoreCase(data, 908697017);
+	}
+
+	/**
+	 * Gets a 32-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
+	 * UUses <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a> version 4.2, but shrunk down to work on 16-bit
+	 * char values instead of 64-bit long values. This gets the hash as if all cased letters have been
+	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
+	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
+	 * would use this with {@code (hashCodeIgnoreCase(text, seed) >>> shift)}.
+	 *
+	 * @param data a non-null CharSequence; often a String, but this has no trouble with a StringBuilder
+	 * @param seed any int; must be the same between calls if two equivalent values for {@code data} must be the same
+	 * @return an int hashCode; quality should be similarly good across any bits
+	 */
+	public static int hashCodeIgnoreCase (final CharSequence data, int seed) {
+		if(data == null) return 0;
+		final int len = data.length();
+		int b0 = GOOD_MULTIPLIERS[(seed & 127)];
+		int b1 = GOOD_MULTIPLIERS[(seed >>>  8 & 127)+128];
+		int b2 = GOOD_MULTIPLIERS[(seed >>> 16 & 127)+256];
+		int b3 = GOOD_MULTIPLIERS[(seed >>> 24 & 127)+384];
+		int a, b;
+		int p = 0;
+		if(len<=2){
+			if(len==2){ a=Character.toUpperCase(data.charAt(0)); b=Character.toUpperCase(data.charAt(1)); }
+			else if(len==1){ a=Character.toUpperCase(data.charAt(0)); b=0;}
+			else a=b=0;
+		}
+		else{
+			int i=len;
+			if(i>=6){
+				int see1=seed, see2=seed;
+				do{
+					seed=BitConversion.imul(Character.toUpperCase(data.charAt(p  ))^b1, Character.toUpperCase(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
+					see1=BitConversion.imul(Character.toUpperCase(data.charAt(p+2))^b2, Character.toUpperCase(data.charAt(p+3))^see1);see1^=(see1<<21|see1>>>11)^(see1<<15|see1>>>19);
+					see2=BitConversion.imul(Character.toUpperCase(data.charAt(p+4))^b3, Character.toUpperCase(data.charAt(p+5))^see2);see2^=(see2<<26|see2>>> 6)^(see2<< 7|see2>>>25);
+					p+=6; i-=6;
+				}while(i>=6);
+				seed^=see1^see2;
+			}
+			while((i>2)){
+				seed=BitConversion.imul(Character.toUpperCase(data.charAt(p  ))^b1, Character.toUpperCase(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
+				i-=2; p+=2;
+			}
+			a=Character.toUpperCase(data.charAt(len-2));
+			b=Character.toUpperCase(data.charAt(len-1));
+		}
+		a^=b1;
+		b^=seed;
+		p=BitConversion.imul(a, b);
+		a=p^p>>>11^p>>>21^b0^len;
+		b=p^(p<<29|p>>> 3)^(p<< 8|p>>>24)^b1;
+		p=BitConversion.imul(a, b);
+		return p^(p<<29|p>>> 3)^(p<< 8|p>>>24);
+	}
 }

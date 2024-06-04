@@ -33,7 +33,7 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * with a simple polynomial hash (the typical Java kind, used by String and Arrays), or if more speed is needed,
  * one with <a href="https://richardstartin.github.io/posts/collecting-rocks-and-benchmarks">some of these
  * optimizations by Richard Startin</a>. If you don't want to write or benchmark a hash function (which is quite
- * understandable), {@link Utilities#longHashCodeIgnoreCase(CharSequence)} can get a case-insensitive hash of any
+ * understandable), {@link Utilities#hashCodeIgnoreCase(CharSequence)} can get a case-insensitive hash of any
  * CharSequence, as a long. It does this without allocating new Strings all over, where many case-insensitive
  * algorithms do allocate quite a lot, but it does this by handling case incorrectly for the Georgian alphabet.
  * If I see Georgian text in-the-wild, I may reconsider, but I don't think that particular alphabet is in
@@ -119,7 +119,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	@Override
 	protected int place (Object item) {
 		if (item instanceof CharSequence)
-			return (int)Utilities.longHashCodeIgnoreCase((CharSequence)item, hashMultiplier) & mask;
+			return Utilities.hashCodeIgnoreCase((CharSequence)item, hashMultiplier) & mask;
 		return super.place(item);
 	}
 
@@ -139,7 +139,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			CharSequence key = keyTable[i];
 			if (key != null) {
-				h ^= Utilities.longHashCodeIgnoreCase(key);
+				h ^= Utilities.hashCodeIgnoreCase(key);
 				V value = valueTable[i];
 				if (value != null) {h ^= value.hashCode();}
 			}
@@ -203,7 +203,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 
 		@Override
 		public int hashCode () {
-			int result = key != null ? (int)Utilities.longHashCodeIgnoreCase(key) : 0;
+			int result = key != null ? Utilities.hashCodeIgnoreCase(key) : 0;
 			result = 31 * result + (value != null ? value.hashCode() : 0);
 			return result;
 		}
@@ -221,7 +221,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 			while (iter.hasNext()) {
 				CharSequence obj = iter.next();
 				if (obj != null)
-					h += Utilities.longHashCodeIgnoreCase(obj);
+					h += Utilities.hashCodeIgnoreCase(obj);
 			}
 			return h;
 		}
