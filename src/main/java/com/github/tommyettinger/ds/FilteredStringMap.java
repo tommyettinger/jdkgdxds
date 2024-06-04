@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -185,30 +186,29 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	}
 
 	/**
-	 * Gets a low-to-moderate quality 64-bit hash code from the given String.
-	 * This operates a little... strangely, internally, and takes advantage of its primary intended use
-	 * (in {@link #place(Object)}) only using the upper 31 bits. It currently is designed to limit the number
-	 * of multiplications required, since those can slow down simple hashes like this if too many are needed.
+	 * Gets a low-to-moderate quality 32-bit hash code from the given String.
+	 * This operates by checking if a char in {@code s} matches the filter, and if it does, it rotates the current hash,
+	 * multiplies it by the {@link #getHashMultiplier() hash multiplier}, and adds the current char after editing.
 	 * @param s a String to hash
-	 * @return a 64-bit hash of {@code s}, with quality emphasized only for the upper 31 bits
+	 * @return a 32-bit hash of {@code s}
 	 */
-	protected long hashHelper (final String s) {
-		final long hm = hashMultiplier;
-		long hash = hm;
-		for (int i = 0, len = s.length(), ctr = len; i < len; i++) {
+	protected int hashHelper (final String s) {
+		final int hm = hashMultiplier;
+		int hash = hm;
+		for (int i = 0, len = s.length(); i < len; i++) {
 			final char c = s.charAt(i);
 			if (filter.filter.test(c)) {
-				hash = (hash << 16 | hash >>> 48) ^ filter.editor.applyAsChar(c);
-				if((--ctr & 3) == 0) hash *= hm;
+				hash = BitConversion.imul((hash << 13 | hash >>> 19), hm) + filter.editor.applyAsChar(c);
 			}
 		}
-		return (hash ^ (hash << 23 | hash >>> 41) ^ (hash << 42 | hash >>> 22)) * hm;
+		hash = BitConversion.imul(hash, hm);
+		return hash ^ (hash << 23 | hash >>> 9) ^ (hash << 11 | hash >>> 21);
 	}
 
 	@Override
 	protected int place (Object item) {
 		if (item instanceof String) {
-			return (int)(hashHelper((String) item) >>> shift);
+			return hashHelper((String) item) >>> shift;
 		}
 		return super.place(item);
 	}

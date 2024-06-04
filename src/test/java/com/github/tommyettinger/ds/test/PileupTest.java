@@ -3630,9 +3630,9 @@ public class PileupTest {
 */
 
         @Override
-        protected long hashHelper (final String s) {
-            final long hm = hashMultiplier;
-            long hash = hm;
+        protected int hashHelper (final String s) {
+            final int hm = hashMultiplier;
+            int hash = hm;
             for (int i = 0, len = s.length(), ctr = len; i < len; i++) {
                 final char c = s.charAt(i);
                 if (filter.filter.test(c)) {
@@ -3648,8 +3648,8 @@ public class PileupTest {
                     // WITH MULTIPLY ONLY
                     //total collisions: 22152, longest pileup: 11
                     //total of 12 longest pileups: 74
-                    hash = (hash << 16 | hash >>> 48) ^ filter.editor.applyAsChar(c);
-                    if((--ctr & 3) == 0) hash *= hm;
+                    hash = (hash << 13 | hash >>> 19) + filter.editor.applyAsChar(c);
+                    if((--ctr & 1) == 0) hash *= hm;
                     // WITH XOR HM
                     //total collisions: 21626, longest pileup: 11
                     //total of 12 longest pileups: 74
@@ -3689,7 +3689,8 @@ public class PileupTest {
 //                    if((--ctr & 3) == 0) hash = (hash ^ hash >>> 29) * hm;
                 }
             }
-            return (hash ^ (hash << 23 | hash >>> 41) ^ (hash << 42 | hash >>> 22)) * hm;
+            hash *= hm;
+            return hash ^ (hash << 23 | hash >>> 9) ^ (hash << 11 | hash >>> 21);
 //            return (hash ^ (hash << 23 | hash >>> 41) ^ (hash << 42 | hash >>> 22));
 //            return hash * hm;
 //            return hash * (hm ^ 0x9E3779B97F4A7C16L);
