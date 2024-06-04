@@ -125,7 +125,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = BitConversion.countLeadingZeros((long)mask);
+		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		keyTable = (T[])new Object[tableSize];
 	}
@@ -483,7 +483,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = BitConversion.countLeadingZeros((long)mask);
+		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 //		// We modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
 //		// We incorporate the size in here to randomize things more. The multiplier seems to do a little better if it ends in the

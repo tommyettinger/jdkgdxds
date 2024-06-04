@@ -179,7 +179,7 @@ Highest pileup    : 28
 						int oldCapacity = keyTable.length;
 						threshold = (int)(newSize * loadFactor);
 						mask = newSize - 1;
-						shift = BitConversion.countLeadingZeros((long)mask);
+						shift = BitConversion.countLeadingZeros(mask) + 32;
 
 //						hashMultiplier = LongUtilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 0x1FF];
 						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];

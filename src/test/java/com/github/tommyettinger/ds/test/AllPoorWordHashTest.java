@@ -70,7 +70,7 @@ public class AllPoorWordHashTest {
 						int oldCapacity = keyTable.length;
 						threshold = (int)(newSize * loadFactor);
 						mask = newSize - 1;
-						shift = BitConversion.countLeadingZeros((long)mask);
+						shift = BitConversion.countLeadingZeros(mask) + 32;
 
 //						hashMultiplier = LongUtilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 27) + shift & 511];
 						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];

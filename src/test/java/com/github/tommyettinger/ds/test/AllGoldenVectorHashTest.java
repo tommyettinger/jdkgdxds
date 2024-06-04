@@ -75,7 +75,7 @@ public class AllGoldenVectorHashTest {
 						int oldCapacity = keyTable.length;
 						threshold = (int)(newSize * loadFactor);
 						mask = newSize - 1;
-						shift = BitConversion.countLeadingZeros((long)mask);
+						shift = BitConversion.countLeadingZeros(mask) + 32;
 
 //						// we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
 //						// for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.

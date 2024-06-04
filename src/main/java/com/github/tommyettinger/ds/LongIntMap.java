@@ -81,7 +81,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	protected int threshold;
 
 	/**
-	 * Used by {@link #place(long)} to bit shift the upper bits of a {@code long} into a usable range (&gt;= 0 and &lt;=
+	 * Used by {@link #place(long)} to bit shift the upper bits of an {@code int} into a usable range (&gt;= 0 and &lt;=
 	 * {@link #mask}). The shift can be negative, which is convenient to match the number of bits in mask: if mask is a 7-bit
 	 * number, a shift of -7 shifts the upper 7 bits into the lowest 7 positions. This class sets the shift &gt; 32 and &lt; 64,
 	 * which when used with an int will still move the upper bits of an int to the lower bits due to Java's implicit modulus on
@@ -144,7 +144,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = BitConversion.countLeadingZeros((long)mask);
+		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		keyTable = new long[tableSize];
 		valueTable = new int[tableSize];
@@ -583,7 +583,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = BitConversion.countLeadingZeros((long)mask);
+		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];
 		long[] oldKeyTable = keyTable;
@@ -614,19 +614,19 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size; this
 	 * is for specific advanced usage only. Calling resize() will change the multiplier before it gets used, and the current
 	 * {@link #size()} of the data structure also changes the value. The hash multiplier is used by {@link #place(long)}.
-	 * The hash multiplier must be an odd long, and should usually be "rather large." Here, that means the absolute value of
-	 * the multiplier should be at least a quadrillion or so (a million billions, or roughly {@code 0x4000000000000L}). The
+	 * The hash multiplier must be an odd int, and should usually be "rather large." Here, that means the absolute value of
+	 * the multiplier should be at least a billion or so (roughly {@code 0x40000000} in hex). The
 	 * only validation this does is to ensure the multiplier is odd; everything else is up to the caller. The hash multiplier
 	 * changes whenever {@link #resize(int)} is called, though its value before the resize affects its value after. Because
-	 * of how resize() randomizes the multiplier, even inputs such as {@code 1L} and {@code -1L} actually work well.
+	 * of how resize() randomizes the multiplier, even inputs such as {@code 1} and {@code -1} actually work well.
 	 * <br>
 	 * This is accessible at all mainly so serialization code that has a need to access the hash multiplier can do so, but
-	 * also to provide an "emergency escape route" in case of hash flooding. Using one of the "known good" longs in
+	 * also to provide an "emergency escape route" in case of hash flooding. Using one of the "known good" ints in
 	 * {@link Utilities#GOOD_MULTIPLIERS} should usually be fine if you don't know what multiplier will work well.
 	 * Be advised that because this has to call resize(), it isn't especially fast, and it slows
 	 * down the more items are in the data structure. If you in a situation where you are worried about hash flooding, you
 	 * also shouldn't permit adversaries to cause this method to be called frequently.
-	 * @param hashMultiplier any odd long; will not be used as-is
+	 * @param hashMultiplier any odd int; will not be used as-is
 	 */
 	public void setHashMultiplier (int hashMultiplier) {
 		this.hashMultiplier = hashMultiplier | 1;

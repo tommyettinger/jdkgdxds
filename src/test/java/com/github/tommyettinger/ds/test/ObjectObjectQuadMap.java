@@ -139,7 +139,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = BitConversion.countLeadingZeros((long)mask);
+		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		keyTable = (K[])new Object[tableSize];
 		valueTable = (V[])new Object[tableSize];
@@ -656,7 +656,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = BitConversion.countLeadingZeros((long)mask);
+		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		// we modify the hash multiplier by... basically it just needs to stay odd, and use 21 bits or fewer (for GWT reasons).
 		// we incorporate the size in here (times 2, so it doesn't make the multiplier even) to randomize things more.
