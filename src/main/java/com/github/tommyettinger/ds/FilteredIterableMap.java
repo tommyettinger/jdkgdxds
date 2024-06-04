@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.tommyettinger.function.ObjToSameFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -225,11 +226,11 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 		return this;
 	}
 
-	protected long hashHelper(I s) {
-		long hash = hashMultiplier;
+	protected int hashHelper(I s) {
+		int hash = hashMultiplier;
 		for (K c : s) {
 			if(filter.test(c)){
-				hash = (hash + editor.apply(c).hashCode()) * hashMultiplier;
+				hash = BitConversion.imul(hash + editor.apply(c).hashCode(), hashMultiplier);
 			}
 		}
 		return hash;
@@ -238,7 +239,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	@Override
 	protected int place (Object item) {
 		if (item instanceof Iterable) {
-			return (int)(hashHelper((I) item) >>> shift);
+			return hashHelper((I) item) >>> shift;
 		}
 		return super.place(item);
 	}
