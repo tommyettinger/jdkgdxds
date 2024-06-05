@@ -1,3 +1,9 @@
+[1.6.0]
+- [BREAKING] The protected hashMultiplier field is now an int instead of a long, and it is initialized differently. It also changes differently in resize().
+- [BREAKING, MAYBE] Utilities.GOOD_MULTIPLIERS is now an int array instead of a long array, with different contents. This array was unlikely to be used externally, but it is always possible.
+- All hash-based collections (maps and sets) now avoid math on longs if possible, because GWT is so slow with long math. This changes the iteration of sets and maps that aren't Ordered, but that iteration wasn't expected to be reliably-ordered anyway.
+- There is now an int-based Utilities.hashCodeIgnoreCase() in addition to a Utilities.longHashCodeIgnoreCase().
+
 [1.5.4]
 - [BREAKING, SORT OF] PrimitiveCollection.areEqual() was broken, apparently since it was created, and has either been removed where it wasn't properly applicable, or changed to equalContents() for set-like types.
 - Massive addition of toString() and related appendTo() code to nearly all classes here.
