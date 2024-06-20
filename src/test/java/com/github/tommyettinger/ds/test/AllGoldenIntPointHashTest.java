@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.IntIntOrderedMap;
+import com.github.tommyettinger.ds.IntSet;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -37,6 +38,18 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 547989
  * Lowest pileup     : 1
  * Highest pileup    : 14
+ * Adjusting the threshold to be much higher, and switching Point2.hashCode() to be what GridPoint2 uses:
+ * 121 problem multipliers in total, 391 likely good multipliers in total.
+ * Lowest collisions : 5212413
+ * Highest collisions: 6730145
+ * Lowest pileup     : 16
+ * Highest pileup    : 161
+ * With changing hm re-enabled, using (hm ^ hm >>> 17 ^ shift) & 511; :
+ * 168 problem multipliers in total, 344 likely good multipliers in total.
+ * Lowest collisions : 5217694
+ * Highest collisions: 6730266
+ * Lowest pileup     : 16
+ * Highest pileup    : 116
  */
 public class AllGoldenIntPointHashTest {
 
@@ -181,7 +194,14 @@ public class AllGoldenIntPointHashTest {
 //			GOLDEN_INTS[i] = (int)(MathTools.GOLDEN_LONGS[i] >>> 32) | 1;
 //		}
 		final Point2[] spiral = generatePointSpiral(LEN);
-		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
+		IntSet collisions = new IntSet(LEN);
+		for (int i = 0; i < LEN; i++) {
+			collisions.add(spiral[i].hashCode());
+		}
+		System.out.println(collisions.size() + "/" + LEN + " hashes are unique.");
+//		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));
+		final long THRESHOLD = (long)((double)LEN * (double) LEN / (0.125 * collisions.size()));
+
 //		IntLongOrderedMap problems = new IntLongOrderedMap(100);
 		final int[] problems = {0};
 		final int COUNT = 512;
@@ -233,9 +253,9 @@ public class AllGoldenIntPointHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-//						int index = (hm ^ hm >>> 17 ^ shift) & 511;
-//						chosen[index]++;
-//						hashMultiplier = hm = GOOD[index];
+						int index = (hm ^ hm >>> 17 ^ shift) & 511;
+						chosen[index]++;
+						hashMultiplier = hm = GOOD[index];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];

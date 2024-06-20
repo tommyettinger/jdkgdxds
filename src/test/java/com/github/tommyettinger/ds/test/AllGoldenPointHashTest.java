@@ -38,12 +38,32 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 673485
  * Lowest pileup     : 1
  * Highest pileup    : 25
+ * Adjusting the threshold to be much higher, and switching Point2.hashCode() to be what GridPoint2 uses:
+ * 122 problem multipliers in total, 390 likely good multipliers in total.
+ * Lowest collisions : 5212359
+ * Highest collisions: 6699761
+ * Lowest pileup     : 16
+ * Highest pileup    : 184
+ * With changing hm re-enabled, using (int)(hm >>> 48 + shift) & 511 :
+ * 168 problem multipliers in total, 344 likely good multipliers in total.
+ * Lowest collisions : 5215319
+ * Highest collisions: 6729779
+ * Lowest pileup     : 16
+ * Highest pileup    : 91
  */
 public class AllGoldenPointHashTest {
 
 	public static void main(String[] args) throws IOException {
 		final Point2[] spiral = generatePointSpiral(LEN);
-		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
+
+		IntSet collisions = new IntSet(LEN);
+		for (int i = 0; i < LEN; i++) {
+			collisions.add(spiral[i].hashCode());
+		}
+		System.out.println(collisions.size() + "/" + LEN + " hashes are unique.");
+//		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));
+		final long THRESHOLD = (long)((double)LEN * (double) LEN / (0.125 * collisions.size()));
+
 		final int[] problems = {0};
 		final int COUNT = 512;
 		LongIntOrderedMap good = new LongIntOrderedMap(512);
@@ -112,10 +132,10 @@ public class AllGoldenPointHashTest {
 //						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511]; // 0 problems, worst collisions nope
 
 //						hashMultiplier = LongUtilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
-//						int index = (int)(hm >>> 48 + shift) & 511;
-//						chosen[index]++;
-//						hashMultiplier = Utilities.GOOD_MULTIPLIERS[index];
-//						hm = LongUtilities.GOOD_MULTIPLIERS[index];
+						int index = (int)(hm >>> 48 + shift) & 511;
+						chosen[index]++;
+						hashMultiplier = Utilities.GOOD_MULTIPLIERS[index];
+						hm = LongUtilities.GOOD_MULTIPLIERS[index];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
