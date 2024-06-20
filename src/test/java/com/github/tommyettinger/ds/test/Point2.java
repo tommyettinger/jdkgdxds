@@ -61,28 +61,34 @@ public class Point2 {
 
 	@Override
 	public int hashCode () {
-//		int result = x;
-//		result = 31 * result + y;
-//		return result;
-		short x = (short)this.x;
-		short y = (short)this.y;
-
-		// Calculates a hash that won't overlap until very, very many Coords have been produced.
-		// the signs for x and y; each is either -1 or 0
-		int xs = this.x >> 31, ys = this.y >> 31;
-		// makes mx equivalent to -1 ^ this.x if this.x is negative; this means mx is never negative
-		int mx = this.x ^ xs;
-		// same for my; it is also never negative
-		int my = this.y ^ ys;
-		// Math.max can be branchless on modern JVMs, which may help if the Coord pool is expanded a lot or often.
-		final int max = Math.max(mx, my);
-		// imul uses * on most platforms, but instead uses the JS Math.imul() function on GWT
-		return  // Rosenberg-Strong pairing function; produces larger values in a "ripple" moving away from the origin
-				(max * max + max + mx - my)
-						// XOR with every odd-index bit of xs and every even-index bit of ys
-						// this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
-						^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)
-				;
-
+		final int prime = 53;
+		int result = 1;
+		result = prime * result + this.x;
+		result = prime * result + this.y;
+		return result;
 	}
+//
+//	@Override
+//	public int hashCode () {
+//		short x = (short)this.x;
+//		short y = (short)this.y;
+//
+//		// Calculates a hash that won't overlap until very, very many Coords have been produced.
+//		// the signs for x and y; each is either -1 or 0
+//		int xs = this.x >> 31, ys = this.y >> 31;
+//		// makes mx equivalent to -1 ^ this.x if this.x is negative; this means mx is never negative
+//		int mx = this.x ^ xs;
+//		// same for my; it is also never negative
+//		int my = this.y ^ ys;
+//		// Math.max can be branchless on modern JVMs, which may help if the Coord pool is expanded a lot or often.
+//		final int max = Math.max(mx, my);
+//		// imul uses * on most platforms, but instead uses the JS Math.imul() function on GWT
+//		return  // Rosenberg-Strong pairing function; produces larger values in a "ripple" moving away from the origin
+//				(max * max + max + mx - my)
+//						// XOR with every odd-index bit of xs and every even-index bit of ys
+//						// this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
+//						^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)
+//				;
+//
+//	}
 }

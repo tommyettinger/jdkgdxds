@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.IntIntOrderedMap;
+import com.github.tommyettinger.ds.IntSet;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -42,6 +43,18 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 619463
  * Lowest pileup     : 1
  * Highest pileup    : 65
+ * Adjusting the threshold to be much higher, and switching Point2.hashCode() to be what GridPoint2 uses:
+ * 108 problem multipliers in total, 404 likely good multipliers in total.
+ * Lowest collisions : 5212535
+ * Highest collisions: 6699757
+ * Lowest pileup     : 16
+ * Highest pileup    : 121
+ * With changing hm re-enabled, using (hm * shift >>> 5) & 511 :
+ * 231 problem multipliers in total, 281 likely good multipliers in total.
+ * Lowest collisions : 5231727
+ * Highest collisions: 5692089
+ * Lowest pileup     : 16
+ * Highest pileup    : 16
  */
 public class AllGoldenSmallPointHashTest {
 
@@ -120,8 +133,15 @@ public class AllGoldenSmallPointHashTest {
 //			GOLDEN_INTS[i] = (int)(MathTools.GOLDEN_LONGS[i] >>> 32) | 1;
 //		}
 		final Point2[] spiral = generatePointSpiral(LEN);
-		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
-//		IntLongOrderedMap problems = new IntLongOrderedMap(100);
+
+		IntSet collisions = new IntSet(LEN);
+		for (int i = 0; i < LEN; i++) {
+			collisions.add(spiral[i].hashCode());
+		}
+		System.out.println(collisions.size() + "/" + LEN + " hashes are unique.");
+//		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));
+		final long THRESHOLD = (long)((double)LEN * (double) LEN / (0.125 * collisions.size()));
+
 		final int[] problems = {0};
 		final int COUNT = 512;//GOOD.length;
 		IntIntOrderedMap good = new IntIntOrderedMap(COUNT);
@@ -173,9 +193,9 @@ public class AllGoldenSmallPointHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-//						int index = (hm * shift >>> 5) & 511;
-//						chosen[index]++;
-//						hashMultiplier = hm = GOOD[index];
+						int index = (hm * shift >>> 5) & 511;
+						chosen[index]++;
+						hashMultiplier = hm = GOOD[index];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
