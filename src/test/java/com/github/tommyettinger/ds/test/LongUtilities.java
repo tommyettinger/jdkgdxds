@@ -17,20 +17,18 @@
 
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.ObjectSet;
-
 /**
- * Utility code shared by various data structures in this package.
+ * A variant on {@link com.github.tommyettinger.ds.Utilities} that uses long instead of int multipliers.
  *
  * @author Tommy Ettinger
  */
 public final class LongUtilities {
 	/**
 	 * A final array of 512 long multipliers that have been tested to work on at least some large
-	 * input sets without excessively high collision rates. The initial value passed to a
-	 * {@link ObjectSet#setHashMultiplier(long)} method (on any hashed data structure here) is used
+	 * input sets without excessively high collision rates. The initial value passed to an older
+	 * setHashMultiplier(long) method (on any hashed data structure here) was used
 	 * to choose one of these based on that long value (actually 11 of its middle bits). All hashed
-	 * data structures here currently start with a multiplier of 0xD1B54A32D192ED03L, which is not
+	 * data structures here started with a multiplier of 0xD1B54A32D192ED03L, which is not
 	 * in this array by default, but is still a pretty good multiplier.
 	 * <br>
 	 * You can mutate this array, but you should only do so if you encounter high collision rates or
