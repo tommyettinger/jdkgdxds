@@ -50,6 +50,18 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 6729779
  * Lowest pileup     : 16
  * Highest pileup    : 91
+ * With changing hm re-enabled, using (int)(hm * shift >>> 10) & 511 :
+ * 267 problem multipliers in total, 245 likely good multipliers in total.
+ * Lowest collisions : 5218683
+ * Highest collisions: 6445984
+ * Lowest pileup     : 16
+ * Highest pileup    : 103
+ * With changing hm re-enabled, using (int)(hm * shift >>> 5) & 511 :
+ * 254 problem multipliers in total, 258 likely good multipliers in total.
+ * Lowest collisions : 5218487
+ * Highest collisions: 6697191
+ * Lowest pileup     : 16
+ * Highest pileup    : 62
  */
 public class AllGoldenPointHashTest {
 
@@ -132,7 +144,9 @@ public class AllGoldenPointHashTest {
 //						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511]; // 0 problems, worst collisions nope
 
 //						hashMultiplier = LongUtilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
-						int index = (int)(hm >>> 48 + shift) & 511;
+//						int index = (int)(hm >>> 48 + shift) & 511;
+//						int index = (int)(hm * shift >>> 10) & 511;
+						int index = (int)(hm * shift >>> 5) & 511;
 						chosen[index]++;
 						hashMultiplier = Utilities.GOOD_MULTIPLIERS[index];
 						hm = LongUtilities.GOOD_MULTIPLIERS[index];

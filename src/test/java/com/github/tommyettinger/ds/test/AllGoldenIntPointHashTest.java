@@ -44,12 +44,18 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 6730145
  * Lowest pileup     : 16
  * Highest pileup    : 161
- * With changing hm re-enabled, using (hm ^ hm >>> 17 ^ shift) & 511; :
+ * With changing hm re-enabled, using (hm ^ hm >>> 17 ^ shift) & 511 :
  * 168 problem multipliers in total, 344 likely good multipliers in total.
  * Lowest collisions : 5217694
  * Highest collisions: 6730266
  * Lowest pileup     : 16
  * Highest pileup    : 116
+ * With changing hm re-enabled, using BitConversion.imul(hm, shift) >>> 5 & 511 :
+ * 97 problem multipliers in total, 415 likely good multipliers in total.
+ * Lowest collisions : 5267486
+ * Highest collisions: 5749688
+ * Lowest pileup     : 16
+ * Highest pileup    : 78
  */
 public class AllGoldenIntPointHashTest {
 
@@ -253,7 +259,8 @@ public class AllGoldenIntPointHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-						int index = (hm ^ hm >>> 17 ^ shift) & 511;
+//						int index = (hm ^ hm >>> 17 ^ shift) & 511;
+						int index = BitConversion.imul(hm, shift) >>> 5 & 511;
 						chosen[index]++;
 						hashMultiplier = hm = GOOD[index];
 						Object[] oldKeyTable = keyTable;
