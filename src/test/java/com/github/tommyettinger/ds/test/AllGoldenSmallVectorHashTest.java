@@ -1,0 +1,355 @@
+/*
+ * Copyright (c) 2022 See AUTHORS file.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package com.github.tommyettinger.ds.test;
+
+import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.IntIntOrderedMap;
+import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.support.sort.IntComparators;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.io.IOException;
+
+import static com.github.tommyettinger.ds.test.PileupTest.LEN;
+import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
+
+/**
+ * (NO CHANGE)
+ * 0 problem multipliers in total, 1024 likely good multipliers in total.
+ * Lowest collisions : 603111
+ * Highest collisions: 619681
+ * Lowest pileup     : 15
+ * Highest pileup    : 17
+ * (CHANGE WITH (hm ^ hm >>> 17 ^ shift) & 511)
+ * 0 problem multipliers in total, 1024 likely good multipliers in total.
+ * Lowest collisions : 604389
+ * Highest collisions: 618037
+ * Lowest pileup     : 15
+ * Highest pileup    : 21
+ * (CHANGE WITH (hm ^ hm >>> 9 ^ shift) & 511)
+ * 0 problem multipliers in total, 1024 likely good multipliers in total.
+ * Lowest collisions : 603173
+ * Highest collisions: 619681
+ * Lowest pileup     : 15
+ * Highest pileup    : 21
+ * (CHANGE WITH (hm ^ hm >>> 10 ^ shift) & 511)
+ * 0 problem multipliers in total, 1024 likely good multipliers in total.
+ * Lowest collisions : 603139
+ * Highest collisions: 617361
+ * Lowest pileup     : 15
+ * Highest pileup    : 19
+ * (CHANGE WITH (hm ^ hm >>> 11 ^ shift) & 511)
+ * 0 problem multipliers in total, 1024 likely good multipliers in total.
+ * Lowest collisions : 603319
+ * Highest collisions: 619369
+ * Lowest pileup     : 15
+ * Highest pileup    : 21
+ * (CHANGE WITH (hm ^ hm >>> 12 ^ shift) & 511)
+ * 0 problem multipliers in total, 1024 likely good multipliers in total.
+ * Lowest collisions : 603215
+ * Highest collisions: 619369
+ * Lowest pileup     : 15
+ * Highest pileup    : 21
+ * (CHANGE WITH (hm ^ hm >>> 13 ^ shift) & 511)
+ * 0 problem multipliers in total, 1024 likely good multipliers in total.
+ * Lowest collisions : 603287
+ * Highest collisions: 618189
+ * Lowest pileup     : 15
+ * Highest pileup    : 21
+ * <br>
+ * Limiting to 512 ints:
+ * (CHANGE WITH (hm ^ hm >>> 10 ^ shift) & 511)
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 603139
+ * Highest collisions: 617361
+ * Lowest pileup     : 15
+ * Highest pileup    : 19
+ */
+public class AllGoldenSmallVectorHashTest {
+
+	public static void main(String[] args) throws IOException {
+		final int[] GOOD = new int[]{
+				0x00197D75, 0x001F6AE3, 0x0006F5F3, 0x001C4C3D, 0x001AD501, 0x000D36F9, 0x0012D2B7, 0x001A0E77,
+				0x000AB569, 0x00114C3D, 0x0016CC3D, 0x000348A3, 0x0002F571, 0x0009C255, 0x000DF571, 0x000DFD75,
+				0x000B1E47, 0x001254FF, 0x000F52B7, 0x00150E77, 0x000C5205, 0x000B7D75, 0x0017D5EB, 0x0015EAE3,
+				0x001A4987, 0x00012207, 0x0002E173, 0x001FA119, 0x001A7B2F, 0x00116CE9, 0x000214D9, 0x000B85C7,
+				0x000CC255, 0x00102DC3, 0x00020427, 0x0001A649, 0x000D7B2F, 0x0010D2B7, 0x000694D9, 0x001865D5,
+				0x00073B83, 0x0004D4FF, 0x0018EAE3, 0x0013F5F3, 0x0016E5D5, 0x000765D5, 0x0003B6F9, 0x000AD4FF,
+				0x000B8E77, 0x0000D339, 0x0005ADC3, 0x00114C17, 0x001FE173, 0x0011ADC3, 0x000BC057, 0x001A52B7,
+				0x00130427, 0x00165205, 0x001FBCA7, 0x000EFB2F, 0x000BD4FF, 0x000B55EB, 0x0001B569, 0x001CA649,
+				0x00163713, 0x000DB569, 0x00018427, 0x00075501, 0x000C3B83, 0x000B4987, 0x001265D5, 0x000914D9,
+				0x001854FF, 0x0007C8D7, 0x0014D5EB, 0x00087571, 0x0002AA37, 0x001714D9, 0x00016173, 0x0008D2B7,
+				0x0012BB83, 0x001F7BB3, 0x0003A119, 0x0002C8D7, 0x0008C057, 0x0001E8E7, 0x00065205, 0x00024057,
+				0x001C14D9, 0x0010C8A3, 0x0006F6F7, 0x001E0E77, 0x00182649, 0x00013713, 0x0001F5F3, 0x0016CC17,
+				0x000BB569, 0x001ACC17, 0x0011FBB3, 0x0000F6F7, 0x0016FD75, 0x001BAA37, 0x0015B713, 0x000F2207,
+				0x0012A649, 0x000F5501, 0x00050415, 0x0009D501, 0x0001CC17, 0x001AA649, 0x0002C8A3, 0x001D1E47,
+				0x0010ECE9, 0x001548A3, 0x000D7D75, 0x000DADC3, 0x00014C3D, 0x0012C987, 0x0008C4BF, 0x00084057,
+				0x000750DB, 0x0019D0DB, 0x001B7571, 0x001D2DC3, 0x00153569, 0x001365D5, 0x000C1E47, 0x0006B569,
+				0x000DEA89, 0x0015D205, 0x000CD501, 0x0000C2E5, 0x00105339, 0x001D42E5, 0x001FC057, 0x000568E7,
+				0x000F2649, 0x000B0415, 0x0018CC17, 0x000D48A3, 0x000052B7, 0x000DD501, 0x0009D0DB, 0x00060415,
+				0x00043B83, 0x001848D7, 0x0007F6F7, 0x0014C987, 0x0016CD59, 0x0005BCA7, 0x00138427, 0x00024987,
+				0x001A8427, 0x001C42E5, 0x000B0427, 0x00035339, 0x000A6173, 0x001BCC3D, 0x000D4EC9, 0x000E94D9,
+				0x001A4C3D, 0x001D65D5, 0x0018E8E7, 0x001D5205, 0x000FEAE3, 0x00098427, 0x000FD5EB, 0x0000E173,
+				0x0017E5D5, 0x000D2119, 0x0019A207, 0x001955EB, 0x001F2207, 0x00010427, 0x001DFD75, 0x00104D59,
+				0x0012B713, 0x001FE8E7, 0x001EF6F7, 0x00104C17, 0x0019C057, 0x00168415, 0x001A48D7, 0x0011A649,
+				0x001BA207, 0x000DAA37, 0x001355EB, 0x000DC057, 0x000952B7, 0x0015AA37, 0x001F9497, 0x001C52B7,
+				0x001F85C7, 0x0003C8A3, 0x000CE5D5, 0x000FB713, 0x00037B2F, 0x0000EA89, 0x001BD0DB, 0x000CC057,
+				0x000AF571, 0x00112DC3, 0x0014C4BF, 0x00062A37, 0x001DC8A3, 0x0001D205, 0x000B48A3, 0x00084987,
+				0x001DE173, 0x001950DB, 0x0012F571, 0x00076AE3, 0x0005D5EB, 0x00093B83, 0x00064C3D, 0x0019B6F9,
+				0x000FD2B7, 0x00135501, 0x001442E5, 0x000CD205, 0x000EA649, 0x000F8427, 0x000014D9, 0x001155EB,
+				0x000B9497, 0x00094EC9, 0x001594D9, 0x00027D75, 0x001EE5D5, 0x00042119, 0x0001AA37, 0x000A4987,
+				0x000F5205, 0x001C5501, 0x000C9497, 0x001BC2E5, 0x000C55EB, 0x000FD4FF, 0x000B6AE3, 0x0013B6F9,
+				0x000848A3, 0x00022207, 0x00084C17, 0x0000CC3D, 0x001D52B7, 0x00114D59, 0x001ACEC9, 0x00047B2F,
+				0x000A2119, 0x00051E47, 0x000C48D7, 0x0013FD75, 0x001055EB, 0x001CD205, 0x00127BB3, 0x0016B569,
+				0x0012BCA7, 0x0015ADC3, 0x001A8415, 0x0008FBB3, 0x0009ECE9, 0x000A42E5, 0x001F3713, 0x00130E77,
+				0x00005339, 0x0001ADC3, 0x00150427, 0x0019EA89, 0x0003A649, 0x001E1497, 0x000BCC17, 0x000CD0DB,
+				0x000B4255, 0x0019FB2F, 0x001DD2B7, 0x000AD0DB, 0x000EAA37, 0x00146173, 0x00172119, 0x001DA207,
+				0x00086173, 0x0003D501, 0x001B85C7, 0x000E85C7, 0x00044057, 0x0014E8E7, 0x000FFB2F, 0x000AC987,
+				0x001A2119, 0x00021497, 0x00044255, 0x00078427, 0x000C52B7, 0x00074EC9, 0x00164987, 0x0004ECE9,
+				0x001D2207, 0x0012CC3D, 0x00192207, 0x0006CC3D, 0x00103713, 0x00134C3D, 0x000E3569, 0x0014C057,
+				0x0011E173, 0x00182A37, 0x0019C987, 0x00197B2F, 0x00195501, 0x001DC987, 0x000AF5F3, 0x0010FBB3,
+				0x001905C7, 0x00077571, 0x000FF6F7, 0x000314D9, 0x0005E8E7, 0x00145501, 0x0017CEC9, 0x0017D205,
+				0x000F85C7, 0x001F4EC9, 0x001876F7, 0x001DCEC9, 0x0007C987, 0x000942E5, 0x000BF571, 0x000442E5,
+				0x000E50DB, 0x001344BF, 0x00108E77, 0x001AB713, 0x00034987, 0x00180427, 0x000585C7, 0x0002B6F9,
+				0x0008F571, 0x00024EC9, 0x001FCDD1, 0x00014DD1, 0x001FC7FB, 0x001B136F, 0x0009C7FB, 0x00110B4F,
+				0x0016D71B, 0x0009CDD1, 0x0010CDD1, 0x000F0B4F, 0x0012C7FB, 0x00188B4F, 0x000547FB, 0x001AC7FB,
+				0x000647FB, 0x0018936F, 0x0008CDD1, 0x0014936F, 0x0019136F, 0x0007936F, 0x001DC7FB, 0x0014571B,
+				0x000E936F, 0x0004936F, 0x001B0B4F, 0x001DD71B, 0x0011CDD1, 0x0015C7FB, 0x000C4DD1, 0x0004571B,
+				0x0013571B, 0x000E4DD1, 0x00148B4F, 0x001D136F, 0x000C8B4F, 0x0001571B, 0x001E136F, 0x001C571B,
+				0x000747FB, 0x000CC7FB, 0x0014548F, 0x001A2AA9, 0x00118A27, 0x00101A2D, 0x000514C9, 0x001EF7C7,
+				0x00164ED1, 0x001A0EB9, 0x001E0CAF, 0x001FC43F, 0x000C00F5, 0x000F77C7, 0x000CD0CD, 0x000A14D1,
+				0x0012EAF1, 0x0006CAB9, 0x000C98E1, 0x00011663, 0x0005CBF3, 0x001AB53D, 0x00137C2F, 0x001438A1,
+				0x000F5DB3, 0x001CE795, 0x001A741B, 0x001AE9E7, 0x001040CF, 0x001D7E5D, 0x00081CB1, 0x000B6F35,
+				0x0004A781, 0x000EBF25, 0x00195695, 0x001BCB61, 0x001DF667, 0x00098BD7, 0x0010AC31, 0x001EF46B,
+				0x001DF7C7, 0x0000E53B, 0x001D0A5D, 0x0010F71F, 0x000F0475, 0x001F10DF, 0x00139CEB, 0x00102733,
+				0x0017D14F, 0x0001409D, 0x0007D7F3, 0x0011357D, 0x001BF855, 0x000937AD, 0x001470FD, 0x000B3DE1,
+				0x001C9C89, 0x0007A781, 0x0018E671, 0x00022A4F, 0x0008548F, 0x000D38A1, 0x000E00C9, 0x00028D31,
+				0x001D66FF, 0x00039F61, 0x000BFDE7, 0x0010F17B, 0x00023DE1, 0x00164B83, 0x000EDD93, 0x00138D13,
+				0x0012765B, 0x0019D823, 0x0007AB3F, 0x0019C7D7, 0x0008773B, 0x0012CC4F, 0x0006E53B, 0x00031FAD,
+				0x0009443F, 0x0015E81D, 0x000439B5, 0x000B35F7, 0x00179D2F, 0x0019A733, 0x00014BA7, 0x0018FC4F,
+				0x001D40FB, 0x0000286B, 0x001D653D, 0x00157861, 0x00138B11, 0x0012BD63, 0x0016AC31, 0x001F6795,
+				0x00022BC5, 0x00166795, 0x0012548F, 0x000AF8A9, 0x0015B873, 0x0017746B, 0x000A2AA9, 0x00088A73,
+				0x0014AC31, 0x00031F61, 0x0010653B, 0x000E5D93, 0x001514D1, 0x001A66F1, 0x001A3D49, 0x000B186F,
+				0x0017BB2B, 0x0014A2DD, 0x00152C2F, 0x000A66FF, 0x0007C54B, 0x001CBF25, 0x000C0A5D, 0x001EBA91,
+				0x000A98C5, 0x0015DD93, 0x001E5D43, 0x000F10DF, 0x00052807, 0x000B70FD, 0x00018615, 0x0005F855,
+				0x000A02C5, 0x000DBA8D, 0x0001F029, 0x00078A73, 0x0019B7AD, 0x001347D7, 0x001F44F1, 0x001970D5,
+				0x00040BD7, 0x001D277D, 0x0003147F, 0x0018D75F, 0x0012D93D, 0x000898E1, 0x001861B5, 0x001EDBE9,
+				0x000C0711, 0x0015CED1, 0x0008A005, 0x0003765B, 0x001E4BF3, 0x00004B61, 0x0016A005, 0x0004AC31,
+				0x00197E5D, 0x0015C2EF, 0x0003147B, 0x001EF855, 0x000AE073, 0x001E7949, 0x000C66FF, 0x000294D1,
+				0x0018F17B, 0x0012CB83, 0x001F66FF, 0x000E7E5D, 0x000B9909, 0x00009455, 0x001E773B, 0x00093691,
+				0x000EE2D3, 0x0007BDE1, 0x0017D40F, 0x00199407, 0x0003E9E7, 0x0008A2DD, 0x0018D2E5, 0x001E14D1,
+				0x00132633, 0x000C4455, 0x00010129, 0x000052E5, 0x00124B83, 0x000ADD93, 0x001AC641, 0x0004EC45,
+				0x0019454B, 0x0019453F, 0x00002005, 0x000361B5, 0x00177E5D, 0x0019ED47, 0x000F0657, 0x000C101B,
+				0x000A7855, 0x0018BDE1, 0x0019C7BD, 0x0010D14F, 0x00097667, 0x00161ABB, 0x000142EF, 0x0016D40F,
+				0x00086691, 0x001E409D, 0x000879F7, 0x000B7C2F, 0x00075D93, 0x000FBA63, 0x000347BD, 0x00045DB3,
+				0x0015B5F7, 0x0000B691, 0x0002C3BF, 0x001EB57D, 0x001D9ABB, 0x000244F1, 0x001147D7, 0x0007FDE7,
+				0x001898C5, 0x000BBA63, 0x000C6795, 0x001DE1B5, 0x001B979F, 0x0018C3AD, 0x0007F8AD, 0x000DA2DD,
+				0x0009B873, 0x0019433D, 0x000547D7, 0x001ED4D5, 0x00110EB9, 0x0002B8A1, 0x0015E6F1, 0x00079455,
+				0x0000357D, 0x000FAC31, 0x00123FE1, 0x001898E1, 0x000FA719, 0x0010BD63, 0x001B61B5, 0x000BA781,
+				0x000F917B, 0x00041471, 0x00084B83, 0x00168657, 0x0015231F, 0x001DB691, 0x00197667, 0x00123943,
+				0x0010B671, 0x000BEC85, 0x001DFE5D, 0x001F70D5, 0x000270FD, 0x00157B81, 0x001AC2EF, 0x001AF0FD,
+				0x001EED47, 0x001D575F, 0x00026EEB, 0x00058A27, 0x000D535F, 0x001054D5, 0x00184729, 0x00165307,
+				0x000F1ABB, 0x000D3671, 0x0010765B, 0x0018D2D1, 0x000924FB, 0x000E231F, 0x001D8711, 0x001D9663,
+				0x0014504F, 0x00030A73, 0x00050D31, 0x001C3691, 0x0009504F, 0x0017E6FF, 0x001B2C2F, 0x0013A4D9,
+				0x000754D5, 0x001C540F, 0x0007AAA9, 0x001A8BD7, 0x001DF41B, 0x000CF46B, 0x000ECC4F, 0x001A277D,
+				0x000852E5, 0x0012F0FB, 0x000E504F, 0x000ACBF3, 0x00171909, 0x0019762B, 0x0005231F, 0x001870FB,
+				0x0003C4F1, 0x0018B5F7, 0x0013504F, 0x000E2719, 0x00072C31, 0x000D2535, 0x000E746B, 0x0016BA91,
+				0x000BC7BD, 0x00093873, 0x000BD2E5, 0x0000AB3F, 0x0006433D, 0x001EAAA9, 0x000A37AD, 0x001CF46B,
+				0x0002D48F, 0x001798C5, 0x00042447, 0x0013F645, 0x0007CBF3, 0x0008409D, 0x001CFB81, 0x000FA005,
+				0x000835F7, 0x0000F73B, 0x00024ED1, 0x0013EE51, 0x001F4AB9, 0x00107741, 0x000CA77D, 0x0006E073,
+				0x0017645B, 0x000F6C45, 0x00103EBD, 0x0001BB2B, 0x00052D03, 0x00011CEB, 0x0017C4F1, 0x000A2D79,
+				0x001ADE51, 0x0009540F, 0x000BF71F, 0x001FF739, 0x0017ED47, 0x000C2B3F, 0x00083D49, 0x000FFDE7,
+				0x001EF8AD, 0x0013548F, 0x001FA447, 0x00167C99, 0x001589B9, 0x001AB2B5, 0x001629ED, 0x0017DD43,
+				0x0017946F, 0x00155BE9, 0x000F2807, 0x0000593D, 0x00112719, 0x000D0475, 0x0018548F, 0x0015653D,
+				0x00051909, 0x00145C17, 0x000DE671, 0x0007DB3B, 0x001CF38B, 0x0016179F, 0x001F0D31, 0x001C8D13,
+				0x0015B96B, 0x0005C3BF, 0x00066EEB, 0x00015307, 0x00197C4F, 0x001F9C89, 0x0004F0FD, 0x00193A71,
+				0x000BF029, 0x00029A8F, 0x001AF65B, 0x001A946F, 0x00136AF1, 0x0010E073, 0x0010A77D, 0x0011D4D5,
+				0x00199FAD, 0x00007861, 0x00013D63, 0x000C4729, 0x0000762B, 0x00070D31, 0x0001BEB1, 0x0014F17B,
+				0x0019EC85, 0x0019F0FD, 0x00107861, 0x0012231F, 0x000E40FB, 0x0001CAB9, 0x001B3873, 0x000D40FB,
+				0x001E3FE1, 0x000D442D, 0x000B4B61, 0x00163D49, 0x00181407, 0x001B2EFB, 0x00012719, 0x001DE6FF,
+				0x001902ED, 0x0010A94B, 0x0003C3C3, 0x000E9921, 0x00033D49, 0x0008C53F, 0x001FE45B, 0x0006DE51,
+				0x0010E6FF, 0x0015E691, 0x000D3A91, 0x0017A535, 0x0010F8A9, 0x00081CEB, 0x0016F46B, 0x0008A535,
+				0x000EDD43, 0x000B9F61, 0x001F8129, 0x00003FE1, 0x00151921, 0x0011573F, 0x0003850F, 0x000E8D13,
+				0x001E277D, 0x0010FC99, 0x0013C4F1, 0x0010653D, 0x0003A9ED, 0x00077645, 0x001E3A71, 0x000F3A71,
+				0x001F8615, 0x000FBDE1, 0x0018E4EF, 0x00183691, 0x001852D1, 0x000E8BD7, 0x0016AEFB, 0x000C4B83,
+				0x0018B96B, 0x0006BEA9, 0x00102C2F, 0x000B146F, 0x000D117B, 0x000D8087, 0x00118A73, 0x0000EC45,
+				0x000BF8AD, 0x000AB53D, 0x001339E7, 0x000DC33D, 0x001B6F35, 0x0009106B, 0x0013946F, 0x0000D7F3,
+				0x000D5A5D, 0x00072AA9, 0x0007627B, 0x000A5F23, 0x000A47BD, 0x0006EE51, 0x0001F949, 0x00004641,
+				0x00074B83, 0x00007949, 0x0006F0FB, 0x0014653B, 0x001D3691, 0x001F97AB, 0x0015C3C3, 0x000C0D3B,
+				0x00162A4F, 0x001C0B11, 0x0003B28F, 0x0008EAF1, 0x0008EED3, 0x000AED47, 0x001710DF, 0x0013B671,
+				0x00015C17, 0x00157029, 0x0014771F, 0x0003A4D9, 0x001C2633, 0x001C901B, 0x000FA77D, 0x00020E6D,
+				0x0014A535, 0x0006A447, 0x00065C17, 0x000638A1, 0x00194455, 0x000A2C7D, 0x0006901B, 0x00159ABB,
+				0x000A6C45, 0x0017EAF1, 0x000242EF, 0x000C1A8F, 0x00022C7D, 0x000C2447, 0x000A7861, 0x0001E691,
+				0x000C6691, 0x001DB279, 0x00073EB1, 0x0011C2EF, 0x00149CEB, 0x001B8B11, 0x000002C5, 0x000DA9ED,
+				0x0001294B, 0x000A2733, 0x000B746B, 0x001E5B3B, 0x000482C5, 0x0011DB3B, 0x001F1D2F, 0x00030EB9,
+				0x001C3A8D, 0x00067E5D, 0x0001EC45, 0x00170D13, 0x0009146F, 0x0016E27B, 0x000262D3, 0x0019BB89,
+				0x001A8129, 0x001E6C45, 0x00023A71, 0x001B43BF, 0x0010B691, 0x00079A8F, 0x0005A807, 0x001CF741,
+				0x00032A4F, 0x001A396B, 0x001BD8BB, 0x00021471, 0x0014FC2F, 0x000A5307, 0x0011B691, 0x000617AB,
+				0x0001EF35, 0x000D43AD, 0x00042633, 0x001D186F, 0x00051921, 0x000AD8BB, 0x000BF62B, 0x00175D4B,
+				0x001A18E1, 0x000DFC99, 0x001DBD63, 0x00160087, 0x00198EB9, 0x000B7025, 0x00124729, 0x001CB691,
+				0x001D1455, 0x000EF949, 0x001F3A71, 0x000A50CD, 0x000C43C3, 0x0018B8A1, 0x0018C53F, 0x001FBA71,
+				0x0009F0D5, 0x00171921, 0x0010645B, 0x000802ED, 0x000BDD43, 0x000824FB, 0x00092A4F, 0x0011B8A1,
+				0x001709B9, 0x00166AF1, 0x001F3943, 0x0016979F, 0x0010B873, 0x001C277D, 0x00112807, 0x001A10DF,
+				0x001C454B, 0x0002BFE1, 0x001CC0FB, 0x00067025, 0x0000A77D, 0x0011F645, 0x001F2535, 0x001494C9,
+				0x00081407, 0x001AE691, 0x000C0E6D, 0x00059407, 0x0001F0D5, 0x001AF645, 0x00163943, 0x0004E9E7,
+				0x0010C09D, 0x000C901B, 0x0014CB61, 0x00010657, 0x00134C4F, 0x0000A4D9, 0x001BF8AD, 0x0006F741,
+				0x00155DB3, 0x0013947F, 0x000AF861, 0x00168D3B, 0x001C294B, 0x00003691, 0x0008ED47, 0x00069ABB,
+				0x0015CBF3, 0x000CFC2F, 0x0018681D, 0x00129FAD, 0x00161F61, 0x001717AB, 0x00135307, 0x000D2633,
+				0x0009B96B, 0x0015AD79, 0x0018E53B, 0x000CCB61, 0x00025A5D, 0x00117B81, 0x001227CB, 0x000E6C45,
+				0x00151663, 0x001AD695, 0x00033A8D, 0x001F6F35, 0x0009F0FB, 0x001FC641, 0x000C0A27, 0x0002E2D3,
+		};
+
+
+//		int[] GOLDEN_INTS = new int[MathTools.GOLDEN_LONGS.length];
+//		for (int i = 0; i < GOLDEN_INTS.length; i++) {
+//			GOLDEN_INTS[i] = (int)(MathTools.GOLDEN_LONGS[i] >>> 32) | 1;
+//		}
+		final Vector2[] spiral = generateVectorSpiral(LEN);
+		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
+//		IntLongOrderedMap problems = new IntLongOrderedMap(100);
+		final int[] problems = {0};
+		IntIntOrderedMap good = new IntIntOrderedMap(GOOD.length);
+		for (int x = 0; x < GOOD.length; x++) {
+			good.put(GOOD[x], 0);
+		}
+//		int[] GOLDEN_INTS = good.keySet().toArray();
+		int[] GOLDEN_INTS = GOOD;
+		final int COUNT = 512;//GOLDEN_INTS.length;
+		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
+		short[] chosen = new short[512];
+		for (int a = 0; a < COUNT; a++) {
+			final int g = GOLDEN_INTS[a];
+			{
+				final int finalA = a;
+				ObjectSet set = new ObjectSet(51, 0.6f) {
+					long collisionTotal = 0;
+					int longestPileup = 0;
+					int hm = 0x17AD97;//0xF1042721;// 0x9E3779B7;
+
+					@Override
+					protected int place (Object item) {
+//						final int h = BitConversion.imul(item.hashCode(), hm);
+//						return (h ^ h << 16) >>> shift;
+//						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS
+//						final int h = item.hashCode();
+//						return BitConversion.imul(h ^ h >>> 16, hm) >>> shift;
+						return item.hashCode() * hm >>> shift;
+					}
+
+					@Override
+					protected void addResize (@NonNull Object key) {
+						Object[] keyTable = this.keyTable;
+						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
+							if (keyTable[i] == null) {
+								keyTable[i] = key;
+								return;
+							} else {
+								collisionTotal++;
+								longestPileup = Math.max(longestPileup, ++p);
+								good.put(g, longestPileup);
+							}
+						}
+					}
+
+					@Override
+					protected void resize (int newSize) {
+						int oldCapacity = keyTable.length;
+						threshold = (int)(newSize * loadFactor);
+						mask = newSize - 1;
+						shift = BitConversion.countLeadingZeros(mask) + 32;
+
+						int index = (hm ^ hm >>> 10 ^ shift) & 511;
+						chosen[index]++;
+						hashMultiplier = hm = GOOD[index];
+						Object[] oldKeyTable = keyTable;
+
+						keyTable = new Object[newSize];
+
+						collisionTotal = 0;
+						longestPileup = 0;
+
+						if (size > 0) {
+							for (int i = 0; i < oldCapacity; i++) {
+								Object key = oldKeyTable[i];
+								if (key != null) {addResize(key);}
+							}
+						}
+						if (collisionTotal > THRESHOLD) {
+//							System.out.printf("  WHOOPS!!!  Multiplier %08X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
+							problems[0]++;
+//							good.remove(g);
+							throw new RuntimeException();
+						}
+					}
+
+					@Override
+					public void clear () {
+						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
+						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+						minMax[0] = Math.min(minMax[0], collisionTotal);
+						minMax[1] = Math.max(minMax[1], collisionTotal);
+						minMax[2] = Math.min(minMax[2], longestPileup);
+						minMax[3] = Math.max(minMax[3], longestPileup);
+						super.clear();
+					}
+
+					@Override
+					public void setHashMultiplier (int hashMultiplier) {
+						this.hashMultiplier = hashMultiplier | 1;
+						hm = this.hashMultiplier;
+						resize(keyTable.length);
+					}
+				};
+				set.setHashMultiplier(g);
+				try {
+					for (int i = 0, n = spiral.length; i < n; i++) {
+						set.add(spiral[i]);
+					}
+				}catch (RuntimeException ignored){
+					System.out.println(g + " FAILURE");
+					continue;
+				}
+				set.clear();
+			}
+		}
+		System.out.println("This used a threshold of " + THRESHOLD);
+		System.out.println("Indices used: ");
+		for (int y = 0, idx = 0; y < 32; y++) {
+			for (int x = 0; x < 16; x++) {
+				System.out.print(Base.BASE16.unsigned(chosen[idx++]) + " ");
+			}
+			System.out.println();
+		}
+		good.sortByValue(IntComparators.NATURAL_COMPARATOR);
+
+		System.out.println("\n\nint[] GOOD_MULTIPLIERS = new int[]{");
+		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
+			System.out.print("0x"+Base.BASE16.unsigned(good.keyAt(i))+"=0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
+			if((i & 7) == 7)
+				System.out.println();
+		}
+		System.out.println("};\n");
+		System.out.println(problems[0] + " problem multipliers in total, " + (COUNT - problems[0]) + " likely good multipliers in total.");
+		System.out.println("Lowest collisions : " + minMax[0]);
+		System.out.println("Highest collisions: " + minMax[1]);
+		System.out.println("Lowest pileup     : " + minMax[2]);
+		System.out.println("Highest pileup    : " + minMax[3]);
+	}
+
+}
