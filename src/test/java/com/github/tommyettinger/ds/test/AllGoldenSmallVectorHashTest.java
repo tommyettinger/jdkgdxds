@@ -74,12 +74,19 @@ import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
  * Highest pileup    : 21
  * <br>
  * Limiting to 512 ints:
+ * <br>
  * (CHANGE WITH (hm ^ hm >>> 10 ^ shift) & 511)
  * 0 problem multipliers in total, 512 likely good multipliers in total.
  * Lowest collisions : 603139
  * Highest collisions: 617361
  * Lowest pileup     : 15
  * Highest pileup    : 19
+ * (CHANGE WITH (hm * shift >>> 5) & 511)
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 604485
+ * Highest collisions: 605385
+ * Lowest pileup     : 15
+ * Highest pileup    : 17
  */
 public class AllGoldenSmallVectorHashTest {
 
@@ -224,13 +231,13 @@ public class AllGoldenSmallVectorHashTest {
 		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
 //		IntLongOrderedMap problems = new IntLongOrderedMap(100);
 		final int[] problems = {0};
-		IntIntOrderedMap good = new IntIntOrderedMap(GOOD.length);
-		for (int x = 0; x < GOOD.length; x++) {
+		final int COUNT = 512;//GOOD.length;
+		IntIntOrderedMap good = new IntIntOrderedMap(COUNT);
+		for (int x = 0; x < COUNT; x++) {
 			good.put(GOOD[x], 0);
 		}
 //		int[] GOLDEN_INTS = good.keySet().toArray();
 		int[] GOLDEN_INTS = GOOD;
-		final int COUNT = 512;//GOLDEN_INTS.length;
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
 		short[] chosen = new short[512];
 		for (int a = 0; a < COUNT; a++) {
@@ -274,7 +281,7 @@ public class AllGoldenSmallVectorHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-						int index = (hm ^ hm >>> 10 ^ shift) & 511;
+						int index = (hm * shift >>> 5) & 511;
 						chosen[index]++;
 						hashMultiplier = hm = GOOD[index];
 						Object[] oldKeyTable = keyTable;
