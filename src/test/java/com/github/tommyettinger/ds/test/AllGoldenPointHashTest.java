@@ -20,10 +20,8 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.ds.LongLongOrderedMap;
-import com.github.tommyettinger.ds.LongOrderedSet;
-import com.github.tommyettinger.ds.ObjectSet;
-import com.github.tommyettinger.ds.Utilities;
+import com.github.tommyettinger.ds.*;
+import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -32,18 +30,29 @@ import java.io.IOException;
 import static com.github.tommyettinger.ds.test.PileupTest.*;
 
 /**
- *
+ * This uses a different collision tracking method than before; it counts every collision at every size.
+ * Using the original 31-based simple hashing, this fails to get under its threshold every time.
+ * But, with a no-multiplication Rosenberg-Strong-based hash, it gets:
+ * 36 problem multipliers in total, 476 likely good multipliers in total.
+ * Lowest collisions : 45222
+ * Highest collisions: 673485
+ * Lowest pileup     : 1
+ * Highest pileup    : 25
  */
 public class AllGoldenPointHashTest {
 
 	public static void main(String[] args) throws IOException {
 		final Point2[] spiral = generatePointSpiral(LEN);
 		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
-		LongLongOrderedMap problems = new LongLongOrderedMap(100);
-		LongOrderedSet good = LongOrderedSet.with(LongUtilities.GOOD_MULTIPLIERS);
+		final int[] problems = {0};
+		final int COUNT = 512;
+		LongIntOrderedMap good = new LongIntOrderedMap(512);
+		for (int x = 0; x < COUNT; x++) {
+			good.put(LongUtilities.GOOD_MULTIPLIERS[x], 0);
+		}
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
 		short[] chosen = new short[512];
-		for (int a = 0; a < LongUtilities.GOOD_MULTIPLIERS.length; a++) {
+		for (int a = 0; a < COUNT; a++) {
 			final long g = LongUtilities.GOOD_MULTIPLIERS[a];
 			{
 				int finalA = a;
@@ -54,8 +63,7 @@ public class AllGoldenPointHashTest {
 
 					@Override
 					protected int place(Object item) {
-						final long h = item.hashCode() * hm;
-						return (int)(h ^ h >>> 33) & mask;
+						return (int)(item.hashCode() * hm >>> shift);
 					}
 
 					@Override
@@ -68,6 +76,7 @@ public class AllGoldenPointHashTest {
 							} else {
 								collisionTotal++;
 								longestPileup = Math.max(longestPileup, ++p);
+								good.put(g, longestPileup);
 							}
 						}
 					}
@@ -103,15 +112,15 @@ public class AllGoldenPointHashTest {
 //						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511]; // 0 problems, worst collisions nope
 
 //						hashMultiplier = LongUtilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
-						int index = (int)(hm >>> 48 + shift) & 511;
-						chosen[index]++;
-						hashMultiplier = Utilities.GOOD_MULTIPLIERS[index];
-						hm = LongUtilities.GOOD_MULTIPLIERS[index];
+//						int index = (int)(hm >>> 48 + shift) & 511;
+//						chosen[index]++;
+//						hashMultiplier = Utilities.GOOD_MULTIPLIERS[index];
+//						hm = LongUtilities.GOOD_MULTIPLIERS[index];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
 
-						collisionTotal = 0;
+//						collisionTotal = 0;
 						longestPileup = 0;
 
 						if (size > 0) {
@@ -121,21 +130,22 @@ public class AllGoldenPointHashTest {
 							}
 						}
 						if (collisionTotal > THRESHOLD) {
-							System.out.printf("  WHOOPS!!!  Multiplier %016X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
-							problems.put(g, collisionTotal);
-							good.remove(g);
-//							throw new RuntimeException();
+//							System.out.printf("  WHOOPS!!!  Multiplier %016X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
+//							problems.put(g, collisionTotal);
+//							good.remove(g);
+							problems[0]++;
+							throw new RuntimeException();
 						}
 					}
 
 					@Override
 					public void clear () {
-						System.out.print("Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hashMultiplier));
-						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
+						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + good.get(g));
 						minMax[0] = Math.min(minMax[0], collisionTotal);
 						minMax[1] = Math.max(minMax[1], collisionTotal);
-						minMax[2] = Math.min(minMax[2], longestPileup);
-						minMax[3] = Math.max(minMax[3], longestPileup);
+						minMax[2] = Math.min(minMax[2], good.get(g));
+						minMax[3] = Math.max(minMax[3], good.get(g));
 						super.clear();
 					}
 
@@ -164,16 +174,16 @@ public class AllGoldenPointHashTest {
 			}
 			System.out.println();
 		}
-		problems.sortByValue(LongComparators.NATURAL_COMPARATOR);
-		System.out.println(problems.toString(", ", ": ", false, Base.BASE16::appendUnsigned, Base.BASE16::appendUnsigned));
-		System.out.println("\n\nnew int[]{");
+		good.sortByValue(IntComparators.NATURAL_COMPARATOR);
+
+		System.out.println("\n\nint[] GOOD_MULTIPLIERS = new int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
-			System.out.print("0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
+			System.out.print("0x"+Base.BASE16.unsigned(good.keyAt(i))+"=0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
 			if((i & 7) == 7)
 				System.out.println();
 		}
 		System.out.println("};\n");
-		System.out.println(problems.size() + " problem multipliers in total, " + good.size() + " likely good multipliers in total.");
+		System.out.println(problems[0] + " problem multipliers in total, " + (COUNT - problems[0]) + " likely good multipliers in total.");
 		System.out.println("Lowest collisions : " + minMax[0]);
 		System.out.println("Highest collisions: " + minMax[1]);
 		System.out.println("Lowest pileup     : " + minMax[2]);

@@ -29,7 +29,14 @@ import java.io.IOException;
 import static com.github.tommyettinger.ds.test.PileupTest.*;
 
 /**
- *
+ * This uses a different collision tracking method than before; it counts every collision at every size.
+ * Using the original 31-based simple hashing, this fails to get under its threshold every time.
+ * But, with a no-multiplication Rosenberg-Strong-based hash, it gets:
+ * 32 problem multipliers in total, 480 likely good multipliers in total.
+ * Lowest collisions : 57908
+ * Highest collisions: 547989
+ * Lowest pileup     : 1
+ * Highest pileup    : 14
  */
 public class AllGoldenIntPointHashTest {
 
@@ -177,17 +184,16 @@ public class AllGoldenIntPointHashTest {
 		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
 //		IntLongOrderedMap problems = new IntLongOrderedMap(100);
 		final int[] problems = {0};
+		final int COUNT = 512;
 		IntIntOrderedMap good = new IntIntOrderedMap(512);
-		for (int x = 0; x < 512; x++) {
+		for (int x = 0; x < COUNT; x++) {
 			good.put(GOOD[x], 0);
 		}
 //		int[] GOLDEN_INTS = good.keySet().toArray();
-		int[] GOLDEN_INTS = GOOD;
-		final int COUNT = GOLDEN_INTS.length;
-		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
+        long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
 		short[] chosen = new short[512];
 		for (int a = 0; a < COUNT; a++) {
-			final int g = GOLDEN_INTS[a];
+			final int g = GOOD[a];
 			{
 				final int finalA = a;
 				ObjectSet set = new ObjectSet(51, 0.6f) {
@@ -227,14 +233,14 @@ public class AllGoldenIntPointHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-						int index = (hm ^ hm >>> 17 ^ shift) & 511;
-						chosen[index]++;
-						hashMultiplier = hm = GOOD[index];
+//						int index = (hm ^ hm >>> 17 ^ shift) & 511;
+//						chosen[index]++;
+//						hashMultiplier = hm = GOOD[index];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
 
-						collisionTotal = 0;
+//						collisionTotal = 0;
 						longestPileup = 0;
 
 						if (size > 0) {
@@ -254,11 +260,11 @@ public class AllGoldenIntPointHashTest {
 					@Override
 					public void clear () {
 						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
-						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + good.get(g));
 						minMax[0] = Math.min(minMax[0], collisionTotal);
 						minMax[1] = Math.max(minMax[1], collisionTotal);
-						minMax[2] = Math.min(minMax[2], longestPileup);
-						minMax[3] = Math.max(minMax[3], longestPileup);
+						minMax[2] = Math.min(minMax[2], good.get(g));
+						minMax[3] = Math.max(minMax[3], good.get(g));
 						super.clear();
 					}
 
