@@ -350,7 +350,7 @@ public class AllGoldenSmallPointHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-						int index = (hm * shift >>> 5) & 511;
+						int index = (hm * shift >>> 5) & 255;
 						chosen[index]++;
 						hashMultiplier = hm = GOOD[index];
 						Object[] oldKeyTable = keyTable;
