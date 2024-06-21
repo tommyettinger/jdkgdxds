@@ -46,6 +46,12 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 716915767
  * Lowest pileup     : 9
  * Highest pileup    : 54060
+ * Trying again...
+ * 0 problem multipliers in total, 65536 likely good multipliers in total.
+ * Lowest collisions : 65361
+ * Highest collisions: 716916972
+ * Lowest pileup     : 9
+ * Highest pileup    : 54270
  */
 public class SmallCombinedHashTest {
 	public static final int[] GOOD_MULTIPLIERS = {
@@ -183,7 +189,7 @@ public class SmallCombinedHashTest {
 //	};
 
 	public static final int LEN = 200000;
-	public static final int COUNT = 1 << 14;
+	public static final int COUNT = 1 << 12;
 	public static final IntIntOrderedMap good = new IntIntOrderedMap(COUNT);
 
 	static {
@@ -204,25 +210,28 @@ public class SmallCombinedHashTest {
 			final int g = good.keyAt(a);
 			{
 				MetricSet pointSet = new MetricSet(g);
-				MetricSet vectorSet = new MetricSet(g);
-				MetricSet wordSet = new MetricSet(g);
 				for (int i = 0, n = LEN; i < n; i++) {
 					pointSet.add(pointSpiral[i]);
-					vectorSet.add(vectorSpiral[i]);
-				}
-				for (int i = 0, n = words.size(); i < n; i++) {
-					wordSet.add(words.get(i));
 				}
 				System.out.print(Base.BASE10.unsigned(a) + "/" + Base.BASE10.unsigned(COUNT) + " P ");
 				pointSet.clear();
+				MetricSet vectorSet = new MetricSet(g);
+				for (int i = 0, n = LEN; i < n; i++) {
+					vectorSet.add(vectorSpiral[i]);
+				}
 				System.out.print(Base.BASE10.unsigned(a) + "/" + Base.BASE10.unsigned(COUNT) + " V ");
 				vectorSet.clear();
+				MetricSet wordSet = new MetricSet(g);
+				for (int i = 0, n = words.size(); i < n; i++) {
+					wordSet.add(words.get(i));
+				}
 				System.out.print(Base.BASE10.unsigned(a) + "/" + Base.BASE10.unsigned(COUNT) + " W ");
 				wordSet.clear();
 			}
 		}
 		good.sortByValue(IntComparators.NATURAL_COMPARATOR);
-
+		final long lowest = good.getAt(0), highest = good.getAt(good.size()-1);
+		good.truncate(2048);
 		System.out.println("\n\nint[] GOOD_MULTIPLIERS = new int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
 			System.out.print("0x"+Base.BASE16.unsigned(good.keyAt(i))+"=0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
@@ -233,13 +242,13 @@ public class SmallCombinedHashTest {
 		System.out.println(problems[0] + " problem multipliers in total, " + (COUNT - problems[0]) + " likely good multipliers in total.");
 		System.out.println("Lowest collisions : " + MetricSet.minMax[0]);
 		System.out.println("Highest collisions: " + MetricSet.minMax[1]);
-		System.out.println("Lowest pileup     : " + MetricSet.minMax[2]);
-		System.out.println("Highest pileup    : " + MetricSet.minMax[3]);
+		System.out.println("Lowest pileup     : " + lowest);
+		System.out.println("Highest pileup    : " + highest);
 	}
 
 	private static class MetricSet extends ObjectSet {
 		private final int initialMul;
-        public static final long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
+        public static final long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE};
 		long collisionTotal;
 		int longestPileup;
 		int existingPileup;
@@ -303,8 +312,6 @@ public class SmallCombinedHashTest {
 			System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + good.get(initialMul));
 			minMax[0] = Math.min(minMax[0], collisionTotal);
 			minMax[1] = Math.max(minMax[1], collisionTotal);
-			minMax[2] = Math.min(minMax[2], good.get(initialMul));
-			minMax[3] = Math.max(minMax[3], good.get(initialMul));
 			super.clear();
 		}
 
