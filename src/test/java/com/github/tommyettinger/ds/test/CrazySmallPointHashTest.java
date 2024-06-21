@@ -108,20 +108,15 @@ public class CrazySmallPointHashTest {
 				0x000A02C5, 0x000DBA8D, 0x0001F029, 0x00078A73, 0x0019B7AD, 0x001347D7, 0x001F44F1, 0x001970D5,
 		};
 
+		final Point2[] pointSpiral = generatePointSpiral(LEN);
 
-//		int[] GOLDEN_INTS = new int[MathTools.GOLDEN_LONGS.length];
-//		for (int i = 0; i < GOLDEN_INTS.length; i++) {
-//			GOLDEN_INTS[i] = (int)(MathTools.GOLDEN_LONGS[i] >>> 32) | 1;
-//		}
-		final Point2[] spiral = generatePointSpiral(LEN);
-
-		IntSet collisions = new IntSet(LEN);
+		IntSet pointCollisions = new IntSet(LEN);
 		for (int i = 0; i < LEN; i++) {
-			collisions.add(spiral[i].hashCode());
+			pointCollisions.add(pointSpiral[i].hashCode());
 		}
-		System.out.println(collisions.size() + "/" + LEN + " hashes are unique.");
+		System.out.println(pointCollisions.size() + "/" + LEN + " hashes are unique.");
 //		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));
-		final long THRESHOLD = (long)((double)LEN * (double) LEN / (0.125 * collisions.size()));
+		final long THRESHOLD = (long)((double)LEN * (double) LEN / (0.125 * pointCollisions.size()));
 
 		final int[] problems = {0};
 		final int COUNT = 8192;//GOOD.length;
@@ -130,7 +125,6 @@ public class CrazySmallPointHashTest {
 		for (int x = 0; x < COUNT; x++) {
 			good.put(running = running * GOOD[x & 511] & 0x1FFFFF, 0);
 		}
-//		int[] GOLDEN_INTS = good.keySet().toArray();
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
 		for (int a = 0; a < COUNT; a++) {
 			final int g = good.keyAt(a);
@@ -139,17 +133,10 @@ public class CrazySmallPointHashTest {
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
-					int hm = 0x17AD97;
 
 					@Override
 					protected int place (Object item) {
-//						final int h = BitConversion.imul(item.hashCode(), hm);
-//						return (h ^ h << 16) >>> shift;
-//						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS
-//						final int h = item.hashCode();
-//						return BitConversion.imul(h ^ h >>> 16, hm) >>> shift;
-						return item.hashCode() * hm >>> shift;
-//						return (item.hashCode() ^ 0x9E3779B9) * hm >>> shift;
+						return item.hashCode() * hashMultiplier >>> shift;
 					}
 
 					@Override
@@ -181,7 +168,6 @@ public class CrazySmallPointHashTest {
 
 						keyTable = new Object[newSize];
 
-//						collisionTotal = 0;
 						longestPileup = 0;
 
 						if (size > 0) {
@@ -191,16 +177,14 @@ public class CrazySmallPointHashTest {
 							}
 						}
 						if (collisionTotal > THRESHOLD) {
-//							System.out.printf("  WHOOPS!!!  Multiplier %08X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
 							problems[0]++;
-//							good.remove(g);
 							throw new RuntimeException();
 						}
 					}
 
 					@Override
 					public void clear () {
-						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
+						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hashMultiplier));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + good.get(g));
 						minMax[0] = Math.min(minMax[0], collisionTotal);
 						minMax[1] = Math.max(minMax[1], collisionTotal);
@@ -212,14 +196,13 @@ public class CrazySmallPointHashTest {
 					@Override
 					public void setHashMultiplier (int hashMultiplier) {
 						this.hashMultiplier = hashMultiplier | 1;
-						hm = this.hashMultiplier;
 						resize(keyTable.length);
 					}
 				};
 				set.setHashMultiplier(g);
 				try {
-					for (int i = 0, n = spiral.length; i < n; i++) {
-						set.add(spiral[i]);
+					for (int i = 0, n = pointSpiral.length; i < n; i++) {
+						set.add(pointSpiral[i]);
 					}
 				}catch (RuntimeException ignored){
 					System.out.println(g + " FAILURE");
