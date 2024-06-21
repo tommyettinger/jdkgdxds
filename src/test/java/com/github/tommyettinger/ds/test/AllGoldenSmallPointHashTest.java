@@ -225,6 +225,7 @@ public class AllGoldenSmallPointHashTest {
 				0x00058F19, 0x001EFE25, 0x00048F29, 0x001176FB, 0x001FBCD5, 0x000639E9, 0x000DB44B, 0x001524F3,
 				0x0007B065, 0x0001DE2B, 0x001FBEE7, 0x001556E1, 0x001C822F, 0x001A8C1B, 0x0009A85F, 0x001B344B,
 		};
+
 //		// has 256 int multipliers, each using 21 bits or fewer, each repeated for compatibility.
 //		final int[] GOOD = new int[]{
 //				0x00197D75, 0x001F6AE3, 0x0006F5F3, 0x001C4C3D, 0x001AD501, 0x000D36F9, 0x0012D2B7, 0x001A0E77,
