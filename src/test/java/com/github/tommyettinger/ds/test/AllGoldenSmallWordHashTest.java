@@ -83,6 +83,12 @@ import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
  * Highest collisions: 34780
  * Lowest pileup     : 9
  * Highest pileup    : 18
+ * Changing re-enabled, using the XOR with 0x80000000 above:
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 33114
+ * Highest collisions: 34341
+ * Lowest pileup     : 10
+ * Highest pileup    : 18
  */
 public class AllGoldenSmallWordHashTest {
 
@@ -288,9 +294,9 @@ public class AllGoldenSmallWordHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-//						int index = (hm * shift >>> 5) & 511;
-//						chosen[index]++;
-//						hashMultiplier = hm = GOOD[index];
+						int index = (hm * shift >>> 5) & 511;
+						chosen[index]++;
+						hashMultiplier = hm = GOOD[index];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];

@@ -117,6 +117,12 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 6726328
  * Lowest pileup     : 16
  * Highest pileup    : 33
+ * Changing re-enabled, using the XOR with 0x80000000 above:
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 5212539
+ * Highest collisions: 5268720
+ * Lowest pileup     : 16
+ * Highest pileup    : 22
  */
 public class AllGoldenSmallPointHashTest {
 	public static final int[] GOOD_MULTIPLIERS = new int[]{
@@ -540,9 +546,9 @@ public class AllGoldenSmallPointHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-//						int index = (hm * shift >>> 5) & 511;
-//						chosen[index]++;
-//						hashMultiplier = hm = GOOD[index];
+						int index = (hm * shift >>> 5) & 511;
+						chosen[index]++;
+						hashMultiplier = hm = GOOD[index];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];

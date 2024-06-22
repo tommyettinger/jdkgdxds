@@ -68,7 +68,8 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
 public class SmallCombinedHashTest {
 	// 0x00106AE3, 0x00181497, 0x001F62D3, 0x001677C7
 	// were replaced with
-	// 0x00195339, 0x00174255, 0x0012F39D, 0x001D05F9, 0x001176B7, 0x00137B2F, 0x0015A633, 0x001900F3,
+	// 0x00195339, 0x00174255, 0x0012F39D, 0x001D05F9
+	// but, 0x001176B7, 0x00137B2F, 0x0015A633, 0x001900F3 are additional options.
 	public static final int[] GOOD_MULTIPLIERS = {
 			0x00110427, 0x00144057, 0x001AFB2F, 0x001F1753, 0x00135205, 0x00176C45, 0x001E3A15, 0x001F406D,
 			0x001DEF1D, 0x0018BD49, 0x001DE7A9, 0x00117949, 0x001BDC1D, 0x00190A37, 0x0014A839, 0x00108EB9,
@@ -345,7 +346,7 @@ public class SmallCombinedHashTest {
 
 		@Override
 		protected int place (Object item) {
-			return item.hashCode() * hashMultiplier >>> shift;
+			return (item.hashCode() ^ 0x80000000) * hashMultiplier >>> shift;
 		}
 
 		@Override
