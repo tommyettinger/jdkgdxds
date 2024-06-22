@@ -117,6 +117,24 @@ import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
  * Highest collisions: 643227
  * Lowest pileup     : 15
  * Highest pileup    : 23
+ * With bitwise NOT to ensure GWT gets the hashCode() in the 32-bit range:
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 604445
+ * Highest collisions: 676793
+ * Lowest pileup     : 15
+ * Highest pileup    : 31
+ * Using this instead of using NOT: (item.hashCode() ^ 0x9E3779B9) * hm >>> shift;
+ * 248 problem multipliers in total, 264 likely good multipliers in total.
+ * Lowest collisions : 608571
+ * Highest collisions: 677709
+ * Lowest pileup     : 18
+ * Highest pileup    : 75
+ * But, with 0x80000000 instead of 0x9E3779B9:
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 603215
+ * Highest collisions: 643227
+ * Lowest pileup     : 15
+ * Highest pileup    : 23
  */
 public class AllGoldenSmallVectorHashTest {
 	public static final int[] GOOD_MULTIPLIERS = new int[]{
@@ -558,7 +576,8 @@ public class AllGoldenSmallVectorHashTest {
 //						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS
 //						final int h = item.hashCode();
 //						return BitConversion.imul(h ^ h >>> 16, hm) >>> shift;
-						return item.hashCode() * hm >>> shift;
+//						return ~item.hashCode() * hm >>> shift;
+						return (item.hashCode() ^ 0x80000000) * hm >>> shift;
 					}
 
 					@Override

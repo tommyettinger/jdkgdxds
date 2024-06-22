@@ -65,6 +65,24 @@ import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
  * Highest collisions: 34341
  * Lowest pileup     : 10
  * Highest pileup    : 18
+ * With bitwise NOT to ensure GWT gets the hashCode() in the 32-bit range:
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 32902
+ * Highest collisions: 34960
+ * Lowest pileup     : 10
+ * Highest pileup    : 22
+ * Using this instead of using NOT: (item.hashCode() ^ 0x9E3779B9) * hm >>> shift;
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 32482
+ * Highest collisions: 34529
+ * Lowest pileup     : 9
+ * Highest pileup    : 22
+ * But, with 0x80000000 instead of 0x9E3779B9:
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 32891
+ * Highest collisions: 34780
+ * Lowest pileup     : 9
+ * Highest pileup    : 18
  */
 public class AllGoldenSmallWordHashTest {
 
@@ -244,7 +262,8 @@ public class AllGoldenSmallWordHashTest {
 //						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS
 //						final int h = item.hashCode();
 //						return BitConversion.imul(h ^ h >>> 16, hm) >>> shift;
-						return item.hashCode() * hm >>> shift;
+//						return ~item.hashCode() * hm >>> shift;
+						return (item.hashCode() ^ 0x80000000) * hm >>> shift;
 					}
 
 					@Override
@@ -269,9 +288,9 @@ public class AllGoldenSmallWordHashTest {
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-						int index = (hm * shift >>> 5) & 511;
-						chosen[index]++;
-						hashMultiplier = hm = GOOD[index];
+//						int index = (hm * shift >>> 5) & 511;
+//						chosen[index]++;
+//						hashMultiplier = hm = GOOD[index];
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];

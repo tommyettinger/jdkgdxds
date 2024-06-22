@@ -99,6 +99,24 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 6726328
  * Lowest pileup     : 16
  * Highest pileup    : 33
+ * With bitwise NOT to ensure GWT gets the hashCode() in the 32-bit range:
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 5212241
+ * Highest collisions: 6719990
+ * Lowest pileup     : 16
+ * Highest pileup    : 33
+ * Using this instead of using NOT: (item.hashCode() ^ 0x9E3779B9) * hm >>> shift;
+ * 120 problem multipliers in total, 392 likely good multipliers in total.
+ * Lowest collisions : 5212787
+ * Highest collisions: 6706235
+ * Lowest pileup     : 16
+ * Highest pileup    : 33
+ * But, with 0x80000000 instead of 0x9E3779B9:
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 5212153
+ * Highest collisions: 6726328
+ * Lowest pileup     : 16
+ * Highest pileup    : 33
  */
 public class AllGoldenSmallPointHashTest {
 	public static final int[] GOOD_MULTIPLIERS = new int[]{
@@ -496,8 +514,8 @@ public class AllGoldenSmallPointHashTest {
 //						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS
 //						final int h = item.hashCode();
 //						return BitConversion.imul(h ^ h >>> 16, hm) >>> shift;
-						return item.hashCode() * hm >>> shift;
-//						return (item.hashCode() ^ 0x9E3779B9) * hm >>> shift;
+//						return ~item.hashCode() * hm >>> shift;
+						return (item.hashCode() ^ 0x80000000) * hm >>> shift;
 					}
 
 					@Override
