@@ -239,10 +239,10 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 		int hash = hashMultiplier;
 		for (K c : s) {
 			if(filter.test(c)){
-				hash = BitConversion.imul(hash + editor.apply(c).hashCode(), hashMultiplier);
+				hash = (hash ^ editor.apply(c).hashCode()) * hashMultiplier;
 			}
 		}
-		return hash;
+		return hash ^ (hash << 23 | hash >>> 9) ^ (hash << 11 | hash >>> 21);
 	}
 
 	@Override

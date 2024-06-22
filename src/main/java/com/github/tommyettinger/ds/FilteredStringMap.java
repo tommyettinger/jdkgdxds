@@ -188,7 +188,9 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	/**
 	 * Gets a low-to-moderate quality 32-bit hash code from the given String.
 	 * This operates by checking if a char in {@code s} matches the filter, and if it does, it rotates the current hash,
-	 * multiplies it by the {@link #getHashMultiplier() hash multiplier}, and adds the current char after editing.
+	 * multiplies it by the {@link #getHashMultiplier() hash multiplier}, and XORs with the current char after editing.
+	 * This finalizes the hash by multiplying it again by the hash multiplier, then using the reversible
+	 * XOR-rotate-XOR-rotate sequence of operations to adequately jumble the bits.
 	 * @param s a String to hash
 	 * @return a 32-bit hash of {@code s}
 	 */
@@ -198,10 +200,10 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 		for (int i = 0, len = s.length(); i < len; i++) {
 			final char c = s.charAt(i);
 			if (filter.filter.test(c)) {
-				hash = BitConversion.imul((hash << 13 | hash >>> 19), hm) + filter.editor.applyAsChar(c);
+				hash = ((hash << 13 | hash >>> 19) * hm) ^ filter.editor.applyAsChar(c);
 			}
 		}
-		hash = BitConversion.imul(hash, hm);
+		hash *= hm;
 		return hash ^ (hash << 23 | hash >>> 9) ^ (hash << 11 | hash >>> 21);
 	}
 
