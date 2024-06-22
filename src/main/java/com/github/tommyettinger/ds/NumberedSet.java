@@ -160,10 +160,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link InternalMap#mask} for the specified {@code item}, mixed.
 	 * <p>
-	 * The default behavior uses a basic hash mixing family; it simply gets the
-	 * {@link Object#hashCode()} of {@code item}, multiplies it by the current
-	 * {@link InternalMap#hashMultiplier}, and makes an unsigned right shift by {@link InternalMap#shift} before
-	 * casting to int and returning. Because the hashMultiplier changes every time the backing
+	 * The default behavior uses a basic hash mixing family; it gets the
+	 * {@link Object#hashCode()} of {@code item}, does some no-op bitwise math to satisfy GWT,
+	 * multiplies that by the current {@link InternalMap#hashMultiplier}, and makes an unsigned right shift
+	 * by {@link InternalMap#shift} before returning. Because the hashMultiplier changes every time the backing
 	 * table resizes, if a problematic sequence of keys piles up with many collisions, that won't
 	 * continue to cause problems when the next resize changes the hashMultiplier again. This
 	 * doesn't have much way of preventing trouble from hashCode() implementations that always
@@ -189,8 +189,9 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link InternalMap#mask} (both inclusive)
 	 */
-	protected int place (Object item) {
-		return BitConversion.imul(item.hashCode(), map.hashMultiplier) >>> map.shift;
+	@SuppressWarnings("PointlessBitwiseExpression")
+	protected int place (@NonNull Object item) {
+		return (item.hashCode() | 0) * map.hashMultiplier >>> map.shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
 	}

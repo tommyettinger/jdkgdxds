@@ -212,7 +212,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (long item) {
-		return BitConversion.imul((int)(item ^ item >>> 32), hashMultiplier) >>> shift;
+		return (int)(item ^ item >>> 32) * hashMultiplier >>> shift;
 	}
 
 	/**
@@ -583,7 +583,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier  * shift >>> 5 & 511];
 		long[] oldKeyTable = keyTable;
 		long[] oldValueTable = valueTable;
 
