@@ -661,7 +661,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		T[] oldKeyTable = keyTable;
 
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier  * shift >>> 5 & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier * shift >>> 5 & 511];
 		keyTable = (T[])new Object[newSize];
 
 		if (size > 0) {

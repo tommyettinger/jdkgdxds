@@ -437,12 +437,13 @@ public final class Utilities {
 			a=Character.toUpperCase(data.charAt(len-2));
 			b=Character.toUpperCase(data.charAt(len-1));
 		}
-		a^=b1;
-		b^=seed;
-		p=a*b;
-		a=p^p>>>11^p>>>21^b0^len;
-		b=p^(p<<29|p>>> 3)^(p<< 8|p>>>24)^b1;
-		p=BitConversion.imul(a, b);
-		return p^(p<<29|p>>> 3)^(p<< 8|p>>>24);
+		a*=b2;
+		b^=seed+len;
+		b=(b<< 3|b>>>29)^(a=(a<<24|a>>> 8)+b^b0)+(a<< 7|a>>>25);
+		a=(a<<14|a>>>18)^(b=(b<<29|b>>> 3)+a^b1)+(b<<11|b>>>21);
+		// I don't know if we need this level of robust mixing.
+//		b=(b<<19|b>>>13)^(a=(a<< 5|a>>>27)+b^b2)+(a<<29|a>>> 3);
+//		a=(a<<17|a>>>15)^(b=(b<<11|b>>>21)+a^b3)+(b<<23|b>>> 9);
+		return a^(a<<27|a>>> 5)^(a<< 9|a>>>23);
 	}
 }

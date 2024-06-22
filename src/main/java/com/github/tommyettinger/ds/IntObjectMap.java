@@ -570,7 +570,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier  * shift >>> 5 & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier * shift >>> 5 & 511];
 		int[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;
 

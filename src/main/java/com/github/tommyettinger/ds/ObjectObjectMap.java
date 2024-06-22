@@ -655,7 +655,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier  * shift >>> 5 & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier * shift >>> 5 & 511];
 		K[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;
 
