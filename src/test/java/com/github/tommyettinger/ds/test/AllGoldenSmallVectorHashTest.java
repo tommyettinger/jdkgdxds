@@ -111,6 +111,12 @@ import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
  * Highest collisions: 677617
  * Lowest pileup     : 15
  * Highest pileup    : 60
+ * With better metrics... Maybe...
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 603215
+ * Highest collisions: 643227
+ * Lowest pileup     : 15
+ * Highest pileup    : 23
  */
 public class AllGoldenSmallVectorHashTest {
 	public static final int[] GOOD_MULTIPLIERS = new int[]{

@@ -93,6 +93,12 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 6625152
  * Lowest pileup     : 16
  * Highest pileup    : 118
+ * With better metrics... Maybe...
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 5212153
+ * Highest collisions: 6726328
+ * Lowest pileup     : 16
+ * Highest pileup    : 33
  */
 public class AllGoldenSmallPointHashTest {
 	public static final int[] GOOD_MULTIPLIERS = new int[]{
@@ -565,7 +571,7 @@ public class AllGoldenSmallPointHashTest {
 						set.add(spiral[i]);
 					}
 				}catch (RuntimeException ignored){
-					System.out.println(g + " FAILURE");
+					System.out.println("0x" + Base.BASE16.unsigned(g) + " FAILURE");
 					continue;
 				}
 				set.clear();
