@@ -141,7 +141,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 
 	/**
 	 * Gets the hash multiplier, which this class does not use itself.
-	 * @return the current hash multiplier
+	 * @return the current hash multiplier, which should always be an odd int between 1 and 2097151, inclusive
 	 */
 	@Override
 	public int getHashMultiplier () {
@@ -156,7 +156,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 */
 	@Override
 	public void setHashMultiplier (int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 1;
+		this.hashMultiplier = (hashMultiplier & 0x1FFFFF) | 1;
 	}
 
 	/**

@@ -549,8 +549,11 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	/**
-	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
+	 * Returns a key that maps to the specified value, or null if value is not in the map.
+	 * Note, this traverses the entire map and compares
 	 * every value, which may be an expensive operation.
+	 * @param value the value to search for
+	 * @return a key that maps to value, if present, or null if value cannot be found
 	 */
 	@Nullable
 	public K findKey (int value) {
@@ -564,8 +567,9 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	/**
-	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
-	 * adding many items to avoid multiple backing array resizes.
+	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor.
+	 * Useful before adding many items to avoid multiple backing array resizes.
+	 * @param additionalCapacity how many more items this must be able to hold; the load factor increases the actual capacity change
 	 */
 	public void ensureCapacity (int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
@@ -597,7 +601,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * Gets the current hash multiplier as used by {@link #place(Object)}; for specific advanced usage only.
 	 * The hash multiplier changes whenever {@link #resize(int)} is called, though its value before the resize
 	 * affects its value after.
-	 * @return the current hash multiplier, which should always be a large odd int
+	 * @return the current hash multiplier, which should always be an odd int between 1 and 2097151, inclusive
 	 */
 	public int getHashMultiplier () {
 		return hashMultiplier;
@@ -607,22 +611,23 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size; this
 	 * is for specific advanced usage only. Calling resize() will change the multiplier before it gets used, and the current
 	 * {@link #size()} of the data structure also changes the value. The hash multiplier is used by {@link #place(Object)}.
-	 * The hash multiplier must be an odd int, and should usually be "rather large." Here, that means the absolute value of
-	 * the multiplier should be at least a billion or so (roughly {@code 0x40000000} in hex). The
-	 * only validation this does is to ensure the multiplier is odd; everything else is up to the caller. The hash multiplier
-	 * changes whenever {@link #resize(int)} is called, though its value before the resize affects its value after. Because
-	 * of how resize() randomizes the multiplier, even inputs such as {@code 1} and {@code -1} actually work well.
+	 * The hash multiplier must be an odd int, and should usually be "somewhat large." Here, that means the absolute value of
+	 * the multiplier should be no more than 2 million or so (roughly {@code 0x1FFFFF} in hex), and this method will ensure
+	 * that both the used multiplier is within that range and is odd. The hash multiplier changes whenever
+	 * {@link #resize(int)} is called, though its value before the resize affects its value after. Because of how
+	 * resize() randomizes the multiplier, even inputs such as {@code 1}, {@code -999999999} and {@code 0} actually work well.
 	 * <br>
 	 * This is accessible at all mainly so serialization code that has a need to access the hash multiplier can do so, but
 	 * also to provide an "emergency escape route" in case of hash flooding. Using one of the "known good" ints in
 	 * {@link Utilities#GOOD_MULTIPLIERS} should usually be fine if you don't know what multiplier will work well.
-	 * Be advised that because this has to call resize(), it isn't especially fast, and it slows
-	 * down the more items are in the data structure. If you in a situation where you are worried about hash flooding, you
-	 * also shouldn't permit adversaries to cause this method to be called frequently.
-	 * @param hashMultiplier any odd int; will not be used as-is
+	 * Be advised that because this has to call resize(), it isn't especially fast, and it slows down the more items are
+	 * in the data structure. If you in a situation where you are worried about hash flooding, you also shouldn't permit
+	 * adversaries to cause this method to be called frequently. Also be advised that because of how resize() works, the
+	 * result of {@link #getHashMultiplier()} after calling this will only very rarely be the same as the parameter here.
+	 * @param hashMultiplier any int; will not be used as-is
 	 */
 	public void setHashMultiplier (int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 1;
+		this.hashMultiplier = (hashMultiplier & 0x1FFFFF) | 1;
 		resize(keyTable.length);
 	}
 
