@@ -616,6 +616,18 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	public boolean containsValue (Object value) {
 		return containsValue(value, false);
 	}
+	/**
+	 * Returns a key that maps to the specified value, or null if value is not in the map.
+	 * Note, this traverses the entire map and compares
+	 * every value using {@link Object#equals(Object)}, which may be an expensive operation.
+	 * This is the same as calling {@code findKey(value, false)}.
+	 * @param value the value to search for
+	 * @return a key that maps to value, if present, or null if value cannot be found
+	 */
+	@Nullable
+	public K findKey (@Nullable Object value) {
+		return findKey(value, false);
+	}
 
 	/**
 	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares

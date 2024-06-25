@@ -73,7 +73,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		}
 
 		@Override
-		protected int place (Object item) {
+		protected int place (@NonNull Object item) {
 			return NumberedSet.this.place(item);
 		}
 
@@ -357,10 +357,25 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return changed;
 	}
 
+	/**
+	 * Adds all items in the T array {@code array} to this set, inserting at the end of the iteration order.
+	 *
+	 * @param array          a non-null array of {@code T}
+	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
+	 */
 	public boolean addAll (@NonNull T[] array) {
 		return addAll(array, 0, array.length);
 	}
 
+	/**
+	 * Adds up to {@code length} items, starting from {@code offset}, in the T array {@code array} to this set,
+	 * inserting at the end of the iteration order.
+	 *
+	 * @param array          a non-null array of {@code T}
+	 * @param offset         the first index in {@code other} to use
+	 * @param length          how many indices in {@code other} to use
+	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
+	 */
 	public boolean addAll (@NonNull T[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size();
@@ -368,7 +383,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return oldSize != size();
 	}
 	/**
-	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
+	 * Adds up to {@code count} items, starting from {@code offset}, in the T array {@code array} to this set,
 	 * inserting starting at {@code insertionIndex} in the iteration order.
 	 *
 	 * @param insertionIndex where to insert into the iteration order
@@ -479,6 +494,11 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return old;
 	}
 
+	/**
+	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor.
+	 * Useful before adding many items to avoid multiple backing array resizes.
+	 * @param additionalCapacity how many more items this must be able to hold; the load factor increases the actual capacity change
+	 */
 	public void ensureCapacity (int additionalCapacity) {
 		map.ensureCapacity(additionalCapacity);
 	}
@@ -516,18 +536,45 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		map.setHashMultiplier(hashMultiplier);
 	}
 
+	/**
+	 * Changes the item {@code before} to {@code after} without changing its position in the order or its value. Returns true if
+	 * {@code after} has been added to the NumberedSet and {@code before} has been removed; returns false if {@code after} is
+	 * already present or {@code before} is not present. If you are iterating over a NumberedSet and have an index, you should
+	 * prefer {@link #alterAt(int, Object)}, which doesn't need to search for an index like this does and so can be faster.
+	 *
+	 * @param before an item that must be present for this to succeed
+	 * @param after  an item that must not be in this map for this to succeed
+	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
+	 */
 	public boolean alter (T before, T after) {
 		return map.alter(before, after);
 	}
 
+	/**
+	 * Changes the item at the given {@code index} in the order to {@code after}, without changing the ordering of other entries or
+	 * any values. If {@code after} is already present, this returns false; it will also return false if {@code index} is invalid
+	 * for the size of this map. Otherwise, it returns true. Unlike {@link #alter(Object, Object)}, this operates in constant time.
+	 *
+	 * @param index the index in the order of the item to change; must be non-negative and less than {@link #size}
+	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
+	 * @return true if {@code after} successfully replaced the item at {@code index}, false otherwise
+	 */
 	public boolean alterAt (int index, T after) {
 		return map.alterAt(index, after);
 	}
 
+	/**
+	 * Returns the item at the given index, which must be at least 0 and less than {@link #size()}.
+	 * @param index the index to retrieve; must be between 0, inclusive, and {@link #size()}, exclusive
+	 * @return the item at {@code index}
+	 */
 	public T getAt (int index) {
 		return map.keyAt(index);
 	}
 
+	/**
+	 * Clears the map and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
+	 */
 	public void clear (int maximumCapacity) {
 		map.clear(maximumCapacity);
 	}
@@ -539,9 +586,9 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 
 	/**
 	 * Gets the index of a given item in this set's ordering. Unlike most collections, this takes O(1) time here.
-	 * This returns -1 if the item was not present.
+	 * This returns {@link #getDefaultValue()} (usually -1) if the item was not present.
 	 * @param item the item to retrieve the index for
-	 * @return the index of the item, or -1 if it was not found
+	 * @return the index of the item, or {@link #getDefaultValue()} (usually -1) if it was not found
 	 */
 	public int indexOf (Object item) {
 		return map.get(item);
@@ -570,11 +617,22 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	public boolean isEmpty () {
 		return map.isEmpty();
 	}
-
+	/**
+	 * Gets the default value, a {@code int} which is returned by {@link #indexOf(Object)} if the key is not found.
+	 * If not changed, the default value is -1 .
+	 *
+	 * @return the current default value
+	 */
 	public int getDefaultValue () {
 		return map.getDefaultValue();
 	}
-
+	/**
+	 * Sets the default value, a {@code int} which is returned by {@link #indexOf(Object)} if the key is not found.
+	 * If not changed, the default value is -1 . Note that {@link #indexOfOrDefault(Object, int)} is also available,
+	 * which allows specifying a "not-found" value per-call.
+	 *
+	 * @param defaultValue may be any int; should usually be one that doesn't occur as a typical value
+	 */
 	public void setDefaultValue (int defaultValue) {
 		map.setDefaultValue(defaultValue);
 	}
@@ -583,9 +641,14 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		map.shrink(maximumCapacity);
 	}
 
+	/**
+	 * Returns true if this NumberedSet contains the given item, or false otherwise.
+	 * @param item element whose presence in this set is to be tested
+	 * @return true if this set contains item, or false otherwise
+	 */
 	@Override
-	public boolean contains (Object key) {
-		return map.containsKey(key);
+	public boolean contains (Object item) {
+		return map.containsKey(item);
 	}
 
 	/**
