@@ -148,13 +148,13 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.6.0'
+api 'com.github.tommyettinger:jdkgdxds:1.6.1'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
-`mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on `digital` (which provides
-common math code meant for use by multiple projects), `funderby` (Java 8 functional interfaces for primitive types), and for
-annotations only, `checker-qual` ([the project GitHub page is here.](https://github.com/typetools/checker-framework)). The
+`mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on [digital](https://github.com/tommyettinger/digital)
+(which provides common math code meant for use by multiple projects), [funderby](https://github.com/tommyettinger/funderby)
+(Java 8 functional interfaces for primitive types), and for annotations only, [checker-qual](https://github.com/typetools/checker-framework). The
 version for the `digital` dependency is 0.4.8 (you can specify it manually with the core dependency
 `api "com.github.tommyettinger:digital:0.4.8"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`). The version for
@@ -167,7 +167,7 @@ If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
 implementation "com.github.tommyettinger:digital:0.4.8:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.6.0:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.6.1:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add

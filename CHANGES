@@ -1,3 +1,7 @@
+[1.6.1]
+- [SEED BREAKING] Utilities.hashCodeIgnoreCase() returns different results in this version than in the previous version, with the same seed. This has to do with the next bullet point.
+- Utilities.GOOD_MULTIPLIERS now holds only smaller ints, which allows place() to avoid calling imul() entirely. This may have some speed implication on any platform, but most likely a small one.
+
 [1.6.0]
 - [BREAKING] The protected hashMultiplier field is now an int instead of a long, and it is initialized differently. It also changes differently in resize().
 - [BREAKING, MAYBE] Utilities.GOOD_MULTIPLIERS is now an int array instead of a long array, with different contents. This array was unlikely to be used externally, but it is always possible.
