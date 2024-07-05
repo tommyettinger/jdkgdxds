@@ -389,7 +389,7 @@ public final class Utilities {
 	 * @return an int hashCode; quality should be similarly good across any bits
 	 */
 	public static int hashCodeIgnoreCase (final CharSequence data) {
-		return hashCodeIgnoreCase(data, 908697017);
+		return hashCodeIgnoreCase(data, 0x36299db9);
 	}
 
 	/**
@@ -407,10 +407,9 @@ public final class Utilities {
 	public static int hashCodeIgnoreCase (final CharSequence data, int seed) {
 		if(data == null) return 0;
 		final int len = data.length();
-		int b0 = GOOD_MULTIPLIERS[(seed & 127)];
-		int b1 = GOOD_MULTIPLIERS[(seed >>>  8 & 127)+128];
-		int b2 = GOOD_MULTIPLIERS[(seed >>> 16 & 127)+256];
-		int b3 = GOOD_MULTIPLIERS[(seed >>> 24 & 127)+384];
+		final int x = GOOD_MULTIPLIERS[(seed & 127)];
+		final int y = GOOD_MULTIPLIERS[(seed >>>  7 & 127)+128];
+		final int z = GOOD_MULTIPLIERS[(seed >>> 14 & 255)+256];
 		int a, b;
 		int p = 0;
 		if(len<=2){
@@ -423,27 +422,27 @@ public final class Utilities {
 			if(i>=6){
 				int see1=seed, see2=seed;
 				do{
-					seed=(Character.toUpperCase(data.charAt(p  ))^b1)*(Character.toUpperCase(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
-					see1=(Character.toUpperCase(data.charAt(p+2))^b2)*(Character.toUpperCase(data.charAt(p+3))^see1);see1^=(see1<<21|see1>>>11)^(see1<<15|see1>>>19);
-					see2=(Character.toUpperCase(data.charAt(p+4))^b3)*(Character.toUpperCase(data.charAt(p+5))^see2);see2^=(see2<<26|see2>>> 6)^(see2<< 7|see2>>>25);
+					seed=(Character.toUpperCase(data.charAt(p  ))^x)*(Character.toUpperCase(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
+					see1=(Character.toUpperCase(data.charAt(p+2))^y)*(Character.toUpperCase(data.charAt(p+3))^see1);see1^=(see1<<21|see1>>>11)^(see1<<15|see1>>>19);
+					see2=(Character.toUpperCase(data.charAt(p+4))^z)*(Character.toUpperCase(data.charAt(p+5))^see2);see2^=(see2<<26|see2>>> 6)^(see2<< 7|see2>>>25);
 					p+=6;i-=6;
 				}while(i>=6);
 				seed^=see1^see2;
 			}
 			while((i>2)){
-				seed=(Character.toUpperCase(data.charAt(p  ))^b1)*(Character.toUpperCase(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
+				seed=(Character.toUpperCase(data.charAt(p  ))^x)*(Character.toUpperCase(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
 				i-=2; p+=2;
 			}
 			a=Character.toUpperCase(data.charAt(len-2));
 			b=Character.toUpperCase(data.charAt(len-1));
 		}
-		a*=b2;
+		a*=z;
 		b^=seed+len;
-		b=(b<< 3|b>>>29)^(a=(a<<24|a>>> 8)+b^b0)+(a<< 7|a>>>25);
-		a=(a<<14|a>>>18)^(b=(b<<29|b>>> 3)+a^b1)+(b<<11|b>>>21);
+		b=(b<< 3|b>>>29)^(a=(a<<24|a>>> 8)+b^y)+(a<< 7|a>>>25);
+		a=(a<<14|a>>>18)^(b=(b<<29|b>>> 3)+a^x)+(b<<11|b>>>21);
 		// I don't know if we need this level of robust mixing.
-//		b=(b<<19|b>>>13)^(a=(a<< 5|a>>>27)+b^b2)+(a<<29|a>>> 3);
-//		a=(a<<17|a>>>15)^(b=(b<<11|b>>>21)+a^b3)+(b<<23|b>>> 9);
+//		b=(b<<19|b>>>13)^(a=(a<< 5|a>>>27)+b^y)+(a<<29|a>>> 3);
+//		a=(a<<17|a>>>15)^(b=(b<<11|b>>>21)+a^z)+(b<<23|b>>> 9);
 		return a^(a<<27|a>>> 5)^(a<< 9|a>>>23);
 	}
 }

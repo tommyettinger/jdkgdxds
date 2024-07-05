@@ -219,7 +219,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 			while (iter.hasNext()) {
 				CharSequence obj = iter.next();
 				if (obj != null)
-					h += Utilities.hashCodeIgnoreCase(obj);
+					h ^= Utilities.hashCodeIgnoreCase(obj);
 			}
 			return h;
 		}

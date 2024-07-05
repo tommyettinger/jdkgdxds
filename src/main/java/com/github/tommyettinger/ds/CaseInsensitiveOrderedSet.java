@@ -161,7 +161,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 		CharSequence[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			CharSequence key = keyTable[i];
-			if (key != null) {h += Utilities.hashCodeIgnoreCase(key);}
+			if (key != null) {h ^= Utilities.hashCodeIgnoreCase(key);}
 		}
 		return h;
 	}
