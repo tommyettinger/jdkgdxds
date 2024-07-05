@@ -76,7 +76,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * This only needs to be serialized if the full key table is serialized, or if the iteration order should be
 	 * the same before and after serialization. Iteration order is better handled by using {@link LongOrderedSet}.
 	 */
-	protected int hashMultiplier = 0xB7AD9447;
+	protected int hashMultiplier = 0x13C6ED;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two

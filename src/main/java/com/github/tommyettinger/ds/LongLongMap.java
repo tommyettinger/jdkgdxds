@@ -94,7 +94,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
 	 * the same before and after serialization. Iteration order is better handled by using {@link LongLongOrderedMap}.
 	 */
-	protected int hashMultiplier = 0xB7AD9447;
+	protected int hashMultiplier = 0x13C6ED;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the tables. Must be all 1 bits in its low positions, ie a power of two
