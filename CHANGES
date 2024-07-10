@@ -1,3 +1,6 @@
+[1.6.2]
+- [BREAKING] Because using BitConversion.imul() didn't benchmark as having any speed penalty, but there were potentially-significant collision issues with small hashCode()s and smaller GWT-friendly multipliers, the Utilities.GOOD_MULTIPLIERS table now stores 32-bit ints instead of 21-bit ones. Again.
+
 [1.6.1]
 - [SEED BREAKING] Utilities.hashCodeIgnoreCase() returns different results in this version than in the previous version, with the same seed. This has to do with the next bullet point.
 - Utilities.GOOD_MULTIPLIERS now holds only smaller ints, which allows place() to avoid calling imul() entirely. This may have some speed implication on any platform, but most likely a small one.

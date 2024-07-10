@@ -148,7 +148,7 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.6.1'
+api 'com.github.tommyettinger:jdkgdxds:1.6.2'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -167,7 +167,7 @@ If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
 implementation "com.github.tommyettinger:digital:0.4.8:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.6.1:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.6.2:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -177,7 +177,7 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="com.github.tommyettinger.jdkgdxds" />
 ```
 in with the other `inherits` lines. You shouldn't need to specify checker-qual in GWT dependencies.
-Using jdkgdxds 1.6.0 or later is strongly encouraged for GWT applications for performance reasons.
+Using jdkgdxds 1.6.2 or later is strongly encouraged for GWT applications for performance reasons.
 
 If you have an Android module, you may need to ensure that multi-dex and desugaring are enabled. Projects generated with
 gdx-liftoff that target Java 8 or higher have this already, but projects made with gdx-setup or manually do not.
