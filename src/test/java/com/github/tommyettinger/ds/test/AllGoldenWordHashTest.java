@@ -155,7 +155,7 @@ Highest pileup    : 28
 					 * Highest pileup    : 23
 					 */
 					@Override
-					protected int place (Object item) {
+					protected int place (@NonNull Object item) {
 						final int h = item.hashCode() * hashMul;
 						return (h >>> shift) ^ (h & mask);
 					}

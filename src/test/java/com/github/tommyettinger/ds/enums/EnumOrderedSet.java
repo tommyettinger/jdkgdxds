@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds.enums;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.Utilities;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
@@ -106,7 +107,7 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	}
 
 	@Override
-	protected int place (Object item) {
+	protected int place (@NonNull Object item) {
 		// As long as the capacity is sufficient, ordinals will never collide.
 		if (item instanceof Enum)
 			return ((Enum<?>)item).ordinal() & mask;

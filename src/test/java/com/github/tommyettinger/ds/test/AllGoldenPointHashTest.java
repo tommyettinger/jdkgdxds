@@ -94,7 +94,7 @@ public class AllGoldenPointHashTest {
 					long hm = hashMultiplier * 0xF1357AEA2E62A9C5L;
 
 					@Override
-					protected int place(Object item) {
+					protected int place(@NonNull Object item) {
 						return (int)(item.hashCode() * hm >>> shift);
 					}
 

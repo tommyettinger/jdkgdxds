@@ -38,7 +38,7 @@ public class PileupTest {
         final int numLetters = 4;
         ObjectSet<String> set = new ObjectSet<String>(size, LOAD) {
             @Override
-            protected int place (Object item) {
+            protected int place (@NonNull Object item) {
                 return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
             }
         };
@@ -131,7 +131,7 @@ public class PileupTest {
             double averagePileup = 0;
 
             @Override
-            protected int place (Object item) {
+            protected int place (@NonNull Object item) {
                 return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
             }
 
@@ -228,7 +228,7 @@ public class PileupTest {
             double averagePileup = 0;
 
             @Override
-            protected int place (Object item) {
+            protected int place (@NonNull Object item) {
                 return (int)(hashMultiplier * item.hashCode()) >>> shift;
             }
 
@@ -711,7 +711,7 @@ public class PileupTest {
             int hm = 0x13C6ED;
 
             @Override
-            protected int place (Object item) {
+            protected int place (@NonNull Object item) {
                 return item.hashCode() * hm >>> shift;
             }
 
@@ -802,7 +802,7 @@ public class PileupTest {
         final int numLetters = 4;
         ObjectSet<BadString> set = new ObjectSet<BadString>(size, LOAD) {
             @Override
-            protected int place (Object item) {
+            protected int place (@NonNull Object item) {
                 return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
             }
         };
@@ -894,7 +894,7 @@ public class PileupTest {
             double averagePileup = 0;
 
             @Override
-            protected int place (Object item) {
+            protected int place (@NonNull Object item) {
                 return (int)(item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // if this long constant is the same as the one used
                 // by place() in generateUniqueBadFibSet's map, and this uses that FibSet version, then this slows down massively.
             }
@@ -1516,7 +1516,7 @@ public class PileupTest {
             }
 
             @Override
-            protected int place (Object item) {
+            protected int place (@NonNull Object item) {
 //                return item.hashCode() * hashMul >>> shift;
 //                final int h = item.hashCode() * hashAddend;
 //                return (h ^ h >>> 16) & mask; //total collisions: 1842294, longest pileup: 35
@@ -1655,7 +1655,7 @@ public class PileupTest {
                     int oa = ra, ob = rb;
 
                     @Override
-                    protected int place (Object item) {
+                    protected int place (@NonNull Object item) {
                         final int h = item.hashCode();
                         return (h ^ (h << ra | h >>> -ra) ^ (h << rb | h >>> -rb)) & mask;
                     }
@@ -1764,7 +1764,7 @@ public class PileupTest {
             }
 
             @Override
-            protected int place (Object item) {
+            protected int place (@NonNull Object item) {
 //                return item.hashCode() * hashMul >>> shift;
 //                final int h = item.hashCode() * hashAddend;
 //                return (h ^ h >>> 16) & mask; //total collisions: 1842294, longest pileup: 35
@@ -2009,7 +2009,7 @@ public class PileupTest {
 //            }
 
             @Override
-            protected int place (Object item) {
+            protected int place (@NonNull Object item) {
 // 97823400 ns, total collisions: 1917655, longest pileup: 125, average pileup: 7.315273284912109, total of 13 pileups: 428
 //                return (int)Hasher.randomize2(hashMultiplier ^ item.hashCode()) & mask;
 //77881700 ns, total collisions: 1564928, longest pileup: 67, average pileup: 5.9697265625, total of 13 pileups: 222
@@ -2292,7 +2292,7 @@ public class PileupTest {
                 int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                 @Override
-                protected int place (Object item) {
+                protected int place (@NonNull Object item) {
                     final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
 //                    return hash.applyAsInt(p.x, p.y) & mask;
@@ -2424,7 +2424,7 @@ public class PileupTest {
                 int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                 @Override
-                protected int place (Object item) {
+                protected int place (@NonNull Object item) {
                     final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
                     return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -2543,7 +2543,7 @@ public class PileupTest {
                 int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                 @Override
-                protected int place (Object item) {
+                protected int place (@NonNull Object item) {
                     final Point2 p = (Point2)item;
                     return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 //                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -2662,7 +2662,7 @@ public class PileupTest {
                 int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                 @Override
-                protected int place (Object item) {
+                protected int place (@NonNull Object item) {
                     final Point2 p = (Point2)item;
                     return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 //                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -2869,7 +2869,7 @@ public class PileupTest {
                     int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                     @Override
-                    protected int place (Object item) {
+                    protected int place (@NonNull Object item) {
                         final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 //                        return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -2999,7 +2999,7 @@ public class PileupTest {
                 int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                 @Override
-                protected int place (Object item) {
+                protected int place (@NonNull Object item) {
                     final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
                     return hash.applyAsInt(p.x, p.y) & mask;
@@ -3131,7 +3131,7 @@ public class PileupTest {
                 int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                 @Override
-                protected int place (Object item) {
+                protected int place (@NonNull Object item) {
                     final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
                     return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -3257,7 +3257,7 @@ public class PileupTest {
                 int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                 @Override
-                protected int place (Object item) {
+                protected int place (@NonNull Object item) {
                     final Point2 p = (Point2)item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
                     return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -3488,7 +3488,7 @@ public class PileupTest {
                     int hashMul = (int)(hashMultiplier & 0x1FFFFFL);
 
                     @Override
-                    protected int place (Object item) {
+                    protected int place (@NonNull Object item) {
                         final Point2 p = (Point2)item;
 //                        return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
                         return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -3699,7 +3699,7 @@ public class PileupTest {
         }
 
         @Override
-        protected int place (Object item) {
+        protected int place (@NonNull Object item) {
             return super.place(item);
         }
 
@@ -3754,7 +3754,7 @@ public class PileupTest {
         }
 
         @Override
-        protected int place (Object item) {
+        protected int place (@NonNull Object item) {
             //total collisions: 21742, longest pileup: 10
             //total of 12 longest pileups: 69
             return super.place(item);

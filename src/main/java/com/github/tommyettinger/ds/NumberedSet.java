@@ -507,21 +507,20 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * Gets the current hash multiplier as used by {@link #place(Object)}; for specific advanced usage only.
 	 * The hash multiplier changes whenever {@link #resize(int)} is called, though its value before the resize
 	 * affects its value after.
-	 * @return the current hash multiplier, which should always be an odd int between 1 and 2097151, inclusive
+	 * @return the current hash multiplier, which should always be a negative, odd int
 	 */
 	public int getHashMultiplier () {
 		return map.getHashMultiplier();
 	}
 
 	/**
-	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size; this
-	 * is for specific advanced usage only. Calling resize() will change the multiplier before it gets used, and the current
-	 * {@link #size()} of the data structure also changes the value. The hash multiplier is used by {@link #place(Object)}.
-	 * The hash multiplier must be an odd int, and should usually be "somewhat large." Here, that means the absolute value of
-	 * the multiplier should be no more than 2 million or so (roughly {@code 0x1FFFFF} in hex), and this method will ensure
-	 * that both the used multiplier is within that range and is odd. The hash multiplier changes whenever
-	 * {@link #resize(int)} is called, though its value before the resize affects its value after. Because of how
-	 * resize() randomizes the multiplier, even inputs such as {@code 1}, {@code -999999999} and {@code 0} actually work well.
+	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size;
+	 * this is for specific advanced usage only. Calling resize() will change the multiplier before it gets used, and
+	 * the current {@link #size()} of the data structure also changes the value. The hash multiplier is used by
+	 * {@link #place(Object)}. The hash multiplier must be a negative, odd int, and this method will ensure that both the
+	 * used multiplier is both negative and odd. The hash multiplier changes whenever {@link #resize(int)} is called,
+	 * though its value before the resize affects its value after. Because of how resize() randomizes the multiplier,
+	 * even inputs such as {@code 1}, {@code -999999999} and {@code 0} actually work well.
 	 * <br>
 	 * This is accessible at all mainly so serialization code that has a need to access the hash multiplier can do so, but
 	 * also to provide an "emergency escape route" in case of hash flooding. Using one of the "known good" ints in

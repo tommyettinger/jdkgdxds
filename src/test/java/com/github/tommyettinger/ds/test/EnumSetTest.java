@@ -108,7 +108,6 @@ public class EnumSetTest extends TestCase {
         assertEquals(EnumSet.with(HugeEnumCount.NO65), set);
     }
 
-    @SuppressWarnings("unchecked")
     public void test_AllOf_LClass() {
         EnumSet enumSet = EnumSet.allOf(EnumFoo.values());
         assertEquals("Size of enumSet should be 64", 64, enumSet.size());
@@ -144,7 +143,6 @@ public class EnumSetTest extends TestCase {
 
     }
     
-    @SuppressWarnings("unchecked")
     public void test_add_E() {
         Set<Enum<?>> set = new EnumSet(EnumFoo.values(), true);
         set.add(EnumFoo.a);
@@ -737,7 +735,6 @@ public class EnumSetTest extends TestCase {
         rawEnumCollection.add(HugeEnumWithInnerClass.a);
     }
 
-    @SuppressWarnings("unchecked")
     public void test_CopyOf_LESet() {
         EnumSet enumSet = EnumSet
                 .noneOf(EnumWithInnerClass.class);

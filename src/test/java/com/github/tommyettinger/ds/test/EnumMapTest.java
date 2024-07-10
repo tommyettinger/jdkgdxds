@@ -200,7 +200,7 @@ public class EnumMapTest extends TestCase {
                 .containsKey(null));
     }
 
-    @SuppressWarnings( { "unchecked", "boxing" })
+    @SuppressWarnings( { "unchecked"})
     public void test_clone() {
         EnumMap enumSizeMap = new EnumMap(Size.class);
         Integer integer = new Integer("3");

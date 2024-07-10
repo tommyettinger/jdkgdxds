@@ -88,7 +88,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
 	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectObjectOrderedMap}.
 	 */
-	protected int hashMultiplier = 0x13C6ED;
+	protected int hashMultiplier = 0xEFAA28F1;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two

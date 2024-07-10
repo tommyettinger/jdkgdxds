@@ -277,7 +277,7 @@ public class IntCombinedHashTest {
 		}
 
 		@Override
-		protected int place (Object item) {
+		protected int place (@NonNull Object item) {
 			return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
 		}
 

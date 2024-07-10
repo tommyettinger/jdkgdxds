@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
@@ -141,7 +142,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	}
 
 	@Override
-	protected int place (Object item) {
+	protected int place (@NonNull Object item) {
 		if (item instanceof CharSequence)
 			return Utilities.hashCodeIgnoreCase((CharSequence)item, hashMultiplier) & mask;
 		return super.place(item);

@@ -136,7 +136,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	}
 
 	@Override
-	protected int place (Object item) {
+	protected int place (@NonNull Object item) {
 		if (item instanceof CharSequence)
 			return Utilities.hashCodeIgnoreCase((CharSequence)item, hashMultiplier) & mask;
 		return super.place(item);

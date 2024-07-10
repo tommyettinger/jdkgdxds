@@ -60,7 +60,7 @@ public class ExhaustivePointHashTest {
 //						originalMultiplier = hashMultiplier;
 //					}
 					@Override
-					protected int place (Object item) {
+					protected int place (@NonNull Object item) {
 						final Point2 p = (Point2)item;
 						return p.x * hashX + p.y * hashY & mask;
 //						return (int)(item.hashCode() * hashMultiplier >>> shift);

@@ -117,7 +117,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	}
 
 	@Override
-	protected int place (Object item) {
+	protected int place (@NonNull Object item) {
 		if (item instanceof CharSequence)
 			return Utilities.hashCodeIgnoreCase((CharSequence)item, hashMultiplier) & mask;
 		return super.place(item);

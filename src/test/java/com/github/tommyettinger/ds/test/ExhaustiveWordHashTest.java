@@ -111,7 +111,7 @@ public class ExhaustiveWordHashTest {
 //						originalMultiplier = hashMultiplier;
 //					}
 					@Override
-					protected int place (Object item) {
+					protected int place (@NonNull Object item) {
 						return item.hashCode() * hashMul >>> shift;
 //						return item.hashCode() * hashMul + hashAdd >>> shift;
 //						return (int)(item.hashCode() * hashMultiplier >>> shift);

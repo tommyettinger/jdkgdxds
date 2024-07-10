@@ -345,7 +345,7 @@ public class SmallCombinedHashTest {
 		}
 
 		@Override
-		protected int place (Object item) {
+		protected int place (@NonNull Object item) {
 			return (item.hashCode() ^ 0x80000000) * hashMultiplier >>> shift;
 		}
 

@@ -277,7 +277,7 @@ public class AllGoldenIntWordHashTest {
 					int hm = 0xB7AD9447;//0xF1042721;// 0x9E3779B7;
 
 					@Override
-					protected int place (Object item) {
+					protected int place (@NonNull Object item) {
 //						final int h = BitConversion.imul(item.hashCode(), hm);
 //						return (h ^ h << 16) >>> shift;
 //						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS

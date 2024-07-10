@@ -89,7 +89,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
 	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectFloatOrderedMap}.
 	 */
-	protected int hashMultiplier = 0x13C6ED;
+	protected int hashMultiplier = 0xEFAA28F1;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
@@ -232,9 +232,8 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	@SuppressWarnings("PointlessBitwiseExpression")
 	protected int place (@NonNull Object item) {
-		return (item.hashCode() | 0) * hashMultiplier >>> shift;
+		return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
 	}
@@ -620,7 +619,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier * shift >>> 5 & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
 		K[] oldKeyTable = keyTable;
 		float[] oldValueTable = valueTable;
 
@@ -639,21 +638,20 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * Gets the current hash multiplier as used by {@link #place(Object)}; for specific advanced usage only.
 	 * The hash multiplier changes whenever {@link #resize(int)} is called, though its value before the resize
 	 * affects its value after.
-	 * @return the current hash multiplier, which should always be an odd int between 1 and 2097151, inclusive
+	 * @return the current hash multiplier, which should always be a negative, odd int
 	 */
 	public int getHashMultiplier () {
 		return hashMultiplier;
 	}
 
 	/**
-	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size; this
-	 * is for specific advanced usage only. Calling resize() will change the multiplier before it gets used, and the current
-	 * {@link #size()} of the data structure also changes the value. The hash multiplier is used by {@link #place(Object)}.
-	 * The hash multiplier must be an odd int, and should usually be "somewhat large." Here, that means the absolute value of
-	 * the multiplier should be no more than 2 million or so (roughly {@code 0x1FFFFF} in hex), and this method will ensure
-	 * that both the used multiplier is within that range and is odd. The hash multiplier changes whenever
-	 * {@link #resize(int)} is called, though its value before the resize affects its value after. Because of how
-	 * resize() randomizes the multiplier, even inputs such as {@code 1}, {@code -999999999} and {@code 0} actually work well.
+	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size;
+	 * this is for specific advanced usage only. Calling resize() will change the multiplier before it gets used, and
+	 * the current {@link #size()} of the data structure also changes the value. The hash multiplier is used by
+	 * {@link #place(Object)}. The hash multiplier must be a negative, odd int, and this method will ensure that both the
+	 * used multiplier is both negative and odd. The hash multiplier changes whenever {@link #resize(int)} is called,
+	 * though its value before the resize affects its value after. Because of how resize() randomizes the multiplier,
+	 * even inputs such as {@code 1}, {@code -999999999} and {@code 0} actually work well.
 	 * <br>
 	 * This is accessible at all mainly so serialization code that has a need to access the hash multiplier can do so, but
 	 * also to provide an "emergency escape route" in case of hash flooding. Using one of the "known good" ints in
@@ -665,7 +663,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * @param hashMultiplier any int; will not be used as-is
 	 */
 	public void setHashMultiplier (int hashMultiplier) {
-		this.hashMultiplier = (hashMultiplier & 0x1FFFFF) | 1;
+		this.hashMultiplier = hashMultiplier | 0x80000001;
 		resize(keyTable.length);
 	}
 

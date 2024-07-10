@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
@@ -208,7 +209,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	}
 
 	@Override
-	protected int place (Object item) {
+	protected int place (@NonNull Object item) {
 		if (item instanceof String) {
 			return hashHelper((String) item) >>> shift;
 		}

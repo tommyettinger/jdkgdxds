@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.tommyettinger.function.ObjToSameFunction;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
@@ -233,7 +234,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	}
 
 	@Override
-	protected int place (Object item) {
+	protected int place (@NonNull Object item) {
 		if (item instanceof Iterable) {
 			return hashHelper((I) item) >>> shift;
 		}

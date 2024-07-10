@@ -135,7 +135,7 @@ public class CrazySmallPointHashTest {
 					int longestPileup = 0;
 
 					@Override
-					protected int place (Object item) {
+					protected int place (@NonNull Object item) {
 						return item.hashCode() * hashMultiplier >>> shift;
 					}
 

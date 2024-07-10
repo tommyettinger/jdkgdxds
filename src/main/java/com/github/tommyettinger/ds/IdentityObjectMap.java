@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Map;
@@ -114,7 +115,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 * @param item a non-null Object; its identityHashCode is used here
 	 */
 	@Override
-	protected int place (Object item) {
+	protected int place (@NonNull Object item) {
 		return (System.identityHashCode(item) & mask);
 	}
 
@@ -141,7 +142,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 
 	/**
 	 * Gets the hash multiplier, which this class does not use itself.
-	 * @return the current hash multiplier, which should always be an odd int between 1 and 2097151, inclusive
+	 * @return the current hash multiplier, which should always be a negative, odd int
 	 */
 	@Override
 	public int getHashMultiplier () {
@@ -152,11 +153,11 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 * Sets the hash multiplier, which this class does not use itself. Because of that, this method does not
 	 * call {@link #resize(int)} at all. The hash multiplier will change anyway the next time resize() is called.
 	 * You probably just don't need to call this method.
-	 * @param hashMultiplier will not be used, but will be treated as odd and stored in case some other code needs it
+	 * @param hashMultiplier will not be used, but will be treated as negative and odd and stored in case some other code needs it
 	 */
 	@Override
 	public void setHashMultiplier (int hashMultiplier) {
-		this.hashMultiplier = (hashMultiplier & 0x1FFFFF) | 1;
+		this.hashMultiplier = hashMultiplier | 0x80000001;
 	}
 
 	/**

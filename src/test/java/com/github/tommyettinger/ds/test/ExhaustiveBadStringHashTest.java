@@ -89,7 +89,7 @@ public class ExhaustiveBadStringHashTest {
 //						originalMultiplier = hashMultiplier;
 //					}
 					@Override
-					protected int place (Object item) {
+					protected int place (@NonNull Object item) {
 						return item.hashCode() * hashMul + hashAdd >>> shift;
 //						return (int)(item.hashCode() * hashMultiplier >>> shift);
 //                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
