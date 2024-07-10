@@ -238,7 +238,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 		int hash = hashMultiplier;
 		for (T c : s) {
 			if(filter.test(c)){
-				hash = (hash ^ editor.apply(c).hashCode()) * hashMultiplier;
+				hash = BitConversion.imul(hash ^ editor.apply(c).hashCode(), hashMultiplier);
 			}
 		}
 		return hash ^ (hash << 23 | hash >>> 9) ^ (hash << 11 | hash >>> 21);

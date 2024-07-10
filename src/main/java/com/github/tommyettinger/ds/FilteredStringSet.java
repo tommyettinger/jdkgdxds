@@ -195,10 +195,10 @@ public class FilteredStringSet extends ObjectSet<String> {
 		for (int i = 0, len = s.length(); i < len; i++) {
 			final char c = s.charAt(i);
 			if (filter.filter.test(c)) {
-				hash = ((hash << 13 | hash >>> 19) * hm) ^ filter.editor.applyAsChar(c);
+				hash = BitConversion.imul((hash << 13 | hash >>> 19), hm) ^ filter.editor.applyAsChar(c);
 			}
 		}
-		hash *= hm;
+		hash = BitConversion.imul(hash, hm);
 		return hash ^ (hash << 23 | hash >>> 9) ^ (hash << 11 | hash >>> 21);
 	}
 
