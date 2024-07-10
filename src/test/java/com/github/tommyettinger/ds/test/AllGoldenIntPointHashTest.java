@@ -282,6 +282,12 @@ public class AllGoldenIntPointHashTest {
 //				0xC859FD25, 0xFDA6D769, 0xA4AF7F5D, 0xD0C56693, 0xB40740CF, 0xE8A09349, 0x9FB48479, 0xF80A9919,
 //		};
 
+				// The best candidate so far for 1.6.2 . This uses the same switching as the two before.
+				//0 problem multipliers in total, 512 likely good multipliers in total.
+				//Lowest collisions : 5212426
+				//Highest collisions: 5288324
+				//Lowest pileup     : 16
+				//Highest pileup    : 30
 		new int[]{
 				0x9B89CD59, 0xDCA1C8D7, 0xC5F768E7, 0x92317571, 0x937CD501, 0xE993C987, 0xD5567571, 0x85C8ADB5,
 				0xE6AC8B4F, 0xC21736F9, 0xFD890F79, 0xC514D823, 0xF151575F, 0x8BDCE3EF, 0xA7F27B2F, 0x8C1EAA4F,
