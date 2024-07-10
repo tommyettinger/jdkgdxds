@@ -13,6 +13,9 @@ buildscript {
 apply plugin: 'java-library'
 apply plugin: 'com.vanniktech.maven.publish'
 
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
 def projectName = 'jdkgdxds'
 version "$VERSION_NAME"
 group 'com.github.tommyettinger'
@@ -33,6 +36,12 @@ if (JavaVersion.current().isJava8Compatible()) {
         }
     }
 }
+
+mavenPublishing {
+    configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
+}
+
+mavenPlainJavadocJar.archiveBaseName.set("$projectName")
 
 java.sourceCompatibility = 1.8
 java.targetCompatibility = 1.8
