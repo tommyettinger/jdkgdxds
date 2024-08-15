@@ -1,3 +1,7 @@
+[1.6.3]
+- The dependency on digital was updated to 0.5.0, which improves Interpolators and parts of TrigTools.
+- The Gradle version used to build jdkgdxds was updated to 8.10, which will allow this to be built with Java 23.
+
 [1.6.2]
 - [BREAKING] Because using BitConversion.imul() didn't benchmark as having any speed penalty, but there were potentially-significant collision issues with small hashCode()s and smaller GWT-friendly multipliers, the Utilities.GOOD_MULTIPLIERS table now stores 32-bit ints instead of 21-bit ones. Again.
 
