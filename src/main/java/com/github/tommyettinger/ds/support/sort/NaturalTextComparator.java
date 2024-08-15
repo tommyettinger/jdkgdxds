@@ -23,7 +23,7 @@ import java.util.Comparator;
  * A Comparator that can sort Strings, StringBuilders, and other CharSequences by "natural text order," also called
  * Alphanum sort order. This "unofficial natural order" for text treats groups of digits as one number, and sorts using that one
  * numerical value instead of the lexicographic order that is more commonly used in programming languages. This is based on
- * <a href="https://github.com/gpanther/java-nat-sort">Grey Panther's code</a>, extending it slightly so it sorts all
+ * <a href="https://github.com/gpanther/java-nat-sort">Grey Panther's code</a>, extending it slightly so that it sorts all
  * upper-case letters before any lower-case letters, in any language with case. You don't construct a new one of these; instead,
  * use {@link #CASE_SENSITIVE} or {@link #CASE_INSENSITIVE} to get a predefined immutable instance.
  */
@@ -111,18 +111,12 @@ public class NaturalTextComparator implements Comparator<CharSequence> {
 			if ((u1 != c1) && (u2 == c2)) {
 				return Integer.MAX_VALUE;
 			}
-			return u1 - u2;
-		} else {
-			return u1 - u2;
-		}
-	}
+        }
+        return u1 - u2;
+    }
 
 	private static int compareUnsigned (long num1, long num2) {
-		return compare(num1 + Long.MIN_VALUE, num2 + Long.MIN_VALUE);
-	}
-
-	private static int compare (long x, long y) {
-		return Long.compare(x, y);
+		return Long.compare(num1 + Long.MIN_VALUE, num2 + Long.MIN_VALUE);
 	}
 
 	private static long parse (char c1) {
