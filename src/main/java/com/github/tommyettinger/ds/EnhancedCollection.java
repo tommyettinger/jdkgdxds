@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.ShortIterator;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -36,6 +37,26 @@ public interface EnhancedCollection<T> extends Collection<T> {
 			add(it.next());
 		}
 		return oldSize != size();
+	}
+	/**
+	 * Removes from this collection all occurrences of any elements contained in the specified Iterator.
+	 *
+	 * @param it an Iterator of items to remove fully
+	 * @return true if this collection was modified.
+	 */
+	default boolean removeAll (Iterator<? extends T> it) {
+		Iterator<T> me;
+		int originalSize = size();
+		while (it.hasNext()) {
+			T item = it.next();
+			me = iterator();
+			while (me.hasNext()) {
+				if (me.next() == item) {
+					me.remove();
+				}
+			}
+		}
+		return originalSize != size();
 	}
 
 	default boolean removeAll (Object[] array) {
@@ -67,7 +88,19 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @return true if this collection was modified.
 	 */
 	default boolean removeEach (Iterable<?> other) {
-		Iterator<?> it = other.iterator();
+		return removeEach(other.iterator());
+	}
+
+	/**
+	 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+	 * Note that if a value is present more than once in this collection, only one of those occurrences
+	 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+	 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+	 *
+	 * @param it an Iterable of any items to remove one-by-one, such as an ObjectList or ObjectSet
+	 * @return true if this collection was modified.
+	 */
+	default boolean removeEach (Iterator<?> it) {
 		boolean changed = false;
 		while (it.hasNext()) {
 			changed |= remove(it.next());

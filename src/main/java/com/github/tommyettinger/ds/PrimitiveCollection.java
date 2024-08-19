@@ -121,7 +121,16 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll (OfInt other) {
-			IntIterator it = other.iterator(), me;
+			return removeAll(other.iterator());
+		}
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified IntIterator.
+		 *
+		 * @param it a IntIterator of items to remove fully
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeAll (IntIterator it) {
+			IntIterator me;
 			int originalSize = size();
 			while (it.hasNext()) {
 				int item = it.nextInt();
@@ -164,7 +173,18 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach (OfInt other) {
-			IntIterator it = other.iterator();
+			return removeEach(other.iterator());
+		}
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified IntIterator.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code it}. If {@code it} has the same
+		 * contents as this collection or has additional items, then removing each of {@code it} will clear this.
+		 *
+		 * @param it a IntIterator of items to remove one-by-one
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (IntIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextInt());
@@ -467,7 +487,16 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll (OfLong other) {
-			LongIterator it = other.iterator(), me;
+			return removeAll(other.iterator());
+		}
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified LongIterator.
+		 *
+		 * @param it a LongIterator of items to remove fully
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeAll (LongIterator it) {
+			LongIterator me;
 			int originalSize = size();
 			while (it.hasNext()) {
 				long item = it.nextLong();
@@ -510,7 +539,18 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach (OfLong other) {
-			LongIterator it = other.iterator();
+			return removeEach(other.iterator());
+		}
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified LongIterator.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code it}. If {@code it} has the same
+		 * contents as this collection or has additional items, then removing each of {@code it} will clear this.
+		 *
+		 * @param it a LongIterator of items to remove one-by-one
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (LongIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextLong());
@@ -813,7 +853,16 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll (OfFloat other) {
-			FloatIterator it = other.iterator(), me;
+			return removeAll(other.iterator());
+		}
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified FloatIterator.
+		 *
+		 * @param it a FloatIterator of items to remove fully
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeAll (FloatIterator it) {
+			FloatIterator me;
 			int originalSize = size();
 			while (it.hasNext()) {
 				float item = it.nextFloat();
@@ -856,7 +905,18 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach (OfFloat other) {
-			FloatIterator it = other.iterator();
+			return removeEach(other.iterator());
+		}
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified FloatIterator.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code it}. If {@code it} has the same
+		 * contents as this collection or has additional items, then removing each of {@code it} will clear this.
+		 *
+		 * @param it a FloatIterator of items to remove one-by-one
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (FloatIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextFloat());
@@ -1133,7 +1193,16 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll (OfDouble other) {
-			DoubleIterator it = other.iterator(), me;
+			return removeAll(other.iterator());
+		}
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified DoubleIterator.
+		 *
+		 * @param it a DoubleIterator of items to remove fully
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeAll (DoubleIterator it) {
+			DoubleIterator me;
 			int originalSize = size();
 			while (it.hasNext()) {
 				double item = it.nextDouble();
@@ -1176,7 +1245,18 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach (OfDouble other) {
-			DoubleIterator it = other.iterator();
+			return removeEach(other.iterator());
+		}
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified DoubleIterator.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code it}. If {@code it} has the same
+		 * contents as this collection or has additional items, then removing each of {@code it} will clear this.
+		 *
+		 * @param it a DoubleIterator of items to remove one-by-one
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (DoubleIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextDouble());
@@ -1453,7 +1533,16 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll (OfShort other) {
-			ShortIterator it = other.iterator(), me;
+			return removeAll(other.iterator());
+		}
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified ShortIterator.
+		 *
+		 * @param it a ShortIterator of items to remove fully
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeAll (ShortIterator it) {
+			ShortIterator me;
 			int originalSize = size();
 			while (it.hasNext()) {
 				short item = it.nextShort();
@@ -1496,7 +1585,18 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach (OfShort other) {
-			ShortIterator it = other.iterator();
+			return removeEach(other.iterator());
+		}
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified ShortIterator.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code it}. If {@code it} has the same
+		 * contents as this collection or has additional items, then removing each of {@code it} will clear this.
+		 *
+		 * @param it a ShortIterator of items to remove one-by-one
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (ShortIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextShort());
@@ -1773,7 +1873,16 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll (OfByte other) {
-			ByteIterator it = other.iterator(), me;
+			return removeAll(other.iterator());
+		}
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified ByteIterator.
+		 *
+		 * @param it a ByteIterator of items to remove fully
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeAll (ByteIterator it) {
+			ByteIterator me;
 			int originalSize = size();
 			while (it.hasNext()) {
 				byte item = it.nextByte();
@@ -1816,7 +1925,18 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach (OfByte other) {
-			ByteIterator it = other.iterator();
+			return removeEach(other.iterator());
+		}
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified ByteIterator.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code it}. If {@code it} has the same
+		 * contents as this collection or has additional items, then removing each of {@code it} will clear this.
+		 *
+		 * @param it a ByteIterator of items to remove one-by-one
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (ByteIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextByte());
@@ -2093,7 +2213,16 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll (OfChar other) {
-			CharIterator it = other.iterator(), me;
+			return removeAll(other.iterator());
+		}
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified CharIterator.
+		 *
+		 * @param it a CharIterator of items to remove fully
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeAll (CharIterator it) {
+			CharIterator me;
 			int originalSize = size();
 			while (it.hasNext()) {
 				char item = it.nextChar();
@@ -2136,7 +2265,18 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach (OfChar other) {
-			CharIterator it = other.iterator();
+			return removeEach(other.iterator());
+		}
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified CharIterator.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code it}. If {@code it} has the same
+		 * contents as this collection or has additional items, then removing each of {@code it} will clear this.
+		 *
+		 * @param it a CharIterator of items to remove one-by-one
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (CharIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextChar());
@@ -2413,7 +2553,16 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll (OfBoolean other) {
-			BooleanIterator it = other.iterator(), me;
+			return removeAll(other.iterator());
+		}
+		/**
+		 * Removes from this collection all occurrences of any elements contained in the specified BooleanIterator.
+		 *
+		 * @param it a BooleanIterator of items to remove fully
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeAll (BooleanIterator it) {
+			BooleanIterator me;
 			int originalSize = size();
 			while (it.hasNext()) {
 				boolean item = it.nextBoolean();
@@ -2456,7 +2605,18 @@ public interface PrimitiveCollection<T> {
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach (OfBoolean other) {
-			BooleanIterator it = other.iterator();
+			return removeEach(other.iterator());
+		}
+		/**
+		 * Removes from this collection element-wise occurrences of elements contained in the specified BooleanIterator.
+		 * Note that if a value is present more than once in this collection, only one of those occurrences
+		 * will be removed for each occurrence of that value in {@code it}. If {@code it} has the same
+		 * contents as this collection or has additional items, then removing each of {@code it} will clear this.
+		 *
+		 * @param it a BooleanIterator of items to remove one-by-one
+		 * @return true if this collection was modified.
+		 */
+		default boolean removeEach (BooleanIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= remove(it.nextBoolean());
