@@ -29,7 +29,7 @@ import java.util.Objects;
 /**
  * A customizable variant on ObjectSet that uses Iterable items made of T sub-items, and only considers a sub-item (for
  * equality and hashing purposes) if that sub-item satisfies a predicate. This can also edit the sub-items that pass
- * the filter, such as normalize their data during comparisons (and hashing). You will usually want to call
+ * the filter, such as by normalizing their data during comparisons (and hashing). You will usually want to call
  * {@link #setFilter(ObjPredicate)} and/or {@link #setEditor(ObjToSameFunction)} to change the behavior of hashing and
  * equality before you enter any items, unless you have specified the filter and/or editor you want in the constructor.
  * Calling {@link #setModifiers(ObjPredicate, ObjToSameFunction)} is recommended if you need to set both the filter and

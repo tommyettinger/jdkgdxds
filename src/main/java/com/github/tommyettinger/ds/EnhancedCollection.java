@@ -22,7 +22,22 @@ import com.github.tommyettinger.ds.support.util.Appender;
 import java.util.Collection;
 import java.util.Iterator;
 
+/**
+ * Augments {@link Collection} with default methods that can usually use the same implementation across subtypes.
+ * This generally brings Object-based collections to parity with the default methods provided by the various
+ * {@link PrimitiveCollection} types.
+ *
+ * @param <T> the type of items in this collection
+ */
 public interface EnhancedCollection<T> extends Collection<T> {
+	default boolean addAll (Iterator<? extends T> it) {
+		int oldSize = size();
+		while (it.hasNext()) {
+			add(it.next());
+		}
+		return oldSize != size();
+	}
+
 	default boolean removeAll (Object[] array) {
 		return removeAll(array, 0, array.length);
 	}

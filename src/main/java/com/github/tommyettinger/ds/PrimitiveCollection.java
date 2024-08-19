@@ -80,6 +80,9 @@ public interface PrimitiveCollection<T> {
 	@Override
 	boolean equals (Object other);
 
+	/**
+	 * A PrimitiveCollection with unboxed {@code int} items.
+	 */
 	interface OfInt extends PrimitiveCollection<Integer> {
 		boolean add (int item);
 
@@ -88,7 +91,10 @@ public interface PrimitiveCollection<T> {
 		boolean contains (int item);
 
 		default boolean addAll (OfInt other) {
-			IntIterator it = other.iterator();
+			return addAll(other.iterator());
+		}
+
+		default boolean addAll (IntIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextInt());
@@ -420,6 +426,9 @@ public interface PrimitiveCollection<T> {
 		}
 	}
 
+	/**
+	 * A PrimitiveCollection with unboxed {@code long} items.
+	 */
 	interface OfLong extends PrimitiveCollection<Long> {
 		boolean add (long item);
 
@@ -428,7 +437,10 @@ public interface PrimitiveCollection<T> {
 		boolean contains (long item);
 
 		default boolean addAll (OfLong other) {
-			LongIterator it = other.iterator();
+			return addAll(other.iterator());
+		}
+
+		default boolean addAll (LongIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextLong());
@@ -760,6 +772,9 @@ public interface PrimitiveCollection<T> {
 		}
 	}
 
+	/**
+	 * A PrimitiveCollection with unboxed {@code float} items.
+	 */
 	interface OfFloat extends PrimitiveCollection<Float> {
 		boolean add (float item);
 
@@ -768,7 +783,10 @@ public interface PrimitiveCollection<T> {
 		boolean contains (float item);
 
 		default boolean addAll (OfFloat other) {
-			FloatIterator it = other.iterator();
+			return addAll(other.iterator());
+		}
+
+		default boolean addAll (FloatIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextFloat());
@@ -1074,6 +1092,9 @@ public interface PrimitiveCollection<T> {
 		}
 	}
 
+	/**
+	 * A PrimitiveCollection with unboxed {@code double} items.
+	 */
 	interface OfDouble extends PrimitiveCollection<Double> {
 		boolean add (double item);
 
@@ -1082,7 +1103,10 @@ public interface PrimitiveCollection<T> {
 		boolean contains (double item);
 
 		default boolean addAll (OfDouble other) {
-			DoubleIterator it = other.iterator();
+			return addAll(other.iterator());
+		}
+
+		default boolean addAll (DoubleIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextDouble());
@@ -1388,6 +1412,9 @@ public interface PrimitiveCollection<T> {
 		}
 	}
 
+	/**
+	 * A PrimitiveCollection with unboxed {@code short} items.
+	 */
 	interface OfShort extends PrimitiveCollection<Short> {
 		boolean add (short item);
 
@@ -1396,7 +1423,10 @@ public interface PrimitiveCollection<T> {
 		boolean contains (short item);
 
 		default boolean addAll (OfShort other) {
-			ShortIterator it = other.iterator();
+			return addAll(other.iterator());
+		}
+		
+		default boolean addAll (ShortIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextShort());
@@ -1702,6 +1732,9 @@ public interface PrimitiveCollection<T> {
 		}
 	}
 
+	/**
+	 * A PrimitiveCollection with unboxed {@code byte} items.
+	 */
 	interface OfByte extends PrimitiveCollection<Byte> {
 		boolean add (byte item);
 
@@ -1710,7 +1743,10 @@ public interface PrimitiveCollection<T> {
 		boolean contains (byte item);
 
 		default boolean addAll (OfByte other) {
-			ByteIterator it = other.iterator();
+			return addAll(other.iterator());
+		}
+		
+		default boolean addAll (ByteIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextByte());
@@ -2016,6 +2052,9 @@ public interface PrimitiveCollection<T> {
 		}
 	}
 
+	/**
+	 * A PrimitiveCollection with unboxed {@code char} items.
+	 */
 	interface OfChar extends PrimitiveCollection<Character> {
 		boolean add (char item);
 
@@ -2024,7 +2063,10 @@ public interface PrimitiveCollection<T> {
 		boolean contains (char item);
 
 		default boolean addAll (OfChar other) {
-			CharIterator it = other.iterator();
+			return addAll(other.iterator());
+		}
+		
+		default boolean addAll (CharIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextChar());
@@ -2330,6 +2372,9 @@ public interface PrimitiveCollection<T> {
 		}
 	}
 
+	/**
+	 * A PrimitiveCollection with unboxed {@code boolean} items.
+	 */
 	interface OfBoolean extends PrimitiveCollection<Boolean> {
 		boolean add (boolean item);
 
@@ -2338,7 +2383,10 @@ public interface PrimitiveCollection<T> {
 		boolean contains (boolean item);
 
 		default boolean addAll (OfBoolean other) {
-			BooleanIterator it = other.iterator();
+			return addAll(other.iterator());
+		}
+		
+		default boolean addAll (BooleanIterator it) {
 			boolean changed = false;
 			while (it.hasNext()) {
 				changed |= add(it.nextBoolean());
