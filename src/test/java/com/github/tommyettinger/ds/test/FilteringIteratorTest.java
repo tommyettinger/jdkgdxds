@@ -1,13 +1,7 @@
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.FloatList;
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.LongList;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.iterator.FilteringFloatIterator;
-import com.github.tommyettinger.ds.support.iterator.FilteringIntIterator;
-import com.github.tommyettinger.ds.support.iterator.FilteringIterator;
-import com.github.tommyettinger.ds.support.iterator.FilteringLongIterator;
+import com.github.tommyettinger.ds.*;
+import com.github.tommyettinger.ds.support.iterator.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -63,6 +57,20 @@ public class FilteringIteratorTest {
         next.addAll(fil);
         Assert.assertEquals(1, next.size());
         fil.set(data.iterator(), (float s) -> s % 10 == 1);
+        next.clear();
+        next.addAll(fil);
+        Assert.assertEquals(2, next.size());
+    }
+
+    @Test
+    public void testFilteringDoubleIterator() {
+        DoubleList data = DoubleList.with(IteratorTest.doubles);
+        FilteringDoubleIterator fil =
+                new FilteringDoubleIterator(data.iterator(), (double s) -> s % 50 == 25);
+        DoubleList next = new DoubleList();
+        next.addAll(fil);
+        Assert.assertEquals(1, next.size());
+        fil.set(data.iterator(), (double s) -> s % 10 == 1);
         next.clear();
         next.addAll(fil);
         Assert.assertEquals(2, next.size());
