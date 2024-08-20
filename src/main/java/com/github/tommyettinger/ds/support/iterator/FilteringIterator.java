@@ -85,5 +85,4 @@ public class FilteringIterator<T> implements Iterator<T> {
         if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
         iterator.remove();
     }
-
 }
