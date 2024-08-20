@@ -15,14 +15,14 @@
  *
  */
 
-package com.github.tommyettinger.ds.support.util;
+package com.github.tommyettinger.ds.support.text;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.function.ObjBooleanToObjBiFunction;
+import com.github.tommyettinger.function.ObjDoubleToObjBiFunction;
 
 /**
- * A convenience wrapper around an {@link ObjBooleanToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code boolean}.
- * This is not typically a method reference to anything in {@link Base}, which is different from other Appender types.
+ * A convenience wrapper around an {@link ObjDoubleToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code double}.
+ * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, double)}.
  */
-public interface BooleanAppender extends ObjBooleanToObjBiFunction<StringBuilder, StringBuilder> {
+public interface DoubleAppender extends ObjDoubleToObjBiFunction<StringBuilder, StringBuilder> {
 }

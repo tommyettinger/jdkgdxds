@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.text.Appender;
 
 import java.util.Collection;
 import java.util.Iterator;

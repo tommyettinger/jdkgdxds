@@ -20,9 +20,9 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 
-import com.github.tommyettinger.ds.support.util.Appender;
-import com.github.tommyettinger.ds.support.util.IntAppender;
-import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.ds.support.text.Appender;
+import com.github.tommyettinger.ds.support.text.IntAppender;
+import com.github.tommyettinger.ds.support.iterator.IntIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;

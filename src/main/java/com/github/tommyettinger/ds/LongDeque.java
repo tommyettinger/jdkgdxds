@@ -20,7 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 
-import com.github.tommyettinger.ds.support.util.LongIterator;
+import com.github.tommyettinger.ds.support.iterator.LongIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;

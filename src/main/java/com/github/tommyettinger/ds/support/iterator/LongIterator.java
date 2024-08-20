@@ -15,25 +15,35 @@
  *
  */
 
-package com.github.tommyettinger.ds.support.util;
+package com.github.tommyettinger.ds.support.iterator;
 
-import com.github.tommyettinger.function.ShortConsumer;
+import com.github.tommyettinger.function.LongConsumer;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * An Iterator specialized for {@code short} values.
- * This iterates over primitive shorts using {@link #nextShort()}.
+ * An Iterator specialized for {@code long} values.
+ * This iterates over primitive longs using {@link #nextLong()}.
+ * <br>
+ * This is roughly equivalent to {@code LongIterator} in Java 8, and is present here so environments
+ * don't fully support Java 8 APIs (such as RoboVM) can use it.
+ * <br>
+ * This interface is closely based on {@code LongIterator} in OpenJDK 8.
+ * This iterator interface is extremely simple and there's no way to implement it in a way
+ * that respects compatibility other than the way OpenJDK 8 does.
+ * <a href="https://github.com/openjdk/jdk/blob/d3f2498ed72089301a49ddf0bc7bd2df54368033/LICENSE">OpenJDK's
+ * license is available here</a>,
+ * if it applies at all.
  */
-public interface ShortIterator extends Iterator<Short> {
+public interface LongIterator extends Iterator<Long> {
 	/**
-	 * Returns the next {@code short} element in the iteration.
+	 * Returns the next {@code long} element in the iteration.
 	 *
-	 * @return the next {@code short} element in the iteration
+	 * @return the next {@code long} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	short nextShort ();
+	long nextLong ();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -46,21 +56,21 @@ public interface ShortIterator extends Iterator<Short> {
 	 * @implSpec <p>The default implementation behaves as if:
 	 * <pre>{@code
 	 *     while (hasNext())
-	 *         action.accept(nextShort());
+	 *         action.accept(nextLong());
 	 * }</pre>
 	 */
-	default void forEachRemaining (ShortConsumer action) {
-		while (hasNext()) {action.accept(nextShort());}
+	default void forEachRemaining (LongConsumer action) {
+		while (hasNext()) {action.accept(nextLong());}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * @implSpec The default implementation boxes the result of calling
-	 * {@link #nextShort()}, and returns that boxed result.
+	 * {@link #nextLong()}, and returns that boxed result.
 	 */
 	@Override
-	default Short next () {
-		return nextShort();
+	default Long next () {
+		return nextLong();
 	}
 }

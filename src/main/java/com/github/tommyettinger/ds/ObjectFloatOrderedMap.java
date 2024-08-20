@@ -21,8 +21,8 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 
-import com.github.tommyettinger.ds.support.util.Appender;
-import com.github.tommyettinger.ds.support.util.FloatAppender;
+import com.github.tommyettinger.ds.support.text.Appender;
+import com.github.tommyettinger.ds.support.text.FloatAppender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;

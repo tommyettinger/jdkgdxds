@@ -15,7 +15,7 @@
  *
  */
 
-package com.github.tommyettinger.ds.support.util;
+package com.github.tommyettinger.ds.support.iterator;
 
 import com.github.tommyettinger.function.CharConsumer;
 
@@ -25,6 +25,13 @@ import java.util.NoSuchElementException;
 /**
  * An Iterator specialized for {@code char} values.
  * This iterates over primitive chars using {@link #nextChar()}.
+ * <br>
+ * This interface is loosely based on a similar interface in OpenJDK 8.
+ * This iterator interface is extremely simple and there's no way to implement it in a way
+ * that respects compatibility other than the way OpenJDK 8 does.
+ * <a href="https://github.com/openjdk/jdk/blob/d3f2498ed72089301a49ddf0bc7bd2df54368033/LICENSE">OpenJDK's
+ * license is available here</a>,
+ * if it applies at all.
  */
 public interface CharIterator extends Iterator<Character> {
 	/**

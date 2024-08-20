@@ -19,9 +19,9 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.util.Appender;
-import com.github.tommyettinger.ds.support.util.FloatAppender;
-import com.github.tommyettinger.ds.support.util.FloatIterator;
+import com.github.tommyettinger.ds.support.text.Appender;
+import com.github.tommyettinger.ds.support.text.FloatAppender;
+import com.github.tommyettinger.ds.support.iterator.FloatIterator;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.ObjFloatBiConsumer;
 import com.github.tommyettinger.function.ObjFloatToFloatBiFunction;

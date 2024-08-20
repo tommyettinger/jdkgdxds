@@ -15,25 +15,32 @@
  *
  */
 
-package com.github.tommyettinger.ds.support.util;
+package com.github.tommyettinger.ds.support.iterator;
 
-import com.github.tommyettinger.function.ByteConsumer;
+import com.github.tommyettinger.function.FloatConsumer;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * An Iterator specialized for {@code byte} values.
- * This iterates over primitive bytes using {@link #nextByte()}.
+ * An Iterator specialized for {@code float} values.
+ * This iterates over primitive floats using {@link #nextFloat()}.
+ * <br>
+ * This interface is loosely based on a similar interface in OpenJDK 8.
+ * This iterator interface is extremely simple and there's no way to implement it in a way
+ * that respects compatibility other than the way OpenJDK 8 does.
+ * <a href="https://github.com/openjdk/jdk/blob/d3f2498ed72089301a49ddf0bc7bd2df54368033/LICENSE">OpenJDK's
+ * license is available here</a>,
+ * if it applies at all.
  */
-public interface ByteIterator extends Iterator<Byte> {
+public interface FloatIterator extends Iterator<Float> {
 	/**
-	 * Returns the next {@code byte} element in the iteration.
+	 * Returns the next {@code float} element in the iteration.
 	 *
-	 * @return the next {@code byte} element in the iteration
+	 * @return the next {@code float} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	byte nextByte ();
+	float nextFloat ();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -46,21 +53,21 @@ public interface ByteIterator extends Iterator<Byte> {
 	 * @implSpec <p>The default implementation behaves as if:
 	 * <pre>{@code
 	 *     while (hasNext())
-	 *         action.accept(nextByte());
+	 *         action.accept(nextFloat());
 	 * }</pre>
 	 */
-	default void forEachRemaining (ByteConsumer action) {
-		while (hasNext()) {action.accept(nextByte());}
+	default void forEachRemaining (FloatConsumer action) {
+		while (hasNext()) {action.accept(nextFloat());}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * @implSpec The default implementation boxes the result of calling
-	 * {@link #nextByte()}, and returns that boxed result.
+	 * {@link #nextFloat()}, and returns that boxed result.
 	 */
 	@Override
-	default Byte next () {
-		return nextByte();
+	default Float next () {
+		return nextFloat();
 	}
 }

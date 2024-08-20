@@ -17,17 +17,17 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.util.BooleanAppender;
-import com.github.tommyettinger.ds.support.util.ByteAppender;
-import com.github.tommyettinger.ds.support.util.CharAppender;
-import com.github.tommyettinger.ds.support.util.DoubleAppender;
-import com.github.tommyettinger.ds.support.util.DoubleIterator;
-import com.github.tommyettinger.ds.support.util.FloatAppender;
-import com.github.tommyettinger.ds.support.util.IntAppender;
-import com.github.tommyettinger.ds.support.util.IntIterator;
-import com.github.tommyettinger.ds.support.util.LongAppender;
-import com.github.tommyettinger.ds.support.util.LongIterator;
-import com.github.tommyettinger.ds.support.util.ShortAppender;
+import com.github.tommyettinger.ds.support.text.BooleanAppender;
+import com.github.tommyettinger.ds.support.text.ByteAppender;
+import com.github.tommyettinger.ds.support.text.CharAppender;
+import com.github.tommyettinger.ds.support.text.DoubleAppender;
+import com.github.tommyettinger.ds.support.iterator.DoubleIterator;
+import com.github.tommyettinger.ds.support.text.FloatAppender;
+import com.github.tommyettinger.ds.support.text.IntAppender;
+import com.github.tommyettinger.ds.support.iterator.IntIterator;
+import com.github.tommyettinger.ds.support.text.LongAppender;
+import com.github.tommyettinger.ds.support.iterator.LongIterator;
+import com.github.tommyettinger.ds.support.text.ShortAppender;
 import com.github.tommyettinger.function.BooleanConsumer;
 import com.github.tommyettinger.function.BooleanPredicate;
 import com.github.tommyettinger.function.ByteConsumer;
@@ -38,11 +38,11 @@ import com.github.tommyettinger.function.FloatConsumer;
 import com.github.tommyettinger.function.FloatPredicate;
 import com.github.tommyettinger.function.ShortConsumer;
 import com.github.tommyettinger.function.ShortPredicate;
-import com.github.tommyettinger.ds.support.util.BooleanIterator;
-import com.github.tommyettinger.ds.support.util.ByteIterator;
-import com.github.tommyettinger.ds.support.util.CharIterator;
-import com.github.tommyettinger.ds.support.util.FloatIterator;
-import com.github.tommyettinger.ds.support.util.ShortIterator;
+import com.github.tommyettinger.ds.support.iterator.BooleanIterator;
+import com.github.tommyettinger.ds.support.iterator.ByteIterator;
+import com.github.tommyettinger.ds.support.iterator.CharIterator;
+import com.github.tommyettinger.ds.support.iterator.FloatIterator;
+import com.github.tommyettinger.ds.support.iterator.ShortIterator;
 
 import java.util.Iterator;
 import com.github.tommyettinger.function.DoubleConsumer;

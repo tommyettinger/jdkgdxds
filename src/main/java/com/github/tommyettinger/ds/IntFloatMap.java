@@ -19,14 +19,14 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.util.FloatAppender;
-import com.github.tommyettinger.ds.support.util.IntAppender;
-import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.ds.support.text.FloatAppender;
+import com.github.tommyettinger.ds.support.text.IntAppender;
+import com.github.tommyettinger.ds.support.iterator.IntIterator;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.IntFloatBiConsumer;
 import com.github.tommyettinger.function.IntFloatToFloatBiFunction;
 import com.github.tommyettinger.function.IntToFloatFunction;
-import com.github.tommyettinger.ds.support.util.FloatIterator;
+import com.github.tommyettinger.ds.support.iterator.FloatIterator;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;

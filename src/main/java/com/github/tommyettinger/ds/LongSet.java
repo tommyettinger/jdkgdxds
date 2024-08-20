@@ -18,7 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.util.LongIterator;
+import com.github.tommyettinger.ds.support.iterator.LongIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;

@@ -15,28 +15,32 @@
  *
  */
 
-package com.github.tommyettinger.ds.support.util;
+package com.github.tommyettinger.ds.support.iterator;
 
-import com.github.tommyettinger.function.DoubleConsumer;
+import com.github.tommyettinger.function.ShortConsumer;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * An Iterator specialized for {@code double} values.
- * This iterates over primitive doubles using {@link #nextDouble()}.
+ * An Iterator specialized for {@code short} values.
+ * This iterates over primitive shorts using {@link #nextShort()}.
  * <br>
- * This is roughly equivalent to {@code DoubleIterator} in Java 8, and is present here so environments
- * don't fully support Java 8 APIs (such as RoboVM) can use it.
+ * This interface is loosely based on a similar interface in OpenJDK 8.
+ * This iterator interface is extremely simple and there's no way to implement it in a way
+ * that respects compatibility other than the way OpenJDK 8 does.
+ * <a href="https://github.com/openjdk/jdk/blob/d3f2498ed72089301a49ddf0bc7bd2df54368033/LICENSE">OpenJDK's
+ * license is available here</a>,
+ * if it applies at all.
  */
-public interface DoubleIterator extends Iterator<Double> {
+public interface ShortIterator extends Iterator<Short> {
 	/**
-	 * Returns the next {@code double} element in the iteration.
+	 * Returns the next {@code short} element in the iteration.
 	 *
-	 * @return the next {@code double} element in the iteration
+	 * @return the next {@code short} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	double nextDouble ();
+	short nextShort ();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -49,21 +53,21 @@ public interface DoubleIterator extends Iterator<Double> {
 	 * @implSpec <p>The default implementation behaves as if:
 	 * <pre>{@code
 	 *     while (hasNext())
-	 *         action.accept(nextDouble());
+	 *         action.accept(nextShort());
 	 * }</pre>
 	 */
-	default void forEachRemaining (DoubleConsumer action) {
-		while (hasNext()) {action.accept(nextDouble());}
+	default void forEachRemaining (ShortConsumer action) {
+		while (hasNext()) {action.accept(nextShort());}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * @implSpec The default implementation boxes the result of calling
-	 * {@link #nextDouble()}, and returns that boxed result.
+	 * {@link #nextShort()}, and returns that boxed result.
 	 */
 	@Override
-	default Double next () {
-		return nextDouble();
+	default Short next () {
+		return nextShort();
 	}
 }

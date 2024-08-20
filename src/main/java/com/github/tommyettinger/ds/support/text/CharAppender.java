@@ -15,14 +15,14 @@
  *
  */
 
-package com.github.tommyettinger.ds.support.util;
+package com.github.tommyettinger.ds.support.text;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.function.ObjShortToObjBiFunction;
+import com.github.tommyettinger.function.ObjCharToObjBiFunction;
 
 /**
- * A convenience wrapper around an {@link ObjShortToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code short}.
- * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, short)}.
+ * A convenience wrapper around an {@link ObjCharToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code char}.
+ * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, char)}.
  */
-public interface ShortAppender extends ObjShortToObjBiFunction<StringBuilder, StringBuilder> {
+public interface CharAppender extends ObjCharToObjBiFunction<StringBuilder, StringBuilder> {
 }

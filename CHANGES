@@ -90,7 +90,7 @@
 [1.3.0]
 - [BREAKING CHANGE] Updated Funderby to 0.1.0; this update removes some unnecessary ThingToBoolean types, so is sort-of incompatible if you use those instead of ThingPredicate types. Lambdas will just be equivalent to the ThingPredicate types.
 - [BREAKING CHANGE] All Java 8 APIs in the project have been replaced by versions defined here or in Funderby; this should help RoboVM compatibility.
-- [BREAKING CHANGE] While in earlier versions, FloatIterator from this library was mixed with PrimitiveIterator.OfInt/OfLong, now all iterator types are defined here for RoboVM compatibility. They are all in the package com.github.tommyettinger.ds.support.util .
+- [BREAKING CHANGE] While in earlier versions, FloatIterator from this library was mixed with PrimitiveIterator.OfInt/OfLong, now all iterator types are defined here for RoboVM compatibility. They are all in the package com.github.tommyettinger.ds.support.text .
 - None of the primitive iterators implement the Java 8 PrimitiveIterator interface, but they all do implement Iterator.
 - The Override annotation is still present on some overrides of methods added in Java 8, but RoboVM seems to ignore Override.
 

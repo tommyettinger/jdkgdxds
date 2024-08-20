@@ -15,7 +15,7 @@
  *
  */
 
-package com.github.tommyettinger.ds.support.util;
+package com.github.tommyettinger.ds.support.text;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.function.ObjFloatToObjBiFunction;

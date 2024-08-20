@@ -20,7 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.function.ShortToShortFunction;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
-import com.github.tommyettinger.ds.support.util.ShortIterator;
+import com.github.tommyettinger.ds.support.iterator.ShortIterator;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;

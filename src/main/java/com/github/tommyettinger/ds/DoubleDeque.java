@@ -22,7 +22,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
 
-import com.github.tommyettinger.ds.support.util.DoubleIterator;
+import com.github.tommyettinger.ds.support.iterator.DoubleIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;

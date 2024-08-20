@@ -19,7 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.BooleanComparators;
-import com.github.tommyettinger.ds.support.util.BooleanIterator;
+import com.github.tommyettinger.ds.support.iterator.BooleanIterator;
 import com.github.tommyettinger.function.BooleanPredicate;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

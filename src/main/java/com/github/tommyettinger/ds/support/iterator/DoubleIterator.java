@@ -15,25 +15,35 @@
  *
  */
 
-package com.github.tommyettinger.ds.support.util;
+package com.github.tommyettinger.ds.support.iterator;
 
-import com.github.tommyettinger.function.FloatConsumer;
+import com.github.tommyettinger.function.DoubleConsumer;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * An Iterator specialized for {@code float} values.
- * This iterates over primitive floats using {@link #nextFloat()}.
+ * An Iterator specialized for {@code double} values.
+ * This iterates over primitive doubles using {@link #nextDouble()}.
+ * <br>
+ * This is roughly equivalent to {@code DoubleIterator} in Java 8, and is present here so environments
+ * don't fully support Java 8 APIs (such as RoboVM) can use it.
+ * <br>
+ * This interface is closely based on {@code DoubleIterator} in OpenJDK 8.
+ * This iterator interface is extremely simple and there's no way to implement it in a way
+ * that respects compatibility other than the way OpenJDK 8 does.
+ * <a href="https://github.com/openjdk/jdk/blob/d3f2498ed72089301a49ddf0bc7bd2df54368033/LICENSE">OpenJDK's
+ * license is available here</a>,
+ * if it applies at all.
  */
-public interface FloatIterator extends Iterator<Float> {
+public interface DoubleIterator extends Iterator<Double> {
 	/**
-	 * Returns the next {@code float} element in the iteration.
+	 * Returns the next {@code double} element in the iteration.
 	 *
-	 * @return the next {@code float} element in the iteration
+	 * @return the next {@code double} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	float nextFloat ();
+	double nextDouble ();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -46,21 +56,21 @@ public interface FloatIterator extends Iterator<Float> {
 	 * @implSpec <p>The default implementation behaves as if:
 	 * <pre>{@code
 	 *     while (hasNext())
-	 *         action.accept(nextFloat());
+	 *         action.accept(nextDouble());
 	 * }</pre>
 	 */
-	default void forEachRemaining (FloatConsumer action) {
-		while (hasNext()) {action.accept(nextFloat());}
+	default void forEachRemaining (DoubleConsumer action) {
+		while (hasNext()) {action.accept(nextDouble());}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * @implSpec The default implementation boxes the result of calling
-	 * {@link #nextFloat()}, and returns that boxed result.
+	 * {@link #nextDouble()}, and returns that boxed result.
 	 */
 	@Override
-	default Float next () {
-		return nextFloat();
+	default Double next () {
+		return nextDouble();
 	}
 }

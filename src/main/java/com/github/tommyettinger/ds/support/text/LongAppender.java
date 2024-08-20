@@ -15,14 +15,14 @@
  *
  */
 
-package com.github.tommyettinger.ds.support.util;
+package com.github.tommyettinger.ds.support.text;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.function.ObjDoubleToObjBiFunction;
+import com.github.tommyettinger.function.ObjLongToObjBiFunction;
 
 /**
- * A convenience wrapper around an {@link ObjDoubleToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code double}.
- * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, double)}.
+ * A convenience wrapper around an {@link ObjLongToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code long}.
+ * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, long)}.
  */
-public interface DoubleAppender extends ObjDoubleToObjBiFunction<StringBuilder, StringBuilder> {
+public interface LongAppender extends ObjLongToObjBiFunction<StringBuilder, StringBuilder> {
 }

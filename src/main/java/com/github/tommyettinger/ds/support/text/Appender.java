@@ -15,14 +15,15 @@
  *
  */
 
-package com.github.tommyettinger.ds.support.util;
+package com.github.tommyettinger.ds.support.text;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.function.ObjByteToObjBiFunction;
+import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 
 /**
- * A convenience wrapper around an {@link ObjByteToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code byte}.
- * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, byte)}.
+ * A convenience wrapper around an {@link ObjObjToObjBiFunction} that takes and returns a StringBuilder, as well as taking a generic object.
+ * This is not typically a method reference to anything in {@link Base}, which is different from other Appender types. This will frequently
+ * use a lambda.
  */
-public interface ByteAppender extends ObjByteToObjBiFunction<StringBuilder, StringBuilder> {
+public interface Appender<T> extends ObjObjToObjBiFunction<StringBuilder, T, StringBuilder> {
 }
