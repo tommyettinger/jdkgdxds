@@ -1,6 +1,5 @@
 package com.github.tommyettinger.ds.support.iterator;
 
-import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.function.LongPredicate;
 
 import java.util.NoSuchElementException;
@@ -11,8 +10,7 @@ import java.util.NoSuchElementException;
  * This has undefined behavior if any items the LongIterator could return are modified during iteration.
  * <br>
  * You can change both the LongIterator and filter at once using {@link #set(LongIterator, LongPredicate)} , and can
- * also just change the Iterator with {@link #set(LongIterator)}. These can also take a
- * {@link PrimitiveCollection.OfLong}, which just gets the LongIterator from that parameter and uses that.
+ * also just change the Iterator with {@link #set(LongIterator)}.
  * <br>
  * Based very closely on {@code Predicate.PredicateIterator} from <a href="https://libgdx.com">libGDX</a>, but changed
  * to handle primitive items.
@@ -27,26 +25,14 @@ public class FilteringLongIterator implements LongIterator {
     public FilteringLongIterator() {
     }
 
-    public FilteringLongIterator(final PrimitiveCollection.OfLong iterable, final LongPredicate filter) {
-        this(iterable.iterator(), filter);
-    }
-
     public FilteringLongIterator(final LongIterator iterator, final LongPredicate filter) {
         set(iterator, filter);
-    }
-
-    public void set(final PrimitiveCollection.OfLong iterable, final LongPredicate predicate) {
-        set(iterable.iterator(), predicate);
     }
 
     public void set(final LongIterator iterator, final LongPredicate predicate) {
         this.iterator = iterator;
         this.filter = predicate;
         end = available = false;
-    }
-
-    public void set(final PrimitiveCollection.OfLong iterable) {
-        set(iterable.iterator(), filter);
     }
 
     public void set(final LongIterator iterator) {

@@ -11,8 +11,7 @@ import java.util.NoSuchElementException;
  * This has undefined behavior if any items the Iterator could return are modified during iteration.
  * <br>
  * You can change both the Iterator and filter at once using {@link #set(Iterator, ObjPredicate)}, and can also just
- * change the Iterator with {@link #set(Iterator)}. These can also take an {@link Iterable}, which just gets the
- * iterator from that parameter and uses that.
+ * change the Iterator with {@link #set(Iterator)}.
  * <br>
  * Based very closely on {@code Predicate.PredicateIterator} from <a href="https://libgdx.com">libGDX</a>, but changed
  * to handle null items.
@@ -28,16 +27,8 @@ public class FilteringIterator<T> implements Iterator<T> {
     public FilteringIterator() {
     }
 
-    public FilteringIterator (final Iterable<T> iterable, final ObjPredicate<T> filter) {
-        this(iterable.iterator(), filter);
-    }
-
     public FilteringIterator (final Iterator<T> iterator, final ObjPredicate<T> filter) {
         set(iterator, filter);
-    }
-
-    public void set (final Iterable<T> iterable, final ObjPredicate<T> predicate) {
-        set(iterable.iterator(), predicate);
     }
 
     public void set (final Iterator<T> iterator, final ObjPredicate<T> predicate) {
@@ -45,10 +36,6 @@ public class FilteringIterator<T> implements Iterator<T> {
         this.filter = predicate;
         end = available = false;
         next = null;
-    }
-
-    public void set (final Iterable<T> iterable) {
-        set(iterable.iterator(), filter);
     }
 
     public void set (final Iterator<T> iterator) {
