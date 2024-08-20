@@ -1,8 +1,10 @@
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.FloatList;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.LongList;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.support.iterator.FilteringFloatIterator;
 import com.github.tommyettinger.ds.support.iterator.FilteringIntIterator;
 import com.github.tommyettinger.ds.support.iterator.FilteringIterator;
 import com.github.tommyettinger.ds.support.iterator.FilteringLongIterator;
@@ -47,6 +49,20 @@ public class FilteringIteratorTest {
         next.addAll(fil);
         Assert.assertEquals(1, next.size());
         fil.set(data.iterator(), (int s) -> s % 10 == 1);
+        next.clear();
+        next.addAll(fil);
+        Assert.assertEquals(2, next.size());
+    }
+
+    @Test
+    public void testFilteringFloatIterator() {
+        FloatList data = FloatList.with(IteratorTest.floats);
+        FilteringFloatIterator fil =
+                new FilteringFloatIterator(data.iterator(), (float s) -> s % 50 == 25);
+        FloatList next = new FloatList();
+        next.addAll(fil);
+        Assert.assertEquals(1, next.size());
+        fil.set(data.iterator(), (float s) -> s % 10 == 1);
         next.clear();
         next.addAll(fil);
         Assert.assertEquals(2, next.size());
