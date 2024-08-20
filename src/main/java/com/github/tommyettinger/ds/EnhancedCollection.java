@@ -136,11 +136,19 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * Like {@link Collection#containsAll(Collection)}, but returns true immediately if any item in the given Iterable
 	 * {@code other} is present in this EnhancedCollection.
 	 * @param other a Collection or other Iterable of any type to look through
-	 * @return true if any items from array are present in this EnhancedCollection
+	 * @return true if any items from the Iterable are present in this EnhancedCollection
 	 */
-
 	default boolean containsAny (Iterable<?> other) {
-		Iterator<?> it = other.iterator();
+		return containsAny(other.iterator());
+	}
+
+	/**
+	 * Like {@link Collection#containsAll(Collection)}, but returns true immediately if any item in the given Iterator
+	 * {@code it} is present in this EnhancedCollection.
+	 * @param it an Iterator of any type to look through
+	 * @return true if any items from the Iterator are present in this EnhancedCollection
+	 */
+	default boolean containsAny (Iterator<?> it) {
 		while (it.hasNext()) {
 			if(contains(it.next())) return true;
 		}

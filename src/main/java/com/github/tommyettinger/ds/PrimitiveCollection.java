@@ -224,7 +224,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAny (OfInt other) {
-			IntIterator it = other.iterator();
+			return containsAny(other.iterator());
+		}
+
+		default boolean containsAny (IntIterator it) {
 			while (it.hasNext()) {
 				if(contains(it.nextInt())) return true;
 			}
@@ -590,7 +593,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAny (OfLong other) {
-			LongIterator it = other.iterator();
+			return containsAny(other.iterator());
+		}
+
+		default boolean containsAny (LongIterator it) {
 			while (it.hasNext()) {
 				if(contains(it.nextLong())) return true;
 			}
@@ -956,7 +962,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAny (OfFloat other) {
-			FloatIterator it = other.iterator();
+			return containsAny(other.iterator());
+		}
+
+		default boolean containsAny (FloatIterator it) {
 			while (it.hasNext()) {
 				if(contains(it.nextFloat())) return true;
 			}
@@ -1296,7 +1305,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAny (OfDouble other) {
-			DoubleIterator it = other.iterator();
+			return containsAny(other.iterator());
+		}
+
+		default boolean containsAny (DoubleIterator it) {
 			while (it.hasNext()) {
 				if(contains(it.nextDouble())) return true;
 			}
@@ -1636,7 +1648,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAny (OfShort other) {
-			ShortIterator it = other.iterator();
+			return containsAny(other.iterator());
+		}
+
+		default boolean containsAny (ShortIterator it) {
 			while (it.hasNext()) {
 				if(contains(it.nextShort())) return true;
 			}
@@ -1976,7 +1991,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAny (OfByte other) {
-			ByteIterator it = other.iterator();
+			return containsAny(other.iterator());
+		}
+
+		default boolean containsAny (ByteIterator it) {
 			while (it.hasNext()) {
 				if(contains(it.nextByte())) return true;
 			}
@@ -2316,7 +2334,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAny (OfChar other) {
-			CharIterator it = other.iterator();
+			return containsAny(other.iterator());
+		}
+
+		default boolean containsAny (CharIterator it) {
 			while (it.hasNext()) {
 				if(contains(it.nextChar())) return true;
 			}
@@ -2656,7 +2677,10 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default boolean containsAny (OfBoolean other) {
-			BooleanIterator it = other.iterator();
+			return containsAny(other.iterator());
+		}
+
+		default boolean containsAny (BooleanIterator it) {
 			while (it.hasNext()) {
 				if(contains(it.nextBoolean())) return true;
 			}
