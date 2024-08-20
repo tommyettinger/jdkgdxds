@@ -18,7 +18,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.Appender;
-import com.github.tommyettinger.ds.support.util.ShortIterator;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -120,6 +119,12 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return changed;
 	}
 
+	default boolean containsAll (Iterator<?> it) {
+		while (it.hasNext()) {
+			if(!contains(it.next())) return false;
+		}
+		return true;
+	}
 
 	default boolean containsAll (Object[] array) {
 		return containsAll(array, 0, array.length);
