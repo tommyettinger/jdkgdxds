@@ -16,7 +16,7 @@
  */
 
 /**
- * Iterator interfaces for all primitive types.
+ * Iterator interfaces for all primitive types. This also includes wrappers around other iterators.
  */
 package com.github.tommyettinger.ds.support.iterator;
 
