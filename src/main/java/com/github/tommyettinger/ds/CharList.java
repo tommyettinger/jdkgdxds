@@ -138,6 +138,16 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public CharList (CharIterator coll) {
+		this();
+		addAll(coll);
+	}
+
+	/**
 	 * Copies the given Ordered.OfChar into a new CharList.
 	 *
 	 * @param other another Ordered.OfChar that will have its contents copied into this

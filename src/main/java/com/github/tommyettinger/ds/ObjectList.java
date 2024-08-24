@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.iterator.BooleanIterator;
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -115,6 +116,16 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	@Deprecated
 	public ObjectList (boolean ordered, Collection<? extends T> c) {
 		super(c);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public ObjectList (Iterator<? extends T> coll) {
+		this();
+		addAll(coll);
 	}
 
 	public ObjectList (T[] a) {

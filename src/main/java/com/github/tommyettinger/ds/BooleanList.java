@@ -137,6 +137,16 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public BooleanList (BooleanIterator coll) {
+		this();
+		addAll(coll);
+	}
+
+	/**
 	 * Copies the given Ordered.OfBoolean into a new BooleanList.
 	 *
 	 * @param other another Ordered.OfBoolean that will have its contents copied into this

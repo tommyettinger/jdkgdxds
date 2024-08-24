@@ -138,6 +138,16 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public ByteList (ByteIterator coll) {
+		this();
+		addAll(coll);
+	}
+
+	/**
 	 * Copies the given Ordered.OfByte into a new ByteList.
 	 *
 	 * @param other another Ordered.OfByte that will have its contents copied into this

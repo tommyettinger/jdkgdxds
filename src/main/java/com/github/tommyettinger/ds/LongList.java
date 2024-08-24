@@ -138,6 +138,16 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public LongList (LongIterator coll) {
+		this();
+		addAll(coll);
+	}
+
+	/**
 	 * Copies the given Ordered.OfLong into a new LongList.
 	 *
 	 * @param other another Ordered.OfLong that will have its contents copied into this

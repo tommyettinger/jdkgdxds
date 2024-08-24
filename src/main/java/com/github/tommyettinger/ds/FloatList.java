@@ -139,6 +139,16 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public FloatList (FloatIterator coll) {
+		this();
+		addAll(coll);
+	}
+
+	/**
 	 * Copies the given Ordered.OfFloat into a new FloatList.
 	 *
 	 * @param other another Ordered.OfFloat that will have its contents copied into this
