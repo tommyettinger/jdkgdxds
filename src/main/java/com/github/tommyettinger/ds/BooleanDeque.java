@@ -18,7 +18,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.iterator.BooleanIterator;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -89,6 +88,16 @@ public class BooleanDeque implements PrimitiveCollection.OfBoolean, Arrangeable 
 	 */
 	public BooleanDeque (OfBoolean coll) {
 		this(coll.size());
+		addAll(coll);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public BooleanDeque (BooleanIterator coll) {
+		this();
 		addAll(coll);
 	}
 

@@ -94,6 +94,16 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 	}
 
 	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public FloatDeque (FloatIterator coll) {
+		this();
+		addAll(coll);
+	}
+
+	/**
 	 * Copies the given FloatDeque exactly into this one. Individual values will be shallow-copied.
 	 *
 	 * @param deque another FloatDeque to copy

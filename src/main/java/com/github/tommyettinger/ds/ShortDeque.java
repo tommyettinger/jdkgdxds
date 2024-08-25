@@ -93,6 +93,16 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 	}
 
 	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public ShortDeque (ShortIterator coll) {
+		this();
+		addAll(coll);
+	}
+
+	/**
 	 * Copies the given ShortDeque exactly into this one. Individual values will be shallow-copied.
 	 *
 	 * @param deque another ShortDeque to copy

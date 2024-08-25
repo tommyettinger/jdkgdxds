@@ -19,10 +19,10 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.ds.support.iterator.DoubleIterator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
 
-import com.github.tommyettinger.ds.support.iterator.DoubleIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -91,6 +91,16 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 	 */
 	public DoubleDeque (PrimitiveCollection.OfDouble coll) {
 		this(coll.size());
+		addAll(coll);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public DoubleDeque (DoubleIterator coll) {
+		this();
 		addAll(coll);
 	}
 

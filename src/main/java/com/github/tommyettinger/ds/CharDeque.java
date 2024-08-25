@@ -29,7 +29,7 @@ import java.util.NoSuchElementException;
 import java.util.Random;
 
 /**
- * A resizable, insertion-ordered double-ended queue of shorts with efficient add and remove at the beginning and end. Values in the
+ * A resizable, insertion-ordered double-ended queue of chars with efficient add and remove at the beginning and end. Values in the
  * backing array may wrap back to the beginning, making add and remove at the beginning and end O(1) (unless the backing array needs to
  * resize when adding). Deque functionality is provided via {@link #removeLast()} and {@link #addFirst(char)}.
  * <br>
@@ -89,6 +89,16 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 	 */
 	public CharDeque (PrimitiveCollection.OfChar coll) {
 		this(coll.size());
+		addAll(coll);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public CharDeque (CharIterator coll) {
+		this();
 		addAll(coll);
 	}
 
