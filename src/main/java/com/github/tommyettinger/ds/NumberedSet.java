@@ -128,6 +128,16 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 *
 	 * @param coll all distinct items in this Collection will become items in this NumberedSet
 	 */
+	public NumberedSet (Iterator<? extends T> coll) {
+		this();
+		addAll(coll);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code coll}.
+	 *
+	 * @param coll all distinct items in this Collection will become items in this NumberedSet
+	 */
 	public NumberedSet (Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);

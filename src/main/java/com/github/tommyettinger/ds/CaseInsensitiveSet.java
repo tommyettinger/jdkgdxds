@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * A custom variant on ObjectSet that always uses CharSequence keys and compares them as case-insensitive.
@@ -69,6 +70,16 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 */
 	public CaseInsensitiveSet (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public CaseInsensitiveSet (Iterator<? extends CharSequence> coll) {
+		this();
+		addAll(coll);
 	}
 
 	/**

@@ -21,6 +21,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * A variant on {@link ObjectOrderedSet} that compares items by identity (using {@code ==}) instead of equality (using {@code equals()}).
@@ -47,6 +48,15 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 
 	public IdentityOrderedSet (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public IdentityOrderedSet (Iterator<? extends T> coll) {
+		super(coll);
 	}
 
 	public IdentityOrderedSet (ObjectOrderedSet<? extends T> set) {

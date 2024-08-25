@@ -42,7 +42,7 @@ import java.util.NoSuchElementException;
  * @author jshapcott
  * @author tommyettinger
  */
-public class OffsetBitSet implements PrimitiveCollection.OfInt {
+public class OffsetBitSet implements PrimitiveSet.OfInt {
 
 	/**
 	 * The raw bits, each one representing the presence or absence of an integer at a position.

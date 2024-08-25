@@ -21,6 +21,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * A variant on {@link ObjectSet} that compares items by identity (using {@code ==}) instead of equality (using {@code equals()}).
@@ -46,6 +47,15 @@ public class IdentitySet<T> extends ObjectSet<T> {
 
 	public IdentitySet (int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public IdentitySet (Iterator<? extends T> coll) {
+		super(coll);
 	}
 
 	public IdentitySet (ObjectSet<? extends T> set) {

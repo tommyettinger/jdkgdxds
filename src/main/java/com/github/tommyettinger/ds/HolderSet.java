@@ -151,6 +151,16 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
     }
 
     /**
+     * Creates a new instance containing the items in the specified iterator.
+     *
+     * @param coll an iterator that will have its remaining contents added to this
+     */
+    public HolderSet (@NonNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll) {
+        this(extractor);
+        addAll(coll);
+    }
+
+    /**
      * Creates a new set identical to the specified set.
      * This doesn't copy the extractor; instead it references the same ObjToObjFunction from the argument.
      * This can have issues if the extractor causes side effects or is stateful.
