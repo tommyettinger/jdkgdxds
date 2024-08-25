@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.iterator.LongIterator;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -64,6 +66,16 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	public LongOrderedSet (int initialCapacity) {
 		super(initialCapacity);
 		items = new LongList(initialCapacity);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public LongOrderedSet (LongIterator coll) {
+		this();
+		addAll(coll);
 	}
 
 	public LongOrderedSet (LongOrderedSet set) {

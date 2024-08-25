@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.iterator.IntIterator;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -64,6 +66,16 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	public IntOrderedSet (int initialCapacity) {
 		super(initialCapacity);
 		items = new IntList(initialCapacity);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public IntOrderedSet (IntIterator coll) {
+		this();
+		addAll(coll);
 	}
 
 	public IntOrderedSet (IntOrderedSet set) {

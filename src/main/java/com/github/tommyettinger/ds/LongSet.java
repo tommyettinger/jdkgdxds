@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.iterator.IntIterator;
 import com.github.tommyettinger.ds.support.iterator.LongIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
@@ -121,6 +122,16 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		keyTable = new long[tableSize];
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public LongSet (LongIterator coll) {
+		this();
+		addAll(coll);
 	}
 
 	/**

@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.iterator.IntIterator;
+import com.github.tommyettinger.ds.support.iterator.ShortIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -121,6 +122,16 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		keyTable = new int[tableSize];
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public IntSet (IntIterator coll) {
+		this();
+		addAll(coll);
 	}
 
 	/**

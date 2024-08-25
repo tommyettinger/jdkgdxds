@@ -68,6 +68,15 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		super(initialCapacity);
 		items = new ObjectList<>(initialCapacity);
 	}
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public ObjectOrderedSet (Iterator<? extends T> coll) {
+		this();
+		addAll(coll);
+	}
 
 	public ObjectOrderedSet (ObjectOrderedSet<? extends T> set) {
 		super(set);

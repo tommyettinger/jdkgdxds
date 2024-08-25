@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.iterator.LongIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
@@ -123,6 +124,16 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		keyTable = (T[])new Object[tableSize];
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public ObjectSet (Iterator<? extends T> coll) {
+		this();
+		addAll(coll);
 	}
 
 	/**
