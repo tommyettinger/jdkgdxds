@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.iterator.DoubleIterator;
 
 import java.util.List;
 
@@ -94,6 +95,16 @@ public class DoubleBag extends DoubleList {
 	 */
 	public DoubleBag (OfDouble coll) {
 		super(coll);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public DoubleBag (DoubleIterator coll) {
+		this();
+		addAll(coll);
 	}
 
 	/**

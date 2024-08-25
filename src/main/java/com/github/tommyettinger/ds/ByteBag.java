@@ -17,6 +17,9 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.iterator.BooleanIterator;
+import com.github.tommyettinger.ds.support.iterator.ByteIterator;
+
 import java.util.List;
 
 /**
@@ -92,6 +95,16 @@ public class ByteBag extends ByteList {
 	 */
 	public ByteBag (OfByte coll) {
 		super(coll);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public ByteBag (ByteIterator coll) {
+		this();
+		addAll(coll);
 	}
 
 	/**

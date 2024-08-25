@@ -17,9 +17,11 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.iterator.ByteIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * An unordered List of T items. This allows efficient iteration via a reused iterator or via index.
@@ -40,6 +42,13 @@ public class ObjectBag<T> extends ObjectList<T> {
 	}
 
 	/**
+	 * Constructs an empty bag with an initial capacity of 10.
+	 */
+	public ObjectBag () {
+		super();
+	}
+
+	/**
 	 * Constructs an empty bag with the specified initial capacity.
 	 *
 	 * @param initialCapacity the initial capacity of the bag
@@ -48,13 +57,6 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 */
 	public ObjectBag (int initialCapacity) {
 		super(initialCapacity);
-	}
-
-	/**
-	 * Constructs an empty bag with an initial capacity of 10.
-	 */
-	public ObjectBag () {
-		super();
 	}
 
 	/**
@@ -75,6 +77,16 @@ public class ObjectBag<T> extends ObjectList<T> {
 
 	public ObjectBag (T[] a, int offset, int count) {
 		super(a, offset, count);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public ObjectBag (Iterator<? extends T> coll) {
+		this();
+		addAll(coll);
 	}
 
 	/**

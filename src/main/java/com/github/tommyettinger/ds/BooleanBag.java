@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.iterator.BooleanIterator;
+
 import java.util.List;
 
 /**
@@ -92,6 +94,16 @@ public class BooleanBag extends BooleanList {
 	 */
 	public BooleanBag (OfBoolean coll) {
 		super(coll);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public BooleanBag (BooleanIterator coll) {
+		this();
+		addAll(coll);
 	}
 
 	/**

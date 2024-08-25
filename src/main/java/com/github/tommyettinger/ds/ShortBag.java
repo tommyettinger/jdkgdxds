@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.iterator.ShortIterator;
+
 import java.util.List;
 /**
  * An unordered List of short items. This allows efficient iteration via a reused iterator or via index.
@@ -91,6 +93,16 @@ public class ShortBag extends ShortList {
 	 */
 	public ShortBag (OfShort coll) {
 		super(coll);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public ShortBag (ShortIterator coll) {
+		this();
+		addAll(coll);
 	}
 
 	/**

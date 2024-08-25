@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.iterator.CharIterator;
+
 import java.util.List;
 
 /**
@@ -92,6 +94,16 @@ public class CharBag extends CharList {
 	 */
 	public CharBag (OfChar coll) {
 		super(coll);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public CharBag (CharIterator coll) {
+		this();
+		addAll(coll);
 	}
 
 	/**
