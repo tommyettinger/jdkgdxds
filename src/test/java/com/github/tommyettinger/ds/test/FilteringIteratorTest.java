@@ -63,6 +63,20 @@ public class FilteringIteratorTest {
     }
 
     @Test
+    public void testFilteringByteIterator() {
+        ByteList data = ByteList.with(IteratorTest.bytes);
+        FilteringByteIterator fil =
+                new FilteringByteIterator(data.iterator(), (byte s) -> s % 50 == 13);
+        ByteList next = new ByteList();
+        next.addAll(fil);
+        Assert.assertEquals(2, next.size());
+        fil.set(data.iterator(), (byte s) -> s % 10 == 0);
+        next.clear();
+        next.addAll(fil);
+        Assert.assertEquals(3, next.size());
+    }
+
+    @Test
     public void testFilteringFloatIterator() {
         FloatList data = FloatList.with(IteratorTest.floats);
         FilteringFloatIterator fil =
