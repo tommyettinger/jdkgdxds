@@ -75,4 +75,18 @@ public class FilteringIteratorTest {
         next.addAll(fil);
         Assert.assertEquals(2, next.size());
     }
+
+    @Test
+    public void testFilteringCharIterator() {
+        CharList data = CharList.with(IteratorTest.chars);
+        FilteringCharIterator fil =
+                new FilteringCharIterator(data.iterator(), (char s) -> s % 50 == 25);
+        CharList next = new CharList();
+        next.addAll(fil);
+        Assert.assertEquals(1, next.size());
+        fil.set(data.iterator(), (char s) -> s % 10 == 1);
+        next.clear();
+        next.addAll(fil);
+        Assert.assertEquals(2, next.size());
+    }
 }
