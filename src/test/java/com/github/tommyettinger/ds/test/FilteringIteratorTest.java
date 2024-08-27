@@ -49,6 +49,20 @@ public class FilteringIteratorTest {
     }
 
     @Test
+    public void testFilteringShortIterator() {
+        ShortList data = ShortList.with(IteratorTest.shorts);
+        FilteringShortIterator fil =
+                new FilteringShortIterator(data.iterator(), (short s) -> s % 50 == 25);
+        ShortList next = new ShortList();
+        next.addAll(fil);
+        Assert.assertEquals(1, next.size());
+        fil.set(data.iterator(), (short s) -> s % 10 == 1);
+        next.clear();
+        next.addAll(fil);
+        Assert.assertEquals(2, next.size());
+    }
+
+    @Test
     public void testFilteringFloatIterator() {
         FloatList data = FloatList.with(IteratorTest.floats);
         FilteringFloatIterator fil =
