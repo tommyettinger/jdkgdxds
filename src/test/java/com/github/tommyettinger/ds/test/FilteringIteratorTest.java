@@ -117,4 +117,18 @@ public class FilteringIteratorTest {
         next.addAll(fil);
         Assert.assertEquals(2, next.size());
     }
+
+    @Test
+    public void testFilteringBooleanIterator() {
+        BooleanList data = BooleanList.with(IteratorTest.booleans);
+        FilteringBooleanIterator fil =
+                new FilteringBooleanIterator(data.iterator(), (boolean s) -> s);
+        BooleanList next = new BooleanList();
+        next.addAll(fil);
+        Assert.assertEquals(9, next.size());
+        fil.set(data.iterator(), (boolean s) -> !s);
+        next.clear();
+        next.addAll(fil);
+        Assert.assertEquals(7, next.size());
+    }
 }
