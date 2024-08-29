@@ -21,19 +21,20 @@ public class StridingIteratorTest {
         Assert.assertEquals("delta", next.get(1));
     }
     //		'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
-//    @Test
-//    public void testStridingLongIterator() {
-//        LongList data = LongList.with(IteratorTest.longs);
-//        StridingLongIterator fil =
-//                new StridingLongIterator(data.iterator(), (long s) -> s % 50 == 25);
-//        LongList next = new LongList();
-//        next.addAll(fil);
-//        Assert.assertEquals(1, next.size());
-//        fil.set(data.iterator(), (long s) -> s % 10 == 1);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(2, next.size());
-//    }
+    @Test
+    public void testStridingLongIterator() {
+        LongList data = LongList.with(IteratorTest.longs);
+        StridingLongIterator stri = new StridingLongIterator(data.iterator(), 1, 2);
+        LongList next = new LongList();
+        next.addAll(stri);
+        Assert.assertEquals('Β', next.get(0));
+        Assert.assertEquals('Δ', next.get(1));
+        stri.set(data.iterator(), 0, 3);
+        next.clear();
+        next.addAll(stri);
+        Assert.assertEquals('Α', next.get(0));
+        Assert.assertEquals('Δ', next.get(1));
+    }
 //
 //    @Test
 //    public void testStridingIntIterator() {
@@ -76,6 +77,7 @@ public class StridingIteratorTest {
 //        next.addAll(fil);
 //        Assert.assertEquals(3, next.size());
 //    }
+
     @Test
     public void testStridingFloatIterator() {
         FloatList data = FloatList.with(IteratorTest.floats);
