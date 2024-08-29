@@ -221,8 +221,6 @@ public class CuckooHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> 
     return get(key, null);
   }
 
-  @SuppressWarnings("Since15")
-  @Override
   public V getOrDefault(Object key, V defaultValue) {
     return get(key, defaultValue);
   }
