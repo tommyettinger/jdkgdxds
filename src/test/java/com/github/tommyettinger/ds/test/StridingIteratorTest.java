@@ -20,7 +20,7 @@ public class StridingIteratorTest {
         Assert.assertEquals("alpha", next.get(0));
         Assert.assertEquals("delta", next.get(1));
     }
-//
+    //		'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
 //    @Test
 //    public void testStridingLongIterator() {
 //        LongList data = LongList.with(IteratorTest.longs);
@@ -76,20 +76,20 @@ public class StridingIteratorTest {
 //        next.addAll(fil);
 //        Assert.assertEquals(3, next.size());
 //    }
-//
-//    @Test
-//    public void testStridingFloatIterator() {
-//        FloatList data = FloatList.with(IteratorTest.floats);
-//        StridingFloatIterator fil =
-//                new StridingFloatIterator(data.iterator(), (float s) -> s % 50 == 25);
-//        FloatList next = new FloatList();
-//        next.addAll(fil);
-//        Assert.assertEquals(1, next.size());
-//        fil.set(data.iterator(), (float s) -> s % 10 == 1);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(2, next.size());
-//    }
+    @Test
+    public void testStridingFloatIterator() {
+        FloatList data = FloatList.with(IteratorTest.floats);
+        StridingFloatIterator stri = new StridingFloatIterator(data.iterator(), 1, 2);
+        FloatList next = new FloatList();
+        next.addAll(stri);
+        Assert.assertEquals('Β', next.get(0), 0);
+        Assert.assertEquals('Δ', next.get(1), 0);
+        stri.set(data.iterator(), 0, 3);
+        next.clear();
+        next.addAll(stri);
+        Assert.assertEquals('Α', next.get(0), 0);
+        Assert.assertEquals('Δ', next.get(1), 0);
+    }
 //
 //    @Test
 //    public void testStridingDoubleIterator() {
