@@ -90,20 +90,21 @@ public class StridingIteratorTest {
         Assert.assertEquals('Α', next.get(0), 0);
         Assert.assertEquals('Δ', next.get(1), 0);
     }
-//
-//    @Test
-//    public void testStridingDoubleIterator() {
-//        DoubleList data = DoubleList.with(IteratorTest.doubles);
-//        StridingDoubleIterator fil =
-//                new StridingDoubleIterator(data.iterator(), (double s) -> s % 50 == 25);
-//        DoubleList next = new DoubleList();
-//        next.addAll(fil);
-//        Assert.assertEquals(1, next.size());
-//        fil.set(data.iterator(), (double s) -> s % 10 == 1);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(2, next.size());
-//    }
+
+    @Test
+    public void testStridingDoubleIterator() {
+        DoubleList data = DoubleList.with(IteratorTest.doubles);
+        StridingDoubleIterator stri = new StridingDoubleIterator(data.iterator(), 1, 2);
+        DoubleList next = new DoubleList();
+        next.addAll(stri);
+        Assert.assertEquals('Β', next.get(0), 0);
+        Assert.assertEquals('Δ', next.get(1), 0);
+        stri.set(data.iterator(), 0, 3);
+        next.clear();
+        next.addAll(stri);
+        Assert.assertEquals('Α', next.get(0), 0);
+        Assert.assertEquals('Δ', next.get(1), 0);
+    }
 //
 //    @Test
 //    public void testStridingCharIterator() {
