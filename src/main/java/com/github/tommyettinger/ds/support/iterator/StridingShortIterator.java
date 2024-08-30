@@ -32,6 +32,7 @@ public class StridingShortIterator implements ShortIterator {
         this.iterator = iterator;
         this.offset = Math.max(0, offset);
         this.stride = Math.max(1, stride);
+        index = -1;
         end = available = false;
     }
 

@@ -126,18 +126,22 @@ public class StridingIteratorTest {
         Assert.assertEquals('Α', next.get(0));
         Assert.assertEquals('Δ', next.get(1));
     }
-//
-//    @Test
-//    public void testStridingBooleanIterator() {
-//        BooleanList data = BooleanList.with(IteratorTest.booleans);
-//        StridingBooleanIterator fil =
-//                new StridingBooleanIterator(data.iterator(), (boolean s) -> s);
-//        BooleanList next = new BooleanList();
-//        next.addAll(fil);
-//        Assert.assertEquals(9, next.size());
-//        fil.set(data.iterator(), (boolean s) -> !s);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(7, next.size());
-//    }
+//true, false, false, false, true, false, true, true, false, true, true, false, true, true, false, true
+
+    @Test
+    public void testStridingBooleanIterator() {
+        BooleanList data = BooleanList.with(IteratorTest.booleans);
+        StridingBooleanIterator stri = new StridingBooleanIterator(data.iterator(), 1, 2);
+        BooleanList next = new BooleanList();
+        next.addAll(stri);
+        Assert.assertEquals(false, next.get(0));
+        Assert.assertEquals(false, next.get(1));
+        Assert.assertEquals(true, next.get(3));
+        stri.set(data.iterator(), 0, 3);
+        next.clear();
+        next.addAll(stri);
+        Assert.assertEquals(true, next.get(0));
+        Assert.assertEquals(false, next.get(1));
+        Assert.assertEquals(true, next.get(2));
+    }
 }
