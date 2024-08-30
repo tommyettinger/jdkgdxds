@@ -111,20 +111,21 @@ public class StridingIteratorTest {
         Assert.assertEquals('Α', next.get(0), 0);
         Assert.assertEquals('Δ', next.get(1), 0);
     }
-//
-//    @Test
-//    public void testStridingCharIterator() {
-//        CharList data = CharList.with(IteratorTest.chars);
-//        StridingCharIterator fil =
-//                new StridingCharIterator(data.iterator(), (char s) -> s % 50 == 25);
-//        CharList next = new CharList();
-//        next.addAll(fil);
-//        Assert.assertEquals(1, next.size());
-//        fil.set(data.iterator(), (char s) -> s % 10 == 1);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(2, next.size());
-//    }
+
+    @Test
+    public void testStridingCharIterator() {
+        CharList data = CharList.with(IteratorTest.chars);
+        StridingCharIterator stri = new StridingCharIterator(data.iterator(), 1, 2);
+        CharList next = new CharList();
+        next.addAll(stri);
+        Assert.assertEquals('Β', next.get(0));
+        Assert.assertEquals('Δ', next.get(1));
+        stri.set(data.iterator(), 0, 3);
+        next.clear();
+        next.addAll(stri);
+        Assert.assertEquals('Α', next.get(0));
+        Assert.assertEquals('Δ', next.get(1));
+    }
 //
 //    @Test
 //    public void testStridingBooleanIterator() {
