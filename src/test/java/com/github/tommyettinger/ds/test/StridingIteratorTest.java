@@ -50,20 +50,22 @@ public class StridingIteratorTest {
         Assert.assertEquals('Α', next.get(0));
         Assert.assertEquals('Δ', next.get(1));
     }
-//
-//    @Test
-//    public void testStridingShortIterator() {
-//        ShortList data = ShortList.with(IteratorTest.shorts);
-//        StridingShortIterator fil =
-//                new StridingShortIterator(data.iterator(), (short s) -> s % 50 == 25);
-//        ShortList next = new ShortList();
-//        next.addAll(fil);
-//        Assert.assertEquals(1, next.size());
-//        fil.set(data.iterator(), (short s) -> s % 10 == 1);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(2, next.size());
-//    }
+
+
+    @Test
+    public void testStridingShortIterator() {
+        ShortList data = ShortList.with(IteratorTest.shorts);
+        StridingShortIterator stri = new StridingShortIterator(data.iterator(), 1, 2);
+        ShortList next = new ShortList();
+        next.addAll(stri);
+        Assert.assertEquals('Β', next.get(0));
+        Assert.assertEquals('Δ', next.get(1));
+        stri.set(data.iterator(), 0, 3);
+        next.clear();
+        next.addAll(stri);
+        Assert.assertEquals('Α', next.get(0));
+        Assert.assertEquals('Δ', next.get(1));
+    }
 //
 //    @Test
 //    public void testStridingByteIterator() {
