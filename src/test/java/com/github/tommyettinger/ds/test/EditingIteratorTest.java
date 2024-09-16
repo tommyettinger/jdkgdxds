@@ -32,20 +32,20 @@ public class EditingIteratorTest {
         next.addAll(fil);
         Assert.assertEquals(Integer.valueOf('b'), next.get(1));
     }
-//
-//    @Test
-//    public void testEditingLongIterator() {
-//        LongList data = LongList.with(IteratorTest.longs);
-//        EditingLongIterator fil =
-//                new EditingLongIterator(data.iterator(), (long s) -> s % 50 == 25);
-//        LongList next = new LongList();
-//        next.addAll(fil);
-//        Assert.assertEquals(1, next.size());
-//        fil.set(data.iterator(), (long s) -> s % 10 == 1);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(2, next.size());
-//    }
+
+    @Test
+    public void testEditingLongIterator() {
+        LongList data = LongList.with(IteratorTest.longs);
+        EditingLongIterator fil =
+                new EditingLongIterator(data.iterator(), (long s) -> s & 1L);
+        LongList next = new LongList();
+        next.addAll(fil);
+        Assert.assertEquals('Α' & 1L, next.first());
+        fil.set(data.iterator(), (long s) -> s % 10);
+        next.clear();
+        next.addAll(fil);
+        Assert.assertEquals('Β' % 10, next.get(1));
+    }
 //
 //    @Test
 //    public void testEditingIntIterator() {

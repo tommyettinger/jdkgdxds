@@ -1,8 +1,7 @@
 package com.github.tommyettinger.ds.support.iterator;
 
-import com.github.tommyettinger.function.ObjToSameFunction;
+import com.github.tommyettinger.function.LongToLongFunction;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -11,28 +10,26 @@ import java.util.NoSuchElementException;
  * If you need to return a different type than what the iterator returns, you can use an {@link AlteringIterator}.
  * This has undefined behavior if any items the Iterator could return are modified during iteration.
  * <br>
- * You can change both the Iterator and editor at once using {@link #set(Iterator, ObjToSameFunction)}, and can also
- * just change the Iterator with {@link #set(Iterator)}.
- *
- * @param <T> the type of items this can return, and the type the wrapped Iterator returns
+ * You can change both the Iterator and editor at once using {@link #set(LongIterator, LongToLongFunction)} ,
+ * and can also just change the Iterator with {@link #set(LongIterator)}.
  */
-public class EditingIterator<T> implements Iterator<T> {
-    public Iterator<T> iterator;
-    public ObjToSameFunction<T> editor;
+public class EditingLongIterator implements LongIterator {
+    public LongIterator iterator;
+    public LongToLongFunction editor;
 
-    public EditingIterator() {
+    public EditingLongIterator() {
     }
 
-    public EditingIterator(final Iterator<T> iterator, final ObjToSameFunction<T> editor) {
+    public EditingLongIterator(final LongIterator iterator, final LongToLongFunction editor) {
         set(iterator, editor);
     }
 
-    public void set (final Iterator<T> iterator, final ObjToSameFunction<T> editor) {
+    public void set (final LongIterator iterator, final LongToLongFunction editor) {
         this.iterator = iterator;
         this.editor = editor;
     }
 
-    public void set (final Iterator<T> iterator) {
+    public void set (final LongIterator iterator) {
         set(iterator, editor);
     }
 
@@ -42,9 +39,9 @@ public class EditingIterator<T> implements Iterator<T> {
     }
 
     @Override
-    public T next () {
+    public long nextLong () {
         if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
-        return editor.apply(iterator.next());
+        return editor.applyAsLong(iterator.nextLong());
     }
 
     @Override

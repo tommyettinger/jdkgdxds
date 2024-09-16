@@ -1,7 +1,6 @@
 package com.github.tommyettinger.ds.support.iterator;
 
 import com.github.tommyettinger.function.ObjToObjFunction;
-import com.github.tommyettinger.function.ObjToObjFunction;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -14,7 +13,7 @@ import java.util.NoSuchElementException;
  * <br>
  * You can change both the Iterator and editor at once using {@link #set(Iterator, ObjToObjFunction)}, and can also
  * just change the Iterator with {@link #set(Iterator)}.
-
+ *
  * @param <T> the type of items this can return, and the type the wrapped Iterator returns
  */
 public class AlteringIterator<T, R> implements Iterator<R> {
