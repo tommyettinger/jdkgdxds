@@ -60,20 +60,20 @@ public class EditingIteratorTest {
         next.addAll(fil);
         Assert.assertEquals('Β' % 10, next.get(1));
     }
-//
-//    @Test
-//    public void testEditingShortIterator() {
-//        ShortList data = ShortList.with(IteratorTest.shorts);
-//        EditingShortIterator fil =
-//                new EditingShortIterator(data.iterator(), (short s) -> s % 50 == 25);
-//        ShortList next = new ShortList();
-//        next.addAll(fil);
-//        Assert.assertEquals(1, next.size());
-//        fil.set(data.iterator(), (short s) -> s % 10 == 1);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(2, next.size());
-//    }
+
+    @Test
+    public void testEditingShortIterator() {
+        ShortList data = ShortList.with(IteratorTest.shorts);
+        EditingShortIterator fil =
+                new EditingShortIterator(data.iterator(), (short s) -> (short) (s & 1));
+        ShortList next = new ShortList();
+        next.addAll(fil);
+        Assert.assertEquals('Α' & 1, next.first());
+        fil.set(data.iterator(), (short s) -> (short) (s % 10));
+        next.clear();
+        next.addAll(fil);
+        Assert.assertEquals('Β' % 10, next.get(1));
+    }
 //
 //    @Test
 //    public void testEditingByteIterator() {
