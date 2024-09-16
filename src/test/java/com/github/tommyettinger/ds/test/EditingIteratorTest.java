@@ -89,20 +89,20 @@ public class EditingIteratorTest {
         next.addAll(fil);
         Assert.assertEquals(2 % 10, next.get(3));
     }
-//
-//    @Test
-//    public void testEditingFloatIterator() {
-//        FloatList data = FloatList.with(IteratorTest.floats);
-//        EditingFloatIterator fil =
-//                new EditingFloatIterator(data.iterator(), (float s) -> s % 50 == 25);
-//        FloatList next = new FloatList();
-//        next.addAll(fil);
-//        Assert.assertEquals(1, next.size());
-//        fil.set(data.iterator(), (float s) -> s % 10 == 1);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(2, next.size());
-//    }
+
+    @Test
+    public void testEditingFloatIterator() {
+        FloatList data = FloatList.with(IteratorTest.floats);
+        EditingFloatIterator fil =
+                new EditingFloatIterator(data.iterator(), (float s) -> (float) (s % 2));
+        FloatList next = new FloatList();
+        next.addAll(fil);
+        Assert.assertEquals('Α' & 1, next.first(), MathTools.EPSILON);
+        fil.set(data.iterator(), (float s) -> (float) (s % 10));
+        next.clear();
+        next.addAll(fil);
+        Assert.assertEquals('Β' % 10, next.get(1), MathTools.EPSILON);
+    }
 
     @Test
     public void testEditingDoubleIterator() {
