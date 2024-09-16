@@ -1,5 +1,6 @@
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.iterator.*;
 import org.junit.Assert;
@@ -102,20 +103,20 @@ public class EditingIteratorTest {
 //        next.addAll(fil);
 //        Assert.assertEquals(2, next.size());
 //    }
-//
-//    @Test
-//    public void testEditingDoubleIterator() {
-//        DoubleList data = DoubleList.with(IteratorTest.doubles);
-//        EditingDoubleIterator fil =
-//                new EditingDoubleIterator(data.iterator(), (double s) -> s % 50 == 25);
-//        DoubleList next = new DoubleList();
-//        next.addAll(fil);
-//        Assert.assertEquals(1, next.size());
-//        fil.set(data.iterator(), (double s) -> s % 10 == 1);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(2, next.size());
-//    }
+
+    @Test
+    public void testEditingDoubleIterator() {
+        DoubleList data = DoubleList.with(IteratorTest.doubles);
+        EditingDoubleIterator fil =
+                new EditingDoubleIterator(data.iterator(), (double s) -> (double) (s % 2));
+        DoubleList next = new DoubleList();
+        next.addAll(fil);
+        Assert.assertEquals('Α' & 1, next.first(), MathTools.EPSILON_D);
+        fil.set(data.iterator(), (double s) -> (double) (s % 10));
+        next.clear();
+        next.addAll(fil);
+        Assert.assertEquals('Β' % 10, next.get(1), MathTools.EPSILON_D);
+    }
 
     @Test
     public void testEditingCharIterator() {
