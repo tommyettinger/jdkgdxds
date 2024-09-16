@@ -74,20 +74,20 @@ public class EditingIteratorTest {
         next.addAll(fil);
         Assert.assertEquals('Β' % 10, next.get(1));
     }
-//
-//    @Test
-//    public void testEditingByteIterator() {
-//        ByteList data = ByteList.with(IteratorTest.bytes);
-//        EditingByteIterator fil =
-//                new EditingByteIterator(data.iterator(), (byte s) -> s % 50 == 13);
-//        ByteList next = new ByteList();
-//        next.addAll(fil);
-//        Assert.assertEquals(2, next.size());
-//        fil.set(data.iterator(), (byte s) -> s % 10 == 0);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(3, next.size());
-//    }
+
+    @Test
+    public void testEditingByteIterator() {
+        ByteList data = ByteList.with(IteratorTest.bytes);
+        EditingByteIterator fil =
+                new EditingByteIterator(data.iterator(), (byte s) -> (byte) (s & 1));
+        ByteList next = new ByteList();
+        next.addAll(fil);
+        Assert.assertEquals(-1 & 1, next.get(2));
+        fil.set(data.iterator(), (byte s) -> (byte) (s % 10));
+        next.clear();
+        next.addAll(fil);
+        Assert.assertEquals(2 % 10, next.get(3));
+    }
 //
 //    @Test
 //    public void testEditingFloatIterator() {
