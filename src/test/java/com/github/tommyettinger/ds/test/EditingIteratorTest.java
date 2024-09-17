@@ -131,18 +131,19 @@ public class EditingIteratorTest {
         next.addAll(fil);
         Assert.assertEquals('Β' % 10, next.get(1));
     }
-//
-//    @Test
-//    public void testEditingBooleanIterator() {
-//        BooleanList data = BooleanList.with(IteratorTest.booleans);
-//        EditingBooleanIterator fil =
-//                new EditingBooleanIterator(data.iterator(), (boolean s) -> s);
-//        BooleanList next = new BooleanList();
-//        next.addAll(fil);
-//        Assert.assertEquals(9, next.size());
-//        fil.set(data.iterator(), (boolean s) -> !s);
-//        next.clear();
-//        next.addAll(fil);
-//        Assert.assertEquals(7, next.size());
-//    }
+
+    //true, false, false, false, true, false, true, true, false, true, true, false, true, true, false, true
+    @Test
+    public void testEditingBooleanIterator() {
+        BooleanList data = BooleanList.with(IteratorTest.booleans);
+        EditingBooleanIterator fil =
+                new EditingBooleanIterator(data.iterator(), (boolean s) -> !s);
+        BooleanList next = new BooleanList();
+        next.addAll(fil);
+        Assert.assertFalse(next.first());
+        fil.set(data.iterator(), (boolean s) -> !s);
+        next.clear();
+        next.addAll(fil);
+        Assert.assertTrue(next.get(1));
+    }
 }
