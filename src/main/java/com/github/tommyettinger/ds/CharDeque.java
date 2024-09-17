@@ -19,7 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.CharComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparators;
-import com.github.tommyettinger.ds.support.iterator.CharIterator;
+import com.github.tommyettinger.ds.support.util.CharIterator;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;

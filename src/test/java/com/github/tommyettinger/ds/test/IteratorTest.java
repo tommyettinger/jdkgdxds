@@ -1,14 +1,14 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.ds.*;
-import com.github.tommyettinger.ds.support.iterator.BooleanIterator;
-import com.github.tommyettinger.ds.support.iterator.ByteIterator;
-import com.github.tommyettinger.ds.support.iterator.CharIterator;
-import com.github.tommyettinger.ds.support.iterator.DoubleIterator;
-import com.github.tommyettinger.ds.support.iterator.FloatIterator;
-import com.github.tommyettinger.ds.support.iterator.IntIterator;
-import com.github.tommyettinger.ds.support.iterator.LongIterator;
-import com.github.tommyettinger.ds.support.iterator.ShortIterator;
+import com.github.tommyettinger.ds.support.util.BooleanIterator;
+import com.github.tommyettinger.ds.support.util.ByteIterator;
+import com.github.tommyettinger.ds.support.util.CharIterator;
+import com.github.tommyettinger.ds.support.util.DoubleIterator;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
+import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.ds.support.util.LongIterator;
+import com.github.tommyettinger.ds.support.util.ShortIterator;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.Assert;
 import org.junit.Test;

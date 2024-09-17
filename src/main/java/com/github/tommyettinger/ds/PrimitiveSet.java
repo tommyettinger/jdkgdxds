@@ -17,8 +17,8 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.iterator.IntIterator;
-import com.github.tommyettinger.ds.support.iterator.LongIterator;
+import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 
 /**
  * Analogous to {@link java.util.Set} but for a primitive type, this extends {@link PrimitiveCollection} and the

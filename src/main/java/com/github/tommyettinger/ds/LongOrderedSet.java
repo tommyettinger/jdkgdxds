@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.iterator.LongIterator;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

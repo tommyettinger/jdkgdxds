@@ -19,9 +19,9 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.text.Appender;
-import com.github.tommyettinger.ds.support.text.LongAppender;
-import com.github.tommyettinger.ds.support.iterator.LongIterator;
+import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.LongAppender;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongObjBiConsumer;
 import com.github.tommyettinger.function.LongObjToObjBiFunction;
 

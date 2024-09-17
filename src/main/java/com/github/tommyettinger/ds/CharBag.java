@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.iterator.CharIterator;
+import com.github.tommyettinger.ds.support.util.CharIterator;
 
 import java.util.List;
 

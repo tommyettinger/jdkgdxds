@@ -308,8 +308,8 @@ folders needed to change. They did so in digital 0.1.7, funderby 0.0.2, juniper 
 Version 1.3.0 removes a lot of Java 8 APIs, including all interfaces that require Java 8 code. Language level 8 is still used,
 since it's been safe to use on all platforms for a while now, but RoboVM (for iOS support) still doesn't support Java 8 APIs (just
 the language level). To update, change any usage of `PrimitiveIterator.OfInt`, `PrimitiveIterator.OfLong`, and
-`PrimitiveIterator.OfDouble` to `com.github.tommyettinger.ds.support.text.IntIterator`,
-`com.github.tommyettinger.ds.support.text.LongIterator`, and `com.github.tommyettinger.ds.support.text.DoubleIterator`,
+`PrimitiveIterator.OfDouble` to `com.github.tommyettinger.ds.support.util.IntIterator`,
+`com.github.tommyettinger.ds.support.util.LongIterator`, and `com.github.tommyettinger.ds.support.util.DoubleIterator`,
 respectively. You may also need to change some functional interfaces to use the ones in Funderby, which are named differently:
 
  - `Function` becomes `ObjToObjFunction`, `BiFunction` becomes `ObjObjToObjBiFunction`, `Consumer` becomes `ObjConsumer`,

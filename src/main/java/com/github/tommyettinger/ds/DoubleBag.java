@@ -18,7 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.iterator.DoubleIterator;
+import com.github.tommyettinger.ds.support.util.DoubleIterator;
 
 import java.util.List;
 

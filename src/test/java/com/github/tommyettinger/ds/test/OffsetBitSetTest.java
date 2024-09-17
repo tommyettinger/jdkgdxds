@@ -20,7 +20,7 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.OffsetBitSet;
-import com.github.tommyettinger.ds.support.iterator.IntIterator;
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.junit.Assert;
 import org.junit.Test;
 

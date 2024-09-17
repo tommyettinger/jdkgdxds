@@ -19,7 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
-import com.github.tommyettinger.ds.support.iterator.IntIterator;
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntToIntFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

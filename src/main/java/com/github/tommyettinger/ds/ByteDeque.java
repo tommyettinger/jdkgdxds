@@ -19,7 +19,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparators;
-import com.github.tommyettinger.ds.support.iterator.ByteIterator;
+import com.github.tommyettinger.ds.support.util.ByteIterator;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;

@@ -19,8 +19,8 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 
-import com.github.tommyettinger.ds.support.text.IntAppender;
-import com.github.tommyettinger.ds.support.iterator.IntIterator;
+import com.github.tommyettinger.ds.support.util.IntAppender;
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
 import java.util.NoSuchElementException;

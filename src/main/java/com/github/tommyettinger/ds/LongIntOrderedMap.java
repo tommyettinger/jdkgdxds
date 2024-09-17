@@ -23,9 +23,9 @@ import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 
-import com.github.tommyettinger.ds.support.text.IntAppender;
-import com.github.tommyettinger.ds.support.text.LongAppender;
-import com.github.tommyettinger.ds.support.iterator.LongIterator;
+import com.github.tommyettinger.ds.support.util.IntAppender;
+import com.github.tommyettinger.ds.support.util.LongAppender;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Iterator;

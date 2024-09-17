@@ -23,9 +23,9 @@ import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 
-import com.github.tommyettinger.ds.support.text.FloatAppender;
-import com.github.tommyettinger.ds.support.text.IntAppender;
-import com.github.tommyettinger.ds.support.iterator.IntIterator;
+import com.github.tommyettinger.ds.support.util.FloatAppender;
+import com.github.tommyettinger.ds.support.util.IntAppender;
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Iterator;

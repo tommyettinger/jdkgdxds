@@ -2,7 +2,7 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.*;
-import com.github.tommyettinger.ds.support.iterator.*;
+import com.github.tommyettinger.ds.support.util.*;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.text.Appender;
+import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;

@@ -20,7 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
-import com.github.tommyettinger.ds.support.iterator.DoubleIterator;
+import com.github.tommyettinger.ds.support.util.DoubleIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;

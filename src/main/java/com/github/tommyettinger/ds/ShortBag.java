@@ -17,7 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.iterator.ShortIterator;
+import com.github.tommyettinger.ds.support.util.ShortIterator;
 
 import java.util.List;
 /**

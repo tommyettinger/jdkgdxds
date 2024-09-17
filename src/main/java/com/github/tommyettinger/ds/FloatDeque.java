@@ -20,7 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
-import com.github.tommyettinger.ds.support.iterator.FloatIterator;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;

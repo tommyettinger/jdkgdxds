@@ -18,7 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.iterator.FloatIterator;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import java.util.List;
 
