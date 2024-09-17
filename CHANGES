@@ -1,3 +1,13 @@
+[1.6.4]
+- Most collections can be initialized with an Iterator now, which adds items from the Iterator until it is exhausted.
+- You can also use Iterator types in addAll(), removeAll(), and so on.
+- There are new Iterator wrappers, including FilteringIterator, StridingIterator, EditingIterator, and primitive variants on each.
+- FilteringIterator skips items unless they match a predicate.
+- StridingIterator skips a fixed number of items at a time, repeatedly.
+- EditingIterator runs a function on each item and returns what that function does.
+- Updated to digital 0.5.1, which mostly improves and adds to its Hasher class.
+- The Gradle version used to build jdkgdxds was updated to 8.10.1, and the daemon was disabled while building. This shouldn't affect users.
+
 [1.6.3]
 - The dependency on digital was updated to 0.5.0, which improves Interpolators and parts of TrigTools.
 - The Gradle version used to build jdkgdxds was updated to 8.10, which will allow this to be built with Java 23.

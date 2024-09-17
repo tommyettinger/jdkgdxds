@@ -85,6 +85,7 @@ key universe. `EnumMap` does also store a default value, which is usually `null`
 The library includes expanded interfaces for these to implement, like the aforementioned `Ordered` interface,
 `PrimitiveCollection` is akin to Java 8's `PrimitiveIterator`, some `float`-based versions of primitive specializations where
 the JDK only offers `int`, `long`, and `double`, and primitive `Comparator`s (which are Java 8 `FunctionalInterface`s).
+There is also `EnhancedCollection`, which is used to add default methods to various classes here.
 
 You can extend essentially all classes in jdkgdxds, and it's meant to be friendlier to inherit from than the libGDX collections.
 The Object-keyed maps and sets have protected `place()` and `equate()` methods to allow changing the behavior of hashing (with
@@ -142,21 +143,31 @@ number in some range that defies find-and-replace) you're looking for with excla
 lambda that was made to check for `42`. Passing in user-definable functions hasn't been done much in jdkgdxds, but it may see much
 more use in the future.
 
+Starting in jdkgdxds 1.6.4, there's more support for receiving iterator types in any of the various data structures,
+and there are wrappers around iterators provided to change what these iterators can provide to a constructor or
+`addAll()` call, for instance. Each of these wrappers has variants for all primitive types:
+
+- FilteringIterator skips items unless they match a predicate.
+- StridingIterator skips a fixed number of items at a time, repeatedly.
+- EditingIterator runs a function on each item and returns what that function does.
+  - There's also AlteringIterator, which has two type parameters since it receives one from the iterator and returns another.
+- More iterator wrappers will probably be added in the future.
+
 ## How do I get it?
 
 You have two options: Maven Central for stable releases, or JitPack to select a commit of your choice to build.
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.6.3'
+api 'com.github.tommyettinger:jdkgdxds:1.6.4'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
 `mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on [digital](https://github.com/tommyettinger/digital)
 (which provides common math code meant for use by multiple projects), [funderby](https://github.com/tommyettinger/funderby)
 (Java 8 functional interfaces for primitive types), and for annotations only, [checker-qual](https://github.com/typetools/checker-framework). The
-version for the `digital` dependency is 0.5.0 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.5.0"`). Funderby has only changed a bit since its initial release, and is on version
+version for the `digital` dependency is 0.5.1 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.5.1"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`). The version for
 `checker-qual` is 3.42.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes.
 Earlier versions of jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to
@@ -166,8 +177,8 @@ mention that JSR305 is currently unmaintained). You can manually specify a `chec
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.5.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.6.3:sources"
+implementation "com.github.tommyettinger:digital:0.5.1:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.6.4:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -220,7 +231,7 @@ on what your other dependencies use, to your project or its core module (if ther
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.5.0:sources"
+implementation "com.github.tommyettinger:digital:0.5.1:sources"
 implementation "com.github.tommyettinger:jdkgdxds:4e8ddbddd7:sources"
 ```
 to its
