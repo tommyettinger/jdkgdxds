@@ -129,21 +129,19 @@ public class LimitingIteratorTest {
         Assert.assertEquals('Γ', next.peek());
     }
 ////true, false, false, false, true, false, true, true, false, true, true, false, true, true, false, true
-//
-//    @Test
-//    public void testLimitingBooleanIterator() {
-//        BooleanList data = BooleanList.with(IteratorTest.booleans);
-//        LimitingBooleanIterator lim = new LimitingBooleanIterator(data.iterator(), 1, 2);
-//        BooleanList next = new BooleanList();
-//        next.addAll(lim);
-//        Assert.assertEquals(false, next.get(0));
-//        Assert.assertEquals(false, next.get(1));
-//        Assert.assertEquals(true, next.get(3));
-//        lim.set(data.iterator(), 0, 3);
-//        next.clear();
-//        next.addAll(lim);
-//        Assert.assertEquals(true, next.get(0));
-//        Assert.assertEquals(false, next.get(1));
-//        Assert.assertEquals(true, next.get(2));
-//    }
+
+    @Test
+    public void testLimitingBooleanIterator() {
+        BooleanList data = BooleanList.with(IteratorTest.booleans);
+        LimitingBooleanIterator lim = new LimitingBooleanIterator(data.iterator(), 5);
+        BooleanList next = new BooleanList();
+        next.addAll(lim);
+        Assert.assertFalse(next.get(1));
+        Assert.assertTrue(next.peek());
+        lim.set(data.iterator(), 3);
+        next.clear();
+        next.addAll(lim);
+        Assert.assertTrue(next.first());
+        Assert.assertFalse(next.peek());
+    }
 }
