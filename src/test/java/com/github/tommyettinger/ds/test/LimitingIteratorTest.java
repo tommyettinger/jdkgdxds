@@ -69,21 +69,21 @@ public class LimitingIteratorTest {
     }
 
 //    //1, 0, -1, 2, -2, 3, -3, 11, 10, -11, 12, -12, 13, -13, 111, 110, -111, 112, -112, 113, -113
-//    @Test
-//    public void testLimitingByteIterator() {
-//        ByteList data = ByteList.with(IteratorTest.bytes);
-//        LimitingByteIterator lim = new LimitingByteIterator(data.iterator(), 1, 2);
-//        ByteList next = new ByteList();
-//        next.addAll(lim);
-//        Assert.assertEquals(0, next.get(0));
-//        Assert.assertEquals(2, next.get(1));
-//        lim.set(data.iterator(), 0, 3);
-//        next.clear();
-//        next.addAll(lim);
-//        Assert.assertEquals(1, next.get(0));
-//        Assert.assertEquals(2, next.get(1));
-//    }
-//
+    @Test
+    public void testLimitingByteIterator() {
+        ByteList data = ByteList.with(IteratorTest.bytes);
+        LimitingByteIterator lim = new LimitingByteIterator(data.iterator(), 4);
+        ByteList next = new ByteList();
+        next.addAll(lim);
+        Assert.assertEquals(0, next.get(1));
+        Assert.assertEquals(2, next.peek());
+        lim.set(data.iterator(), 3);
+        next.clear();
+        next.addAll(lim);
+        Assert.assertEquals(1, next.first());
+        Assert.assertEquals(-1, next.peek());
+    }
+
     @Test
     public void testLimitingFloatIterator() {
         FloatList data = FloatList.with(IteratorTest.floats);
