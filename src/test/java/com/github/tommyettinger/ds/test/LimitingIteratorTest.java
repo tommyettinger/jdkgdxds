@@ -52,22 +52,22 @@ public class LimitingIteratorTest {
         Assert.assertEquals('Α', next.first());
         Assert.assertEquals('Γ', next.peek());
     }
-//    
-//    @Test
-//    public void testLimitingShortIterator() {
-//        ShortList data = ShortList.with(IteratorTest.shorts);
-//        LimitingShortIterator lim = new LimitingShortIterator(data.iterator(), 1, 2);
-//        ShortList next = new ShortList();
-//        next.addAll(lim);
-//        Assert.assertEquals('Β', next.get(0));
-//        Assert.assertEquals('Δ', next.get(1));
-//        lim.set(data.iterator(), 0, 3);
-//        next.clear();
-//        next.addAll(lim);
-//        Assert.assertEquals('Α', next.get(0));
-//        Assert.assertEquals('Δ', next.get(1));
-//    }
-//
+
+    @Test
+    public void testLimitingShortIterator() {
+        ShortList data = ShortList.with(IteratorTest.shorts);
+        LimitingShortIterator lim = new LimitingShortIterator(data.iterator(), 4);
+        ShortList next = new ShortList();
+        next.addAll(lim);
+        Assert.assertEquals('Β', next.get(1));
+        Assert.assertEquals('Δ', next.peek());
+        lim.set(data.iterator(), 3);
+        next.clear();
+        next.addAll(lim);
+        Assert.assertEquals('Α', next.first());
+        Assert.assertEquals('Γ', next.peek());
+    }
+
 //    //1, 0, -1, 2, -2, 3, -3, 11, 10, -11, 12, -12, 13, -13, 111, 110, -111, 112, -112, 113, -113
 //    @Test
 //    public void testLimitingByteIterator() {
