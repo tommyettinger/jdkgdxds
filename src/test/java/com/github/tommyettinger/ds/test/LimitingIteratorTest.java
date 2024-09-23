@@ -99,21 +99,21 @@ public class LimitingIteratorTest {
         Assert.assertEquals('Γ', next.peek(), 0);
     }
 
-//    @Test
-//    public void testLimitingDoubleIterator() {
-//        DoubleList data = DoubleList.with(IteratorTest.doubles);
-//        LimitingDoubleIterator lim = new LimitingDoubleIterator(data.iterator(), 1, 2);
-//        DoubleList next = new DoubleList();
-//        next.addAll(lim);
-//        Assert.assertEquals('Β', next.get(0), 0);
-//        Assert.assertEquals('Δ', next.get(1), 0);
-//        lim.set(data.iterator(), 0, 3);
-//        next.clear();
-//        next.addAll(lim);
-//        Assert.assertEquals('Α', next.get(0), 0);
-//        Assert.assertEquals('Δ', next.get(1), 0);
-//    }
-//
+    @Test
+    public void testLimitingDoubleIterator() {
+        DoubleList data = DoubleList.with(IteratorTest.doubles);
+        LimitingDoubleIterator lim = new LimitingDoubleIterator(data.iterator(), 4);
+        DoubleList next = new DoubleList();
+        next.addAll(lim);
+        Assert.assertEquals('Β', next.get(1), 0);
+        Assert.assertEquals('Δ', next.peek(), 0);
+        lim.set(data.iterator(), 3);
+        next.clear();
+        next.addAll(lim);
+        Assert.assertEquals('Α', next.first(), 0);
+        Assert.assertEquals('Γ', next.peek(), 0);
+    }
+
 //    @Test
 //    public void testLimitingCharIterator() {
 //        CharList data = CharList.with(IteratorTest.chars);
