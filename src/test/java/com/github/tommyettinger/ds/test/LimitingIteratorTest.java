@@ -23,21 +23,21 @@ public class LimitingIteratorTest {
         Assert.assertEquals("gamma", next.peek());
     }
     //		'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
-//    @Test
-//    public void testLimitingLongIterator() {
-//        LongList data = LongList.with(IteratorTest.longs);
-//        LimitingLongIterator lim = new LimitingLongIterator(data.iterator(), 1, 2);
-//        LongList next = new LongList();
-//        next.addAll(lim);
-//        Assert.assertEquals('Β', next.get(0));
-//        Assert.assertEquals('Δ', next.get(1));
-//        lim.set(data.iterator(), 0, 3);
-//        next.clear();
-//        next.addAll(lim);
-//        Assert.assertEquals('Α', next.get(0));
-//        Assert.assertEquals('Δ', next.get(1));
-//    }
-//
+    @Test
+    public void testLimitingLongIterator() {
+        LongList data = LongList.with(IteratorTest.longs);
+        LimitingLongIterator lim = new LimitingLongIterator(data.iterator(), 4);
+        LongList next = new LongList();
+        next.addAll(lim);
+        Assert.assertEquals('Β', next.get(1));
+        Assert.assertEquals('Δ', next.peek());
+        lim.set(data.iterator(), 3);
+        next.clear();
+        next.addAll(lim);
+        Assert.assertEquals('Α', next.first());
+        Assert.assertEquals('Γ', next.peek());
+    }
+
 //    @Test
 //    public void testLimitingIntIterator() {
 //        IntList data = IntList.with(IteratorTest.ints);
