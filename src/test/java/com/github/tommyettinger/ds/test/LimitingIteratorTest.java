@@ -114,20 +114,20 @@ public class LimitingIteratorTest {
         Assert.assertEquals('Γ', next.peek(), 0);
     }
 
-//    @Test
-//    public void testLimitingCharIterator() {
-//        CharList data = CharList.with(IteratorTest.chars);
-//        LimitingCharIterator lim = new LimitingCharIterator(data.iterator(), 1, 2);
-//        CharList next = new CharList();
-//        next.addAll(lim);
-//        Assert.assertEquals('Β', next.get(0));
-//        Assert.assertEquals('Δ', next.get(1));
-//        lim.set(data.iterator(), 0, 3);
-//        next.clear();
-//        next.addAll(lim);
-//        Assert.assertEquals('Α', next.get(0));
-//        Assert.assertEquals('Δ', next.get(1));
-//    }
+    @Test
+    public void testLimitingCharIterator() {
+        CharList data = CharList.with(IteratorTest.chars);
+        LimitingCharIterator lim = new LimitingCharIterator(data.iterator(), 4);
+        CharList next = new CharList();
+        next.addAll(lim);
+        Assert.assertEquals('Β', next.get(1));
+        Assert.assertEquals('Δ', next.peek());
+        lim.set(data.iterator(), 3);
+        next.clear();
+        next.addAll(lim);
+        Assert.assertEquals('Α', next.first());
+        Assert.assertEquals('Γ', next.peek());
+    }
 ////true, false, false, false, true, false, true, true, false, true, true, false, true, true, false, true
 //
 //    @Test
