@@ -38,20 +38,20 @@ public class LimitingIteratorTest {
         Assert.assertEquals('Γ', next.peek());
     }
 
-//    @Test
-//    public void testLimitingIntIterator() {
-//        IntList data = IntList.with(IteratorTest.ints);
-//        LimitingIntIterator lim = new LimitingIntIterator(data.iterator(), 1, 2);
-//        IntList next = new IntList();
-//        next.addAll(lim);
-//        Assert.assertEquals('Β', next.get(0));
-//        Assert.assertEquals('Δ', next.get(1));
-//        lim.set(data.iterator(), 0, 3);
-//        next.clear();
-//        next.addAll(lim);
-//        Assert.assertEquals('Α', next.get(0));
-//        Assert.assertEquals('Δ', next.get(1));
-//    }
+    @Test
+    public void testLimitingIntIterator() {
+        IntList data = IntList.with(IteratorTest.ints);
+        LimitingIntIterator lim = new LimitingIntIterator(data.iterator(), 4);
+        IntList next = new IntList();
+        next.addAll(lim);
+        Assert.assertEquals('Β', next.get(1));
+        Assert.assertEquals('Δ', next.peek());
+        lim.set(data.iterator(), 3);
+        next.clear();
+        next.addAll(lim);
+        Assert.assertEquals('Α', next.first());
+        Assert.assertEquals('Γ', next.peek());
+    }
 //    
 //    @Test
 //    public void testLimitingShortIterator() {
