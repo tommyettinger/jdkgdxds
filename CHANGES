@@ -1,3 +1,8 @@
+[1.6.5]
+- Added LimitingIterator, which will only iterate through a set amount of items at most.
+- Updated to digital 0.5.2, which mostly adds the Distributor class.
+- The Gradle version used to build jdkgdxds was updated to 8.10.2, and the daemon was re-enabled while building. This shouldn't affect users.
+
 [1.6.4]
 - Most collections can be initialized with an Iterator now, which adds items from the Iterator until it is exhausted.
 - You can also use Iterator types in addAll(), removeAll(), and so on.
