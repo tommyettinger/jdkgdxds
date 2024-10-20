@@ -125,6 +125,42 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	}
 
 	/**
+	 * Creates a bit set from an entire int array.
+	 * The offset of the new bit set will be the lowest int in the collection, which you should be aware of
+	 * if you intend to use the bitwise methods such as {@link #and(OffsetBitSet)} and {@link #or(OffsetBitSet)}.
+	 *
+	 * @param toCopy the non-null int array to copy
+	 */
+	public OffsetBitSet (int[] toCopy){
+		this(toCopy, 0, toCopy.length);
+	}
+	/**
+	 * Creates a bit set from an int array, starting reading at an offset and continuing for a given length.
+	 * The offset of the new bit set will be the lowest int in the collection, which you should be aware of
+	 * if you intend to use the bitwise methods such as {@link #and(OffsetBitSet)} and {@link #or(OffsetBitSet)}.
+	 *
+	 * @param toCopy the int array to copy
+	 * @param off which index to start copying from toCopy
+	 * @param length how many items to copy from toCopy
+	 */
+	public OffsetBitSet (int[] toCopy, int off, int length) {
+		if(toCopy.length == 0){
+			offset = 0;
+			bits = new int[1];
+			return;
+		}
+		int start = Integer.MAX_VALUE, end = Integer.MIN_VALUE;
+		for(int i = off, e = off + length; i < e; i++) {
+			int n = toCopy[i];
+			start = Math.min(start, n);
+			end = Math.max(end, n + 1);
+		}
+		offset = start;
+		bits = new int[end + 31 - start >>> 5];
+		addAll(toCopy, off, length);
+	}
+
+	/**
 	 * Gets the lowest integer position that this OffsetBitSet can store.
 	 * If all positions are at least equal to some value, using that for the offset can save space.
 	 */
