@@ -307,7 +307,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 
 	private void checkCapacity (int index) {
 		if (index >= bits.length) {
-			int[] newBits = new int[Integer.highestOneBit(index) << 1]; // resizes to next power of two size that can fit index
+			int[] newBits = new int[1 << -BitConversion.countLeadingZeros(index)]; // resizes to next power of two size that can fit index
 			System.arraycopy(bits, 0, newBits, 0, bits.length);
 			bits = newBits;
 		}
