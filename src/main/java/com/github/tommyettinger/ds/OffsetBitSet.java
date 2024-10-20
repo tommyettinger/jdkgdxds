@@ -268,6 +268,48 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 		return changed;
 	}
 
+	public boolean addAll(short[] indices) {
+		return addAll(indices, 0, indices.length);
+	}
+
+	public boolean addAll (short[] indices, int off, int length) {
+		if(length <= 0 || off < 0 || off + length > indices.length)
+			return false;
+		boolean changed = false;
+		for (int i = off, n = off + length; i < n; i++) {
+			changed |= add(indices[i]);
+		}
+		return changed;
+	}
+
+	public boolean addAll(byte[] indices) {
+		return addAll(indices, 0, indices.length);
+	}
+
+	public boolean addAll (byte[] indices, int off, int length) {
+		if(length <= 0 || off < 0 || off + length > indices.length)
+			return false;
+		boolean changed = false;
+		for (int i = off, n = off + length; i < n; i++) {
+			changed |= add(indices[i]);
+		}
+		return changed;
+	}
+
+	public boolean addAll(char[] indices) {
+		return addAll(indices, 0, indices.length);
+	}
+
+	public boolean addAll (char[] indices, int off, int length) {
+		if(length <= 0 || off < 0 || off + length > indices.length)
+			return false;
+		boolean changed = false;
+		for (int i = off, n = off + length; i < n; i++) {
+			changed |= add(indices[i]);
+		}
+		return changed;
+	}
+
 	public boolean addAll(PrimitiveCollection.OfInt indices) {
 		IntIterator it = indices.iterator();
 		boolean changed = false;
