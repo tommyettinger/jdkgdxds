@@ -33,11 +33,12 @@ public class OffsetBitSetTest {
 
 	@Test
 	public void testHashcodeAndEquals () {
-		OffsetBitSet b1 = new OffsetBitSet();
-		OffsetBitSet b2 = new OffsetBitSet();
+		OffsetBitSet b1 = new OffsetBitSet(1);
+		OffsetBitSet b2 = new OffsetBitSet(1);
 
-		b1.add(1);
-		b2.add(1);
+		b1.add(31);
+		//		System.out.println("Length is " + b1.length());
+		b2.add(31);
 
 		assertEquals(b1.hashCode(), b2.hashCode());
 		assertEquals(b1, b2);

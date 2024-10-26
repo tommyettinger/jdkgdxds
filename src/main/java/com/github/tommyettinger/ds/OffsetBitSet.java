@@ -419,7 +419,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 		for (int word = bits.length - 1; word >= 0; --word) {
 			int bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
-				return (word + 1 << 5) - BitConversion.countLeadingZeros(bitsAtWord) + 1 + offset;
+				return (word + 1 << 5) - BitConversion.countLeadingZeros(bitsAtWord) + offset;
 			}
 		}
 		return 0;
@@ -670,9 +670,9 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 
 	@Override
 	public int hashCode () {
-		final int word = (length() >>> 5) - offset;
+		final int limit = (length() + 31 - offset >>> 5);
 		int hash = offset;
-		for (int i = 0; i <= word; i++) {
+		for (int i = 0; i < limit; i++) {
 			hash += bits[i];
 		}
 		return hash;
