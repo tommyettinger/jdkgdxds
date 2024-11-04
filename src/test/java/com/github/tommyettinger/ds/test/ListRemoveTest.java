@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 public class ListRemoveTest {
-	@Test(expected = AssertionError.class)
+	@Test
 	public void testArrayListRemoveAll (){
 		ArrayList<String> list = new ArrayList<>(ObjectList.with(
 			"foo", "bar", "baz", "quux",
@@ -16,7 +16,7 @@ public class ListRemoveTest {
 			"foo", "bar", "baz", "quux"));
 		ArrayList<String> remover = new ArrayList<>(ObjectList.with("foo", "bar", "baz", "quux"));
 		Assert.assertEquals(list.size(), 12);
-		list.removeAll(remover);
+		for(String s : remover) list.remove(s);
 		Assert.assertEquals(list.size(), 8);
 		System.out.println(list);
 		list.removeAll(ObjectList.with("foo", "foo"));
@@ -26,15 +26,15 @@ public class ListRemoveTest {
 		Assert.assertTrue(list.contains("baz"));
 		Assert.assertTrue(list.contains("quux"));
 	}
-	@Test(expected = AssertionError.class)
-	public void testObjectListRemoveAll (){
+	@Test
+	public void testObjectListRemoveEach(){
 		ObjectList<String> list = ObjectList.with(
 			"foo", "bar", "baz", "quux",
 			"foo", "bar", "baz", "quux",
 			"foo", "bar", "baz", "quux");
 		ObjectList<String> remover = ObjectList.with("foo", "bar", "baz", "quux");
 		Assert.assertEquals(list.size(), 12);
-		list.removeAll(remover);
+		list.removeEach(remover);
 		Assert.assertEquals(list.size(), 8);
 		System.out.println(list);
 		list.removeAll(ObjectList.with("foo", "foo"));
@@ -44,22 +44,22 @@ public class ListRemoveTest {
 		Assert.assertTrue(list.contains("baz"));
 		Assert.assertTrue(list.contains("quux"));
 	}
-	@Test(expected = AssertionError.class)
+	@Test
 	public void testIntListRemoveAll (){
 		IntList list = IntList.with(
 			1, 2, 3, 4,
 			1, 2, 3, 4,
 			1, 2, 3, 4);
-		IntList remover = IntList.with(1, 2, 3, 4);
+		IntList remover = IntList.with(1, 2, 3);
 		Assert.assertEquals(list.size(), 12);
 		list.removeAll(remover);
-		Assert.assertEquals(list.size(), 8);
+		Assert.assertEquals(list.size(), 3);
 		System.out.println(list);
-		list.removeAll(IntList.with(1, 1));
-		Assert.assertEquals(list.size(), 6);
+		list.removeEach(IntList.with(4));
+		Assert.assertEquals(list.size(), 2);
 		Assert.assertFalse(list.contains(1));
-		Assert.assertTrue(list.contains(2));
-		Assert.assertTrue(list.contains(3));
+		Assert.assertFalse(list.contains(2));
+		Assert.assertFalse(list.contains(3));
 		Assert.assertTrue(list.contains(4));
 	}
 	@Test()
