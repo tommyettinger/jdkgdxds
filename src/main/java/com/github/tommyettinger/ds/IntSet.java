@@ -286,22 +286,50 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 			return true;
 		}
 
-		int i = locateKey(key);
-		if (i < 0) {return false;}
+		int pos = locateKey(key);
+		if (pos < 0) {return false;}
 		int[] keyTable = this.keyTable;
-		int mask = this.mask, next = i + 1 & mask;
-		while ((key = keyTable[next]) != 0) {
-			int placement = place(key);
-			if ((next - placement & mask) > (i - placement & mask)) {
-				keyTable[i] = key;
-				i = next;
-			}
-			next = next + 1 & mask;
-		}
-		keyTable[i] = 0;
+		int mask = this.mask, last, slot;
 		size--;
-		return true;
+		for (;;) {
+			pos = ((last = pos) + 1) & mask;
+			for (;;) {
+				if ((key = keyTable[pos]) == 0) {
+					keyTable[last] = 0;
+					return true;
+				}
+				slot = place(key);
+				if (last <= pos ? last >= slot || slot > pos : last >= slot && slot > pos) break;
+				pos = (pos + 1) & mask;
+			}
+			keyTable[last] = key;
+		}
 	}
+
+//	public boolean remove (int key) {
+//		if (key == 0) {
+//			if (!hasZeroValue) {return false;}
+//			hasZeroValue = false;
+//			size--;
+//			return true;
+//		}
+//
+//		int i = locateKey(key);
+//		if (i < 0) {return false;}
+//		int[] keyTable = this.keyTable;
+//		int mask = this.mask, next = i + 1 & mask;
+//		while ((key = keyTable[next]) != 0) {
+//			int placement = place(key);
+//			if ((next - placement & mask) > (i - placement & mask)) {
+//				keyTable[i] = key;
+//				i = next;
+//			}
+//			next = next + 1 & mask;
+//		}
+//		keyTable[i] = 0;
+//		size--;
+//		return true;
+//	}
 
 	/**
 	 * Returns true if the set has one or more items.
