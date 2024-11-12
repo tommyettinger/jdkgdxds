@@ -18,6 +18,8 @@
 /**
  * A large package of all data structures in this library, plus some interfaces they use.
  */
-
+@DefaultQualifier(NonNull.class)
 package com.github.tommyettinger.ds;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;

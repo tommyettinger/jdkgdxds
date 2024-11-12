@@ -19,5 +19,8 @@
  * Functional interfaces for appending data to text, Iterator interfaces for all primitive types, and special wrapper
  * iterators for Object and primitive types.
  */
+@DefaultQualifier(NonNull.class)
 package com.github.tommyettinger.ds.support.util;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;

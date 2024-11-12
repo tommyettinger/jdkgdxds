@@ -25,5 +25,8 @@
  * Like fastutil, jdkgdxds is Apache-licensed, but if you want to refer to FastUtil's license,
  * <a href="https://github.com/vigna/fastutil/blob/2411defb3b1bd7f004ea75a7706ccaebb4dbfc25/LICENSE-2.0">it is here</a>.
  */
+@DefaultQualifier(NonNull.class)
 package com.github.tommyettinger.ds.support.sort;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
