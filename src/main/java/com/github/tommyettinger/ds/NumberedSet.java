@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -198,11 +199,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link InternalMap#mask} (both inclusive)
 	 */
-	@SuppressWarnings("PointlessBitwiseExpression")
 	protected int place (@NonNull Object item) {
-		return (item.hashCode() | 0) * map.hashMultiplier >>> map.shift;
+		return BitConversion.imul(item.hashCode(), map.hashMultiplier) >>> map.shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
-//		return item.hashCode() & mask;
+//		return item.hashCode() & map.mask;
 	}
 
 	/**

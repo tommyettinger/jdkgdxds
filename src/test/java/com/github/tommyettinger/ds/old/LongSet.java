@@ -184,7 +184,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (long item) {
-		return (int)(item ^ item >>> 32) * hashMultiplier >>> shift;
+		return BitConversion.imul((int)(item ^ item >>> 32), hashMultiplier) >>> shift;
 	}
 
 	/**
