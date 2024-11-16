@@ -74,31 +74,31 @@ public class IntIntMapOpTest {
                 map.put(randomKey, randomValue);
                 old.put(randomKey, randomValue);
             } else {
-                IntIntMap.EntryIterator si = map.iterator();
+                IntIntMap.EntryIterator mi = map.iterator();
                 com.github.tommyettinger.ds.old.IntIntMap.EntryIterator oi = old.iterator();
                 for (int j = 1; j < map.size; j++) {
-                    si.next();
+                    mi.next();
                 }
                 for (int j = 1; j < old.size(); j++) {
                     oi.next();
                 }
                 if (map.size > 1)
-                    si.remove();
+                    mi.remove();
                 if (old.size() > 1)
                     oi.remove();
                 if (map.size > 2) {
-                    si.next();
-                    si.remove();
+                    mi.next();
+                    mi.remove();
                 }
                 if (old.size() > 2) {
                     oi.next();
                     oi.remove();
                 }
-                if (si.hasNext && oi.hasNext) {
-                    IntIntMap.Entry se = si.next();
+                if (mi.hasNext && oi.hasNext) {
+                    IntIntMap.Entry me = mi.next();
                     com.github.tommyettinger.ds.old.IntIntMap.Entry oe = oi.next();
-                    Assert.assertEquals(se.key, oe.key);
-                    Assert.assertEquals(se.value, oe.value);
+                    Assert.assertEquals(me.key, oe.key);
+                    Assert.assertEquals(me.value, oe.value);
                 }
             }
             Assert.assertArrayEquals(map.keyTable, old.keyTable);
