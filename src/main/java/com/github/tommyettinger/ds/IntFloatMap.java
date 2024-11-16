@@ -428,26 +428,28 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			}
 			return defaultValue;
 		}
-		int i = locateKey(key);
-		if (i < 0) {return defaultValue;}
+		int pos = locateKey(key);
+		if (pos < 0) {return defaultValue;}
 		int[] keyTable = this.keyTable;
-		int rem;
 		float[] valueTable = this.valueTable;
-		float oldValue = valueTable[i];
-		int mask = this.mask, next = i + 1 & mask;
-		while ((rem = keyTable[next]) != 0) {
-			int placement = place(rem);
-			if ((next - placement & mask) > (i - placement & mask)) {
-				keyTable[i] = rem;
-				valueTable[i] = valueTable[next];
-				i = next;
-			}
-			next = next + 1 & mask;
-		}
-		keyTable[i] = 0;
+		float oldValue = valueTable[pos];
 
+		int mask = this.mask, last, slot;
 		size--;
-		return oldValue;
+		for (;;) {
+			pos = ((last = pos) + 1) & mask;
+			for (;;) {
+				if ((key = keyTable[pos]) == 0) {
+					keyTable[last] = 0;
+					return oldValue;
+				}
+				slot = place(key);
+				if (last <= pos ? last >= slot || slot > pos : last >= slot && slot > pos) break;
+				pos = (pos + 1) & mask;
+			}
+			keyTable[last] = key;
+			valueTable[last] = valueTable[pos];
+		}
 	}
 
 	/**
