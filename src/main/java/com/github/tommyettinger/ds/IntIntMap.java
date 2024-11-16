@@ -98,7 +98,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	protected int hashMultiplier = 0xEFAA28F1;
 
 	/**
-	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1-bits in its low positions, ie a power of two
 	 * minus 1. If {@link #place(int)} is overridden, this can be used instead of {@link #shift} to isolate usable bits of a
 	 * hash.
 	 */
@@ -425,26 +425,28 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 			}
 			return defaultValue;
 		}
-		int i = locateKey(key);
-		if (i < 0) {return defaultValue;}
+		int pos = locateKey(key);
+		if (pos < 0) {return defaultValue;}
 		int[] keyTable = this.keyTable;
-		int rem;
 		int[] valueTable = this.valueTable;
-		int oldValue = valueTable[i];
-		int mask = this.mask, next = i + 1 & mask;
-		while ((rem = keyTable[next]) != 0) {
-			int placement = place(rem);
-			if ((next - placement & mask) > (i - placement & mask)) {
-				keyTable[i] = rem;
-				valueTable[i] = valueTable[next];
-				i = next;
-			}
-			next = next + 1 & mask;
-		}
-		keyTable[i] = 0;
+		int oldValue = valueTable[pos];
 
+		int mask = this.mask, last, slot;
 		size--;
-		return oldValue;
+		for (;;) {
+			pos = ((last = pos) + 1) & mask;
+			for (;;) {
+				if ((key = keyTable[pos]) == 0) {
+					keyTable[last] = 0;
+					return oldValue;
+				}
+				slot = place(key);
+				if (last <= pos ? last >= slot || slot > pos : last >= slot && slot > pos) break;
+				pos = (pos + 1) & mask;
+			}
+			keyTable[last] = key;
+			valueTable[last] = valueTable[pos];
+		}
 	}
 
 	/**
@@ -1276,7 +1278,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		 * @param coll any modifiable Map; may have items appended into it
 		 * @return the given map
 		 */
-		public IntFloatMap appendInto(IntFloatMap coll) {
+		public IntIntMap appendInto(IntIntMap coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {

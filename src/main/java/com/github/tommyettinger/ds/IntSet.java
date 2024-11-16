@@ -280,14 +280,16 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	@Override
 	public boolean remove (int key) {
 		if (key == 0) {
-			if (!hasZeroValue) {return false;}
+			if (!hasZeroValue)
+				return false;
 			hasZeroValue = false;
 			size--;
 			return true;
 		}
 
 		int pos = locateKey(key);
-		if (pos < 0) {return false;}
+		if (pos < 0)
+			return false;
 		int[] keyTable = this.keyTable;
 		int mask = this.mask, last, slot;
 		size--;
