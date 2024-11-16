@@ -409,31 +409,35 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 			if (hasZeroValue) {
 				hasZeroValue = false;
 				--size;
-				return zeroValue;
+				@Nullable V oldValue = zeroValue;
+				zeroValue = null;
+				return oldValue;
 			}
 			return defaultValue;
 		}
-		int i = locateKey(key);
-		if (i < 0) {return defaultValue;}
+		int pos = locateKey(key);
+		if (pos < 0) return defaultValue;
 		long[] keyTable = this.keyTable;
-		long rem;
-		V[] valueTable = this.valueTable;
-		V oldValue = valueTable[i];
-		int mask = this.mask, next = i + 1 & mask;
-		while ((rem = keyTable[next]) != 0) {
-			int placement = place(rem);
-			if ((next - placement & mask) > (i - placement & mask)) {
-				keyTable[i] = rem;
-				valueTable[i] = valueTable[next];
-				i = next;
-			}
-			next = next + 1 & mask;
-		}
-		keyTable[i] = 0;
-		valueTable[i] = null;
+		@Nullable V[] valueTable = this.valueTable;
+		@Nullable V oldValue = valueTable[pos];
 
+		int mask = this.mask, last, slot;
 		size--;
-		return oldValue;
+		for (;;) {
+			pos = ((last = pos) + 1) & mask;
+			for (;;) {
+				if ((key = keyTable[pos]) == 0) {
+					keyTable[last] = 0;
+					valueTable[last] = null;
+					return oldValue;
+				}
+				slot = place(key);
+				if (last <= pos ? last >= slot || slot > pos : last >= slot && slot > pos) break;
+				pos = (pos + 1) & mask;
+			}
+			keyTable[last] = key;
+			valueTable[last] = valueTable[pos];
+		}
 	}
 
 	/**

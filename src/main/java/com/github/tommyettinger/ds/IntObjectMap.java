@@ -410,7 +410,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			return defaultValue;
 		}
 		int pos = locateKey(key);
-		if (pos < 0) {return defaultValue;}
+		if (pos < 0) return defaultValue;
 		int[] keyTable = this.keyTable;
 		@Nullable V[] valueTable = this.valueTable;
 		@Nullable V oldValue = valueTable[pos];

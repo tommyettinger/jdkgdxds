@@ -426,7 +426,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 			return defaultValue;
 		}
 		int pos = locateKey(key);
-		if (pos < 0) {return defaultValue;}
+		if (pos < 0) return defaultValue;
 		int[] keyTable = this.keyTable;
 		int[] valueTable = this.valueTable;
 		int oldValue = valueTable[pos];

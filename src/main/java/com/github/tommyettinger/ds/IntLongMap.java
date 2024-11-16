@@ -429,7 +429,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 			return defaultValue;
 		}
 		int pos = locateKey(key);
-		if (pos < 0) {return defaultValue;}
+		if (pos < 0) return defaultValue;
 		int[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
 		long oldValue = valueTable[pos];

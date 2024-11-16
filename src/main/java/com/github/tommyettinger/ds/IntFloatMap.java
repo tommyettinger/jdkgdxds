@@ -429,7 +429,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			return defaultValue;
 		}
 		int pos = locateKey(key);
-		if (pos < 0) {return defaultValue;}
+		if (pos < 0) return defaultValue;
 		int[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		float oldValue = valueTable[pos];
