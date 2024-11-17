@@ -445,6 +445,15 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		resize(keyTable.length);
 	}
 
+	/**
+	 * Gets the length of the internal array used to store all items, as well as empty space awaiting more items to be
+	 * entered. This is also called the capacity.
+	 * @return the length of the internal array that holds all items
+	 */
+	public int getTableSize() {
+		return keyTable.length;
+	}
+
 	public float getLoadFactor () {
 		return loadFactor;
 	}

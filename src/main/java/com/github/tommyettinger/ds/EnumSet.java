@@ -48,8 +48,8 @@ import java.util.Set;
  */
 public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable<Enum<?>>, EnhancedCollection<Enum<?>> {
 	protected int size;
-	protected int[] table;
-	protected Enum<?>[] universe;
+	protected int @Nullable[] table;
+	protected Enum<?> @Nullable[] universe;
 	@Nullable protected transient ESetIterator iterator1;
 	@Nullable protected transient ESetIterator iterator2;
 
@@ -105,9 +105,8 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param contents an array of Enum items to place into this set
 	 */
-	public EnumSet (Enum<?>[] contents) {
+	public EnumSet (Enum<?> @NonNull [] contents) {
 		super();
-		if(contents == null) throw new NullPointerException("EnumSet cannot be constructed with a null array.");
 		addAll(contents);
 	}
 
@@ -128,9 +127,8 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public EnumSet (Collection<? extends Enum<?>> contents) {
+	public EnumSet (@NonNull Collection<? extends Enum<?>> contents) {
 		super();
-		if(contents == null) throw new NullPointerException("EnumSet cannot be constructed with a null Collection.");
 		addAll(contents);
 	}
 
@@ -138,8 +136,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * Copy constructor; uses a direct reference to the enum values that may be cached in {@code other}, but copies other fields.
 	 * @param other another EnumSet that will have most of its data copied, but its cached {@code values()} results will be used directly
 	 */
-	public EnumSet (EnumSet other) {
-		if(other == null) throw new NullPointerException("EnumSet cannot be constructed from a null EnumSet.");
+	public EnumSet (@NonNull EnumSet other) {
 		this.size = other.size;
 		if(other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
@@ -185,7 +182,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 */
 	@Override
 	public boolean contains (Object item) {
-		if(table == null || item == null || size == 0 || !(item instanceof Enum<?>)) return false;
+		if(table == null || universe == null || size == 0 || !(item instanceof Enum<?>)) return false;
 		final Enum<?> e = (Enum<?>)item;
 		final int ord = e.ordinal();
 		if(ord >= universe.length || universe[ord] != item) return false;
@@ -242,8 +239,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * element
 	 */
 	@Override
-	public boolean add (Enum<?> item) {
-		if(item == null) throw new NullPointerException("Items added to an EnumSet must not be null.");
+	public boolean add (@NonNull Enum<?> item) {
 		if(universe == null) universe = item.getDeclaringClass().getEnumConstants();
 		if(table == null) table = new int[universe.length + 31 >>> 5];
 		final int ord = item.ordinal();
@@ -279,7 +275,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 */
 	@Override
 	public boolean remove (Object item) {
-		if(table == null || item == null || size == 0 || !(item instanceof Enum<?>)) return false;
+		if(table == null || universe == null || size == 0 || !(item instanceof Enum<?>)) return false;
 		final Enum<?> e = (Enum<?>)item;
 		final int ord = e.ordinal();
 		if(ord >= universe.length || universe[ord] != e) return false;
@@ -324,7 +320,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		if(!(c instanceof EnumSet))
 			return super.addAll(c);
 		EnumSet es = (EnumSet)c;
-		if(es.universe == null || es.universe.length == 0) return false;
+		if(es.universe == null || es.table == null || es.universe.length == 0) return false;
 		if(universe == null) universe = es.universe;
 		if(table == null) table = new int[universe.length + 31 >>> 5];
 		if(es.universe.length != universe.length || universe[0] != es.universe[0]) return false;
@@ -345,8 +341,8 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		if(!(c instanceof EnumSet))
 			return super.containsAll(c);
 		EnumSet es = (EnumSet)c;
-		if(es.size == 0 || es.universe == null || es.universe.length == 0) return true;
-		if(size < es.size || universe == null || universe.length != es.universe.length || universe[0] != es.universe[0]) return false;
+		if(es.size == 0 || es.universe == null || es.table == null || es.universe.length == 0) return true;
+		if(size < es.size || universe == null || table == null || universe.length != es.universe.length || universe[0] != es.universe[0]) return false;
 		for (int i = 0; i < table.length; i++) {
 			if((~table[i] & es.table[i]) != 0) return false;
 		}
@@ -418,7 +414,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		size = 0;
 		if (universe == null) {
 			table = null;
-		} else if(universe.length >>> 5 <= this.universe.length >>> 5) {
+		} else if(this.universe != null && universe.length >>> 5 <= this.universe.length >>> 5) {
 			if(table != null)
 				Arrays.fill(table, 0);
 		} else {
@@ -451,7 +447,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 			this.universe = null;
 		} else {
 			Enum<?>[] cons = universe.getEnumConstants();
-			if(cons.length >>> 5 <= this.universe.length >>> 5) {
+			if(this.universe != null && cons.length >>> 5 <= this.universe.length >>> 5) {
 				if(table != null)
 					Arrays.fill(table, 0);
 			} else {
@@ -467,7 +463,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * If an EnumSet has not been initialized, just adding an item will set its key universe to match the given item.
 	 * @return the current key universe
 	 */
-	public Enum<?>[] getUniverse () {
+	public Enum<?> @Nullable[] getUniverse () {
 		return universe;
 	}
 
