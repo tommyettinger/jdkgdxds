@@ -41,6 +41,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * {@link #remove(Object)} does as well. You can use {@link #get(Object)} to go back to a T value from a
  * K key.
  *
+ * @param <T> the type of full items stored in the set; each T must have a way to get a K from it
+ * @param <K> the type of lookup keys stored in each T item
  * @author Nathan Sweet
  * @author Tommy Ettinger
  */
@@ -48,7 +50,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 
     protected int size;
 
-    protected T[] keyTable;
+    protected @Nullable T[] keyTable;
 
     /**
      * Between 0f (exclusive) and 1f (inclusive, if you're careful), this determines how full the backing table
@@ -287,7 +289,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
      * @param key a non-null Object that should probably be a K
      */
     protected int locateKey(@NonNull Object key) {
-        T[] keyTable = this.keyTable;
+        @Nullable T[] keyTable = this.keyTable;
         for (int i = place(key); ; i = i + 1 & mask) {
             T other = keyTable[i];
             if (other == null) {
@@ -515,28 +517,29 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
      * Takes a K key and not a T value!
      * Returns true if the key was removed.
      */
-    @SuppressWarnings("unchecked")
     @Override
     public boolean remove(Object key) {
-        int i = locateKey(key);
-        if (i < 0) {
-            return false;
-        }
+        int pos = locateKey(key);
+        if (pos < 0) return false;
         assert extractor != null;
-        T[] keyTable = this.keyTable;
-        int mask = this.mask, next = i + 1 & mask;
-        while ((key = keyTable[next]) != null) {
-            T tk = (T) key;
-            int placement = place(extractor.apply(tk));
-            if ((next - placement & mask) > (i - placement & mask)) {
-                keyTable[i] = tk;
-                i = next;
-            }
-            next = next + 1 & mask;
-        }
-        keyTable[i] = null;
+        @Nullable T[] keyTable = this.keyTable;
+
+        int mask = this.mask, last, slot;
         size--;
-        return true;
+        @Nullable T rem;
+        for (;;) {
+            pos = ((last = pos) + 1) & mask;
+            for (;;) {
+                if ((rem = keyTable[pos]) == null) {
+                    keyTable[last] = null;
+                    return true;
+                }
+                slot = place(extractor.apply(rem));
+                if (last <= pos ? last >= slot || slot > pos : last >= slot && slot > pos) break;
+                pos = (pos + 1) & mask;
+            }
+            keyTable[last] = rem;
+        }
     }
 
     /**
