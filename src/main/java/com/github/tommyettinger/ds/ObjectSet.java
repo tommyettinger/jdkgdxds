@@ -55,7 +55,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	protected int size;
 
-	protected T[] keyTable;
+	protected @Nullable T[] keyTable;
 
 	/**
 	 * Between 0f (exclusive) and 1f (inclusive, if you're careful), this determines how full the backing table
@@ -240,7 +240,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @return a negative index if the key was not found, or the non-negative index of the existing key if found
 	 */
 	protected int locateKey (Object key) {
-		T[] keyTable = this.keyTable;
+		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
 			if (equate(key, other))
@@ -256,7 +256,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 */
 	@Override
 	public boolean add (T key) {
-		T[] keyTable = this.keyTable;
+		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
 			if (equate(key, other))
@@ -408,7 +408,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	public boolean addAll (ObjectSet<T> set) {
 		ensureCapacity(set.size);
-		T[] keyTable = set.keyTable;
+		@Nullable T[] keyTable = set.keyTable;
 		int oldSize = size;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
@@ -421,7 +421,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * Like {@link #add(Object)}, but skips checks for existing keys, and doesn't increment size.
 	 */
 	protected void addResize (T key) {
-		T[] keyTable = this.keyTable;
+		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
@@ -435,21 +435,25 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 */
 	@Override
 	public boolean remove (@NonNull Object key) {
-		int i = locateKey(key);
-		if (i < 0) {return false;}
-		T[] keyTable = this.keyTable;
-		int mask = this.mask, next = i + 1 & mask;
-		while ((key = keyTable[next]) != null) {
-			int placement = place(key);
-			if ((next - placement & mask) > (i - placement & mask)) {
-				keyTable[i] = (T)key;
-				i = next;
-			}
-			next = next + 1 & mask;
-		}
-		keyTable[i] = null;
+		int pos = locateKey(key);
+		if (pos < 0) return false;
+		@Nullable T[] keyTable = this.keyTable;
+		int mask = this.mask, last, slot;
 		size--;
-		return true;
+		@Nullable T rem;
+		for (;;) {
+			pos = ((last = pos) + 1) & mask;
+			for (;;) {
+				if ((rem = keyTable[pos]) == null) {
+					keyTable[last] = null;
+					return true;
+				}
+				slot = place(rem);
+				if (last <= pos ? last >= slot || slot > pos : last >= slot && slot > pos) break;
+				pos = (pos + 1) & mask;
+			}
+			keyTable[last] = rem;
+		}
 	}
 
 	/**
@@ -518,7 +522,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	@Override
 	public boolean contains (@NonNull Object key) {
-		T[] keyTable = this.keyTable;
+		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
 			if (equate(key, other))
@@ -530,7 +534,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	@Nullable
 	public T get (T key) {
-		T[] keyTable = this.keyTable;
+		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
 			if (equate(key, other))
@@ -541,8 +545,9 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
 	public T first () {
-		T[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {if (keyTable[i] != null) {return keyTable[i];}}
+		@Nullable T[] keyTable = this.keyTable;
+		@Nullable T k;
+		for (int i = 0, n = keyTable.length; i < n; i++) {if ((k = keyTable[i]) != null) {return k;}}
 		throw new IllegalStateException("ObjectSet is empty.");
 	}
 
@@ -564,7 +569,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
-		T[] oldKeyTable = keyTable;
+		@Nullable T[] oldKeyTable = keyTable;
 
 		keyTable = (T[])new Object[newSize];
 
@@ -625,17 +630,17 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 *
 	 * @param a   the array into which the elements of this set are to be
 	 *            stored, if it is big enough; otherwise, a new array of the same
-	 *            runtime type is allocated for this purpose.
-	 * @param <E> must be the same as {@code T} or a superclass/interface of it; not checked
+	 *            runtime type is allocated for this purpose. This array must not be null.
+	 * @param <E> must be the same as this ObjectSet's {@code T} or a superclass/interface of it; E items may be null
 	 * @return an array containing all the elements in this set
 	 */
 	@Override
-	public <E> E @NonNull [] toArray (E[] a) {
+	public <E> @Nullable E @NonNull [] toArray (@Nullable E[] a) {
 		int size = size();
 		if (a.length < size) {
 			a = Arrays.copyOf(a, size);
 		}
-		Object[] result = a;
+		@Nullable Object[] result = a;
 		Iterator<T> it = iterator();
 		for (int i = 0; i < size; ++i) {
 			result[i] = it.next();
@@ -662,7 +667,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	@Override
 	public int hashCode () {
 		int h = size;
-		T[] keyTable = this.keyTable;
+		@Nullable T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
 			if (key != null) {h += key.hashCode();}
@@ -687,7 +692,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 	public StringBuilder appendTo (StringBuilder builder, String separator) {
 		if (size == 0) {return builder;}
-		T[] keyTable = this.keyTable;
+		@Nullable T[] keyTable = this.keyTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			T key = keyTable[i];
@@ -721,7 +726,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	public void truncate (int newSize) {
-		T[] keyTable = this.keyTable;
+		@Nullable T[] keyTable = this.keyTable;
 		newSize = Math.max(0, newSize);
 		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
 			if (keyTable[i] != null) {
@@ -791,7 +796,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		}
 
 		protected void findNextIndex () {
-			T[] keyTable = set.keyTable;
+			@Nullable T[] keyTable = set.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != null) {
 					hasNext = true;
@@ -805,7 +810,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		public void remove () {
 			int i = currentIndex;
 			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
-			T[] keyTable = set.keyTable;
+			@Nullable T[] keyTable = set.keyTable;
 			int mask = set.mask, next = i + 1 & mask;
 			T key;
 			while ((key = keyTable[next]) != null) {
@@ -833,6 +838,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 			if (!hasNext) {throw new NoSuchElementException();}
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			T key = set.keyTable[nextIndex];
+			if(key == null) throw new IllegalStateException("Impossible scenario! A key that should never be null, is null.");
 			currentIndex = nextIndex;
 			findNextIndex();
 			return key;
