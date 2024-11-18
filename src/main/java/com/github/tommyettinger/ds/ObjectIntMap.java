@@ -629,6 +629,16 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		resize(keyTable.length);
 	}
 
+	/**
+	 * Gets the length of the internal array used to store all keys, as well as empty space awaiting more items to be
+	 * entered. This length is equal to the length of the array used to store all values, and empty space for values,
+	 * here. This is also called the capacity.
+	 * @return the length of the internal array that holds all keys
+	 */
+	public int getTableSize() {
+		return keyTable.length;
+	}
+
 	public float getLoadFactor () {
 		return loadFactor;
 	}

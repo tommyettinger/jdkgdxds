@@ -545,6 +545,16 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	/**
+	 * Gets the length of the internal array used to store all keys, as well as empty space awaiting more items to be
+	 * entered. This length is equal to the length of the array used to store all values, and empty space for values,
+	 * here. This is also called the capacity.
+	 * @return the length of the internal array that holds all keys
+	 */
+	public int getTableSize() {
+		return map.getTableSize();
+	}
+
+	/**
 	 * Changes the item {@code before} to {@code after} without changing its position in the order or its value. Returns true if
 	 * {@code after} has been added to the NumberedSet and {@code before} has been removed; returns false if {@code after} is
 	 * already present or {@code before} is not present. If you are iterating over a NumberedSet and have an index, you should
