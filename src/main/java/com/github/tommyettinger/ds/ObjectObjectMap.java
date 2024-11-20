@@ -458,26 +458,30 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	@Override
 	@Nullable
 	public V remove (Object key) {
-		int i = locateKey(key);
-		if (i < 0) {return defaultValue;}
-		K[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
+		int pos = locateKey(key);
+		if (pos < 0) return defaultValue;
 		K rem;
-		V oldValue = valueTable[i];
-		int mask = this.mask, next = i + 1 & mask;
-		while ((rem = keyTable[next]) != null) {
-			int placement = place(rem);
-			if ((next - placement & mask) > (i - placement & mask)) {
-				keyTable[i] = rem;
-				valueTable[i] = valueTable[next];
-				i = next;
-			}
-			next = next + 1 & mask;
-		}
-		keyTable[i] = null;
-		valueTable[i] = null;
+		@Nullable K[] keyTable = this.keyTable;
+		@Nullable V[] valueTable = this.valueTable;
+		@Nullable V oldValue = valueTable[pos];
+
+		int mask = this.mask, last, slot;
 		size--;
-		return oldValue;
+		for (;;) {
+			pos = ((last = pos) + 1) & mask;
+			for (;;) {
+				if ((rem = keyTable[pos]) == null) {
+					keyTable[last] = null;
+					valueTable[last] = null;
+					return oldValue;
+				}
+				slot = place(rem);
+				if (last <= pos ? last >= slot || slot > pos : last >= slot && slot > pos) break;
+				pos = (pos + 1) & mask;
+			}
+			keyTable[last] = rem;
+			valueTable[last] = valueTable[pos];
+		}
 	}
 
 	/**
