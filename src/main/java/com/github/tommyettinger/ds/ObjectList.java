@@ -280,42 +280,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	}
 
 	/**
-	 * Convenience method that adds two items. This avoids constructing an array for a varargs.
-	 * @param value0 a T item to add
-	 * @param value1 a T item to add
-	 */
-	public void add(@Nullable T value0, @Nullable T value1) {
-		add(value0);
-		add(value1);
-	}
-
-	/**
-	 * Convenience method that adds three items. This avoids constructing an array for a varargs.
-	 * @param value0 a T item to add
-	 * @param value1 a T item to add
-	 * @param value2 a T item to add
-	 */
-	public void add(@Nullable T value0, @Nullable T value1, @Nullable T value2) {
-		add(value0);
-		add(value1);
-		add(value2);
-	}
-
-	/**
-	 * Convenience method that adds four items. This avoids constructing an array for a varargs.
-	 * @param value0 a T item to add
-	 * @param value1 a T item to add
-	 * @param value2 a T item to add
-	 * @param value3 a T item to add
-	 */
-	public void add(@Nullable T value0, @Nullable T value1, @Nullable T value2, @Nullable T value3) {
-		add(value0);
-		add(value1);
-		add(value2);
-		add(value3);
-	}
-
-	/**
 	 * Adds each item in the array {@code a} to this ObjectList, appending to the end.
 	 *
 	 * @param a a non-null array of {@code T}

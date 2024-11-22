@@ -30,6 +30,39 @@ import java.util.Iterator;
  * @param <T> the type of items in this collection
  */
 public interface EnhancedCollection<T> extends Collection<T> {
+	/**
+	 * Adds all parameters using {@link #add(Object)} for each one. Returns true if the set was modified.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @return true if this modified the set
+	 */
+	default boolean add(T item0, T item1) {
+		return add(item0) | add(item1);
+	}
+
+	/**
+	 * Adds all parameters using {@link #add(Object)} for each one. Returns true if the set was modified.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @return true if this modified the set
+	 */
+	default boolean add(T item0, T item1, T item2) {
+		return add(item0) | add(item1) | add(item2);
+	}
+
+	/**
+	 * Adds all parameters using {@link #add(Object)} for each one. Returns true if the set was modified.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @return true if this modified the set
+	 */
+	default boolean add(T item0, T item1, T item2, T item3) {
+		return add(item0) | add(item1) | add(item2) | add(item3);
+	}
+
 	default boolean addAll (Iterator<? extends T> it) {
 		int oldSize = size();
 		while (it.hasNext()) {
