@@ -1972,14 +1972,141 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		}
 	}
 
+	/**
+	 * Creates a new ObjectDeque that holds only the given item, but can be resized.
+	 * @param item one T item
+	 * @return a new ObjectDeque that holds the given item
+	 * @param <T> the type of item, typically inferred
+	 */
 	public static <T> ObjectDeque<T> with (T item) {
-		ObjectDeque<T> deque = new ObjectDeque<>();
+		ObjectDeque<T> deque = new ObjectDeque<>(1);
 		deque.add(item);
 		return deque;
 	}
 
+	/**
+	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @return a new ObjectDeque that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectDeque<T> with (T item0, T item1) {
+		ObjectDeque<T> deque = new ObjectDeque<>(2);
+		deque.add(item0, item1);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @return a new ObjectDeque that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2) {
+		ObjectDeque<T> deque = new ObjectDeque<>(3);
+		deque.add(item0, item1, item2);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @return a new ObjectDeque that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2, T item3) {
+		ObjectDeque<T> deque = new ObjectDeque<>(4);
+		deque.add(item0, item1, item2, item3);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @return a new ObjectDeque that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2, T item3, T item4) {
+		ObjectDeque<T> deque = new ObjectDeque<>(5);
+		deque.add(item0, item1, item2, item3);
+		deque.add(item4);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @return a new ObjectDeque that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+		ObjectDeque<T> deque = new ObjectDeque<>(6);
+		deque.add(item0, item1, item2, item3);
+		deque.add(item4, item5);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new ObjectDeque that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+		ObjectDeque<T> deque = new ObjectDeque<>(7);
+		deque.add(item0, item1, item2, item3);
+		deque.add(item4, item5, item6);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new ObjectDeque that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+		ObjectDeque<T> deque = new ObjectDeque<>(8);
+		deque.add(item0, item1, item2, item3);
+		deque.add(item4, item5, item6, item7);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ObjectDeque that will hold the items in the given array or varargs.
+	 * @param varargs either 0 or more T items, or an array of T
+	 * @return a new ObjectDeque that holds the given T items
+	 * @param <T> the type of items, typically inferred by all the items being the same type
+	 */
 	@SafeVarargs
-	public static <T> ObjectDeque<T> with (T... items) {
-		return new ObjectDeque<>(items);
+	public static <T> ObjectDeque<T> with (T... varargs) {
+		return new ObjectDeque<>(varargs);
 	}
 }

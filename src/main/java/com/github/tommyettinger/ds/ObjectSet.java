@@ -890,9 +890,130 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		}
 	}
 
+	/**
+	 * Creates a new ObjectSet that holds only the given item, but can be resized.
+	 * @param item one T item
+	 * @return a new ObjectSet that holds the given item
+	 * @param <T> the type of item, typically inferred
+	 */
 	public static <T> ObjectSet<T> with (T item) {
 		ObjectSet<T> set = new ObjectSet<>(1);
 		set.add(item);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @return a new ObjectSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectSet<T> with (T item0, T item1) {
+		ObjectSet<T> set = new ObjectSet<>(2);
+		set.add(item0, item1);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @return a new ObjectSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectSet<T> with (T item0, T item1, T item2) {
+		ObjectSet<T> set = new ObjectSet<>(3);
+		set.add(item0, item1, item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @return a new ObjectSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectSet<T> with (T item0, T item1, T item2, T item3) {
+		ObjectSet<T> set = new ObjectSet<>(4);
+		set.add(item0, item1, item2, item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @return a new ObjectSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectSet<T> with (T item0, T item1, T item2, T item3, T item4) {
+		ObjectSet<T> set = new ObjectSet<>(5);
+		set.add(item0, item1, item2, item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @return a new ObjectSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+		ObjectSet<T> set = new ObjectSet<>(6);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new ObjectSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+		ObjectSet<T> set = new ObjectSet<>(7);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new ObjectSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+		ObjectSet<T> set = new ObjectSet<>(8);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6, item7);
 		return set;
 	}
 

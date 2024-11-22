@@ -954,11 +954,126 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * Creates a new ObjectList that holds only the given item, but can be resized.
 	 * @param item one T item
 	 * @return a new ObjectList that holds the given item
-	 * @param <T> the type of item, typically inferred except for array arguments
+	 * @param <T> the type of item, typically inferred
 	 */
 	public static <T> ObjectList<T> with (T item) {
 		ObjectList<T> list = new ObjectList<>(1);
 		list.add(item);
+		return list;
+	}
+
+	/**
+	 * Creates a new ObjectList that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @return a new ObjectList that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectList<T> with (T item0, T item1) {
+		ObjectList<T> list = new ObjectList<>(2);
+		list.add(item0, item1);
+		return list;
+	}
+
+	/**
+	 * Creates a new ObjectList that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @return a new ObjectList that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectList<T> with (T item0, T item1, T item2) {
+		ObjectList<T> list = new ObjectList<>(3);
+		list.add(item0, item1, item2);
+		return list;
+	}
+
+	/**
+	 * Creates a new ObjectList that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @return a new ObjectList that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectList<T> with (T item0, T item1, T item2, T item3) {
+		ObjectList<T> list = new ObjectList<>(4);
+		list.add(item0, item1, item2, item3);
+		return list;
+	}
+
+	/**
+	 * Creates a new ObjectList that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @return a new ObjectList that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectList<T> with (T item0, T item1, T item2, T item3, T item4) {
+		ObjectList<T> list = new ObjectList<>(5);
+		list.add(item0, item1, item2, item3);
+		list.add(item4);
+		return list;
+	}
+
+	/**
+	 * Creates a new ObjectList that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @return a new ObjectList that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectList<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+		ObjectList<T> list = new ObjectList<>(6);
+		list.add(item0, item1, item2, item3);
+		list.add(item4, item5);
+		return list;
+	}
+
+	/**
+	 * Creates a new ObjectList that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new ObjectList that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectList<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+		ObjectList<T> list = new ObjectList<>(7);
+		list.add(item0, item1, item2, item3);
+		list.add(item4, item5, item6);
+		return list;
+	}
+
+	/**
+	 * Creates a new ObjectList that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new ObjectList that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectList<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+		ObjectList<T> list = new ObjectList<>(8);
+		list.add(item0, item1, item2, item3);
+		list.add(item4, item5, item6, item7);
 		return list;
 	}
 

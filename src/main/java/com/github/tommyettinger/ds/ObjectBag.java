@@ -175,12 +175,127 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * Creates a new ObjectBag that holds only the given item, but can be resized.
 	 * @param item one T item
 	 * @return a new ObjectBag that holds the given item
-	 * @param <T> the type of item, typically inferred except for array arguments
+	 * @param <T> the type of item, typically inferred
 	 */
 	public static <T> ObjectBag<T> with (T item) {
-		ObjectBag<T> list = new ObjectBag<>(1);
-		list.add(item);
-		return list;
+		ObjectBag<T> bag = new ObjectBag<>(1);
+		bag.add(item);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @return a new ObjectBag that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectBag<T> with (T item0, T item1) {
+		ObjectBag<T> bag = new ObjectBag<>(2);
+		bag.add(item0, item1);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @return a new ObjectBag that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectBag<T> with (T item0, T item1, T item2) {
+		ObjectBag<T> bag = new ObjectBag<>(3);
+		bag.add(item0, item1, item2);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @return a new ObjectBag that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectBag<T> with (T item0, T item1, T item2, T item3) {
+		ObjectBag<T> bag = new ObjectBag<>(4);
+		bag.add(item0, item1, item2, item3);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @return a new ObjectBag that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectBag<T> with (T item0, T item1, T item2, T item3, T item4) {
+		ObjectBag<T> bag = new ObjectBag<>(5);
+		bag.add(item0, item1, item2, item3);
+		bag.add(item4);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @return a new ObjectBag that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectBag<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+		ObjectBag<T> bag = new ObjectBag<>(6);
+		bag.add(item0, item1, item2, item3);
+		bag.add(item4, item5);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new ObjectBag that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectBag<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+		ObjectBag<T> bag = new ObjectBag<>(7);
+		bag.add(item0, item1, item2, item3);
+		bag.add(item4, item5, item6);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new ObjectBag that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectBag<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+		ObjectBag<T> bag = new ObjectBag<>(8);
+		bag.add(item0, item1, item2, item3);
+		bag.add(item4, item5, item6, item7);
+		return bag;
 	}
 
 	/**
