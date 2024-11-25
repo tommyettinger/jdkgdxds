@@ -20,6 +20,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -57,7 +58,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	/**
 	 * Precalculated value of {@code (int)(keyTable.length * loadFactor)}, used to determine when to resize.
 	 */
-	protected int threshold;
+	protected transient int threshold;
 
 	/**
 	 * Used by {@link #place(int)} to bit shift the upper bits of an {@code int} into a usable range (&gt;= 0 and &lt;=
@@ -69,21 +70,14 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * {@link #mask} can also be used to mask the low bits of a number, which may be faster for some hashcodes, if
 	 * {@link #place(int)} is overridden.
 	 */
-	protected int shift;
+	protected transient int shift;
 
 	/**
-	 * Used by {@link #place(int)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
-	 * This only needs to be serialized if the full key table is serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link IntOrderedSet}.
-	 */
-	protected int hashMultiplier = 0xEFAA28F1;
-
-	/**
-	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+	 * A bitmask used to confine hash codes to the size of the table. Must be all 1-bits in its low positions, ie a power of two
 	 * minus 1. If {@link #place(int)} is overridden, this can be used instead of {@link #shift} to isolate usable bits of a
 	 * hash.
 	 */
-	protected int mask;
+	protected transient int mask;
 
 	@Nullable protected transient IntSetIterator iterator1;
 	@Nullable protected transient IntSetIterator iterator2;
@@ -91,7 +85,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public IntSet () {
+	public IntSet() {
 		this(51, Utilities.getDefaultLoadFactor());
 	}
 
@@ -100,7 +94,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public IntSet (int initialCapacity) {
+	public IntSet(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
@@ -111,13 +105,13 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public IntSet (int initialCapacity, float loadFactor) {
+	public IntSet(int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
-		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
+		threshold = Math.min((int)(tableSize * (double)loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		keyTable = new int[tableSize];
@@ -128,7 +122,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public IntSet (IntIterator coll) {
+	public IntSet(IntIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -136,12 +130,11 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	/**
 	 * Creates a new set identical to the specified set.
 	 */
-	public IntSet (IntSet set) {
+	public IntSet(IntSet set) {
 		this((int)(set.keyTable.length * set.loadFactor), set.loadFactor);
 		System.arraycopy(set.keyTable, 0, keyTable, 0, set.keyTable.length);
 		size = set.size;
 		hasZeroValue = set.hasZeroValue;
-		hashMultiplier = set.hashMultiplier;
 	}
 
 	/**
@@ -150,7 +143,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 *
 	 * @param coll a PrimitiveCollection that will be used in full, except for duplicate items
 	 */
-	public IntSet (PrimitiveCollection.OfInt coll) {
+	public IntSet(OfInt coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -162,47 +155,29 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public IntSet (int[] array, int offset, int length) {
+	public IntSet(int[] array, int offset, int length) {
 		this(length);
 		addAll(array, offset, length);
 	}
 
 	/**
-	 * Creates a new set containing all of the items in the given array.
+	 * Creates a new set containing all the items in the given array.
 	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public IntSet (int[] array) {
+	public IntSet(int[] array) {
 		this(array, 0, array.length);
 	}
 
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
-	 * Defaults to using {@link #hashMultiplier}, which changes every time the data structure resizes.
+	 * Defaults to using a XOR-Rotate-XOR-Rotate on the given hashCode, then masking that with {@link #mask}.
 	 *
-	 * @param item any int; it is usually mixed or masked here
+	 * @param item any int; it is usually mixed and shifted or masked here
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (int item) {
-		return BitConversion.imul(item, hashMultiplier) >>> shift;
-	}
-
-	/**
-	 * Returns the index of the key if already present, else {@code ~index} for the next empty index.
-	 * While this can be overridden to compare for equality differently than {@code ==} between ints, that
-	 * isn't recommended because this has to treat zero keys differently, and it finds those with {@code ==}.
-	 */
-	protected int locateKey (int key) {
-		int[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = i + 1 & mask) {
-			int other = keyTable[i];
-			if (other == 0) {
-				return ~i; // Empty space is available.
-			}
-			if (other == key) {
-				return i; // Same key was found.
-			}
-		}
+		return (item ^ (item << 9 | item >>> 23) ^ (item << 21 | item >>> 11)) & mask;
 	}
 
 	/**
@@ -211,12 +186,13 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	@Override
 	public boolean add (int key) {
 		if (key == 0) {
-			if (hasZeroValue) {return false;}
+			if (hasZeroValue) return false;
 			hasZeroValue = true;
 			size++;
 			return true;
 		}
 		int[] keyTable = this.keyTable;
+
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
 			if (key == other)
@@ -230,11 +206,11 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	}
 
 	public boolean addAll (IntList array) {
-		return addAll(array.items, 0, array.size);
+		return addAll(array.items, 0, array.size());
 	}
 
 	public boolean addAll (IntList array, int offset, int length) {
-		if (offset + length > array.size) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size);}
+		if (offset + length > array.size()) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size());}
 		return addAll(array.items, offset, length);
 	}
 
@@ -280,24 +256,36 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	@Override
 	public boolean remove (int key) {
 		if (key == 0) {
-			if (!hasZeroValue)
-				return false;
-			hasZeroValue = false;
-			size--;
-			return true;
+			if (hasZeroValue) {
+				hasZeroValue = false;
+				size--;
+				return true;
+			}
+			return false;
 		}
 
-		int pos = locateKey(key);
-		if (pos < 0)
-			return false;
+		int pos;
+		int mask = this.mask;
 		int[] keyTable = this.keyTable;
-		int mask = this.mask, last, slot;
+		for (int i = place(key); ; i = i + 1 & mask) {
+			int other = keyTable[i];
+			if (other == 0) {
+				return false; // Nothing is present.
+			}
+			if (other == key) {
+				pos = i; // Same key was found.
+				break;
+			}
+		}
+		int last, slot;
 		size--;
 		for (;;) {
 			pos = ((last = pos) + 1) & mask;
 			for (;;) {
 				if ((key = keyTable[pos]) == 0) {
 					keyTable[last] = 0;
+//					if(mask >= minCapacity && size < (threshold >>> 2))
+//						resize(keyTable.length >>> 1);
 					return true;
 				}
 				slot = place(key);
@@ -307,31 +295,6 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 			keyTable[last] = key;
 		}
 	}
-
-//	public boolean remove (int key) {
-//		if (key == 0) {
-//			if (!hasZeroValue) {return false;}
-//			hasZeroValue = false;
-//			size--;
-//			return true;
-//		}
-//
-//		int i = locateKey(key);
-//		if (i < 0) {return false;}
-//		int[] keyTable = this.keyTable;
-//		int mask = this.mask, next = i + 1 & mask;
-//		while ((key = keyTable[next]) != 0) {
-//			int placement = place(key);
-//			if ((next - placement & mask) > (i - placement & mask)) {
-//				keyTable[i] = key;
-//				i = next;
-//			}
-//			next = next + 1 & mask;
-//		}
-//		keyTable[i] = 0;
-//		size--;
-//		return true;
-//	}
 
 	/**
 	 * Returns true if the set has one or more items.
@@ -398,7 +361,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		if (hasZeroValue) {return 0;}
 		int[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {if (keyTable[i] != 0) {return keyTable[i];}}
-		throw new IllegalStateException("IntSet is empty.");
+		throw new IllegalStateException("IntSetAlt is empty.");
 	}
 
 	/**
@@ -412,11 +375,10 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 
 	protected void resize (int newSize) {
 		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
+		threshold = Math.min((int)(newSize * (double)loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
 		int[] oldKeyTable = keyTable;
 
 		keyTable = new int[newSize];
@@ -430,45 +392,20 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	}
 
 	/**
-	 * Gets the current hash multiplier as used by {@link #place(int)}; for specific advanced usage only.
-	 * The hash multiplier changes whenever {@link #resize(int)} is called, though its value before the resize
-	 * affects its value after.
-	 * @return the current hash multiplier, which should always be a negative, odd int
+	 * By default, does nothing other than return 0. Subclasses may use this.
+	 * Hash multipliers should always be negative, odd ints if they are used.
+	 * This returns 0 to indicate that this class does not have a hash multiplier to get.
+	 * @return the current hash multiplier, which defaults to 0 if not subclassed
 	 */
 	public int getHashMultiplier () {
-		return hashMultiplier;
+		return 0;
 	}
 
 	/**
-	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size;
-	 * this is for specific advanced usage only. Calling resize() will change the multiplier before it gets used, and
-	 * the current {@link #size()} of the data structure also changes the value. The hash multiplier is used by
-	 * {@link #place(int)}. The hash multiplier must be a negative, odd int, and this method will ensure that both the
-	 * used multiplier is both negative and odd. The hash multiplier changes whenever {@link #resize(int)} is called,
-	 * though its value before the resize affects its value after. Because of how resize() randomizes the multiplier,
-	 * even inputs such as {@code 1}, {@code -999999999} and {@code 0} actually work well.
-	 * <br>
-	 * This is accessible at all mainly so serialization code that has a need to access the hash multiplier can do so, but
-	 * also to provide an "emergency escape route" in case of hash flooding. Using one of the "known good" ints in
-	 * {@link Utilities#GOOD_MULTIPLIERS} should usually be fine if you don't know what multiplier will work well.
-	 * Be advised that because this has to call resize(), it isn't especially fast, and it slows down the more items are
-	 * in the data structure. If you in a situation where you are worried about hash flooding, you also shouldn't permit
-	 * adversaries to cause this method to be called frequently. Also be advised that because of how resize() works, the
-	 * result of {@link #getHashMultiplier()} after calling this will only very rarely be the same as the parameter here.
-	 * @param hashMultiplier any int; will not be used as-is
+	 * Does nothing by default; subclasses may use this in some way.
+	 * @param hashMultiplier ignored by default; implementations that use this should take a negative, odd int
 	 */
 	public void setHashMultiplier (int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 0x80000001;
-		resize(keyTable.length);
-	}
-
-	/**
-	 * Gets the length of the internal array used to store all items, as well as empty space awaiting more items to be
-	 * entered. This is also called the capacity.
-	 * @return the length of the internal array that holds all items
-	 */
-	public int getTableSize() {
-		return keyTable.length;
 	}
 
 	public float getLoadFactor () {
@@ -700,7 +637,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		 * @param coll any modifiable PrimitiveCollection.OfInt; may have items appended into it
 		 * @return the given primitive collection
 		 */
-		public PrimitiveCollection.OfInt appendInto(PrimitiveCollection.OfInt coll) {
+		public OfInt appendInto(OfInt coll) {
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
 			while (hasNext) {coll.add(nextInt());}
@@ -711,13 +648,159 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		}
 	}
 
+
+	/**
+	 * Creates a new IntSet that holds only the given item, but can be resized.
+	 * @param item one T item
+	 * @return a new IntSet that holds the given item
+	 */
 	public static IntSet with (int item) {
 		IntSet set = new IntSet(1);
 		set.add(item);
 		return set;
 	}
 
-	public static IntSet with (int... array) {
-		return new IntSet(array);
+	/**
+	 * Creates a new IntSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @return a new IntSet that holds the given items
+	 */
+	public static IntSet with (int item0, int item1) {
+		IntSet set = new IntSet(2);
+		set.add(item0);
+		set.add(item1);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @return a new IntSet that holds the given items
+	 */
+	public static IntSet with (int item0, int item1, int item2) {
+		IntSet set = new IntSet(3);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @return a new IntSet that holds the given items
+	 */
+	public static IntSet with (int item0, int item1, int item2, int item3) {
+		IntSet set = new IntSet(4);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @return a new IntSet that holds the given items
+	 */
+	public static IntSet with (int item0, int item1, int item2, int item3, int item4) {
+		IntSet set = new IntSet(5);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @return a new IntSet that holds the given items
+	 */
+	public static IntSet with (int item0, int item1, int item2, int item3, int item4, int item5) {
+		IntSet set = new IntSet(6);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @param item6 an int item
+	 * @return a new IntSet that holds the given items
+	 */
+	public static IntSet with (int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
+		IntSet set = new IntSet(7);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		set.add(item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @param item6 an int item
+	 * @return a new IntSet that holds the given items
+	 */
+	public static IntSet with (int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
+		IntSet set = new IntSet(8);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		set.add(item6);
+		set.add(item7);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntSet that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs an int varargs or int array; remember that varargs allocate
+	 * @return a new IntSet that holds the given items
+	 */
+	public static IntSet with (int... varargs) {
+		return new IntSet(varargs);
 	}
 }

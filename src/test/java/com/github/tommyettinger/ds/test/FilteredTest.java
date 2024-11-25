@@ -28,10 +28,10 @@ public class FilteredTest {
 	@Test
 	public void testIterableSet() {
 		FilteredIterableSet<String, Iterable<String>> fil = FilteredIterableSet.with(
-			(String s) -> s.length() > 3, String::toUpperCase,
+			(String s) -> s.length() > 3, String::toUpperCase, new Iterable[]{
 			ObjectList.with("zzz", "bee", "binturong"),
 			ObjectDeque.with("hm?", "bee", "BINTURONG"),
-			ObjectList.with(":D", "bee", "Aardvark", "bandicoot")
+			ObjectList.with(":D", "bee", "Aardvark", "bandicoot")}
 			);
 		Assert.assertEquals(2, fil.size());
 	}
@@ -44,8 +44,9 @@ public class FilteredTest {
 		FilteredIterableMap<String, Iterable<String>, Integer> fil = FilteredIterableMap.with(
 			(String s) -> s.length() > 3, String::toUpperCase,
 			ObjectList.with("zzz", "bee", "binturong"), -1,
+				new Object[]{
 			ObjectDeque.with("hm?", "bee", "BINTURONG"), 1,
-			ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), 2
+			ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), 2}
 			);
 		System.out.println(fil);
 		Assert.assertEquals(2, fil.size());
@@ -53,10 +54,10 @@ public class FilteredTest {
 	@Test
 	public void testIterableSetSubtype() {
 		FilteredIterableSet<String, ObjectList<String>> fil = FilteredIterableSet.with(
-			(String s) -> s.length() > 3, String::toUpperCase,
+			(String s) -> s.length() > 3, String::toUpperCase, new Iterable[]{
 			ObjectList.with("zzz", "bee", "binturong"),
 			ObjectList.with("hm?", "bee", "BINTURONG"),
-			ObjectList.with(":D", "bee", "Aardvark", "bandicoot")
+			ObjectList.with(":D", "bee", "Aardvark", "bandicoot")}
 			);
 		Assert.assertEquals(2, fil.size());
 	}
@@ -65,8 +66,9 @@ public class FilteredTest {
 		FilteredIterableMap<String, ObjectList<String>, Integer> fil = FilteredIterableMap.with(
 			(String s) -> s.length() > 3, String::toUpperCase,
 			ObjectList.with("zzz", "bee", "binturong"), -1,
+				new Object[]{
 			ObjectList.with("hm?", "bee", "BINTURONG"), 1,
-			ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), 2
+			ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), 2}
 		);
 		System.out.println(fil);
 		Assert.assertEquals(2, fil.size());

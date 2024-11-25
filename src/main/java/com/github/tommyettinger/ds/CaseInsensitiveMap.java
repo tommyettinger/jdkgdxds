@@ -244,17 +244,83 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	}
 
 	/**
+	 * Constructs a single-entry map given two key-value pairs.
+	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a V value
+	 * @param key1   a K key
+	 * @param value1 a V value
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public static <V> CaseInsensitiveMap<V> with (CharSequence key0, V value0, CharSequence key1, V value1) {
+		CaseInsensitiveMap<V> map = new CaseInsensitiveMap<>(2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map given three key-value pairs.
+	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a CharSequence key
+	 * @param value0 a V value
+	 * @param key1   a CharSequence key
+	 * @param value1 a V value
+	 * @param key2   a CharSequence key
+	 * @param value2 a V value
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public static <V> CaseInsensitiveMap<V> with (CharSequence key0, V value0, CharSequence key1, V value1, CharSequence key2, V value2) {
+		CaseInsensitiveMap<V> map = new CaseInsensitiveMap<>(3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map given four key-value pairs.
+	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a CharSequence key
+	 * @param value0 a V value
+	 * @param key1   a CharSequence key
+	 * @param value1 a V value
+	 * @param key2   a CharSequence key
+	 * @param value2 a V value
+	 * @param key3   a CharSequence key
+	 * @param value3 a V value
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public static <V> CaseInsensitiveMap<V> with (CharSequence key0, V value0, CharSequence key1, V value1, CharSequence key2, V value2, CharSequence key3, V value3) {
+		CaseInsensitiveMap<V> map = new CaseInsensitiveMap<>(4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
+		return map;
+	}
+
+	/**
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
 	 * {@link #CaseInsensitiveMap(CharSequence[], Object[])}, which takes all keys and then all values.
-	 * This needs all keys to be {@code CharSequence}s (like String or StringBuilder) and all values to
-	 * have the same type, because it gets those types from the first value parameter. Any keys that
-	 * aren't CharSequences or values that don't have V as their type have that entry skipped.
+	 * This needs all keys to have the same type and all values to have the same type, because
+	 * it gets those types from the first key parameter and first value parameter. Any keys that don't
+	 * have CharSequence as their type or values that don't have V as their type have that entry skipped.
 	 *
 	 * @param key0   the first key; will be used to determine the type of all keys
 	 * @param value0 the first value; will be used to determine the type of all values
-	 * @param rest   an array or varargs of alternating K, V, K, V... elements
+	 * @param rest   an array or varargs of alternating CharSequence, V, CharSequence, V... elements
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */

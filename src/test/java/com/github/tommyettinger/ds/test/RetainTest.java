@@ -49,7 +49,7 @@ public class RetainTest {
 
 	@Test
 	public void testIntOrderedSetRemoveRange(){
-		IntOrderedSet set = IntOrderedSet.with(1, 111, 11111, 1111111, 2, 222, 22222);
+		IntOrderedSet set = IntOrderedSet.with(new int[]{1, 111, 11111, 1111111, 2, 222, 22222});
 		Assert.assertEquals(set.size(), 7);
 		set.truncate(4);
 		Assert.assertEquals(set.size(), 4);

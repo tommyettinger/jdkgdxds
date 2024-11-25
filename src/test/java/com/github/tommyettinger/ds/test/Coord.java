@@ -152,25 +152,5 @@ public class Coord {
 		protected int place (int item) {
 			return item & this.mask;
 		}
-
-		/**
-		 * Returns the index of the key if already present, else {@code ~index} for the next empty index.
-		 *
-		 * @param key
-		 */
-		@Override
-		protected int locateKey (int key) {
-			int[] keyTable = this.keyTable;
-			for (int i = place(key); ; i = i + 1 & mask) {
-				int other = keyTable[i];
-				if (other == 0) {
-					return ~i; // Empty space is available.
-				}
-				System.out.println("Collision #" + ++collisions + " between existing item " + other + " and new item " + key);
-				if (other == key) {
-					return i; // Same key was found.
-				}
-			}
-		}
 	}
 }

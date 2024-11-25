@@ -117,8 +117,8 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
-		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
+		threshold = Math.min((int)(tableSize * (double)loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		keyTable = new int[tableSize];
@@ -179,13 +179,13 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
-	 * Defaults to using {@link #hashMultiplier}, which changes every time the data structure resizes.
+	 * This does NOT use the old place() function.
 	 *
 	 * @param item any int; it is usually mixed or masked here
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (int item) {
-		return BitConversion.imul(item, hashMultiplier) >>> shift;
+		return (item ^ (item << 9 | item >>> 23) ^ (item << 21 | item >>> 11)) & mask;
 	}
 
 	/**
@@ -383,8 +383,8 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 
 	protected void resize (int newSize) {
 		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
+		threshold = Math.min((int)(newSize * (double)loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
