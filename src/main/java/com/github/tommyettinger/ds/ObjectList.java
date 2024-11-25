@@ -1079,6 +1079,9 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 
 	/**
 	 * Creates a new ObjectList that will hold the items in the given array or varargs.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
 	 * @param varargs either 0 or more T items, or an array of T
 	 * @return a new ObjectList that holds the given T items
 	 * @param <T> the type of items, typically inferred by all the items being the same type

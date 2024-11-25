@@ -1017,8 +1017,17 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		return set;
 	}
 
+	/**
+	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a T varargs or T array; remember that varargs allocate
+	 * @return a new ObjectSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
 	@SafeVarargs
-	public static <T> ObjectSet<T> with (T... array) {
-		return new ObjectSet<>(array);
+	public static <T> ObjectSet<T> with (T... varargs) {
+		return new ObjectSet<>(varargs);
 	}
 }

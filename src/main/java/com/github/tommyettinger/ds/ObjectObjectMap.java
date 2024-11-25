@@ -1569,6 +1569,75 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	/**
+	 * Constructs a single-entry map given two key-value pairs.
+	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a V value
+	 * @param key1   a K key
+	 * @param value1 a V value
+	 * @param <K>    the type of key0
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public static <K, V> ObjectObjectMap<K, V> with (K key0, V value0, K key1, V value1) {
+		ObjectObjectMap<K, V> map = new ObjectObjectMap<>(2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map given three key-value pairs.
+	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a V value
+	 * @param key1   a K key
+	 * @param value1 a V value
+	 * @param key2   a K key
+	 * @param value2 a V value
+	 * @param <K>    the type of key0
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public static <K, V> ObjectObjectMap<K, V> with (K key0, V value0, K key1, V value1, K key2, V value2) {
+		ObjectObjectMap<K, V> map = new ObjectObjectMap<>(3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map given four key-value pairs.
+	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a V value
+	 * @param key1   a K key
+	 * @param value1 a V value
+	 * @param key2   a K key
+	 * @param value2 a V value
+	 * @param key3   a K key
+	 * @param value3 a V value
+	 * @param <K>    the type of key0
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public static <K, V> ObjectObjectMap<K, V> with (K key0, V value0, K key1, V value1, K key2, V value2, K key3, V value3) {
+		ObjectObjectMap<K, V> map = new ObjectObjectMap<>(4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
+		return map;
+	}
+
+	/**
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use

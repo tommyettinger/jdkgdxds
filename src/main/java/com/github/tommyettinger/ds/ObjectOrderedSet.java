@@ -416,14 +416,144 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		}
 	}
 
+	/**
+	 * Creates a new ObjectOrderedSet that holds only the given item, but can be resized.
+	 * @param item one T item
+	 * @return a new ObjectOrderedSet that holds the given item
+	 * @param <T> the type of item, typically inferred
+	 */
 	public static <T> ObjectOrderedSet<T> with (T item) {
 		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(1);
 		set.add(item);
 		return set;
 	}
 
+	/**
+	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @return a new ObjectOrderedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectOrderedSet<T> with (T item0, T item1) {
+		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(2);
+		set.add(item0, item1);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @return a new ObjectOrderedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2) {
+		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(3);
+		set.add(item0, item1, item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @return a new ObjectOrderedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2, T item3) {
+		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(4);
+		set.add(item0, item1, item2, item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @return a new ObjectOrderedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4) {
+		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(5);
+		set.add(item0, item1, item2, item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @return a new ObjectOrderedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(6);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new ObjectOrderedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(7);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new ObjectOrderedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(8);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6, item7);
+		return set;
+	}
+
+	/**
+	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a T varargs or T array; remember that varargs allocate
+	 * @return a new ObjectOrderedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
 	@SafeVarargs
-	public static <T> ObjectOrderedSet<T> with (T... array) {
-		return new ObjectOrderedSet<>(array);
+	public static <T> ObjectOrderedSet<T> with (T... varargs) {
+		return new ObjectOrderedSet<>(varargs);
 	}
 }
