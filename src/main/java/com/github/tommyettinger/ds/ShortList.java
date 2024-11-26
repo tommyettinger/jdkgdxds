@@ -1094,6 +1094,23 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		}
 	}
 
+	/**
+	 * Constructs an empty list.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new list containing nothing
+	 */
+	public static ShortList with () {
+		return new ShortList(0);
+	}
+
+	/**
+	 * Creates a new ShortList that holds only the given item, but can be resized.
+	 * @param item a short item
+	 * @return a new ShortList that holds the given item
+	 */
+
 	public static ShortList with (short item) {
 		ShortList list = new ShortList(1);
 		list.add(item);
@@ -1101,9 +1118,146 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
-	 * @see #ShortList(short[])
+	 * Creates a new ShortList that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @return a new ShortList that holds the given items
 	 */
-	public static ShortList with (short... array) {
-		return new ShortList(array);
+	public static ShortList with (short item0, short item1) {
+		ShortList list = new ShortList(2);
+		list.add(item0);
+		list.add(item1);
+		return list;
+	}
+
+	/**
+	 * Creates a new ShortList that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @return a new ShortList that holds the given items
+	 */
+	public static ShortList with (short item0, short item1, short item2) {
+		ShortList list = new ShortList(3);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		return list;
+	}
+
+	/**
+	 * Creates a new ShortList that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @return a new ShortList that holds the given items
+	 */
+	public static ShortList with (short item0, short item1, short item2, short item3) {
+		ShortList list = new ShortList(4);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		return list;
+	}
+
+	/**
+	 * Creates a new ShortList that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @return a new ShortList that holds the given items
+	 */
+	public static ShortList with (short item0, short item1, short item2, short item3, short item4) {
+		ShortList list = new ShortList(5);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		return list;
+	}
+
+	/**
+	 * Creates a new ShortList that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @param item5 a short item
+	 * @return a new ShortList that holds the given items
+	 */
+	public static ShortList with (short item0, short item1, short item2, short item3, short item4, short item5) {
+		ShortList list = new ShortList(6);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		return list;
+	}
+
+	/**
+	 * Creates a new ShortList that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @param item5 a short item
+	 * @param item6 a short item
+	 * @return a new ShortList that holds the given items
+	 */
+	public static ShortList with (short item0, short item1, short item2, short item3, short item4, short item5, short item6) {
+		ShortList list = new ShortList(7);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		return list;
+	}
+
+	/**
+	 * Creates a new ShortList that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @param item5 a short item
+	 * @param item6 a short item
+	 * @return a new ShortList that holds the given items
+	 */
+	public static ShortList with (short item0, short item1, short item2, short item3, short item4, short item5, short item6, short item7) {
+		ShortList list = new ShortList(8);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		list.add(item7);
+		return list;
+	}
+
+	/**
+	 * Creates a new ShortList that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a short varargs or short array; remember that varargs allocate
+	 * @return a new ShortList that holds the given items
+	 */
+	public static ShortList with (short... varargs) {
+		return new ShortList(varargs);
 	}
 }

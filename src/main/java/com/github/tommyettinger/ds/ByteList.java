@@ -1094,6 +1094,23 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		}
 	}
 
+	/**
+	 * Constructs an empty list.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new list containing nothing
+	 */
+	public static ByteList with () {
+		return new ByteList(0);
+	}
+
+	/**
+	 * Creates a new ByteList that holds only the given item, but can be resized.
+	 * @param item a byte item
+	 * @return a new ByteList that holds the given item
+	 */
+
 	public static ByteList with (byte item) {
 		ByteList list = new ByteList(1);
 		list.add(item);
@@ -1101,9 +1118,146 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
-	 * @see #ByteList(byte[])
+	 * Creates a new ByteList that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @return a new ByteList that holds the given items
 	 */
-	public static ByteList with (byte... array) {
-		return new ByteList(array);
+	public static ByteList with (byte item0, byte item1) {
+		ByteList list = new ByteList(2);
+		list.add(item0);
+		list.add(item1);
+		return list;
+	}
+
+	/**
+	 * Creates a new ByteList that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @return a new ByteList that holds the given items
+	 */
+	public static ByteList with (byte item0, byte item1, byte item2) {
+		ByteList list = new ByteList(3);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		return list;
+	}
+
+	/**
+	 * Creates a new ByteList that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @param item3 a byte item
+	 * @return a new ByteList that holds the given items
+	 */
+	public static ByteList with (byte item0, byte item1, byte item2, byte item3) {
+		ByteList list = new ByteList(4);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		return list;
+	}
+
+	/**
+	 * Creates a new ByteList that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @param item3 a byte item
+	 * @param item4 a byte item
+	 * @return a new ByteList that holds the given items
+	 */
+	public static ByteList with (byte item0, byte item1, byte item2, byte item3, byte item4) {
+		ByteList list = new ByteList(5);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		return list;
+	}
+
+	/**
+	 * Creates a new ByteList that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @param item3 a byte item
+	 * @param item4 a byte item
+	 * @param item5 a byte item
+	 * @return a new ByteList that holds the given items
+	 */
+	public static ByteList with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5) {
+		ByteList list = new ByteList(6);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		return list;
+	}
+
+	/**
+	 * Creates a new ByteList that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @param item3 a byte item
+	 * @param item4 a byte item
+	 * @param item5 a byte item
+	 * @param item6 a byte item
+	 * @return a new ByteList that holds the given items
+	 */
+	public static ByteList with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6) {
+		ByteList list = new ByteList(7);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		return list;
+	}
+
+	/**
+	 * Creates a new ByteList that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @param item3 a byte item
+	 * @param item4 a byte item
+	 * @param item5 a byte item
+	 * @param item6 a byte item
+	 * @return a new ByteList that holds the given items
+	 */
+	public static ByteList with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6, byte item7) {
+		ByteList list = new ByteList(8);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		list.add(item7);
+		return list;
+	}
+
+	/**
+	 * Creates a new ByteList that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a byte varargs or byte array; remember that varargs allocate
+	 * @return a new ByteList that holds the given items
+	 */
+	public static ByteList with (byte... varargs) {
+		return new ByteList(varargs);
 	}
 }

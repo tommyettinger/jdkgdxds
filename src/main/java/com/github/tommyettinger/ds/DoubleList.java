@@ -1111,6 +1111,23 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		}
 	}
 
+	/**
+	 * Constructs an empty list.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new list containing nothing
+	 */
+	public static DoubleList with () {
+		return new DoubleList(0);
+	}
+
+	/**
+	 * Creates a new DoubleList that holds only the given item, but can be resized.
+	 * @param item a double item
+	 * @return a new DoubleList that holds the given item
+	 */
+
 	public static DoubleList with (double item) {
 		DoubleList list = new DoubleList(1);
 		list.add(item);
@@ -1118,9 +1135,146 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	/**
-	 * @see #DoubleList(double[])
+	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @return a new DoubleList that holds the given items
 	 */
-	public static DoubleList with (double... array) {
-		return new DoubleList(array);
+	public static DoubleList with (double item0, double item1) {
+		DoubleList list = new DoubleList(2);
+		list.add(item0);
+		list.add(item1);
+		return list;
+	}
+
+	/**
+	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @return a new DoubleList that holds the given items
+	 */
+	public static DoubleList with (double item0, double item1, double item2) {
+		DoubleList list = new DoubleList(3);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		return list;
+	}
+
+	/**
+	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @param item3 a double item
+	 * @return a new DoubleList that holds the given items
+	 */
+	public static DoubleList with (double item0, double item1, double item2, double item3) {
+		DoubleList list = new DoubleList(4);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		return list;
+	}
+
+	/**
+	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @param item3 a double item
+	 * @param item4 a double item
+	 * @return a new DoubleList that holds the given items
+	 */
+	public static DoubleList with (double item0, double item1, double item2, double item3, double item4) {
+		DoubleList list = new DoubleList(5);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		return list;
+	}
+
+	/**
+	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @param item3 a double item
+	 * @param item4 a double item
+	 * @param item5 a double item
+	 * @return a new DoubleList that holds the given items
+	 */
+	public static DoubleList with (double item0, double item1, double item2, double item3, double item4, double item5) {
+		DoubleList list = new DoubleList(6);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		return list;
+	}
+
+	/**
+	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @param item3 a double item
+	 * @param item4 a double item
+	 * @param item5 a double item
+	 * @param item6 a double item
+	 * @return a new DoubleList that holds the given items
+	 */
+	public static DoubleList with (double item0, double item1, double item2, double item3, double item4, double item5, double item6) {
+		DoubleList list = new DoubleList(7);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		return list;
+	}
+
+	/**
+	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @param item3 a double item
+	 * @param item4 a double item
+	 * @param item5 a double item
+	 * @param item6 a double item
+	 * @return a new DoubleList that holds the given items
+	 */
+	public static DoubleList with (double item0, double item1, double item2, double item3, double item4, double item5, double item6, double item7) {
+		DoubleList list = new DoubleList(8);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		list.add(item7);
+		return list;
+	}
+
+	/**
+	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a double varargs or double array; remember that varargs allocate
+	 * @return a new DoubleList that holds the given items
+	 */
+	public static DoubleList with (double... varargs) {
+		return new DoubleList(varargs);
 	}
 }

@@ -1417,13 +1417,170 @@ public class DoubleDeque implements PrimitiveCollection.OfDouble, Arrangeable {
 		}
 	}
 
+	/**
+	 * Constructs an empty deque.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new deque containing nothing
+	 */
+	public static DoubleDeque with () {
+		return new DoubleDeque(0);
+	}
+
+	/**
+	 * Creates a new DoubleDeque that holds only the given item, but can be resized.
+	 * @param item a double item
+	 * @return a new DoubleDeque that holds the given item
+	 */
+
 	public static DoubleDeque with (double item) {
-		DoubleDeque deque = new DoubleDeque();
+		DoubleDeque deque = new DoubleDeque(1);
 		deque.add(item);
 		return deque;
 	}
 
-	public static DoubleDeque with (double... items) {
-		return new DoubleDeque(items);
+	/**
+	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @return a new DoubleDeque that holds the given items
+	 */
+	public static DoubleDeque with (double item0, double item1) {
+		DoubleDeque deque = new DoubleDeque(2);
+		deque.add(item0);
+		deque.add(item1);
+		return deque;
+	}
+
+	/**
+	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @return a new DoubleDeque that holds the given items
+	 */
+	public static DoubleDeque with (double item0, double item1, double item2) {
+		DoubleDeque deque = new DoubleDeque(3);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		return deque;
+	}
+
+	/**
+	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @param item3 a double item
+	 * @return a new DoubleDeque that holds the given items
+	 */
+	public static DoubleDeque with (double item0, double item1, double item2, double item3) {
+		DoubleDeque deque = new DoubleDeque(4);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		return deque;
+	}
+
+	/**
+	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @param item3 a double item
+	 * @param item4 a double item
+	 * @return a new DoubleDeque that holds the given items
+	 */
+	public static DoubleDeque with (double item0, double item1, double item2, double item3, double item4) {
+		DoubleDeque deque = new DoubleDeque(5);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		return deque;
+	}
+
+	/**
+	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @param item3 a double item
+	 * @param item4 a double item
+	 * @param item5 a double item
+	 * @return a new DoubleDeque that holds the given items
+	 */
+	public static DoubleDeque with (double item0, double item1, double item2, double item3, double item4, double item5) {
+		DoubleDeque deque = new DoubleDeque(6);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		return deque;
+	}
+
+	/**
+	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @param item3 a double item
+	 * @param item4 a double item
+	 * @param item5 a double item
+	 * @param item6 a double item
+	 * @return a new DoubleDeque that holds the given items
+	 */
+	public static DoubleDeque with (double item0, double item1, double item2, double item3, double item4, double item5, double item6) {
+		DoubleDeque deque = new DoubleDeque(7);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		return deque;
+	}
+
+	/**
+	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 * @param item0 a double item
+	 * @param item1 a double item
+	 * @param item2 a double item
+	 * @param item3 a double item
+	 * @param item4 a double item
+	 * @param item5 a double item
+	 * @param item6 a double item
+	 * @return a new DoubleDeque that holds the given items
+	 */
+	public static DoubleDeque with (double item0, double item1, double item2, double item3, double item4, double item5, double item6, double item7) {
+		DoubleDeque deque = new DoubleDeque(8);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		deque.add(item7);
+		return deque;
+	}
+
+	/**
+	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a double varargs or double array; remember that varargs allocate
+	 * @return a new DoubleDeque that holds the given items
+	 */
+	public static DoubleDeque with (double... varargs) {
+		return new DoubleDeque(varargs);
 	}
 }

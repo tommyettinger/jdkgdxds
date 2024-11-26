@@ -1381,14 +1381,170 @@ public class ShortDeque implements PrimitiveCollection.OfShort, Arrangeable {
 		}
 	}
 
+	/**
+	 * Constructs an empty deque.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new deque containing nothing
+	 */
+	public static ShortDeque with () {
+		return new ShortDeque(0);
+	}
+
+	/**
+	 * Creates a new ShortDeque that holds only the given item, but can be resized.
+	 * @param item a short item
+	 * @return a new ShortDeque that holds the given item
+	 */
+
 	public static ShortDeque with (short item) {
-		ShortDeque deque = new ShortDeque();
+		ShortDeque deque = new ShortDeque(1);
 		deque.add(item);
 		return deque;
 	}
 
-	public static ShortDeque with (short... items) {
-		return new ShortDeque(items);
+	/**
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @return a new ShortDeque that holds the given items
+	 */
+	public static ShortDeque with (short item0, short item1) {
+		ShortDeque deque = new ShortDeque(2);
+		deque.add(item0);
+		deque.add(item1);
+		return deque;
 	}
 
+	/**
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @return a new ShortDeque that holds the given items
+	 */
+	public static ShortDeque with (short item0, short item1, short item2) {
+		ShortDeque deque = new ShortDeque(3);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @return a new ShortDeque that holds the given items
+	 */
+	public static ShortDeque with (short item0, short item1, short item2, short item3) {
+		ShortDeque deque = new ShortDeque(4);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @return a new ShortDeque that holds the given items
+	 */
+	public static ShortDeque with (short item0, short item1, short item2, short item3, short item4) {
+		ShortDeque deque = new ShortDeque(5);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @param item5 a short item
+	 * @return a new ShortDeque that holds the given items
+	 */
+	public static ShortDeque with (short item0, short item1, short item2, short item3, short item4, short item5) {
+		ShortDeque deque = new ShortDeque(6);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @param item5 a short item
+	 * @param item6 a short item
+	 * @return a new ShortDeque that holds the given items
+	 */
+	public static ShortDeque with (short item0, short item1, short item2, short item3, short item4, short item5, short item6) {
+		ShortDeque deque = new ShortDeque(7);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @param item5 a short item
+	 * @param item6 a short item
+	 * @return a new ShortDeque that holds the given items
+	 */
+	public static ShortDeque with (short item0, short item1, short item2, short item3, short item4, short item5, short item6, short item7) {
+		ShortDeque deque = new ShortDeque(8);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		deque.add(item7);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a short varargs or short array; remember that varargs allocate
+	 * @return a new ShortDeque that holds the given items
+	 */
+	public static ShortDeque with (short... varargs) {
+		return new ShortDeque(varargs);
+	}
 }

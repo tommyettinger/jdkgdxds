@@ -189,17 +189,170 @@ public class BooleanBag extends BooleanList {
 		return h;
 	}
 
-	public static BooleanBag with (boolean item) {
-		BooleanBag list = new BooleanBag(1);
-		list.add(item);
-		return list;
+	/**
+	 * Constructs an empty bag.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new bag containing nothing
+	 */
+	public static BooleanBag with () {
+		return new BooleanBag(0);
 	}
 
 	/**
-	 * @see #BooleanBag(boolean[])
+	 * Creates a new BooleanBag that holds only the given item, but can be resized.
+	 * @param item a boolean item
+	 * @return a new BooleanBag that holds the given item
 	 */
-	public static BooleanBag with (boolean... array) {
-		return new BooleanBag(array);
+
+	public static BooleanBag with (boolean item) {
+		BooleanBag bag = new BooleanBag(1);
+		bag.add(item);
+		return bag;
 	}
 
+	/**
+	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @return a new BooleanBag that holds the given items
+	 */
+	public static BooleanBag with (boolean item0, boolean item1) {
+		BooleanBag bag = new BooleanBag(2);
+		bag.add(item0);
+		bag.add(item1);
+		return bag;
+	}
+
+	/**
+	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @return a new BooleanBag that holds the given items
+	 */
+	public static BooleanBag with (boolean item0, boolean item1, boolean item2) {
+		BooleanBag bag = new BooleanBag(3);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		return bag;
+	}
+
+	/**
+	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @return a new BooleanBag that holds the given items
+	 */
+	public static BooleanBag with (boolean item0, boolean item1, boolean item2, boolean item3) {
+		BooleanBag bag = new BooleanBag(4);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		return bag;
+	}
+
+	/**
+	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @return a new BooleanBag that holds the given items
+	 */
+	public static BooleanBag with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4) {
+		BooleanBag bag = new BooleanBag(5);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		return bag;
+	}
+
+	/**
+	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @param item5 a boolean item
+	 * @return a new BooleanBag that holds the given items
+	 */
+	public static BooleanBag with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5) {
+		BooleanBag bag = new BooleanBag(6);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		return bag;
+	}
+
+	/**
+	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @param item5 a boolean item
+	 * @param item6 a boolean item
+	 * @return a new BooleanBag that holds the given items
+	 */
+	public static BooleanBag with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6) {
+		BooleanBag bag = new BooleanBag(7);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		bag.add(item6);
+		return bag;
+	}
+
+	/**
+	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @param item5 a boolean item
+	 * @param item6 a boolean item
+	 * @return a new BooleanBag that holds the given items
+	 */
+	public static BooleanBag with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6, boolean item7) {
+		BooleanBag bag = new BooleanBag(8);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		bag.add(item6);
+		bag.add(item7);
+		return bag;
+	}
+
+	/**
+	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a boolean varargs or boolean array; remember that varargs allocate
+	 * @return a new BooleanBag that holds the given items
+	 */
+	public static BooleanBag with (boolean... varargs) {
+		return new BooleanBag(varargs);
+	}
 }

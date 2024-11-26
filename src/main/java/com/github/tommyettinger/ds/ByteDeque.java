@@ -1380,13 +1380,170 @@ public class ByteDeque implements PrimitiveCollection.OfByte, Arrangeable {
 		}
 	}
 
+	/**
+	 * Constructs an empty deque.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new deque containing nothing
+	 */
+	public static ByteDeque with () {
+		return new ByteDeque(0);
+	}
+
+	/**
+	 * Creates a new ByteDeque that holds only the given item, but can be resized.
+	 * @param item a byte item
+	 * @return a new ByteDeque that holds the given item
+	 */
+
 	public static ByteDeque with (byte item) {
-		ByteDeque deque = new ByteDeque();
+		ByteDeque deque = new ByteDeque(1);
 		deque.add(item);
 		return deque;
 	}
 
-	public static ByteDeque with (byte... items) {
-		return new ByteDeque(items);
+	/**
+	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @return a new ByteDeque that holds the given items
+	 */
+	public static ByteDeque with (byte item0, byte item1) {
+		ByteDeque deque = new ByteDeque(2);
+		deque.add(item0);
+		deque.add(item1);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @return a new ByteDeque that holds the given items
+	 */
+	public static ByteDeque with (byte item0, byte item1, byte item2) {
+		ByteDeque deque = new ByteDeque(3);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @param item3 a byte item
+	 * @return a new ByteDeque that holds the given items
+	 */
+	public static ByteDeque with (byte item0, byte item1, byte item2, byte item3) {
+		ByteDeque deque = new ByteDeque(4);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @param item3 a byte item
+	 * @param item4 a byte item
+	 * @return a new ByteDeque that holds the given items
+	 */
+	public static ByteDeque with (byte item0, byte item1, byte item2, byte item3, byte item4) {
+		ByteDeque deque = new ByteDeque(5);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @param item3 a byte item
+	 * @param item4 a byte item
+	 * @param item5 a byte item
+	 * @return a new ByteDeque that holds the given items
+	 */
+	public static ByteDeque with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5) {
+		ByteDeque deque = new ByteDeque(6);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @param item3 a byte item
+	 * @param item4 a byte item
+	 * @param item5 a byte item
+	 * @param item6 a byte item
+	 * @return a new ByteDeque that holds the given items
+	 */
+	public static ByteDeque with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6) {
+		ByteDeque deque = new ByteDeque(7);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 * @param item0 a byte item
+	 * @param item1 a byte item
+	 * @param item2 a byte item
+	 * @param item3 a byte item
+	 * @param item4 a byte item
+	 * @param item5 a byte item
+	 * @param item6 a byte item
+	 * @return a new ByteDeque that holds the given items
+	 */
+	public static ByteDeque with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6, byte item7) {
+		ByteDeque deque = new ByteDeque(8);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		deque.add(item7);
+		return deque;
+	}
+
+	/**
+	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a byte varargs or byte array; remember that varargs allocate
+	 * @return a new ByteDeque that holds the given items
+	 */
+	public static ByteDeque with (byte... varargs) {
+		return new ByteDeque(varargs);
 	}
 }

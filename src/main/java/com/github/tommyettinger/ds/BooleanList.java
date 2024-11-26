@@ -1000,6 +1000,23 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		}
 	}
 
+	/**
+	 * Constructs an empty list.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new list containing nothing
+	 */
+	public static BooleanList with () {
+		return new BooleanList(0);
+	}
+
+	/**
+	 * Creates a new BooleanList that holds only the given item, but can be resized.
+	 * @param item a boolean item
+	 * @return a new BooleanList that holds the given item
+	 */
+
 	public static BooleanList with (boolean item) {
 		BooleanList list = new BooleanList(1);
 		list.add(item);
@@ -1007,9 +1024,146 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
-	 * @see #BooleanList(boolean[])
+	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @return a new BooleanList that holds the given items
 	 */
-	public static BooleanList with (boolean... array) {
-		return new BooleanList(array);
+	public static BooleanList with (boolean item0, boolean item1) {
+		BooleanList list = new BooleanList(2);
+		list.add(item0);
+		list.add(item1);
+		return list;
+	}
+
+	/**
+	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @return a new BooleanList that holds the given items
+	 */
+	public static BooleanList with (boolean item0, boolean item1, boolean item2) {
+		BooleanList list = new BooleanList(3);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		return list;
+	}
+
+	/**
+	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @return a new BooleanList that holds the given items
+	 */
+	public static BooleanList with (boolean item0, boolean item1, boolean item2, boolean item3) {
+		BooleanList list = new BooleanList(4);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		return list;
+	}
+
+	/**
+	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @return a new BooleanList that holds the given items
+	 */
+	public static BooleanList with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4) {
+		BooleanList list = new BooleanList(5);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		return list;
+	}
+
+	/**
+	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @param item5 a boolean item
+	 * @return a new BooleanList that holds the given items
+	 */
+	public static BooleanList with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5) {
+		BooleanList list = new BooleanList(6);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		return list;
+	}
+
+	/**
+	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @param item5 a boolean item
+	 * @param item6 a boolean item
+	 * @return a new BooleanList that holds the given items
+	 */
+	public static BooleanList with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6) {
+		BooleanList list = new BooleanList(7);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		return list;
+	}
+
+	/**
+	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @param item5 a boolean item
+	 * @param item6 a boolean item
+	 * @return a new BooleanList that holds the given items
+	 */
+	public static BooleanList with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6, boolean item7) {
+		BooleanList list = new BooleanList(8);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		list.add(item7);
+		return list;
+	}
+
+	/**
+	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a boolean varargs or boolean array; remember that varargs allocate
+	 * @return a new BooleanList that holds the given items
+	 */
+	public static BooleanList with (boolean... varargs) {
+		return new BooleanList(varargs);
 	}
 }

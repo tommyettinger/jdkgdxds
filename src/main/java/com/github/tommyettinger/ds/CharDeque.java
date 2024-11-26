@@ -1392,13 +1392,170 @@ public class CharDeque implements PrimitiveCollection.OfChar, Arrangeable {
 		}
 	}
 
+	/**
+	 * Constructs an empty deque.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new deque containing nothing
+	 */
+	public static CharDeque with () {
+		return new CharDeque(0);
+	}
+
+	/**
+	 * Creates a new CharDeque that holds only the given item, but can be resized.
+	 * @param item a char item
+	 * @return a new CharDeque that holds the given item
+	 */
+
 	public static CharDeque with (char item) {
-		CharDeque deque = new CharDeque();
+		CharDeque deque = new CharDeque(1);
 		deque.add(item);
 		return deque;
 	}
 
-	public static CharDeque with (char... items) {
-		return new CharDeque(items);
+	/**
+	 * Creates a new CharDeque that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @return a new CharDeque that holds the given items
+	 */
+	public static CharDeque with (char item0, char item1) {
+		CharDeque deque = new CharDeque(2);
+		deque.add(item0);
+		deque.add(item1);
+		return deque;
+	}
+
+	/**
+	 * Creates a new CharDeque that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @return a new CharDeque that holds the given items
+	 */
+	public static CharDeque with (char item0, char item1, char item2) {
+		CharDeque deque = new CharDeque(3);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		return deque;
+	}
+
+	/**
+	 * Creates a new CharDeque that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @return a new CharDeque that holds the given items
+	 */
+	public static CharDeque with (char item0, char item1, char item2, char item3) {
+		CharDeque deque = new CharDeque(4);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		return deque;
+	}
+
+	/**
+	 * Creates a new CharDeque that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @return a new CharDeque that holds the given items
+	 */
+	public static CharDeque with (char item0, char item1, char item2, char item3, char item4) {
+		CharDeque deque = new CharDeque(5);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		return deque;
+	}
+
+	/**
+	 * Creates a new CharDeque that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @param item5 a char item
+	 * @return a new CharDeque that holds the given items
+	 */
+	public static CharDeque with (char item0, char item1, char item2, char item3, char item4, char item5) {
+		CharDeque deque = new CharDeque(6);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		return deque;
+	}
+
+	/**
+	 * Creates a new CharDeque that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @param item5 a char item
+	 * @param item6 a char item
+	 * @return a new CharDeque that holds the given items
+	 */
+	public static CharDeque with (char item0, char item1, char item2, char item3, char item4, char item5, char item6) {
+		CharDeque deque = new CharDeque(7);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		return deque;
+	}
+
+	/**
+	 * Creates a new CharDeque that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @param item5 a char item
+	 * @param item6 a char item
+	 * @return a new CharDeque that holds the given items
+	 */
+	public static CharDeque with (char item0, char item1, char item2, char item3, char item4, char item5, char item6, char item7) {
+		CharDeque deque = new CharDeque(8);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		deque.add(item7);
+		return deque;
+	}
+
+	/**
+	 * Creates a new CharDeque that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a char varargs or char array; remember that varargs allocate
+	 * @return a new CharDeque that holds the given items
+	 */
+	public static CharDeque with (char... varargs) {
+		return new CharDeque(varargs);
 	}
 }

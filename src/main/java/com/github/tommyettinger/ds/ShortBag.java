@@ -188,17 +188,170 @@ public class ShortBag extends ShortList {
 		return h;
 	}
 
-	public static ShortBag with (short item) {
-		ShortBag list = new ShortBag(1);
-		list.add(item);
-		return list;
+	/**
+	 * Constructs an empty bag.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new bag containing nothing
+	 */
+	public static ShortBag with () {
+		return new ShortBag(0);
 	}
 
 	/**
-	 * @see #ShortBag(short[])
+	 * Creates a new ShortBag that holds only the given item, but can be resized.
+	 * @param item a short item
+	 * @return a new ShortBag that holds the given item
 	 */
-	public static ShortBag with (short... array) {
-		return new ShortBag(array);
+
+	public static ShortBag with (short item) {
+		ShortBag bag = new ShortBag(1);
+		bag.add(item);
+		return bag;
 	}
 
+	/**
+	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @return a new ShortBag that holds the given items
+	 */
+	public static ShortBag with (short item0, short item1) {
+		ShortBag bag = new ShortBag(2);
+		bag.add(item0);
+		bag.add(item1);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @return a new ShortBag that holds the given items
+	 */
+	public static ShortBag with (short item0, short item1, short item2) {
+		ShortBag bag = new ShortBag(3);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @return a new ShortBag that holds the given items
+	 */
+	public static ShortBag with (short item0, short item1, short item2, short item3) {
+		ShortBag bag = new ShortBag(4);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @return a new ShortBag that holds the given items
+	 */
+	public static ShortBag with (short item0, short item1, short item2, short item3, short item4) {
+		ShortBag bag = new ShortBag(5);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @param item5 a short item
+	 * @return a new ShortBag that holds the given items
+	 */
+	public static ShortBag with (short item0, short item1, short item2, short item3, short item4, short item5) {
+		ShortBag bag = new ShortBag(6);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @param item5 a short item
+	 * @param item6 a short item
+	 * @return a new ShortBag that holds the given items
+	 */
+	public static ShortBag with (short item0, short item1, short item2, short item3, short item4, short item5, short item6) {
+		ShortBag bag = new ShortBag(7);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		bag.add(item6);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 * @param item0 a short item
+	 * @param item1 a short item
+	 * @param item2 a short item
+	 * @param item3 a short item
+	 * @param item4 a short item
+	 * @param item5 a short item
+	 * @param item6 a short item
+	 * @return a new ShortBag that holds the given items
+	 */
+	public static ShortBag with (short item0, short item1, short item2, short item3, short item4, short item5, short item6, short item7) {
+		ShortBag bag = new ShortBag(8);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		bag.add(item6);
+		bag.add(item7);
+		return bag;
+	}
+
+	/**
+	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a short varargs or short array; remember that varargs allocate
+	 * @return a new ShortBag that holds the given items
+	 */
+	public static ShortBag with (short... varargs) {
+		return new ShortBag(varargs);
+	}
 }

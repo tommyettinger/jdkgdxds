@@ -993,6 +993,23 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		}
 	}
 
+	/**
+	 * Constructs an empty list.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new list containing nothing
+	 */
+	public static CharList with () {
+		return new CharList(0);
+	}
+
+	/**
+	 * Creates a new CharList that holds only the given item, but can be resized.
+	 * @param item a char item
+	 * @return a new CharList that holds the given item
+	 */
+
 	public static CharList with (char item) {
 		CharList list = new CharList(1);
 		list.add(item);
@@ -1000,9 +1017,146 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
-	 * @see #CharList(char[])
+	 * Creates a new CharList that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @return a new CharList that holds the given items
 	 */
-	public static CharList with (char... array) {
-		return new CharList(array);
+	public static CharList with (char item0, char item1) {
+		CharList list = new CharList(2);
+		list.add(item0);
+		list.add(item1);
+		return list;
+	}
+
+	/**
+	 * Creates a new CharList that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @return a new CharList that holds the given items
+	 */
+	public static CharList with (char item0, char item1, char item2) {
+		CharList list = new CharList(3);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		return list;
+	}
+
+	/**
+	 * Creates a new CharList that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @return a new CharList that holds the given items
+	 */
+	public static CharList with (char item0, char item1, char item2, char item3) {
+		CharList list = new CharList(4);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		return list;
+	}
+
+	/**
+	 * Creates a new CharList that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @return a new CharList that holds the given items
+	 */
+	public static CharList with (char item0, char item1, char item2, char item3, char item4) {
+		CharList list = new CharList(5);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		return list;
+	}
+
+	/**
+	 * Creates a new CharList that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @param item5 a char item
+	 * @return a new CharList that holds the given items
+	 */
+	public static CharList with (char item0, char item1, char item2, char item3, char item4, char item5) {
+		CharList list = new CharList(6);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		return list;
+	}
+
+	/**
+	 * Creates a new CharList that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @param item5 a char item
+	 * @param item6 a char item
+	 * @return a new CharList that holds the given items
+	 */
+	public static CharList with (char item0, char item1, char item2, char item3, char item4, char item5, char item6) {
+		CharList list = new CharList(7);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		return list;
+	}
+
+	/**
+	 * Creates a new CharList that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @param item5 a char item
+	 * @param item6 a char item
+	 * @return a new CharList that holds the given items
+	 */
+	public static CharList with (char item0, char item1, char item2, char item3, char item4, char item5, char item6, char item7) {
+		CharList list = new CharList(8);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		list.add(item7);
+		return list;
+	}
+
+	/**
+	 * Creates a new CharList that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a char varargs or char array; remember that varargs allocate
+	 * @return a new CharList that holds the given items
+	 */
+	public static CharList with (char... varargs) {
+		return new CharList(varargs);
 	}
 }

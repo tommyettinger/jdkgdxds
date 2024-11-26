@@ -1344,13 +1344,170 @@ public class BooleanDeque implements PrimitiveCollection.OfBoolean, Arrangeable 
 		}
 	}
 
+	/**
+	 * Constructs an empty deque.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new deque containing nothing
+	 */
+	public static BooleanDeque with () {
+		return new BooleanDeque(0);
+	}
+
+	/**
+	 * Creates a new BooleanDeque that holds only the given item, but can be resized.
+	 * @param item a boolean item
+	 * @return a new BooleanDeque that holds the given item
+	 */
+
 	public static BooleanDeque with (boolean item) {
-		BooleanDeque deque = new BooleanDeque();
+		BooleanDeque deque = new BooleanDeque(1);
 		deque.add(item);
 		return deque;
 	}
 
-	public static BooleanDeque with (boolean... items) {
-		return new BooleanDeque(items);
+	/**
+	 * Creates a new BooleanDeque that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @return a new BooleanDeque that holds the given items
+	 */
+	public static BooleanDeque with (boolean item0, boolean item1) {
+		BooleanDeque deque = new BooleanDeque(2);
+		deque.add(item0);
+		deque.add(item1);
+		return deque;
+	}
+
+	/**
+	 * Creates a new BooleanDeque that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @return a new BooleanDeque that holds the given items
+	 */
+	public static BooleanDeque with (boolean item0, boolean item1, boolean item2) {
+		BooleanDeque deque = new BooleanDeque(3);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		return deque;
+	}
+
+	/**
+	 * Creates a new BooleanDeque that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @return a new BooleanDeque that holds the given items
+	 */
+	public static BooleanDeque with (boolean item0, boolean item1, boolean item2, boolean item3) {
+		BooleanDeque deque = new BooleanDeque(4);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		return deque;
+	}
+
+	/**
+	 * Creates a new BooleanDeque that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @return a new BooleanDeque that holds the given items
+	 */
+	public static BooleanDeque with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4) {
+		BooleanDeque deque = new BooleanDeque(5);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		return deque;
+	}
+
+	/**
+	 * Creates a new BooleanDeque that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @param item5 a boolean item
+	 * @return a new BooleanDeque that holds the given items
+	 */
+	public static BooleanDeque with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5) {
+		BooleanDeque deque = new BooleanDeque(6);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		return deque;
+	}
+
+	/**
+	 * Creates a new BooleanDeque that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @param item5 a boolean item
+	 * @param item6 a boolean item
+	 * @return a new BooleanDeque that holds the given items
+	 */
+	public static BooleanDeque with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6) {
+		BooleanDeque deque = new BooleanDeque(7);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		return deque;
+	}
+
+	/**
+	 * Creates a new BooleanDeque that holds only the given items, but can be resized.
+	 * @param item0 a boolean item
+	 * @param item1 a boolean item
+	 * @param item2 a boolean item
+	 * @param item3 a boolean item
+	 * @param item4 a boolean item
+	 * @param item5 a boolean item
+	 * @param item6 a boolean item
+	 * @return a new BooleanDeque that holds the given items
+	 */
+	public static BooleanDeque with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6, boolean item7) {
+		BooleanDeque deque = new BooleanDeque(8);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		deque.add(item7);
+		return deque;
+	}
+
+	/**
+	 * Creates a new BooleanDeque that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a boolean varargs or boolean array; remember that varargs allocate
+	 * @return a new BooleanDeque that holds the given items
+	 */
+	public static BooleanDeque with (boolean... varargs) {
+		return new BooleanDeque(varargs);
 	}
 }

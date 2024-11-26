@@ -189,17 +189,170 @@ public class CharBag extends CharList {
 		return h;
 	}
 
-	public static CharBag with (char item) {
-		CharBag list = new CharBag(1);
-		list.add(item);
-		return list;
+	/**
+	 * Constructs an empty bag.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new bag containing nothing
+	 */
+	public static CharBag with () {
+		return new CharBag(0);
 	}
 
 	/**
-	 * @see #CharBag(char[])
+	 * Creates a new CharBag that holds only the given item, but can be resized.
+	 * @param item a char item
+	 * @return a new CharBag that holds the given item
 	 */
-	public static CharBag with (char... array) {
-		return new CharBag(array);
+
+	public static CharBag with (char item) {
+		CharBag bag = new CharBag(1);
+		bag.add(item);
+		return bag;
 	}
 
+	/**
+	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @return a new CharBag that holds the given items
+	 */
+	public static CharBag with (char item0, char item1) {
+		CharBag bag = new CharBag(2);
+		bag.add(item0);
+		bag.add(item1);
+		return bag;
+	}
+
+	/**
+	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @return a new CharBag that holds the given items
+	 */
+	public static CharBag with (char item0, char item1, char item2) {
+		CharBag bag = new CharBag(3);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		return bag;
+	}
+
+	/**
+	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @return a new CharBag that holds the given items
+	 */
+	public static CharBag with (char item0, char item1, char item2, char item3) {
+		CharBag bag = new CharBag(4);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		return bag;
+	}
+
+	/**
+	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @return a new CharBag that holds the given items
+	 */
+	public static CharBag with (char item0, char item1, char item2, char item3, char item4) {
+		CharBag bag = new CharBag(5);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		return bag;
+	}
+
+	/**
+	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @param item5 a char item
+	 * @return a new CharBag that holds the given items
+	 */
+	public static CharBag with (char item0, char item1, char item2, char item3, char item4, char item5) {
+		CharBag bag = new CharBag(6);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		return bag;
+	}
+
+	/**
+	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @param item5 a char item
+	 * @param item6 a char item
+	 * @return a new CharBag that holds the given items
+	 */
+	public static CharBag with (char item0, char item1, char item2, char item3, char item4, char item5, char item6) {
+		CharBag bag = new CharBag(7);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		bag.add(item6);
+		return bag;
+	}
+
+	/**
+	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 * @param item0 a char item
+	 * @param item1 a char item
+	 * @param item2 a char item
+	 * @param item3 a char item
+	 * @param item4 a char item
+	 * @param item5 a char item
+	 * @param item6 a char item
+	 * @return a new CharBag that holds the given items
+	 */
+	public static CharBag with (char item0, char item1, char item2, char item3, char item4, char item5, char item6, char item7) {
+		CharBag bag = new CharBag(8);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		bag.add(item6);
+		bag.add(item7);
+		return bag;
+	}
+
+	/**
+	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a char varargs or char array; remember that varargs allocate
+	 * @return a new CharBag that holds the given items
+	 */
+	public static CharBag with (char... varargs) {
+		return new CharBag(varargs);
+	}
 }

@@ -1129,6 +1129,23 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		}
 	}
 
+	/**
+	 * Constructs an empty list.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new list containing nothing
+	 */
+	public static FloatList with () {
+		return new FloatList(0);
+	}
+
+	/**
+	 * Creates a new FloatList that holds only the given item, but can be resized.
+	 * @param item a float item
+	 * @return a new FloatList that holds the given item
+	 */
+
 	public static FloatList with (float item) {
 		FloatList list = new FloatList(1);
 		list.add(item);
@@ -1136,9 +1153,146 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
-	 * @see #FloatList(float[])
+	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @return a new FloatList that holds the given items
 	 */
-	public static FloatList with (float... array) {
-		return new FloatList(array);
+	public static FloatList with (float item0, float item1) {
+		FloatList list = new FloatList(2);
+		list.add(item0);
+		list.add(item1);
+		return list;
+	}
+
+	/**
+	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @return a new FloatList that holds the given items
+	 */
+	public static FloatList with (float item0, float item1, float item2) {
+		FloatList list = new FloatList(3);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		return list;
+	}
+
+	/**
+	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @return a new FloatList that holds the given items
+	 */
+	public static FloatList with (float item0, float item1, float item2, float item3) {
+		FloatList list = new FloatList(4);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		return list;
+	}
+
+	/**
+	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @return a new FloatList that holds the given items
+	 */
+	public static FloatList with (float item0, float item1, float item2, float item3, float item4) {
+		FloatList list = new FloatList(5);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		return list;
+	}
+
+	/**
+	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @param item5 a float item
+	 * @return a new FloatList that holds the given items
+	 */
+	public static FloatList with (float item0, float item1, float item2, float item3, float item4, float item5) {
+		FloatList list = new FloatList(6);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		return list;
+	}
+
+	/**
+	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @param item5 a float item
+	 * @param item6 a float item
+	 * @return a new FloatList that holds the given items
+	 */
+	public static FloatList with (float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
+		FloatList list = new FloatList(7);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		return list;
+	}
+
+	/**
+	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @param item5 a float item
+	 * @param item6 a float item
+	 * @return a new FloatList that holds the given items
+	 */
+	public static FloatList with (float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
+		FloatList list = new FloatList(8);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		list.add(item7);
+		return list;
+	}
+
+	/**
+	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a float varargs or float array; remember that varargs allocate
+	 * @return a new FloatList that holds the given items
+	 */
+	public static FloatList with (float... varargs) {
+		return new FloatList(varargs);
 	}
 }

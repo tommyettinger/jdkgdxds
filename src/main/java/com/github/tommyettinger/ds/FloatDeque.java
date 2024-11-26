@@ -1411,13 +1411,170 @@ public class FloatDeque implements PrimitiveCollection.OfFloat, Arrangeable {
 		}
 	}
 
+	/**
+	 * Constructs an empty deque.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new deque containing nothing
+	 */
+	public static FloatDeque with () {
+		return new FloatDeque(0);
+	}
+
+	/**
+	 * Creates a new FloatDeque that holds only the given item, but can be resized.
+	 * @param item a float item
+	 * @return a new FloatDeque that holds the given item
+	 */
+
 	public static FloatDeque with (float item) {
-		FloatDeque deque = new FloatDeque();
+		FloatDeque deque = new FloatDeque(1);
 		deque.add(item);
 		return deque;
 	}
 
-	public static FloatDeque with (float... items) {
-		return new FloatDeque(items);
+	/**
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @return a new FloatDeque that holds the given items
+	 */
+	public static FloatDeque with (float item0, float item1) {
+		FloatDeque deque = new FloatDeque(2);
+		deque.add(item0);
+		deque.add(item1);
+		return deque;
+	}
+
+	/**
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @return a new FloatDeque that holds the given items
+	 */
+	public static FloatDeque with (float item0, float item1, float item2) {
+		FloatDeque deque = new FloatDeque(3);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		return deque;
+	}
+
+	/**
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @return a new FloatDeque that holds the given items
+	 */
+	public static FloatDeque with (float item0, float item1, float item2, float item3) {
+		FloatDeque deque = new FloatDeque(4);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		return deque;
+	}
+
+	/**
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @return a new FloatDeque that holds the given items
+	 */
+	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4) {
+		FloatDeque deque = new FloatDeque(5);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		return deque;
+	}
+
+	/**
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @param item5 a float item
+	 * @return a new FloatDeque that holds the given items
+	 */
+	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4, float item5) {
+		FloatDeque deque = new FloatDeque(6);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		return deque;
+	}
+
+	/**
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @param item5 a float item
+	 * @param item6 a float item
+	 * @return a new FloatDeque that holds the given items
+	 */
+	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
+		FloatDeque deque = new FloatDeque(7);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		return deque;
+	}
+
+	/**
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @param item5 a float item
+	 * @param item6 a float item
+	 * @return a new FloatDeque that holds the given items
+	 */
+	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
+		FloatDeque deque = new FloatDeque(8);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		deque.add(item7);
+		return deque;
+	}
+
+	/**
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a float varargs or float array; remember that varargs allocate
+	 * @return a new FloatDeque that holds the given items
+	 */
+	public static FloatDeque with (float... varargs) {
+		return new FloatDeque(varargs);
 	}
 }
