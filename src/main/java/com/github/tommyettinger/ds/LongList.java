@@ -1094,6 +1094,11 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		}
 	}
 
+	/**
+	 * Creates a new LongList that holds only the given item, but can be resized.
+	 * @param item a long item
+	 * @return a new LongList that holds the given item
+	 */
 	public static LongList with (long item) {
 		LongList list = new LongList(1);
 		list.add(item);
@@ -1101,9 +1106,146 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
-	 * @see #LongList(long[])
+	 * Creates a new LongList that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @return a new LongList that holds the given items
 	 */
-	public static LongList with (long... array) {
-		return new LongList(array);
+	public static LongList with (long item0, long item1) {
+		LongList list = new LongList(2);
+		list.add(item0);
+		list.add(item1);
+		return list;
+	}
+
+	/**
+	 * Creates a new LongList that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @return a new LongList that holds the given items
+	 */
+	public static LongList with (long item0, long item1, long item2) {
+		LongList list = new LongList(3);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		return list;
+	}
+
+	/**
+	 * Creates a new LongList that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @return a new LongList that holds the given items
+	 */
+	public static LongList with (long item0, long item1, long item2, long item3) {
+		LongList list = new LongList(4);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		return list;
+	}
+
+	/**
+	 * Creates a new LongList that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @return a new LongList that holds the given items
+	 */
+	public static LongList with (long item0, long item1, long item2, long item3, long item4) {
+		LongList list = new LongList(5);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		return list;
+	}
+
+	/**
+	 * Creates a new LongList that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @return a new LongList that holds the given items
+	 */
+	public static LongList with (long item0, long item1, long item2, long item3, long item4, long item5) {
+		LongList list = new LongList(6);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		return list;
+	}
+
+	/**
+	 * Creates a new LongList that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @param item6 a long item
+	 * @return a new LongList that holds the given items
+	 */
+	public static LongList with (long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
+		LongList list = new LongList(7);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		return list;
+	}
+
+	/**
+	 * Creates a new LongList that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @param item6 a long item
+	 * @return a new LongList that holds the given items
+	 */
+	public static LongList with (long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
+		LongList list = new LongList(8);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		list.add(item7);
+		return list;
+	}
+
+	/**
+	 * Creates a new LongList that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a long varargs or long array; remember that varargs allocate
+	 * @return a new LongList that holds the given items
+	 */
+	public static LongList with (long... varargs) {
+		return new LongList(varargs);
 	}
 }

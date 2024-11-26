@@ -1382,13 +1382,158 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 		}
 	}
 
+	/**
+	 * Creates a new LongDeque that holds only the given item, but can be resized.
+	 * @param item a long item
+	 * @return a new LongDeque that holds the given item
+	 */
 	public static LongDeque with (long item) {
-		LongDeque deque = new LongDeque();
+		LongDeque deque = new LongDeque(1);
 		deque.add(item);
 		return deque;
 	}
 
-	public static LongDeque with (long... items) {
-		return new LongDeque(items);
+	/**
+	 * Creates a new LongDeque that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @return a new LongDeque that holds the given items
+	 */
+	public static LongDeque with (long item0, long item1) {
+		LongDeque deque = new LongDeque(2);
+		deque.add(item0);
+		deque.add(item1);
+		return deque;
+	}
+
+	/**
+	 * Creates a new LongDeque that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @return a new LongDeque that holds the given items
+	 */
+	public static LongDeque with (long item0, long item1, long item2) {
+		LongDeque deque = new LongDeque(3);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		return deque;
+	}
+
+	/**
+	 * Creates a new LongDeque that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @return a new LongDeque that holds the given items
+	 */
+	public static LongDeque with (long item0, long item1, long item2, long item3) {
+		LongDeque deque = new LongDeque(4);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		return deque;
+	}
+
+	/**
+	 * Creates a new LongDeque that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @return a new LongDeque that holds the given items
+	 */
+	public static LongDeque with (long item0, long item1, long item2, long item3, long item4) {
+		LongDeque deque = new LongDeque(5);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		return deque;
+	}
+
+	/**
+	 * Creates a new LongDeque that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @return a new LongDeque that holds the given items
+	 */
+	public static LongDeque with (long item0, long item1, long item2, long item3, long item4, long item5) {
+		LongDeque deque = new LongDeque(6);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		return deque;
+	}
+
+	/**
+	 * Creates a new LongDeque that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @param item6 a long item
+	 * @return a new LongDeque that holds the given items
+	 */
+	public static LongDeque with (long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
+		LongDeque deque = new LongDeque(7);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		return deque;
+	}
+
+	/**
+	 * Creates a new LongDeque that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @param item6 a long item
+	 * @return a new LongDeque that holds the given items
+	 */
+	public static LongDeque with (long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
+		LongDeque deque = new LongDeque(8);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		deque.add(item7);
+		return deque;
+	}
+
+	/**
+	 * Creates a new LongDeque that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a long varargs or long array; remember that varargs allocate
+	 * @return a new LongDeque that holds the given items
+	 */
+	public static LongDeque with (long... varargs) {
+		return new LongDeque(varargs);
 	}
 }

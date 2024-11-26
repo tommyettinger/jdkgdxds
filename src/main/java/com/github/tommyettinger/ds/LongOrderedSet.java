@@ -401,13 +401,158 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		}
 	}
 
+	/**
+	 * Creates a new LongOrderedSet that holds only the given item, but can be resized.
+	 * @param item a long item
+	 * @return a new LongOrderedSet that holds the given item
+	 */
 	public static LongOrderedSet with (long item) {
 		LongOrderedSet set = new LongOrderedSet(1);
 		set.add(item);
 		return set;
 	}
 
-	public static LongOrderedSet with (long... array) {
-		return new LongOrderedSet(array);
+	/**
+	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @return a new LongOrderedSet that holds the given items
+	 */
+	public static LongOrderedSet with (long item0, long item1) {
+		LongOrderedSet set = new LongOrderedSet(2);
+		set.add(item0);
+		set.add(item1);
+		return set;
+	}
+
+	/**
+	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @return a new LongOrderedSet that holds the given items
+	 */
+	public static LongOrderedSet with (long item0, long item1, long item2) {
+		LongOrderedSet set = new LongOrderedSet(3);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @return a new LongOrderedSet that holds the given items
+	 */
+	public static LongOrderedSet with (long item0, long item1, long item2, long item3) {
+		LongOrderedSet set = new LongOrderedSet(4);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @return a new LongOrderedSet that holds the given items
+	 */
+	public static LongOrderedSet with (long item0, long item1, long item2, long item3, long item4) {
+		LongOrderedSet set = new LongOrderedSet(5);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @return a new LongOrderedSet that holds the given items
+	 */
+	public static LongOrderedSet with (long item0, long item1, long item2, long item3, long item4, long item5) {
+		LongOrderedSet set = new LongOrderedSet(6);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @param item6 a long item
+	 * @return a new LongOrderedSet that holds the given items
+	 */
+	public static LongOrderedSet with (long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
+		LongOrderedSet set = new LongOrderedSet(7);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		set.add(item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @param item6 a long item
+	 * @return a new LongOrderedSet that holds the given items
+	 */
+	public static LongOrderedSet with (long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
+		LongOrderedSet set = new LongOrderedSet(8);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		set.add(item6);
+		set.add(item7);
+		return set;
+	}
+
+	/**
+	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a long varargs or long array; remember that varargs allocate
+	 * @return a new LongOrderedSet that holds the given items
+	 */
+	public static LongOrderedSet with (long... varargs) {
+		return new LongOrderedSet(varargs);
 	}
 }

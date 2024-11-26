@@ -189,17 +189,158 @@ public class LongBag extends LongList {
 		return (int)(h ^ h >>> 32);
 	}
 
+	/**
+	 * Creates a new LongBag that holds only the given item, but can be resized.
+	 * @param item a long item
+	 * @return a new LongBag that holds the given item
+	 */
 	public static LongBag with (long item) {
-		LongBag list = new LongBag(1);
-		list.add(item);
-		return list;
+		LongBag bag = new LongBag(1);
+		bag.add(item);
+		return bag;
 	}
 
 	/**
-	 * @see #LongBag(long[])
+	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @return a new LongBag that holds the given items
 	 */
-	public static LongBag with (long... array) {
-		return new LongBag(array);
+	public static LongBag with (long item0, long item1) {
+		LongBag bag = new LongBag(2);
+		bag.add(item0);
+		bag.add(item1);
+		return bag;
 	}
 
+	/**
+	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @return a new LongBag that holds the given items
+	 */
+	public static LongBag with (long item0, long item1, long item2) {
+		LongBag bag = new LongBag(3);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		return bag;
+	}
+
+	/**
+	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @return a new LongBag that holds the given items
+	 */
+	public static LongBag with (long item0, long item1, long item2, long item3) {
+		LongBag bag = new LongBag(4);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		return bag;
+	}
+
+	/**
+	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @return a new LongBag that holds the given items
+	 */
+	public static LongBag with (long item0, long item1, long item2, long item3, long item4) {
+		LongBag bag = new LongBag(5);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		return bag;
+	}
+
+	/**
+	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @return a new LongBag that holds the given items
+	 */
+	public static LongBag with (long item0, long item1, long item2, long item3, long item4, long item5) {
+		LongBag bag = new LongBag(6);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		return bag;
+	}
+
+	/**
+	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @param item6 a long item
+	 * @return a new LongBag that holds the given items
+	 */
+	public static LongBag with (long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
+		LongBag bag = new LongBag(7);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		bag.add(item6);
+		return bag;
+	}
+
+	/**
+	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 * @param item0 a long item
+	 * @param item1 a long item
+	 * @param item2 a long item
+	 * @param item3 a long item
+	 * @param item4 a long item
+	 * @param item5 a long item
+	 * @param item6 a long item
+	 * @return a new LongBag that holds the given items
+	 */
+	public static LongBag with (long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
+		LongBag bag = new LongBag(8);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		bag.add(item6);
+		bag.add(item7);
+		return bag;
+	}
+
+	/**
+	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a long varargs or long array; remember that varargs allocate
+	 * @return a new LongBag that holds the given items
+	 */
+	public static LongBag with (long... varargs) {
+		return new LongBag(varargs);
+	}
 }
