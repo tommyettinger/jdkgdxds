@@ -649,6 +649,17 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	}
 
 	/**
+	 * Constructs an empty set.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new set containing nothing
+	 */
+	public static IntSet with () {
+		return new IntSet(0);
+	}
+
+	/**
 	 * Creates a new IntSet that holds only the given item, but can be resized.
 	 * @param item an int item
 	 * @return a new IntSet that holds the given item

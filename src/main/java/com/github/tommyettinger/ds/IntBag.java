@@ -190,6 +190,17 @@ public class IntBag extends IntList {
 	}
 
 	/**
+	 * Constructs an empty bag.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new bag containing nothing
+	 */
+	public static IntBag with () {
+		return new IntBag(0);
+	}
+
+	/**
 	 * Creates a new IntBag that holds only the given item, but can be resized.
 	 * @param item an int item
 	 * @return a new IntBag that holds the given item

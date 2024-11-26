@@ -891,6 +891,18 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
 	/**
+	 * Constructs an empty set given the type as a generic type argument.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <T>    the type of items; must be given explicitly
+	 * @return a new set containing nothing
+	 */
+	public static <T> ObjectSet<T> with () {
+		return new ObjectSet<>(0);
+	}
+
+	/**
 	 * Creates a new ObjectSet that holds only the given item, but can be resized.
 	 * @param item one T item
 	 * @return a new ObjectSet that holds the given item

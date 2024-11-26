@@ -691,10 +691,22 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	}
 
 	/**
+	 * Constructs an empty set.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new set containing nothing
+	 */
+	public static LongSet with () {
+		return new LongSet(0);
+	}
+
+	/**
 	 * Creates a new LongSet that holds only the given item, but can be resized.
 	 * @param item a long item
 	 * @return a new LongSet that holds the given item
 	 */
+
 	public static LongSet with (long item) {
 		LongSet set = new LongSet(1);
 		set.add(item);

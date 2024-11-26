@@ -1095,6 +1095,17 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
+	 * Constructs an empty list.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new list containing nothing
+	 */
+	public static LongList with () {
+		return new LongList(0);
+	}
+
+	/**
 	 * Creates a new LongList that holds only the given item, but can be resized.
 	 * @param item a long item
 	 * @return a new LongList that holds the given item

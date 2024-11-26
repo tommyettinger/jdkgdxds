@@ -1973,6 +1973,18 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	}
 
 	/**
+	 * Constructs an empty deque given the type as a generic type argument.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <T>    the type of items; must be given explicitly
+	 * @return a new deque containing nothing
+	 */
+	public static <T> ObjectDeque<T> with () {
+		return new ObjectDeque<>(0);
+	}
+
+	/**
 	 * Creates a new ObjectDeque that holds only the given item, but can be resized.
 	 * @param item one T item
 	 * @return a new ObjectDeque that holds the given item

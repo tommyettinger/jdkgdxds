@@ -172,6 +172,18 @@ public class ObjectBag<T> extends ObjectList<T> {
 	}
 
 	/**
+	 * Constructs an empty bag given the type as a generic type argument.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <T>    the type of items; must be given explicitly
+	 * @return a new bag containing nothing
+	 */
+	public static <T> ObjectBag<T> with () {
+		return new ObjectBag<>(0);
+	}
+
+	/**
 	 * Creates a new ObjectBag that holds only the given item, but can be resized.
 	 * @param item one T item
 	 * @return a new ObjectBag that holds the given item

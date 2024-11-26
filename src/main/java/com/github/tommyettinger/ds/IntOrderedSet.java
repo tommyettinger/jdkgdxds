@@ -390,6 +390,16 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 		}
 	}
 
+	/**
+	 * Constructs an empty set.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new set containing nothing
+	 */
+	public static IntOrderedSet with () {
+		return new IntOrderedSet(0);
+	}
 
 	/**
 	 * Creates a new IntOrderedSet that holds only the given item, but can be resized.

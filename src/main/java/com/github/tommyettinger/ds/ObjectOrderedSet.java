@@ -417,6 +417,18 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	/**
+	 * Constructs an empty set given the type as a generic type argument.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <T>    the type of items; must be given explicitly
+	 * @return a new set containing nothing
+	 */
+	public static <T> ObjectOrderedSet<T> with () {
+		return new ObjectOrderedSet<>(0);
+	}
+
+	/**
 	 * Creates a new ObjectOrderedSet that holds only the given item, but can be resized.
 	 * @param item one T item
 	 * @return a new ObjectOrderedSet that holds the given item

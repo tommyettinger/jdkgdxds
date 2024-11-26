@@ -190,6 +190,17 @@ public class LongBag extends LongList {
 	}
 
 	/**
+	 * Constructs an empty bag.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new bag containing nothing
+	 */
+	public static LongBag with () {
+		return new LongBag(0);
+	}
+
+	/**
 	 * Creates a new LongBag that holds only the given item, but can be resized.
 	 * @param item a long item
 	 * @return a new LongBag that holds the given item

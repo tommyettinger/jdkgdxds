@@ -1383,6 +1383,17 @@ public class LongDeque implements PrimitiveCollection.OfLong, Arrangeable {
 	}
 
 	/**
+	 * Constructs an empty deque.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new deque containing nothing
+	 */
+	public static LongDeque with () {
+		return new LongDeque(0);
+	}
+
+	/**
 	 * Creates a new LongDeque that holds only the given item, but can be resized.
 	 * @param item a long item
 	 * @return a new LongDeque that holds the given item

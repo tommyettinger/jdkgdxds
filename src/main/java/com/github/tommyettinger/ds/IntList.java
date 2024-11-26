@@ -1095,6 +1095,17 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
+	 * Constructs an empty list.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new list containing nothing
+	 */
+	public static IntList with () {
+		return new IntList(0);
+	}
+
+	/**
 	 * Creates a new IntList that holds only the given item, but can be resized.
 	 * @param item an int item
 	 * @return a new IntList that holds the given item

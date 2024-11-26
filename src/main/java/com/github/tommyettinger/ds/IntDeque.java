@@ -1383,6 +1383,17 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 	}
 
 	/**
+	 * Constructs an empty deque.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new deque containing nothing
+	 */
+	public static IntDeque with () {
+		return new IntDeque(0);
+	}
+
+	/**
 	 * Creates a new IntDeque that holds only the given item, but can be resized.
 	 * @param item an int item
 	 * @return a new IntDeque that holds the given item
