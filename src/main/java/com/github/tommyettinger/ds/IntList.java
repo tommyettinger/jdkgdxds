@@ -1094,6 +1094,11 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		}
 	}
 
+	/**
+	 * Creates a new IntList that holds only the given item, but can be resized.
+	 * @param item an int item
+	 * @return a new IntList that holds the given item
+	 */
 	public static IntList with (int item) {
 		IntList list = new IntList(1);
 		list.add(item);
@@ -1101,9 +1106,146 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * @see #IntList(int[])
+	 * Creates a new IntList that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @return a new IntList that holds the given items
 	 */
-	public static IntList with (int... array) {
-		return new IntList(array);
+	public static IntList with (int item0, int item1) {
+		IntList list = new IntList(2);
+		list.add(item0);
+		list.add(item1);
+		return list;
+	}
+
+	/**
+	 * Creates a new IntList that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @return a new IntList that holds the given items
+	 */
+	public static IntList with (int item0, int item1, int item2) {
+		IntList list = new IntList(3);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		return list;
+	}
+
+	/**
+	 * Creates a new IntList that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @return a new IntList that holds the given items
+	 */
+	public static IntList with (int item0, int item1, int item2, int item3) {
+		IntList list = new IntList(4);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		return list;
+	}
+
+	/**
+	 * Creates a new IntList that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @return a new IntList that holds the given items
+	 */
+	public static IntList with (int item0, int item1, int item2, int item3, int item4) {
+		IntList list = new IntList(5);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		return list;
+	}
+
+	/**
+	 * Creates a new IntList that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @return a new IntList that holds the given items
+	 */
+	public static IntList with (int item0, int item1, int item2, int item3, int item4, int item5) {
+		IntList list = new IntList(6);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		return list;
+	}
+
+	/**
+	 * Creates a new IntList that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @param item6 an int item
+	 * @return a new IntList that holds the given items
+	 */
+	public static IntList with (int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
+		IntList list = new IntList(7);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		return list;
+	}
+
+	/**
+	 * Creates a new IntList that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @param item6 an int item
+	 * @return a new IntList that holds the given items
+	 */
+	public static IntList with (int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
+		IntList list = new IntList(8);
+		list.add(item0);
+		list.add(item1);
+		list.add(item2);
+		list.add(item3);
+		list.add(item4);
+		list.add(item5);
+		list.add(item6);
+		list.add(item7);
+		return list;
+	}
+
+	/**
+	 * Creates a new IntList that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs an int varargs or int array; remember that varargs allocate
+	 * @return a new IntList that holds the given items
+	 */
+	public static IntList with (int... varargs) {
+		return new IntList(varargs);
 	}
 }

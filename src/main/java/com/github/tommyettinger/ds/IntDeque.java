@@ -1382,14 +1382,158 @@ public class IntDeque implements PrimitiveCollection.OfInt, Arrangeable {
 		}
 	}
 
+	/**
+	 * Creates a new IntDeque that holds only the given item, but can be resized.
+	 * @param item an int item
+	 * @return a new IntDeque that holds the given item
+	 */
 	public static IntDeque with (int item) {
-		IntDeque deque = new IntDeque();
+		IntDeque deque = new IntDeque(1);
 		deque.add(item);
 		return deque;
 	}
 
-	public static IntDeque with (int... items) {
-		return new IntDeque(items);
+	/**
+	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @return a new IntDeque that holds the given items
+	 */
+	public static IntDeque with (int item0, int item1) {
+		IntDeque deque = new IntDeque(2);
+		deque.add(item0);
+		deque.add(item1);
+		return deque;
 	}
 
+	/**
+	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @return a new IntDeque that holds the given items
+	 */
+	public static IntDeque with (int item0, int item1, int item2) {
+		IntDeque deque = new IntDeque(3);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		return deque;
+	}
+
+	/**
+	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @return a new IntDeque that holds the given items
+	 */
+	public static IntDeque with (int item0, int item1, int item2, int item3) {
+		IntDeque deque = new IntDeque(4);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		return deque;
+	}
+
+	/**
+	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @return a new IntDeque that holds the given items
+	 */
+	public static IntDeque with (int item0, int item1, int item2, int item3, int item4) {
+		IntDeque deque = new IntDeque(5);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		return deque;
+	}
+
+	/**
+	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @return a new IntDeque that holds the given items
+	 */
+	public static IntDeque with (int item0, int item1, int item2, int item3, int item4, int item5) {
+		IntDeque deque = new IntDeque(6);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		return deque;
+	}
+
+	/**
+	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @param item6 an int item
+	 * @return a new IntDeque that holds the given items
+	 */
+	public static IntDeque with (int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
+		IntDeque deque = new IntDeque(7);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		return deque;
+	}
+
+	/**
+	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @param item6 an int item
+	 * @return a new IntDeque that holds the given items
+	 */
+	public static IntDeque with (int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
+		IntDeque deque = new IntDeque(8);
+		deque.add(item0);
+		deque.add(item1);
+		deque.add(item2);
+		deque.add(item3);
+		deque.add(item4);
+		deque.add(item5);
+		deque.add(item6);
+		deque.add(item7);
+		return deque;
+	}
+
+	/**
+	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs an int varargs or int array; remember that varargs allocate
+	 * @return a new IntDeque that holds the given items
+	 */
+	public static IntDeque with (int... varargs) {
+		return new IntDeque(varargs);
+	}
 }

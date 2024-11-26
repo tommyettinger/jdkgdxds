@@ -648,10 +648,9 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		}
 	}
 
-
 	/**
 	 * Creates a new IntSet that holds only the given item, but can be resized.
-	 * @param item one T item
+	 * @param item an int item
 	 * @return a new IntSet that holds the given item
 	 */
 	public static IntSet with (int item) {

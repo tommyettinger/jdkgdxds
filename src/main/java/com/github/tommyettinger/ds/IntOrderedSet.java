@@ -390,13 +390,159 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 		}
 	}
 
+
+	/**
+	 * Creates a new IntOrderedSet that holds only the given item, but can be resized.
+	 * @param item an int item
+	 * @return a new IntOrderedSet that holds the given item
+	 */
 	public static IntOrderedSet with (int item) {
 		IntOrderedSet set = new IntOrderedSet(1);
 		set.add(item);
 		return set;
 	}
 
-	public static IntOrderedSet with (int... array) {
-		return new IntOrderedSet(array);
+	/**
+	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @return a new IntOrderedSet that holds the given items
+	 */
+	public static IntOrderedSet with (int item0, int item1) {
+		IntOrderedSet set = new IntOrderedSet(2);
+		set.add(item0);
+		set.add(item1);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @return a new IntOrderedSet that holds the given items
+	 */
+	public static IntOrderedSet with (int item0, int item1, int item2) {
+		IntOrderedSet set = new IntOrderedSet(3);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @return a new IntOrderedSet that holds the given items
+	 */
+	public static IntOrderedSet with (int item0, int item1, int item2, int item3) {
+		IntOrderedSet set = new IntOrderedSet(4);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @return a new IntOrderedSet that holds the given items
+	 */
+	public static IntOrderedSet with (int item0, int item1, int item2, int item3, int item4) {
+		IntOrderedSet set = new IntOrderedSet(5);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @return a new IntOrderedSet that holds the given items
+	 */
+	public static IntOrderedSet with (int item0, int item1, int item2, int item3, int item4, int item5) {
+		IntOrderedSet set = new IntOrderedSet(6);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @param item6 an int item
+	 * @return a new IntOrderedSet that holds the given items
+	 */
+	public static IntOrderedSet with (int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
+		IntOrderedSet set = new IntOrderedSet(7);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		set.add(item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @param item6 an int item
+	 * @return a new IntOrderedSet that holds the given items
+	 */
+	public static IntOrderedSet with (int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
+		IntOrderedSet set = new IntOrderedSet(8);
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		set.add(item6);
+		set.add(item7);
+		return set;
+	}
+
+	/**
+	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs an int varargs or int array; remember that varargs allocate
+	 * @return a new IntOrderedSet that holds the given items
+	 */
+	public static IntOrderedSet with (int... varargs) {
+		return new IntOrderedSet(varargs);
 	}
 }

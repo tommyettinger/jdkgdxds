@@ -189,17 +189,158 @@ public class IntBag extends IntList {
 		return h;
 	}
 
+	/**
+	 * Creates a new IntBag that holds only the given item, but can be resized.
+	 * @param item an int item
+	 * @return a new IntBag that holds the given item
+	 */
 	public static IntBag with (int item) {
-		IntBag list = new IntBag(1);
-		list.add(item);
-		return list;
+		IntBag bag = new IntBag(1);
+		bag.add(item);
+		return bag;
 	}
 
 	/**
-	 * @see #IntBag(int[])
+	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @return a new IntBag that holds the given items
 	 */
-	public static IntBag with (int... array) {
-		return new IntBag(array);
+	public static IntBag with (int item0, int item1) {
+		IntBag bag = new IntBag(2);
+		bag.add(item0);
+		bag.add(item1);
+		return bag;
 	}
 
+	/**
+	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @return a new IntBag that holds the given items
+	 */
+	public static IntBag with (int item0, int item1, int item2) {
+		IntBag bag = new IntBag(3);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		return bag;
+	}
+
+	/**
+	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @return a new IntBag that holds the given items
+	 */
+	public static IntBag with (int item0, int item1, int item2, int item3) {
+		IntBag bag = new IntBag(4);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		return bag;
+	}
+
+	/**
+	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @return a new IntBag that holds the given items
+	 */
+	public static IntBag with (int item0, int item1, int item2, int item3, int item4) {
+		IntBag bag = new IntBag(5);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		return bag;
+	}
+
+	/**
+	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @return a new IntBag that holds the given items
+	 */
+	public static IntBag with (int item0, int item1, int item2, int item3, int item4, int item5) {
+		IntBag bag = new IntBag(6);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		return bag;
+	}
+
+	/**
+	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @param item6 an int item
+	 * @return a new IntBag that holds the given items
+	 */
+	public static IntBag with (int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
+		IntBag bag = new IntBag(7);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		bag.add(item6);
+		return bag;
+	}
+
+	/**
+	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 * @param item0 an int item
+	 * @param item1 an int item
+	 * @param item2 an int item
+	 * @param item3 an int item
+	 * @param item4 an int item
+	 * @param item5 an int item
+	 * @param item6 an int item
+	 * @return a new IntBag that holds the given items
+	 */
+	public static IntBag with (int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
+		IntBag bag = new IntBag(8);
+		bag.add(item0);
+		bag.add(item1);
+		bag.add(item2);
+		bag.add(item3);
+		bag.add(item4);
+		bag.add(item5);
+		bag.add(item6);
+		bag.add(item7);
+		return bag;
+	}
+
+	/**
+	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs an int varargs or int array; remember that varargs allocate
+	 * @return a new IntBag that holds the given items
+	 */
+	public static IntBag with (int... varargs) {
+		return new IntBag(varargs);
+	}
 }
