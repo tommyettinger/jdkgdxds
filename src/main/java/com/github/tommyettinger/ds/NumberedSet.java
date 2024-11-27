@@ -1131,16 +1131,158 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 			return this;
 		}
 	}
-	
+
+
+	/**
+	 * Constructs an empty set given the type as a generic type argument.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <T>    the type of items; must be given explicitly
+	 * @return a new set containing nothing
+	 */
+	public static <T> NumberedSet<T> with () {
+		return new NumberedSet<>(0);
+	}
+
+	/**
+	 * Creates a new NumberedSet that holds only the given item, but can be resized.
+	 * @param item one T item
+	 * @return a new NumberedSet that holds the given item
+	 * @param <T> the type of item, typically inferred
+	 */
 	public static <T> NumberedSet<T> with (T item) {
 		NumberedSet<T> set = new NumberedSet<>(1);
 		set.add(item);
 		return set;
 	}
 
-	@SafeVarargs
-	public static <T> NumberedSet<T> with (T... array) {
-		return new NumberedSet<>(array);
+	/**
+	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @return a new NumberedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> NumberedSet<T> with (T item0, T item1) {
+		NumberedSet<T> set = new NumberedSet<>(2);
+		set.add(item0, item1);
+		return set;
 	}
 
+	/**
+	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @return a new NumberedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> NumberedSet<T> with (T item0, T item1, T item2) {
+		NumberedSet<T> set = new NumberedSet<>(3);
+		set.add(item0, item1, item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @return a new NumberedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> NumberedSet<T> with (T item0, T item1, T item2, T item3) {
+		NumberedSet<T> set = new NumberedSet<>(4);
+		set.add(item0, item1, item2, item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @return a new NumberedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> NumberedSet<T> with (T item0, T item1, T item2, T item3, T item4) {
+		NumberedSet<T> set = new NumberedSet<>(5);
+		set.add(item0, item1, item2, item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @return a new NumberedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> NumberedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+		NumberedSet<T> set = new NumberedSet<>(6);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new NumberedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> NumberedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+		NumberedSet<T> set = new NumberedSet<>(7);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return a new NumberedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	public static <T> NumberedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+		NumberedSet<T> set = new NumberedSet<>(8);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6, item7);
+		return set;
+	}
+
+	/**
+	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied and the type of the
+	 * items requested is the component type of the array, or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a T varargs or T array; remember that varargs allocate
+	 * @return a new NumberedSet that holds the given items
+	 * @param <T> the type of item, typically inferred
+	 */
+	@SafeVarargs
+	public static <T> NumberedSet<T> with (T... varargs) {
+		return new NumberedSet<>(varargs);
+	}
 }

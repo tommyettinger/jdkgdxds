@@ -150,14 +150,144 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 		return h;
 	}
 
+	/**
+	 * Constructs an empty set.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new set containing nothing
+	 */
+	public static CaseInsensitiveSet with () {
+		return new CaseInsensitiveSet(0);
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveSet that holds only the given item, but can be resized.
+	 * @param item one CharSequence item
+	 * @return a new CaseInsensitiveSet that holds the given item
+	 */
 	public static CaseInsensitiveSet with (CharSequence item) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(1);
 		set.add(item);
 		return set;
 	}
 
-	public static CaseInsensitiveSet with (CharSequence... array) {
-		return new CaseInsensitiveSet(array);
+	/**
+	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @return a new CaseInsensitiveSet that holds the given items
+	 */
+	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1) {
+		CaseInsensitiveSet set = new CaseInsensitiveSet(2);
+		set.add(item0, item1);
+		return set;
 	}
 
+	/**
+	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @return a new CaseInsensitiveSet that holds the given items
+	 */
+	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2) {
+		CaseInsensitiveSet set = new CaseInsensitiveSet(3);
+		set.add(item0, item1, item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @param item3 a CharSequence item
+	 * @return a new CaseInsensitiveSet that holds the given items
+	 */
+	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3) {
+		CaseInsensitiveSet set = new CaseInsensitiveSet(4);
+		set.add(item0, item1, item2, item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @param item3 a CharSequence item
+	 * @param item4 a CharSequence item
+	 * @return a new CaseInsensitiveSet that holds the given items
+	 */
+	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4) {
+		CaseInsensitiveSet set = new CaseInsensitiveSet(5);
+		set.add(item0, item1, item2, item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @param item3 a CharSequence item
+	 * @param item4 a CharSequence item
+	 * @param item5 a CharSequence item
+	 * @return a new CaseInsensitiveSet that holds the given items
+	 */
+	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5) {
+		CaseInsensitiveSet set = new CaseInsensitiveSet(6);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @param item3 a CharSequence item
+	 * @param item4 a CharSequence item
+	 * @param item5 a CharSequence item
+	 * @param item6 a CharSequence item
+	 * @return a new CaseInsensitiveSet that holds the given items
+	 */
+	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6) {
+		CaseInsensitiveSet set = new CaseInsensitiveSet(7);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @param item3 a CharSequence item
+	 * @param item4 a CharSequence item
+	 * @param item5 a CharSequence item
+	 * @param item6 a CharSequence item
+	 * @return a new CaseInsensitiveSet that holds the given items
+	 */
+	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6, CharSequence item7) {
+		CaseInsensitiveSet set = new CaseInsensitiveSet(8);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6, item7);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 * This overload will only be used when varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a CharSequence varargs or CharSequence array; remember that varargs allocate
+	 * @return a new CaseInsensitiveSet that holds the given items
+	 */
+	public static CaseInsensitiveSet with (CharSequence... varargs) {
+		return new CaseInsensitiveSet(varargs);
+	}
 }

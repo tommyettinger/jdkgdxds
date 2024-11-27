@@ -178,14 +178,144 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 		return h;
 	}
 
+	/**
+	 * Constructs an empty set.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new set containing nothing
+	 */
+	public static CaseInsensitiveOrderedSet with () {
+		return new CaseInsensitiveOrderedSet(0);
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveOrderedSet that holds only the given item, but can be resized.
+	 * @param item one CharSequence item
+	 * @return a new CaseInsensitiveOrderedSet that holds the given item
+	 */
 	public static CaseInsensitiveOrderedSet with (CharSequence item) {
 		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(1);
 		set.add(item);
 		return set;
 	}
 
-	public static CaseInsensitiveOrderedSet with (CharSequence... array) {
-		return new CaseInsensitiveOrderedSet(array);
+	/**
+	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @return a new CaseInsensitiveOrderedSet that holds the given items
+	 */
+	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1) {
+		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(2);
+		set.add(item0, item1);
+		return set;
 	}
 
+	/**
+	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @return a new CaseInsensitiveOrderedSet that holds the given items
+	 */
+	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2) {
+		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(3);
+		set.add(item0, item1, item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @param item3 a CharSequence item
+	 * @return a new CaseInsensitiveOrderedSet that holds the given items
+	 */
+	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3) {
+		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(4);
+		set.add(item0, item1, item2, item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @param item3 a CharSequence item
+	 * @param item4 a CharSequence item
+	 * @return a new CaseInsensitiveOrderedSet that holds the given items
+	 */
+	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4) {
+		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(5);
+		set.add(item0, item1, item2, item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @param item3 a CharSequence item
+	 * @param item4 a CharSequence item
+	 * @param item5 a CharSequence item
+	 * @return a new CaseInsensitiveOrderedSet that holds the given items
+	 */
+	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5) {
+		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(6);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @param item3 a CharSequence item
+	 * @param item4 a CharSequence item
+	 * @param item5 a CharSequence item
+	 * @param item6 a CharSequence item
+	 * @return a new CaseInsensitiveOrderedSet that holds the given items
+	 */
+	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6) {
+		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(7);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 a CharSequence item
+	 * @param item1 a CharSequence item
+	 * @param item2 a CharSequence item
+	 * @param item3 a CharSequence item
+	 * @param item4 a CharSequence item
+	 * @param item5 a CharSequence item
+	 * @param item6 a CharSequence item
+	 * @return a new CaseInsensitiveOrderedSet that holds the given items
+	 */
+	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6, CharSequence item7) {
+		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(8);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6, item7);
+		return set;
+	}
+
+	/**
+	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 * This overload will only be used when varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a CharSequence varargs or CharSequence array; remember that varargs allocate
+	 * @return a new CaseInsensitiveOrderedSet that holds the given items
+	 */
+	public static CaseInsensitiveOrderedSet with (CharSequence... varargs) {
+		return new CaseInsensitiveOrderedSet(varargs);
+	}
 }
