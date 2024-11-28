@@ -750,7 +750,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	}
 
 	/**
-	 * Constructs an empty map given the value type as a generic type argument.
+	 * Constructs an empty map given the key type as a generic type argument.
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
@@ -765,9 +765,9 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its Number key to a primitive long, regardless of which Number type was used.
+	 * convert its V value to a primitive float, regardless of which Number type was used.
 	 *
-	 * @param key0   the first and only key; will be converted to a primitive long
+	 * @param key0   the first and only key; will be converted to primitive long
 	 * @param value0 the first and only value
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
@@ -780,15 +780,84 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 
 	/**
 	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its V values to primitive floats, regardless of which Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a V value
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a V value
+	 * @param <V>    the type of values
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <V> LongObjectOrderedMap<V> with (Number key0, V value0, Number key1, V value1) {
+		LongObjectOrderedMap<V> map = new LongObjectOrderedMap<>(2);
+		map.put(key0.longValue(), value0);
+		map.put(key1.longValue(), value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its V values to primitive floats, regardless of which Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a V value
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a V value
+	 * @param key2   a Number key; will be converted to primitive long
+	 * @param value2 a V value
+	 * @param <V>    the type of values
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <V> LongObjectOrderedMap<V> with (Number key0, V value0, Number key1, V value1, Number key2, V value2) {
+		LongObjectOrderedMap<V> map = new LongObjectOrderedMap<>(3);
+		map.put(key0.longValue(), value0);
+		map.put(key1.longValue(), value1);
+		map.put(key2.longValue(), value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its V values to primitive floats, regardless of which Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a V value
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a V value
+	 * @param key2   a Number key; will be converted to primitive long
+	 * @param value2 a V value
+	 * @param key3   a Number key; will be converted to primitive long
+	 * @param value3 a V value
+	 * @param <V>    the type of values
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <V> LongObjectOrderedMap<V> with (Number key0, V value0, Number key1, V value1, Number key2, V value2, Number key3, V value3) {
+		LongObjectOrderedMap<V> map = new LongObjectOrderedMap<>(4);
+		map.put(key0.longValue(), value0);
+		map.put(key1.longValue(), value1);
+		map.put(key2.longValue(), value2);
+		map.put(key3.longValue(), value3);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
-	 * {@link #LongObjectOrderedMap(long[], Object[])}, which takes all keys and then all values.
-	 * This needs all keys to be some kind of (boxed) Number, and converts them to primitive
-	 * {@code long}s. It also needs all values to have the same type, because it gets those
-	 * types from the first key parameter and first value parameter. Any keys that aren't
-	 * {@code Number}s or values that don't have V as their type have that entry skipped.
+	 * {@link #LongObjectOrderedMap(long[], V[])}, which takes all keys and then all values.
+	 * This needs all keys to have the same type, because it gets a generic type from the
+	 * first key parameter. All keys must be some type of boxed Number, such as {@link Integer}
+	 * or {@link Double}, and will be converted to primitive {@code long}s. Any values that don't
+	 * have V as their type or keys that aren't {@code Number}s have that entry skipped.
 	 *
-	 * @param key0   the first key; will be converted to a primitive long
+	 * @param key0   the first key; will be converted to primitive long
 	 * @param value0 the first value; will be used to determine the type of all values
 	 * @param rest   an array or varargs of alternating Number, V, Number, V... elements
 	 * @param <V>    the type of values, inferred from value0
@@ -804,6 +873,104 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 			} catch (ClassCastException ignored) {
 			}
 		}
+		return map;
+	}
+
+	/**
+	 * Constructs an empty map given the key type as a generic type argument.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <V>    the type of values
+	 * @return a new map containing nothing
+	 */
+	public static <V> LongObjectOrderedMap<V> withPrimitive () {
+		return new LongObjectOrderedMap<>(0);
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed long as
+	 * its key type, and will not box it.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a V value
+	 * @param <V>    the type of value0
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static <V> LongObjectOrderedMap<V> withPrimitive (long key0, V value0) {
+		LongObjectOrderedMap<V> map = new LongObjectOrderedMap<>(1);
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed long as
+	 * its key type, and will not box it.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a V value
+	 * @param key1   a long key
+	 * @param value1 a V value
+	 * @param <V>    the type of values
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <V> LongObjectOrderedMap<V> withPrimitive (long key0, V value0, long key1, V value1) {
+		LongObjectOrderedMap<V> map = new LongObjectOrderedMap<>(2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed long as
+	 * its key type, and will not box it.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a V value
+	 * @param key1   a long key
+	 * @param value1 a V value
+	 * @param key2   a long key
+	 * @param value2 a V value
+	 * @param <V>    the type of values
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <V> LongObjectOrderedMap<V> withPrimitive (long key0, V value0, long key1, V value1, long key2, V value2) {
+		LongObjectOrderedMap<V> map = new LongObjectOrderedMap<>(3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed long as
+	 * its key type, and will not box it.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a V value
+	 * @param key1   a long key
+	 * @param value1 a V value
+	 * @param key2   a long key
+	 * @param value2 a V value
+	 * @param key3   a long key
+	 * @param value3 a V value
+	 * @param <V>    the type of values
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <V> LongObjectOrderedMap<V> withPrimitive (long key0, V value0, long key1, V value1, long key2, V value2, long key3, V value3) {
+		LongObjectOrderedMap<V> map = new LongObjectOrderedMap<>(4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
 		return map;
 	}
 }
