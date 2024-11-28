@@ -786,15 +786,85 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its Number key to a primitive int, regardless of which Number type was used.
+	 * convert its Number keys and values to primitive int and float, regardless of which
+	 * Number type was used.
 	 *
-	 * @param key0   the first and only key; will be converted to a primitive int
-	 * @param value0 the first and only value; will be converted to a primitive float
+	 * @param key0   the first and only key; will be converted to primitive int
+	 * @param value0 the first and only value; will be converted to primitive float
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
 	public static IntFloatOrderedMap with (Number key0, Number value0) {
 		IntFloatOrderedMap map = new IntFloatOrderedMap(1);
 		map.put(key0.intValue(), value0.floatValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive int and float, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive int
+	 * @param value0 a Number for a value; will be converted to primitive float
+	 * @param key1   a Number key; will be converted to primitive int
+	 * @param value1 a Number for a value; will be converted to primitive float
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static IntFloatOrderedMap with (Number key0, Number value0, Number key1, Number value1) {
+		IntFloatOrderedMap map = new IntFloatOrderedMap(2);
+		map.put(key0.intValue(), value0.floatValue());
+		map.put(key1.intValue(), value1.floatValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive int and float, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive int
+	 * @param value0 a Number for a value; will be converted to primitive float
+	 * @param key1   a Number key; will be converted to primitive int
+	 * @param value1 a Number for a value; will be converted to primitive float
+	 * @param key2   a Number key; will be converted to primitive int
+	 * @param value2 a Number for a value; will be converted to primitive float
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static IntFloatOrderedMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
+		IntFloatOrderedMap map = new IntFloatOrderedMap(3);
+		map.put(key0.intValue(), value0.floatValue());
+		map.put(key1.intValue(), value1.floatValue());
+		map.put(key2.intValue(), value2.floatValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive int and float, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive int
+	 * @param value0 a Number for a value; will be converted to primitive float
+	 * @param key1   a Number key; will be converted to primitive int
+	 * @param value1 a Number for a value; will be converted to primitive float
+	 * @param key2   a Number key; will be converted to primitive int
+	 * @param value2 a Number for a value; will be converted to primitive float
+	 * @param key3   a Number key; will be converted to primitive int
+	 * @param value3 a Number for a value; will be converted to primitive float
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static IntFloatOrderedMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
+		IntFloatOrderedMap map = new IntFloatOrderedMap(4);
+		map.put(key0.intValue(), value0.floatValue());
+		map.put(key1.intValue(), value1.floatValue());
+		map.put(key2.intValue(), value2.floatValue());
+		map.put(key3.intValue(), value3.floatValue());
 		return map;
 	}
 
@@ -811,7 +881,7 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	 * @param key0   the first key; will be converted to a primitive int
 	 * @param value0 the first value; will be converted to a primitive float
 	 * @param rest   an array or varargs of Number elements
-	 * @return a new map containing the given keys and values
+	 * @return a new map containing the given key-value pairs
 	 */
 	public static IntFloatOrderedMap with (Number key0, Number value0, Number... rest) {
 		IntFloatOrderedMap map = new IntFloatOrderedMap(1 + (rest.length >>> 1));
@@ -819,6 +889,99 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 		for (int i = 1; i < rest.length; i += 2) {
 			map.put(rest[i - 1].intValue(), rest[i].floatValue());
 		}
+		return map;
+	}
+
+	/**
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new map containing nothing
+	 */
+	public static IntFloatOrderedMap withPrimitive () {
+		return new IntFloatOrderedMap(0);
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   the first and only key
+	 * @param value0 the first and only value
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static IntFloatOrderedMap withPrimitive (int key0, float value0) {
+		IntFloatOrderedMap map = new IntFloatOrderedMap(1);
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a int key
+	 * @param value0 a float value
+	 * @param key1   a int key
+	 * @param value1 a float value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static IntFloatOrderedMap withPrimitive (int key0, float value0, int key1, float value1) {
+		IntFloatOrderedMap map = new IntFloatOrderedMap(2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a int key
+	 * @param value0 a float value
+	 * @param key1   a int key
+	 * @param value1 a float value
+	 * @param key2   a int key
+	 * @param value2 a float value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static IntFloatOrderedMap withPrimitive (int key0, float value0, int key1, float value1, int key2, float value2) {
+		IntFloatOrderedMap map = new IntFloatOrderedMap(3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a int key
+	 * @param value0 a float value
+	 * @param key1   a int key
+	 * @param value1 a float value
+	 * @param key2   a int key
+	 * @param value2 a float value
+	 * @param key3   a int key
+	 * @param value3 a float value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static IntFloatOrderedMap withPrimitive (int key0, float value0, int key1, float value1, int key2, float value2, int key3, float value3) {
+		IntFloatOrderedMap map = new IntFloatOrderedMap(4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
 		return map;
 	}
 }
