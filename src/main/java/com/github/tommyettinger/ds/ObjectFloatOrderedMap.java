@@ -744,6 +744,75 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 
 	/**
 	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number values to primitive floats, regardless of which Number type was used.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a Number for a value; will be converted to primitive float
+	 * @param key1   a K key
+	 * @param value1 a Number for a value; will be converted to primitive float
+	 * @param <K>    the type of keys
+	 * @return a new map containing just the entry mapping keys to values
+	 */
+	public static <K> ObjectFloatOrderedMap<K> with (K key0, Number value0, K key1, Number value1) {
+		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(2);
+		map.put(key0, value0.floatValue());
+		map.put(key1, value1.floatValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number values to primitive floats, regardless of which Number type was used.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a Number for a value; will be converted to primitive float
+	 * @param key1   a K key
+	 * @param value1 a Number for a value; will be converted to primitive float
+	 * @param key2   a K key
+	 * @param value2 a Number for a value; will be converted to primitive float
+	 * @param <K>    the type of keys
+	 * @return a new map containing just the entry mapping keys to values
+	 */
+	public static <K> ObjectFloatOrderedMap<K> with (K key0, Number value0, K key1, Number value1, K key2, Number value2) {
+		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(3);
+		map.put(key0, value0.floatValue());
+		map.put(key1, value1.floatValue());
+		map.put(key2, value2.floatValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number values to primitive floats, regardless of which Number type was used.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a Number for a value; will be converted to primitive float
+	 * @param key1   a K key
+	 * @param value1 a Number for a value; will be converted to primitive float
+	 * @param key2   a K key
+	 * @param value2 a Number for a value; will be converted to primitive float
+	 * @param key3   a K key
+	 * @param value3 a Number for a value; will be converted to primitive float
+	 * @param <K>    the type of keys
+	 * @return a new map containing just the entry mapping keys to values
+	 */
+	public static <K> ObjectFloatOrderedMap<K> with (K key0, Number value0, K key1, Number value1, K key2, Number value2, K key3, Number value3) {
+		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(4);
+		map.put(key0, value0.floatValue());
+		map.put(key1, value1.floatValue());
+		map.put(key2, value2.floatValue());
+		map.put(key3, value3.floatValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
 	 * {@link #ObjectFloatOrderedMap(Object[], float[])}, which takes all keys and then all values.
