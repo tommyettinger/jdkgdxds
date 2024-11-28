@@ -472,12 +472,13 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Constructs an empty set given the type as a generic type argument.
+	 * Constructs an empty set given only an extractor function.
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param <T>    the type of items; must be given explicitly
+	 * @param <K> the type of keys that extractor pulls from T items
 	 * @return a new set containing nothing
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor) {
@@ -485,11 +486,12 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new ObjectSet that holds only the given item, but can be resized.
+	 * Creates a new HolderOrderedSet that holds only the given item, but can be resized.
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param item one T item
-	 * @return a new ObjectSet that holds the given item
+	 * @return a new HolderOrderedSet that holds the given item
 	 * @param <T> the type of item, typically inferred
+	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 1);
@@ -498,12 +500,13 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param item0 a T item
 	 * @param item1 a T item
-	 * @return a new ObjectSet that holds the given items
+	 * @return a new HolderOrderedSet that holds the given items
 	 * @param <T> the type of item, typically inferred
+	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 2);
@@ -512,13 +515,14 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
-	 * @return a new ObjectSet that holds the given items
+	 * @return a new HolderOrderedSet that holds the given items
 	 * @param <T> the type of item, typically inferred
+	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 3);
@@ -527,14 +531,15 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
-	 * @return a new ObjectSet that holds the given items
+	 * @return a new HolderOrderedSet that holds the given items
 	 * @param <T> the type of item, typically inferred
+	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 4);
@@ -543,15 +548,16 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
-	 * @return a new ObjectSet that holds the given items
+	 * @return a new HolderOrderedSet that holds the given items
 	 * @param <T> the type of item, typically inferred
+	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 5);
@@ -561,7 +567,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param item0 a T item
 	 * @param item1 a T item
@@ -569,8 +575,9 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param item3 a T item
 	 * @param item4 a T item
 	 * @param item5 a T item
-	 * @return a new ObjectSet that holds the given items
+	 * @return a new HolderOrderedSet that holds the given items
 	 * @param <T> the type of item, typically inferred
+	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4, T item5) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 6);
@@ -580,7 +587,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param item0 a T item
 	 * @param item1 a T item
@@ -589,8 +596,9 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
-	 * @return a new ObjectSet that holds the given items
+	 * @return a new HolderOrderedSet that holds the given items
 	 * @param <T> the type of item, typically inferred
+	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 7);
@@ -600,7 +608,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param item0 a T item
 	 * @param item1 a T item
@@ -609,8 +617,9 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
-	 * @return a new ObjectSet that holds the given items
+	 * @return a new HolderOrderedSet that holds the given items
 	 * @param <T> the type of item, typically inferred
+	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 8);
@@ -620,14 +629,15 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param varargs a T varargs or T array; remember that varargs allocate
-	 * @return a new ObjectSet that holds the given items
+	 * @return a new HolderOrderedSet that holds the given items
 	 * @param <T> the type of item, typically inferred
+	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	@SafeVarargs
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T... varargs) {

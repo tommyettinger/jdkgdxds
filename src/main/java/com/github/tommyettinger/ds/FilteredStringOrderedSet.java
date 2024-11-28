@@ -286,13 +286,154 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 		return h;
 	}
 
-	public static FilteredStringOrderedSet with (CharFilter filter, String item) {
+	/**
+	 * Constructs an empty set given a CharFilter.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @return a new set containing nothing
+	 */
+	public static FilteredStringOrderedSet with(CharFilter filter) {
+		return new FilteredStringOrderedSet(filter, 0);
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given item, but can be resized.
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param item one String item
+	 * @return a new FilteredStringOrderedSet that holds the given item
+	 */
+	public static FilteredStringOrderedSet with(CharFilter filter, String item) {
 		FilteredStringOrderedSet set = new FilteredStringOrderedSet(filter, 1);
 		set.add(item);
 		return set;
 	}
 
-	public static FilteredStringOrderedSet with (CharFilter filter, String... array) {
-		return new FilteredStringOrderedSet(filter, array);
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public static FilteredStringOrderedSet with(CharFilter filter, String item0, String item1) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(filter, 2);
+		set.add(item0, item1);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public static FilteredStringOrderedSet with(CharFilter filter, String item0, String item1, String item2) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(filter, 3);
+		set.add(item0, item1, item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public static FilteredStringOrderedSet with(CharFilter filter, String item0, String item1, String item2, String item3) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(filter, 4);
+		set.add(item0, item1, item2, item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public static FilteredStringOrderedSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(filter, 5);
+		set.add(item0, item1, item2, item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @param item5 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public static FilteredStringOrderedSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4, String item5) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(filter, 6);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @param item5 a String item
+	 * @param item6 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public static FilteredStringOrderedSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4, String item5, String item6) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(filter, 7);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @param item5 a String item
+	 * @param item6 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public static FilteredStringOrderedSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4, String item5, String item6, String item7) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(filter, 8);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6, item7);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * This overload will only be used when an array is supplied or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param varargs a String varargs or String array; remember that varargs allocate
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public static FilteredStringOrderedSet with(CharFilter filter, String... varargs) {
+		return new FilteredStringOrderedSet(filter, varargs);
 	}
 }

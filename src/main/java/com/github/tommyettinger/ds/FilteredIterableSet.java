@@ -301,10 +301,24 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	}
 
 	/**
+	 * Constructs a new FilteredIterableSet with the given filter and editor, without contents, and returns the set.
+	 *
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @return a new FilteredIterableSet containing nothing
+	 * @param <T> the type of sub-items
+	 * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
+	 */
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor) {
+		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor);
+		return set;
+	}
+
+	/**
 	 * Constructs a new FilteredIterableSet with the given filter and editor, inserts {@code item} into it, and returns the set.
 	 *
-	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param item   the one item to initially include in the set
 	 * @return a new FilteredIterableSet containing {@code item}
 	 * @param <T> the type of sub-items
@@ -317,11 +331,155 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	}
 
 	/**
+	 * Constructs a new FilteredIterableSet with the given filter and editor, inserts items into it, and returns the set.
+	 *
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param item0  an Iterable of T to initially include in the set
+	 * @param item1  an Iterable of T to initially include in the set
+	 * @return a new FilteredIterableSet containing the given items
+	 * @param <T> the type of sub-items
+	 * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
+	 */
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1) {
+		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 2);
+		set.add(item0, item1);
+		return set;
+	}
+
+	/**
+	 * Constructs a new FilteredIterableSet with the given filter and editor, inserts items into it, and returns the set.
+	 *
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param item0  an Iterable of T to initially include in the set
+	 * @param item1  an Iterable of T to initially include in the set
+	 * @param item2  an Iterable of T to initially include in the set
+	 * @return a new FilteredIterableSet containing the given items
+	 * @param <T> the type of sub-items
+	 * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
+	 */
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2) {
+		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 3);
+		set.add(item0, item1, item2);
+		return set;
+	}
+
+	/**
+	 * Constructs a new FilteredIterableSet with the given filter and editor, inserts items into it, and returns the set.
+	 *
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param item0  an Iterable of T to initially include in the set
+	 * @param item1  an Iterable of T to initially include in the set
+	 * @param item2  an Iterable of T to initially include in the set
+	 * @param item3  an Iterable of T to initially include in the set
+	 * @return a new FilteredIterableSet containing the given items
+	 * @param <T> the type of sub-items
+	 * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
+	 */
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3) {
+		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 4);
+		set.add(item0, item1, item2, item3);
+		return set;
+	}
+
+	/**
+	 * Constructs a new FilteredIterableSet with the given filter and editor, inserts items into it, and returns the set.
+	 *
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param item0  an Iterable of T to initially include in the set
+	 * @param item1  an Iterable of T to initially include in the set
+	 * @param item2  an Iterable of T to initially include in the set
+	 * @param item3  an Iterable of T to initially include in the set
+	 * @param item4  an Iterable of T to initially include in the set
+	 * @return a new FilteredIterableSet containing the given items
+	 * @param <T> the type of sub-items
+	 * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
+	 */
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4) {
+		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 5);
+		set.add(item0, item1, item2, item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Constructs a new FilteredIterableSet with the given filter and editor, inserts items into it, and returns the set.
+	 *
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param item0  an Iterable of T to initially include in the set
+	 * @param item1  an Iterable of T to initially include in the set
+	 * @param item2  an Iterable of T to initially include in the set
+	 * @param item3  an Iterable of T to initially include in the set
+	 * @param item4  an Iterable of T to initially include in the set
+	 * @param item5  an Iterable of T to initially include in the set
+	 * @return a new FilteredIterableSet containing the given items
+	 * @param <T> the type of sub-items
+	 * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
+	 */
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4, I item5) {
+		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 6);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5);
+		return set;
+	}
+
+	/**
+	 * Constructs a new FilteredIterableSet with the given filter and editor, inserts items into it, and returns the set.
+	 *
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param item0  an Iterable of T to initially include in the set
+	 * @param item1  an Iterable of T to initially include in the set
+	 * @param item2  an Iterable of T to initially include in the set
+	 * @param item3  an Iterable of T to initially include in the set
+	 * @param item4  an Iterable of T to initially include in the set
+	 * @param item5  an Iterable of T to initially include in the set
+	 * @param item6  an Iterable of T to initially include in the set
+	 * @return a new FilteredIterableSet containing the given items
+	 * @param <T> the type of sub-items
+	 * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
+	 */
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4, I item5, I item6) {
+		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 7);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6);
+		return set;
+	}
+
+	/**
+	 * Constructs a new FilteredIterableSet with the given filter and editor, inserts items into it, and returns the set.
+	 *
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param item0  an Iterable of T to initially include in the set
+	 * @param item1  an Iterable of T to initially include in the set
+	 * @param item2  an Iterable of T to initially include in the set
+	 * @param item3  an Iterable of T to initially include in the set
+	 * @param item4  an Iterable of T to initially include in the set
+	 * @param item5  an Iterable of T to initially include in the set
+	 * @param item6  an Iterable of T to initially include in the set
+	 * @param item7  an Iterable of T to initially include in the set
+	 * @return a new FilteredIterableSet containing the given items
+	 * @param <T> the type of sub-items
+	 * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
+	 */
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4, I item5, I item6, I item7) {
+		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 8);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6, item7);
+		return set;
+	}
+
+	/**
 	 * This is the same as {@link #FilteredIterableSet(ObjPredicate, ObjToSameFunction, Iterable[])}, but
 	 * can take the array argument as either an array or as varargs. It can be useful for code-generation scenarios.
 	 *
-	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param items  an array or varargs of {@code I} that will be used in the new set
 	 * @return a new FilteredIterableSet containing the entirety of items, as the filter and editor permit
 	 * @param <T> the type of sub-items
@@ -331,5 +489,4 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I... items) {
         return new FilteredIterableSet<>(filter, editor, items);
 	}
-
 }
