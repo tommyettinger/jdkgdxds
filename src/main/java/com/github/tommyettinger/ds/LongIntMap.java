@@ -1603,15 +1603,85 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its Number key to a primitive long, regardless of which Number type was used.
+	 * convert its Number keys and values to primitive long and int, regardless of which
+	 * Number type was used.
 	 *
-	 * @param key0   the first and only key; will be converted to a primitive long
-	 * @param value0 the first and only value; will be converted to a primitive int
+	 * @param key0   the first and only key; will be converted to primitive long
+	 * @param value0 the first and only value; will be converted to primitive int
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
 	public static LongIntMap with (Number key0, Number value0) {
 		LongIntMap map = new LongIntMap(1);
 		map.put(key0.longValue(), value0.intValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and int, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive int
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive int
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongIntMap with (Number key0, Number value0, Number key1, Number value1) {
+		LongIntMap map = new LongIntMap(2);
+		map.put(key0.longValue(), value0.intValue());
+		map.put(key1.longValue(), value1.intValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and int, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive int
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive int
+	 * @param key2   a Number key; will be converted to primitive long
+	 * @param value2 a Number for a value; will be converted to primitive int
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongIntMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
+		LongIntMap map = new LongIntMap(3);
+		map.put(key0.longValue(), value0.intValue());
+		map.put(key1.longValue(), value1.intValue());
+		map.put(key2.longValue(), value2.intValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and int, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive int
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive int
+	 * @param key2   a Number key; will be converted to primitive long
+	 * @param value2 a Number for a value; will be converted to primitive int
+	 * @param key3   a Number key; will be converted to primitive long
+	 * @param value3 a Number for a value; will be converted to primitive int
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongIntMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
+		LongIntMap map = new LongIntMap(4);
+		map.put(key0.longValue(), value0.intValue());
+		map.put(key1.longValue(), value1.intValue());
+		map.put(key2.longValue(), value2.intValue());
+		map.put(key3.longValue(), value3.intValue());
 		return map;
 	}
 
@@ -1628,7 +1698,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	 * @param key0   the first key; will be converted to a primitive long
 	 * @param value0 the first value; will be converted to a primitive int
 	 * @param rest   an array or varargs of Number elements
-	 * @return a new map containing the given keys and values
+	 * @return a new map containing the given key-value pairs
 	 */
 	public static LongIntMap with (Number key0, Number value0, Number... rest) {
 		LongIntMap map = new LongIntMap(1 + (rest.length >>> 1));
@@ -1636,6 +1706,88 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		for (int i = 1; i < rest.length; i += 2) {
 			map.put(rest[i - 1].longValue(), rest[i].intValue());
 		}
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   the first and only key
+	 * @param value0 the first and only value
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static LongIntMap withPrimitive (long key0, int value0) {
+		LongIntMap map = new LongIntMap(1);
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a long key
+	 * @param value0 an int value
+	 * @param key1   a long key
+	 * @param value1 an int value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongIntMap withPrimitive (long key0, int value0, long key1, int value1) {
+		LongIntMap map = new LongIntMap(2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a long key
+	 * @param value0 an int value
+	 * @param key1   a long key
+	 * @param value1 an int value
+	 * @param key2   a long key
+	 * @param value2 an int value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongIntMap withPrimitive (long key0, int value0, long key1, int value1, long key2, int value2) {
+		LongIntMap map = new LongIntMap(3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a long key
+	 * @param value0 an int value
+	 * @param key1   a long key
+	 * @param value1 an int value
+	 * @param key2   a long key
+	 * @param value2 an int value
+	 * @param key3   a long key
+	 * @param value3 an int value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongIntMap withPrimitive (long key0, int value0, long key1, int value1, long key2, int value2, long key3, int value3) {
+		LongIntMap map = new LongIntMap(4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
 		return map;
 	}
 }

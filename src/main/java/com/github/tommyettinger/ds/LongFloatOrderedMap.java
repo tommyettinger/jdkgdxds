@@ -781,15 +781,85 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its Number key to a primitive long, regardless of which Number type was used.
+	 * convert its Number keys and values to primitive long and float, regardless of which
+	 * Number type was used.
 	 *
-	 * @param key0   the first and only key; will be converted to a primitive long
-	 * @param value0 the first and only value; will be converted to a primitive float
+	 * @param key0   the first and only key; will be converted to primitive long
+	 * @param value0 the first and only value; will be converted to primitive float
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
 	public static LongFloatOrderedMap with (Number key0, Number value0) {
 		LongFloatOrderedMap map = new LongFloatOrderedMap(1);
 		map.put(key0.longValue(), value0.floatValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and float, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive float
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive float
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongFloatOrderedMap with (Number key0, Number value0, Number key1, Number value1) {
+		LongFloatOrderedMap map = new LongFloatOrderedMap(2);
+		map.put(key0.longValue(), value0.floatValue());
+		map.put(key1.longValue(), value1.floatValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and float, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive float
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive float
+	 * @param key2   a Number key; will be converted to primitive long
+	 * @param value2 a Number for a value; will be converted to primitive float
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongFloatOrderedMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
+		LongFloatOrderedMap map = new LongFloatOrderedMap(3);
+		map.put(key0.longValue(), value0.floatValue());
+		map.put(key1.longValue(), value1.floatValue());
+		map.put(key2.longValue(), value2.floatValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and float, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive float
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive float
+	 * @param key2   a Number key; will be converted to primitive long
+	 * @param value2 a Number for a value; will be converted to primitive float
+	 * @param key3   a Number key; will be converted to primitive long
+	 * @param value3 a Number for a value; will be converted to primitive float
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongFloatOrderedMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
+		LongFloatOrderedMap map = new LongFloatOrderedMap(4);
+		map.put(key0.longValue(), value0.floatValue());
+		map.put(key1.longValue(), value1.floatValue());
+		map.put(key2.longValue(), value2.floatValue());
+		map.put(key3.longValue(), value3.floatValue());
 		return map;
 	}
 
@@ -806,7 +876,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 	 * @param key0   the first key; will be converted to a primitive long
 	 * @param value0 the first value; will be converted to a primitive float
 	 * @param rest   an array or varargs of Number elements
-	 * @return a new map containing the given keys and values
+	 * @return a new map containing the given key-value pairs
 	 */
 	public static LongFloatOrderedMap with (Number key0, Number value0, Number... rest) {
 		LongFloatOrderedMap map = new LongFloatOrderedMap(1 + (rest.length >>> 1));
@@ -814,6 +884,88 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 		for (int i = 1; i < rest.length; i += 2) {
 			map.put(rest[i - 1].longValue(), rest[i].floatValue());
 		}
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   the first and only key
+	 * @param value0 the first and only value
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static LongFloatOrderedMap withPrimitive (long key0, float value0) {
+		LongFloatOrderedMap map = new LongFloatOrderedMap(1);
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a float value
+	 * @param key1   a long key
+	 * @param value1 a float value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongFloatOrderedMap withPrimitive (long key0, float value0, long key1, float value1) {
+		LongFloatOrderedMap map = new LongFloatOrderedMap(2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a float value
+	 * @param key1   a long key
+	 * @param value1 a float value
+	 * @param key2   a long key
+	 * @param value2 a float value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongFloatOrderedMap withPrimitive (long key0, float value0, long key1, float value1, long key2, float value2) {
+		LongFloatOrderedMap map = new LongFloatOrderedMap(3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a float value
+	 * @param key1   a long key
+	 * @param value1 a float value
+	 * @param key2   a long key
+	 * @param value2 a float value
+	 * @param key3   a long key
+	 * @param value3 a float value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongFloatOrderedMap withPrimitive (long key0, float value0, long key1, float value1, long key2, float value2, long key3, float value3) {
+		LongFloatOrderedMap map = new LongFloatOrderedMap(4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
 		return map;
 	}
 }
