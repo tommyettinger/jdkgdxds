@@ -774,15 +774,85 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its Number key to a primitive long, regardless of which Number type was used.
+	 * convert its Number keys and values to primitive long and long, regardless of which
+	 * Number type was used.
 	 *
-	 * @param key0   the first and only key; will be converted to a primitive long
-	 * @param value0 the first and only value; will be converted to a primitive long
+	 * @param key0   the first and only key; will be converted to primitive long
+	 * @param value0 the first and only value; will be converted to primitive long
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
 	public static LongLongOrderedMap with (Number key0, Number value0) {
 		LongLongOrderedMap map = new LongLongOrderedMap(1);
 		map.put(key0.longValue(), value0.longValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and long, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive long
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive long
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongLongOrderedMap with (Number key0, Number value0, Number key1, Number value1) {
+		LongLongOrderedMap map = new LongLongOrderedMap(2);
+		map.put(key0.longValue(), value0.longValue());
+		map.put(key1.longValue(), value1.longValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and long, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive long
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive long
+	 * @param key2   a Number key; will be converted to primitive long
+	 * @param value2 a Number for a value; will be converted to primitive long
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongLongOrderedMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
+		LongLongOrderedMap map = new LongLongOrderedMap(3);
+		map.put(key0.longValue(), value0.longValue());
+		map.put(key1.longValue(), value1.longValue());
+		map.put(key2.longValue(), value2.longValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and long, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive long
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive long
+	 * @param key2   a Number key; will be converted to primitive long
+	 * @param value2 a Number for a value; will be converted to primitive long
+	 * @param key3   a Number key; will be converted to primitive long
+	 * @param value3 a Number for a value; will be converted to primitive long
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongLongOrderedMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
+		LongLongOrderedMap map = new LongLongOrderedMap(4);
+		map.put(key0.longValue(), value0.longValue());
+		map.put(key1.longValue(), value1.longValue());
+		map.put(key2.longValue(), value2.longValue());
+		map.put(key3.longValue(), value3.longValue());
 		return map;
 	}
 
@@ -799,7 +869,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param key0   the first key; will be converted to a primitive long
 	 * @param value0 the first value; will be converted to a primitive long
 	 * @param rest   an array or varargs of Number elements
-	 * @return a new map containing the given keys and values
+	 * @return a new map containing the given key-value pairs
 	 */
 	public static LongLongOrderedMap with (Number key0, Number value0, Number... rest) {
 		LongLongOrderedMap map = new LongLongOrderedMap(1 + (rest.length >>> 1));
@@ -823,16 +893,12 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 
 	/**
 	 * Constructs a single-entry map given one key and one value.
-	 * This is mostly useful as an optimization for {@link #withPrimitive(long, long, long...)}
-	 * when there's no "rest" of the keys or values. This variation requires both the key
-	 * and the value to be primitive {@code long}s.
-	 * <br>
-	 * This method has to be named differently from {@link #with(Number, Number)} to
-	 * disambiguate the two, which would otherwise both be callable with all primitives
-	 * (due to auto-boxing).
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
 	 *
-	 * @param key0   the first and only key; must not be boxed
-	 * @param value0 the first and only value; must not be boxed
+	 * @param key0   the first and only key
+	 * @param value0 the first and only value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
 	public static LongLongOrderedMap withPrimitive (long key0, long value0) {
@@ -843,27 +909,67 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 
 	/**
 	 * Constructs a map given alternating keys and values.
-	 * This can be useful in some code-generation scenarios, or when you want to make a
-	 * map conveniently by-hand and have it populated at the start. You can also use
-	 * {@link #LongLongOrderedMap(long[], long[])}, which takes all keys and then all values.
-	 * This needs all keys and all values to be primitive {@code long}s; if any are boxed,
-	 * then you should call {@link #with(Number, Number, Number...)}.
-	 * <br>
-	 * This method has to be named differently from {@link #with(Number, Number, Number...)} to
-	 * disambiguate the two, which would otherwise both be callable with all primitives
-	 * (due to auto-boxing).
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
 	 *
-	 * @param key0   the first key; must not be boxed
-	 * @param value0 the first value; must not be boxed
-	 * @param rest   an array or varargs of primitive long elements
-	 * @return a new map containing the given keys and values
+	 * @param key0   a long key
+	 * @param value0 a long value
+	 * @param key1   a long key
+	 * @param value1 a long value
+	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongLongOrderedMap withPrimitive (long key0, long value0, long... rest) {
-		LongLongOrderedMap map = new LongLongOrderedMap(1 + (rest.length >>> 1));
+	public static LongLongOrderedMap withPrimitive (long key0, long value0, long key1, long value1) {
+		LongLongOrderedMap map = new LongLongOrderedMap(2);
 		map.put(key0, value0);
-		for (int i = 1; i < rest.length; i += 2) {
-			map.put(rest[i - 1], rest[i]);
-		}
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a long value
+	 * @param key1   a long key
+	 * @param value1 a long value
+	 * @param key2   a long key
+	 * @param value2 a long value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongLongOrderedMap withPrimitive (long key0, long value0, long key1, long value1, long key2, long value2) {
+		LongLongOrderedMap map = new LongLongOrderedMap(3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a long value
+	 * @param key1   a long key
+	 * @param value1 a long value
+	 * @param key2   a long key
+	 * @param value2 a long value
+	 * @param key3   a long key
+	 * @param value3 a long value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongLongOrderedMap withPrimitive (long key0, long value0, long key1, long value1, long key2, long value2, long key3, long value3) {
+		LongLongOrderedMap map = new LongLongOrderedMap(4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
 		return map;
 	}
 }

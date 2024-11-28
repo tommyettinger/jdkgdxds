@@ -1601,15 +1601,85 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its Number key to a primitive long, regardless of which Number type was used.
+	 * convert its Number keys and values to primitive long and long, regardless of which
+	 * Number type was used.
 	 *
-	 * @param key0   the first and only key; will be converted to a primitive long
-	 * @param value0 the first and only value; will be converted to a primitive long
+	 * @param key0   the first and only key; will be converted to primitive long
+	 * @param value0 the first and only value; will be converted to primitive long
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
 	public static LongLongMap with (Number key0, Number value0) {
 		LongLongMap map = new LongLongMap(1);
 		map.put(key0.longValue(), value0.longValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and long, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive long
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive long
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongLongMap with (Number key0, Number value0, Number key1, Number value1) {
+		LongLongMap map = new LongLongMap(2);
+		map.put(key0.longValue(), value0.longValue());
+		map.put(key1.longValue(), value1.longValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and long, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive long
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive long
+	 * @param key2   a Number key; will be converted to primitive long
+	 * @param value2 a Number for a value; will be converted to primitive long
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongLongMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
+		LongLongMap map = new LongLongMap(3);
+		map.put(key0.longValue(), value0.longValue());
+		map.put(key1.longValue(), value1.longValue());
+		map.put(key2.longValue(), value2.longValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive long and long, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive long
+	 * @param value0 a Number for a value; will be converted to primitive long
+	 * @param key1   a Number key; will be converted to primitive long
+	 * @param value1 a Number for a value; will be converted to primitive long
+	 * @param key2   a Number key; will be converted to primitive long
+	 * @param value2 a Number for a value; will be converted to primitive long
+	 * @param key3   a Number key; will be converted to primitive long
+	 * @param value3 a Number for a value; will be converted to primitive long
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongLongMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
+		LongLongMap map = new LongLongMap(4);
+		map.put(key0.longValue(), value0.longValue());
+		map.put(key1.longValue(), value1.longValue());
+		map.put(key2.longValue(), value2.longValue());
+		map.put(key3.longValue(), value3.longValue());
 		return map;
 	}
 
@@ -1626,7 +1696,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 * @param key0   the first key; will be converted to a primitive long
 	 * @param value0 the first value; will be converted to a primitive long
 	 * @param rest   an array or varargs of Number elements
-	 * @return a new map containing the given keys and values
+	 * @return a new map containing the given key-value pairs
 	 */
 	public static LongLongMap with (Number key0, Number value0, Number... rest) {
 		LongLongMap map = new LongLongMap(1 + (rest.length >>> 1));
@@ -1650,21 +1720,83 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 
 	/**
 	 * Constructs a single-entry map given one key and one value.
-	 * This is mostly useful as an optimization for {@link #withPrimitive(long, long, long...)}
-	 * when there's no "rest" of the keys or values. This variation requires both the key
-	 * and the value to be primitive {@code long}s.
-	 * <br>
-	 * This method has to be named differently from {@link #with(Number, Number)} to
-	 * disambiguate the two, which would otherwise both be callable with all primitives
-	 * (due to auto-boxing).
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
 	 *
-	 * @param key0   the first and only key; must not be boxed
-	 * @param value0 the first and only value; must not be boxed
+	 * @param key0   the first and only key
+	 * @param value0 the first and only value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
 	public static LongLongMap withPrimitive (long key0, long value0) {
 		LongLongMap map = new LongLongMap(1);
 		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a long value
+	 * @param key1   a long key
+	 * @param value1 a long value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongLongMap withPrimitive (long key0, long value0, long key1, long value1) {
+		LongLongMap map = new LongLongMap(2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a long value
+	 * @param key1   a long key
+	 * @param value1 a long value
+	 * @param key2   a long key
+	 * @param value2 a long value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongLongMap withPrimitive (long key0, long value0, long key1, long value1, long key2, long value2) {
+		LongLongMap map = new LongLongMap(3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a long key
+	 * @param value0 a long value
+	 * @param key1   a long key
+	 * @param value1 a long value
+	 * @param key2   a long key
+	 * @param value2 a long value
+	 * @param key3   a long key
+	 * @param value3 a long value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static LongLongMap withPrimitive (long key0, long value0, long key1, long value1, long key2, long value2, long key3, long value3) {
+		LongLongMap map = new LongLongMap(4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
 		return map;
 	}
 

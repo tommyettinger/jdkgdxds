@@ -753,7 +753,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param key1   a K key
 	 * @param value1 a Number for a value; will be converted to primitive int
 	 * @param <K>    the type of keys
-	 * @return a new map containing just the entry mapping keys to values
+	 * @return a new map containing the given key-value pairs
 	 */
 	public static <K> ObjectIntOrderedMap<K> with (K key0, Number value0, K key1, Number value1) {
 		ObjectIntOrderedMap<K> map = new ObjectIntOrderedMap<>(2);
@@ -775,7 +775,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param key2   a K key
 	 * @param value2 a Number for a value; will be converted to primitive int
 	 * @param <K>    the type of keys
-	 * @return a new map containing just the entry mapping keys to values
+	 * @return a new map containing the given key-value pairs
 	 */
 	public static <K> ObjectIntOrderedMap<K> with (K key0, Number value0, K key1, Number value1, K key2, Number value2) {
 		ObjectIntOrderedMap<K> map = new ObjectIntOrderedMap<>(3);
@@ -800,7 +800,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param key3   a K key
 	 * @param value3 a Number for a value; will be converted to primitive int
 	 * @param <K>    the type of keys
-	 * @return a new map containing just the entry mapping keys to values
+	 * @return a new map containing the given key-value pairs
 	 */
 	public static <K> ObjectIntOrderedMap<K> with (K key0, Number value0, K key1, Number value1, K key2, Number value2, K key3, Number value3) {
 		ObjectIntOrderedMap<K> map = new ObjectIntOrderedMap<>(4);
@@ -837,6 +837,104 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 			} catch (ClassCastException ignored) {
 			}
 		}
+		return map;
+	}
+
+	/**
+	 * Constructs an empty map given the key type as a generic type argument.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <K>    the type of keys
+	 * @return a new map containing nothing
+	 */
+	public static <K> ObjectIntOrderedMap<K> withPrimitive () {
+		return new ObjectIntOrderedMap<>(0);
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed int as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   a K for a key
+	 * @param value0 a int for a value
+	 * @param <K>    the type of key0
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static <K> ObjectIntOrderedMap<K> withPrimitive (K key0, int value0) {
+		ObjectIntOrderedMap<K> map = new ObjectIntOrderedMap<>(1);
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed int as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a int for a value
+	 * @param key1   a K key
+	 * @param value1 a int for a value
+	 * @param <K>    the type of keys
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <K> ObjectIntOrderedMap<K> withPrimitive (K key0, int value0, K key1, int value1) {
+		ObjectIntOrderedMap<K> map = new ObjectIntOrderedMap<>(2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed int as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a int for a value
+	 * @param key1   a K key
+	 * @param value1 a int for a value
+	 * @param key2   a K key
+	 * @param value2 a int for a value
+	 * @param <K>    the type of keys
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <K> ObjectIntOrderedMap<K> withPrimitive (K key0, int value0, K key1, int value1, K key2, int value2) {
+		ObjectIntOrderedMap<K> map = new ObjectIntOrderedMap<>(3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed int as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a int for a value
+	 * @param key1   a K key
+	 * @param value1 a int for a value
+	 * @param key2   a K key
+	 * @param value2 a int for a value
+	 * @param key3   a K key
+	 * @param value3 a int for a value
+	 * @param <K>    the type of keys
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <K> ObjectIntOrderedMap<K> withPrimitive (K key0, int value0, K key1, int value1, K key2, int value2, K key3, int value3) {
+		ObjectIntOrderedMap<K> map = new ObjectIntOrderedMap<>(4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
 		return map;
 	}
 }

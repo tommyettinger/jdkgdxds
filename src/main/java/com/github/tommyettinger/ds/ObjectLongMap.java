@@ -1538,7 +1538,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param key1   a K key
 	 * @param value1 a Number for a value; will be converted to primitive long
 	 * @param <K>    the type of keys
-	 * @return a new map containing just the entry mapping keys to values
+	 * @return a new map containing the given key-value pairs
 	 */
 	public static <K> ObjectLongMap<K> with (K key0, Number value0, K key1, Number value1) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(2);
@@ -1560,7 +1560,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param key2   a K key
 	 * @param value2 a Number for a value; will be converted to primitive long
 	 * @param <K>    the type of keys
-	 * @return a new map containing just the entry mapping keys to values
+	 * @return a new map containing the given key-value pairs
 	 */
 	public static <K> ObjectLongMap<K> with (K key0, Number value0, K key1, Number value1, K key2, Number value2) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(3);
@@ -1585,7 +1585,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param key3   a K key
 	 * @param value3 a Number for a value; will be converted to primitive long
 	 * @param <K>    the type of keys
-	 * @return a new map containing just the entry mapping keys to values
+	 * @return a new map containing the given key-value pairs
 	 */
 	public static <K> ObjectLongMap<K> with (K key0, Number value0, K key1, Number value1, K key2, Number value2, K key3, Number value3) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(4);
@@ -1622,6 +1622,104 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			} catch (ClassCastException ignored) {
 			}
 		}
+		return map;
+	}
+
+	/**
+	 * Constructs an empty map given the key type as a generic type argument.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <K>    the type of keys
+	 * @return a new map containing nothing
+	 */
+	public static <K> ObjectLongMap<K> withPrimitive () {
+		return new ObjectLongMap<>(0);
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed long as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   a K for a key
+	 * @param value0 a long for a value
+	 * @param <K>    the type of key0
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static <K> ObjectLongMap<K> withPrimitive (K key0, long value0) {
+		ObjectLongMap<K> map = new ObjectLongMap<>(1);
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed long as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a long for a value
+	 * @param key1   a K key
+	 * @param value1 a long for a value
+	 * @param <K>    the type of keys
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <K> ObjectLongMap<K> withPrimitive (K key0, long value0, K key1, long value1) {
+		ObjectLongMap<K> map = new ObjectLongMap<>(2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed long as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a long for a value
+	 * @param key1   a K key
+	 * @param value1 a long for a value
+	 * @param key2   a K key
+	 * @param value2 a long for a value
+	 * @param <K>    the type of keys
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <K> ObjectLongMap<K> withPrimitive (K key0, long value0, K key1, long value1, K key2, long value2) {
+		ObjectLongMap<K> map = new ObjectLongMap<>(3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Object, Number, Object...)}
+	 * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed long as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   a K key
+	 * @param value0 a long for a value
+	 * @param key1   a K key
+	 * @param value1 a long for a value
+	 * @param key2   a K key
+	 * @param value2 a long for a value
+	 * @param key3   a K key
+	 * @param value3 a long for a value
+	 * @param <K>    the type of keys
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static <K> ObjectLongMap<K> withPrimitive (K key0, long value0, K key1, long value1, K key2, long value2, K key3, long value3) {
+		ObjectLongMap<K> map = new ObjectLongMap<>(4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
 		return map;
 	}
 }
