@@ -145,6 +145,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 		super(set);
 		filter = set.filter;
 		editor = set.editor;
+		this.hashMultiplier = set.hashMultiplier;
 	}
 
 	/**

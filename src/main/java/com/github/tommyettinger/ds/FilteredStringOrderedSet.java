@@ -139,6 +139,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	public FilteredStringOrderedSet (FilteredStringOrderedSet set) {
 		super(set);
 		filter = set.filter;
+		this.hashMultiplier = set.hashMultiplier;
 	}
 
 	/**

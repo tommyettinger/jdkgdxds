@@ -144,6 +144,7 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 		super(map);
 		filter = map.filter;
 		editor = map.editor;
+		this.hashMultiplier = map.hashMultiplier;
 	}
 
 	/**

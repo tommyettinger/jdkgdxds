@@ -140,6 +140,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	public FilteredStringOrderedMap (FilteredStringOrderedMap<? extends V> map) {
 		super(map);
 		filter = map.filter;
+		this.hashMultiplier = map.hashMultiplier;
 	}
 
 	/**

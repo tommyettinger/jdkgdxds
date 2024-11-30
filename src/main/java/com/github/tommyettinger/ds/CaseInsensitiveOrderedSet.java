@@ -148,6 +148,16 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	}
 
 	/**
+	 * Creates a new set that contains all distinct elements in {@code set}.
+	 *
+	 * @param set another CaseInsensitiveOrderedSet
+	 */
+	public CaseInsensitiveOrderedSet (CaseInsensitiveOrderedSet set) {
+		super(set);
+		this.hashMultiplier = set.hashMultiplier;
+	}
+
+	/**
 	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 *

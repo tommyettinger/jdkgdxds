@@ -114,6 +114,16 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	}
 
 	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map a CaseInsensitiveMap to copy
+	 */
+	public CaseInsensitiveMap(CaseInsensitiveMap<? extends V> map) {
+		super(map);
+		this.hashMultiplier = map.hashMultiplier;
+	}
+
+	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
 	 *

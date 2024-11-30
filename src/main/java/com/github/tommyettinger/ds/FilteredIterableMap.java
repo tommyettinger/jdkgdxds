@@ -135,6 +135,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 		super(map);
 		filter = map.filter;
 		editor = map.editor;
+		this.hashMultiplier = map.hashMultiplier;
 	}
 
 	/**

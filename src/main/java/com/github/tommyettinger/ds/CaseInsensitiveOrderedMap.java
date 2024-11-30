@@ -118,6 +118,15 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	public CaseInsensitiveOrderedMap (CharSequence[] keys, V[] values) {
 		super(keys, values);
 	}
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map a CaseInsensitiveOrderedMap to copy
+	 */
+	public CaseInsensitiveOrderedMap(CaseInsensitiveOrderedMap<? extends V> map) {
+		super(map);
+		this.hashMultiplier = map.hashMultiplier;
+	}
 
 	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.

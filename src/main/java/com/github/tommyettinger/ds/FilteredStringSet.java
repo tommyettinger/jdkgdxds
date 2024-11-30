@@ -131,6 +131,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	public FilteredStringSet (FilteredStringSet set) {
 		super(set);
 		filter = set.filter;
+		this.hashMultiplier = set.hashMultiplier;
 	}
 
 	/**

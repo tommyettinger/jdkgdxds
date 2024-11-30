@@ -131,6 +131,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	public FilteredStringMap (FilteredStringMap<? extends V> map) {
 		super(map);
 		filter = map.filter;
+		this.hashMultiplier = map.hashMultiplier;
 	}
 
 	/**

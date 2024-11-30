@@ -110,6 +110,16 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	}
 
 	/**
+	 * Creates a new set that contains all distinct elements in {@code set}.
+	 *
+	 * @param set another CaseInsensitiveSet
+	 */
+	public CaseInsensitiveSet (CaseInsensitiveSet set) {
+		super(set);
+		this.hashMultiplier = set.hashMultiplier;
+	}
+
+	/**
 	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
 	 * This takes a CharSequence array, not a String array, though Strings can be put into a CharSequence array (along with
 	 * StringBuilders and similar CharSequences).
