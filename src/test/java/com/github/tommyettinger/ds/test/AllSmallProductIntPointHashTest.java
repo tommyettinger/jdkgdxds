@@ -21,7 +21,6 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.IntIntOrderedMap;
 import com.github.tommyettinger.ds.IntSet;
-import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import org.checkerframework.checker.nullness.qual.NonNull;
 

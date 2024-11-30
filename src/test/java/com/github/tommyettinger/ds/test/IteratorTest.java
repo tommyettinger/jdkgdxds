@@ -10,6 +10,7 @@ import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.tommyettinger.ds.ObjectSet;
 import org.junit.Assert;
 import org.junit.Test;
 

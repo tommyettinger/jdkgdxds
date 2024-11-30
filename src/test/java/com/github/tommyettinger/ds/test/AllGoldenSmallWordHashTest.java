@@ -20,7 +20,6 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.IntIntOrderedMap;
-import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.random.WhiskerRandom;
 import org.checkerframework.checker.nullness.qual.NonNull;

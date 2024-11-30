@@ -12,7 +12,6 @@ import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.ds.IntSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
-import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.random.WhiskerRandom;
@@ -125,7 +124,7 @@ public class PileupTest {
         final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging and the constant in place() changed back
-        ObjectSet set = new ObjectSet(51, LOAD) {
+        com.github.tommyettinger.ds.test.ObjectSet set = new com.github.tommyettinger.ds.test.ObjectSet(51, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
