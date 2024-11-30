@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.BitConversion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
@@ -51,6 +52,13 @@ import java.util.Iterator;
  * but {@code new FilteredStringOrderedSet<>(Character::isLetter, Character::toUpperCase)} will work.
  */
 public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
+
+	/**
+	 * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
+	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
+	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectObjectOrderedMap}.
+	 */
+	protected int hashMultiplier = 0xEFAA28F1;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
@@ -176,6 +184,25 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 			if (key != null) {h ^= Utilities.hashCodeIgnoreCase(key);}
 		}
 		return h;
+	}
+
+	protected void resize (int newSize) {
+		int oldCapacity = keyTable.length;
+		threshold = (int)(newSize * loadFactor);
+		mask = newSize - 1;
+		shift = BitConversion.countLeadingZeros(mask) + 32;
+
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
+		@Nullable CharSequence[] oldKeyTable = keyTable;
+
+		keyTable = new String[newSize];
+
+		if (size > 0) {
+			for (int i = 0; i < oldCapacity; i++) {
+				CharSequence key = oldKeyTable[i];
+				if (key != null) {addResize(key);}
+			}
+		}
 	}
 
 	/**

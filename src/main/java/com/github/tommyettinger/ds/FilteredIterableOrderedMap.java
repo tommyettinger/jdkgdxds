@@ -52,6 +52,14 @@ import java.util.Objects;
 public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends ObjectObjectOrderedMap<I, V> {
 	protected ObjPredicate<K>      filter = c -> true;
 	protected ObjToSameFunction<K> editor = c -> c;
+
+	/**
+	 * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
+	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
+	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectObjectOrderedMap}.
+	 */
+	protected int hashMultiplier = 0xEFAA28F1;
+
 	/**
 	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
@@ -316,6 +324,27 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 			}
 		}
 		return h;
+	}
+
+	protected void resize (int newSize) {
+		int oldCapacity = keyTable.length;
+		threshold = (int)(newSize * loadFactor);
+		mask = newSize - 1;
+		shift = BitConversion.countLeadingZeros(mask) + 32;
+
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
+		I[] oldKeyTable = keyTable;
+		V[] oldValueTable = valueTable;
+
+		keyTable = (I[])new Object[newSize];
+		valueTable = (V[])new Object[newSize];
+
+		if (size > 0) {
+			for (int i = 0; i < oldCapacity; i++) {
+				I key = oldKeyTable[i];
+				if (key != null) {putResize(key, oldValueTable[i]);}
+			}
+		}
 	}
 
 	/**

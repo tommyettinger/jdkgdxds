@@ -34,8 +34,8 @@ public final class Utilities {
 	/**
 	 * A final array of 512 int multipliers that have shown to have few collisions in some kinds of
 	 * hash table. These multipliers aren't currently used within jdkgdxds except in
-	 * {@link #hashCodeIgnoreCase(CharSequence, int)} and the Filtered maps and sets, but may still
-	 * be used externally.
+	 * {@link #hashCodeIgnoreCase(CharSequence, int)}, the CaseInsensitive maps and sets, and the
+	 * Filtered maps and sets, but may still be used externally.
 	 * <br>
 	 * You can mutate this array, but you should only do so if you encounter high collision rates or
 	 * resizes with a particular multiplier from this table. Any int m you set into this array must
