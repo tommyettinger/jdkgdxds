@@ -141,24 +141,24 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	}
 
 	/**
-	 * Gets the hash multiplier, which this class does not use itself.
-	 * @return the current hash multiplier, which should always be a negative, odd int
+	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
+	 * Subclasses can use this as some kind of identifier or user data, though.
+	 *
+	 * @return any int; the value isn't used internally, but may be used by subclasses to identify something
 	 */
-	@Override
-	public int getHashMultiplier () {
-		return hashMultiplier;
+	public int getHashMultiplier() {
+		return 0;
 	}
 
 	/**
-	 * Sets the hash multiplier, which this class does not use itself. Because of that, this method does not
-	 * call {@link #resize(int)} at all. The hash multiplier will change anyway the next time resize() is called.
-	 * You probably just don't need to call this method.
-	 * @param hashMultiplier will not be used, but will be treated as negative and odd and stored in case some other code needs it
+	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
+	 * Subclasses can use this to set some kind of identifier or user data, though.
+	 *
+	 * @param unused any int; will not be used as-is
 	 */
-	@Override
-	public void setHashMultiplier (int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 0x80000001;
+	public void setHashMultiplier(int unused) {
 	}
+
 
 	/**
 	 * Constructs an empty map given the types as generic type arguments.

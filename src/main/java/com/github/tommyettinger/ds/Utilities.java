@@ -32,14 +32,10 @@ import static com.github.tommyettinger.digital.Hasher.*;
  */
 public final class Utilities {
 	/**
-	 * A final array of 512 int multipliers that have been tested to work on at least some large
-	 * input sets without excessively high collision rates. The initial value passed to a
-	 * {@link ObjectSet#setHashMultiplier(int)} method (on any hashed data structure here) is used
-	 * to choose one of these based on the int parameter (it also uses the current shift value).
-	 * All hashed data structures here currently start with a multiplier of 0xEFAA28F1, which is not
-	 * in this array by default, but is still a very good multiplier. The numbers here all are odd
-	 * and negative, which is important because it affects how they distribute hash codes, but because
-	 * they can be large numbers, we use {@link BitConversion#imul(int, int)} for GWT support.
+	 * A final array of 512 int multipliers that have shown to have few collisions in some kinds of
+	 * hash table. These multipliers aren't currently used within jdkgdxds except in
+	 * {@link #hashCodeIgnoreCase(CharSequence, int)} and the Filtered maps and sets, but may still
+	 * be used externally.
 	 * <br>
 	 * You can mutate this array, but you should only do so if you encounter high collision rates or
 	 * resizes with a particular multiplier from this table. Any int m you set into this array must

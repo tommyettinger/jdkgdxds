@@ -400,15 +400,15 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		}
 	}
 
-	/**
-	 * Gets the current hash multiplier as used by {@link #place(int)}; for specific advanced usage only.
-	 * The hash multiplier changes whenever {@link #resize(int)} is called, though its value before the resize
-	 * affects its value after.
-	 * @return the current hash multiplier, which should always be a negative, odd int
-	 */
-	public int getHashMultiplier () {
-		return hashMultiplier;
-	}
+    /**
+     * Effectively does nothing here because the hashMultiplier is no longer stored or used.
+     * Subclasses can use this as some kind of identifier or user data, though.
+     *
+     * @return any int; the value isn't used internally, but may be used by subclasses to identify something
+     */
+    public int getHashMultiplier() {
+        return 0;
+    }
 
 	/**
 	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size;

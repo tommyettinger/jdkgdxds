@@ -574,38 +574,24 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 	}
 
-	/**
-	 * Gets the current hash multiplier as used by {@link #place(Object)}; for specific advanced usage only.
-	 * The hash multiplier changes whenever {@link #resize(int)} is called, though its value before the resize
-	 * affects its value after.
-	 * @return the current hash multiplier, which should always be a negative, odd int
-	 */
-	public int getHashMultiplier () {
-		return hashMultiplier;
-	}
+    /**
+     * Effectively does nothing here because the hashMultiplier is no longer stored or used.
+     * Subclasses can use this as some kind of identifier or user data, though.
+     *
+     * @return any int; the value isn't used internally, but may be used by subclasses to identify something
+     */
+    public int getHashMultiplier() {
+        return 0;
+    }
 
-	/**
-	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size;
-	 * this is for specific advanced usage only. Calling resize() will change the multiplier before it gets used, and
-	 * the current {@link #size()} of the data structure also changes the value. The hash multiplier is used by
-	 * {@link #place(Object)}. The hash multiplier must be a negative, odd int, and this method will ensure that both the
-	 * used multiplier is both negative and odd. The hash multiplier changes whenever {@link #resize(int)} is called,
-	 * though its value before the resize affects its value after. Because of how resize() randomizes the multiplier,
-	 * even inputs such as {@code 1}, {@code -999999999} and {@code 0} actually work well.
-	 * <br>
-	 * This is accessible at all mainly so serialization code that has a need to access the hash multiplier can do so, but
-	 * also to provide an "emergency escape route" in case of hash flooding. Using one of the "known good" ints in
-	 * {@link Utilities#GOOD_MULTIPLIERS} should usually be fine if you don't know what multiplier will work well.
-	 * Be advised that because this has to call resize(), it isn't especially fast, and it slows down the more items are
-	 * in the data structure. If you in a situation where you are worried about hash flooding, you also shouldn't permit
-	 * adversaries to cause this method to be called frequently. Also be advised that because of how resize() works, the
-	 * result of {@link #getHashMultiplier()} after calling this will only very rarely be the same as the parameter here.
-	 * @param hashMultiplier any int; will not be used as-is
-	 */
-	public void setHashMultiplier (int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 0x80000001;
-		resize(keyTable.length);
-	}
+    /**
+     * Effectively does nothing here because the hashMultiplier is no longer stored or used.
+     * Subclasses can use this to set some kind of identifier or user data, though.
+     *
+     * @param unused any int; will not be used as-is
+     */
+    public void setHashMultiplier(int unused) {
+    }
 
 	/**
 	 * Gets the length of the internal array used to store all keys, as well as empty space awaiting more items to be

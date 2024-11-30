@@ -391,20 +391,22 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	}
 
 	/**
-	 * By default, does nothing other than return 0. Subclasses may use this.
-	 * Hash multipliers should always be negative, odd ints if they are used.
-	 * This returns 0 to indicate that this class does not have a hash multiplier to get.
-	 * @return the current hash multiplier, which defaults to 0 if not subclassed
+	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
+	 * Subclasses can use this as some kind of identifier or user data, though.
+	 *
+	 * @return any int; the value isn't used internally, but may be used by subclasses to identify something
 	 */
-	public int getHashMultiplier () {
+	public int getHashMultiplier() {
 		return 0;
 	}
 
 	/**
-	 * Does nothing by default; subclasses may use this in some way.
-	 * @param hashMultiplier ignored by default; implementations that use this should take a negative, odd int
+	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
+	 * Subclasses can use this to set some kind of identifier or user data, though.
+	 *
+	 * @param unused any int; will not be used as-is
 	 */
-	public void setHashMultiplier (int hashMultiplier) {
+	public void setHashMultiplier(int unused) {
 	}
 
 	public float getLoadFactor () {
