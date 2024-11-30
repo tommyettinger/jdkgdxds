@@ -171,7 +171,6 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
-	 * Defaults to using a XOR-Rotate-XOR-Rotate on the given hashCode, then masking that with {@link #mask}.
 	 *
 	 * @param item any int; it is usually mixed and shifted or masked here
 	 * @return an index between 0 and {@link #mask} (both inclusive)

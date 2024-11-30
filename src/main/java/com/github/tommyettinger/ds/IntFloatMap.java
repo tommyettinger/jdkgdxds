@@ -209,13 +209,12 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
-	 * Defaults to using {@link #hashMultiplier}, which changes every time the data structure resizes.
 	 *
 	 * @param item any int; it is usually mixed or masked here
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (int item) {
-		return BitConversion.imul(item, hashMultiplier) >>> shift;
+		return (item ^ (item << 9 | item >>> 23) ^ (item << 21 | item >>> 11)) & mask;
 	}
 
 	/**
