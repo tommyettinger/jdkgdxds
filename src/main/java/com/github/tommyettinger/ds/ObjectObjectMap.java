@@ -197,38 +197,13 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	/**
 	 * Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}, mixed.
-	 * <p>
-	 * The default behavior uses a basic hash mixing family; it simply gets the
-	 * {@link Object#hashCode()} of {@code item}, multiplies it by the current
-	 * {@link #hashMultiplier}, and makes an unsigned right shift by {@link #shift} before
-	 * casting to int and returning. Because the hashMultiplier changes every time the backing
-	 * table resizes, if a problematic sequence of keys piles up with many collisions, that won't
-	 * continue to cause problems when the next resize changes the hashMultiplier again. This
-	 * doesn't have much way of preventing trouble from hashCode() implementations that always
-	 * or very frequently return 0, but nothing really can handle that well.
-	 * <br>
-	 * This can be overridden to hash {@code item} differently, though all implementors must
-	 * ensure this returns results in the range of 0 to {@link #mask}, inclusive. If nothing
-	 * else is changed, then unsigned-right-shifting an int or long by {@link #shift} will also
-	 * restrict results to the correct range. You should usually override this method
-	 * if you also override {@link #equate(Object, Object)}, because two equal values should have
-	 * the same hash. If you are confident that the hashCode() implementation used by item will
-	 * have reasonable quality, you can override this with a simpler implementation, such as
-	 * {@code return item.hashCode() & mask;}. This simpler version is not used by default, even
-	 * though it can be slightly faster, because the default hashing family provides much
-	 * better resilience against high collision rates when they occur accidentally. If collision
-	 * rates are high on the low bits of many hashes, then the simpler version tends to be
-	 * significantly slower than the hashing family. Neither version provides stronger defenses
-	 * against maliciously-chosen items, but linear probing naturally won't fail entirely even in
-	 * that case. It is possible that a user could write an implementation of place() that is more
-	 * robust against malicious inputs; one such approach is optionally employed by .NET Core and
-	 * newer versions for the hashes of strings. That approach is similar to the current one here.
 	 *
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (@NonNull Object item) {
-		return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
+		final int h = item.hashCode();
+		return (h ^ (h << 9 | h >>> 23) ^ (h << 21 | h >>> 11)) & mask;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
 	}
