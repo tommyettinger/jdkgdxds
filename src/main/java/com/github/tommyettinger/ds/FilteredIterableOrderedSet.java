@@ -247,7 +247,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	@Override
 	protected int place (@NonNull Object item) {
 		if (item instanceof Iterable) {
-			return hashHelper((I) item) >>> shift;
+			return hashHelper((I) item) & mask;
 		}
 		return super.place(item);
 	}

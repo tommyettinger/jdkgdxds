@@ -249,7 +249,7 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	@Override
 	protected int place (@NonNull Object item) {
 		if (item instanceof Iterable) {
-			return hashHelper((I) item) >>> shift;
+			return hashHelper((I) item) & mask;
 		}
 		return super.place(item);
 	}

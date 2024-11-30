@@ -236,7 +236,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	@Override
 	protected int place (@NonNull Object item) {
 		if (item instanceof Iterable) {
-			return hashHelper((I) item) >>> shift;
+			return hashHelper((I) item) & mask;
 		}
 		return super.place(item);
 	}

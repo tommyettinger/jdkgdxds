@@ -206,7 +206,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	@Override
 	protected int place (@NonNull Object item) {
 		if (item instanceof String) {
-			return hashHelper((String) item) >>> shift;
+			return hashHelper((String) item) & mask;
 		}
 		return super.place(item);
 	}
