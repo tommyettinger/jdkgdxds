@@ -91,13 +91,6 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	protected int shift;
 
 	/**
-	 * Used by {@link #place(int)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link IntIntOrderedMap}.
-	 */
-	protected int hashMultiplier = 0xEFAA28F1;
-
-	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1-bits in its low positions, ie a power of two
 	 * minus 1. If {@link #place(int)} is overridden, this can be used instead of {@link #shift} to isolate usable bits of a
 	 * hash.
@@ -161,7 +154,6 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		defaultValue = map.defaultValue;
 		zeroValue = map.zeroValue;
 		hasZeroValue = map.hasZeroValue;
-		hashMultiplier = map.hashMultiplier;
 	}
 
 	/**
@@ -586,7 +578,6 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
 		int[] oldKeyTable = keyTable;
 		int[] oldValueTable = valueTable;
 

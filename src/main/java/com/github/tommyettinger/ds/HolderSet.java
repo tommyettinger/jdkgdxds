@@ -71,13 +71,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
     protected int shift;
 
     /**
-     * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
-     * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-     * the same before and after serialization. Iteration order is better handled by using {@link ObjectOrderedSet}.
-     */
-    protected int hashMultiplier = 0xEFAA28F1;
-
-    /**
      * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
      * minus 1. If {@link #place(Object)} is overridden, this can be used instead of {@link #shift} to isolate usable bits of a
      * hash.
@@ -175,7 +168,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
         keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
         size = set.size;
         extractor = set.extractor;
-        hashMultiplier = set.hashMultiplier;
     }
 
     /**
@@ -663,8 +655,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
         shift = BitConversion.countLeadingZeros(mask) + 32;
         T[] oldKeyTable = keyTable;
 
-        hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
-        keyTable = (T[]) new Object[newSize];
+                keyTable = (T[]) new Object[newSize];
 
         if (size > 0) {
             for (int i = 0; i < oldCapacity; i++) {
