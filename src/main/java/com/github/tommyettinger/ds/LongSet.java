@@ -18,7 +18,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Arrays;
@@ -185,27 +184,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (long item) {
-		return BitConversion.imul((int)(item ^ item >>> 32), hashMultiplier) >>> shift;
-	}
-
-	/**
-	 * Returns the index of the key if already present, else {@code ~index} for the next empty index.
-	 * While this can be overridden to compare for equality differently than {@code ==} between ints, that
-	 * isn't recommended because this has to treat zero keys differently, and it finds those with {@code ==}.
-	 * If you want to treat equality between longs differently for some reason, you would also need to override
-	 * {@link #contains(long)} and {@link #add(long)}, at the very least.
-	 */
-	protected int locateKey (long key) {
-		long[] keyTable = this.keyTable;
-		for (int i = place(key); ; i = i + 1 & mask) {
-			long other = keyTable[i];
-			if (other == 0) {
-				return ~i; // Empty space is available.
-			}
-			if (other == key) {
-				return i; // Same key was found.
-			}
-		}
+		return (int)(item ^ (item << 11 | item >>> 53) ^ (item << 43 | item >>> 21)) & mask;
 	}
 
 	/**
@@ -283,18 +262,28 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	@Override
 	public boolean remove (long key) {
 		if (key == 0) {
-			if (!hasZeroValue)
-				return false;
-			hasZeroValue = false;
-			size--;
-			return true;
+			if (hasZeroValue) {
+				hasZeroValue = false;
+				size--;
+				return true;
+			}
+			return false;
 		}
 
-		int pos = locateKey(key);
-		if (pos < 0)
-			return false;
+		int pos;
+		int mask = this.mask;
 		long[] keyTable = this.keyTable;
-		int mask = this.mask, last, slot;
+		for (int i = place(key); ; i = i + 1 & mask) {
+			long other = keyTable[i];
+			if (other == 0) {
+				return false; // Nothing is present.
+			}
+			if (other == key) {
+				pos = i; // Same key was found.
+				break;
+			}
+		}
+		int last, slot;
 		size--;
 		for (;;) {
 			pos = ((last = pos) + 1) & mask;

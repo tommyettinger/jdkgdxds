@@ -194,7 +194,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (long item) {
-		return BitConversion.imul((int)(item ^ item >>> 32), hashMultiplier) >>> shift;
+		return (int)(item ^ (item << 11 | item >>> 53) ^ (item << 43 | item >>> 21)) & mask;
 	}
 
 	/**

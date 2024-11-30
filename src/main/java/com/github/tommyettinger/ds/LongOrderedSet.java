@@ -40,8 +40,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * ObjectOrderedSet and ObjectObjectOrderedMap.
  * <p>
  * You can customize most behavior of this set by extending it. {@link #place(long)} can be overridden to change how hashCodes
- * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()), and
- * {@link #locateKey(long)} can be overridden to change how equality is calculated.
+ * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()).
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal.
  * It tries different hashes from a simple family, with the hash changing on resize.
