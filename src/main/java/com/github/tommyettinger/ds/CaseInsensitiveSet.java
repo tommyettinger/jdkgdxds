@@ -88,25 +88,55 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 */
 	public CaseInsensitiveSet (Iterator<? extends CharSequence> coll) {
 		this();
+		hashMultiplier = 0xEFAA28F1;
 		addAll(coll);
 	}
 
 	/**
 	 * Creates a new set identical to the specified set.
 	 *
-	 * @param set an ObjectSet or subclass to copy, such as another CaseInsensitiveSet
+	 * @param set an ObjectSet or one of its subclasses
 	 */
 	public CaseInsensitiveSet (ObjectSet<? extends CharSequence> set) {
-		super(set);
+		this(set.size());
+		hashMultiplier = 0xEFAA28F1;
+		addAll(set);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 *
-	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that doesn't subclass ObjectSet
+	 * @param coll a Collection implementation, such as an ObjectList
 	 */
 	public CaseInsensitiveSet (Collection<? extends CharSequence> coll) {
-		super(coll);
+		super(coll.size());
+		hashMultiplier = 0xEFAA28F1;
+		addAll(coll);
+
+	}
+
+	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 *
+	 * @param array  an array to draw items from
+	 * @param offset the first index in array to draw an item from
+	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 */
+	public CaseInsensitiveSet (CharSequence[] array, int offset, int length) {
+		this(length);
+		hashMultiplier = 0xEFAA28F1;
+		addAll(array, offset, length);
+	}
+
+	/**
+	 * Creates a new set containing all the items in the given array.
+	 *
+	 * @param array an array that will be used in full, except for duplicate items
+	 */
+	public CaseInsensitiveSet (CharSequence[] array) {
+		this(array.length);
+		hashMultiplier = 0xEFAA28F1;
+		addAll(array);
 	}
 
 	/**
@@ -115,32 +145,9 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 * @param set another CaseInsensitiveSet
 	 */
 	public CaseInsensitiveSet (CaseInsensitiveSet set) {
-		super(set);
+		super(set.size);
 		this.hashMultiplier = set.hashMultiplier;
-	}
-
-	/**
-	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
-	 * This takes a CharSequence array, not a String array, though Strings can be put into a CharSequence array (along with
-	 * StringBuilders and similar CharSequences).
-	 *
-	 * @param array  an array to draw items from
-	 * @param offset the first index in array to draw an item from
-	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
-	 */
-	public CaseInsensitiveSet (CharSequence[] array, int offset, int length) {
-		super(array, offset, length);
-	}
-
-	/**
-	 * Creates a new set containing all of the items in the given array.
-	 * This takes a CharSequence array, not a String array, though Strings can be put into a CharSequence array (along with
-	 * StringBuilders and similar CharSequences).
-	 *
-	 * @param array an array that will be used in full, except for duplicate items
-	 */
-	public CaseInsensitiveSet (CharSequence[] array) {
-		super(array);
+		addAll(set);
 	}
 
 	@Override
@@ -170,22 +177,8 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	}
 
 	protected void resize (int newSize) {
-		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
-		mask = newSize - 1;
-		shift = BitConversion.countLeadingZeros(mask) + 32;
-
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
-		@Nullable CharSequence[] oldKeyTable = keyTable;
-
-		keyTable = new String[newSize];
-
-		if (size > 0) {
-			for (int i = 0; i < oldCapacity; i++) {
-				CharSequence key = oldKeyTable[i];
-				if (key != null) {addResize(key);}
-			}
-		}
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, BitConversion.countLeadingZeros(newSize - 1) + 32) >>> 5 & 511];
+		super.resize(newSize);
 	}
 
 	/**

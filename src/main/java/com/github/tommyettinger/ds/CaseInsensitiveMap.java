@@ -87,19 +87,12 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map an ObjectObjectMap to copy, or a subclass such as this one
-	 */
-	public CaseInsensitiveMap (ObjectObjectMap<? extends CharSequence, ? extends V> map) {
-		super(map);
-	}
-
-	/**
-	 * Creates a new map identical to the specified map.
-	 *
-	 * @param map a Map to copy; ObjectObjectMap and subclasses of it will be faster
+	 * @param map a Map to copy
 	 */
 	public CaseInsensitiveMap (Map<? extends CharSequence, ? extends V> map) {
-		super(map);
+		super(map.size());
+		hashMultiplier = 0xEFAA28F1;
+		putAll(map);
 	}
 
 	/**
@@ -110,17 +103,20 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	 * @param values an array of values
 	 */
 	public CaseInsensitiveMap (CharSequence[] keys, V[] values) {
-		super(keys, values);
+		super(Math.min(keys.length, values.length));
+		hashMultiplier = 0xEFAA28F1;
+		putAll(keys, values);
 	}
-
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
 	 * @param map a CaseInsensitiveMap to copy
 	 */
 	public CaseInsensitiveMap(CaseInsensitiveMap<? extends V> map) {
-		super(map);
+		super(map.size());
 		this.hashMultiplier = map.hashMultiplier;
+		putAll(map);
+
 	}
 
 	/**
@@ -131,7 +127,9 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	 * @param values a Collection of values
 	 */
 	public CaseInsensitiveMap (Collection<? extends CharSequence> keys, Collection<? extends V> values) {
-		super(keys, values);
+		super(Math.min(keys.size(), values.size()));
+		hashMultiplier = 0xEFAA28F1;
+		putAll(keys, values);
 	}
 
 	@Override
@@ -189,24 +187,8 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	}
 
 	protected void resize (int newSize) {
-		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
-		mask = newSize - 1;
-		shift = BitConversion.countLeadingZeros(mask) + 32;
-
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
-		CharSequence[] oldKeyTable = keyTable;
-		V[] oldValueTable = valueTable;
-
-		keyTable = (CharSequence[])new Object[newSize];
-		valueTable = (V[])new Object[newSize];
-
-		if (size > 0) {
-			for (int i = 0; i < oldCapacity; i++) {
-				CharSequence key = oldKeyTable[i];
-				if (key != null) {putResize(key, oldValueTable[i]);}
-			}
-		}
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, BitConversion.countLeadingZeros(newSize - 1) + 32) >>> 5 & 511];
+		super.resize(newSize);
 	}
 
 	@Override

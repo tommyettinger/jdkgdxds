@@ -20,6 +20,8 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -95,27 +97,19 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 */
 	public CaseInsensitiveOrderedSet (Iterator<? extends CharSequence> coll) {
 		this();
+		hashMultiplier = 0xEFAA28F1;
 		addAll(coll);
 	}
 
 	/**
 	 * Creates a new set identical to the specified set.
 	 *
-	 * @param set an ObjectSet or one of its subclasses; ObjectOrderedSet uses a different constructor
+	 * @param set an ObjectSet or one of its subclasses
 	 */
 	public CaseInsensitiveOrderedSet (ObjectSet<? extends CharSequence> set) {
-		super(set);
-	}
-
-	/**
-	 * Creates a new ordered set identical to the specified ordered set.
-	 * Typically, this would take another CaseInsensitiveOrderedSet, but you can use an ObjectOrderedSet
-	 * or one of its other subclasses as well.
-	 *
-	 * @param set an ObjectOrderedSet or one of its subclasses, such as a CaseInsensitiveOrderedSet
-	 */
-	public CaseInsensitiveOrderedSet (ObjectOrderedSet<? extends CharSequence> set) {
-		super(set);
+		this(set.size());
+		hashMultiplier = 0xEFAA28F1;
+		addAll(set);
 	}
 
 	/**
@@ -124,7 +118,10 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param coll a Collection implementation, such as an ObjectList
 	 */
 	public CaseInsensitiveOrderedSet (Collection<? extends CharSequence> coll) {
-		super(coll);
+		super(coll.size());
+		hashMultiplier = 0xEFAA28F1;
+		addAll(coll);
+
 	}
 
 	/**
@@ -135,7 +132,9 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
 	public CaseInsensitiveOrderedSet (CharSequence[] array, int offset, int length) {
-		super(array, offset, length);
+		this(length);
+		hashMultiplier = 0xEFAA28F1;
+		addAll(array, offset, length);
 	}
 
 	/**
@@ -144,7 +143,9 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
 	public CaseInsensitiveOrderedSet (CharSequence[] array) {
-		super(array);
+		this(array.length);
+		hashMultiplier = 0xEFAA28F1;
+		addAll(array);
 	}
 
 	/**
@@ -153,8 +154,9 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param set another CaseInsensitiveOrderedSet
 	 */
 	public CaseInsensitiveOrderedSet (CaseInsensitiveOrderedSet set) {
-		super(set);
+		super(set.size);
 		this.hashMultiplier = set.hashMultiplier;
+		addAll(set);
 	}
 
 	/**
@@ -167,6 +169,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 */
 	public CaseInsensitiveOrderedSet (Ordered<CharSequence> other, int offset, int count) {
 		this(count);
+		hashMultiplier = 0xEFAA28F1;
 		addAll(0, other, offset, count);
 	}
 
@@ -196,23 +199,14 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 		return h;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
+	}
+
 	protected void resize (int newSize) {
-		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
-		mask = newSize - 1;
-		shift = BitConversion.countLeadingZeros(mask) + 32;
-
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
-		@Nullable CharSequence[] oldKeyTable = keyTable;
-
-		keyTable = new String[newSize];
-
-		if (size > 0) {
-			for (int i = 0; i < oldCapacity; i++) {
-				CharSequence key = oldKeyTable[i];
-				if (key != null) {addResize(key);}
-			}
-		}
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, BitConversion.countLeadingZeros(newSize - 1) + 32) >>> 5 & 511];
+		super.resize(newSize);
 	}
 
 	/**

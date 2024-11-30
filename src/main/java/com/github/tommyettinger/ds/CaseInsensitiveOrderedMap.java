@@ -93,19 +93,12 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map an ObjectObjectOrderedMap to copy, or a subclass such as this one
-	 */
-	public CaseInsensitiveOrderedMap (ObjectObjectOrderedMap<? extends CharSequence, ? extends V> map) {
-		super(map);
-	}
-
-	/**
-	 * Creates a new map identical to the specified map.
-	 *
 	 * @param map a Map to copy; ObjectObjectOrderedMap and subclasses of it will be faster
 	 */
 	public CaseInsensitiveOrderedMap (Map<? extends CharSequence, ? extends V> map) {
-		super(map);
+		super(map.size());
+		hashMultiplier = 0xEFAA28F1;
+		putAll(map);
 	}
 
 	/**
@@ -116,7 +109,9 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param values an array of values
 	 */
 	public CaseInsensitiveOrderedMap (CharSequence[] keys, V[] values) {
-		super(keys, values);
+		super(Math.min(keys.length, values.length));
+		hashMultiplier = 0xEFAA28F1;
+		putAll(keys, values);
 	}
 	/**
 	 * Creates a new map identical to the specified map.
@@ -124,8 +119,10 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param map a CaseInsensitiveOrderedMap to copy
 	 */
 	public CaseInsensitiveOrderedMap(CaseInsensitiveOrderedMap<? extends V> map) {
-		super(map);
+		super(map.size());
 		this.hashMultiplier = map.hashMultiplier;
+		putAll(map);
+
 	}
 
 	/**
@@ -136,7 +133,9 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param values a Collection of values
 	 */
 	public CaseInsensitiveOrderedMap (Collection<? extends CharSequence> keys, Collection<? extends V> values) {
-		super(keys, values);
+		super(Math.min(keys.size(), values.size()));
+		hashMultiplier = 0xEFAA28F1;
+		putAll(keys, values);
 	}
 
 	/**
@@ -149,6 +148,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 */
 	public CaseInsensitiveOrderedMap (ObjectObjectOrderedMap<? extends CharSequence, ? extends V> other, int offset, int count) {
 		this(count);
+		hashMultiplier = 0xEFAA28F1;
 		putAll(0, other, offset, count);
 	}
 
@@ -207,24 +207,8 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	}
 
 	protected void resize (int newSize) {
-		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
-		mask = newSize - 1;
-		shift = BitConversion.countLeadingZeros(mask) + 32;
-
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
-		CharSequence[] oldKeyTable = keyTable;
-		V[] oldValueTable = valueTable;
-
-		keyTable = (CharSequence[])new Object[newSize];
-		valueTable = (V[])new Object[newSize];
-
-		if (size > 0) {
-			for (int i = 0; i < oldCapacity; i++) {
-				CharSequence key = oldKeyTable[i];
-				if (key != null) {putResize(key, oldValueTable[i]);}
-			}
-		}
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, BitConversion.countLeadingZeros(newSize - 1) + 32) >>> 5 & 511];
+		super.resize(newSize);
 	}
 
 	@Override
