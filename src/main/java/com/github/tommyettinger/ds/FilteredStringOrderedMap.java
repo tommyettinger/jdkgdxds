@@ -138,9 +138,10 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param map an FilteredStringOrderedMap to copy
 	 */
 	public FilteredStringOrderedMap (FilteredStringOrderedMap<? extends V> map) {
-		super(map);
+		super(map.size());
 		filter = map.filter;
 		this.hashMultiplier = map.hashMultiplier;
+		putAll(map);
 	}
 
 	/**

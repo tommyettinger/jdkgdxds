@@ -141,10 +141,11 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * @param map another FilteredIterableMap to copy
 	 */
 	public FilteredIterableOrderedMap (FilteredIterableOrderedMap<K, ? extends I, ? extends V> map) {
-		super(map);
+		super(map.size());
 		filter = map.filter;
 		editor = map.editor;
 		this.hashMultiplier = map.hashMultiplier;
+		putAll(map);
 	}
 
 	/**

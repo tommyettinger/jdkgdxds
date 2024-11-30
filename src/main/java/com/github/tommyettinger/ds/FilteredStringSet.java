@@ -129,9 +129,10 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * @param set another FilteredStringSet to copy
 	 */
 	public FilteredStringSet (FilteredStringSet set) {
-		super(set);
+		super(set.size());
 		filter = set.filter;
 		this.hashMultiplier = set.hashMultiplier;
+		addAll(set);
 	}
 
 	/**

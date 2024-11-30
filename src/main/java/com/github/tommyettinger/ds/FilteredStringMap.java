@@ -129,9 +129,10 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param map an FilteredStringMap to copy
 	 */
 	public FilteredStringMap (FilteredStringMap<? extends V> map) {
-		super(map);
+		super(map.size());
 		filter = map.filter;
 		this.hashMultiplier = map.hashMultiplier;
+		putAll(map);
 	}
 
 	/**

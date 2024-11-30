@@ -131,10 +131,11 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @param set another FilteredIterableSet to copy
 	 */
 	public FilteredIterableSet (FilteredIterableSet<T, ? extends I> set) {
-		super(set);
+		super(set.size());
 		filter = set.filter;
 		editor = set.editor;
 		this.hashMultiplier = set.hashMultiplier;
+		addAll(set);
 	}
 
 	/**
