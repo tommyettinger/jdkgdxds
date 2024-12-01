@@ -306,23 +306,6 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 		return true;
 	}
 
-	/**
-	 * Constructs a single-entry map given one key and one value.
-	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
-	 * when there's no "rest" of the keys or values.
-	 *
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param key0   the first and only key
-	 * @param value0 the first and only value
-	 * @param <V>    the type of value0
-	 * @return a new map containing just the entry mapping key0 to value0
-	 */
-	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0) {
-		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 1);
-		map.put(key0, value0);
-		return map;
-	}
-
 	protected void resize (int newSize) {
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
@@ -345,19 +328,117 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	}
 
 	/**
-	 * Constructs a map given alternating keys and values.
-	 * This can be useful in some code-generation scenarios, or when you want to make a
-	 * map conveniently by-hand and have it populated at the start. You can also use
-	 * {@link #FilteredStringMap(CharFilter, String[], Object[])},
-	 * which takes all keys and then all values.
-	 * This needs all keys to be {@code String}s and all values to
-	 * have the same type, because it gets those types from the first value parameter. Any keys that
-	 * aren't Strings or values that don't have V as their type have that entry skipped.
+	 * Constructs an empty map given just a CharFilter.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param key0   the first key
+	 * @param <V>    the type of values
+	 * @return a new map containing nothing
+	 */
+	public static <V> FilteredStringMap<V> with (CharFilter filter) {
+		return new FilteredStringMap<>(filter);
+	}
+
+	/**
+	 * Constructs a single-entry map given a CharFilter, one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param key0   the first and only key
+	 * @param value0 the first and only value
+	 * @param <V>    the type of value0
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0) {
+		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 1);
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map given a CharFilter and two key-value pairs.
+	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param key0   a String key
+	 * @param value0 a V value
+	 * @param key1   a String key
+	 * @param value1 a V value
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0, String key1, V value1) {
+		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map given a CharFilter and three key-value pairs.
+	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param key0   a String key
+	 * @param value0 a V value
+	 * @param key1   a String key
+	 * @param value1 a V value
+	 * @param key2   a String key
+	 * @param value2 a V value
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0, String key1, V value1, String key2, V value2) {
+		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map  given a CharFilter and four key-value pairs.
+	 * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param key0   a String key
+	 * @param value0 a V value
+	 * @param key1   a String key
+	 * @param value1 a V value
+	 * @param key2   a String key
+	 * @param value2 a V value
+	 * @param key3   a String key
+	 * @param value3 a V value
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0, String key1, V value1, String key2, V value2, String key3, V value3) {
+		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given a CharFilter, then alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link #FilteredStringMap(CharFilter, String[], Object[])}, which takes all keys and then all values.
+	 * This needs all keys to have the same type and all values to have the same type, because
+	 * it gets those types from the first key parameter and first value parameter. Any keys that don't
+	 * have String as their type or values that don't have V as their type have that entry skipped.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param key0   the first key; will be used to determine the type of all keys
 	 * @param value0 the first value; will be used to determine the type of all values
-	 * @param rest   an array or varargs of alternating K, V, K, V... elements
+	 * @param rest   an array or varargs of alternating String, V, String, V... elements
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
