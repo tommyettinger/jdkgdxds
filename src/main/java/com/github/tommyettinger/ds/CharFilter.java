@@ -33,6 +33,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * references to {@link Character#isLetter(char)} for the filter, {@link Character#toUpperCase(char)} for the editor, and could be
  * named {@code "LetterOnlyCaseInsensitive"}.
  * <br>
+ * Any CharFilter can be used as a factory to create {@link FilteredStringSet} and {@link FilteredStringOrderedSet}
+ * collections as if using their {@link FilteredStringSet#with()} static method and this CharFilter. These use the
+ * {@link #makeSet()} and {@link #makeOrderedSet()} methods, which can take 0-8 String parameters without allocating,
+ * or any number of String parameters if given an array or varargs.
+ * <br>
  * If you target GWT, be aware that several built-in JDK methods for handling chars may work differently in HTML than on
  * desktop, Android, or other platforms. In particular, {@link Character#toUpperCase(char)} will not work on most Unicode
  * chars on GWT, so you need another way to handle case-insensitivity. If you depend on
@@ -298,4 +303,153 @@ public class CharFilter {
 		return new FilteredStringSet(this, varargs);
 	}
 
+	/**
+	 * Constructs an empty ordered set using this CharFilter.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new ordered set containing nothing
+	 */
+	public FilteredStringOrderedSet makeOrderedSet () {
+		return new FilteredStringOrderedSet(this, 0);
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given item, but can be resized.
+	 * Uses this CharFilter in the new ordered set.
+	 * @param item one String item
+	 * @return a new FilteredStringOrderedSet that holds the given item
+	 */
+	public FilteredStringOrderedSet makeOrderedSet (String item) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 1);
+		set.add(item);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new ordered set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 2);
+		set.add(item0, item1);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new ordered set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 3);
+		set.add(item0, item1, item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new ordered set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2, String item3) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 4);
+		set.add(item0, item1, item2, item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new ordered set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2, String item3, String item4) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 5);
+		set.add(item0, item1, item2, item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new ordered set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @param item5 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2, String item3, String item4, String item5) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 6);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new ordered set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @param item5 a String item
+	 * @param item6 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2, String item3, String item4, String item5, String item6) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 7);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new ordered set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @param item5 a String item
+	 * @param item6 a String item
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2, String item3, String item4, String item5, String item6, String item7) {
+		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 8);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6, item7);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new ordered set.
+	 * This overload will only be used when an array is supplied or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a String varargs or String array; remember that varargs allocate
+	 * @return a new FilteredStringOrderedSet that holds the given items
+	 */
+	public FilteredStringOrderedSet makeOrderedSet (String... varargs) {
+		return new FilteredStringOrderedSet(this, varargs);
+	}
 }
