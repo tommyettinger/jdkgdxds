@@ -38,6 +38,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * {@link #makeSet()} and {@link #makeOrderedSet()} methods, which can take 0-8 String parameters without allocating,
  * or any number of String parameters if given an array or varargs.
  * <br>
+ * Any CharFilter can be also used as a factory to create {@link FilteredStringMap} and {@link FilteredStringOrderedMap}
+ * collections as if using their {@link FilteredStringMap#with()} static method and this CharFilter. These use the
+ * {@link #makeMap()} and {@link #makeOrderedMap()} methods, which can take 0-4 String-V pairs without allocating,
+ * or one or more String-V pairs if given an array or varargs.
+ * <br>
  * If you target GWT, be aware that several built-in JDK methods for handling chars may work differently in HTML than on
  * desktop, Android, or other platforms. In particular, {@link Character#toUpperCase(char)} will not work on most Unicode
  * chars on GWT, so you need another way to handle case-insensitivity. If you depend on
@@ -451,5 +456,248 @@ public class CharFilter {
 	 */
 	public FilteredStringOrderedSet makeOrderedSet (String... varargs) {
 		return new FilteredStringOrderedSet(this, varargs);
+	}
+	
+	/**
+	 * Constructs an empty map given just a CharFilter.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <V>    the type of values
+	 * @return a new map containing nothing
+	 */
+	public <V> FilteredStringMap<V> makeMap () {
+		return new FilteredStringMap<>(this);
+	}
+
+	/**
+	 * Constructs a single-entry map given a CharFilter, one key and one value.
+	 * This is mostly useful as an optimization for {@link #makeMap(String, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   the first and only key
+	 * @param value0 the first and only value
+	 * @param <V>    the type of value0
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public <V> FilteredStringMap<V> makeMap (String key0, V value0) {
+		FilteredStringMap<V> map = new FilteredStringMap<>(this, 1);
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map given a CharFilter and two key-value pairs.
+	 * This is mostly useful as an optimization for {@link #makeMap(String, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a String key
+	 * @param value0 a V value
+	 * @param key1   a String key
+	 * @param value1 a V value
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public <V> FilteredStringMap<V> makeMap (String key0, V value0, String key1, V value1) {
+		FilteredStringMap<V> map = new FilteredStringMap<>(this, 2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map given a CharFilter and three key-value pairs.
+	 * This is mostly useful as an optimization for {@link #makeMap(String, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a String key
+	 * @param value0 a V value
+	 * @param key1   a String key
+	 * @param value1 a V value
+	 * @param key2   a String key
+	 * @param value2 a V value
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public <V> FilteredStringMap<V> makeMap (String key0, V value0, String key1, V value1, String key2, V value2) {
+		FilteredStringMap<V> map = new FilteredStringMap<>(this, 3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry map  given a CharFilter and four key-value pairs.
+	 * This is mostly useful as an optimization for {@link #makeMap(String, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a String key
+	 * @param value0 a V value
+	 * @param key1   a String key
+	 * @param value1 a V value
+	 * @param key2   a String key
+	 * @param value2 a V value
+	 * @param key3   a String key
+	 * @param value3 a V value
+	 * @param <V>    the type of value0
+	 * @return a new map containing entries mapping each key to the following value
+	 */
+	public <V> FilteredStringMap<V> makeMap (String key0, V value0, String key1, V value1, String key2, V value2, String key3, V value3) {
+		FilteredStringMap<V> map = new FilteredStringMap<>(this, 4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given a CharFilter, then alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link FilteredStringMap#FilteredStringMap(CharFilter, String[], Object[])}, which takes all keys and then all values.
+	 * This needs all keys to have the same type and all values to have the same type, because
+	 * it gets those types from the first key parameter and first value parameter. Any keys that don't
+	 * have String as their type or values that don't have V as their type have that entry skipped.
+	 *
+	 * @param key0   the first key; will be used to determine the type of all keys
+	 * @param value0 the first value; will be used to determine the type of all values
+	 * @param rest   an array or varargs of alternating String, V, String, V... elements
+	 * @param <V>    the type of values, inferred from value0
+	 * @return a new map containing the given keys and values
+	 */
+	@SuppressWarnings("unchecked")
+	public <V> FilteredStringMap<V> makeMap (String key0, V value0, Object... rest) {
+		FilteredStringMap<V> map = new FilteredStringMap<>(this, 1 + (rest.length >>> 1));
+		map.put(key0, value0);
+		for (int i = 1; i < rest.length; i += 2) {
+			try {
+				map.put((String)rest[i - 1], (V)rest[i]);
+			} catch (ClassCastException ignored) {
+			}
+		}
+		return map;
+	}
+	/**
+	 * Constructs an empty ordered map given just a CharFilter.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @param <V>    the type of values
+	 * @return a new ordered map containing nothing
+	 */
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap () {
+		return new FilteredStringOrderedMap<>(this);
+	}
+
+	/**
+	 * Constructs a single-entry ordered map given a CharFilter, one key and one value.
+	 * This is mostly useful as an optimization for {@link #makeOrderedMap(String, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   the first and only key
+	 * @param value0 the first and only value
+	 * @param <V>    the type of value0
+	 * @return a new ordered map containing just the entry mapping key0 to value0
+	 */
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap (String key0, V value0) {
+		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(this, 1);
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry ordered map given a CharFilter and two key-value pairs.
+	 * This is mostly useful as an optimization for {@link #makeOrderedMap(String, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a String key
+	 * @param value0 a V value
+	 * @param key1   a String key
+	 * @param value1 a V value
+	 * @param <V>    the type of value0
+	 * @return a new ordered map containing entries mapping each key to the following value
+	 */
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap (String key0, V value0, String key1, V value1) {
+		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(this, 2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry ordered map given a CharFilter and three key-value pairs.
+	 * This is mostly useful as an optimization for {@link #makeOrderedMap(String, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a String key
+	 * @param value0 a V value
+	 * @param key1   a String key
+	 * @param value1 a V value
+	 * @param key2   a String key
+	 * @param value2 a V value
+	 * @param <V>    the type of value0
+	 * @return a new ordered map containing entries mapping each key to the following value
+	 */
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap (String key0, V value0, String key1, V value1, String key2, V value2) {
+		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(this, 3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a single-entry ordered map  given a CharFilter and four key-value pairs.
+	 * This is mostly useful as an optimization for {@link #makeOrderedMap(String, Object, Object...)}
+	 * when there's no "rest" of the keys or values.
+	 *
+	 * @param key0   a String key
+	 * @param value0 a V value
+	 * @param key1   a String key
+	 * @param value1 a V value
+	 * @param key2   a String key
+	 * @param value2 a V value
+	 * @param key3   a String key
+	 * @param value3 a V value
+	 * @param <V>    the type of value0
+	 * @return a new ordered map containing entries mapping each key to the following value
+	 */
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap (String key0, V value0, String key1, V value1, String key2, V value2, String key3, V value3) {
+		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(this, 4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
+		return map;
+	}
+
+	/**
+	 * Constructs a ordered map given a CharFilter, then alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * ordered map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link FilteredStringOrderedMap#FilteredStringOrderedMap(CharFilter, String[], Object[])}, which takes all keys and then all values.
+	 * This needs all keys to have the same type and all values to have the same type, because
+	 * it gets those types from the first key parameter and first value parameter. Any keys that don't
+	 * have String as their type or values that don't have V as their type have that entry skipped.
+	 *
+	 * @param key0   the first key; will be used to determine the type of all keys
+	 * @param value0 the first value; will be used to determine the type of all values
+	 * @param rest   an array or varargs of alternating String, V, String, V... elements
+	 * @param <V>    the type of values, inferred from value0
+	 * @return a new ordered map containing the given keys and values
+	 */
+	@SuppressWarnings("unchecked")
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap (String key0, V value0, Object... rest) {
+		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(this, 1 + (rest.length >>> 1));
+		map.put(key0, value0);
+		for (int i = 1; i < rest.length; i += 2) {
+			try {
+				map.put((String)rest[i - 1], (V)rest[i]);
+			} catch (ClassCastException ignored) {
+			}
+		}
+		return map;
 	}
 }
