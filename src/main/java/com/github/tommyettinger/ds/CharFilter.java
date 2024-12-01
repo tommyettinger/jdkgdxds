@@ -20,17 +20,26 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A small class that holds two functional-interface values used for filtering and editing characters, and a name they can be
+ * A small class that holds two functional-interface values used for filtering and editing characters, and a name they are
  * associated with. Every time a CharFilter is constructed, it is registered internally, so it can be looked up at a later time
  * by name, using {@link #get(String)} or {@link #getOrDefault(String, CharFilter)}. Actually obtaining CharFilter objects is done
  * with {@link #getOrCreate(String, CharPredicate, CharToCharFunction)}, which tries to get an existing CharFilter first, and if it
- * can't find one, then it creates, registers, and returns one. A suggested practice for names is to describe
- * the filter's effects first, if any, followed by the editor's effects. A typical filter might only allow letter chars through,
+ * can't find one, then it creates, registers, and returns one. A suggested practice for names is to describe the
+ * filter's effects first, if any, followed by the editor's effects. A typical filter might only allow letter chars through,
  * and would convert them to upper-case so that they can (almost always) be treated as case-insensitive. This could use method
  * references to {@link Character#isLetter(char)} for the filter, {@link Character#toUpperCase(char)} for the editor, and could be
  * named {@code "LetterOnlyCaseInsensitive"}.
+ * <br>
+ * If you target GWT, be aware that several built-in JDK methods for handling chars may work differently in HTML than on
+ * desktop, Android, or other platforms. In particular, {@link Character#toUpperCase(char)} will not work on most Unicode
+ * chars on GWT, so you need another way to handle case-insensitivity. If you depend on
+ * <a href="https://github.com/tommyettinger/RegExodus">RegExodus</a>, you can use its {@code Category::caseUp} as an
+ * editor to make a char upper-case (if such a transformation can be done), and this works on GWT. Similarly,
+ * {@code Category.L::contains} can be used as a filter to allow only chars in Unicode category L (letters). Because
+ * jdkgdxds does not depend on RegExodus, these aren't used in predefined filters or editors here.
  */
 public class CharFilter {
 	/**
@@ -125,7 +134,7 @@ public class CharFilter {
 	 * @param name the name to look up
 	 * @return a registered CharFilter or null
 	 */
-	public static CharFilter get(String name) {
+	public static @Nullable CharFilter get(String name) {
 		return REGISTRY.get(name);
 	}
 
@@ -135,7 +144,158 @@ public class CharFilter {
 	 * @param defaultValue a CharFilter to return if none was found; may be null
 	 * @return a registered CharFilter or {@code defaultValue}
 	 */
-	public static CharFilter getOrDefault(String name, CharFilter defaultValue) {
+	public static @Nullable CharFilter getOrDefault(String name, @Nullable CharFilter defaultValue) {
 		return REGISTRY.getOrDefault(name, defaultValue);
 	}
+
+	/**
+	 * Constructs an empty set using this CharFilter.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new set containing nothing
+	 */
+	public FilteredStringSet makeSet () {
+		return new FilteredStringSet(this, 0);
+	}
+
+	/**
+	 * Creates a new FilteredStringSet that holds only the given item, but can be resized.
+	 * Uses this CharFilter in the new set.
+	 * @param item one String item
+	 * @return a new FilteredStringSet that holds the given item
+	 */
+	public FilteredStringSet makeSet (String item) {
+		FilteredStringSet set = new FilteredStringSet(this, 1);
+		set.add(item);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @return a new FilteredStringSet that holds the given items
+	 */
+	public FilteredStringSet makeSet (String item0, String item1) {
+		FilteredStringSet set = new FilteredStringSet(this, 2);
+		set.add(item0, item1);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @return a new FilteredStringSet that holds the given items
+	 */
+	public FilteredStringSet makeSet (String item0, String item1, String item2) {
+		FilteredStringSet set = new FilteredStringSet(this, 3);
+		set.add(item0, item1, item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @return a new FilteredStringSet that holds the given items
+	 */
+	public FilteredStringSet makeSet (String item0, String item1, String item2, String item3) {
+		FilteredStringSet set = new FilteredStringSet(this, 4);
+		set.add(item0, item1, item2, item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @return a new FilteredStringSet that holds the given items
+	 */
+	public FilteredStringSet makeSet (String item0, String item1, String item2, String item3, String item4) {
+		FilteredStringSet set = new FilteredStringSet(this, 5);
+		set.add(item0, item1, item2, item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @param item5 a String item
+	 * @return a new FilteredStringSet that holds the given items
+	 */
+	public FilteredStringSet makeSet (String item0, String item1, String item2, String item3, String item4, String item5) {
+		FilteredStringSet set = new FilteredStringSet(this, 6);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @param item5 a String item
+	 * @param item6 a String item
+	 * @return a new FilteredStringSet that holds the given items
+	 */
+	public FilteredStringSet makeSet (String item0, String item1, String item2, String item3, String item4, String item5, String item6) {
+		FilteredStringSet set = new FilteredStringSet(this, 7);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new set.
+	 * @param item0 a String item
+	 * @param item1 a String item
+	 * @param item2 a String item
+	 * @param item3 a String item
+	 * @param item4 a String item
+	 * @param item5 a String item
+	 * @param item6 a String item
+	 * @return a new FilteredStringSet that holds the given items
+	 */
+	public FilteredStringSet makeSet (String item0, String item1, String item2, String item3, String item4, String item5, String item6, String item7) {
+		FilteredStringSet set = new FilteredStringSet(this, 8);
+		set.add(item0, item1, item2, item3);
+		set.add(item4, item5, item6, item7);
+		return set;
+	}
+
+	/**
+	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 * Uses this CharFilter in the new set.
+	 * This overload will only be used when an array is supplied or if varargs are used and
+	 * there are 9 or more arguments.
+	 * @param varargs a String varargs or String array; remember that varargs allocate
+	 * @return a new FilteredStringSet that holds the given items
+	 */
+	public FilteredStringSet makeSet (String... varargs) {
+		return new FilteredStringSet(this, varargs);
+	}
+
 }

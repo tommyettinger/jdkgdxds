@@ -612,7 +612,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
      * @return the T item that holds the given key, or {@code defaultValue} if none was found
      */
     @Nullable
-    public T getOrDefault(Object key, T defaultValue) {
+    public T getOrDefault(Object key, @Nullable T defaultValue) {
         int i = locateKey(key);
         return i < 0 ? defaultValue : keyTable[i];
     }
@@ -625,10 +625,11 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
      * @throws IllegalStateException if this HolderSet is empty
      */
     public T first() {
-        T[] keyTable = this.keyTable;
+        @Nullable T[] keyTable = this.keyTable;
         for (int i = 0, n = keyTable.length; i < n; i++) {
-            if (keyTable[i] != null) {
-                return keyTable[i];
+            @Nullable T key = keyTable[i];
+            if (key != null) {
+                return key;
             }
         }
         throw new IllegalStateException("HolderSet is empty.");
