@@ -160,15 +160,15 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api 'com.github.tommyettinger:jdkgdxds:1.6.5'
+api 'com.github.tommyettinger:jdkgdxds:1.7.0'
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
 `mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on [digital](https://github.com/tommyettinger/digital)
 (which provides common math code meant for use by multiple projects), [funderby](https://github.com/tommyettinger/funderby)
 (Java 8 functional interfaces for primitive types), and for annotations only, [checker-qual](https://github.com/typetools/checker-framework). The
-version for the `digital` dependency is 0.5.2 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.5.2"`). Funderby has only changed a bit since its initial release, and is on version
+version for the `digital` dependency is 0.5.4 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.5.4"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`). The version for
 `checker-qual` is 3.42.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes.
 Earlier versions of jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to
@@ -178,8 +178,8 @@ mention that JSR305 is currently unmaintained). You can manually specify a `chec
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.5.2:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.6.5:sources"
+implementation "com.github.tommyettinger:digital:0.5.4:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.7.0:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -232,7 +232,7 @@ on what your other dependencies use, to your project or its core module (if ther
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.5.2:sources"
+implementation "com.github.tommyettinger:digital:0.5.4:sources"
 implementation "com.github.tommyettinger:jdkgdxds:56d6c63644:sources"
 ```
 to its
@@ -357,3 +357,16 @@ always grouped into a `CharFilter` object, which has a name that can be looked u
 use `CharFilter.getOrCreate()` to get an existing CharFilter if one can be reused, or create one if the name isn't registered.
 This is only breaking if you updated to 1.4.5 between December 5 and December 7, 2023, since 1.4.6 was released on December 7,
 2023... Plus you would have to be using the new FilteredString types... So, this is unlikely to be a problem.
+
+## Updating to 1.7.0
+
+Version 1.7.0 mostly has a small breaking change that is not very likely to affect users, but this can cascade if you
+subclass set or map classes. Most sets and maps had their `hashMultiplier` field removed, since it wasn't used anymore.
+Some re-added `hashMultiplier` to themselves, such as the Filtered sets and maps, or the CaseInsensitive ones, because
+they did still use that field. This needed some extra work because of how calls to a `super()` constructor can't see
+initialization done in a subclass; subclasses that previously relied on a superconstructor that took a collection or
+array now have to use a superconstructor that doesn't, then set hashMultiplier, then add that collection or array. This
+will only affect user code that extends classes such as ObjectSet, ObjectObjectMap, IntSet, IntFloatMap, LongSet,
+LongIntMap, and so on, and even then only if the subclass needs to access `hashMultiplier`. The getters and setters for
+`hashMultiplier` are still there, and can still be overridden to do something even if a class doesn't use a
+`hashMultiplier` at all.

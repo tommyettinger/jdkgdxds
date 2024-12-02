@@ -1,3 +1,15 @@
+[1.7.0]
+- [BREAKING] Set and map types no longer guarantee they will have a `hashMultiplier` field, though the getters and setters for that field still exist.
+- Some set and map types do still have a `hashMultiplier` field, and are mostly unaffected by the above breakage, including all Filtered and/or CaseInsensitive sets and maps.
+- The first change means classes like ObjectSet and IntFloatMap no longer use hash function *families* to mix hash codes, and instead use a multiplication-free bitwise mixer.
+- The `remove()` method in maps and sets changed slightly internally, and should be faster. It uses a complex technique that was pulled from Fastutil and seems to have a small speed benefit.
+- There are many more overloads of `with()` now; this avoids allocating any array when passing 8 or fewer parameters (for 8 items in a set, or 4 key-value pairs in a map).
+- A CharFilter can be used to construct FilteredString sets and maps, or ordered variants, that use that same CharFilter. Use `makeSet()`, `makeMap()`, `makeOrderedSet()`, or `makeOrderedMap()` for this; these act like `with()` but don't need another CharFilter to be looked up.
+- OffsetBitSet now uses `int` internally instead of `long`, because GWT is so much slower with `long` math. Various other fixes were applied to OffsetBitSet.
+- Some improvements to nullity handling.
+- Updated to digital 0.5.4 . This release makes some changes to how Distributor behaves.
+- The Gradle version used to build jdkgdxds was updated to 8.11.1, and the daemon was re-disabled while building. This shouldn't affect users.
+
 [1.6.5]
 - Added LimitingIterator, which will only iterate through a set amount of items at most.
 - Updated to digital 0.5.2, which mostly adds the Distributor class.

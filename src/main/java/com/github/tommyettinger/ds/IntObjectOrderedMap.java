@@ -850,7 +850,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
-	 * {@link #IntObjectOrderedMap(int[], V[])}, which takes all keys and then all values.
+	 * {@link #IntObjectOrderedMap(int[], Object[])}, which takes all keys and then all values.
 	 * This needs all keys to have the same type, because it gets a generic type from the
 	 * first key parameter. All keys must be some type of boxed Number, such as {@link Integer}
 	 * or {@link Double}, and will be converted to primitive {@code int}s. Any values that don't
