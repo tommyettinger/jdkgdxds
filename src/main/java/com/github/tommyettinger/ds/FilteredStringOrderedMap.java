@@ -252,6 +252,27 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	}
 
 	/**
+	 * This actually does something here because the hash multiplier can change.
+	 *
+	 * @return this class' current hash multiplier
+	 */
+	@Override
+	public int getHashMultiplier() {
+		return hashMultiplier;
+	}
+
+	/**
+	 * This actually does something here because the hash multiplier can change.
+	 * The {@code mul} will be made negative and odd if it wasn't both already.
+	 *
+	 * @param mul any int; will be made negative and odd before using
+	 */
+	@Override
+	public void setHashMultiplier(int mul) {
+		hashMultiplier = mul | 0x80000001;
+	}
+
+	/**
 	 * Compares two objects for equality by the rules this filtered data structure uses for keys.
 	 * This will return true if the arguments are reference-equivalent or both null. Otherwise, it
 	 * requires that both are {@link String}s and compares them using the {@link #getFilter() filter}

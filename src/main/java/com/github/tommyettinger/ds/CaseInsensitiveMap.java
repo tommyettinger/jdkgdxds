@@ -139,6 +139,27 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 		return super.place(item);
 	}
 
+	/**
+	 * This actually does something here because the hash multiplier can change.
+	 *
+	 * @return this class' current hash multiplier
+	 */
+	@Override
+	public int getHashMultiplier() {
+		return hashMultiplier;
+	}
+
+	/**
+	 * This actually does something here because the hash multiplier can change.
+	 * The {@code mul} will be made negative and odd if it wasn't both already.
+	 *
+	 * @param mul any int; will be made negative and odd before using
+	 */
+	@Override
+	public void setHashMultiplier(int mul) {
+		hashMultiplier = mul | 0x80000001;
+	}
+
 	@Override
 	protected boolean equate (Object left, @Nullable Object right) {
 		if ((left instanceof CharSequence) && (right instanceof CharSequence)) {

@@ -579,6 +579,7 @@ public class CharFilter {
 		}
 		return map;
 	}
+
 	/**
 	 * Constructs an empty ordered map given just a CharFilter.
 	 * This is usually less useful than just using the constructor, but can be handy
