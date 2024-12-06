@@ -58,7 +58,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	/**
 	 * Precalculated value of {@code (int)(keyTable.length * loadFactor)}, used to determine when to resize.
 	 */
-	protected transient int threshold;
+	protected int threshold;
 
 	/**
 	 * Used by {@link #place(int)} to bit shift the upper bits of an {@code int} into a usable range (&gt;= 0 and &lt;=
@@ -70,14 +70,14 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * {@link #mask} can also be used to mask the low bits of a number, which may be faster for some hashcodes, if
 	 * {@link #place(int)} is overridden.
 	 */
-	protected transient int shift;
+	protected int shift;
 
 	/**
 	 * A bitmask used to confine hash codes to the size of the table. Must be all 1-bits in its low positions, ie a power of two
 	 * minus 1. If {@link #place(int)} is overridden, this can be used instead of {@link #shift} to isolate usable bits of a
 	 * hash.
 	 */
-	protected transient int mask;
+	protected int mask;
 
 	@Nullable protected transient IntSetIterator iterator1;
 	@Nullable protected transient IntSetIterator iterator2;
