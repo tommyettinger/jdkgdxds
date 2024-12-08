@@ -118,6 +118,62 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             return new Leaf<>(item);
         }
     }
+
+    public static class Not<T extends Comparable<T>> implements Term<T>{
+        public Term<T> term;
+
+        public Not() {
+        }
+        public Not(T item) {
+            this.term = Leaf.of(item);
+        }
+        private Not(Class<Void> ignored, Term<T> term) {
+            this.term = term;
+        }
+
+        @Override
+        public boolean match(Collection<? extends T> seq) {
+            return !term.match(seq);
+        }
+
+        @Override
+        public char symbol() {
+            return '~';
+        }
+
+        @Override
+        public String name() {
+            return "not";
+        }
+
+        @Override
+        public String toString() {
+            return "not(" + term.toString() + ")";
+        }
+
+        @Override
+        public final boolean equals(Object o) {
+            if (!(o instanceof Junction.Not)) return !Objects.equals(o, term);
+
+            Not<?> leaf = (Not<?>) o;
+            return !Objects.equals(term, leaf.term);
+        }
+
+        @Override
+        public int hashCode() {
+            return ~Objects.hashCode(term);
+        }
+
+        @Override
+        public int compareTo(Term<T> o) {
+            return -(o instanceof Not ? term.compareTo(((Not<T>)o).term) : Integer.signum(o.symbol() - symbol()));
+        }
+
+        public static <T extends Comparable<T>> Not<T> of(Term<T> term) {
+            return new Not<>(Void.TYPE, term);
+        }
+    }
+
     public static class Any<T extends Comparable<T>> implements Term<T>{
         public final ObjectList<Term<T>> contents;
 
