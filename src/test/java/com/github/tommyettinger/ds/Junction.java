@@ -1,10 +1,17 @@
 package com.github.tommyettinger.ds;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * Matches potentially more than one {@code T} value in different ways against a supplied {@link Collection} of
+ * {@code T}. This is inspired by the Junction type in <a href="https://docs.raku.org/type/Junction">Raku</a>, but
+ * isn't totally equivalent. A Junction is the outermost parent of its hierarchy, and contains {@link Term} nodes.
+ * Note, the {@link #equals(Object)} method is meant to compare two Junctions to see if they are equivalent, while
+ * the {@link #match(Collection)} method is how you actually check if this Junction matches a Collection.
+ *
+ * @param <T> any Comparable type, such as String or any enum type
+ */
 public class Junction<T extends Comparable<T>> implements Term<T> {
     public final Term<T> root;
 
@@ -15,6 +22,10 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         this.root = canonicalize(root);
     }
 
+    private Junction(Class<Void> ignored, T item) {
+        this.root = Leaf.of(item);
+    }
+
     // TODO: NYI
     public Term<T> canonicalize(Term<T> term) {
         return term;
@@ -22,7 +33,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
     @Override
     public final boolean equals(Object o) {
-        if (!(o instanceof Junction)) return false;
+        if (!(o instanceof Junction)) return Objects.equals(o, root);
 
         Junction<?> junction = (Junction<?>) o;
         return root.equals(junction.root);
@@ -48,48 +59,18 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         return "(" + root + ")";
     }
 
-    /**
-     * Compares this object with the specified object for order.  Returns a
-     * negative integer, zero, or a positive integer as this object is less
-     * than, equal to, or greater than the specified object.
-     *
-     * <p>The implementor must ensure {@link Integer#signum
-     * signum}{@code (x.compareTo(y)) == -signum(y.compareTo(x))} for
-     * all {@code x} and {@code y}.  (This implies that {@code
-     * x.compareTo(y)} must throw an exception if and only if {@code
-     * y.compareTo(x)} throws an exception.)
-     *
-     * <p>The implementor must also ensure that the relation is transitive:
-     * {@code (x.compareTo(y) > 0 && y.compareTo(z) > 0)} implies
-     * {@code x.compareTo(z) > 0}.
-     *
-     * <p>Finally, the implementor must ensure that {@code
-     * x.compareTo(y)==0} implies that {@code signum(x.compareTo(z))
-     * == signum(y.compareTo(z))}, for all {@code z}.
-     *
-     * @param o the object to be compared.
-     * @return a negative integer, zero, or a positive integer as this object
-     * is less than, equal to, or greater than the specified object.
-     * @throws NullPointerException if the specified object is null
-     * @throws ClassCastException   if the specified object's type prevents it
-     *                              from being compared to this object.
-     * @apiNote It is strongly recommended, but <i>not</i> strictly required that
-     * {@code (x.compareTo(y)==0) == (x.equals(y))}.  Generally speaking, any
-     * class that implements the {@code Comparable} interface and violates
-     * this condition should clearly indicate this fact.  The recommended
-     * language is "Note: this class has a natural ordering that is
-     * inconsistent with equals."
-     */
     @Override
     public int compareTo(Term<T> o) {
         return root.compareTo(o);
     }
+    public static <T extends Comparable<T>> Junction<T> of(T item) {
+        return new Junction<>(Void.TYPE, item);
+    }
 
     public static class Leaf<T extends Comparable<T>> implements Term<T>{
-        public final T item;
+        public T item;
 
         public Leaf() {
-            item = (T)(new Object());
         }
         public Leaf(T item) {
             this.item = item;
@@ -132,6 +113,10 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         public int compareTo(Term<T> o) {
             return o instanceof Leaf ? item.compareTo(((Leaf<T>)o).item) : Integer.signum(o.symbol() - symbol());
         }
+
+        public static <T extends Comparable<T>> Leaf<T> of(T item) {
+            return new Leaf<>(item);
+        }
     }
     public static class Any<T extends Comparable<T>> implements Term<T>{
         public final ObjectList<Term<T>> contents;
@@ -151,6 +136,16 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         public Any(Collection<Term<T>> coll) {
             contents = new ObjectList<>(coll);
+            contents.sort();
+        }
+
+        /**
+         * Use via {@link #of(Term[])} instead of directly.
+         * @param ignored {@link Void#TYPE}
+         * @param terms an array of Terms that will be put into {@link #contents} and sorted
+         */
+        private Any(Class<Void> ignored, Term<T>[] terms) {
+            contents = new ObjectList<>(terms);
             contents.sort();
         }
 
@@ -179,7 +174,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         @Override
         public final boolean equals(Object o) {
-            if (!(o instanceof Any)) return false;
+            if (!(o instanceof Any)) return o != null && contents.contains(o);
 
             Any<?> any = (Any<?>) o;
             return contents.equals(any.contents);
@@ -202,6 +197,11 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                 }
             }
             return Integer.signum(o.symbol() - symbol());
+        }
+
+        @SafeVarargs
+        public static <T extends Comparable<T>> Any<T> of(Term<T>... terms){
+            return new Any<>(Void.TYPE, terms);
         }
     }
 }
