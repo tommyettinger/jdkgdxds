@@ -371,6 +371,22 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	}
 
 	/**
+	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this takes no
+	 * keys or values, and doesn't allocate an array from using varargs.
+	 *
+	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @return a new FilteredIterableOrderedMap containing only the given key and value
+	 * @param <K>    the type of sub-keys inside each Iterable key
+	 * @param <I>    the type of keys, which must extend Iterable; inferred from key0
+	 * @param <V>    the type of values, inferred from value0
+	 */
+	public static <K, I extends Iterable<K>, V> FilteredIterableOrderedMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor) {
+		return new FilteredIterableOrderedMap<>(filter, editor, 0);
+	}
+
+	/**
 	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this only takes one
 	 * key-value pair, and doesn't allocate an array from using varargs.
 	 *
@@ -387,6 +403,84 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	public static <K, I extends Iterable<K>, V> FilteredIterableOrderedMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key, V value) {
 		FilteredIterableOrderedMap<K, I, V> map = new FilteredIterableOrderedMap<>(filter, editor, 1);
 		map.put(key, value);
+		return map;
+	}
+
+	/**
+	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this only takes
+	 * the given key-value pairs, and doesn't allocate an array from using varargs.
+	 *
+	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param key0   a key that will be present in the returned map
+	 * @param value0 a value that will be present in the returned map
+	 * @param key1   a key that will be present in the returned map
+	 * @param value1 a value that will be present in the returned map
+	 * @return a new FilteredIterableOrderedMap containing only the given keys and values
+	 * @param <K>    the type of sub-keys inside each Iterable key
+	 * @param <I>    the type of keys, which must extend Iterable; inferred from key0
+	 * @param <V>    the type of values, inferred from value0
+	 */
+	public static <K, I extends Iterable<K>, V> FilteredIterableOrderedMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, I key1, V value1) {
+		FilteredIterableOrderedMap<K, I, V> map = new FilteredIterableOrderedMap<>(filter, editor, 2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this only takes
+	 * the given key-value pairs, and doesn't allocate an array from using varargs.
+	 *
+	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param key0   a key that will be present in the returned map
+	 * @param value0 a value that will be present in the returned map
+	 * @param key1   a key that will be present in the returned map
+	 * @param value1 a value that will be present in the returned map
+	 * @param key2   a key that will be present in the returned map
+	 * @param value2 a value that will be present in the returned map
+	 * @return a new FilteredIterableOrderedMap containing only the given keys and values
+	 * @param <K>    the type of sub-keys inside each Iterable key
+	 * @param <I>    the type of keys, which must extend Iterable; inferred from key0
+	 * @param <V>    the type of values, inferred from value0
+	 */
+	public static <K, I extends Iterable<K>, V> FilteredIterableOrderedMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, I key1, V value1, I key2, V value2) {
+		FilteredIterableOrderedMap<K, I, V> map = new FilteredIterableOrderedMap<>(filter, editor, 3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this only takes
+	 * the given key-value pairs, and doesn't allocate an array from using varargs.
+	 *
+	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param key0   a key that will be present in the returned map
+	 * @param value0 a value that will be present in the returned map
+	 * @param key1   a key that will be present in the returned map
+	 * @param value1 a value that will be present in the returned map
+	 * @param key2   a key that will be present in the returned map
+	 * @param value2 a value that will be present in the returned map
+	 * @param key3   a key that will be present in the returned map
+	 * @param value3 a value that will be present in the returned map
+	 * @return a new FilteredIterableOrderedMap containing only the given keys and values
+	 * @param <K>    the type of sub-keys inside each Iterable key
+	 * @param <I>    the type of keys, which must extend Iterable; inferred from key0
+	 * @param <V>    the type of values, inferred from value0
+	 */
+	public static <K, I extends Iterable<K>, V> FilteredIterableOrderedMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, I key1, V value1, I key2, V value2, I key3, V value3) {
+		FilteredIterableOrderedMap<K, I, V> map = new FilteredIterableOrderedMap<>(filter, editor, 4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
 		return map;
 	}
 
@@ -422,5 +516,4 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 		}
 		return map;
 	}
-
 }

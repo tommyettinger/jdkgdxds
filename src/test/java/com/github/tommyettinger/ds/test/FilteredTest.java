@@ -50,6 +50,19 @@ public class FilteredTest {
 			);
 		System.out.println(fil);
 		Assert.assertEquals(2, fil.size());
+
+		fil = FilteredIterableMap.with(
+				(String s) -> s.length() > 3, String::toUpperCase,
+				ObjectList.with("zzz", "bee", "binturong"), 1234,
+				ObjectList.with("hm?", "bee", "BINTURONG"), -5678,
+				ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), Integer.MIN_VALUE
+		);
+
+		System.out.println(fil);
+		Assert.assertEquals(2, fil.size());
+
+
+
 	}
 	@Test
 	public void testIterableSetSubtype() {
