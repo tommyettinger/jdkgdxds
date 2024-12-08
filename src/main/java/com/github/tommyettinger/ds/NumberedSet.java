@@ -18,7 +18,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -792,14 +791,19 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 
 	@Override
 	public boolean equals (Object o) {
-		if (this == o)
+		if (o == this)
 			return true;
-		if (o == null || getClass() != o.getClass())
+
+		if (!(o instanceof Set))
 			return false;
-
-		NumberedSet<?> that = (NumberedSet<?>)o;
-
-		return map.equals(that.map);
+		Collection<?> c = (Collection<?>) o;
+		if (c.size() != size())
+			return false;
+		try {
+			return containsAll(c);
+		} catch (ClassCastException | NullPointerException unused) {
+			return false;
+		}
 	}
 
 	public float getLoadFactor () {
