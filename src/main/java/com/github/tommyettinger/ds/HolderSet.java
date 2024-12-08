@@ -258,7 +258,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
     protected int locateKey(@NonNull Object key) {
         @Nullable T[] keyTable = this.keyTable;
         for (int i = place(key); ; i = i + 1 & mask) {
-            T other = keyTable[i];
+            @Nullable T other = keyTable[i];
             if (other == null) {
                 return ~i; // Always negative; means empty space is available at i.
             }
@@ -762,24 +762,27 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
         return h;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof HolderSet)) {
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+
+        if (extractor == null || !(o instanceof Set))
             return false;
-        }
-        HolderSet other = (HolderSet) obj;
-        if (other.size != size) {
-            return false;
-        }
-        T[] keyTable = this.keyTable;
-        assert extractor != null;
-        for (int i = 0, n = keyTable.length; i < n; i++) {
-            if (keyTable[i] != null && !other.contains(extractor.apply(keyTable[i]))) {
+        try {
+            Collection<T> c = (Collection<T>) o;
+            if (c.size() != size())
                 return false;
+            for (T obj : c) {
+                if (!contains(extractor.apply(obj))) {
+                    return false;
+                }
             }
+            return true;
+        } catch (ClassCastException | NullPointerException unused) {
+            return false;
         }
-        return true;
     }
 
     @Override
