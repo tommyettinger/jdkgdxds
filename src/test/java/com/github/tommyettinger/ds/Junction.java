@@ -204,4 +204,91 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             return new Any<>(Void.TYPE, terms);
         }
     }
+
+    public static class All<T extends Comparable<T>> implements Term<T>{
+        public final ObjectList<Term<T>> contents;
+
+        public All() {
+            contents = new ObjectList<>(0);
+        }
+
+        @SafeVarargs
+        public All(T... items) {
+            contents = new ObjectList<>(items.length);
+            for (int i = 0; i < items.length; i++) {
+                contents.add(new Leaf<>(items[i]));
+            }
+            contents.sort();
+        }
+
+        public All(Collection<Term<T>> coll) {
+            contents = new ObjectList<>(coll);
+            contents.sort();
+        }
+
+        /**
+         * Use via {@link #of(Term[])} instead of directly.
+         * @param ignored {@link Void#TYPE}
+         * @param terms an array of Terms that will be put into {@link #contents} and sorted
+         */
+        private All(Class<Void> ignored, Term<T>[] terms) {
+            contents = new ObjectList<>(terms);
+            contents.sort();
+        }
+
+        @Override
+        public boolean match(Collection<? extends T> seq) {
+            for (int i = 0; i < contents.size(); i++) {
+                if(!contents.get(i).match(seq)) return false;
+            }
+            return true;
+        }
+
+        @Override
+        public char symbol() {
+            return '&';
+        }
+
+        @Override
+        public String name() {
+            return "all";
+        }
+
+        @Override
+        public String toString() {
+            return contents.toString("&", false, StringBuilder::append);
+        }
+
+        @Override
+        public final boolean equals(Object o) {
+            if (!(o instanceof All)) return o != null && contents.contains(o);
+
+            All<?> any = (All<?>) o;
+            return contents.equals(any.contents);
+        }
+
+        @Override
+        public int hashCode() {
+            return contents.hashCode();
+        }
+
+        @Override
+        public int compareTo(Term<T> o) {
+            if(o instanceof All) {
+                All<T> a = (All<T>)o;
+                if(contents.size() != a.contents.size())
+                    return contents.size() - a.contents.size();
+                for (int i = 0; i < contents.size(); i++) {
+                    int comp = contents.get(i).compareTo(a.contents.get(i));
+                    if(comp != 0) return comp;
+                }
+            }
+            return Integer.signum(o.symbol() - symbol());
+        }
+
+        @SafeVarargs
+        public static <T extends Comparable<T>> All<T> of(Term<T>... terms){
+            return new All<>(Void.TYPE, terms);
+        }
+    }
 }
