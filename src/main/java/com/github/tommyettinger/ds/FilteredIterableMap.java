@@ -341,24 +341,8 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	protected void resize (int newSize) {
-		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
-		mask = newSize - 1;
-		shift = BitConversion.countLeadingZeros(mask) + 32;
-
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
-		I[] oldKeyTable = keyTable;
-		V[] oldValueTable = valueTable;
-
-		keyTable = (I[])new Object[newSize];
-		valueTable = (V[])new Object[newSize];
-
-		if (size > 0) {
-			for (int i = 0; i < oldCapacity; i++) {
-				I key = oldKeyTable[i];
-				if (key != null) {putResize(key, oldValueTable[i]);}
-			}
-		}
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, BitConversion.countLeadingZeros(newSize - 1) + 32) >>> 5 & 511];
+		super.resize(newSize);
 	}
 
 	/**

@@ -17,10 +17,7 @@
 
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.FilteredIterableMap;
-import com.github.tommyettinger.ds.FilteredIterableSet;
-import com.github.tommyettinger.ds.ObjectDeque;
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,12 +25,34 @@ public class FilteredTest {
 	@Test
 	public void testIterableSet() {
 		FilteredIterableSet<String, Iterable<String>> fil = FilteredIterableSet.with(
-			(String s) -> s.length() > 3, String::toUpperCase, new Iterable[]{
+			(String s) -> s.length() > 3, String::toUpperCase,
 			ObjectList.with("zzz", "bee", "binturong"),
 			ObjectDeque.with("hm?", "bee", "BINTURONG"),
-			ObjectList.with(":D", "bee", "Aardvark", "bandicoot")}
+			ObjectList.with(":D", "bee", "Aardvark", "bandicoot")
 			);
 		Assert.assertEquals(2, fil.size());
+
+		fil.add(ObjectList.with("let's"));
+		fil.add(ObjectList.with("get this"));
+		fil.add(ObjectList.with("party"));
+		fil.add(ObjectList.with("started"));
+	}
+	@Test
+	public void testStringSet() {
+		FilteredStringSet fil = FilteredStringSet.with(
+			CharFilter.getOrCreate("CAPS", (c) -> true, Character::toUpperCase),
+			"zzz", "bee", "binturong",
+			"hm?", "bee", "BINTURONG");
+		Assert.assertEquals(4, fil.size());
+
+		fil.add("let's");
+		fil.add("get this");
+		fil.add("party");
+		fil.add("started");
+		fil.add("nn nn");
+		fil.add("tss tss");
+		fil.add("wub wub");
+		fil.add("WRRRRR");
 	}
 
 	/**
