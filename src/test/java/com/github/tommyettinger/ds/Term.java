@@ -7,11 +7,48 @@ import java.util.Collection;
  * @param <T> the type being joined in the Junction; must be Comparable
  */
 public interface Term<T extends Comparable<T>> extends Comparable<Term<T>> {
-    boolean match(Collection<? extends T> seq);
+    /**
+     * A predicate that checks if the given Collection of T satisfies this Term.
+     * Returns true if this Term matches the given Collection, or false otherwise.
+     * @param coll a Collection of T that will not be modified
+     * @return true if coll matches, or false otherwise
+     */
+    boolean match(Collection<? extends T> coll);
 
-    Collection<T> remove(Collection<T> seq);
+    /**
+     * Modifies the given Collection of T by removing any items that match this Term.
+     * You can use {@link Junction#negate()} on an outer Junction to flip this to perform the converse
+     * operation to removing, filtering.
+     * @param coll a Collection of T that may be modified
+     * @return usually coll, after modifications
+     */
+    Collection<T> remove(Collection<T> coll);
 
+    /**
+     * Gets a single char constant that represents this Term and determines its comparison order in the
+     * event of a tie. Every Term class should return a different char from this method.
+     * @return a char that represents this Term and is used to break ties in sorting.
+     */
     char symbol();
 
+    /**
+     * Gets a plain-English name, typically all lower-case and one word, that describes what operation this
+     * Term performs.
+     * @return a typically lower-case single-word name describing what this Term does
+     */
     String name();
+
+    /**
+     * Slightly different from the normal toString() behavior, this may incorporate {@link #name()} but doesn't
+     * need to, and if it contains multiple parts, they should be separated by {@link #symbol()}.
+     * @return a String representation of this Term, or sometimes only its contents
+     */
+    String toString();
+
+    /**
+     * Used primarily to check for equality between Terms, not to act like {@link #match(Collection)}.
+     * @param o another Object that must be a Term of the same class for this to be able to return true
+     * @return true if and only if o is a Term of the same class, and this Term is equivalent to o
+     */
+    boolean equals(Object o);
 }

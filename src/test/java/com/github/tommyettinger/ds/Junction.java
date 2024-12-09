@@ -54,13 +54,13 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
     }
 
     @Override
-    public boolean match(Collection<? extends T> seq) {
-        return root.match(seq);
+    public boolean match(Collection<? extends T> coll) {
+        return root.match(coll);
     }
 
     @Override
-    public Collection<T> remove(Collection<T> seq) {
-        return root.remove(seq);
+    public Collection<T> remove(Collection<T> coll) {
+        return root.remove(coll);
     }
 
     @Override
@@ -70,7 +70,12 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
     @Override
     public String name() {
-        return "(" + root + ")";
+        return "junction";
+    }
+
+    @Override
+    public String toString() {
+        return root.toString();
     }
 
     @Override
@@ -91,14 +96,14 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
 
         @Override
-        public boolean match(Collection<? extends T> seq) {
-            return seq.contains(item);
+        public boolean match(Collection<? extends T> coll) {
+            return coll.contains(item);
         }
 
         @Override
-        public Collection<T> remove(Collection<T> seq) {
-            seq.remove(item);
-            return seq;
+        public Collection<T> remove(Collection<T> coll) {
+            coll.remove(item);
+            return coll;
         }
 
         @Override
@@ -108,7 +113,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         @Override
         public String name() {
-            return "yes";
+            return "just";
         }
 
         @Override
@@ -152,16 +157,16 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
 
         @Override
-        public boolean match(Collection<? extends T> seq) {
-            return !term.match(seq);
+        public boolean match(Collection<? extends T> coll) {
+            return !term.match(coll);
         }
 
         @Override
-        public Collection<T> remove(Collection<T> seq) {
-            ObjectList<T> list = new ObjectList<>(seq);
+        public Collection<T> remove(Collection<T> coll) {
+            ObjectList<T> list = new ObjectList<>(coll);
             term.remove(list);
-            seq.removeAll(list);
-            return seq;
+            coll.removeAll(list);
+            return coll;
         }
 
         @Override
@@ -176,7 +181,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         @Override
         public String toString() {
-            return "not(" + term.toString() + ")";
+            return "!" + term;
         }
 
         @Override
@@ -234,19 +239,19 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
 
         @Override
-        public boolean match(Collection<? extends T> seq) {
+        public boolean match(Collection<? extends T> coll) {
             for (int i = 0; i < contents.size(); i++) {
-                if(contents.get(i).match(seq)) return true;
+                if(contents.get(i).match(coll)) return true;
             }
             return false;
         }
 
         @Override
-        public Collection<T> remove(Collection<T> seq) {
+        public Collection<T> remove(Collection<T> coll) {
             for (int i = 0; i < contents.size(); i++) {
-                contents.get(i).remove(seq);
+                contents.get(i).remove(coll);
             }
-            return seq;
+            return coll;
         }
 
         @Override
@@ -261,7 +266,8 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         @Override
         public String toString() {
-            return contents.toString("|", false, StringBuilder::append);
+            return contents.appendTo(new StringBuilder(contents.size() + 2).append('(')
+                    , "|", false).append(')').toString();
         }
 
         @Override
@@ -329,22 +335,22 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
 
         @Override
-        public boolean match(Collection<? extends T> seq) {
+        public boolean match(Collection<? extends T> coll) {
             for (int i = 0; i < contents.size(); i++) {
-                if(!contents.get(i).match(seq)) return false;
+                if(!contents.get(i).match(coll)) return false;
             }
             return true;
         }
 
         @Override
-        public Collection<T> remove(Collection<T> seq) {
+        public Collection<T> remove(Collection<T> coll) {
             for (int i = 0; i < contents.size(); i++) {
-                if(!contents.get(i).match(seq)) return seq;
+                if(!contents.get(i).match(coll)) return coll;
             }
             for (int i = 0; i < contents.size(); i++) {
-                contents.get(i).remove(seq);
+                contents.get(i).remove(coll);
             }
-            return seq;
+            return coll;
         }
 
         @Override
@@ -359,7 +365,8 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         @Override
         public String toString() {
-            return contents.toString("&", false, StringBuilder::append);
+            return contents.appendTo(new StringBuilder(contents.size() + 2).append('(')
+                    , "&", false).append(')').toString();
         }
 
         @Override
@@ -427,20 +434,20 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
 
         @Override
-        public boolean match(Collection<? extends T> seq) {
+        public boolean match(Collection<? extends T> coll) {
             int count = 0;
             for (int i = 0; i < contents.size() && count <= 1; i++) {
-                if(contents.get(i).match(seq)) count++;
+                if(contents.get(i).match(coll)) count++;
             }
             return count == 1;
         }
 
         @Override
-        public Collection<T> remove(Collection<T> seq) {
+        public Collection<T> remove(Collection<T> coll) {
             for (int i = 0; i < contents.size(); i++) {
-                if(contents.get(i).match(seq)) return contents.get(i).remove(seq);
+                if(contents.get(i).match(coll)) return contents.get(i).remove(coll);
             }
-            return seq;
+            return coll;
         }
 
         @Override
@@ -455,7 +462,9 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         @Override
         public String toString() {
-            return contents.toString("^", false, StringBuilder::append);
+            return contents.appendTo(new StringBuilder(contents.size() + 2).append('(')
+                    , "^", false).append(')').toString();
+
         }
 
         @Override
