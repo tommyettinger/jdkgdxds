@@ -1,3 +1,9 @@
+[1.7.1]
+- Fix automatic serialization of IntSet (when not using a serializer that knows how primitive sets work).
+- Fix resize() in all Filtered types (including Iterable and String, Sets and Maps).
+- Fill out the missing with() methods in `FilteredIterable(Ordered)?(Set|Map)`.
+- Use the standard definition of set equality for NumberedSet, HolderSet, and HolderOrderedSet.
+
 [1.7.0]
 - [BREAKING] Set and map types no longer guarantee they will have a `hashMultiplier` field, though the getters and setters for that field still exist.
 - Some set and map types do still have a `hashMultiplier` field, and are mostly unaffected by the above breakage, including all Filtered and/or CaseInsensitive sets and maps.
