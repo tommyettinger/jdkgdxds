@@ -1,5 +1,7 @@
 package com.github.tommyettinger.ds;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 
 /**
@@ -23,6 +25,31 @@ public interface Term<T extends Comparable<T>> extends Comparable<Term<T>> {
      * @return usually coll, after modifications
      */
     Collection<T> remove(Collection<T> coll);
+
+    /**
+     * If this Term has sub-Terms, which this calls children, calling appendChildren will take all children
+     * one level descendant from this and place them into {@code appending}, in undefined order.
+     * Typically, after appendChildren() has been called at least once and doesn't need to append more, calling
+     * code will sort {@code appending}.
+     * @param appending will be modified by appending child Terms
+     */
+    void appendChildren(Collection<Term<T>> appending);
+
+    /**
+     * If this term has a T value (not inside another wrapping Term), this returns that value.
+     * Otherwise, this returns null.
+     * @return a T value not inside another wrapping Term, or null if this Term doesn't have a T value.
+     */
+    @Nullable T value();
+
+    /**
+     * Attempts to convert this Term and its children (recursively) to a single possible format for potentially
+     * many different internal representations. This mostly means things like {@code Not(Not(Leaf("something")))}
+     * can be simplified to {@code Leaf("something")}, and chains of Any of Any of Any of... can be simplified to
+     * one Any with more items. The last case also works for All, but not One.
+     * @return a unified formatting of the data this held, modifying this Term in place.
+     */
+    Term<T> canonicalize();
 
     /**
      * Gets a single char constant that represents this Term and determines its comparison order in the

@@ -12,7 +12,7 @@ import java.util.Map;
 public class JunctionTest {
     @Test
     public void testBasics() {
-        Junction<String> j = new Junction<>(Any.of(All.of(Leaf.of("miss"), Leaf.of("block")), Leaf.of("fumble")));
+        Junction<String> j = new Junction<>(Any.of(All.of(Leaf.of("miss"), Leaf.of("block")), Any.of(Leaf.of("fumble"), Leaf.of("cardiac-arrest"))));
         ObjectObjectOrderedMap<String, ObjectList<String>> possible =
                 ObjectObjectOrderedMap.with("miss", ObjectList.with("miss"),
                         "blocking miss", ObjectList.with("miss", "block"),

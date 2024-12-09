@@ -1,5 +1,7 @@
 package com.github.tommyettinger.ds;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 import java.util.Objects;
 
@@ -19,16 +21,26 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         root = new Any<>();
     }
     public Junction(Term<T> root) {
-        this.root = canonicalize(root);
+        this.root = root.canonicalize();
     }
 
     private Junction(Class<Void> ignored, T item) {
         this.root = Leaf.of(item);
     }
 
+    @Override
+    public void appendChildren(Collection<Term<T>> appending) {
+        appending.add(root);
+    }
+
+    @Override
+    public @Nullable T value() {
+        return null;
+    }
+
     // TODO: NYI
-    public Term<T> canonicalize(Term<T> term) {
-        return term;
+    public Term<T> canonicalize() {
+        return root.canonicalize();
     }
 
     public Junction<T> negate() {
@@ -107,6 +119,20 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
 
         @Override
+        public void appendChildren(Collection<Term<T>> appending) {
+        }
+
+        @Override
+        public @Nullable T value() {
+            return item;
+        }
+
+        @Override
+        public Term<T> canonicalize() {
+            return this;
+        }
+
+        @Override
         public char symbol() {
             return '=';
         }
@@ -167,6 +193,21 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             term.remove(list);
             coll.removeAll(list);
             return coll;
+        }
+
+        @Override
+        public void appendChildren(Collection<Term<T>> appending) {
+            appending.add(term);
+        }
+
+        @Override
+        public @Nullable T value() {
+            return null;
+        }
+
+        @Override
+        public Term<T> canonicalize() {
+            return term instanceof Not ? ((Not<T>) term).term : this;
         }
 
         @Override
@@ -252,6 +293,31 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                 contents.get(i).remove(coll);
             }
             return coll;
+        }
+
+        @Override
+        public void appendChildren(Collection<Term<T>> appending) {
+            appending.addAll(contents);
+        }
+
+        @Override
+        public @Nullable T value() {
+            return null;
+        }
+
+        @Override
+        public Term<T> canonicalize() {
+            for (int i = 0, n = contents.size(); i < n; i++) {
+                Term<T> child = contents.get(i);
+                if(child instanceof Any){
+                    contents.removeAt(i--);
+                    contents.addAll(((Any<T>) child).contents);
+                }
+            }
+            for (int i = 0, n = contents.size(); i < n; i++) {
+                contents.get(i).canonicalize();
+            }
+            return this;
         }
 
         @Override
@@ -354,6 +420,31 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
 
         @Override
+        public void appendChildren(Collection<Term<T>> appending) {
+            appending.addAll(contents);
+        }
+
+        @Override
+        public @Nullable T value() {
+            return null;
+        }
+
+        @Override
+        public Term<T> canonicalize() {
+            for (int i = 0, n = contents.size(); i < n; i++) {
+                Term<T> child = contents.get(i);
+                if(child instanceof All){
+                    contents.removeAt(i--);
+                    contents.addAll(((All<T>) child).contents);
+                }
+            }
+            for (int i = 0, n = contents.size(); i < n; i++) {
+                contents.get(i).canonicalize();
+            }
+            return this;
+        }
+
+        @Override
         public char symbol() {
             return '&';
         }
@@ -448,6 +539,24 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                 if(contents.get(i).match(coll)) return contents.get(i).remove(coll);
             }
             return coll;
+        }
+
+        @Override
+        public void appendChildren(Collection<Term<T>> appending) {
+            appending.addAll(contents);
+        }
+
+        @Override
+        public @Nullable T value() {
+            return null;
+        }
+
+        @Override
+        public Term<T> canonicalize() {
+            for (int i = 0, n = contents.size(); i < n; i++) {
+                contents.get(i).canonicalize();
+            }
+            return this;
         }
 
         @Override
