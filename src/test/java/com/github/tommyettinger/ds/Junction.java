@@ -1,6 +1,7 @@
 package com.github.tommyettinger.ds;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Objects;
  * @param <T> any Comparable type, such as String or any enum type
  */
 public class Junction<T extends Comparable<T>> implements Term<T> {
-    public final Term<T> root;
+    public Term<T> root;
 
     public Junction() {
         root = new Any<>();
@@ -29,6 +30,15 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
     // TODO: NYI
     public Term<T> canonicalize(Term<T> term) {
         return term;
+    }
+
+    public Junction<T> negate() {
+        if(root instanceof Not) // not
+            root = ((Not)root).term;
+        else {
+            root = Not.of(root);
+        }
+        return this;
     }
 
     @Override
@@ -47,6 +57,11 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
     @Override
     public boolean match(Collection<? extends T> seq) {
         return root.match(seq);
+    }
+
+    @Override
+    public Collection<T> remove(Collection<T> seq) {
+        return root.remove(seq);
     }
 
     @Override
@@ -79,6 +94,12 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         @Override
         public boolean match(Collection<? extends T> seq) {
             return seq.contains(item);
+        }
+
+        @Override
+        public Collection<T> remove(Collection<T> seq) {
+            seq.remove(item);
+            return seq;
         }
 
         @Override
@@ -134,6 +155,14 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         @Override
         public boolean match(Collection<? extends T> seq) {
             return !term.match(seq);
+        }
+
+        @Override
+        public Collection<T> remove(Collection<T> seq) {
+            ObjectList<T> list = new ObjectList<>(seq);
+            term.remove(list);
+            seq.removeAll(list);
+            return seq;
         }
 
         @Override
@@ -211,6 +240,14 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                 if(contents.get(i).match(seq)) return true;
             }
             return false;
+        }
+
+        @Override
+        public Collection<T> remove(Collection<T> seq) {
+            for (int i = 0; i < contents.size(); i++) {
+                contents.get(i).remove(seq);
+            }
+            return seq;
         }
 
         @Override
@@ -301,6 +338,17 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
 
         @Override
+        public Collection<T> remove(Collection<T> seq) {
+            for (int i = 0; i < contents.size(); i++) {
+                if(!contents.get(i).match(seq)) return seq;
+            }
+            for (int i = 0; i < contents.size(); i++) {
+                contents.get(i).remove(seq);
+            }
+            return seq;
+        }
+
+        @Override
         public char symbol() {
             return '&';
         }
@@ -386,6 +434,14 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                 if(contents.get(i).match(seq)) count++;
             }
             return count == 1;
+        }
+
+        @Override
+        public Collection<T> remove(Collection<T> seq) {
+            for (int i = 0; i < contents.size(); i++) {
+                if(contents.get(i).match(seq)) return contents.get(i).remove(seq);
+            }
+            return seq;
         }
 
         @Override

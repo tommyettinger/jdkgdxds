@@ -9,6 +9,8 @@ import java.util.Collection;
 public interface Term<T extends Comparable<T>> extends Comparable<Term<T>> {
     boolean match(Collection<? extends T> seq);
 
+    Collection<T> remove(Collection<T> seq);
+
     char symbol();
 
     String name();
