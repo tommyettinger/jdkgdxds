@@ -609,4 +609,44 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
     }
 
+    /**
+     * Tokenizes a range of the String {@code text} from {@code start} inclusive to {@code end} exclusive.
+     * Returns an ObjectDeque of Strings; they should be considered "operator-like" if they are one of
+     * {@code ()|&^~} and otherwise are names.
+     * @param text the String to tokenize
+     * @param start the first index to read from, inclusive
+     * @param end the last index to stop reading before, exclusive
+     * @return an ObjectDeque of the tokenized Strings
+     */
+    public static ObjectDeque<String> lex(String text, int start, int end){
+        ObjectDeque<String> deque = new ObjectDeque<>(end - start >>> 1);
+        StringBuilder sb = new StringBuilder(32);
+        for (int i = start; i < end; i++) {
+            char current = text.charAt(i);
+            switch (current){
+                case '~':
+                    if(sb.length() > 0)
+                        deque.add(sb.toString());
+                    deque.add("#");
+                    deque.add(String.valueOf(current));
+                    sb.setLength(0);
+                    break;
+                case '(':
+                case ')':
+                case '|':
+                case '&':
+                case '^':
+                    if(sb.length() > 0)
+                        deque.add(sb.toString());
+                    deque.add(String.valueOf(current));
+                    sb.setLength(0);
+                    break;
+                default:
+                    sb.append(current);
+            }
+            if(sb.length() > 0)
+                deque.add(sb.toString());
+        }
+        return deque;
+    }
 }
