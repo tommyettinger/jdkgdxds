@@ -222,7 +222,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         @Override
         public String toString() {
-            return "!" + term;
+            return "~" + term;
         }
 
         @Override
@@ -627,7 +627,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                 case '~':
                     if(sb.length() > 0)
                         deque.add(sb.toString());
-                    deque.add("#");
+                    deque.add("");
                     deque.add(String.valueOf(current));
                     sb.setLength(0);
                     break;
@@ -644,9 +644,9 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                 default:
                     sb.append(current);
             }
-            if(sb.length() > 0)
-                deque.add(sb.toString());
         }
+        if(sb.length() > 0)
+            deque.add(sb.toString());
         return deque;
     }
 }
