@@ -38,7 +38,6 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         return null;
     }
 
-    // TODO: NYI
     public Term<T> canonicalize() {
         return root.canonicalize();
     }
@@ -178,6 +177,11 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         public Not(T item) {
             this.term = Leaf.of(item);
         }
+
+        public Not(Term<T> ignored, Term<T> right) {
+            term = right;
+        }
+
         private Not(Class<Void> ignored, Term<T> term) {
             this.term = term;
         }
@@ -261,6 +265,11 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             for (int i = 0; i < items.length; i++) {
                 contents.add(new Leaf<>(items[i]));
             }
+            contents.sort();
+        }
+
+        public Any(Term<T> left, Term<T> right) {
+            contents = ObjectList.with(left, right);
             contents.sort();
         }
 
@@ -385,6 +394,11 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             contents.sort();
         }
 
+        public All(Term<T> left, Term<T> right) {
+            contents = ObjectList.with(left, right);
+            contents.sort();
+        }
+
         public All(Collection<Term<T>> coll) {
             contents = new ObjectList<>(coll);
             contents.sort();
@@ -506,6 +520,11 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             for (int i = 0; i < items.length; i++) {
                 contents.add(new Leaf<>(items[i]));
             }
+            contents.sort();
+        }
+
+        public One(Term<T> left, Term<T> right) {
+            contents = ObjectList.with(left, right);
             contents.sort();
         }
 
