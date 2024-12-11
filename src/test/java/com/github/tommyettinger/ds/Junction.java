@@ -628,6 +628,8 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
     }
 
+    private static final ObjectIntMap<String> OPERATORS = ObjectIntMap.with("~", 27, "^", 9, "&", 6, "|", 3);
+
     /**
      * Tokenizes a range of the String {@code text} from {@code start} inclusive to {@code end} exclusive.
      * Returns an ObjectDeque of Strings; they should be considered "operator-like" if they are one of
@@ -667,5 +669,41 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         if(sb.length() > 0)
             deque.add(sb.toString());
         return deque;
+    }
+
+    private static boolean checkPrecedence(int opPrecedence, String other) {
+        return OPERATORS.get(other) >= opPrecedence;
+    }
+
+    /**
+     * <a href="https://eddmann.com/posts/shunting-yard-implementation-in-java/">Credit to Edd Mann</a>.
+     * Edd's implementation might produce prefix order instead of postfix, but either can work.
+     * @param tokens typically produced by {@link #lex(String, int, int)}
+     * @return the tokens, rearranged in postfix order
+     */
+    public static ObjectDeque<String> shuntingYard(ObjectDeque<String> tokens) {
+        ObjectDeque<String> output = new ObjectDeque<>(tokens.size()), stack = new ObjectDeque<>(16);
+        
+        for (String token : tokens) {
+            if (OPERATORS.containsKey(token)) {
+                int opPrecedence = OPERATORS.get(token);
+                while (stack.notEmpty() && checkPrecedence(opPrecedence, stack.peek()))
+                    output.push(stack.pop());
+                stack.push(token);
+            } else if (token.equals("(")) {
+                stack.push(token);
+            } else if (token.equals(")")) {
+                while (!"(".equals(stack.peek()))
+                    output.push(stack.pop());
+                stack.pop();
+            } else {
+                output.push(token);
+            }
+        }
+
+        while (stack.notEmpty())
+            output.push(stack.pop());
+
+        return output;
     }
 }
