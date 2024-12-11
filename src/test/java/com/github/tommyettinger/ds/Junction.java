@@ -707,4 +707,45 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         return output;
     }
+
+    /**
+     * Parses the String {@code text} into one Junction of String.
+     * @param text the String to parse
+     * @return the resulting Junction of String
+     */
+    public static Junction<String> parse(String text){
+        return parse(text, 0, text.length());
+    }
+    /**
+     * Parses a substring of {@code text} into one Junction of String. The {@code start} is inclusive and
+     * the {@code end} is exclusive.
+     * @param text the String to parse
+     * @param start the first index to read from, inclusive
+     * @param end the last index to stop reading before, exclusive
+     * @return the resulting Junction of String
+     */
+    public static Junction<String> parse(String text, int start, int end){
+        ObjectDeque<String> tokens = lex(text, start, end);
+        tokens = shuntingYard(tokens);
+        ObjectDeque<Term<String>> terms = new ObjectDeque<>(tokens.size());
+        for(String tok : tokens) {
+            if(OPERATORS.containsKey(tok)) {
+                Term<String> right = terms.removeLast(), left = terms.removeLast();
+                switch (tok.charAt(0)) {
+                    case '~': terms.addLast(Not.of(right));
+                    break;
+                    case '^': terms.addLast(new One<>(left, right));
+                    break;
+                    case '&': terms.addLast(new All<>(left, right));
+                    break;
+                    case '|': terms.addLast(new Any<>(left, right));
+                    break;
+                }
+            } else {
+                terms.addLast(Leaf.of(tok));
+            }
+        }
+        if(terms.isEmpty()) terms.addLast(Leaf.of(""));
+        return new Junction<>(terms.getLast());
+    }
 }
