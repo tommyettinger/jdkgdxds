@@ -28,4 +28,14 @@ public class JunctionTest {
         ObjectDeque<String> deque = Junction.lex(text, 0, text.length());
         System.out.println(deque.toString("] [", true));
     }
+
+    @Test
+    public void testOperators() {
+        String text = "((~cardiac-arrest&fumble)|(block&miss))";
+        System.out.println(text);
+        ObjectDeque<String> deque = Junction.lex(text, 0, text.length());
+        System.out.println(deque.toString("] [", true));
+        deque = Junction.shuntingYard(deque);
+        System.out.println(deque.toString("] [", true));
+    }
 }

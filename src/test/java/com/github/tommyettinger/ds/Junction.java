@@ -677,32 +677,33 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
     /**
      * <a href="https://eddmann.com/posts/shunting-yard-implementation-in-java/">Credit to Edd Mann</a>.
-     * Edd's implementation might produce prefix order instead of postfix, but either can work.
+     * Edd's implementation operates on a StringBuilder, whereas we output another ObjectDeque, so the
+     * order needed some work.
      * @param tokens typically produced by {@link #lex(String, int, int)}
-     * @return the tokens, rearranged in postfix order
+     * @return the tokens, rearranged in postfix order and with parentheses removed
      */
     public static ObjectDeque<String> shuntingYard(ObjectDeque<String> tokens) {
         ObjectDeque<String> output = new ObjectDeque<>(tokens.size()), stack = new ObjectDeque<>(16);
-        
+
         for (String token : tokens) {
             if (OPERATORS.containsKey(token)) {
                 int opPrecedence = OPERATORS.get(token);
                 while (stack.notEmpty() && checkPrecedence(opPrecedence, stack.peek()))
-                    output.push(stack.pop());
+                    output.add(stack.pop());
                 stack.push(token);
             } else if (token.equals("(")) {
                 stack.push(token);
             } else if (token.equals(")")) {
                 while (!"(".equals(stack.peek()))
-                    output.push(stack.pop());
+                    output.add(stack.pop());
                 stack.pop();
             } else {
-                output.push(token);
+                output.add(token);
             }
         }
 
         while (stack.notEmpty())
-            output.push(stack.pop());
+            output.add(stack.pop());
 
         return output;
     }
