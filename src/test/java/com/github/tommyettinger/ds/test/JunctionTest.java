@@ -38,4 +38,16 @@ public class JunctionTest {
         deque = Junction.shuntingYard(deque);
         System.out.println(deque.toString("] [", true));
     }
+
+    @Test
+    public void testParse() {
+        String text = "((~cardiac-arrest&fumble)|(block&miss))";
+        System.out.println("Ideal:  " + text);
+        Junction<String> manual = new Junction<>(Any.of(All.of(Leaf.of("miss"), Leaf.of("block")), All.of(Leaf.of("fumble"), Not.of(Leaf.of("cardiac-arrest")))));
+        System.out.println("Manual: " + manual);
+        Junction<String> alternate = new Junction<>(Any.of(All.of(Leaf.of("fumble"), Not.of(Leaf.of("cardiac-arrest"))), All.of(Leaf.of("miss"), Leaf.of("block"))));
+        System.out.println("Alt:    " + alternate);
+        Junction<String> junction = Junction.parse(text);
+        System.out.println("Parsed: " + junction);
+    }
 }
