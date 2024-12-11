@@ -8,9 +8,29 @@ import java.util.Objects;
 /**
  * Matches potentially more than one {@code T} value in different ways against a supplied {@link Collection} of
  * {@code T}. This is inspired by the Junction type in <a href="https://docs.raku.org/type/Junction">Raku</a>, but
- * isn't totally equivalent. A Junction is the outermost parent of its hierarchy, and contains {@link Term} nodes.
+ * isn't totally equivalent. A Junction is the outermost parent of its hierarchy, and contains a {@link Term} node.
  * Note, the {@link #equals(Object)} method is meant to compare two Junctions to see if they are equivalent, while
  * the {@link #match(Collection)} method is how you actually check if this Junction matches a Collection.
+ * <br>
+ * A Junction mostly provides the same API as any other Term type, but does also supply {@link #negate()}, which
+ * can be useful when you don't want to use {@link #remove(Collection)} to remove matches, but instead want to
+ * filter and keep only terms that match this Junction. Note that negate() modifies this Junction in-place, so you
+ * might want to call negate() again after filtering.
+ * <br>
+ * There are several inner classes here, all {@link Term} types, which are used to actually implement the different
+ * types of logic for different types of matching. {@link Leaf} is simplest, and simply wraps a single T instance in
+ * a Term so it can be used with other Terms. {@link Not} negates matches on its Term item, so if {@code ==} would
+ * make sense without a Not, {@code !=} would be used instead with a Not. {@link Any} has multiple Terms, and will
+ * match if any of those Terms match. The contrasting type is {@link All}, which also has multiple Terms, but will
+ * match only if all of those Terms match. Lastly, {@link One} is special, and matches only if exactly one of its
+ * multiple Terms match. Any, All, and One are usually shown as taking two arguments, but can actually take 1 or more.
+ * This is important for One because it still requires exactly one match even if 10 arguments are given.
+ * <br>
+ * This provides a static convenience method, {@link #parse(String)}, that can parse a Junction of String from a
+ * String that may contain symbols for various terms, and/or parentheses. Given an input such as {@code a|b|c},
+ * you get a Junction that will match any of "a", "b", or "c". Alternatively, an input such as
+ * {@code (beef|turkey|veggie|warm melted cheese)&bun} will match a Collection that contains "beef" as well as
+ * "bun", "turkey" as well as "bun", "veggie" as well as "bun", or "warm melted cheese" as well as "bun".
  *
  * @param <T> any Comparable type, such as String or any enum type
  */
@@ -44,7 +64,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
     public Junction<T> negate() {
         if(root instanceof Not) // not
-            root = ((Not)root).term;
+            root = ((Not<T>)root).term;
         else {
             root = Not.of(root);
         }
@@ -97,6 +117,10 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         return new Junction<>(Void.TYPE, item);
     }
 
+    /**
+     * Simply matches a single {@code T} value, with no additional Terms involved.
+     * @param <T> the Comparable type shared by all Terms in this Junction
+     */
     public static class Leaf<T extends Comparable<T>> implements Term<T>{
         public T item;
 
@@ -169,6 +193,11 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
     }
 
+    /**
+     * Takes a Term and treats a case where it matches or doesn't match as the opposite.
+     * This can take up to two Term parameters in its constructor, but it only uses the last one.
+     * @param <T> the Comparable type shared by all Terms in this Junction
+     */
     public static class Not<T extends Comparable<T>> implements Term<T>{
         public Term<T> term;
 
@@ -252,6 +281,10 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
     }
 
+    /**
+     * Takes one or more Terms and matches if any of those Terms match.
+     * @param <T> the Comparable type shared by all Terms in this Junction
+     */
     public static class Any<T extends Comparable<T>> implements Term<T>{
         public final ObjectList<Term<T>> contents;
 
@@ -375,6 +408,10 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
     }
 
+    /**
+     * Takes one or more Terms and matches if all of those Terms match.
+     * @param <T> the Comparable type shared by all Terms in this Junction
+     */
     public static class All<T extends Comparable<T>> implements Term<T>{
         public final ObjectList<Term<T>> contents;
 
@@ -501,6 +538,10 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
     }
 
+    /**
+     * Takes one or more Terms and matches if exactly one of those Terms matches.
+     * @param <T> the Comparable type shared by all Terms in this Junction
+     */
     public static class One<T extends Comparable<T>> implements Term<T>{
         public final ObjectList<Term<T>> contents;
 
@@ -563,6 +604,13 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         @Override
         public Term<T> canonicalize() {
             for (int i = 0, n = contents.size(); i < n; i++) {
+                Term<T> child = contents.get(i);
+                if(child instanceof One){
+                    contents.removeAt(i--);
+                    contents.addAll(((One<T>) child).contents);
+                }
+            }
+            for (int i = 0, n = contents.size(); i < n; i++) {
                 contents.get(i).canonicalize();
             }
             contents.sort();
@@ -619,7 +667,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         }
     }
 
-    private static final ObjectIntMap<String> OPERATORS = ObjectIntMap.with("~", 27, "^", 9, "&", 6, "|", 3);
+    static final ObjectIntMap<String> OPERATORS = ObjectIntMap.with("~", 27, "^", 9, "&", 6, "|", 3);
 
     /**
      * Tokenizes a range of the String {@code text} from {@code start} inclusive to {@code end} exclusive.
@@ -630,7 +678,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
      * @param end the last index to stop reading before, exclusive
      * @return an ObjectDeque of the tokenized Strings
      */
-    public static ObjectDeque<String> lex(String text, int start, int end){
+    static ObjectDeque<String> lex(String text, int start, int end){
         ObjectDeque<String> deque = new ObjectDeque<>(end - start >>> 1);
         StringBuilder sb = new StringBuilder(32);
         for (int i = start; i < end; i++) {
@@ -662,7 +710,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
         return deque;
     }
 
-    private static boolean checkPrecedence(int opPrecedence, String other) {
+    static boolean checkPrecedence(int opPrecedence, String other) {
         return OPERATORS.get(other) >= opPrecedence;
     }
 
@@ -673,7 +721,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
      * @param tokens typically produced by {@link #lex(String, int, int)}
      * @return the tokens, rearranged in postfix order and with parentheses removed
      */
-    public static ObjectDeque<String> shuntingYard(ObjectDeque<String> tokens) {
+    static ObjectDeque<String> shuntingYard(ObjectDeque<String> tokens) {
         ObjectDeque<String> output = new ObjectDeque<>(tokens.size()), stack = new ObjectDeque<>(16);
 
         for (String token : tokens) {

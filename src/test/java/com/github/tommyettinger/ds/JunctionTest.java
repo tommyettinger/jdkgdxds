@@ -1,6 +1,5 @@
-package com.github.tommyettinger.ds.test;
+package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.Junction.*;
 import org.junit.Test;
 
