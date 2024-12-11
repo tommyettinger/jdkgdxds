@@ -161,7 +161,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         @Override
         public int compareTo(Term<T> o) {
-            return o instanceof Leaf ? item.compareTo(((Leaf<T>)o).item) : Integer.signum(o.symbol() - symbol());
+            return o instanceof Leaf ? item.compareTo(((Leaf<T>)o).item) : Integer.signum(symbol() - o.symbol());
         }
 
         public static <T extends Comparable<T>> Leaf<T> of(T item) {
@@ -244,7 +244,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         @Override
         public int compareTo(Term<T> o) {
-            return -(o instanceof Not ? term.compareTo(((Not<T>)o).term) : Integer.signum(o.symbol() - symbol()));
+            return o instanceof Not ? term.compareTo(((Not<T>)o).term) : Integer.signum(symbol() - o.symbol());
         }
 
         public static <T extends Comparable<T>> Not<T> of(Term<T> term) {
@@ -265,17 +265,14 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             for (int i = 0; i < items.length; i++) {
                 contents.add(new Leaf<>(items[i]));
             }
-            contents.sort();
         }
 
         public Any(Term<T> left, Term<T> right) {
             contents = ObjectList.with(left, right);
-            contents.sort();
         }
 
         public Any(Collection<Term<T>> coll) {
             contents = new ObjectList<>(coll);
-            contents.sort();
         }
 
         /**
@@ -285,7 +282,6 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
          */
         private Any(Class<Void> ignored, Term<T>[] terms) {
             contents = new ObjectList<>(terms);
-            contents.sort();
         }
 
         @Override
@@ -326,6 +322,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             for (int i = 0, n = contents.size(); i < n; i++) {
                 contents.get(i).canonicalize();
             }
+            contents.sort();
             return this;
         }
 
@@ -369,7 +366,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                     if(comp != 0) return comp;
                 }
             }
-            return Integer.signum(o.symbol() - symbol());
+            return Integer.signum(symbol() - o.symbol());
         }
 
         @SafeVarargs
@@ -391,17 +388,14 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             for (int i = 0; i < items.length; i++) {
                 contents.add(new Leaf<>(items[i]));
             }
-            contents.sort();
         }
 
         public All(Term<T> left, Term<T> right) {
             contents = ObjectList.with(left, right);
-            contents.sort();
         }
 
         public All(Collection<Term<T>> coll) {
             contents = new ObjectList<>(coll);
-            contents.sort();
         }
 
         /**
@@ -411,7 +405,6 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
          */
         private All(Class<Void> ignored, Term<T>[] terms) {
             contents = new ObjectList<>(terms);
-            contents.sort();
         }
 
         @Override
@@ -455,6 +448,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             for (int i = 0, n = contents.size(); i < n; i++) {
                 contents.get(i).canonicalize();
             }
+            contents.sort();
             return this;
         }
 
@@ -498,7 +492,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                     if(comp != 0) return comp;
                 }
             }
-            return Integer.signum(o.symbol() - symbol());
+            return Integer.signum(symbol() - o.symbol());
         }
 
         @SafeVarargs
@@ -520,17 +514,14 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             for (int i = 0; i < items.length; i++) {
                 contents.add(new Leaf<>(items[i]));
             }
-            contents.sort();
         }
 
         public One(Term<T> left, Term<T> right) {
             contents = ObjectList.with(left, right);
-            contents.sort();
         }
 
         public One(Collection<Term<T>> coll) {
             contents = new ObjectList<>(coll);
-            contents.sort();
         }
 
         /**
@@ -540,7 +531,6 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
          */
         private One(Class<Void> ignored, Term<T>[] terms) {
             contents = new ObjectList<>(terms);
-            contents.sort();
         }
 
         @Override
@@ -575,6 +565,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
             for (int i = 0, n = contents.size(); i < n; i++) {
                 contents.get(i).canonicalize();
             }
+            contents.sort();
             return this;
         }
 
@@ -619,7 +610,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                     if(comp != 0) return comp;
                 }
             }
-            return Integer.signum(o.symbol() - symbol());
+            return Integer.signum(symbol() - o.symbol());
         }
 
         @SafeVarargs
