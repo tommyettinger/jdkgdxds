@@ -1,5 +1,6 @@
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.function.ObjToObjFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
@@ -755,6 +756,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
     public static Junction<String> parse(String text){
         return parse(text, 0, text.length());
     }
+
     /**
      * Parses a substring of {@code text} into one Junction of String. The {@code start} is inclusive and
      * the {@code end} is exclusive.
@@ -764,12 +766,34 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
      * @return the resulting Junction of String
      */
     public static Junction<String> parse(String text, int start, int end){
+        return parse(String::toString, text, start, end);
+    }
+
+    /**
+     * Parses all of {@code text} into one Junction of T, creating T items from String sections using {@code parser}.
+     * @param parser converts String sections to T values to put in the Junction; an enum's {@code valueOf(String)} can work
+     * @param text the String to parse
+     * @return the resulting Junction of String
+     */
+    public static <T extends Comparable<T>> Junction<T> parse(ObjToObjFunction<String, T> parser, String text) {
+        return parse(parser, text, 0, text.length());
+    }
+    /**
+     * Parses a substring of {@code text} into one Junction of T, creating T items from String sections using
+     * {@code parser}. The {@code start} is inclusive and the {@code end} is exclusive.
+     * @param parser converts String sections to T values to put in the Junction; an enum's {@code valueOf(String)} can work
+     * @param text the String to parse
+     * @param start the first index to read from, inclusive
+     * @param end the last index to stop reading before, exclusive
+     * @return the resulting Junction of String
+     */
+    public static <T extends Comparable<T>> Junction<T> parse(ObjToObjFunction<String, T> parser, String text, int start, int end){
         ObjectDeque<String> tokens = lex(text, start, end);
         tokens = shuntingYard(tokens);
-        ObjectDeque<Term<String>> terms = new ObjectDeque<>(tokens.size());
+        ObjectDeque<Term<T>> terms = new ObjectDeque<>(tokens.size());
         for(String tok : tokens) {
             if(OPERATORS.containsKey(tok)) {
-                Term<String> right = terms.removeLast(), left = terms.removeLast();
+                Term<T> right = terms.removeLast(), left = terms.removeLast();
                 switch (tok.charAt(0)) {
                     case '~': terms.addLast(Not.of(right));
                     break;
@@ -781,10 +805,10 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                     break;
                 }
             } else {
-                terms.addLast(Leaf.of(tok));
+                terms.addLast(Leaf.of(parser.apply(tok)));
             }
         }
-        if(terms.isEmpty()) terms.addLast(Leaf.of(""));
+        if(terms.isEmpty()) terms.addLast(Leaf.of(parser.apply("")));
         return new Junction<>(terms.getLast());
     }
 }

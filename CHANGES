@@ -1,3 +1,6 @@
+[1.7.2]
+- Junction (and its supporting interface Term) are new in this version. They can be used as a type of predicate to match multiple items in a Collection.
+
 [1.7.1]
 - Fix automatic serialization of IntSet (when not using a serializer that knows how primitive sets work).
 - Fix resize() in all Filtered types (including Iterable and String, Sets and Maps).
