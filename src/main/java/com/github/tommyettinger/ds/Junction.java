@@ -770,24 +770,24 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
     }
 
     /**
-     * Parses all of {@code text} into one Junction of T, creating T items from String sections using {@code parser}.
-     * @param parser converts String sections to T values to put in the Junction; an enum's {@code valueOf(String)} can work
+     * Parses all of {@code text} into one Junction of T, creating T items from String sections using {@code converter}.
+     * @param converter converts String sections to T values to put in the Junction; an enum's {@code valueOf(String)} can work
      * @param text the String to parse
      * @return the resulting Junction of String
      */
-    public static <T extends Comparable<T>> Junction<T> parse(ObjToObjFunction<String, T> parser, String text) {
-        return parse(parser, text, 0, text.length());
+    public static <T extends Comparable<T>> Junction<T> parse(ObjToObjFunction<String, T> converter, String text) {
+        return parse(converter, text, 0, text.length());
     }
     /**
      * Parses a substring of {@code text} into one Junction of T, creating T items from String sections using
-     * {@code parser}. The {@code start} is inclusive and the {@code end} is exclusive.
-     * @param parser converts String sections to T values to put in the Junction; an enum's {@code valueOf(String)} can work
+     * {@code converter}. The {@code start} is inclusive and the {@code end} is exclusive.
+     * @param converter converts String sections to T values to put in the Junction; an enum's {@code valueOf(String)} can work
      * @param text the String to parse
      * @param start the first index to read from, inclusive
      * @param end the last index to stop reading before, exclusive
      * @return the resulting Junction of String
      */
-    public static <T extends Comparable<T>> Junction<T> parse(ObjToObjFunction<String, T> parser, String text, int start, int end){
+    public static <T extends Comparable<T>> Junction<T> parse(ObjToObjFunction<String, T> converter, String text, int start, int end){
         ObjectDeque<String> tokens = lex(text, start, end);
         tokens = shuntingYard(tokens);
         ObjectDeque<Term<T>> terms = new ObjectDeque<>(tokens.size());
@@ -805,10 +805,10 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                     break;
                 }
             } else {
-                terms.addLast(Leaf.of(parser.apply(tok)));
+                terms.addLast(Leaf.of(converter.apply(tok)));
             }
         }
-        if(terms.isEmpty()) terms.addLast(Leaf.of(parser.apply("")));
+        if(terms.isEmpty()) terms.addLast(Any.of());
         return new Junction<>(terms.getLast());
     }
 }

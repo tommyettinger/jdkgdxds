@@ -1,5 +1,6 @@
 [1.7.2]
 - Junction (and its supporting interface Term) are new in this version. They can be used as a type of predicate to match multiple items in a Collection.
+- A Junction can be parsed from a String, creating several Terms and their relationships. This can produce any type that a supplied function can convert from a String.
 
 [1.7.1]
 - Fix automatic serialization of IntSet (when not using a serializer that knows how primitive sets work).
