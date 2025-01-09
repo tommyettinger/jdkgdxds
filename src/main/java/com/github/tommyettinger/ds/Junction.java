@@ -114,6 +114,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
     public int compareTo(Term<T> o) {
         return root.compareTo(o);
     }
+
     public static <T extends Comparable<T>> Junction<T> of(T item) {
         return new Junction<>(Void.TYPE, item);
     }

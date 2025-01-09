@@ -173,12 +173,6 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param item element whose presence in this set is to be tested
 	 * @return {@code true} if this set contains the specified element
-	 * @throws ClassCastException   if the type of the specified element
-	 *                              is incompatible with this set
-	 *                              (<a href="Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException if the specified element is null and this
-	 *                              set does not permit null elements
-	 *                              (<a href="Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
 	public boolean contains (Object item) {
