@@ -18,6 +18,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -501,41 +502,33 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 
 	@Override
 	public int hashCode () {
-		int h = size;
-		Enum<?>[] universe = this.universe;
-		Object[] valueTable = this.valueTable;
-		for (int i = 0, n = universe.length; i < n; i++) {
-			Enum<?> key = universe[i];
-			if (key != null) {
-				h ^= key.hashCode();
-				V value = release(valueTable[i]);
-				if (value != null) {h ^= value.hashCode();}
-			}
+		if(keys == null || keys.universe == null || keys.isEmpty())
+			return 0;
+		int h = keys.size;
+		Enum<?>[] universe = keys.universe;
+		long[] valueTable = this.valueTable;
+		for (int i = keys.nextOrdinal(0); i != -1; i = keys.nextOrdinal(i+1)) {
+			Enum<?> key = keys.universe[i];
+			h ^= key.hashCode();
+			long value = valueTable[i];
+			h ^= value ^ value >>> 32;
 		}
 		return h;
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) {return true;}
-		if (!(obj instanceof Map)) {return false;}
-		Map other = (Map)obj;
-		if (other.size() != size) {return false;}
-		Enum<?>[] universe = this.universe;
-		Object[] valueTable = this.valueTable;
-		if(universe == null || valueTable == null || size == 0) return other.isEmpty();
+		if (!(obj instanceof EnumLongMap)) {return false;}
+		EnumLongMap other = (EnumLongMap)obj;
+		if (other.size() != size()) {return false;}
+		if(this.keys == null || this.keys.universe == null || this.valueTable == null) return other.isEmpty();
+		Enum<?>[] universe = this.keys.universe;
+		long[] valueTable = this.valueTable;
 		try {
-			for (int i = 0, n = universe.length; i < n; i++) {
-				Object rawValue = valueTable[i];
-				if (rawValue != null) {
-					V value = release(rawValue);
-					if (value == null) {
-						if (other.getOrDefault(universe[i], neverIdentical) != null) {return false;}
-					} else {
-						if (!value.equals(other.get(universe[i]))) {return false;}
-					}
-				}
+			for (int i = keys.nextOrdinal(0); i != -1; i = keys.nextOrdinal(i+1)) {
+				long value = valueTable[i];
+				if (value != (other.get(universe[i]))) {return false;}
 			}
 		}catch (ClassCastException | NullPointerException unused) {
 			return false;
@@ -543,24 +536,6 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 
 		return true;
 	}
-
-	/**
-	 * Uses == for comparison of each value.
-	 */
-	public boolean equalsIdentity (@Nullable Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof EnumLongMap)) {return false;}
-		EnumLongMap other = (EnumLongMap)obj;
-		if (other.size != size) {return false;}
-		Enum<?>[] universe = this.universe;
-		Object[] valueTable = this.valueTable;
-		for (int i = 0, n = universe.length; i < n; i++) {
-			Enum<?> key = universe[i];
-			if (key != null && release(valueTable[i]) != other.getOrDefault(key, neverIdentical)) {return false;}
-		}
-		return true;
-	}
-
 
 	@Override
 	public String toString () {
@@ -583,7 +558,7 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	}
 	/**
 	 * Makes a String from the contents of this ObjectObjectMap, but uses the given {@link Appender} and
-	 * {@link Appender} to convert each key and each value to a customizable representation and append them
+	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
 	 *
@@ -591,11 +566,11 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
 	 * @param keyAppender a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @param valueAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
 	 * @return a new String representing this map
 	 */
 	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
-		Appender<Enum<?>> keyAppender, Appender<V> valueAppender){
+		Appender<Enum<?>> keyAppender, LongAppender valueAppender){
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
@@ -616,37 +591,37 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 		 * @param valueAppender a function that takes a StringBuilder and a V, and returns the modified StringBuilder
 		 * @return {@code sb}, with the appended keys and values of this map
 		 */
-		public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
-		Appender<Enum<?>> keyAppender, Appender<V> valueAppender) {
-			if (size == 0) {return braces ? sb.append("{}") : sb;}
-			if (braces) {sb.append('{');}
-			Enum<?>[] universe = this.universe;
-			Object[] valueTable = this.valueTable;
-			int i = -1;
-			final int len = universe.length;
-			while (++i < len) {
-				Object v = valueTable[i];
-				if (v == null) {continue;}
-				keyAppender.apply(sb, universe[i]);
-				sb.append(keyValueSeparator);
-				V value = release(v);
-				if(value == this) sb.append("(this)");
-				else valueAppender.apply(sb, value);
-				break;
-			}
-			while (++i < len) {
-				Object v = valueTable[i];
-				if (v == null) {continue;}
-				sb.append(entrySeparator);
-				keyAppender.apply(sb, universe[i]);
-				sb.append(keyValueSeparator);
-				V value = release(v);
-				if(value == this) sb.append("(this)");
-				else valueAppender.apply(sb, value);
-			}
-			if (braces) {sb.append('}');}
-			return sb;
+	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+		Appender<Enum<?>> keyAppender, LongAppender valueAppender) {
+		if (size() == 0) {
+			return braces ? sb.append("{}") : sb;
 		}
+		if (braces) {
+			sb.append('{');
+		}
+		Enum<?>[] universe = this.keys.universe;
+		long[] valueTable = this.valueTable;
+		int i = 0;
+		final int len = universe.length;
+		while ((i = keys.nextOrdinal(i)) != -1) {
+			long v = valueTable[i];
+			keyAppender.apply(sb, universe[i]);
+			sb.append(keyValueSeparator);
+			valueAppender.apply(sb, v);
+			break;
+		}
+		while ((i = keys.nextOrdinal(i)) != -1) {
+			long v = valueTable[i];
+			sb.append(entrySeparator);
+			keyAppender.apply(sb, universe[i]);
+			sb.append(keyValueSeparator);
+			valueAppender.apply(sb, v);
+		}
+		if (braces) {
+			sb.append('}');
+		}
+		return sb;
+	}
 
 	@Nullable
 	public V replace (Enum<?> key, V value) {
