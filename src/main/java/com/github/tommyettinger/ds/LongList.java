@@ -840,7 +840,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	@Override
 	public int hashCode () {
 		long[] items = this.items;
-		long h = 0xC13FA9A902A6328FL;
+		long h = size;
 		for (int i = 0, n = size; i < n; i++) {
 			h = h * 0x9E3779B97F4A7C15L + items[i];
 		}
