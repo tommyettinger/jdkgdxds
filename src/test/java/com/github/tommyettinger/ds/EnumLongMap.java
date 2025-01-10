@@ -704,7 +704,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	/**
 	 * Returns a {@link Set} view of the keys contained in this map.
 	 * The set is backed by the map, so changes to the map are
-	 * reflected in the set, and vice-versa.  If the map is modified
+	 * reflected in the set, and vice versa.  If the map is modified
 	 * while an iteration over the set is in progress (except through
 	 * the iterator's own {@code remove} operation), the results of
 	 * the iteration are undefined.  The set supports element removal,
@@ -765,12 +765,12 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * Note that the same iterator instance is returned each time this method is called.
 	 * Use the {@link Entries} constructor for nested or multithreaded iteration.
 	 *
-	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
+	 * @return a {@link Set} of {@link Entry} key-value pairs
 	 */
-	public @NonNull Entries<V> entrySet () {
+	public @NonNull Entries entrySet () {
 		if (entries1 == null || entries2 == null) {
-			entries1 = new Entries<>(this);
-			entries2 = new Entries<>(this);
+			entries1 = new Entries(this);
+			entries2 = new Entries(this);
 		}
 		if (!entries1.iter.valid) {
 			entries1.iter.reset();
@@ -784,56 +784,29 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		return entries2;
 	}
 
-	public static class Entry<V> implements Map.Entry<Enum<?>, V> {
+	public static class Entry {
 		@Nullable public Enum<?> key;
-		@Nullable public V value;
+		public long value;
 
 		public Entry () {
 		}
 
-		public Entry (@Nullable Enum<?> key, @Nullable V value) {
+		public Entry (@Nullable Enum<?> key, long value) {
 			this.key = key;
 			this.value = value;
 		}
 
-		public Entry (Map.Entry<? extends Enum<?>, ? extends V> entry) {
-			key = entry.getKey();
-			value = entry.getValue();
-		}
-
 		@Override
-		@Nullable
 		public String toString () {
 			return key + "=" + value;
 		}
 
-		/**
-		 * Returns the key corresponding to this entry.
-		 *
-		 * @return the key corresponding to this entry
-		 * @throws IllegalStateException implementations may, but are not
-		 *                               required to, throw this exception if the entry has been
-		 *                               removed from the backing map.
-		 */
-		@Override
 		public Enum<?> getKey () {
 			Objects.requireNonNull(key);
 			return key;
 		}
 
-		/**
-		 * Returns the value corresponding to this entry.  If the mapping
-		 * has been removed from the backing map (by the iterator's
-		 * {@code remove} operation), the results of this call are undefined.
-		 *
-		 * @return the value corresponding to this entry
-		 * @throws IllegalStateException implementations may, but are not
-		 *                               required to, throw this exception if the entry has been
-		 *                               removed from the backing map.
-		 */
-		@Override
-		@Nullable
-		public V getValue () {
+		public long getValue () {
 			return value;
 		}
 
@@ -842,10 +815,8 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * @param value the new V value to use
 		 * @return the old value this held, before modification
 		 */
-		@Override
-		@Nullable
-		public V setValue (V value) {
-			V old = this.value;
+		public long setValue (long value) {
+			long old = this.value;
 			this.value = value;
 			return old;
 		}
@@ -853,17 +824,17 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		@Override
 		public boolean equals (@Nullable Object o) {
 			if (this == o) {return true;}
-			if (!(o instanceof Map.Entry)) {return false;}
+			if (!(o instanceof Entry)) {return false;}
 
-			Map.Entry entry = (Map.Entry)o;
+			Entry entry = (Entry)o;
 
 			if (!Objects.equals(key, entry.getKey())) {return false;}
-			return Objects.equals(value, entry.getValue());
+			return value == entry.getValue();
 		}
 
 		@Override
 		public int hashCode () {
-			return (key != null ? key.hashCode() : 0) ^ (value != null ? value.hashCode() : 0);
+			return (key != null ? key.hashCode() : 0) ^ (int) (value ^ value >>> 32);
 		}
 	}
 
