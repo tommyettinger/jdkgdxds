@@ -20,13 +20,13 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
+import com.github.tommyettinger.function.LongLongToLongBiFunction;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
+import com.github.tommyettinger.function.ObjToLongFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.*;
-
-import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 
 /**
  * An unordered map where the keys are {@code Enum}s and values are primitive longs. Null keys are not allowed.
@@ -51,7 +51,7 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * @author Nathan Sweet (Keys, Values, Entries, and MapIterator, as well as general structure)
  * @author Tommy Ettinger (Enum-related adaptation)
  */
-public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
+public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	protected @Nullable EnumSet keys;
 
 	protected long @Nullable[] valueTable;
@@ -623,46 +623,68 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 		return sb;
 	}
 
-	@Nullable
-	public V replace (Enum<?> key, V value) {
-		int i = key.ordinal();
-		if (i < universe.length) {
-			V oldValue = release(valueTable[i]);
-			valueTable[i] = hold(value);
-			return oldValue;
+	public long replace (Enum<?> key, long value) {
+		if(keys != null && keys.contains(key)) {
+			int i = key.ordinal();
+			if (i < valueTable.length) {
+				long oldValue = valueTable[i];
+				valueTable[i] = value;
+				return oldValue;
+			}
 		}
 		return defaultValue;
 	}
 
+	public long computeIfAbsent (Enum<?> key, ObjToLongFunction<? super Enum<?>> mappingFunction) {
+        if (keys != null && keys.universe != null && keys.contains(key)) {
+            return valueTable[key.ordinal()];
+        } else {
+            long newValue = mappingFunction.applyAsLong(key);
+            put(key, newValue);
+            return newValue;
+        }
+    }
+
+	public boolean remove (Object key, long value) {
+		if (keys != null && keys.contains(key) && valueTable[((Enum<?>)key).ordinal()] == value) {
+			remove(key);
+			return true;
+		}
+		return false;
+	}
+
 	/**
-	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM), and this
-	 * won't remove entries if the remappingFunction returns null (in that case, it will call {@code put(key, null)}).
-	 * This also uses a functional interface from Funderby instead of the JDK, for RoboVM support.
+	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM),
+	 * this uses primitive values, and this won't remove entries if the remappingFunction returns null (because
+	 * that isn't possible with primitive types).
+	 * This uses a functional interface from Funderby.
 	 * @param key key with which the resulting value is to be associated
 	 * @param value the value to be merged with the existing value
 	 *        associated with the key or, if no existing value
 	 *        is associated with the key, to be associated with the key
-	 * @param remappingFunction given a V from this and the V {@code value}, this should return what V to use
+	 * @param remappingFunction given a long from this and the long {@code value}, this should return what long to use
 	 * @return the value now associated with key
 	 */
-	@Nullable
-	public V combine (Enum<?> key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-		int i = key.ordinal();
-		V next = (valueTable[i] == null) ? value : remappingFunction.apply(release(valueTable[i]), value);
+	public long combine (Enum<?> key, long value, LongLongToLongBiFunction remappingFunction) {
+		if(keys == null || keys.universe == null) {
+			put(key, value);
+			return value;
+		}
+		long next = (keys.contains(key)) ? remappingFunction.applyAsLong(valueTable[key.ordinal()], value) : value;
 		put(key, next);
 		return next;
 	}
 
 	/**
-	 * Simply calls {@link #combine(Enum, Object, ObjObjToObjBiFunction)} on this map using every
+	 * Simply calls {@link #combine(Enum, long, LongLongToLongBiFunction)} on this map using every
 	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
 	 * this map, though this depends on the {@code remappingFunction}.
-	 * @param other a non-null Map (or subclass) with compatible key and value types
-	 * @param remappingFunction given a V value from this and a value from other, this should return what V to use
+	 * @param other a non-null ObjectLongMap (or subclass) with a compatible key type
+	 * @param remappingFunction given a long value from this and a value from other, this should return what long to use
 	 */
-	public void combine (Map<? extends Enum<?>, ? extends V> other, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-		for (Map.Entry<? extends Enum<?>, ? extends V> e : other.entrySet()) {
-			combine(e.getKey(), e.getValue(), remappingFunction);
+	public void combine (EnumLongMap other, LongLongToLongBiFunction remappingFunction) {
+		for (Entry e : other.entrySet()) {
+			combine(e.key, e.value, remappingFunction);
 		}
 	}
 
@@ -721,10 +743,10 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 *
 	 * @return a {@link Collection} of V values
 	 */
-	public @NonNull Values<V> values () {
+	public @NonNull Values values () {
 		if (values1 == null || values2 == null) {
-			values1 = new Values<>(this);
-			values2 = new Values<>(this);
+			values1 = new Values(this);
+			values2 = new Values(this);
 		}
 		if (!values1.iter.valid) {
 			values1.iter.reset();
