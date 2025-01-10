@@ -697,7 +697,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator () {
+	public @NonNull MapIterator iterator () {
 		return entrySet().iterator();
 	}
 
@@ -838,14 +838,14 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		}
 	}
 
-	public static abstract class MapIterator<V, I> implements Iterable<I>, Iterator<I> {
+	public static abstract class MapIterator {
 		public boolean hasNext;
 
-		protected final EnumLongMap<? extends V> map;
+		protected final EnumLongMap map;
 		protected int nextIndex, currentIndex;
 		public boolean valid = true;
 
-		public MapIterator (EnumLongMap<? extends V> map) {
+		public MapIterator (EnumLongMap map) {
 			this.map = map;
 			reset();
 		}
@@ -857,40 +857,117 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		}
 
 		protected void findNextIndex () {
-			Object[] valueTable = map.valueTable;
-			if(valueTable != null) {
-				for (int n = map.universe.length; ++nextIndex < n; ) {
-					if (valueTable[nextIndex] != null) {
-						hasNext = true;
-						return;
-					}
-				}
-			}
-			hasNext = false;
+			if(map.keys == null || map.keys.universe == null) return;
+			nextIndex = map.keys.nextOrdinal(nextIndex+1);
+			hasNext = nextIndex != -1;
 		}
 
-		@Override
 		public void remove () {
 			int i = currentIndex;
-			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
-			Object[] valueTable = map.valueTable;
-			if(valueTable == null) return;
-			// This condition can happen if the map had this the current item removed without using this method.
-			if(valueTable[i] != null)
-				map.size--;
-			valueTable[i] = null;
+			if (i < 0 || map.keys == null || map.keys.universe == null) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
+			map.keys.remove(map.keys.universe[i]);
 			currentIndex = -1;
 		}
 	}
 
-	public static class Entries<V> extends AbstractSet<Map.Entry<Enum<?>, V>> implements EnhancedCollection<Map.Entry<Enum<?>, V>> {
-		protected Entry<V> entry = new Entry<>();
-		protected MapIterator<V, Map.Entry<Enum<?>, V>> iter;
+	public static class KeyIterator extends MapIterator implements Iterable<Enum<?>>, Iterator<Enum<?>> {
 
-		public Entries (EnumLongMap<V> map) {
-			iter = new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
-				@Override
-				public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator () {
+		public KeyIterator (EnumLongMap map) {
+			super(map);
+		}
+
+		@Override
+		public @NonNull KeyIterator iterator () {
+			return this;
+		}
+
+		@Override
+		public boolean hasNext () {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			return hasNext;
+		}
+
+		@Override
+		public Enum<?> next () {
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			Enum<?> key = map.keys.universe[nextIndex];
+			currentIndex = nextIndex;
+			findNextIndex();
+			return key;
+		}
+	}
+
+	public static class ValueIterator extends MapIterator implements LongIterator {
+		public ValueIterator (EnumLongMap map) {
+			super(map);
+		}
+
+		/**
+		 * Returns the next {@code long} element in the iteration.
+		 *
+		 * @return the next {@code long} element in the iteration
+		 * @throws NoSuchElementException if the iteration has no more elements
+		 */
+		@Override
+		public long nextLong () {
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			long value = map.valueTable[nextIndex];
+			currentIndex = nextIndex;
+			findNextIndex();
+			return value;
+		}
+
+		@Override
+		public boolean hasNext () {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			return hasNext;
+		}
+	}
+
+	public static class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
+		protected Entry entry = new Entry();
+
+		public EntryIterator (EnumLongMap map) {
+			super(map);
+		}
+
+		@Override
+		public @NonNull EntryIterator iterator () {
+			return this;
+		}
+
+		/**
+		 * Note the same entry instance is returned each time this method is called.
+		 */
+		@Override
+		public Entry next () {
+			if (!hasNext) {throw new NoSuchElementException();}
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			entry.key = map.keys.universe[nextIndex];
+			entry.value = map.valueTable[nextIndex];
+			currentIndex = nextIndex;
+			findNextIndex();
+			return entry;
+		}
+
+		@Override
+		public boolean hasNext () {
+			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+			return hasNext;
+		}
+	}
+
+	public static class Entries extends AbstractSet<Entry> implements EnhancedCollection<Entry> {
+		protected Entry entry = new Entry();
+		protected MapIterator iter;
+
+		public Entries (EnumLongMap map) {
+			iter = new MapIterator(map) {
+				public @NonNull MapIterator iterator () {
 					return this;
 				}
 
@@ -899,8 +976,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 				 *
 				 * @return a reused Entry that will have its key and value set to the next pair
 				 */
-				@Override
-				public Map.Entry<Enum<?>, V> next () {
+				public Entry next () {
 					if (!hasNext) {throw new NoSuchElementException();}
 					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 					Enum<?>[] universe = map.universe;
