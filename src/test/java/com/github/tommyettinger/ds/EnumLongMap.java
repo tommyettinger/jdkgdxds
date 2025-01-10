@@ -423,7 +423,7 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 * Removes all the elements from this map and can reset the universe of possible Enum items this can hold.
 	 * The map will be empty after this call returns.
 	 * This changes the universe of possible Enum items this can hold to match the Enum constants in {@code universe}.
-	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumMap()} was called.
+	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumLongMap()} was called.
 	 * If the table this would need is the same size as or smaller than the current table (such as if {@code universe} is the same as
 	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
@@ -465,67 +465,36 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	/**
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
-	 *
-	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
-	 *                 {@link #equals(Object)}.
 	 */
-	public boolean containsValue (@Nullable Object value, boolean identity) {
-		Object[] valueTable = this.valueTable;
-		Object held = hold(value);
-		if (identity) {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (valueTable[i] == held) {return true;}}
-		} else {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (held.equals(valueTable[i])) {return true;}}
-		}
+	public boolean containsValue (long value) {
+		if(this.valueTable == null) return false;
+		long[] valueTable = this.valueTable;
+		for (int i = valueTable.length - 1; i >= 0; i--) {if (valueTable[i] == value) {return true;}}
 		return false;
 	}
 
 	public boolean containsKey (Object key) {
-		if(size == 0 || !(key instanceof Enum<?>))
+		if(keys == null || keys.isEmpty() || !(key instanceof Enum<?>))
 			return false;
 		final Enum<?> e = (Enum<?>)key;
-		final int ord = e.ordinal();
-		return ord < universe.length && universe[ord] == e && valueTable[ord] != null;
-	}
-
-	/**
-	 * Returns {@code true} if this map maps one or more keys to the
-	 * specified value.  More formally, returns {@code true} if and only if
-	 * this map contains at least one mapping to a value {@code v} such that
-	 * {@code (value==null ? v==null : value.equals(v))}.  This operation
-	 * will probably require time linear in the map size for most
-	 * implementations of the {@code Map} interface.
-	 *
-	 * @param value value whose presence in this map is to be tested
-	 * @return {@code true} if this map maps one or more keys to the
-	 * specified value
-	 * @throws ClassCastException   if the value is of an inappropriate type for
-	 *                              this map
-	 *                              (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException if the specified value is null and this
-	 *                              map does not permit null values
-	 *                              (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
-	 */
-	public boolean containsValue (Object value) {
-		return containsValue(value, false);
+		return keys.contains(e);
 	}
 
 	/**
 	 * Returns the key for the specified value, or null if it is not in the map. Note this traverses the entire map and compares
 	 * every value, which may be an expensive operation.
 	 *
-	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
-	 *                 {@link #equals(Object)}.
 	 * @return the corresponding Enum if the value was found, or null otherwise
 	 */
 	@Nullable
-	public Enum<?> findKey (@Nullable Object value, boolean identity) {
-		Object[] valueTable = this.valueTable;
-		Object held = hold(value);
-		if (identity) {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (valueTable[i] == held) {return universe[i];}}
-		} else {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (held.equals(valueTable[i])) {return universe[i];}}
+	public Enum<?> findKey (long value) {
+		if(this.keys == null || this.valueTable == null || this.keys.isEmpty() || keys.universe == null) return null;
+		long[] valueTable = this.valueTable;
+		for (int i = valueTable.length - 1; i >= 0; i--) {
+			if (valueTable[i] == value) {
+				Enum<?> item = keys.universe[i];
+				if (keys.contains(item)) return item;
+			}
 		}
 		return null;
 	}
