@@ -280,49 +280,37 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 *
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
-	@Override
-	@Nullable
-	public V get (Object key) {
-		if(size == 0 || !(key instanceof Enum<?>))
+	public long get (Object key) {
+		if(keys == null || keys.isEmpty() || keys.universe == null || !(key instanceof Enum<?>))
 			return defaultValue;
 		final Enum<?> e = (Enum<?>)key;
-		final int ord = e.ordinal();
-		if(ord >= universe.length || universe[ord] != e)
-			return defaultValue;
-		Object o = valueTable[ord];
-		return o == null ? defaultValue : release(o);
+		return keys.contains(e) ? valueTable[e.ordinal()] : defaultValue;
 	}
 
 	/**
 	 * Returns the value for the specified key, or the given default value if the key is not in the map.
 	 */
-	@Override
-	@Nullable
-	public V getOrDefault (Object key, @Nullable V defaultValue) {
-		if(size == 0 || !(key instanceof Enum<?>))
+	public long getOrDefault (Object key, long defaultValue) {
+		if(keys == null || keys.isEmpty() || keys.universe == null || !(key instanceof Enum<?>))
 			return defaultValue;
-		Enum<?> e = (Enum<?>)key;
-		Object o = valueTable[e.ordinal()];
-		return o == null ? defaultValue : release(o);
+		final Enum<?> e = (Enum<?>)key;
+		return keys.contains(e) ? valueTable[e.ordinal()] : defaultValue;
 	}
 
-	@Override
-	@Nullable
-	public V remove (Object key) {
-		if(size == 0 || !(key instanceof Enum<?>))
+	public long remove (Object key) {
+		if(keys == null || keys.isEmpty() || keys.universe == null || !(key instanceof Enum<?>))
 			return defaultValue;
 		Enum<?> e = (Enum<?>)key;
-		Object o = valueTable[e.ordinal()];
-		valueTable[e.ordinal()] = null;
-		if(o == null) return defaultValue;
-		--size;
-		return release(o);
+		final int ord = e.ordinal();
+		long o = valueTable[ord];
+		if(!keys.remove(e)) return defaultValue;
+		return o;
 	}
 
 	/**
 	 * Copies all the mappings from the specified map to this map
 	 * (optional operation).  The effect of this call is equivalent to that
-	 * of calling {@link #put(Enum, Object) put(k, v)} on this map once
+	 * of calling {@link #put(Enum, long) put(k, v)} on this map once
 	 * for each mapping from key {@code k} to value {@code v} in the
 	 * specified map.  The behavior of this operation is undefined if the
 	 * specified map is modified while the operation is in progress.
@@ -341,9 +329,8 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 * @throws IllegalArgumentException      if some property of a key or value in
 	 *                                       the specified map prevents it from being stored in this map
 	 */
-	@Override
-	public void putAll (Map<? extends Enum<?>, ? extends V> m) {
-		for (Map.Entry<? extends Enum<?>, ? extends V> kv : m.entrySet()) {put(kv.getKey(), kv.getValue());}
+	public void putAll (ObjectLongMap<Enum<?>> m) {
+		for (ObjectLongMap.Entry<Enum<?>> kv : m.entrySet()) {put(kv.getKey(), kv.getValue());}
 	}
 
 	/**
@@ -360,7 +347,6 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 *
 	 * @return the number of key-value mappings in this map
 	 */
-	@Override
 	public int size () {
 		return size;
 	}
@@ -368,14 +354,13 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	/**
 	 * Returns true if the map is empty.
 	 */
-	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
 
 	/**
-	 * Gets the default value, a {@code V} which is returned by {@link #get(Object)} if the key is not found.
-	 * If not changed, the default value is null.
+	 * Gets the default value, a {@code long} which is returned by {@link #get(Object)} if the key is not found.
+	 * If not changed, the default value is 0.
 	 *
 	 * @return the current default value
 	 */
@@ -400,7 +385,6 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 * The map will be empty after this call returns.
 	 * This does not change the universe of possible Enum items this can hold.
 	 */
-	@Override
 	public void clear () {
 		size = 0;
 		if(valueTable != null)
@@ -496,7 +480,6 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 		return false;
 	}
 
-	@Override
 	public boolean containsKey (Object key) {
 		if(size == 0 || !(key instanceof Enum<?>))
 			return false;
@@ -523,7 +506,6 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 *                              map does not permit null values
 	 *                              (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	@Override
 	public boolean containsValue (Object value) {
 		return containsValue(value, false);
 	}
@@ -697,7 +679,6 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 			return sb;
 		}
 
-	@Override
 	@Nullable
 	public V replace (Enum<?> key, V value) {
 		int i = key.ordinal();
@@ -773,7 +754,6 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	@Override
 	public @NonNull Keys keySet () {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys(this);
@@ -797,7 +777,6 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 *
 	 * @return a {@link Collection} of V values
 	 */
-	@Override
 	public @NonNull Values<V> values () {
 		if (values1 == null || values2 == null) {
 			values1 = new Values<>(this);
@@ -822,7 +801,6 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 *
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
-	@Override
 	public @NonNull Entries<V> entrySet () {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries<>(this);
