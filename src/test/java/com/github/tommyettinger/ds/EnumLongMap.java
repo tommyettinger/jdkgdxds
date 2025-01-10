@@ -337,25 +337,24 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 * Returns true if the map has one or more items.
 	 */
 	public boolean notEmpty () {
-		return size != 0;
+		return keys != null && keys.size != 0;
 	}
 
 	/**
-	 * Returns the number of key-value mappings in this map.  If the
-	 * map contains more than {@code Integer.MAX_VALUE} elements, returns
-	 * {@code Integer.MAX_VALUE}.
+	 * Returns the number of key-value mappings in this map.
 	 *
 	 * @return the number of key-value mappings in this map
 	 */
 	public int size () {
-		return size;
+		if(keys == null) return 0;
+		return keys.size;
 	}
 
 	/**
 	 * Returns true if the map is empty.
 	 */
 	public boolean isEmpty () {
-		return size == 0;
+		return keys == null || keys.size == 0;
 	}
 
 	/**
@@ -364,19 +363,18 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 *
 	 * @return the current default value
 	 */
-	@Nullable
-	public V getDefaultValue () {
+	public long getDefaultValue () {
 		return defaultValue;
 	}
 
 	/**
-	 * Sets the default value, a {@code V} which is returned by {@link #get(Object)} if the key is not found.
-	 * If not changed, the default value is null. Note that {@link #getOrDefault(Object, Object)} is also available,
+	 * Sets the default value, a {@code long} which is returned by {@link #get(Object)} if the key is not found.
+	 * If not changed, the default value is 0. Note that {@link #getOrDefault(Object, long)}  is also available,
 	 * which allows specifying a "not-found" value per-call.
 	 *
-	 * @param defaultValue may be any V object or null; should usually be one that doesn't occur as a typical value
+	 * @param defaultValue may be any long; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue (@Nullable V defaultValue) {
+	public void setDefaultValue (long defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -386,36 +384,38 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 * This does not change the universe of possible Enum items this can hold.
 	 */
 	public void clear () {
-		size = 0;
-		if(valueTable != null)
-			Utilities.clear(valueTable);
+		if(keys != null)
+			keys.clear();
 	}
 
 	/**
 	 * Removes all the elements from this map and can reset the universe of possible Enum items this can hold.
 	 * The map will be empty after this call returns.
 	 * This changes the universe of possible Enum items this can hold to match {@code universe}.
-	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumMap()} was called.
+	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumLongMap()} was called.
 	 * If the table this would need is the same size as or smaller than the current table (such as if {@code universe} is the same as
 	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This always uses {@code universe} directly, without copying.
 	 * <br>
-	 * This can be useful to allow an EnumMap that was created with {@link #EnumMap()} to share a universe with other EMaps.
+	 * This can be useful to allow an EnumMap that was created with {@link #EnumLongMap()} to share a universe with other EMaps.
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
 	public void clearToUniverse (Enum<?>@Nullable [] universe) {
-		size = 0;
 		if (universe == null) {
+			keys = null;
 			valueTable = null;
-		} else if(universe.length <= this.universe.length) {
-			if(valueTable != null)
-				Utilities.clear(valueTable);
 		} else {
-			valueTable = new Object[universe.length];
+			if (keys == null) {
+				keys = new EnumSet(universe);
+			} else
+				keys.clearToUniverse(universe);
+
+			if (keys.universe != null && universe.length > keys.universe.length) {
+				valueTable = new long[universe.length];
+			}
 		}
-		this.universe = universe;
 	}
 
 
@@ -436,19 +436,19 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
 	 */
 	public void clearToUniverse (@Nullable Class<? extends Enum<?>> universe) {
-		size = 0;
 		if (universe == null) {
+			keys = null;
 			valueTable = null;
-			this.universe = null;
 		} else {
 			Enum<?>[] cons = universe.getEnumConstants();
-			if(cons.length <= this.universe.length) {
-				if(valueTable != null)
-					Utilities.clear(valueTable);
-			} else {
-				valueTable = new Object[cons.length];
+			if (keys == null) {
+				keys = new EnumSet(cons);
+			} else
+				keys.clearToUniverse(cons);
+
+			if (keys.universe != null && cons.length > keys.universe.length) {
+				valueTable = new long[cons.length];
 			}
-			this.universe = cons;
 		}
 	}
 
@@ -458,8 +458,8 @@ public class EnumLongMap implements Iterable<ObjectLongMap.Entry<Enum<?>>> {
 	 * If an EnumMap has not been initialized, just adding a key will set the key universe to match the given item.
 	 * @return the current key universe
 	 */
-	public Enum<?>[] getUniverse () {
-		return universe;
+	public Enum<?> @Nullable[] getUniverse () {
+		return keys == null ? null : keys.universe;
 	}
 
 	/**
