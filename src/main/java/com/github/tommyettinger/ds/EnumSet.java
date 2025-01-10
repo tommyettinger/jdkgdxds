@@ -652,6 +652,137 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		set.add(item);
 		return set;
 	}
+	/**
+	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @return a new EnumSet that holds the given items
+	 */
+	public static EnumSet with (Enum<?> item0, Enum<?> item1) {
+		EnumSet set = new EnumSet();
+		set.add(item0);
+		set.add(item1);
+		return set;
+	}
+
+	/**
+	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @return a new EnumSet that holds the given items
+	 */
+	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2) {
+		EnumSet set = new EnumSet();
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		return set;
+	}
+
+	/**
+	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @param item3 an Enum item
+	 * @return a new EnumSet that holds the given items
+	 */
+	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3) {
+		EnumSet set = new EnumSet();
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		return set;
+	}
+
+	/**
+	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @param item3 an Enum item
+	 * @param item4 an Enum item
+	 * @return a new EnumSet that holds the given items
+	 */
+	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4) {
+		EnumSet set = new EnumSet();
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		return set;
+	}
+
+	/**
+	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @param item3 an Enum item
+	 * @param item4 an Enum item
+	 * @param item5 an Enum item
+	 * @return a new EnumSet that holds the given items
+	 */
+	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5) {
+		EnumSet set = new EnumSet();
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		return set;
+	}
+
+	/**
+	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @param item3 an Enum item
+	 * @param item4 an Enum item
+	 * @param item5 an Enum item
+	 * @param item6 an Enum item
+	 * @return a new EnumSet that holds the given items
+	 */
+	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6) {
+		EnumSet set = new EnumSet();
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		set.add(item6);
+		return set;
+	}
+
+	/**
+	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @param item3 an Enum item
+	 * @param item4 an Enum item
+	 * @param item5 an Enum item
+	 * @param item6 an Enum item
+	 * @return a new EnumSet that holds the given items
+	 */
+	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6, Enum<?> item7) {
+		EnumSet set = new EnumSet();
+		set.add(item0);
+		set.add(item1);
+		set.add(item2);
+		set.add(item3);
+		set.add(item4);
+		set.add(item5);
+		set.add(item6);
+		set.add(item7);
+		return set;
+	}
 
 	/**
 	 * Builds an EnumSet that contains the unique elements from the given {@code array} or varargs.
