@@ -279,7 +279,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * legitimate key. Checking that the result of this method is null does not guarantee that the
 	 * {@code key} is not present.
 	 *
-	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
+	 * @param key a non-null Object that should always be an Enum
 	 */
 	public long get (Object key) {
 		if(keys == null || keys.isEmpty() || keys.universe == null || !(key instanceof Enum<?>))
@@ -1504,30 +1504,96 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	}
 
 	/**
-	 * Constructs an empty map given the types as generic type arguments.
+	 * Constructs an empty map.
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <V>    the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> EnumLongMap<V> with () {
-		return new EnumLongMap<>();
+	public static EnumLongMap with () {
+		return new EnumLongMap();
 	}
+
 
 	/**
 	 * Constructs a single-entry map given one key and one value.
-	 * This is mostly useful as an optimization for {@link #with(Enum, Object, Object...)}
-	 * when there's no "rest" of the keys or values.
+	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number value to a primitive long, regardless of which Number type was used.
 	 *
-	 * @param key0   the first and only key
-	 * @param value0 the first and only value
-	 * @param <V>    the type of value0
+	 * @param key0   the first and only Enum key
+	 * @param value0 the first and only value; will be converted to primitive long
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> EnumLongMap<V> with (Enum<?> key0, V value0) {
-		EnumLongMap<V> map = new EnumLongMap<>();
-		map.put(key0, value0);
+	public static EnumLongMap with (Enum<?> key0, Number value0) {
+		EnumLongMap map = new EnumLongMap();
+		map.put(key0, value0.longValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number values to primitive longs, regardless of which Number type was used.
+	 *
+	 * @param key0   an Enum key
+	 * @param value0 a Number for a value; will be converted to primitive long
+	 * @param key1   an Enum key
+	 * @param value1 a Number for a value; will be converted to primitive long
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static EnumLongMap with (Enum<?> key0, Number value0, Enum<?> key1, Number value1) {
+		EnumLongMap map = new EnumLongMap();
+		map.put(key0, value0.longValue());
+		map.put(key1, value1.longValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number values to primitive longs, regardless of which Number type was used.
+	 *
+	 * @param key0   an Enum key
+	 * @param value0 a Number for a value; will be converted to primitive long
+	 * @param key1   an Enum key
+	 * @param value1 a Number for a value; will be converted to primitive long
+	 * @param key2   an Enum key
+	 * @param value2 a Number for a value; will be converted to primitive long
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static EnumLongMap with (Enum<?> key0, Number value0, Enum<?> key1, Number value1, Enum<?> key2, Number value2) {
+		EnumLongMap map = new EnumLongMap();
+		map.put(key0, value0.longValue());
+		map.put(key1, value1.longValue());
+		map.put(key2, value2.longValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number values to primitive longs, regardless of which Number type was used.
+	 *
+	 * @param key0   an Enum key
+	 * @param value0 a Number for a value; will be converted to primitive long
+	 * @param key1   an Enum key
+	 * @param value1 a Number for a value; will be converted to primitive long
+	 * @param key2   an Enum key
+	 * @param value2 a Number for a value; will be converted to primitive long
+	 * @param key3   an Enum key
+	 * @param value3 a Number for a value; will be converted to primitive long
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static EnumLongMap with (Enum<?> key0, Number value0, Enum<?> key1, Number value1, Enum<?> key2, Number value2, Enum<?> key3, Number value3) {
+		EnumLongMap map = new EnumLongMap();
+		map.put(key0, value0.longValue());
+		map.put(key1, value1.longValue());
+		map.put(key2, value2.longValue());
+		map.put(key3, value3.longValue());
 		return map;
 	}
 
@@ -1535,24 +1601,23 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
-	 * {@link #EnumMap(Enum[], Object[])}, which takes all keys and then all values.
-	 * This needs all keys to have the same type and all values to have the same type, because
-	 * it gets those types from the first key parameter and first value parameter. Any keys that don't
-	 * have Enum as their type or values that don't have V as their type have that entry skipped.
+	 * {@link #EnumLongMap(Enum[], long[])}, which takes all keys and then all values.
+	 * This needs all keys to be Enum constants.
+	 * All values must be some type of boxed Number, such as {@link Integer}
+	 * or {@link Double}, and will be converted to primitive {@code long}s. Any keys that don't
+	 * have Enum as their type or values that aren't {@code Number}s have that entry skipped.
 	 *
-	 * @param key0   the first key (an Enum)
-	 * @param value0 the first value; will be used to determine the type of all values
-	 * @param rest   an array or varargs of alternating Enum, V, Enum, V... elements
-	 * @param <V>    the type of values, inferred from value0
+	 * @param key0   the first Enum key
+	 * @param value0 the first value; will be converted to primitive long
+	 * @param rest   an array or varargs of alternating Enum, Number, Enum, Number... elements
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
-	public static <V> EnumLongMap<V> with (Enum<?> key0, V value0, Object... rest) {
-		EnumLongMap<V> map = new EnumLongMap<>();
-		map.put(key0, value0);
+	public static EnumLongMap with (Enum<?> key0, Number value0, Object... rest) {
+		EnumLongMap map = new EnumLongMap();
+		map.put(key0, value0.longValue());
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
-				map.put((Enum<?>)rest[i - 1], (V)rest[i]);
+				map.put((Enum<?>)rest[i - 1], ((Number)rest[i]).longValue());
 			} catch (ClassCastException ignored) {
 			}
 		}
@@ -1560,37 +1625,128 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	}
 
 	/**
-	 * Constructs an empty map given the types as generic type arguments; an alias for {@link #with()}.
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <V>    the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> EnumLongMap<V> of () {
+	public static EnumLongMap withPrimitive () {
+		return new EnumLongMap();
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed long as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   an Enum for a key
+	 * @param value0 a long for a value
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static EnumLongMap withPrimitive (Enum<?> key0, long value0) {
+		EnumLongMap map = new EnumLongMap();
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed long as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   an Enum key
+	 * @param value0 a long for a value
+	 * @param key1   an Enum key
+	 * @param value1 a long for a value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static EnumLongMap withPrimitive (Enum<?> key0, long value0, Enum<?> key1, long value1) {
+		EnumLongMap map = new EnumLongMap();
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
+	 * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed long as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   an Enum key
+	 * @param value0 a long for a value
+	 * @param key1   an Enum key
+	 * @param value1 a long for a value
+	 * @param key2   an Enum key
+	 * @param value2 a long for a value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static EnumLongMap withPrimitive (Enum<?> key0, long value0, Enum<?> key1, long value1, Enum<?> key2, long value2) {
+		EnumLongMap map = new EnumLongMap();
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)} 
+	 * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed long as
+	 * its value type, and will not box it.
+	 *
+	 * @param key0   an Enum key
+	 * @param value0 a long for a value
+	 * @param key1   an Enum key
+	 * @param value1 a long for a value
+	 * @param key2   an Enum key
+	 * @param value2 a long for a value
+	 * @param key3   an Enum key
+	 * @param value3 a long for a value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static EnumLongMap withPrimitive (Enum<?> key0, long value0, Enum<?> key1, long value1, Enum<?> key2, long value2, Enum<?> key3, long value3) {
+		EnumLongMap map = new EnumLongMap();
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
+		return map;
+	}
+
+	/**
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 * This is an alias for {@link #with()}.
+	 *
+	 * @return a new map containing nothing
+	 */
+	public static EnumLongMap of () {
 		return with();
 	}
 
 	/**
-	 * Constructs a single-entry map given one key and one value; an alias for {@link #with(Enum, Object)}.
+	 * Constructs a map given alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link #EnumLongMap(Enum[], long[])}, which takes all keys and then all values.
+	 * This needs all keys to be Enum constants.
+	 * All values must be some type of boxed Number, such as {@link Integer}
+	 * or {@link Double}, and will be converted to primitive {@code long}s. Any keys that don't
+	 * have Enum as their type or values that aren't {@code Number}s have that entry skipped.
+	 * This is an alias for {@link #with(Enum, Number, Object...)}.
 	 *
-	 * @param key0   the first and only key
-	 * @param value0 the first and only value
-	 * @param <V>    the type of value0
-	 * @return a new map containing just the entry mapping key0 to value0
-	 */
-	public static <V> EnumLongMap<V> of (Enum<?> key0, V value0) {
-		return with(key0, value0);
-	}
-
-	/**
-	 * Constructs a map given alternating keys and values; an alias for {@link #with(Enum, Object, Object...)}.
-	 *
-	 * @param key0   the first key (an Enum)
-	 * @param value0 the first value; will be used to determine the type of all values
-	 * @param rest   an array or varargs of alternating Enum, V, Enum, V... elements
-	 * @param <V>    the type of values, inferred from value0
+	 * @param key0   the first Enum key
+	 * @param value0 the first value; will be converted to primitive long
+	 * @param rest   an array or varargs of alternating Enum, Number, Enum, Number... elements
 	 * @return a new map containing the given keys and values
 	 */
-	public static <V> EnumLongMap<V> of (Enum<?> key0, V value0, Object... rest) {
+	public static EnumLongMap of (Enum<?> key0, Number value0, Object... rest) {
 		return with(key0, value0, rest);
 	}
+
 }
