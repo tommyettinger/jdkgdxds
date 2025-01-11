@@ -68,11 +68,11 @@ public class EnumSetTest extends TestCase {
         NO121, NO122, NO123, NO124, NO125, NO126, NO127, NO128, NO129, NO130,
     }
     
-    public void test_iterator_HugeESet() {
+    public void test_iterator_HugeEnumSet() {
         EnumSet set;
         Object[] array;
 
-        // Test HugeESet with 65 elements
+        // Test HugeEnumSet with 65 elements
         // which is more than the bits of Long
         set = EnumSet.range(HugeEnumCount.NO1, HugeEnumCount.NO65);
         array = set.toArray();
@@ -80,7 +80,7 @@ public class EnumSetTest extends TestCase {
             assertEquals(count, array[count.ordinal()]);
         }
 
-        // Test HugeESet with 130 elements
+        // Test HugeEnumSet with 130 elements
         // which is more than twice of the bits of Long
         set = EnumSet.range(HugeEnumCount.NO1, HugeEnumCount.NO130);
         array = set.toArray();
@@ -89,7 +89,7 @@ public class EnumSetTest extends TestCase {
         }
     }
 
-    public void testRemoveIteratorRemoveFromHugeESet() {
+    public void testRemoveIteratorRemoveFromHugeEnumSet() {
         EnumSet set = new EnumSet(HugeEnumCount.values(), true);
         set.add(HugeEnumCount.NO64);
         set.add(HugeEnumCount.NO65);
@@ -442,7 +442,7 @@ public class EnumSetTest extends TestCase {
         assertEquals("Size should be 2", 2, hugeSet.size());
     }
 
-    public void test_ComplementOf_LESet() {
+    public void test_ComplementOf_LEnumSet() {
         EnumSet set = EnumSet
                 .noneOf(EnumWithInnerClass.values());
         set.add(EnumWithInnerClass.d);
@@ -735,7 +735,7 @@ public class EnumSetTest extends TestCase {
         rawEnumCollection.add(HugeEnumWithInnerClass.a);
     }
 
-    public void test_CopyOf_LESet() {
+    public void test_CopyOf_LEnumSet() {
         EnumSet enumSet = EnumSet
                 .noneOf(EnumWithInnerClass.class);
         enumSet.add(EnumWithInnerClass.a);
@@ -1141,7 +1141,7 @@ public class EnumSetTest extends TestCase {
         set.add(EnumFoo.b);
 
         Iterator<Enum<?>> iterator = set.iterator();
-        Iterator<Enum<?>> anotherIterator = new EnumSet.ESetIterator(set);
+        Iterator<Enum<?>> anotherIterator = new EnumSet.EnumSetIterator(set);
         assertNotSame("Should not be same", iterator, anotherIterator);
         try {
             iterator.remove();
@@ -1261,7 +1261,7 @@ public class EnumSetTest extends TestCase {
         hugeSet.add(HugeEnum.b);
 
         Iterator<Enum<?>> hIterator = hugeSet.iterator();
-        Iterator<Enum<?>> anotherHugeIterator = new EnumSet.ESetIterator(hugeSet);
+        Iterator<Enum<?>> anotherHugeIterator = new EnumSet.EnumSetIterator(hugeSet);
         assertNotSame(hIterator, anotherHugeIterator);
         try {
             hIterator.remove();

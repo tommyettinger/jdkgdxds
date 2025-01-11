@@ -399,7 +399,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This always uses {@code universe} directly, without copying.
 	 * <br>
-	 * This can be useful to allow an EnumMap that was created with {@link #EnumLongMap()} to share a universe with other EMaps.
+	 * This can be useful to allow an EnumMap that was created with {@link #EnumLongMap()} to share a universe with other EnumLongMaps.
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
@@ -1475,7 +1475,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * The EnumSet this returns will share a key universe with the map linked to this key set.
 		 * @return a new EnumSet containing the remaining items, sharing a universe with this key set
 		 */
-		public EnumSet toESet() {
+		public EnumSet toEnumSet() {
 			EnumSet es = new EnumSet(super.universe, true);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;

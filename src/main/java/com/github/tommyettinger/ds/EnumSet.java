@@ -50,8 +50,8 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	protected int size;
 	protected int @Nullable[] table;
 	protected Enum<?> @Nullable[] universe;
-	@Nullable protected transient ESetIterator iterator1;
-	@Nullable protected transient ESetIterator iterator2;
+	@Nullable protected transient EnumSetIterator iterator1;
+	@Nullable protected transient EnumSetIterator iterator2;
 
 	/**
 	 * Empty constructor; using this will postpone allocating any internal arrays until {@link #add(Enum)} is first called
@@ -190,13 +190,13 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * Returns an iterator for the items in the set. The elements are
 	 * returned in the order of their {@link Enum#ordinal()} values. Remove is supported.
 	 * <p>
-	 * Use the {@link ESetIterator} constructor for nested or multithreaded iteration.
+	 * Use the {@link EnumSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
 	public @NonNull Iterator<Enum<?>> iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ESetIterator(this);
-			iterator2 = new ESetIterator(this);
+			iterator1 = new EnumSetIterator(this);
+			iterator2 = new EnumSetIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -400,7 +400,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This always uses {@code universe} directly, without copying.
 	 * <br>
-	 * This can be useful to allow an EnumSet that was created with {@link #EnumSet()} to share a universe with other ESets.
+	 * This can be useful to allow an EnumSet that was created with {@link #EnumSet()} to share a universe with other EnumSets.
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
@@ -551,7 +551,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		return toString(", ", true);
 	}
 
-	public static class ESetIterator implements Iterator<Enum<?>> {
+	public static class EnumSetIterator implements Iterator<Enum<?>> {
 		static private final int INDEX_ILLEGAL = -1, INDEX_ZERO = -1;
 
 		public boolean hasNext;
@@ -560,7 +560,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public ESetIterator (EnumSet set) {
+		public EnumSetIterator (EnumSet set) {
 			this.set = set;
 			reset();
 		}
