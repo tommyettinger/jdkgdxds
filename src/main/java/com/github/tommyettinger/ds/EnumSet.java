@@ -193,7 +193,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * Use the {@link ESetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public @NonNull ESetIterator iterator () {
+	public @NonNull Iterator<Enum<?>> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ESetIterator(this);
 			iterator2 = new ESetIterator(this);

@@ -1367,89 +1367,50 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 	}
 
-	public static class Keys extends AbstractSet<Enum<?>> implements EnhancedCollection<Enum<?>> {
-		protected MapIterator<?, Enum<?>> iter;
+	public static class Keys extends EnumSet {
+		protected KeyIterator iter;
 
-		public Keys (EnumLongMap<?> map) {
-			iter = new MapIterator<Object, Enum<?>>(map) {
-				@Override
-				public @NonNull MapIterator<?, Enum<?>> iterator () {
-					return this;
-				}
+		public Keys (EnumLongMap map) {
+			super();
+			iter = new KeyIterator(map);
+			if(map.keys == null) return;
 
-				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					return hasNext;
-				}
+			EnumSet other = map.keys;
+			this.size = other.size;
+			if(other.table != null)
+				this.table = other.table;
+			this.universe = other.universe;
 
-				@Override
-				public Enum<?> next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					Enum<?> key = map.universe[nextIndex];
-					currentIndex = nextIndex;
-					findNextIndex();
-					return key;
-				}
-			};
+		}
+
+		@Override
+		public boolean add(@NonNull Enum<?> item) {
+			throw new UnsupportedOperationException("Keys cannot have items added.");
+		}
+
+		@Override
+		public boolean addAll(@NonNull Collection<? extends Enum<?>> c) {
+			throw new UnsupportedOperationException("Keys cannot have items added.");
+		}
+
+		@Override
+		public boolean addAll(Enum<?> @NonNull [] c) {
+			throw new UnsupportedOperationException("Keys cannot have items added.");
 		}
 
 		@Override
 		public boolean contains (Object o) {
-			return iter.map.containsKey(o);
+			return super.contains(o);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 *
-		 * @param o
-		 * @throws UnsupportedOperationException {@inheritDoc}
-		 * @throws ClassCastException            {@inheritDoc}
-		 * @throws NullPointerException          {@inheritDoc}
-		 * @implSpec This implementation iterates over the collection looking for the
-		 * specified element.  If it finds the element, it removes the element
-		 * from the collection using the iterator's remove method.
-		 *
-		 * <p>Note that this implementation throws an
-		 * {@code UnsupportedOperationException} if the iterator returned by this
-		 * collection's iterator method does not implement the {@code remove}
-		 * method and this collection contains the specified object.
-		 */
 		@Override
 		public boolean remove (Object o) {
-			if(o instanceof Enum<?>){
-				Enum<?> e = (Enum<?>)o;
-				int ord = e.ordinal();
-				if (ord < iter.map.universe.length && iter.map.universe[ord] == e
-					&& iter.map.valueTable[ord] != null){
-					iter.map.remove(e);
-					return true;
-				}
-			}
-			return false;
+			return super.remove(o);
 		}
-		/**
-		 * Removes from this set all of its elements that are contained in the
-		 * specified collection (optional operation).  If the specified
-		 * collection is also a set, this operation effectively modifies this
-		 * set so that its value is the <i>asymmetric set difference</i> of
-		 * the two sets.
-		 *
-		 * @param c collection containing elements to be removed from this set
-		 * @return {@code true} if this set changed as a result of the call
-		 */
+
 		@Override
 		public boolean removeAll (Collection<?> c) {
-			iter.reset();
-			boolean res = false;
-			for(Object o : c) {
-				if (remove(o)) {
-					iter.reset();
-					res = true;
-				}
-			}
-			return res;
+			return super.removeAll(c);
 		}
 
 		/**
@@ -1458,7 +1419,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull MapIterator<?, Enum<?>> iterator () {
+		public @NonNull Iterator<Enum<?>> iterator () {
 			return iter;
 		}
 
@@ -1467,43 +1428,22 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 */
 		@Override
 		public void clear () {
-			iter.map.clear();
-			iter.reset();
+			super.clear();
 		}
 
-
-		@Override
-		public String toString () {
-			return toString(", ", true);
-		}
-
-		@Override
+        @Override
 		public int size () {
-			return iter.map.size;
+			return super.size();
 		}
 
 		@Override
 		public boolean equals (Object other) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			boolean res = super.equals(other);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return res;
+			return super.equals(other);
 		}
 
 		@Override
 		public int hashCode () {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = super.hashCode();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
+			return super.hashCode();
 		}
 
 		/**
@@ -1513,54 +1453,13 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		public void resetIterator () {
 			iter.reset();
 		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Object @NonNull [] toArray () {
-			Object[] a = new Object[iter.map.size];
-			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {
-				a[i++] = iter.next();
-			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
-			return a;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 *
-		 * @param a
-		 */
-		@Override
-		public <T> T @NonNull [] toArray (T[] a) {
-			if(a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
-			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {
-				a[i++] = (T)iter.next();
-			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
-			return a;
-		}
-
 		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 * @return a new ObjectList containing the remaining items
 		 */
 		public ObjectList<Enum<?>> toList () {
-			ObjectList<Enum<?>> list = new ObjectList<>(iter.map.size);
+			ObjectList<Enum<?>> list = new ObjectList<>(iter.map.size());
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {list.add(iter.next());}
@@ -1577,7 +1476,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * @return a new EnumSet containing the remaining items, sharing a universe with this key set
 		 */
 		public EnumSet toESet() {
-			EnumSet es = new EnumSet(iter.map.universe, true);
+			EnumSet es = new EnumSet(super.universe, true);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {es.add(iter.next());}
