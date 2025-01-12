@@ -339,6 +339,25 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 */
 	public void putAll (ObjectLongMap<Enum<?>> m) {
 		for (ObjectLongMap.Entry<Enum<?>> kv : m.entrySet()) {put(kv.getKey(), kv.getValue());}
+	}	/**
+	 * Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
+	 * put into the map and defaultValue is returned.
+	 */
+	public long getAndIncrement (Enum<?> key, long defaultValue, long increment) {
+		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
+		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
+		if(keys == null) keys = new EnumSet();
+		if(valueTable == null) valueTable = new long[universe.length];
+		int i = key.ordinal();
+		if(i >= valueTable.length || universe[i] != key)
+			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+		long oldValue = valueTable[i];
+		if (keys.add(key)) {
+			valueTable[i] = defaultValue + increment;
+			return defaultValue;
+		}
+		valueTable[i] += increment;
+		return oldValue;
 	}
 
 	/**

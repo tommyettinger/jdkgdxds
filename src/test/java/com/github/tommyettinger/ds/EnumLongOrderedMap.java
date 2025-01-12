@@ -162,20 +162,30 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 		putAll(0, other, offset, count);
 	}
 
-	@Override
-	public long put (Enum<?> key, long value) {
-		int i = locateKey(key);
-		if (i >= 0) { // Existing key was found.
-			long oldValue = valueTable[i];
-			valueTable[i] = value;
-			return oldValue;
-		}
-		i = ~i; // Empty space was found.
-		keyTable[i] = key;
+	/**
+	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
+	 * If this EnumMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
+	 * from now on for this EnumMap.
+	 *
+	 * @param key the Enum key to try to place into this EnumMap
+	 * @param value the V value to associate with {@code key}
+	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
+	 */
+	public long put (@NonNull Enum<?> key, long value) {
+		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
+		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
+		if(keys == null) keys = new EnumSet();
+		if(valueTable == null) valueTable = new long[universe.length];
+		int i = key.ordinal();
+		if(i >= valueTable.length || universe[i] != key)
+			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+		long oldValue = valueTable[i];
 		valueTable[i] = value;
-		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
-		return defaultValue;
+		if (keys.add(key)) {
+			ordering.add(key);
+			return defaultValue;
+		}
+		return oldValue;
 	}
 
 	/**
@@ -183,42 +193,46 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * If the key is already present at a different index, it is moved to the given index and its
 	 * value is set to the given value.
 	 *
-	 * @param key   a K key; must not be null
+	 * @param key   an Enum key; must not be null
 	 * @param value a long value
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
 	 */
 	public long put (Enum<?> key, long value, int index) {
-		int i = locateKey(key);
-		if (i >= 0) { // Existing key was found.
-			long oldValue = valueTable[i];
-			valueTable[i] = value;
-			int oldIndex = keys.indexOf(key);
-			if (oldIndex != index) {keys.insert(index, keys.removeAt(oldIndex));}
-			return oldValue;
-		}
-		i = ~i; // Empty space was found.
-		keyTable[i] = key;
+		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
+		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
+		if(keys == null) keys = new EnumSet();
+		if(valueTable == null) valueTable = new long[universe.length];
+		int i = key.ordinal();
+		if(i >= valueTable.length || universe[i] != key)
+			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+		long oldValue = valueTable[i];
 		valueTable[i] = value;
-		keys.insert(index, key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
-		return defaultValue;
+		if (keys.add(key)) {
+			ordering.insert(index, key);
+			return defaultValue;
+		}
+		int oldIndex = ordering.indexOf(key);
+		if (oldIndex != index) {ordering.insert(index, ordering.removeAt(oldIndex));}
+		return oldValue;
 	}
 
 	@Override
 	public long putOrDefault (Enum<?> key, long value, long defaultValue) {
-		int i = locateKey(key);
-		if (i >= 0) { // Existing key was found.
-			long oldValue = valueTable[i];
-			valueTable[i] = value;
-			return oldValue;
-		}
-		i = ~i; // Empty space was found.
-		keyTable[i] = key;
+		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
+		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
+		if(keys == null) keys = new EnumSet();
+		if(valueTable == null) valueTable = new long[universe.length];
+		int i = key.ordinal();
+		if(i >= valueTable.length || universe[i] != key)
+			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+		long oldValue = valueTable[i];
 		valueTable[i] = value;
-		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
-		return defaultValue;
+		if (keys.add(key)) {
+			ordering.add(key);
+			return defaultValue;
+		}
+		return oldValue;
 	}
 
 	/**
@@ -228,8 +242,8 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
 	public void putAll (EnumLongOrderedMap map) {
-		ensureCapacity(map.size);
-		for (int i = 0, kl = map.size; i < kl; i++) {
+		ensureCapacity(map.size());
+		for (int i = 0, kl = map.size(); i < kl; i++) {
 			put(map.keyAt(i), map.getAt(i));
 		}
 	}
@@ -243,7 +257,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param count  how many indices in {@code other} to use
 	 */
 	public void putAll (EnumLongOrderedMap other, int offset, int count) {
-		putAll(size, other, offset, count);
+		putAll(size(), other, offset, count);
 	}
 
 	/**
@@ -267,7 +281,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	public long remove (Object key) {
 		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
 		if (!super.containsKey(key)) {return defaultValue;}
-		keys.remove(key);
+		ordering.remove(key);
 		return super.remove(key);
 	}
 
@@ -278,7 +292,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return the value of the removed entry
 	 */
 	public long removeAt (int index) {
-		return super.remove(keys.removeAt(index));
+		return super.remove(ordering.removeAt(index));
 	}
 
 	/**
@@ -293,11 +307,11 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	@Override
 	public void removeRange (int start, int end) {
 		start = Math.max(0, start);
-		end = Math.min(keys.size(), end);
+		end = Math.min(ordering.size(), end);
 		for (int i = start; i < end; i++) {
-			super.remove(keys.get(i));
+			super.remove(ordering.get(i));
 		}
-		keys.removeRange(start, end);
+		ordering.removeRange(start, end);
 	}
 
 	/**
@@ -308,7 +322,6 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 */
 	@Override
 	public void truncate (int newSize) {
-		if (size > newSize) {removeRange(newSize, size);}
 	}
 
 	/**
@@ -323,29 +336,33 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 		if (keyTable.length < tableSize) {resize(tableSize);}
 		keys.ensureCapacity(additionalCapacity);
 
+		if (size() > newSize) {removeRange(newSize, size());}
 	}
 
 	@Override
 	public long getAndIncrement (Enum<?> key, long defaultValue, long increment) {
-		int i = locateKey(key);
-		if (i >= 0) { // Existing key was found.
-			long oldValue = valueTable[i];
-			valueTable[i] += increment;
-			return oldValue;
+		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
+		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
+		if(keys == null) keys = new EnumSet();
+		if(valueTable == null) valueTable = new long[universe.length];
+		int i = key.ordinal();
+		if(i >= valueTable.length || universe[i] != key)
+			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+		long oldValue = valueTable[i];
+		if (keys.add(key)) {
+			valueTable[i] = defaultValue + increment;
+			return defaultValue;
 		}
-		i = ~i; // Empty space was found.
-		keyTable[i] = key;
-		valueTable[i] = defaultValue + increment;
-		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
-		return defaultValue;
+		valueTable[i] += increment;
+		ordering.add(key);
+		return oldValue;
 	}
 
 	/**
 	 * Changes the key {@code before} to {@code after} without changing its position in the order or its value. Returns true if
 	 * {@code after} has been added to the ObjectLongOrderedMap and {@code before} has been removed; returns false if {@code after} is
 	 * already present or {@code before} is not present. If you are iterating over an ObjectLongOrderedMap and have an index, you should
-	 * prefer {@link #alterAt(int, Object)}, which doesn't need to search for an index like this does and so can be faster.
+	 * prefer {@link #alterAt(int, Enum)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before a key that must be present for this to succeed
 	 * @param after  a key that must not be in this map for this to succeed
@@ -353,26 +370,26 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 */
 	public boolean alter (Enum<?> before, Enum<?> after) {
 		if (containsKey(after)) {return false;}
-		int index = keys.indexOf(before);
+		int index = ordering.indexOf(before);
 		if (index == -1) {return false;}
 		super.put(after, super.remove(before));
-		keys.set(index, after);
+		ordering.set(index, after);
 		return true;
 	}
 
 	/**
 	 * Changes the key at the given {@code index} in the order to {@code after}, without changing the ordering of other entries or
 	 * any values. If {@code after} is already present, this returns false; it will also return false if {@code index} is invalid
-	 * for the size of this map. Otherwise, it returns true. Unlike {@link #alter(Object, Object)}, this operates in constant time.
+	 * for the size of this map. Otherwise, it returns true. Unlike {@link #alter(Enum, Enum)}, this operates in constant time.
 	 *
 	 * @param index the index in the order of the key to change; must be non-negative and less than {@link #size}
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
 	public boolean alterAt (int index, Enum<?> after) {
-		if (index < 0 || index >= size || containsKey(after)) {return false;}
-		super.put(after, super.remove(keys.get(index)));
-		keys.set(index, after);
+		if (index < 0 || index >= size() || containsKey(after)) {return false;}
+		super.put(after, super.remove(ordering.get(index)));
+		ordering.set(index, after);
 		return true;
 	}
 
@@ -386,8 +403,8 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
 	public long setAt (int index, long v) {
-		if (index < 0 || index >= size) {return defaultValue;}
-		final int pos = locateKey(keys.get(index));
+		if (index < 0 || index >= size() || keys == null || valueTable == null) {return defaultValue;}
+		final int pos = ordering.get(index).ordinal();
 		final long oldValue = valueTable[pos];
 		valueTable[pos] = v;
 		return oldValue;
@@ -401,7 +418,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return the value at the given index
 	 */
 	public long getAt (int index) {
-		return get(keys.get(index));
+		return get(ordering.get(index));
 	}
 
 	/**
@@ -412,18 +429,12 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return the key at the given index
 	 */
 	public Enum<?> keyAt (int index) {
-		return keys.get(index);
-	}
-
-	@Override
-	public void clear (int maximumCapacity) {
-		keys.clear();
-		super.clear(maximumCapacity);
+		return ordering.get(index);
 	}
 
 	@Override
 	public void clear () {
-		keys.clear();
+		ordering.clear();
 		super.clear();
 	}
 
@@ -436,24 +447,24 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 */
 	@Override
 	public ObjectList<Enum<?>> order () {
-		return keys;
+		return ordering;
 	}
 
 	/**
-	 * Sorts this ObjectLongOrderedMap in-place by the keys' natural ordering; {@code K} must implement {@link Comparable}.
+	 * Sorts this ObjectLongOrderedMap in-place by the keys' natural ordering.
 	 */
 	public void sort () {
-		keys.sort(null);
+		ordering.sort(null);
 	}
 
 	/**
 	 * Sorts this ObjectLongOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
-	 * will sort by the natural ordering of the keys, which requires {@code K} to {@link Comparable}.
+	 * will sort by the natural ordering of the keys.
 	 *
-	 * @param comp a Comparator that can compare two {@code K} keys, or null to use the keys' natural ordering
+	 * @param comp a Comparator that can compare two {@code Enum} keys, or null to use the keys' natural ordering
 	 */
 	public void sort (@Nullable Comparator<? super Enum<?>> comp) {
-		keys.sort(comp);
+		ordering.sort(comp);
 	}
 
 	/**
@@ -465,7 +476,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param comp a non-null {@link LongComparator}
 	 */
 	public void sortByValue (LongComparator comp) {
-		keys.sort((a, b) -> comp.compare(get(a), get(b)));
+		ordering.sort((a, b) -> comp.compare(get(a), get(b)));
 	}
 
 	/**
@@ -488,7 +499,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public Keys<Enum<?>> keySet () {
+	public Keys keySet () {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new OrderedMapKeys<>(this);
 			keys2 = new OrderedMapKeys<>(this);
