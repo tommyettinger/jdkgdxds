@@ -83,7 +83,7 @@ public class ObjectObjectMapTest extends TestCase {
 
 	@Test
 	public void test_Constructor () {
-		// Test for method com.github.tommyettinger.merry.ObjectObjectMap()
+		// Test for method com.github.tommyettinger.ds.ObjectObjectMap()
 		runBattery(new ObjectObjectMap<String, String>());
 
 		ObjectObjectMap hm2 = new ObjectObjectMap<>();
@@ -91,7 +91,7 @@ public class ObjectObjectMapTest extends TestCase {
 	}
 
 	@Test public void test_ConstructorI () {
-		// Test for method com.github.tommyettinger.merry.ObjectObjectMap(int)
+		// Test for method com.github.tommyettinger.ds.ObjectObjectMap(int)
 		ObjectObjectMap hm2 = new ObjectObjectMap(5);
 		Assert.assertEquals("Created incorrect ObjectObjectMap", 0, hm2.size());
 		do{
@@ -110,7 +110,7 @@ public class ObjectObjectMapTest extends TestCase {
 	}
 
 	@Test public void test_ConstructorIF () {
-		// Test for method com.github.tommyettinger.merry.ObjectObjectMap(int, float)
+		// Test for method com.github.tommyettinger.ds.ObjectObjectMap(int, float)
 		ObjectObjectMap hm2 = new ObjectObjectMap(5, (float)0.5);
 		Assert.assertEquals("Created incorrect ObjectObjectMap", 0, hm2.size());
 		do{
@@ -172,7 +172,7 @@ public class ObjectObjectMapTest extends TestCase {
 
 	@Test public void test_containsKeyLjava_lang_Object () {
 		// Test for method boolean
-		// com.github.tommyettinger.merry.ObjectObjectMap.containsKey(java.lang.Object)
+		// com.github.tommyettinger.ds.ObjectObjectMap.containsKey(java.lang.Object)
 		Assert.assertTrue("Returned false for valid key", hm.containsKey(new Integer(876).toString()));
 		Assert.assertTrue("Returned true for invalid key", !hm.containsKey("KKDKDKD"));
 
@@ -185,13 +185,13 @@ public class ObjectObjectMapTest extends TestCase {
 
 	@Test public void test_containsValueLjava_lang_Object () {
 		// Test for method boolean
-		// com.github.tommyettinger.merry.ObjectObjectMap.containsValue(java.lang.Object)
+		// com.github.tommyettinger.ds.ObjectObjectMap.containsValue(java.lang.Object)
 		Assert.assertTrue("Returned false for valid value", hm.containsValue(new Integer(875), false));
 		Assert.assertTrue("Returned true for invalid value", !hm.containsValue(new Integer(-9), false));
 	}
 
 	@Test public void test_entrySet () {
-		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectObjectMap.entrySet(
+		// Test for method java.util.Set com.github.tommyettinger.ds.ObjectObjectMap.entrySet(
 		Set<Map.Entry> s = hm.entrySet();
 		Iterator i = s.iterator();
 		Assert.assertTrue("Returned set of incorrect size", hm.size() == s.size());
@@ -207,7 +207,7 @@ public class ObjectObjectMapTest extends TestCase {
 
 	@Test public void test_getLjava_lang_Object () {
 		// Test for method java.lang.Object
-		// com.github.tommyettinger.merry.ObjectObjectMap.get(java.lang.Object)
+		// com.github.tommyettinger.ds.ObjectObjectMap.get(java.lang.Object)
 		Assert.assertNull("Get returned non-null for non existent key", hm.get("T"));
 		hm.put("T", "HELLO");
 		Assert.assertEquals("Get returned incorrect value for existing key", "HELLO", hm.get("T"));
@@ -274,13 +274,13 @@ public class ObjectObjectMapTest extends TestCase {
 //	}
 
 	@Test public void test_isEmpty () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectObjectMap.isEmpty()
+		// Test for method boolean com.github.tommyettinger.ds.ObjectObjectMap.isEmpty()
 		Assert.assertTrue("Returned false for new map", new ObjectObjectMap().isEmpty());
 		Assert.assertTrue("Returned true for non-empty", !hm.isEmpty());
 	}
 
 	@Test public void test_keySet () {
-		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectObjectMap.keySet()
+		// Test for method java.util.Set com.github.tommyettinger.ds.ObjectObjectMap.keySet()
 		Set s = hm.keySet();
 		Assert.assertTrue("Returned set of incorrect size()", s.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)
@@ -396,7 +396,7 @@ public class ObjectObjectMapTest extends TestCase {
 	}
 
 	@Test public void test_putAllLjava_util_Map () {
-		// Test for method void com.github.tommyettinger.merry.ObjectObjectMap.putAll(java.util.Map)
+		// Test for method void com.github.tommyettinger.ds.ObjectObjectMap.putAll(java.util.Map)
 		ObjectObjectMap hm2 = new ObjectObjectMap();
 		hm2.putAll(hm);
 		for (int i = 0; i < 1000; i++)
@@ -501,12 +501,12 @@ public class ObjectObjectMapTest extends TestCase {
 	}
 
 	@Test public void test_size () {
-		// Test for method int com.github.tommyettinger.merry.ObjectObjectMap.size()
+		// Test for method int com.github.tommyettinger.ds.ObjectObjectMap.size()
 		Assert.assertTrue("Returned incorrect size", hm.size() == objArray.length + 1);
 	}
 
 	@Test public void test_values () {
-		// Test for method java.util.Collection com.github.tommyettinger.merry.ObjectObjectMap.values()
+		// Test for method java.util.Collection com.github.tommyettinger.ds.ObjectObjectMap.values()
 		Collection c = hm.values();
 		Assert.assertTrue("Returned collection of incorrect size()", c.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)

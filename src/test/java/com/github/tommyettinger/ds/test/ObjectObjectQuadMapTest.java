@@ -84,7 +84,7 @@ public class ObjectObjectQuadMapTest {
 
 	@Test
 	public void test_Constructor () {
-		// Test for method com.github.tommyettinger.merry.ObjectObjectQuadMap()
+		// Test for method com.github.tommyettinger.ds.ObjectObjectQuadMap()
 		runBattery(new ObjectObjectQuadMap<String, String>());
 
 		ObjectObjectQuadMap hm2 = new ObjectObjectQuadMap<>();
@@ -92,7 +92,7 @@ public class ObjectObjectQuadMapTest {
 	}
 
 	@Test public void test_ConstructorI () {
-		// Test for method com.github.tommyettinger.merry.ObjectObjectQuadMap(int)
+		// Test for method com.github.tommyettinger.ds.ObjectObjectQuadMap(int)
 		ObjectObjectQuadMap hm2 = new ObjectObjectQuadMap(5);
 		assertEquals("Created incorrect ObjectObjectQuadMap", 0, hm2.size());
 		do{
@@ -111,7 +111,7 @@ public class ObjectObjectQuadMapTest {
 	}
 
 	@Test public void test_ConstructorIF () {
-		// Test for method com.github.tommyettinger.merry.ObjectObjectQuadMap(int, float)
+		// Test for method com.github.tommyettinger.ds.ObjectObjectQuadMap(int, float)
 		ObjectObjectQuadMap hm2 = new ObjectObjectQuadMap(5, (float)0.5);
 		assertEquals("Created incorrect ObjectObjectQuadMap", 0, hm2.size());
 		do{
@@ -173,7 +173,7 @@ public class ObjectObjectQuadMapTest {
 
 	@Test public void test_containsKeyLjava_lang_Object () {
 		// Test for method boolean
-		// com.github.tommyettinger.merry.ObjectObjectQuadMap.containsKey(java.lang.Object)
+		// com.github.tommyettinger.ds.ObjectObjectQuadMap.containsKey(java.lang.Object)
 		assertTrue("Returned false for valid key", hm.containsKey(new Integer(876).toString()));
 		assertTrue("Returned true for invalid key", !hm.containsKey("KKDKDKD"));
 
@@ -186,13 +186,13 @@ public class ObjectObjectQuadMapTest {
 
 	@Test public void test_containsValueLjava_lang_Object () {
 		// Test for method boolean
-		// com.github.tommyettinger.merry.ObjectObjectQuadMap.containsValue(java.lang.Object)
+		// com.github.tommyettinger.ds.ObjectObjectQuadMap.containsValue(java.lang.Object)
 		assertTrue("Returned false for valid value", hm.containsValue(new Integer(875), false));
 		assertTrue("Returned true for invalid value", !hm.containsValue(new Integer(-9), false));
 	}
 
 	@Test public void test_entrySet () {
-		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectObjectQuadMap.entrySet(
+		// Test for method java.util.Set com.github.tommyettinger.ds.ObjectObjectQuadMap.entrySet(
 		Set<Map.Entry> s = hm.entrySet();
 		Iterator i = s.iterator();
 		assertTrue("Returned set of incorrect size", hm.size() == s.size());
@@ -208,7 +208,7 @@ public class ObjectObjectQuadMapTest {
 
 	@Test public void test_getLjava_lang_Object () {
 		// Test for method java.lang.Object
-		// com.github.tommyettinger.merry.ObjectObjectQuadMap.get(java.lang.Object)
+		// com.github.tommyettinger.ds.ObjectObjectQuadMap.get(java.lang.Object)
 		Assert.assertNull("Get returned non-null for non existent key", hm.get("T"));
 		hm.put("T", "HELLO");
 		assertEquals("Get returned incorrect value for existing key", "HELLO", hm.get("T"));
@@ -274,13 +274,13 @@ public class ObjectObjectQuadMapTest {
 //	}
 
 	@Test public void test_isEmpty () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectObjectQuadMap.isEmpty()
+		// Test for method boolean com.github.tommyettinger.ds.ObjectObjectQuadMap.isEmpty()
 		assertTrue("Returned false for new map", new ObjectObjectQuadMap().isEmpty());
 		assertTrue("Returned true for non-empty", !hm.isEmpty());
 	}
 
 	@Test public void test_keySet () {
-		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectObjectQuadMap.keySet()
+		// Test for method java.util.Set com.github.tommyettinger.ds.ObjectObjectQuadMap.keySet()
 		Set s = hm.keySet();
 		assertTrue("Returned set of incorrect size()", s.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)
@@ -396,7 +396,7 @@ public class ObjectObjectQuadMapTest {
 	}
 
 	@Test public void test_putAllLjava_util_Map () {
-		// Test for method void com.github.tommyettinger.merry.ObjectObjectQuadMap.putAll(java.util.Map)
+		// Test for method void com.github.tommyettinger.ds.ObjectObjectQuadMap.putAll(java.util.Map)
 		ObjectObjectQuadMap hm2 = new ObjectObjectQuadMap();
 		hm2.putAll(hm);
 		for (int i = 0; i < 1000; i++)
@@ -503,12 +503,12 @@ public class ObjectObjectQuadMapTest {
 	}
 
 	@Test public void test_size () {
-		// Test for method int com.github.tommyettinger.merry.ObjectObjectQuadMap.size()
+		// Test for method int com.github.tommyettinger.ds.ObjectObjectQuadMap.size()
 		assertTrue("Returned incorrect size", hm.size() == objArray.length + 1);
 	}
 
 	@Test public void test_values () {
-		// Test for method java.util.Collection com.github.tommyettinger.merry.ObjectObjectQuadMap.values()
+		// Test for method java.util.Collection com.github.tommyettinger.ds.ObjectObjectQuadMap.values()
 		Collection c = hm.values();
 		assertTrue("Returned collection of incorrect size()", c.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)

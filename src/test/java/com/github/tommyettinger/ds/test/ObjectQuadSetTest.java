@@ -38,13 +38,13 @@ public class ObjectQuadSetTest {
 	}
 
 	@Test public void test_Constructor () {
-		// Test for method com.github.tommyettinger.merry.ObjectQuadSet()
+		// Test for method com.github.tommyettinger.ds.ObjectQuadSet()
 		ObjectQuadSet hs2 = new ObjectQuadSet();
 		Assert.assertEquals("Created incorrect ObjectQuadSet", 0, hs2.size());
 	}
 
 	@Test public void test_ConstructorI () {
-		// Test for method com.github.tommyettinger.merry.ObjectQuadSet(int)
+		// Test for method com.github.tommyettinger.ds.ObjectQuadSet(int)
 		ObjectQuadSet hs2 = new ObjectQuadSet(5);
 		Assert.assertEquals("Created incorrect ObjectQuadSet", 0, hs2.size());
 		try {
@@ -56,7 +56,7 @@ public class ObjectQuadSetTest {
 	}
 
 	@Test public void test_ConstructorIF () {
-		// Test for method com.github.tommyettinger.merry.ObjectQuadSet(int, float)
+		// Test for method com.github.tommyettinger.ds.ObjectQuadSet(int, float)
 		ObjectQuadSet hs2 = new ObjectQuadSet(5, (float)0.5);
 		Assert.assertEquals("Created incorrect ObjectQuadSet", 0, hs2.size());
 		try {
@@ -68,7 +68,7 @@ public class ObjectQuadSetTest {
 	}
 
 	@Test public void test_ConstructorLjava_util_Collection () {
-		// Test for method com.github.tommyettinger.merry.ObjectQuadSet(java.util.Collection)
+		// Test for method com.github.tommyettinger.ds.ObjectQuadSet(java.util.Collection)
 		ObjectQuadSet hs2 = ObjectQuadSet.with(objArray);
 		for (int counter = 0; counter < objArray.length; counter++)
 			Assert.assertTrue("ObjectQuadSet does not contain correct elements", hs.contains(objArray[counter]));
@@ -76,7 +76,7 @@ public class ObjectQuadSetTest {
 	}
 
 	@Test public void test_addLjava_lang_Object () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectQuadSet.add(java.lang.Object)
+		// Test for method boolean com.github.tommyettinger.ds.ObjectQuadSet.add(java.lang.Object)
 		int size = hs.size();
 		hs.add(new Integer(8));
 		Assert.assertTrue("Added element already contained by set", hs.size() == size);
@@ -86,7 +86,7 @@ public class ObjectQuadSetTest {
 	}
 
 	@Test public void test_clear () {
-		// Test for method void com.github.tommyettinger.merry.ObjectQuadSet.clear()
+		// Test for method void com.github.tommyettinger.ds.ObjectQuadSet.clear()
 		ObjectQuadSet orgSet = new ObjectQuadSet(hs);
 		hs.clear();
 		Iterator i = orgSet.iterator();
@@ -96,7 +96,7 @@ public class ObjectQuadSetTest {
 	}
 
 	@Test public void test_containsLjava_lang_Object () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectQuadSet.contains(java.lang.Object)
+		// Test for method boolean com.github.tommyettinger.ds.ObjectQuadSet.contains(java.lang.Object)
 		Assert.assertTrue("Returned false for valid object", hs.contains(objArray[90]));
 		Assert.assertTrue("Returned true for invalid Object", !hs.contains(new Object()));
 
@@ -106,13 +106,13 @@ public class ObjectQuadSetTest {
 	}
 
 	@Test public void test_isEmpty () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectQuadSet.isEmpty()
+		// Test for method boolean com.github.tommyettinger.ds.ObjectQuadSet.isEmpty()
 		Assert.assertTrue("Empty set returned false", new ObjectQuadSet().isEmpty());
 		Assert.assertTrue("Non-empty set returned true", !hs.isEmpty());
 	}
 
 	@Test public void test_iterator () {
-		// Test for method java.util.Iterator com.github.tommyettinger.merry.ObjectQuadSet.iterator()
+		// Test for method java.util.Iterator com.github.tommyettinger.ds.ObjectQuadSet.iterator()
 		Iterator i = hs.iterator();
 		int x = 0;
 		while (i.hasNext()) {
@@ -146,7 +146,7 @@ public class ObjectQuadSetTest {
 	}
 
 	@Test public void test_size () {
-		// Test for method int com.github.tommyettinger.merry.ObjectQuadSet.size
+		// Test for method int com.github.tommyettinger.ds.ObjectQuadSet.size
 		Assert.assertTrue("Returned incorrect size", hs.size() == objArray.length);
 		hs.clear();
 		Assert.assertEquals("Cleared set returned non-zero size", 0, hs.size());

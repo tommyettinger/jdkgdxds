@@ -40,13 +40,13 @@ public class ObjectSetTest {
 	}
 
 	@Test public void test_Constructor () {
-		// Test for method com.github.tommyettinger.merry.ObjectSet()
+		// Test for method com.github.tommyettinger.ds.ObjectSet()
 		ObjectSet hs2 = new ObjectSet();
 		Assert.assertEquals("Created incorrect ObjectSet", 0, hs2.size());
 	}
 
 	@Test public void test_ConstructorI () {
-		// Test for method com.github.tommyettinger.merry.ObjectSet(int)
+		// Test for method com.github.tommyettinger.ds.ObjectSet(int)
 		ObjectSet hs2 = new ObjectSet(5);
 		Assert.assertEquals("Created incorrect ObjectSet", 0, hs2.size());
 		try {
@@ -58,7 +58,7 @@ public class ObjectSetTest {
 	}
 
 	@Test public void test_ConstructorIF () {
-		// Test for method com.github.tommyettinger.merry.ObjectSet(int, float)
+		// Test for method com.github.tommyettinger.ds.ObjectSet(int, float)
 		ObjectSet hs2 = new ObjectSet(5, (float)0.5);
 		Assert.assertEquals("Created incorrect ObjectSet", 0, hs2.size());
 		try {
@@ -70,7 +70,7 @@ public class ObjectSetTest {
 	}
 
 	@Test public void test_ConstructorLjava_util_Collection () {
-		// Test for method com.github.tommyettinger.merry.ObjectSet(java.util.Collection)
+		// Test for method com.github.tommyettinger.ds.ObjectSet(java.util.Collection)
 		ObjectSet hs2 = ObjectSet.with(objArray);
 		for (int counter = 0; counter < objArray.length; counter++)
 			Assert.assertTrue("ObjectSet does not contain correct elements", hs.contains(objArray[counter]));
@@ -78,7 +78,7 @@ public class ObjectSetTest {
 	}
 
 	@Test public void test_addLjava_lang_Object () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectSet.add(java.lang.Object)
+		// Test for method boolean com.github.tommyettinger.ds.ObjectSet.add(java.lang.Object)
 		int size = hs.size();
 		hs.add(new Integer(8));
 		Assert.assertTrue("Added element already contained by set", hs.size() == size);
@@ -88,7 +88,7 @@ public class ObjectSetTest {
 	}
 
 	@Test public void test_clear () {
-		// Test for method void com.github.tommyettinger.merry.ObjectSet.clear()
+		// Test for method void com.github.tommyettinger.ds.ObjectSet.clear()
 		ObjectSet orgSet = new ObjectSet(hs);
 		hs.clear();
 		Iterator i = orgSet.iterator();
@@ -98,7 +98,7 @@ public class ObjectSetTest {
 	}
 
 	@Test public void test_containsLjava_lang_Object () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectSet.contains(java.lang.Object)
+		// Test for method boolean com.github.tommyettinger.ds.ObjectSet.contains(java.lang.Object)
 		Assert.assertTrue("Returned false for valid object", hs.contains(objArray[90]));
 		Assert.assertTrue("Returned true for invalid Object", !hs.contains(new Object()));
 
@@ -108,13 +108,13 @@ public class ObjectSetTest {
 	}
 
 	@Test public void test_isEmpty () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectSet.isEmpty()
+		// Test for method boolean com.github.tommyettinger.ds.ObjectSet.isEmpty()
 		Assert.assertTrue("Empty set returned false", new ObjectSet().isEmpty());
 		Assert.assertTrue("Non-empty set returned true", !hs.isEmpty());
 	}
 
 	@Test public void test_iterator () {
-		// Test for method java.util.Iterator com.github.tommyettinger.merry.ObjectSet.iterator()
+		// Test for method java.util.Iterator com.github.tommyettinger.ds.ObjectSet.iterator()
 		Iterator i = hs.iterator();
 		int x = 0;
 		while (i.hasNext()) {
@@ -129,7 +129,7 @@ public class ObjectSetTest {
 	}
 
 	@Test public void test_removeLjava_lang_Object () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectSet.remove(java.lang.Object)
+		// Test for method boolean com.github.tommyettinger.ds.ObjectSet.remove(java.lang.Object)
 		int size = hs.size();
 		hs.remove(new Integer(98));
 		Assert.assertTrue("Failed to remove element", !hs.contains(new Integer(98)));
@@ -145,7 +145,7 @@ public class ObjectSetTest {
 	}
 
 	@Test public void test_size () {
-		// Test for method int com.github.tommyettinger.merry.ObjectSet.size
+		// Test for method int com.github.tommyettinger.ds.ObjectSet.size
 		Assert.assertTrue("Returned incorrect size", hs.size() == objArray.length);
 		hs.clear();
 		Assert.assertEquals("Cleared set returned non-zero size", 0, hs.size());

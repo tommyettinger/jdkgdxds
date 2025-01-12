@@ -82,7 +82,7 @@ public class CuckooMapTest extends TestCase {
 
 	@Test
 	public void test_Constructor () {
-		// Test for method com.github.tommyettinger.merry.ObjectObjectCuckooMap()
+		// Test for method com.github.tommyettinger.ds.ObjectObjectCuckooMap()
 		runBattery(new ObjectObjectCuckooMap<String, String>());
 
 		ObjectObjectCuckooMap hm2 = new ObjectObjectCuckooMap<>();
@@ -90,7 +90,7 @@ public class CuckooMapTest extends TestCase {
 	}
 
 	@Test public void test_ConstructorI () {
-		// Test for method com.github.tommyettinger.merry.ObjectObjectCuckooMap(int)
+		// Test for method com.github.tommyettinger.ds.ObjectObjectCuckooMap(int)
 		ObjectObjectCuckooMap hm2 = new ObjectObjectCuckooMap(5);
 		Assert.assertEquals("Created incorrect ObjectObjectCuckooMap", 0, hm2.size());
 		do{
@@ -109,7 +109,7 @@ public class CuckooMapTest extends TestCase {
 	}
 
 	@Test public void test_ConstructorIF () {
-		// Test for method com.github.tommyettinger.merry.ObjectObjectCuckooMap(int, float)
+		// Test for method com.github.tommyettinger.ds.ObjectObjectCuckooMap(int, float)
 		ObjectObjectCuckooMap hm2 = new ObjectObjectCuckooMap(5, (float)0.5);
 		Assert.assertEquals("Created incorrect ObjectObjectCuckooMap", 0, hm2.size());
 		do{
@@ -171,7 +171,7 @@ public class CuckooMapTest extends TestCase {
 
 	@Test public void test_containsKeyLjava_lang_Object () {
 		// Test for method boolean
-		// com.github.tommyettinger.merry.ObjectObjectCuckooMap.containsKey(java.lang.Object)
+		// com.github.tommyettinger.ds.ObjectObjectCuckooMap.containsKey(java.lang.Object)
 		Assert.assertTrue("Returned false for valid key", hm.containsKey(new Integer(876).toString()));
 		Assert.assertTrue("Returned true for invalid key", !hm.containsKey("KKDKDKD"));
 
@@ -184,13 +184,13 @@ public class CuckooMapTest extends TestCase {
 
 	@Test public void test_containsValueLjava_lang_Object () {
 		// Test for method boolean
-		// com.github.tommyettinger.merry.ObjectObjectCuckooMap.containsValue(java.lang.Object)
+		// com.github.tommyettinger.ds.ObjectObjectCuckooMap.containsValue(java.lang.Object)
 		Assert.assertTrue("Returned false for valid value", hm.containsValue(new Integer(875), false));
 		Assert.assertTrue("Returned true for invalid value", !hm.containsValue(new Integer(-9), false));
 	}
 
 	@Test public void test_entrySet () {
-		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectObjectCuckooMap.entrySet(
+		// Test for method java.util.Set com.github.tommyettinger.ds.ObjectObjectCuckooMap.entrySet(
 		Set<Map.Entry> s = hm.entrySet();
 		Iterator i = s.iterator();
 		Assert.assertTrue("Returned set of incorrect size", hm.size() == s.size());
@@ -206,7 +206,7 @@ public class CuckooMapTest extends TestCase {
 
 	@Test public void test_getLjava_lang_Object () {
 		// Test for method java.lang.Object
-		// com.github.tommyettinger.merry.ObjectObjectCuckooMap.get(java.lang.Object)
+		// com.github.tommyettinger.ds.ObjectObjectCuckooMap.get(java.lang.Object)
 		Assert.assertNull("Get returned non-null for non existent key", hm.get("T"));
 		hm.put("T", "HELLO");
 		Assert.assertEquals("Get returned incorrect value for existing key", "HELLO", hm.get("T"));
@@ -272,13 +272,13 @@ public class CuckooMapTest extends TestCase {
 //	}
 
 	@Test public void test_isEmpty () {
-		// Test for method boolean com.github.tommyettinger.merry.ObjectObjectCuckooMap.isEmpty()
+		// Test for method boolean com.github.tommyettinger.ds.ObjectObjectCuckooMap.isEmpty()
 		Assert.assertTrue("Returned false for new map", new ObjectObjectCuckooMap().isEmpty());
 		Assert.assertTrue("Returned true for non-empty", !hm.isEmpty());
 	}
 
 	@Test public void test_keySet () {
-		// Test for method java.util.Set com.github.tommyettinger.merry.ObjectObjectCuckooMap.keySet()
+		// Test for method java.util.Set com.github.tommyettinger.ds.ObjectObjectCuckooMap.keySet()
 		Set s = hm.keySet();
 		Assert.assertTrue("Returned set of incorrect size()", s.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)
@@ -394,7 +394,7 @@ public class CuckooMapTest extends TestCase {
 	}
 
 	@Test public void test_putAllLjava_util_Map () {
-		// Test for method void com.github.tommyettinger.merry.ObjectObjectCuckooMap.putAll(java.util.Map)
+		// Test for method void com.github.tommyettinger.ds.ObjectObjectCuckooMap.putAll(java.util.Map)
 		ObjectObjectCuckooMap hm2 = new ObjectObjectCuckooMap();
 		hm2.putAll(hm);
 		for (int i = 0; i < 1000; i++)
@@ -466,12 +466,12 @@ public class CuckooMapTest extends TestCase {
 	}
 
 	@Test public void test_size () {
-		// Test for method int com.github.tommyettinger.merry.ObjectObjectCuckooMap.size()
+		// Test for method int com.github.tommyettinger.ds.ObjectObjectCuckooMap.size()
 		Assert.assertTrue("Returned incorrect size", hm.size() == objArray.length + 1);
 	}
 
 	@Test public void test_values () {
-		// Test for method java.util.Collection com.github.tommyettinger.merry.ObjectObjectCuckooMap.values()
+		// Test for method java.util.Collection com.github.tommyettinger.ds.ObjectObjectCuckooMap.values()
 		Collection c = hm.values();
 		Assert.assertTrue("Returned collection of incorrect size()", c.size() == hm.size());
 //		for (int i = 0; i < objArray.length; i++)

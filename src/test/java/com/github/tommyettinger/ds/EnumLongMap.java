@@ -21,12 +21,18 @@ import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongLongToLongBiFunction;
-import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 import com.github.tommyettinger.function.ObjToLongFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
+import java.util.AbstractSet;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * An unordered map where the keys are {@code Enum}s and values are primitive longs. Null keys are not allowed.
@@ -46,7 +52,8 @@ import java.util.*;
  * first key placed into the EnumMap. You can also set the key universe with {@link #clearToUniverse(Enum[])}, in the process of
  * clearing the map.
  * <br>
- * This class tries to be as compatible as possible with {@link java.util.EnumMap}, though this expands on that where possible.
+ * This class tries to be as compatible as possible with {@link java.util.EnumMap} while using primitive keys,
+ * though this expands on that where possible.
  *
  * @author Nathan Sweet (Keys, Values, Entries, and MapIterator, as well as general structure)
  * @author Tommy Ettinger (Enum-related adaptation)
@@ -1514,7 +1521,6 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		return new EnumLongMap();
 	}
 
-
 	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
@@ -1748,5 +1754,4 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	public static EnumLongMap of (Enum<?> key0, Number value0, Object... rest) {
 		return with(key0, value0, rest);
 	}
-
 }
