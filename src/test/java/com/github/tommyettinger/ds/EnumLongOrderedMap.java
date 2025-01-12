@@ -26,9 +26,13 @@ import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
-
-import static com.github.tommyettinger.ds.Utilities.tableSize;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * An insertion-ordered map where the keys are {@code Enum}s and values are primitive longs. Null keys are not allowed.
@@ -242,7 +246,6 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
 	public void putAll (EnumLongOrderedMap map) {
-		ensureCapacity(map.size());
 		for (int i = 0, kl = map.size(); i < kl; i++) {
 			put(map.keyAt(i), map.getAt(i));
 		}
@@ -271,7 +274,6 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 */
 	public void putAll (int insertionIndex, EnumLongOrderedMap other, int offset, int count) {
 		int end = Math.min(offset + count, other.size());
-		ensureCapacity(end - offset);
 		for (int i = offset; i < end; i++) {
 			put(other.keyAt(i), other.getAt(i), insertionIndex++);
 		}
@@ -320,22 +322,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	@Override
 	public void truncate (int newSize) {
-	}
-
-	/**
-	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
-	 * adding many items to avoid multiple backing array resizes.
-	 *
-	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
-	 */
-	@Override
-	public void ensureCapacity (int additionalCapacity) {
-		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
-		keys.ensureCapacity(additionalCapacity);
-
 		if (size() > newSize) {removeRange(newSize, size());}
 	}
 
@@ -501,8 +488,8 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	@Override
 	public Keys keySet () {
 		if (keys1 == null || keys2 == null) {
-			keys1 = new OrderedMapKeys<>(this);
-			keys2 = new OrderedMapKeys<>(this);
+			keys1 = new OrderedMapKeys(this);
+			keys2 = new OrderedMapKeys(this);
 		}
 		if (!keys1.iter.valid) {
 			keys1.iter.reset();
@@ -524,10 +511,10 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return a {@link PrimitiveCollection.OfLong} of the long values
 	 */
 	@Override
-	public Values<Enum<?>> values () {
+	public Values values () {
 		if (values1 == null || values2 == null) {
-			values1 = new OrderedMapValues<>(this);
-			values2 = new OrderedMapValues<>(this);
+			values1 = new OrderedMapValues(this);
+			values2 = new OrderedMapValues(this);
 		}
 		if (!values1.iter.valid) {
 			values1.iter.reset();
@@ -550,10 +537,10 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public Entries<Enum<?>> entrySet () {
+	public Entries entrySet () {
 		if (entries1 == null || entries2 == null) {
-			entries1 = new OrderedMapEntries<>(this);
-			entries2 = new OrderedMapEntries<>(this);
+			entries1 = new OrderedMapEntries(this);
+			entries2 = new OrderedMapEntries(this);
 		}
 		if (!entries1.iter.valid) {
 			entries1.iter.reset();
@@ -574,10 +561,10 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * multithreaded iteration. You can remove an Entry from this ObjectLongOrderedMap
 	 * using this Iterator.
 	 *
-	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
+	 * @return an {@link Iterator} over key-value pairs as {@link Entry} values
 	 */
 	@Override
-	public @NonNull EntryIterator<Enum<?>> iterator () {
+	public @NonNull EntryIterator iterator () {
 		return entrySet().iterator();
 	}
 
@@ -599,16 +586,13 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 */
 	@Override
 	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<Enum<?>> keyAppender, LongAppender valueAppender) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
+		if (size() == 0) {return braces ? sb.append("{}") : sb;}
 		if (braces) {sb.append('{');}
-		ObjectList<Enum<?>> keys = this.keys;
+		ObjectList<Enum<?>> keys = this.ordering;
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			Enum<?> key = keys.get(i);
 			if (i > 0) {sb.append(entrySeparator);}
-			if(key == this)
-				sb.append("(this)");
-			else
-				keyAppender.apply(sb, key);
+			keyAppender.apply(sb, key);
 			sb.append(keyValueSeparator);
 			valueAppender.apply(sb, get(key));
 		}
@@ -617,18 +601,18 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	public static class OrderedMapEntries extends Entries {
-		protected ObjectList<Enum<?>> keys;
+		protected ObjectList<Enum<?>> ordering;
 
 		public OrderedMapEntries (EnumLongOrderedMap map) {
 			super(map);
-			keys = map.keys;
+			ordering = map.ordering;
 			iter = new EntryIterator(map) {
 
 				@Override
 				public void reset () {
 					currentIndex = -1;
 					nextIndex = 0;
-					hasNext = map.size > 0;
+					hasNext = map.notEmpty();
 				}
 
 				@Override
@@ -636,10 +620,10 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 					if (!hasNext) {throw new NoSuchElementException();}
 					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 					currentIndex = nextIndex;
-					entry.key = keys.get(nextIndex);
+					entry.key = ordering.get(nextIndex);
 					entry.value = map.get(entry.key);
 					nextIndex++;
-					hasNext = nextIndex < map.size;
+					hasNext = nextIndex < map.size();
 					return entry;
 				}
 
@@ -658,35 +642,35 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	public static class OrderedMapKeys extends Keys {
-		private final ObjectList<Enum<?>> keys;
+		private final ObjectList<Enum<?>> ordering;
 
 		public OrderedMapKeys (EnumLongOrderedMap map) {
 			super(map);
-			keys = map.keys;
+			ordering = map.ordering;
 			iter = new KeyIterator(map) {
 
 				@Override
 				public void reset () {
 					currentIndex = -1;
 					nextIndex = 0;
-					hasNext = map.size > 0;
+					hasNext = map.notEmpty();
 				}
 
 				@Override
 				public Enum<?> next () {
 					if (!hasNext) {throw new NoSuchElementException();}
 					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					Enum<?> key = keys.get(nextIndex);
+					Enum<?> key = ordering.get(nextIndex);
 					currentIndex = nextIndex;
 					nextIndex++;
-					hasNext = nextIndex < map.size;
+					hasNext = nextIndex < map.size();
 					return key;
 				}
 
 				@Override
 				public void remove () {
 					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
-					map.remove(keys.get(currentIndex));
+					map.remove(ordering.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
 				}
@@ -696,11 +680,11 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	public static class OrderedMapValues extends Values {
-		private final ObjectList<Enum<?>> keys;
+		private final ObjectList<Enum<?>> ordering;
 
 		public OrderedMapValues (EnumLongOrderedMap map) {
 			super(map);
-			keys = map.keys;
+			ordering = map.ordering;
 			iter = new ValueIterator(map) {
 
 				@Override
@@ -714,7 +698,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 				public long nextLong () {
 					if (!hasNext) {throw new NoSuchElementException();}
 					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-					long value = map.get(keys.get(nextIndex));
+					long value = map.get(ordering.get(nextIndex));
 					currentIndex = nextIndex;
 					nextIndex++;
 					hasNext = nextIndex < map.size();
@@ -724,7 +708,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 				@Override
 				public void remove () {
 					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
-					map.remove(keys.get(currentIndex));
+					map.remove(ordering.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
 				}
