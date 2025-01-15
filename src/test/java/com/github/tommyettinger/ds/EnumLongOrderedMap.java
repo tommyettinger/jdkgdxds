@@ -83,7 +83,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 			ordering = new ObjectList<>();
 			return;
 		}
-		this.keys = new EnumSet(universe);
+		this.keys = EnumSet.noneOf(universe);
 		valueTable = new long[universe.length];
 		ordering = new ObjectList<>(universe.length);
 	}
@@ -423,6 +423,18 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	public void clear () {
 		ordering.clear();
 		super.clear();
+	}
+
+	@Override
+	public void clearToUniverse(Enum<?> @Nullable [] universe) {
+		super.clearToUniverse(universe);
+		ordering.clear();
+	}
+
+	@Override
+	public void clearToUniverse(@Nullable Class<? extends Enum<?>> universe) {
+		super.clearToUniverse(universe);
+		ordering.clear();
 	}
 
 	/**

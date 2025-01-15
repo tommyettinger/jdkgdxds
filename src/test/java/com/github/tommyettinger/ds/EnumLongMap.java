@@ -93,7 +93,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 */
 	public EnumLongMap(Enum<?> @Nullable [] universe) {
 		if(universe == null) return;
-		this.keys = new EnumSet(universe);
+		this.keys = EnumSet.noneOf(universe);
 		valueTable = new long[universe.length];
 	}
 
@@ -435,7 +435,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 			valueTable = null;
 		} else {
 			if (keys == null) {
-				keys = new EnumSet(universe);
+				keys = EnumSet.noneOf(universe);
 			} else
 				keys.clearToUniverse(universe);
 
@@ -469,7 +469,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		} else {
 			Enum<?>[] cons = universe.getEnumConstants();
 			if (keys == null) {
-				keys = new EnumSet(cons);
+				keys = EnumSet.noneOf(cons);
 			} else
 				keys.clearToUniverse(cons);
 
