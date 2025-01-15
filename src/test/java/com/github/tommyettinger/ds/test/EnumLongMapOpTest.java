@@ -1,5 +1,10 @@
-package com.github.tommyettinger.ds;
+package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.ds.EnumLongMap;
+import com.github.tommyettinger.ds.EnumLongOrderedMap;
+import com.github.tommyettinger.ds.LongList;
+import com.github.tommyettinger.ds.support.sort.LongComparator;
+import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.random.AceRandom;
 import org.junit.Assert;
 import org.junit.Test;
@@ -68,5 +73,26 @@ public class EnumLongMapOpTest {
             Assert.assertEquals(neo.size(), map.size());
         }
         System.out.printf("The map has %d items\n", map.size());
+    }
+
+    @Test
+    public void orderingTest() {
+        AceRandom random = new AceRandom(123);
+        EnumLongOrderedMap map = new EnumLongOrderedMap(Chem.ALL);
+        for (int i = 0; i < 100; i++) {
+            map.put(Chem.ALL[i], i);
+        }
+        int startLength = map.size();
+        map.shuffle(random);
+        Assert.assertEquals(startLength, map.size());
+        Assert.assertEquals(startLength, map.order().size());
+        Assert.assertEquals(startLength, map.keySet().size());
+
+        EnumLongOrderedMap byKey = new EnumLongOrderedMap(map), byValue = new EnumLongOrderedMap(map);
+        byKey.sort();
+        byValue.sortByValue(LongComparators.NATURAL_COMPARATOR);
+        for (int i = 0; i < startLength; i++) {
+            Assert.assertEquals(byKey.keyAt(i), byValue.keyAt(i));
+        }
     }
 }
