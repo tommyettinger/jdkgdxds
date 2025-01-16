@@ -17,6 +17,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.PrimitiveCollection.OfLong;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
@@ -121,37 +122,37 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	}
 
 	/**
-	 * Given two side-by-side arrays, one of Enum keys, one of V values, this constructs a map and inserts each pair of key and
+	 * Given two side-by-side arrays, one of Enum keys, one of long values, this constructs a map and inserts each pair of key and
 	 * value into it. If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
 	 * @param keys   an array of Enum keys
-	 * @param values an array of V values
+	 * @param values an array of long values
 	 */
-	public EnumLongMap(Enum<?>[] keys, long[] values) {
+	public EnumLongMap(Enum<?> @NonNull [] keys, long @NonNull [] values) {
 		this();
 		putAll(keys, values);
 	}
 
 	/**
-	 * Given two side-by-side collections, one of Enum keys, one of V values, this constructs a map and inserts each pair of key
+	 * Given two side-by-side collections, one of Enum keys, one of long values, this constructs a map and inserts each pair of key
 	 * and value into it. If keys and values have different lengths, this only uses the length of the smaller collection.
 	 *
 	 * @param keys   a Collection of Enum keys
-	 * @param values a Collection of V values
+	 * @param values a PrimitiveCollection of long values
 	 */
-	public EnumLongMap(Collection<? extends Enum<?>> keys, PrimitiveCollection.OfLong values) {
+	public EnumLongMap(@NonNull Collection<? extends Enum<?>> keys,  @NonNull OfLong values) {
 		this();
 		putAll(keys, values);
 	}
 
 	/**
-	 * Given two side-by-side collections, one of Enum keys, one of V values, this inserts each pair of key and
+	 * Given two side-by-side collections, one of Enum keys, one of long values, this inserts each pair of key and
 	 * value into this map with put().
 	 *
 	 * @param keys   a Collection of Enum keys
-	 * @param values a Collection of V values
+	 * @param values a PrimitiveCollection of long values
 	 */
-	public void putAll (Collection<? extends Enum<?>> keys, PrimitiveCollection.OfLong values) {
+	public void putAll ( @NonNull Collection<? extends Enum<?>> keys,  @NonNull OfLong values) {
 		Enum<?> key;
 		Iterator<? extends Enum<?>> ki = keys.iterator();
 		LongIterator vi = values.iterator();
@@ -167,7 +168,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * from now on for this EnumMap.
 	 *
 	 * @param key the Enum key to try to place into this EnumMap
-	 * @param value the V value to associate with {@code key}
+	 * @param value the long value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	public long put (@NonNull Enum<?> key, long value) {
@@ -190,8 +191,8 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * Acts like {@link #put(Enum, long)}, but uses the specified {@code defaultValue} instead of
 	 * {@link #getDefaultValue() the default value for this EnumMap}.
 	 * @param key the Enum key to try to place into this EnumMap
-	 * @param value the V value to associate with {@code key}
-	 * @param defaultValue the V value to return if {@code key} was not already present
+	 * @param value the long value to associate with {@code key}
+	 * @param defaultValue the long value to return if {@code key} was not already present
 	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
 	 */
 	public long putOrDefault (@NonNull Enum<?> key, long value, long defaultValue) {
@@ -245,7 +246,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public void putAll (Enum<?>[] keys, long[] values) {
+	public void putAll (Enum<?> @NonNull [] keys, long @NonNull [] values) {
 		putAll(keys, 0, values, 0, Math.min(keys.length, values.length));
 	}
 
@@ -257,7 +258,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
-	public void putAll (Enum<?>[] keys, long[] values, int length) {
+	public void putAll (Enum<?> @NonNull [] keys, long @NonNull [] values, int length) {
 		putAll(keys, 0, values, 0, Math.min(length, Math.min(keys.length, values.length)));
 	}
 
@@ -271,7 +272,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * @param valueOffset the first index in values to insert
 	 * @param length      how many items from keys and values to insert, at-most
 	 */
-	public void putAll (Enum<?>[] keys, int keyOffset, long[] values, int valueOffset, int length) {
+	public void putAll (Enum<?> @NonNull [] keys, int keyOffset, long @NonNull [] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
 		Enum<?> key;
 		for (int k = keyOffset, v = valueOffset, i = 0, n = length; i < n; i++, k++, v++) {
@@ -337,13 +338,15 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * @throws IllegalArgumentException      if some property of a key or value in
 	 *                                       the specified map prevents it from being stored in this map
 	 */
-	public void putAll (ObjectLongMap<Enum<?>> m) {
+	public void putAll (@NonNull ObjectLongMap<Enum<?>> m) {
 		for (ObjectLongMap.Entry<Enum<?>> kv : m.entrySet()) {put(kv.getKey(), kv.getValue());}
-	}	/**
+	}
+
+	/**
 	 * Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
 	 * put into the map and defaultValue is returned.
 	 */
-	public long getAndIncrement (Enum<?> key, long defaultValue, long increment) {
+	public long getAndIncrement (@NonNull Enum<?> key, long defaultValue, long increment) {
 		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
@@ -614,7 +617,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 		 * @param braces true to wrap the output in curly braces, or false to omit them
 		 * @param keyAppender a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
-		 * @param valueAppender a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+		 * @param valueAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
 		 * @return {@code sb}, with the appended keys and values of this map
 		 */
 	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
@@ -764,10 +767,11 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	}
 
 	/**
-	 * Returns a Collection of the values in the map. Remove is supported. Note that the same Collection instance is returned each
+	 * Returns a PrimitiveCollection of the values in the map. Remove is supported. Note that the same
+	 * PrimitiveCollection instance is returned each
 	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
 	 *
-	 * @return a {@link Collection} of V values
+	 * @return a {@link PrimitiveCollection} of long values
 	 */
 	public @NonNull Values values () {
 		if (values1 == null || values2 == null) {
@@ -843,7 +847,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 		/**
 		 * Sets the value of this Entry, but does <em>not</em> write through to the containing EnumMap.
-		 * @param value the new V value to use
+		 * @param value the new long value to use
 		 * @return the old value this held, before modification
 		 */
 		public long setValue (long value) {
@@ -1266,7 +1270,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	}
 
 
-	public static class Values implements PrimitiveCollection.OfLong {
+	public static class Values implements OfLong {
 		protected ValueIterator iter;
 
 		@Override
@@ -1327,12 +1331,12 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		}
 
 		/**
-		 * Append the remaining items that this can iterate through into the given Collection.
+		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.
 		 * Does not change the position of this iterator.
-		 * @param coll any modifiable Collection; may have items appended into it
+		 * @param coll any modifiable PrimitiveCollection.OfLong; may have items appended into it
 		 * @return the given collection
 		 */
-		public PrimitiveCollection.OfLong appendInto(PrimitiveCollection.OfLong coll) {
+		public OfLong appendInto(OfLong coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {coll.add(iter.nextLong());}
@@ -1360,7 +1364,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 		@Override
 		public boolean equals (Object other) {
-			if(other instanceof PrimitiveCollection.OfLong) {
+			if(other instanceof OfLong) {
 				boolean res = iter.map.size() == ((OfLong) other).size();
 				if(res) {
 					LongIterator otter = ((OfLong) other).iterator();

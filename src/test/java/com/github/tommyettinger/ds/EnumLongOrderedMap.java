@@ -23,6 +23,7 @@ import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -113,11 +114,11 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Given two side-by-side arrays, one of Enum keys, one of V values, this constructs a map and inserts each pair of key and
+	 * Given two side-by-side arrays, one of Enum keys, one of long values, this constructs a map and inserts each pair of key and
 	 * value into it. If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
 	 * @param keys   an array of Enum keys
-	 * @param values an array of V values
+	 * @param values an array of long values
 	 */
 	public EnumLongOrderedMap(Enum<?>[] keys, long[] values) {
 		this();
@@ -125,11 +126,11 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Given two side-by-side collections, one of Enum keys, one of V values, this constructs a map and inserts each pair of key
+	 * Given two side-by-side collections, one of Enum keys, one of long values, this constructs a map and inserts each pair of key
 	 * and value into it. If keys and values have different lengths, this only uses the length of the smaller collection.
 	 *
 	 * @param keys   a Collection of Enum keys
-	 * @param values a Collection of V values
+	 * @param values a PrimitiveCollection of long values
 	 */
 	public EnumLongOrderedMap(Collection<? extends Enum<?>> keys, PrimitiveCollection.OfLong values) {
 		this();
@@ -137,11 +138,11 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Given two side-by-side collections, one of Enum keys, one of V values, this inserts each pair of key and
+	 * Given two side-by-side collections, one of Enum keys, one of long values, this inserts each pair of key and
 	 * value into this map with put().
 	 *
 	 * @param keys   a Collection of Enum keys
-	 * @param values a Collection of V values
+	 * @param values a PrimitiveCollection of long values
 	 */
 	public void putAll (Collection<? extends Enum<?>> keys, PrimitiveCollection.OfLong values) {
 		Enum<?> key;
@@ -154,14 +155,14 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Creates a new set by copying {@code count} items from the given ObjectLongOrderedMap, starting at {@code offset} in that Map,
+	 * Creates a new set by copying {@code count} items from the given EnumLongOrderedMap, starting at {@code offset} in that Map,
 	 * into this.
 	 *
-	 * @param other  another ObjectLongOrderedMap of the same type
+	 * @param other  another EnumLongOrderedMap
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public EnumLongOrderedMap(EnumLongOrderedMap other, int offset, int count) {
+	public EnumLongOrderedMap(@NonNull EnumLongOrderedMap other, int offset, int count) {
 		this(other.keys == null ? null : other.keys.universe);
 		putAll(0, other, offset, count);
 	}
@@ -172,7 +173,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * from now on for this EnumMap.
 	 *
 	 * @param key the Enum key to try to place into this EnumMap
-	 * @param value the V value to associate with {@code key}
+	 * @param value the long value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	public long put (@NonNull Enum<?> key, long value) {
@@ -202,7 +203,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
 	 */
-	public long put (Enum<?> key, long value, int index) {
+	public long put (@NonNull Enum<?> key, long value, @NonNegative int index) {
 		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
@@ -222,7 +223,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	@Override
-	public long putOrDefault (Enum<?> key, long value, long defaultValue) {
+	public long putOrDefault (@NonNull Enum<?> key, long value, long defaultValue) {
 		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
@@ -245,7 +246,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (EnumLongOrderedMap map) {
+	public void putAll (@NonNull EnumLongOrderedMap map) {
 		for (int i = 0, kl = map.size(); i < kl; i++) {
 			put(map.keyAt(i), map.getAt(i));
 		}
@@ -259,7 +260,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param offset the first index in {@code other} to use
 	 * @param count  how many indices in {@code other} to use
 	 */
-	public void putAll (EnumLongOrderedMap other, int offset, int count) {
+	public void putAll (@NonNull EnumLongOrderedMap other, int offset, int count) {
 		putAll(size(), other, offset, count);
 	}
 
@@ -272,7 +273,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
 	 */
-	public void putAll (int insertionIndex, EnumLongOrderedMap other, int offset, int count) {
+	public void putAll (int insertionIndex, @NonNull EnumLongOrderedMap other, int offset, int count) {
 		int end = Math.min(offset + count, other.size());
 		for (int i = offset; i < end; i++) {
 			put(other.keyAt(i), other.getAt(i), insertionIndex++);
@@ -293,7 +294,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param index the index of the entry to remove; must be at least 0 and less than {@link #size()}
 	 * @return the value of the removed entry
 	 */
-	public long removeAt (int index) {
+	public long removeAt (@NonNegative int index) {
 		return super.remove(ordering.removeAt(index));
 	}
 
@@ -326,8 +327,36 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 		if (size() > newSize) {removeRange(newSize, size());}
 	}
 
+	/**
+	 * Copies all the mappings from the specified map to this map
+	 * (optional operation).  The effect of this call is equivalent to that
+	 * of calling {@link #put(Enum, long) put(k, v)} on this map once
+	 * for each mapping from key {@code k} to value {@code v} in the
+	 * specified map.  The behavior of this operation is undefined if the
+	 * specified map is modified while the operation is in progress.
+	 * <br>
+	 * Note that {@link #putAll(EnumLongOrderedMap)} is more specific and can be
+	 * more efficient by using the internal details of this class.
+	 *
+	 * @param map mappings to be stored in this map
+	 * @throws UnsupportedOperationException if the {@code putAll} operation
+	 *                                       is not supported by this map
+	 * @throws ClassCastException            if the class of a key or value in the
+	 *                                       specified map prevents it from being stored in this map
+	 * @throws NullPointerException          if the specified map is null, or if
+	 *                                       this map does not permit null keys or values, and the
+	 *                                       specified map contains null keys or values
+	 * @throws IllegalArgumentException      if some property of a key or value in
+	 *                                       the specified map prevents it from being stored in this map
+	 */
+	public void putAll (@NonNull ObjectLongOrderedMap<Enum<?>> map) {
+		for (int i = 0, kl = map.size(); i < kl; i++) {
+			put(map.keyAt(i), map.getAt(i));
+		}
+	}
+
 	@Override
-	public long getAndIncrement (Enum<?> key, long defaultValue, long increment) {
+	public long getAndIncrement (@NonNull Enum<?> key, long defaultValue, long increment) {
 		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
@@ -347,15 +376,15 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 
 	/**
 	 * Changes the key {@code before} to {@code after} without changing its position in the order or its value. Returns true if
-	 * {@code after} has been added to the ObjectLongOrderedMap and {@code before} has been removed; returns false if {@code after} is
-	 * already present or {@code before} is not present. If you are iterating over an ObjectLongOrderedMap and have an index, you should
+	 * {@code after} has been added to the EnumLongOrderedMap and {@code before} has been removed; returns false if {@code after} is
+	 * already present or {@code before} is not present. If you are iterating over an EnumLongOrderedMap and have an index, you should
 	 * prefer {@link #alterAt(int, Enum)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before a key that must be present for this to succeed
 	 * @param after  a key that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (Enum<?> before, Enum<?> after) {
+	public boolean alter (@NonNull Enum<?> before, @NonNull Enum<?> after) {
 		if (containsKey(after)) {return false;}
 		int index = ordering.indexOf(before);
 		if (index == -1) {return false;}
@@ -373,7 +402,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterAt (int index, Enum<?> after) {
+	public boolean alterAt (@NonNegative int index, @NonNull Enum<?> after) {
 		if (index < 0 || index >= size() || containsKey(after)) {return false;}
 		super.put(after, super.remove(ordering.get(index)));
 		ordering.set(index, after);
@@ -389,7 +418,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param index the index in the iteration order to set {@code v} at
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
-	public long setAt (int index, long v) {
+	public long setAt (@NonNegative int index, long v) {
 		if (index < 0 || index >= size() || keys == null || valueTable == null) {return defaultValue;}
 		final int pos = ordering.get(index).ordinal();
 		final long oldValue = valueTable[pos];
@@ -404,7 +433,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
-	public long getAt (int index) {
+	public long getAt (@NonNegative int index) {
 		return get(ordering.get(index));
 	}
 
@@ -415,7 +444,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public Enum<?> keyAt (int index) {
+	public Enum<?> keyAt (@NonNegative int index) {
 		return ordering.get(index);
 	}
 
@@ -450,14 +479,14 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Sorts this ObjectLongOrderedMap in-place by the keys' natural ordering.
+	 * Sorts this EnumLongOrderedMap in-place by the keys' natural ordering.
 	 */
 	public void sort () {
 		ordering.sort(null);
 	}
 
 	/**
-	 * Sorts this ObjectLongOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
+	 * Sorts this EnumLongOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
 	 * will sort by the natural ordering of the keys.
 	 *
 	 * @param comp a Comparator that can compare two {@code Enum} keys, or null to use the keys' natural ordering
@@ -467,7 +496,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Sorts this ObjectLongOrderedMap in-place by the given LongComparator used on the values. {@code comp} must not be null,
+	 * Sorts this EnumLongOrderedMap in-place by the given LongComparator used on the values. {@code comp} must not be null,
 	 * and must be able to compare {@code long} values. You can use {@link LongComparators#NATURAL_COMPARATOR} to do
 	 * what {@link #sort()} does (just sorting values in this case instead of keys); there is also a reversed comparator
 	 * available, {@link LongComparators#OPPOSITE_COMPARATOR}.
@@ -516,8 +545,8 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
-	 * <p>Note that the same Collection instance is returned each time this method is called. Use the
+	 * Returns a PrimitiveCollection for the values in the map. Remove is supported by the PrimitiveCollection's iterator.
+	 * <p>Note that the same PrimitiveCollection.OfLong instance is returned each time this method is called. Use the
 	 * {@link OrderedMapValues#OrderedMapValues(EnumLongOrderedMap)} constructor for nested or multithreaded iteration.
 	 *
 	 * @return a {@link PrimitiveCollection.OfLong} of the long values
@@ -570,7 +599,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * Reuses the iterator of the reused {@link Entries}
 	 * produced by {@link #entrySet()}; does not permit nested iteration. Iterate over
 	 * {@link OrderedMapEntries#OrderedMapEntries(EnumLongOrderedMap)} if you need nested or
-	 * multithreaded iteration. You can remove an Entry from this ObjectLongOrderedMap
+	 * multithreaded iteration. You can remove an Entry from this EnumLongOrderedMap
 	 * using this Iterator.
 	 *
 	 * @return an {@link Iterator} over key-value pairs as {@link Entry} values
@@ -581,7 +610,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this ObjectLongOrderedMap, but uses the given {@link Appender} and
+	 * Appends to a StringBuilder from the contents of this EnumLongOrderedMap, but uses the given {@link Appender} and
 	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendUnsigned(StringBuilder, long)}. To use
