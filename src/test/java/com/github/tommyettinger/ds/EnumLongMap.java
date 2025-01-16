@@ -45,12 +45,12 @@ import java.util.Set;
  * to a guaranteed-unique {@code int} that will always be non-negative and less than the size of the key universe. The table of
  * possible values always starts sized to fit exactly as many values as there are keys in the key universe.
  * <br>
- * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumMap can use as keys, in
+ * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumLongMap can use as keys, in
  * the specific order they are declared. You almost always get a key universe by calling {@code MyEnum.values()}, but you
  * can also use {@link Class#getEnumConstants()} for an Enum class. You can and generally should reuse key universes in order to
- * avoid allocations and/or save memory; the constructor {@link #EnumLongMap(Enum[])} (with no values given) creates an empty EnumMap with
+ * avoid allocations and/or save memory; the constructor {@link #EnumLongMap(Enum[])} (with no values given) creates an empty EnumLongMap with
  * a given key universe. If you need to use the zero-argument constructor, you can, and the key universe will be obtained from the
- * first key placed into the EnumMap. You can also set the key universe with {@link #clearToUniverse(Enum[])}, in the process of
+ * first key placed into the EnumLongMap. You can also set the key universe with {@link #clearToUniverse(Enum[])}, in the process of
  * clearing the map.
  * <br>
  * This class tries to be as compatible as possible with {@link java.util.EnumMap} while using primitive keys,
@@ -88,8 +88,8 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * Initializes this map so that it has exactly enough capacity as needed to contain each Enum constant defined in
 	 * {@code universe}, assuming universe stores every possible constant in one Enum type. This map will start empty.
 	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
-	 * reference to one Enum array across many EnumMap instances if you don't modify the shared array. Sharing the same
-	 * universe helps save some memory if you have (very) many EnumMap instances.
+	 * reference to one Enum array across many EnumLongMap instances if you don't modify the shared array. Sharing the same
+	 * universe helps save some memory if you have (very) many EnumLongMap instances.
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 */
 	public EnumLongMap(Enum<?> @Nullable [] universe) {
@@ -110,9 +110,9 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	}
 
 	/**
-	 * Creates a new map identical to the specified EnumMap. This will share a key universe with the given EnumMap, if non-null.
+	 * Creates a new map identical to the specified EnumLongMap. This will share a key universe with the given EnumLongMap, if non-null.
 	 *
-	 * @param map an EnumMap to copy
+	 * @param map an EnumLongMap to copy
 	 */
 	public EnumLongMap(EnumLongMap map) {
 		this.keys = map.keys;
@@ -164,21 +164,21 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
-	 * If this EnumMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
-	 * from now on for this EnumMap.
+	 * If this EnumLongMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
+	 * from now on for this EnumLongMap.
 	 *
-	 * @param key the Enum key to try to place into this EnumMap
+	 * @param key the Enum key to try to place into this EnumLongMap
 	 * @param value the long value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	public long put (@NonNull Enum<?> key, long value) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
+		if(key == null) throw new NullPointerException("Keys added to an EnumLongMap must not be null.");
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new long[universe.length];
 		int i = key.ordinal();
 		if(i >= valueTable.length || universe[i] != key)
-			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+			throw new ClassCastException("Incompatible key for the EnumLongMap's universe.");
 		long oldValue = valueTable[i];
 		valueTable[i] = value;
 		if (keys.add(key)) {
@@ -189,20 +189,20 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 	/**
 	 * Acts like {@link #put(Enum, long)}, but uses the specified {@code defaultValue} instead of
-	 * {@link #getDefaultValue() the default value for this EnumMap}.
-	 * @param key the Enum key to try to place into this EnumMap
+	 * {@link #getDefaultValue() the default value for this EnumLongMap}.
+	 * @param key the Enum key to try to place into this EnumLongMap
 	 * @param value the long value to associate with {@code key}
 	 * @param defaultValue the long value to return if {@code key} was not already present
 	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
 	 */
 	public long putOrDefault (@NonNull Enum<?> key, long value, long defaultValue) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
+		if(key == null) throw new NullPointerException("Keys added to an EnumLongMap must not be null.");
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new long[universe.length];
 		int i = key.ordinal();
 		if(i >= valueTable.length || universe[i] != key)
-			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+			throw new ClassCastException("Incompatible key for the EnumLongMap's universe.");
 		long oldValue = valueTable[i];
 		valueTable[i] = value;
 		if (keys.add(key)) {
@@ -213,9 +213,9 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 	/**
 	 * Puts every key-value pair in the given map into this, with the values from the given map
-	 * overwriting the previous values if two keys are identical. If this EnumMap doesn't yet have
+	 * overwriting the previous values if two keys are identical. If this EnumLongMap doesn't yet have
 	 * a key universe, it will now share a key universe with the given {@code map}. Even if the
-	 * given EnumMap is empty, it can still be used to obtain a key universe for this EnumMap
+	 * given EnumLongMap is empty, it can still be used to obtain a key universe for this EnumLongMap
 	 * (assuming it has a key universe).
 	 *
 	 * @param map another EnumLongMap with an equivalent key universe
@@ -232,7 +232,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		long value;
 		for (int i = 0; i < n; i++) {
 			if(universe[i] != map.keys.universe[i])
-				throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+				throw new ClassCastException("Incompatible key for the EnumLongMap's universe.");
 			value = valueTable[i];
 			this.keys.add(universe[i]);
 			this.valueTable[i] = value;
@@ -347,13 +347,13 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * put into the map and defaultValue is returned.
 	 */
 	public long getAndIncrement (@NonNull Enum<?> key, long defaultValue, long increment) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
+		if(key == null) throw new NullPointerException("Keys added to an EnumLongMap must not be null.");
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new long[universe.length];
 		int i = key.ordinal();
 		if(i >= valueTable.length || universe[i] != key)
-			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+			throw new ClassCastException("Incompatible key for the EnumLongMap's universe.");
 		long oldValue = valueTable[i];
 		if (keys.add(key)) {
 			valueTable[i] = defaultValue + increment;
@@ -428,7 +428,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This always uses {@code universe} directly, without copying.
 	 * <br>
-	 * This can be useful to allow an EnumMap that was created with {@link #EnumLongMap()} to share a universe with other EnumLongMaps.
+	 * This can be useful to allow an EnumLongMap that was created with {@link #EnumLongMap()} to share a universe with other EnumLongMaps.
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
@@ -460,7 +460,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * This calls {@link Class#getEnumConstants()} if universe is non-null, which allocates a new array.
 	 * <br>
 	 * You may want to prefer calling {@link #clearToUniverse(Enum[])} (the overload that takes an array), because it can be used to
-	 * share one universe array between many EnumMap instances. This overload, given a Class, has to call {@link Class#getEnumConstants()}
+	 * share one universe array between many EnumLongMap instances. This overload, given a Class, has to call {@link Class#getEnumConstants()}
 	 * and thus allocate a new array each time this is called.
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
@@ -484,8 +484,8 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 	/**
 	 * Gets the current key universe; this is a technically-mutable array, but should never be modified.
-	 * To set the universe on an existing EnumMap (with existing contents), you can use {@link #clearToUniverse(Enum[])}.
-	 * If an EnumMap has not been initialized, just adding a key will set the key universe to match the given item.
+	 * To set the universe on an existing EnumLongMap (with existing contents), you can use {@link #clearToUniverse(Enum[])}.
+	 * If an EnumLongMap has not been initialized, just adding a key will set the key universe to match the given item.
 	 * @return the current key universe
 	 */
 	public Enum<?> @Nullable[] getUniverse () {
@@ -720,7 +720,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	/**
 	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
 	 * does not permit nested iteration. Iterate over {@link Entries#Entries(EnumLongMap)} if you
-	 * need nested or multithreaded iteration. You can remove an Entry from this EnumMap
+	 * need nested or multithreaded iteration. You can remove an Entry from this EnumLongMap
 	 * using this Iterator.
 	 *
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
@@ -846,7 +846,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		}
 
 		/**
-		 * Sets the value of this Entry, but does <em>not</em> write through to the containing EnumMap.
+		 * Sets the value of this Entry, but does <em>not</em> write through to the containing EnumLongMap.
 		 * @param value the new long value to use
 		 * @return the old value this held, before modification
 		 */
