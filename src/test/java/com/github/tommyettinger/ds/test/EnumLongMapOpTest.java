@@ -5,9 +5,12 @@ import com.github.tommyettinger.ds.EnumLongOrderedMap;
 import com.github.tommyettinger.ds.LongList;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.random.AceRandom;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Iterator;
 
 public class EnumLongMapOpTest {
     enum Chem {
@@ -94,5 +97,28 @@ public class EnumLongMapOpTest {
         for (int i = 0; i < startLength; i++) {
             Assert.assertEquals(byKey.keyAt(i), byValue.keyAt(i));
         }
+        Assert.assertEquals(byKey, byValue);
+        Assert.assertEquals(byKey.entrySet(), byValue.entrySet());
+        Assert.assertEquals(byKey.keySet(), byValue.keySet());
+        Assert.assertEquals(byKey.values(), byValue.values());
+        Iterator<Enum<?>> byKeyIt = byKey.keySet().iterator();
+        LongIterator byValIt = byValue.values().iterator();
+        int count = 0;
+        while (byKeyIt.hasNext() && byValIt.hasNext()){
+            Assert.assertEquals(map.get(byKeyIt.next()), byValIt.nextLong());
+            count++;
+        }
+        Assert.assertEquals(byKeyIt.hasNext(), byValIt.hasNext());
+        Assert.assertEquals(startLength, count);
+
+        byKey.reverse();
+        byValue.sortByValue(LongComparators.OPPOSITE_COMPARATOR);
+        for (int i = 0; i < startLength; i++) {
+            Assert.assertEquals(byKey.keyAt(i), byValue.keyAt(i));
+        }
+        Assert.assertEquals(byKey, byValue);
+        Assert.assertEquals(byKey.entrySet(), byValue.entrySet());
+        Assert.assertEquals(byKey.keySet(), byValue.keySet());
+        Assert.assertEquals(byKey.values(), byValue.values());
     }
 }
