@@ -18,18 +18,19 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.PrimitiveCollection.OfFloat;
 import com.github.tommyettinger.ds.support.util.Appender;
-import com.github.tommyettinger.ds.support.util.IntAppender;
-import com.github.tommyettinger.ds.support.util.IntIterator;
-import com.github.tommyettinger.function.IntIntToIntBiFunction;
-import com.github.tommyettinger.function.ObjToIntFunction;
+import com.github.tommyettinger.ds.support.util.FloatAppender;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
+import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
+import com.github.tommyettinger.function.ObjToFloatFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.*;
 
 /**
- * An unordered map where the keys are {@code Enum}s and values are primitive ints. Null keys are not allowed.
+ * An unordered map where the keys are {@code Enum}s and values are primitive floats. Null keys are not allowed.
  * Unlike {@link java.util.EnumMap}, this does not require a Class at construction time, which can be useful for serialization
  * purposes. No allocation is done unless this is changing its table size and/or key universe.
  * <br>
@@ -38,12 +39,12 @@ import java.util.*;
  * to a guaranteed-unique {@code int} that will always be non-negative and less than the size of the key universe. The table of
  * possible values always starts sized to fit exactly as many values as there are keys in the key universe.
  * <br>
- * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumIntMap can use as keys, in
+ * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumFloatMap can use as keys, in
  * the specific order they are declared. You almost always get a key universe by calling {@code MyEnum.values()}, but you
  * can also use {@link Class#getEnumConstants()} for an Enum class. You can and generally should reuse key universes in order to
- * avoid allocations and/or save memory; the constructor {@link #EnumIntMap(Enum[])} (with no values given) creates an empty EnumIntMap with
+ * avoid allocations and/or save memory; the constructor {@link #EnumFloatMap(Enum[])} (with no values given) creates an empty EnumFloatMap with
  * a given key universe. If you need to use the zero-argument constructor, you can, and the key universe will be obtained from the
- * first key placed into the EnumIntMap. You can also set the key universe with {@link #clearToUniverse(Enum[])}, in the process of
+ * first key placed into the EnumFloatMap. You can also set the key universe with {@link #clearToUniverse(Enum[])}, in the process of
  * clearing the map.
  * <br>
  * This class tries to be as compatible as possible with {@link java.util.EnumMap} while using primitive keys,
@@ -52,10 +53,10 @@ import java.util.*;
  * @author Nathan Sweet (Keys, Values, Entries, and MapIterator, as well as general structure)
  * @author Tommy Ettinger (Enum-related adaptation)
  */
-public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
+public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	protected @Nullable EnumSet keys;
 
-	protected int @Nullable[] valueTable;
+	protected float @Nullable[] valueTable;
 
 	@Nullable protected transient Entries entries1;
 	@Nullable protected transient Entries entries2;
@@ -68,46 +69,46 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * Returned by {@link #get(Object)} when no value exists for the given key, as well as some other methods to indicate that
 	 * no value in the Map could be returned. Defaults to {@code null}.
 	 */
-	public int defaultValue = 0;
+	public float defaultValue = 0L;
 
 	/**
 	 * Empty constructor; using this will postpone creating the key universe and allocating the value table until {@link #put} is
 	 * first called (potentially indirectly). You can also use {@link #clearToUniverse} to set the key universe and value table.
 	 */
-	public EnumIntMap() {
+	public EnumFloatMap() {
 	}
 
 	/**
 	 * Initializes this map so that it has exactly enough capacity as needed to contain each Enum constant defined in
 	 * {@code universe}, assuming universe stores every possible constant in one Enum type. This map will start empty.
 	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
-	 * reference to one Enum array across many EnumIntMap instances if you don't modify the shared array. Sharing the same
-	 * universe helps save some memory if you have (very) many EnumIntMap instances.
+	 * reference to one Enum array across many EnumFloatMap instances if you don't modify the shared array. Sharing the same
+	 * universe helps save some memory if you have (very) many EnumFloatMap instances.
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 */
-	public EnumIntMap(Enum<?> @Nullable [] universe) {
+	public EnumFloatMap(Enum<?> @Nullable [] universe) {
 		if(universe == null) return;
 		this.keys = EnumSet.noneOf(universe);
-		valueTable = new int[universe.length];
+		valueTable = new float[universe.length];
 	}
 
 	/**
 	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined by the
-	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumIntMap(Enum[])}
+	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumFloatMap(Enum[])}
 	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
-	 * if you use {@link #EnumIntMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
+	 * if you use {@link #EnumFloatMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
-	public EnumIntMap(@Nullable Class<? extends Enum<?>> universeClass) {
+	public EnumFloatMap(@Nullable Class<? extends Enum<?>> universeClass) {
 		this(universeClass == null ? null : universeClass.getEnumConstants());
 	}
 
 	/**
-	 * Creates a new map identical to the specified EnumIntMap. This will share a key universe with the given EnumIntMap, if non-null.
+	 * Creates a new map identical to the specified EnumFloatMap. This will share a key universe with the given EnumFloatMap, if non-null.
 	 *
-	 * @param map an EnumIntMap to copy
+	 * @param map an EnumFloatMap to copy
 	 */
-	public EnumIntMap(EnumIntMap map) {
+	public EnumFloatMap(EnumFloatMap map) {
 		this.keys = map.keys;
 		if(map.valueTable != null)
 			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
@@ -115,64 +116,64 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	}
 
 	/**
-	 * Given two side-by-side arrays, one of Enum keys, one of int values, this constructs a map and inserts each pair of key and
+	 * Given two side-by-side arrays, one of Enum keys, one of float values, this constructs a map and inserts each pair of key and
 	 * value into it. If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
 	 * @param keys   an array of Enum keys
-	 * @param values an array of int values
+	 * @param values an array of float values
 	 */
-	public EnumIntMap(Enum<?>[] keys, int[] values) {
+	public EnumFloatMap(Enum<?> @NonNull [] keys, float @NonNull [] values) {
 		this();
 		putAll(keys, values);
 	}
 
 	/**
-	 * Given two side-by-side collections, one of Enum keys, one of int values, this constructs a map and inserts each pair of key
+	 * Given two side-by-side collections, one of Enum keys, one of float values, this constructs a map and inserts each pair of key
 	 * and value into it. If keys and values have different lengths, this only uses the length of the smaller collection.
 	 *
 	 * @param keys   a Collection of Enum keys
-	 * @param values a PrimitiveCollection of int values
+	 * @param values a PrimitiveCollection of float values
 	 */
-	public EnumIntMap(Collection<? extends Enum<?>> keys, PrimitiveCollection.OfInt values) {
+	public EnumFloatMap(@NonNull Collection<? extends Enum<?>> keys, @NonNull OfFloat values) {
 		this();
 		putAll(keys, values);
 	}
 
 	/**
-	 * Given two side-by-side collections, one of Enum keys, one of int values, this inserts each pair of key and
+	 * Given two side-by-side collections, one of Enum keys, one of float values, this inserts each pair of key and
 	 * value into this map with put().
 	 *
 	 * @param keys   a Collection of Enum keys
-	 * @param values a PrimitiveCollection of int values
+	 * @param values a PrimitiveCollection of float values
 	 */
-	public void putAll (Collection<? extends Enum<?>> keys, PrimitiveCollection.OfInt values) {
+	public void putAll ( @NonNull Collection<? extends Enum<?>> keys,  @NonNull OfFloat values) {
 		Enum<?> key;
 		Iterator<? extends Enum<?>> ki = keys.iterator();
-		IntIterator vi = values.iterator();
+		FloatIterator vi = values.iterator();
 		while (ki.hasNext() && vi.hasNext()) {
 			key = ki.next();
-			put(key, vi.nextInt());
+			put(key, vi.nextFloat());
 		}
 	}
 
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
-	 * If this EnumIntMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
-	 * from now on for this EnumIntMap.
+	 * If this EnumFloatMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
+	 * from now on for this EnumFloatMap.
 	 *
-	 * @param key the Enum key to try to place into this EnumIntMap
-	 * @param value the int value to associate with {@code key}
+	 * @param key the Enum key to try to place into this EnumFloatMap
+	 * @param value the float value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
-	public int put (@NonNull Enum<?> key, int value) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumIntMap must not be null.");
+	public float put (@NonNull Enum<?> key, float value) {
+		if(key == null) throw new NullPointerException("Keys added to an EnumFloatMap must not be null.");
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
-		if(valueTable == null) valueTable = new int[universe.length];
+		if(valueTable == null) valueTable = new float[universe.length];
 		int i = key.ordinal();
 		if(i >= valueTable.length || universe[i] != key)
-			throw new ClassCastException("Incompatible key for the EnumIntMap's universe.");
-		int oldValue = valueTable[i];
+			throw new ClassCastException("Incompatible key for the EnumFloatMap's universe.");
+		float oldValue = valueTable[i];
 		valueTable[i] = value;
 		if (keys.add(key)) {
 			return defaultValue;
@@ -181,22 +182,22 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	}
 
 	/**
-	 * Acts like {@link #put(Enum, int)}, but uses the specified {@code defaultValue} instead of
-	 * {@link #getDefaultValue() the default value for this EnumIntMap}.
-	 * @param key the Enum key to try to place into this EnumIntMap
-	 * @param value the int value to associate with {@code key}
-	 * @param defaultValue the int value to return if {@code key} was not already present
+	 * Acts like {@link #put(Enum, float)}, but uses the specified {@code defaultValue} instead of
+	 * {@link #getDefaultValue() the default value for this EnumFloatMap}.
+	 * @param key the Enum key to try to place into this EnumFloatMap
+	 * @param value the float value to associate with {@code key}
+	 * @param defaultValue the float value to return if {@code key} was not already present
 	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
 	 */
-	public int putOrDefault (@NonNull Enum<?> key, int value, int defaultValue) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumIntMap must not be null.");
+	public float putOrDefault (@NonNull Enum<?> key, float value, float defaultValue) {
+		if(key == null) throw new NullPointerException("Keys added to an EnumFloatMap must not be null.");
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
-		if(valueTable == null) valueTable = new int[universe.length];
+		if(valueTable == null) valueTable = new float[universe.length];
 		int i = key.ordinal();
 		if(i >= valueTable.length || universe[i] != key)
-			throw new ClassCastException("Incompatible key for the EnumIntMap's universe.");
-		int oldValue = valueTable[i];
+			throw new ClassCastException("Incompatible key for the EnumFloatMap's universe.");
+		float oldValue = valueTable[i];
 		valueTable[i] = value;
 		if (keys.add(key)) {
 			return defaultValue;
@@ -206,26 +207,26 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 
 	/**
 	 * Puts every key-value pair in the given map into this, with the values from the given map
-	 * overwriting the previous values if two keys are identical. If this EnumIntMap doesn't yet have
+	 * overwriting the previous values if two keys are identical. If this EnumFloatMap doesn't yet have
 	 * a key universe, it will now share a key universe with the given {@code map}. Even if the
-	 * given EnumIntMap is empty, it can still be used to obtain a key universe for this EnumIntMap
+	 * given EnumFloatMap is empty, it can still be used to obtain a key universe for this EnumFloatMap
 	 * (assuming it has a key universe).
 	 *
-	 * @param map another EnumIntMap with an equivalent key universe
+	 * @param map another EnumFloatMap with an equivalent key universe
 	 */
-	public void putAll (@NonNull EnumIntMap map) {
+	public void putAll (@NonNull EnumFloatMap map) {
 		if(map.keys == null || map.keys.universe == null) return;
 		if(keys == null || keys.universe == null) keys = map.keys;
 		Enum<?>[] universe = keys.universe;
-		if(valueTable == null) valueTable = new int[universe.length];
+		if(valueTable == null) valueTable = new float[universe.length];
 		if(map.keys.isEmpty()) return;
 		final int n = map.valueTable.length;
 		if(this.valueTable.length != n) return;
-		int[] valueTable = map.valueTable;
-		int value;
+		float[] valueTable = map.valueTable;
+		float value;
 		for (int i = 0; i < n; i++) {
 			if(universe[i] != map.keys.universe[i])
-				throw new ClassCastException("Incompatible key for the EnumIntMap's universe.");
+				throw new ClassCastException("Incompatible key for the EnumFloatMap's universe.");
 			value = valueTable[i];
 			this.keys.add(universe[i]);
 			this.valueTable[i] = value;
@@ -234,30 +235,30 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * Delegates to {@link #putAll(Enum[], int, int[], int, int)}.
+	 * Delegates to {@link #putAll(Enum[], int, float[], int, int)}.
 	 *
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public void putAll (Enum<?>[] keys, int[] values) {
+	public void putAll (Enum<?> @NonNull [] keys, float @NonNull [] values) {
 		putAll(keys, 0, values, 0, Math.min(keys.length, values.length));
 	}
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
-	 * Delegates to {@link #putAll(Enum[], int, int[], int, int)}.
+	 * Delegates to {@link #putAll(Enum[], int, float[], int, int)}.
 	 *
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
-	public void putAll (Enum<?>[] keys, int[] values, int length) {
+	public void putAll (Enum<?> @NonNull [] keys, float @NonNull [] values, int length) {
 		putAll(keys, 0, values, 0, Math.min(length, Math.min(keys.length, values.length)));
 	}
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with
-	 * {@link #put(Enum, int)}.
+	 * {@link #put(Enum, float)}.
 	 *
 	 * @param keys        an array of keys
 	 * @param keyOffset   the first index in keys to insert
@@ -265,7 +266,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @param valueOffset the first index in values to insert
 	 * @param length      how many items from keys and values to insert, at-most
 	 */
-	public void putAll (Enum<?>[] keys, int keyOffset, int[] values, int valueOffset, int length) {
+	public void putAll (Enum<?> @NonNull [] keys, int keyOffset, float @NonNull [] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
 		Enum<?> key;
 		for (int k = keyOffset, v = valueOffset, i = 0, n = length; i < n; i++, k++, v++) {
@@ -282,7 +283,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @param key a non-null Object that should always be an Enum
 	 */
-	public int get (Object key) {
+	public float get (Object key) {
 		if(keys == null || keys.isEmpty() || keys.universe == null || !(key instanceof Enum<?>))
 			return defaultValue;
 		final Enum<?> e = (Enum<?>)key;
@@ -292,19 +293,19 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	/**
 	 * Returns the value for the specified key, or the given default value if the key is not in the map.
 	 */
-	public int getOrDefault (Object key, int defaultValue) {
+	public float getOrDefault (Object key, float defaultValue) {
 		if(keys == null || keys.isEmpty() || keys.universe == null || !(key instanceof Enum<?>))
 			return defaultValue;
 		final Enum<?> e = (Enum<?>)key;
 		return keys.contains(e) ? valueTable[e.ordinal()] : defaultValue;
 	}
 
-	public int remove (Object key) {
+	public float remove (Object key) {
 		if(keys == null || keys.isEmpty() || keys.universe == null || !(key instanceof Enum<?>))
 			return defaultValue;
 		Enum<?> e = (Enum<?>)key;
 		final int ord = e.ordinal();
-		int o = valueTable[ord];
+		float o = valueTable[ord];
 		if(!keys.remove(e)) return defaultValue;
 		return o;
 	}
@@ -312,12 +313,12 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	/**
 	 * Copies all the mappings from the specified map to this map
 	 * (optional operation).  The effect of this call is equivalent to that
-	 * of calling {@link #put(Enum, int) put(k, v)} on this map once
+	 * of calling {@link #put(Enum, float) put(k, v)} on this map once
 	 * for each mapping from key {@code k} to value {@code v} in the
 	 * specified map.  The behavior of this operation is undefined if the
 	 * specified map is modified while the operation is in progress.
 	 * <br>
-	 * Note that {@link #putAll(EnumIntMap)} is more specific and can be
+	 * Note that {@link #putAll(EnumFloatMap)} is more specific and can be
 	 * more efficient by using the internal details of this class.
 	 *
 	 * @param m mappings to be stored in this map
@@ -331,21 +332,23 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @throws IllegalArgumentException      if some property of a key or value in
 	 *                                       the specified map prevents it from being stored in this map
 	 */
-	public void putAll (ObjectIntMap<Enum<?>> m) {
-		for (ObjectIntMap.Entry<Enum<?>> kv : m.entrySet()) {put(kv.getKey(), kv.getValue());}
-	}	/**
+	public void putAll (@NonNull ObjectFloatMap<Enum<?>> m) {
+		for (ObjectFloatMap.Entry<Enum<?>> kv : m.entrySet()) {put(kv.getKey(), kv.getValue());}
+	}
+
+	/**
 	 * Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
 	 * put into the map and defaultValue is returned.
 	 */
-	public int getAndIncrement (Enum<?> key, int defaultValue, int increment) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumIntMap must not be null.");
+	public float getAndIncrement (@NonNull Enum<?> key, float defaultValue, float increment) {
+		if(key == null) throw new NullPointerException("Keys added to an EnumFloatMap must not be null.");
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
-		if(valueTable == null) valueTable = new int[universe.length];
+		if(valueTable == null) valueTable = new float[universe.length];
 		int i = key.ordinal();
 		if(i >= valueTable.length || universe[i] != key)
-			throw new ClassCastException("Incompatible key for the EnumIntMap's universe.");
-		int oldValue = valueTable[i];
+			throw new ClassCastException("Incompatible key for the EnumFloatMap's universe.");
+		float oldValue = valueTable[i];
 		if (keys.add(key)) {
 			valueTable[i] = defaultValue + increment;
 			return defaultValue;
@@ -379,23 +382,23 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	}
 
 	/**
-	 * Gets the default value, a {@code int} which is returned by {@link #get(Object)} if the key is not found.
+	 * Gets the default value, a {@code float} which is returned by {@link #get(Object)} if the key is not found.
 	 * If not changed, the default value is 0.
 	 *
 	 * @return the current default value
 	 */
-	public int getDefaultValue () {
+	public float getDefaultValue () {
 		return defaultValue;
 	}
 
 	/**
-	 * Sets the default value, a {@code int} which is returned by {@link #get(Object)} if the key is not found.
-	 * If not changed, the default value is 0. Note that {@link #getOrDefault(Object, int)}  is also available,
+	 * Sets the default value, a {@code float} which is returned by {@link #get(Object)} if the key is not found.
+	 * If not changed, the default value is 0. Note that {@link #getOrDefault(Object, float)}  is also available,
 	 * which allows specifying a "not-found" value per-call.
 	 *
-	 * @param defaultValue may be any int; should usually be one that doesn't occur as a typical value
+	 * @param defaultValue may be any float; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue (int defaultValue) {
+	public void setDefaultValue (float defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -413,13 +416,13 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * Removes all the elements from this map and can reset the universe of possible Enum items this can hold.
 	 * The map will be empty after this call returns.
 	 * This changes the universe of possible Enum items this can hold to match {@code universe}.
-	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumIntMap()} was called.
+	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumFloatMap()} was called.
 	 * If the table this would need is the same size as or smaller than the current table (such as if {@code universe} is the same as
 	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This always uses {@code universe} directly, without copying.
 	 * <br>
-	 * This can be useful to allow an EnumIntMap that was created with {@link #EnumIntMap()} to share a universe with other EnumIntMaps.
+	 * This can be useful to allow an EnumFloatMap that was created with {@link #EnumFloatMap()} to share a universe with other EnumFloatMaps.
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
@@ -434,7 +437,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 				keys.clearToUniverse(universe);
 
 			if (keys.universe != null && universe.length > keys.universe.length) {
-				valueTable = new int[universe.length];
+				valueTable = new float[universe.length];
 			}
 		}
 	}
@@ -444,14 +447,14 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * Removes all the elements from this map and can reset the universe of possible Enum items this can hold.
 	 * The map will be empty after this call returns.
 	 * This changes the universe of possible Enum items this can hold to match the Enum constants in {@code universe}.
-	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumIntMap()} was called.
+	 * If {@code universe} is null, this resets this map to the state it would have after {@link #EnumFloatMap()} was called.
 	 * If the table this would need is the same size as or smaller than the current table (such as if {@code universe} is the same as
 	 * the universe here), this will not allocate, but will still clear any items this holds and will set the universe to the given one.
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This calls {@link Class#getEnumConstants()} if universe is non-null, which allocates a new array.
 	 * <br>
 	 * You may want to prefer calling {@link #clearToUniverse(Enum[])} (the overload that takes an array), because it can be used to
-	 * share one universe array between many EnumIntMap instances. This overload, given a Class, has to call {@link Class#getEnumConstants()}
+	 * share one universe array between many EnumFloatMap instances. This overload, given a Class, has to call {@link Class#getEnumConstants()}
 	 * and thus allocate a new array each time this is called.
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
@@ -468,15 +471,15 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 				keys.clearToUniverse(cons);
 
 			if (keys.universe != null && cons.length > keys.universe.length) {
-				valueTable = new int[cons.length];
+				valueTable = new float[cons.length];
 			}
 		}
 	}
 
 	/**
 	 * Gets the current key universe; this is a technically-mutable array, but should never be modified.
-	 * To set the universe on an existing EnumIntMap (with existing contents), you can use {@link #clearToUniverse(Enum[])}.
-	 * If an EnumIntMap has not been initialized, just adding a key will set the key universe to match the given item.
+	 * To set the universe on an existing EnumFloatMap (with existing contents), you can use {@link #clearToUniverse(Enum[])}.
+	 * If an EnumFloatMap has not been initialized, just adding a key will set the key universe to match the given item.
 	 * @return the current key universe
 	 */
 	public Enum<?> @Nullable[] getUniverse () {
@@ -487,9 +490,9 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
 	 */
-	public boolean containsValue (int value) {
+	public boolean containsValue (float value) {
 		if(this.valueTable == null) return false;
-		int[] valueTable = this.valueTable;
+		float[] valueTable = this.valueTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {if (valueTable[i] == value) {return true;}}
 		return false;
 	}
@@ -508,9 +511,9 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @return the corresponding Enum if the value was found, or null otherwise
 	 */
 	@Nullable
-	public Enum<?> findKey (int value) {
+	public Enum<?> findKey (float value) {
 		if(this.keys == null || this.valueTable == null || this.keys.isEmpty() || keys.universe == null) return null;
-		int[] valueTable = this.valueTable;
+		float[] valueTable = this.valueTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
 			if (valueTable[i] == value) {
 				Enum<?> item = keys.universe[i];
@@ -526,12 +529,12 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			return 0;
 		int h = keys.size;
 		Enum<?>[] universe = keys.universe;
-		int[] valueTable = this.valueTable;
+		float[] valueTable = this.valueTable;
 		for (int i = keys.nextOrdinal(0); i != -1; i = keys.nextOrdinal(i+1)) {
 			Enum<?> key = universe[i];
 			h ^= key.hashCode();
-			int value = valueTable[i];
-			h ^= value;
+			float value = valueTable[i];
+			h ^= BitConversion.floatToRawIntBits(value);
 		}
 		return h;
 	}
@@ -539,15 +542,15 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	@Override
 	public boolean equals (Object obj) {
 		if (obj == this) {return true;}
-		if (!(obj instanceof EnumIntMap)) {return false;}
-		EnumIntMap other = (EnumIntMap)obj;
+		if (!(obj instanceof EnumFloatMap)) {return false;}
+		EnumFloatMap other = (EnumFloatMap)obj;
 		if (other.size() != size()) {return false;}
 		if(this.keys == null || this.keys.universe == null || this.valueTable == null) return other.isEmpty();
 		Enum<?>[] universe = this.keys.universe;
-		int[] valueTable = this.valueTable;
+		float[] valueTable = this.valueTable;
 		try {
 			for (int i = keys.nextOrdinal(0); i != -1; i = keys.nextOrdinal(i+1)) {
-				int value = valueTable[i];
+				float value = valueTable[i];
 				if (value != (other.get(universe[i]))) {return false;}
 			}
 		}catch (ClassCastException | NullPointerException unused) {
@@ -578,7 +581,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	}
 	/**
 	 * Makes a String from the contents of this ObjectObjectMap, but uses the given {@link Appender} and
-	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
+	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
 	 *
@@ -586,11 +589,11 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
 	 * @param keyAppender a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and a int, and returns the modified StringBuilder
+	 * @param valueAppender a function that takes a StringBuilder and a float, and returns the modified StringBuilder
 	 * @return a new String representing this map
 	 */
 	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
-		Appender<Enum<?>> keyAppender, IntAppender valueAppender){
+		Appender<Enum<?>> keyAppender, FloatAppender valueAppender){
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
@@ -608,11 +611,11 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 		 * @param braces true to wrap the output in curly braces, or false to omit them
 		 * @param keyAppender a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
-		 * @param valueAppender a function that takes a StringBuilder and a int, and returns the modified StringBuilder
+		 * @param valueAppender a function that takes a StringBuilder and a float, and returns the modified StringBuilder
 		 * @return {@code sb}, with the appended keys and values of this map
 		 */
 	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
-		Appender<Enum<?>> keyAppender, IntAppender valueAppender) {
+		Appender<Enum<?>> keyAppender, FloatAppender valueAppender) {
 		if (size() == 0) {
 			return braces ? sb.append("{}") : sb;
 		}
@@ -620,18 +623,18 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			sb.append('{');
 		}
 		Enum<?>[] universe = this.keys.universe;
-		int[] valueTable = this.valueTable;
+		float[] valueTable = this.valueTable;
 		int i = 0;
 		final int len = universe.length;
 		while ((i = keys.nextOrdinal(i)) != -1) {
-			int v = valueTable[i];
+			float v = valueTable[i];
 			keyAppender.apply(sb, universe[i]);
 			sb.append(keyValueSeparator);
 			valueAppender.apply(sb, v);
 			break;
 		}
 		while ((i = keys.nextOrdinal(i)) != -1) {
-			int v = valueTable[i];
+			float v = valueTable[i];
 			sb.append(entrySeparator);
 			keyAppender.apply(sb, universe[i]);
 			sb.append(keyValueSeparator);
@@ -643,11 +646,11 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		return sb;
 	}
 
-	public int replace (Enum<?> key, int value) {
+	public float replace (Enum<?> key, float value) {
 		if(keys != null && keys.contains(key)) {
 			int i = key.ordinal();
 			if (i < valueTable.length) {
-				int oldValue = valueTable[i];
+				float oldValue = valueTable[i];
 				valueTable[i] = value;
 				return oldValue;
 			}
@@ -655,17 +658,17 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		return defaultValue;
 	}
 
-	public int computeIfAbsent (Enum<?> key, ObjToIntFunction<? super Enum<?>> mappingFunction) {
+	public float computeIfAbsent (Enum<?> key, ObjToFloatFunction<? super Enum<?>> mappingFunction) {
         if (keys != null && keys.universe != null && keys.contains(key)) {
             return valueTable[key.ordinal()];
         } else {
-            int newValue = mappingFunction.applyAsInt(key);
+            float newValue = mappingFunction.applyAsFloat(key);
             put(key, newValue);
             return newValue;
         }
     }
 
-	public boolean remove (Object key, int value) {
+	public boolean remove (Object key, float value) {
 		if (keys != null && keys.contains(key) && valueTable[((Enum<?>)key).ordinal()] == value) {
 			remove(key);
 			return true;
@@ -682,27 +685,27 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @param value the value to be merged with the existing value
 	 *        associated with the key or, if no existing value
 	 *        is associated with the key, to be associated with the key
-	 * @param remappingFunction given a int from this and the int {@code value}, this should return what int to use
+	 * @param remappingFunction given a float from this and the float {@code value}, this should return what float to use
 	 * @return the value now associated with key
 	 */
-	public int combine (Enum<?> key, int value, IntIntToIntBiFunction remappingFunction) {
+	public float combine (Enum<?> key, float value, FloatFloatToFloatBiFunction remappingFunction) {
 		if(keys == null || keys.universe == null) {
 			put(key, value);
 			return value;
 		}
-		int next = (keys.contains(key)) ? remappingFunction.applyAsInt(valueTable[key.ordinal()], value) : value;
+		float next = (keys.contains(key)) ? remappingFunction.applyAsFloat(valueTable[key.ordinal()], value) : value;
 		put(key, next);
 		return next;
 	}
 
 	/**
-	 * Simply calls {@link #combine(Enum, int, IntIntToIntBiFunction)} on this map using every
+	 * Simply calls {@link #combine(Enum, float, FloatFloatToFloatBiFunction)} on this map using every
 	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
 	 * this map, though this depends on the {@code remappingFunction}.
-	 * @param other a non-null ObjectIntMap (or subclass) with a compatible key type
-	 * @param remappingFunction given a int value from this and a value from other, this should return what int to use
+	 * @param other a non-null ObjectFloatMap (or subclass) with a compatible key type
+	 * @param remappingFunction given a float value from this and a value from other, this should return what float to use
 	 */
-	public void combine (EnumIntMap other, IntIntToIntBiFunction remappingFunction) {
+	public void combine (EnumFloatMap other, FloatFloatToFloatBiFunction remappingFunction) {
 		for (Entry e : other.entrySet()) {
 			combine(e.key, e.value, remappingFunction);
 		}
@@ -710,8 +713,8 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 
 	/**
 	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
-	 * does not permit nested iteration. Iterate over {@link Entries#Entries(EnumIntMap)} if you
-	 * need nested or multithreaded iteration. You can remove an Entry from this EnumIntMap
+	 * does not permit nested iteration. Iterate over {@link Entries#Entries(EnumFloatMap)} if you
+	 * need nested or multithreaded iteration. You can remove an Entry from this EnumFloatMap
 	 * using this Iterator.
 	 *
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
@@ -762,7 +765,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * PrimitiveCollection instance is returned each
 	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
 	 *
-	 * @return a {@link PrimitiveCollection} of int values
+	 * @return a {@link PrimitiveCollection} of float values
 	 */
 	public @NonNull Values values () {
 		if (values1 == null || values2 == null) {
@@ -807,7 +810,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 
 	public static class Entry {
 		@Nullable public Enum<?> key;
-		public int value;
+		public float value;
 
 		public Entry () {
 		}
@@ -817,7 +820,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			this.value = entry.value;
 		}
 
-		public Entry (@Nullable Enum<?> key, int value) {
+		public Entry (@Nullable Enum<?> key, float value) {
 			this.key = key;
 			this.value = value;
 		}
@@ -832,17 +835,17 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			return key;
 		}
 
-		public int getValue () {
+		public float getValue () {
 			return value;
 		}
 
 		/**
-		 * Sets the value of this Entry, but does <em>not</em> write through to the containing EnumIntMap.
-		 * @param value the new int value to use
+		 * Sets the value of this Entry, but does <em>not</em> write through to the containing EnumFloatMap.
+		 * @param value the new float value to use
 		 * @return the old value this held, before modification
 		 */
-		public int setValue (int value) {
-			int old = this.value;
+		public float setValue (float value) {
+			float old = this.value;
 			this.value = value;
 			return old;
 		}
@@ -860,18 +863,18 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 
 		@Override
 		public int hashCode () {
-			return (key != null ? key.hashCode() : 0) ^ value;
+			return (key != null ? key.hashCode() : 0) ^ BitConversion.floatToRawIntBits(value);
 		}
 	}
 
 	public static abstract class MapIterator {
 		public boolean hasNext;
 
-		protected final EnumIntMap map;
+		protected final EnumFloatMap map;
 		protected int nextIndex, currentIndex;
 		public boolean valid = true;
 
-		public MapIterator (EnumIntMap map) {
+		public MapIterator (EnumFloatMap map) {
 			this.map = map;
 			reset();
 		}
@@ -900,7 +903,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 
 	public static class KeyIterator extends MapIterator implements Iterable<Enum<?>>, Iterator<Enum<?>> {
 
-		public KeyIterator (EnumIntMap map) {
+		public KeyIterator (EnumFloatMap map) {
 			super(map);
 		}
 
@@ -926,22 +929,22 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		}
 	}
 
-	public static class ValueIterator extends MapIterator implements IntIterator {
-		public ValueIterator (EnumIntMap map) {
+	public static class ValueIterator extends MapIterator implements FloatIterator {
+		public ValueIterator (EnumFloatMap map) {
 			super(map);
 		}
 
 		/**
-		 * Returns the next {@code int} element in the iteration.
+		 * Returns the next {@code float} element in the iteration.
 		 *
-		 * @return the next {@code int} element in the iteration
+		 * @return the next {@code float} element in the iteration
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public int nextInt () {
+		public float nextFloat () {
 			if (!hasNext) {throw new NoSuchElementException();}
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			int value = map.valueTable[nextIndex];
+			float value = map.valueTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
 			return value;
@@ -957,7 +960,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	public static class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
 		protected Entry entry = new Entry();
 
-		public EntryIterator (EnumIntMap map) {
+		public EntryIterator (EnumFloatMap map) {
 			super(map);
 		}
 
@@ -991,7 +994,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		protected Entry entry = new Entry();
 		protected EntryIterator iter;
 
-		public Entries (EnumIntMap map) {
+		public Entries (EnumFloatMap map) {
 			iter = new EntryIterator(map);
 		}
 
@@ -1222,12 +1225,12 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		}
 
 		/**
-		 * Append the remaining items that this can iterate through into the given ObjectIntMap.
-		 * Does not change the position of this iterator. The ObjectIntMap must have Enum keys.
-		 * @param coll a modifiable ObjectIntMap; may have items appended into it
-		 * @return the given ObjectIntMap
+		 * Append the remaining items that this can iterate through into the given ObjectFloatMap.
+		 * Does not change the position of this iterator. The ObjectFloatMap must have Enum keys.
+		 * @param coll a modifiable ObjectFloatMap; may have items appended into it
+		 * @return the given ObjectFloatMap
 		 */
-		public ObjectIntMap<Enum<?>> appendInto(ObjectIntMap<Enum<?>> coll) {
+		public ObjectFloatMap<Enum<?>> appendInto(ObjectFloatMap<Enum<?>> coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
@@ -1241,12 +1244,12 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		}
 
 		/**
-		 * Append the remaining items that this can iterate through into the given EnumIntMap.
+		 * Append the remaining items that this can iterate through into the given EnumFloatMap.
 		 * Does not change the position of this iterator.
-		 * @param coll another EnumIntMap; may have items appended into it
-		 * @return the given EnumIntMap
+		 * @param coll another EnumFloatMap; may have items appended into it
+		 * @return the given EnumFloatMap
 		 */
-		public EnumIntMap appendInto(EnumIntMap coll) {
+		public EnumFloatMap appendInto(EnumFloatMap coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
@@ -1261,27 +1264,27 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	}
 
 
-	public static class Values implements PrimitiveCollection.OfInt {
+	public static class Values implements OfFloat {
 		protected ValueIterator iter;
 
 		@Override
-		public boolean add (int item) {
-			throw new UnsupportedOperationException("ObjectIntMap.Values is read-only");
+		public boolean add (float item) {
+			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
 		}
 
 		@Override
-		public boolean remove (int item) {
-			throw new UnsupportedOperationException("ObjectIntMap.Values is read-only");
+		public boolean remove (float item) {
+			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
 		}
 
 		@Override
-		public boolean contains (int item) {
+		public boolean contains (float item) {
 			return iter.map.containsValue(item);
 		}
 
 		@Override
 		public void clear () {
-			throw new UnsupportedOperationException("ObjectIntMap.Values is read-only");
+			throw new UnsupportedOperationException("ObjectFloatMap.Values is read-only");
 		}
 
 		@Override
@@ -1294,7 +1297,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			return iter.map.size();
 		}
 
-		public Values (EnumIntMap map) {
+		public Values (EnumFloatMap map) {
 			iter = new ValueIterator(map);
 		}
 
@@ -1310,11 +1313,11 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public IntList toList () {
-			IntList list = new IntList(iter.map.size());
+		public FloatList toList () {
+			FloatList list = new FloatList(iter.map.size());
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(iter.nextInt());}
+			while (iter.hasNext) {list.add(iter.nextFloat());}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1324,13 +1327,13 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		/**
 		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.
 		 * Does not change the position of this iterator.
-		 * @param coll any modifiable PrimitiveCollection.OfInt; may have items appended into it
+		 * @param coll any modifiable PrimitiveCollection.OfFloat; may have items appended into it
 		 * @return the given collection
 		 */
-		public OfInt appendInto(OfInt coll) {
+		public OfFloat appendInto(OfFloat coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(iter.nextInt());}
+			while (iter.hasNext) {coll.add(iter.nextFloat());}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1344,8 +1347,8 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			iter.reset();
 			int hc = iter.map.size();
 			while (iter.hasNext) {
-				int v = iter.nextInt();
-				hc = BitConversion.imul(hc, 0x9E3779BB) ^ v;
+				float v = iter.nextFloat();
+				hc = BitConversion.imul(hc, 0x9E3779BB) ^ BitConversion.floatToRawIntBits(v);
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1355,16 +1358,16 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 
 		@Override
 		public boolean equals (Object other) {
-			if(other instanceof PrimitiveCollection.OfInt) {
-				boolean res = iter.map.size() == ((OfInt) other).size();
+			if(other instanceof OfFloat) {
+				boolean res = iter.map.size() == ((OfFloat) other).size();
 				if(res) {
-					IntIterator otter = ((OfInt) other).iterator();
+					FloatIterator otter = ((OfFloat) other).iterator();
 					int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 					boolean hn = iter.hasNext;
 					iter.reset();
 
 					while (iter.hasNext && otter.hasNext()) {
-						if (iter.nextInt() != otter.nextInt()) {
+						if (iter.nextFloat() != otter.nextFloat()) {
 							res = false;
 							break;
 						}
@@ -1391,7 +1394,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	public static class Keys extends EnumSet {
 		protected KeyIterator iter;
 
-		public Keys (EnumIntMap map) {
+		public Keys (EnumFloatMap map) {
 			super();
 			iter = new KeyIterator(map);
 			if(map.keys == null) return;
@@ -1531,23 +1534,23 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @return a new map containing nothing
 	 */
-	public static EnumIntMap with () {
-		return new EnumIntMap();
+	public static EnumFloatMap with () {
+		return new EnumFloatMap();
 	}
 
 	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its Number value to a primitive int, regardless of which Number type was used.
+	 * convert its Number value to a primitive float, regardless of which Number type was used.
 	 *
 	 * @param key0   the first and only Enum key
-	 * @param value0 the first and only value; will be converted to primitive int
+	 * @param value0 the first and only value; will be converted to primitive float
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static EnumIntMap with (Enum<?> key0, Number value0) {
-		EnumIntMap map = new EnumIntMap();
-		map.put(key0, value0.intValue());
+	public static EnumFloatMap with (Enum<?> key0, Number value0) {
+		EnumFloatMap map = new EnumFloatMap();
+		map.put(key0, value0.floatValue());
 		return map;
 	}
 
@@ -1555,18 +1558,18 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its Number values to primitive ints, regardless of which Number type was used.
+	 * convert its Number values to primitive floats, regardless of which Number type was used.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a Number for a value; will be converted to primitive int
+	 * @param value0 a Number for a value; will be converted to primitive float
 	 * @param key1   an Enum key
-	 * @param value1 a Number for a value; will be converted to primitive int
+	 * @param value1 a Number for a value; will be converted to primitive float
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static EnumIntMap with (Enum<?> key0, Number value0, Enum<?> key1, Number value1) {
-		EnumIntMap map = new EnumIntMap();
-		map.put(key0, value0.intValue());
-		map.put(key1, value1.intValue());
+	public static EnumFloatMap with (Enum<?> key0, Number value0, Enum<?> key1, Number value1) {
+		EnumFloatMap map = new EnumFloatMap();
+		map.put(key0, value0.floatValue());
+		map.put(key1, value1.floatValue());
 		return map;
 	}
 
@@ -1574,21 +1577,21 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its Number values to primitive ints, regardless of which Number type was used.
+	 * convert its Number values to primitive floats, regardless of which Number type was used.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a Number for a value; will be converted to primitive int
+	 * @param value0 a Number for a value; will be converted to primitive float
 	 * @param key1   an Enum key
-	 * @param value1 a Number for a value; will be converted to primitive int
+	 * @param value1 a Number for a value; will be converted to primitive float
 	 * @param key2   an Enum key
-	 * @param value2 a Number for a value; will be converted to primitive int
+	 * @param value2 a Number for a value; will be converted to primitive float
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static EnumIntMap with (Enum<?> key0, Number value0, Enum<?> key1, Number value1, Enum<?> key2, Number value2) {
-		EnumIntMap map = new EnumIntMap();
-		map.put(key0, value0.intValue());
-		map.put(key1, value1.intValue());
-		map.put(key2, value2.intValue());
+	public static EnumFloatMap with (Enum<?> key0, Number value0, Enum<?> key1, Number value1, Enum<?> key2, Number value2) {
+		EnumFloatMap map = new EnumFloatMap();
+		map.put(key0, value0.floatValue());
+		map.put(key1, value1.floatValue());
+		map.put(key2, value2.floatValue());
 		return map;
 	}
 
@@ -1596,24 +1599,24 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its Number values to primitive ints, regardless of which Number type was used.
+	 * convert its Number values to primitive floats, regardless of which Number type was used.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a Number for a value; will be converted to primitive int
+	 * @param value0 a Number for a value; will be converted to primitive float
 	 * @param key1   an Enum key
-	 * @param value1 a Number for a value; will be converted to primitive int
+	 * @param value1 a Number for a value; will be converted to primitive float
 	 * @param key2   an Enum key
-	 * @param value2 a Number for a value; will be converted to primitive int
+	 * @param value2 a Number for a value; will be converted to primitive float
 	 * @param key3   an Enum key
-	 * @param value3 a Number for a value; will be converted to primitive int
+	 * @param value3 a Number for a value; will be converted to primitive float
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static EnumIntMap with (Enum<?> key0, Number value0, Enum<?> key1, Number value1, Enum<?> key2, Number value2, Enum<?> key3, Number value3) {
-		EnumIntMap map = new EnumIntMap();
-		map.put(key0, value0.intValue());
-		map.put(key1, value1.intValue());
-		map.put(key2, value2.intValue());
-		map.put(key3, value3.intValue());
+	public static EnumFloatMap with (Enum<?> key0, Number value0, Enum<?> key1, Number value1, Enum<?> key2, Number value2, Enum<?> key3, Number value3) {
+		EnumFloatMap map = new EnumFloatMap();
+		map.put(key0, value0.floatValue());
+		map.put(key1, value1.floatValue());
+		map.put(key2, value2.floatValue());
+		map.put(key3, value3.floatValue());
 		return map;
 	}
 
@@ -1621,23 +1624,23 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
-	 * {@link #EnumIntMap(Enum[], int[])}, which takes all keys and then all values.
+	 * {@link #EnumFloatMap(Enum[], float[])}, which takes all keys and then all values.
 	 * This needs all keys to be Enum constants.
 	 * All values must be some type of boxed Number, such as {@link Integer}
-	 * or {@link Double}, and will be converted to primitive {@code int}s. Any keys that don't
+	 * or {@link Double}, and will be converted to primitive {@code float}s. Any keys that don't
 	 * have Enum as their type or values that aren't {@code Number}s have that entry skipped.
 	 *
 	 * @param key0   the first Enum key
-	 * @param value0 the first value; will be converted to primitive int
+	 * @param value0 the first value; will be converted to primitive float
 	 * @param rest   an array or varargs of alternating Enum, Number, Enum, Number... elements
 	 * @return a new map containing the given keys and values
 	 */
-	public static EnumIntMap with (Enum<?> key0, Number value0, Object... rest) {
-		EnumIntMap map = new EnumIntMap();
-		map.put(key0, value0.intValue());
+	public static EnumFloatMap with (Enum<?> key0, Number value0, Object... rest) {
+		EnumFloatMap map = new EnumFloatMap();
+		map.put(key0, value0.floatValue());
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
-				map.put((Enum<?>)rest[i - 1], ((Number)rest[i]).intValue());
+				map.put((Enum<?>)rest[i - 1], ((Number)rest[i]).floatValue());
 			} catch (ClassCastException ignored) {
 			}
 		}
@@ -1651,22 +1654,22 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @return a new map containing nothing
 	 */
-	public static EnumIntMap withPrimitive () {
-		return new EnumIntMap();
+	public static EnumFloatMap withPrimitive () {
+		return new EnumFloatMap();
 	}
 
 	/**
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
-	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed int as
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed float as
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum for a key
-	 * @param value0 a int for a value
+	 * @param value0 a float for a value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static EnumIntMap withPrimitive (Enum<?> key0, int value0) {
-		EnumIntMap map = new EnumIntMap();
+	public static EnumFloatMap withPrimitive (Enum<?> key0, float value0) {
+		EnumFloatMap map = new EnumFloatMap();
 		map.put(key0, value0);
 		return map;
 	}
@@ -1674,17 +1677,17 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	/**
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
-	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed int as
+	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed float as
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a int for a value
+	 * @param value0 a float for a value
 	 * @param key1   an Enum key
-	 * @param value1 a int for a value
+	 * @param value1 a float for a value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static EnumIntMap withPrimitive (Enum<?> key0, int value0, Enum<?> key1, int value1) {
-		EnumIntMap map = new EnumIntMap();
+	public static EnumFloatMap withPrimitive (Enum<?> key0, float value0, Enum<?> key1, float value1) {
+		EnumFloatMap map = new EnumFloatMap();
 		map.put(key0, value0);
 		map.put(key1, value1);
 		return map;
@@ -1693,19 +1696,19 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	/**
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)}
-	 * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed int as
+	 * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed float as
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a int for a value
+	 * @param value0 a float for a value
 	 * @param key1   an Enum key
-	 * @param value1 a int for a value
+	 * @param value1 a float for a value
 	 * @param key2   an Enum key
-	 * @param value2 a int for a value
+	 * @param value2 a float for a value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static EnumIntMap withPrimitive (Enum<?> key0, int value0, Enum<?> key1, int value1, Enum<?> key2, int value2) {
-		EnumIntMap map = new EnumIntMap();
+	public static EnumFloatMap withPrimitive (Enum<?> key0, float value0, Enum<?> key1, float value1, Enum<?> key2, float value2) {
+		EnumFloatMap map = new EnumFloatMap();
 		map.put(key0, value0);
 		map.put(key1, value1);
 		map.put(key2, value2);
@@ -1715,21 +1718,21 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	/**
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Enum, Number, Object...)} 
-	 * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed int as
+	 * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed float as
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a int for a value
+	 * @param value0 a float for a value
 	 * @param key1   an Enum key
-	 * @param value1 a int for a value
+	 * @param value1 a float for a value
 	 * @param key2   an Enum key
-	 * @param value2 a int for a value
+	 * @param value2 a float for a value
 	 * @param key3   an Enum key
-	 * @param value3 a int for a value
+	 * @param value3 a float for a value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static EnumIntMap withPrimitive (Enum<?> key0, int value0, Enum<?> key1, int value1, Enum<?> key2, int value2, Enum<?> key3, int value3) {
-		EnumIntMap map = new EnumIntMap();
+	public static EnumFloatMap withPrimitive (Enum<?> key0, float value0, Enum<?> key1, float value1, Enum<?> key2, float value2, Enum<?> key3, float value3) {
+		EnumFloatMap map = new EnumFloatMap();
 		map.put(key0, value0);
 		map.put(key1, value1);
 		map.put(key2, value2);
@@ -1745,7 +1748,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @return a new map containing nothing
 	 */
-	public static EnumIntMap of () {
+	public static EnumFloatMap of () {
 		return with();
 	}
 
@@ -1753,19 +1756,19 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * Constructs a map given alternating keys and values.
 	 * This can be useful in some code-generation scenarios, or when you want to make a
 	 * map conveniently by-hand and have it populated at the start. You can also use
-	 * {@link #EnumIntMap(Enum[], int[])}, which takes all keys and then all values.
+	 * {@link #EnumFloatMap(Enum[], float[])}, which takes all keys and then all values.
 	 * This needs all keys to be Enum constants.
 	 * All values must be some type of boxed Number, such as {@link Integer}
-	 * or {@link Double}, and will be converted to primitive {@code int}s. Any keys that don't
+	 * or {@link Double}, and will be converted to primitive {@code float}s. Any keys that don't
 	 * have Enum as their type or values that aren't {@code Number}s have that entry skipped.
 	 * This is an alias for {@link #with(Enum, Number, Object...)}.
 	 *
 	 * @param key0   the first Enum key
-	 * @param value0 the first value; will be converted to primitive int
+	 * @param value0 the first value; will be converted to primitive float
 	 * @param rest   an array or varargs of alternating Enum, Number, Enum, Number... elements
 	 * @return a new map containing the given keys and values
 	 */
-	public static EnumIntMap of (Enum<?> key0, Number value0, Object... rest) {
+	public static EnumFloatMap of (Enum<?> key0, Number value0, Object... rest) {
 		return with(key0, value0, rest);
 	}
 }
