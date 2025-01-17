@@ -61,8 +61,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	protected int size;
 
-	protected K[] keyTable;
-	protected V[] valueTable;
+	protected @Nullable K[] keyTable;
+	protected @Nullable V[] valueTable;
 
 	/**
 	 * Between 0f (exclusive) and 1f (inclusive, if you're careful), this determines how full the backing tables
@@ -855,8 +855,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	public void truncate (int newSize) {
-		K[] keyTable = this.keyTable;
-		V[] valTable = this.valueTable;
+		@Nullable K[] keyTable = this.keyTable;
+		@Nullable V[] valTable = this.valueTable;
 		newSize = Math.max(0, newSize);
 		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
 			if (keyTable[i] != null) {

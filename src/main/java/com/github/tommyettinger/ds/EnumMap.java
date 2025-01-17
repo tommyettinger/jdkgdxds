@@ -535,6 +535,28 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	}
 
 	/**
+	 * Reduces the size of the map to the specified size. If the map is already smaller than the specified
+	 * size, no action is taken. This indiscriminately removes items from the backing array until the
+	 * requested newSize is reached, or until the full backing array has had its elements removed.
+	 * <br>
+	 * This tries to remove from the end of the iteration order, but because the iteration order is not
+	 * guaranteed by an unordered map, this can remove essentially any item(s) from the map if it is larger
+	 * than newSize.
+	 *
+	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
+	 */
+	public void truncate (int newSize) {
+		@Nullable Object[] table = this.valueTable;
+		newSize = Math.max(0, newSize);
+		for (int i = table.length - 1; i >= 0 && size > newSize; i--) {
+			if (table[i] != null) {
+				table[i] = null;
+				--size;
+			}
+		}
+	}
+
+	/**
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
 	 *
