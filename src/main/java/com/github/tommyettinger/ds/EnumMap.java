@@ -183,25 +183,6 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	}
 
 	/**
-	 * Given two side-by-side collections, one of Enum keys, one of V values, this inserts each pair of key and
-	 * value into this map with put().
-	 *
-	 * @param keys   a Collection of Enum keys
-	 * @param values a Collection of V values
-	 */
-	public void putAll (Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
-		Enum<?> key;
-		Iterator<? extends Enum<?>> ki = keys.iterator();
-		Iterator<? extends V> vi = values.iterator();
-		while (ki.hasNext() && vi.hasNext()) {
-			key = ki.next();
-			if (key != null) {
-				put(key, vi.next());
-			}
-		}
-	}
-
-	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 * If this EnumMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
 	 * from now on for this EnumMap.
@@ -324,6 +305,25 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 			key = keys[k];
 			if (key != null) {
 				put(key, values[v]);
+			}
+		}
+	}
+
+	/**
+	 * Given two side-by-side collections, one of Enum keys, one of V values, this inserts each pair of key and
+	 * value into this map with put().
+	 *
+	 * @param keys   a Collection of Enum keys
+	 * @param values a Collection of V values
+	 */
+	public void putAll (Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
+		Enum<?> key;
+		Iterator<? extends Enum<?>> ki = keys.iterator();
+		Iterator<? extends V> vi = values.iterator();
+		while (ki.hasNext() && vi.hasNext()) {
+			key = ki.next();
+			if (key != null) {
+				put(key, vi.next());
 			}
 		}
 	}

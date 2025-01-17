@@ -152,7 +152,6 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 		addAll(array, offset, length);
 	}
 
-
 	/**
 	 * Initializes this set so that it holds the given Enum values, with the universe of possible Enum constants this can hold
 	 * determined by the type of the first Enum in {@code contents}.
