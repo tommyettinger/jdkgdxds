@@ -38,7 +38,7 @@ import java.util.NoSuchElementException;
  * the chances to resize to the next higher POT size.
  * <p>
  * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with {@link Ordered} types like
- * ObjectOrderedSet and ObjectObjectOrderedMap.
+ * EnumOrderedSet and ObjectObjectOrderedMap.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal.
  * It tries different hashes from a simple family, with the hash changing on resize.
@@ -293,8 +293,8 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 
 	/**
 	 * Changes the item {@code before} to {@code after} without changing its position in the order. Returns true if {@code after}
-	 * has been added to the ObjectOrderedSet and {@code before} has been removed; returns false if {@code after} is already present or
-	 * {@code before} is not present. If you are iterating over an ObjectOrderedSet and have an index, you should prefer
+	 * has been added to the EnumOrderedSet and {@code before} has been removed; returns false if {@code after} is already present or
+	 * {@code before} is not present. If you are iterating over an EnumOrderedSet and have an index, you should prefer
 	 * {@link #alterAt(int, Enum)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before an item that must be present for this to succeed
@@ -340,7 +340,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	@Override
 	public Enum<?> first () {
 		if (size == 0 || ordering.isEmpty())
-			throw new IllegalStateException("ObjectOrderedSet is empty.");
+			throw new IllegalStateException("EnumOrderedSet is empty.");
 		return ordering.first();
 	}
 
@@ -376,14 +376,14 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	}
 
 	/**
-	 * Sorts this EnumFloatOrderedMap in-place by the keys' natural ordering.
+	 * Sorts this EnumOrderedMap in-place by the keys' natural ordering.
 	 */
 	public void sort () {
 		ordering.sort(null);
 	}
 
 	/**
-	 * Sorts this EnumFloatOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
+	 * Sorts this EnumOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
 	 * will sort by the natural ordering of the keys.
 	 *
 	 * @param comp a Comparator that can compare two {@code Enum} keys, or null to use the keys' natural ordering
@@ -504,151 +504,140 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <T>    the type of items; must be given explicitly
 	 * @return a new set containing nothing
 	 */
-	public static <Enum<?>> EnumOrderedSet<Enum<?>> with () {
-		return new EnumOrderedSet<>(0);
+	public static EnumOrderedSet with () {
+		return new EnumOrderedSet();
 	}
 
 	/**
-	 * Creates a new ObjectOrderedSet that holds only the given item, but can be resized.
-	 * @param item one T item
-	 * @return a new ObjectOrderedSet that holds the given item
-	 * @param <T> the type of item, typically inferred
+	 * Creates a new EnumOrderedSet that holds only the given item, but can be resized.
+	 * @param item one Enum item
+	 * @return a new EnumOrderedSet that holds the given item
 	 */
-	public static <Enum<?>> EnumOrderedSet<Enum<?>> with (Enum<?> item) {
-		EnumOrderedSet<Enum<?>> set = new EnumOrderedSet<>(1);
+	public static EnumOrderedSet with (Enum<?> item) {
+		EnumOrderedSet set = new EnumOrderedSet();
 		set.add(item);
 		return set;
 	}
 
 	/**
-	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
+	 * Creates a new EnumOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @return a new EnumOrderedSet that holds the given items
 	 */
-	public static <Enum<?>> EnumOrderedSet<Enum<?>> with (Enum<?> item0, Enum<?> item1) {
-		EnumOrderedSet<Enum<?>> set = new EnumOrderedSet<>(2);
+	public static EnumOrderedSet with (Enum<?> item0, Enum<?> item1) {
+		EnumOrderedSet set = new EnumOrderedSet();
 		set.add(item0, item1);
 		return set;
 	}
 
 	/**
-	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
-	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
+	 * Creates a new EnumOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @return a new EnumOrderedSet that holds the given items
 	 */
-	public static <Enum<?>> EnumOrderedSet<Enum<?>> with (Enum<?> item0, Enum<?> item1, Enum<?> item2) {
-		EnumOrderedSet<Enum<?>> set = new EnumOrderedSet<>(3);
+	public static EnumOrderedSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2) {
+		EnumOrderedSet set = new EnumOrderedSet();
 		set.add(item0, item1, item2);
 		return set;
 	}
 
 	/**
-	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
-	 * @param item3 a T item
-	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
+	 * Creates a new EnumOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @param item3 an Enum item
+	 * @return a new EnumOrderedSet that holds the given items
 	 */
-	public static <Enum<?>> EnumOrderedSet<Enum<?>> with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3) {
-		EnumOrderedSet<Enum<?>> set = new EnumOrderedSet<>(4);
+	public static EnumOrderedSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3) {
+		EnumOrderedSet set = new EnumOrderedSet();
 		set.add(item0, item1, item2, item3);
 		return set;
 	}
 
 	/**
-	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
-	 * @param item3 a T item
-	 * @param item4 a T item
-	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
+	 * Creates a new EnumOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @param item3 an Enum item
+	 * @param item4 an Enum item
+	 * @return a new EnumOrderedSet that holds the given items
 	 */
-	public static <Enum<?>> EnumOrderedSet<Enum<?>> with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4) {
-		EnumOrderedSet<Enum<?>> set = new EnumOrderedSet<>(5);
+	public static EnumOrderedSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4) {
+		EnumOrderedSet set = new EnumOrderedSet();
 		set.add(item0, item1, item2, item3);
 		set.add(item4);
 		return set;
 	}
 
 	/**
-	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
-	 * @param item3 a T item
-	 * @param item4 a T item
-	 * @param item5 a T item
-	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
+	 * Creates a new EnumOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @param item3 an Enum item
+	 * @param item4 an Enum item
+	 * @param item5 an Enum item
+	 * @return a new EnumOrderedSet that holds the given items
 	 */
-	public static <Enum<?>> EnumOrderedSet<Enum<?>> with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5) {
-		EnumOrderedSet<Enum<?>> set = new EnumOrderedSet<>(6);
+	public static EnumOrderedSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5) {
+		EnumOrderedSet set = new EnumOrderedSet();
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5);
 		return set;
 	}
 
 	/**
-	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
-	 * @param item3 a T item
-	 * @param item4 a T item
-	 * @param item5 a T item
-	 * @param item6 a T item
-	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
+	 * Creates a new EnumOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @param item3 an Enum item
+	 * @param item4 an Enum item
+	 * @param item5 an Enum item
+	 * @param item6 an Enum item
+	 * @return a new EnumOrderedSet that holds the given items
 	 */
-	public static <Enum<?>> EnumOrderedSet<Enum<?>> with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6) {
-		EnumOrderedSet<Enum<?>> set = new EnumOrderedSet<>(7);
+	public static EnumOrderedSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6) {
+		EnumOrderedSet set = new EnumOrderedSet();
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6);
 		return set;
 	}
 
 	/**
-	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
-	 * @param item3 a T item
-	 * @param item4 a T item
-	 * @param item5 a T item
-	 * @param item6 a T item
-	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
+	 * Creates a new EnumOrderedSet that holds only the given items, but can be resized.
+	 * @param item0 an Enum item
+	 * @param item1 an Enum item
+	 * @param item2 an Enum item
+	 * @param item3 an Enum item
+	 * @param item4 an Enum item
+	 * @param item5 an Enum item
+	 * @param item6 an Enum item
+	 * @return a new EnumOrderedSet that holds the given items
 	 */
-	public static <Enum<?>> EnumOrderedSet<Enum<?>> with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6, Enum<?> item7) {
-		EnumOrderedSet<Enum<?>> set = new EnumOrderedSet<>(8);
+	public static EnumOrderedSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6, Enum<?> item7) {
+		EnumOrderedSet set = new EnumOrderedSet();
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6, item7);
 		return set;
 	}
 
 	/**
-	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 * Creates a new EnumOrderedSet that holds only the given items, but can be resized.
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
-	 * @param varargs a T varargs or T array; remember that varargs allocate
-	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
+	 * @param varargs an Enum varargs or Enum array; remember that varargs allocate
+	 * @return a new EnumOrderedSet that holds the given items
 	 */
-	@SafeVarargs
-	public static <Enum<?>> EnumOrderedSet<Enum<?>> with (Enum<?>... varargs) {
-		return new EnumOrderedSet<>(varargs);
+	public static EnumOrderedSet with (Enum<?>... varargs) {
+		return new EnumOrderedSet(varargs);
 	}
 }
