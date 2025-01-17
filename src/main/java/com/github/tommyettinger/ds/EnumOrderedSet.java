@@ -639,4 +639,134 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	public static EnumOrderedSet with (Enum<?>... varargs) {
 		return new EnumOrderedSet(varargs);
 	}
+
+
+	/**
+	 * Alias of {@link #with(Enum)} for compatibility.
+	 * @param item the one item to initialize the EnumSet with
+	 * @return a new EnumOrderedSet containing {@code item}
+	 */
+	public static EnumOrderedSet of (Enum<?> item) {
+		return with(item);
+	}
+
+	/**
+	 * Alias of {@link #with(Enum[])} for compatibility.
+	 * @param array an array or varargs of Enum constants, which should all have the same Enum type
+	 * @return a new EnumOrderedSet containing each unique item from {@code array}
+	 */
+	public static EnumOrderedSet of (Enum<?>... array) {
+		return with(array);
+	}
+
+	/**
+	 * Creates a new EnumOrderedSet using the given result of calling {@code values()} on an Enum type (the universe), but with no items
+	 * initially stored in the set. You can reuse the universe between EnumOrderedSet instances as long as it is not modified.
+	 * <br>
+	 * This is the same as calling {@link #EnumOrderedSet(Enum[], boolean)}.
+	 *
+	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 * @return a new EnumOrderedSet with the specified universe of possible items, but none present in the set
+	 */
+	public static EnumOrderedSet noneOf(Enum<?>@Nullable [] universe) {
+		return new EnumOrderedSet(universe, true);
+	}
+
+	/**
+	 * Creates a new EnumOrderedSet using the given result of calling {@code values()} on an Enum type (the universe), and with all possible
+	 * items initially stored in the set. You can reuse the universe between EnumOrderedSet instances as long as it is not modified.
+	 *
+	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 * @return a new EnumOrderedSet with the specified universe of possible items, and all of them present in the set
+	 */
+	public static EnumOrderedSet allOf(Enum<?>@Nullable [] universe) {
+		if(universe == null) return new EnumOrderedSet();
+        return new EnumOrderedSet(universe);
+	}
+
+	/**
+	 * Creates a new EnumOrderedSet using the constants from the given Class (of an Enum type), but with no items initially
+	 * stored in the set.
+	 * <br>
+	 * This is the same as calling {@link #EnumOrderedSet(Class)}.
+	 *
+	 * @param clazz the Class of any Enum type; you can get this from a constant with {@link Enum#getDeclaringClass()}
+	 * @return a new EnumOrderedSet with the specified universe of possible items, but none present in the set
+	 */
+	public static EnumOrderedSet noneOf(@Nullable Class<? extends Enum<?>> clazz) {
+		if(clazz == null)
+			return new EnumOrderedSet();
+		return new EnumOrderedSet(clazz.getEnumConstants(), true);
+	}
+
+	/**
+	 * Creates a new EnumOrderedSet using the constants from the given Class (of an Enum type), and with all possible items initially
+	 * stored in the set.
+	 *
+	 * @param clazz the Class of any Enum type; you can get this from a constant with {@link Enum#getDeclaringClass()}
+	 * @return a new EnumOrderedSet with the specified universe of possible items, and all of them present in the set
+	 */
+	public static EnumOrderedSet allOf(@Nullable Class<? extends Enum<?>> clazz) {
+		if(clazz == null)
+			return new EnumOrderedSet();
+        return new EnumOrderedSet(clazz.getEnumConstants());
+	}
+
+	/**
+	 * Given another EnumOrderedSet, this creates a new EnumOrderedSet with the same universe as {@code other}, but with any elements present in other
+	 * absent in the new set, and any elements absent in other present in the new set.
+	 *
+	 * @param other another EnumOrderedSet that this will copy
+	 * @return a complemented copy of {@code other}
+	 */
+	public static EnumOrderedSet complementOf(EnumOrderedSet other) {
+		if(other == null || other.universe == null) return new EnumOrderedSet();
+		EnumOrderedSet coll = new EnumOrderedSet(other);
+		coll.ordering.clear();
+		for (int i = 0; i < coll.table.length - 1; i++) {
+			coll.table[i] ^= -1;
+		}
+		coll.table[coll.table.length - 1] ^= -1 >>> -coll.universe.length;
+		coll.size = coll.universe.length - other.size;
+		for (int i = 0; i < coll.universe.length; i++) {
+			if((coll.table[i >>> 5] & (1 << i)) != 0)
+				coll.add(coll.universe[i]);
+		}
+		return coll;
+	}
+
+	/**
+	 * Creates an EnumOrderedSet holding any Enum items in the given {@code contents}, which may be any Collection of Enum, including another
+	 * EnumOrderedSet. If given an EnumOrderedSet, this will copy its Enum universe and other information even if it is empty.
+	 * @param contents a Collection of Enum values, which may be another EnumOrderedSet
+	 * @return a new EnumOrderedSet containing the unique items in contents
+	 */
+	public static EnumOrderedSet copyOf(Collection<? extends Enum<?>> contents) {
+		if(contents == null) throw new NullPointerException("Cannot copy a null Collection.");
+		return new EnumOrderedSet(contents);
+	}
+
+	/**
+	 * Creates an EnumOrderedSet holding Enum items between the ordinals of {@code start} and {@code end}. If the ordinal of end is less than
+	 * the ordinal of start, this throws an {@link IllegalArgumentException}.
+	 * If start and end are the same, this just inserts that one Enum.
+	 *
+	 * @param start the starting inclusive Enum to insert
+	 * @param end the ending inclusive Enum to insert
+	 * @return a new EnumOrderedSet containing start, end, and any Enum constants with ordinals between them
+	 * @param <E> the shared Enum type of both start and end
+	 * @throws IllegalArgumentException if the {@link Enum#ordinal() ordinal} of end is less than the ordinal of start
+	 */
+	public static  <E extends Enum<E>> EnumOrderedSet range(Enum<E> start, Enum<E> end) {
+		final int mn = start.ordinal();
+		final int mx = end.ordinal();
+		if(mx < mn) throw new IllegalArgumentException("The ordinal of " + end + " (" + mx +
+				") must be at least equal to the ordinal of " + start + " ("+mn+")");
+		EnumOrderedSet coll = new EnumOrderedSet();
+		coll.add(start);
+		for (int i = mn+1; i <= mx; i++) {
+			coll.add(coll.universe[i]);
+		}
+		return coll;
+	}
 }
