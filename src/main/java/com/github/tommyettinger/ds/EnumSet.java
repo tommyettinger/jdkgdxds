@@ -29,10 +29,11 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * A Set of Enum items. Unlike {@link java.util.EnumSet}, this does not require a Class at construction time, which can be
+ * A naturally-ordered Set of Enum items. Unlike {@link java.util.EnumSet}, this does not require a Class at construction time, which can be
  * useful for serialization purposes. Instead of storing a Class, this holds a "key universe" (which is almost always the
  * same as an array returned by calling {@code values()} on an Enum type), and key universes are ideally shared between
- * compatible EnumSets. No allocation is done unless this is changing its table size and/or key universe.
+ * compatible EnumSets. No allocation is done unless this is changing its table size and/or key universe. The natural order
+ * of Enum items is in ascending order of their {@link Enum#ordinal()} values.
  * <br>
  * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumSet can use as keys, in
  * the specific order they are declared. You almost always get a key universe by calling {@code MyEnum.values()}, but you

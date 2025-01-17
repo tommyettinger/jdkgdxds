@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 See AUTHORS file.
+ * Copyright (c) 2022-2025 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,31 +20,30 @@ package com.github.tommyettinger.ds;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
- * A {@link EnumSet} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
- * allocation is done except when growing the table size.
- * <p>
+ * An {@link EnumSet} that also stores keys in an {@link ObjectList} using the insertion order.
+ * Unlike {@link java.util.EnumSet}, this does not require a Class at construction time, which can be
+ * useful for serialization purposes. Instead of storing a Class, this holds a "key universe" (which is almost always the
+ * same as an array returned by calling {@code values()} on an Enum type), and key universes are ideally shared between
+ * compatible EnumSets. No allocation is done unless this is changing its table size and/or key universe. You can change
+ * the ordering of the Enum items using methods like {@link #sort(Comparator)} and {@link #shuffle(Random)}. You can also
+ * access enums via their index in the ordering, using methods such as {@link #getAt(int)}, {@link #alterAt(int, Enum)},
+ * and {@link #removeAt(int)}.
+ * <br>
  * {@link #iterator() Iteration} is ordered and faster than an unordered set. Keys can also be accessed and the order changed
  * using {@link #order()}. There is some additional overhead for put and remove.
- * <p>
- * This class performs fast contains (typically O(1), worst case O(n) but that is rare in practice). Remove is somewhat slower due
- * to {@link #order()}. Add may be slightly slower, depending on hash collisions. Load factors greater than 0.9 greatly increase
- * the chances to resize to the next higher POT size.
- * <p>
- * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with {@link Ordered} types like
- * EnumOrderedSet and ObjectObjectOrderedMap.
- * <p>
- * This implementation uses linear probing with the backward shift algorithm for removal.
- * It tries different hashes from a simple family, with the hash changing on resize.
- * Linear probing continues to work even when all hashCodes collide; it just works more slowly in that case.
+ * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumSet can use as keys, in
+ * the specific order they are declared. You almost always get a key universe by calling {@code MyEnum.values()}, but you
+ * can also use {@link Class#getEnumConstants()} for an Enum class. You can and generally should reuse key universes in order to
+ * avoid allocations and/or save memory; the method {@link #noneOf(Enum[])} creates an empty EnumSet with
+ * a given key universe. If you need to use the zero-argument constructor, you can, and the key universe will be obtained from the
+ * first key placed into the EnumSet, though it won't be shared at first. You can also set the key universe with
+ * {@link #clearToUniverse(Enum[])}, in the process of clearing the map.
+ * <br>
+ * This class tries to be as compatible as possible with {@link java.util.EnumSet}, though this expands on that where possible.
  *
- * @author Nathan Sweet
  * @author Tommy Ettinger
  */
 public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
