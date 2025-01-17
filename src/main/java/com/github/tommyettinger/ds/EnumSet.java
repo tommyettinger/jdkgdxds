@@ -276,7 +276,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		final int upper = ord >>> 5;
 		if(table.length <= upper) return false;
 		// (1 << ord) has ord implicitly used modulo 32
-		final boolean changed = (table[upper]) != (table[upper] &= ~(1 << ord));
+		final boolean changed = table[upper] != (table[upper] &= ~(1 << ord));
 		if(changed) size--;
 		return changed;
 	}
@@ -487,6 +487,33 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 			}
 		}
 		return -1;
+	}
+
+	/**
+	 * Reduces the size of the set to the specified size. If the set is already smaller than the specified
+	 * size, no action is taken. This indiscriminately removes items from the set until the
+	 * requested newSize is reached, or until the set is empty.
+	 * <br>
+	 * Because the iteration order is not guaranteed by an unordered set, this can remove essentially
+	 * any item(s) from the set if it is larger than newSize. Most commonly, it removes from the start
+	 * of the iteration order.
+	 *
+	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
+	 */
+	public void truncate (int newSize) {
+		newSize = Math.max(0, newSize);
+		int difference = size - newSize;
+		if(difference <= 0 || table == null) return;
+		int upper = 0;
+		for (; difference >= 32; difference -= 32, upper++) {
+			table[upper] = 0;
+		}
+		for (int ord = 1; difference > 0; ord <<= 1) {
+			if((table[upper] & ord) != 0) {
+				table[upper] ^= ord;
+				difference--;
+			}
+		}
 	}
 
 	/**
