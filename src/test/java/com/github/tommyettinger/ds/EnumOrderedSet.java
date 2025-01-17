@@ -20,9 +20,11 @@ package com.github.tommyettinger.ds;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
-
-import static com.github.tommyettinger.ds.Utilities.tableSize;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * A {@link EnumSet} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
@@ -191,7 +193,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * order in {@link ObjectList} and the rest of the JDK, not OrderedSet in libGDX.
 	 *
 	 * @param index where in the iteration order to add the given key, or to move it if already present
-	 * @param key   what T item to try to add, if not already present
+	 * @param key   what Enum item to try to add, if not already present
 	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
 	public boolean add (int index, Enum<?> key) {
@@ -209,7 +211,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
 	 * inserting at the end of the iteration order.
 	 *
-	 * @param other  a non-null {@link Ordered} of {@code T}
+	 * @param other  a non-null {@link Ordered} of {@code Enum}
 	 * @param offset the first index in {@code other} to use
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
@@ -223,7 +225,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * inserting starting at {@code insertionIndex} in the iteration order.
 	 *
 	 * @param insertionIndex where to insert into the iteration order
-	 * @param other          a non-null {@link Ordered} of {@code T}
+	 * @param other          a non-null {@link Ordered} of {@code Enum}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
@@ -242,7 +244,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
 	 * inserting at the end of the iteration order.
 	 *
-	 * @param other  a non-null {@link Ordered} of {@code T}
+	 * @param other  a non-null {@link Ordered} of {@code Enum}
 	 * @param offset the first index in {@code other} to use
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
@@ -256,7 +258,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * inserting starting at {@code insertionIndex} in the iteration order.
 	 *
 	 * @param insertionIndex where to insert into the iteration order
-	 * @param other          a non-null {@link Ordered} of {@code T}
+	 * @param other          a non-null {@link Ordered} of {@code Enum}
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
@@ -325,7 +327,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	}
 
 	/**
-	 * Gets the T item at the given {@code index} in the insertion order. The index should be between 0 (inclusive) and
+	 * Gets the Enum item at the given {@code index} in the insertion order. The index should be between 0 (inclusive) and
 	 * {@link #size()} (exclusive).
 	 *
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
@@ -342,11 +344,6 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 		return ordering.first();
 	}
 
-	@Override
-	public void clear (int maximumCapacity) {
-		ordering.clear();
-		super.clear(maximumCapacity);
-	}
 
 	@Override
 	public void clear () {
@@ -354,12 +351,24 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 		super.clear();
 	}
 
+	@Override
+	public void clearToUniverse(Enum<?> @Nullable [] universe) {
+		super.clearToUniverse(universe);
+		ordering.clear();
+	}
+
+	@Override
+	public void clearToUniverse(@Nullable Class<? extends Enum<?>> universe) {
+		super.clearToUniverse(universe);
+		ordering.clear();
+	}
+
 	/**
-	 * Gets the ObjectList of items in the order this class will iterate through them.
+	 * Gets the ObjectList of keys in the order this class will iterate through them.
 	 * Returns a direct reference to the same ObjectList this uses, so changes to the returned list will
 	 * also change the iteration order here.
 	 *
-	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
+	 * @return the ObjectList of keys, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
 	public ObjectList<Enum<?>> order () {
@@ -367,17 +376,17 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	}
 
 	/**
-	 * Sorts this ObjectOrderedSet in-place by the keys' natural ordering; {@code T} must implement {@link Comparable}.
+	 * Sorts this EnumFloatOrderedMap in-place by the keys' natural ordering.
 	 */
 	public void sort () {
 		ordering.sort(null);
 	}
 
 	/**
-	 * Sorts this ObjectOrderedSet in-place by the given Comparator used on the keys. If {@code comp} is null, then this
-	 * will sort by the natural ordering of the keys, which requires {@code T} to {@link Comparable}.
+	 * Sorts this EnumFloatOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
+	 * will sort by the natural ordering of the keys.
 	 *
-	 * @param comp a Comparator that can compare two {@code T} keys, or null to use the keys' natural ordering
+	 * @param comp a Comparator that can compare two {@code Enum} keys, or null to use the keys' natural ordering
 	 */
 	public void sort (@Nullable Comparator<? super Enum<?>> comp) {
 		ordering.sort(comp);
@@ -416,15 +425,15 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
 	 * Reuses one of two iterators, and does not permit nested iteration;
-	 * use {@link ObjectOrderedSetIterator#ObjectOrderedSetIterator(EnumOrderedSet)} to nest iterators.
+	 * use {@link EnumOrderedSetIterator#EnumOrderedSetIterator(EnumOrderedSet)} to nest iterators.
 	 *
-	 * @return an {@link Iterator} over the T items in this, in order
+	 * @return an {@link Iterator} over the Enum items in this, in order
 	 */
 	@Override
-	public @NonNull ObjectSetIterator<Enum<?>> iterator () {
+	public @NonNull EnumSetIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ObjectOrderedSetIterator<>(this);
-			iterator2 = new ObjectOrderedSetIterator<>(this);
+			iterator1 = new EnumOrderedSetIterator(this);
+			iterator2 = new EnumOrderedSetIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -458,10 +467,10 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 		return toString(", ");
 	}
 
-	public static class ObjectOrderedSetIterator<K> extends ObjectSetIterator<K> {
-		private final ObjectList<K> items;
+	public static class EnumOrderedSetIterator extends EnumSetIterator {
+		private final ObjectList<Enum<?>> items;
 
-		public ObjectOrderedSetIterator (EnumOrderedSet<K> set) {
+		public EnumOrderedSetIterator(EnumOrderedSet set) {
 			super(set);
 			items = set.ordering;
 		}
@@ -473,10 +482,10 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 		}
 
 		@Override
-		public K next () {
+		public Enum<?> next () {
 			if (!hasNext) {throw new NoSuchElementException();}
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			K key = items.get(nextIndex);
+			Enum<?> key = items.get(nextIndex);
 			nextIndex++;
 			hasNext = nextIndex < set.size;
 			return key;
