@@ -861,15 +861,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 */
 	public static EnumSet allOf(Enum<?>@Nullable [] universe) {
 		if(universe == null) return new EnumSet();
-		EnumSet coll = new EnumSet(universe, true);
-		if(universe.length == 0) return coll;
-
-		for (int i = 0; i < coll.table.length - 1; i++) {
-			coll.table[i] = -1;
-		}
-		coll.table[coll.table.length - 1] = -1 >>> 32 - universe.length;
-		coll.size = universe.length;
-		return coll;
+		return new EnumSet(universe);
 	}
 
 	/**
@@ -897,15 +889,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	public static EnumSet allOf(@Nullable Class<? extends Enum<?>> clazz) {
 		if(clazz == null)
 			return new EnumSet();
-		EnumSet coll = new EnumSet(clazz.getEnumConstants(), true);
-		if(coll.universe.length == 0) return coll;
-
-		for (int i = 0; i < coll.table.length - 1; i++) {
-			coll.table[i] = -1;
-		}
-		coll.table[coll.table.length - 1] = -1 >>> 32 - coll.universe.length;
-		coll.size = coll.universe.length;
-		return coll;
+		return new EnumSet(clazz.getEnumConstants());
 	}
 
 	/**
