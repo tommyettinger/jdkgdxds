@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 See AUTHORS file.
+ * Copyright (c) 2022-2025 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package com.github.tommyettinger.ds;
@@ -883,7 +882,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * Returns a {@link PrimitiveCollection.OfInt} that acts as a Set
 	 * view of the keys contained in this map.
 	 * The set is backed by the map, so changes to the map are
-	 * reflected in the set, and vice-versa.  If the map is modified
+	 * reflected in the set, and vice versa.  If the map is modified
 	 * while an iteration over the set is in progress (except through
 	 * the iterator's own {@code remove} operation), the results of
 	 * the iteration are undefined. The set supports element removal,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 See AUTHORS file.
+ * Copyright (c) 2022-2025 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package com.github.tommyettinger.ds;
@@ -90,7 +89,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined by the
+	 * Initializes this map so that it has exactly enough capacity as needed to contain each Enum constant defined by the
 	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumLongOrderedMap(Enum[])}
 	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
 	 * if you use {@link #EnumLongOrderedMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
@@ -155,7 +154,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Creates a new set by copying {@code count} items from the given EnumLongOrderedMap, starting at {@code offset} in that Map,
+	 * Creates a new map by copying {@code count} items from the given EnumLongOrderedMap, starting at {@code offset} in that Map,
 	 * into this.
 	 *
 	 * @param other  another EnumLongOrderedMap
@@ -253,7 +252,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Adds up to {@code count} entries, starting from {@code offset}, in the map {@code other} to this set,
+	 * Adds up to {@code count} entries, starting from {@code offset}, in the map {@code other} to this map,
 	 * inserting at the end of the iteration order.
 	 *
 	 * @param other  a non-null ordered map with the same type and compatible generic types
@@ -265,7 +264,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Adds up to {@code count} entries, starting from {@code offset}, in the map {@code other} to this set,
+	 * Adds up to {@code count} entries, starting from {@code offset}, in the map {@code other} to this map,
 	 * inserting starting at {@code insertionIndex} in the iteration order.
 	 *
 	 * @param insertionIndex where to insert into the iteration order
@@ -510,7 +509,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	/**
 	 * Returns a {@link Set} view of the keys contained in this map.
 	 * The set is backed by the map, so changes to the map are
-	 * reflected in the set, and vice-versa.  If the map is modified
+	 * reflected in the set, and vice versa.  If the map is modified
 	 * while an iteration over the set is in progress (except through
 	 * the iterator's own {@code remove} operation), the results of
 	 * the iteration are undefined.  The set supports element removal,
