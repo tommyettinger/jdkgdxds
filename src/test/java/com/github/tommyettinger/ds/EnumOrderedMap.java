@@ -26,14 +26,30 @@ import java.util.*;
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
- * An {@link ObjectObjectMap} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
+ * An {@link EnumMap} that also stores keys in an {@link ObjectList} using the insertion order. Null keys are not allowed. No
  * allocation is done except when growing the table size.
- * <p>
- * Iteration over the {@link #entrySet()}, {@link #keySet()}, and {@link #values()} is ordered and faster than an unordered map. Keys
- * can also be accessed and the order changed using {@link #order()}. There is some additional overhead for put and remove.
- * <p>
+ * Unlike {@link java.util.EnumMap}, this does not require a Class at construction time, which can be
+ * useful for serialization purposes. Instead of storing a Class, this holds a "key universe" (which is almost always the
+ * same as an array returned by calling {@code values()} on an Enum type), and key universes are ideally shared between
+ * compatible EnumOrderedMaps. No allocation is done unless this is changing its table size and/or key universe. You can change
+ * the ordering of the Enum items using methods like {@link #sort(Comparator)} and {@link #shuffle(Random)}. You can also
+ * access enums via their index in the ordering, using methods such as {@link #getAt(int)}, {@link #alterAt(int, Enum)},
+ * and {@link #removeAt(int)}.
+ * <br>
+ * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumOrderedMap can use as keys, in
+ * the specific order they are declared. You almost always get a key universe by calling {@code MyEnum.values()}, but you
+ * can also use {@link Class#getEnumConstants()} for an Enum class. You can and generally should reuse key universes in order to
+ * avoid allocations and/or save memory; the static method {@link #noneOf(Enum[])} creates an empty EnumOrderedMap with
+ * a given key universe. If you need to use the zero-argument constructor, you can, and the key universe will be obtained from the
+ * first key placed into the EnumOrderedMap, though it won't be shared at first. You can also set the key universe with
+ * {@link #clearToUniverse(Enum[])}, in the process of clearing the map.
+ * <br>
+ * {@link #iterator() Iteration} is ordered and faster than an unordered map. Keys can also be accessed and the order changed
+ * using {@link #order()}. There is some additional overhead for put and remove.
  * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with {@link Ordered} types like
  * EnumOrderedSet and EnumOrderedMap.
+ * <br>
+ * This class tries to be as compatible as possible with {@link java.util.EnumMap}, though this expands on that where possible.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
@@ -55,8 +71,8 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * Initializes this map so that it has exactly enough capacity as needed to contain each Enum constant defined in
 	 * {@code universe}, assuming universe stores every possible constant in one Enum type. This map will start empty.
 	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
-	 * reference to one Enum array across many EnumMap instances if you don't modify the shared array. Sharing the same
-	 * universe helps save some memory if you have (very) many EnumMap instances.
+	 * reference to one Enum array across many EnumOrderedMap instances if you don't modify the shared array. Sharing the same
+	 * universe helps save some memory if you have (very) many EnumOrderedMap instances.
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 */
 	public EnumOrderedMap (Enum<?> @Nullable [] universe) {
@@ -71,7 +87,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	}
 
 	/**
-	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined by the
+	 * Initializes this map so that it has exactly enough capacity as needed to contain each Enum constant defined by the
 	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumOrderedMap(Enum[])}
 	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
 	 * if you use {@link #EnumOrderedMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
@@ -82,7 +98,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	}
 
 	/**
-	 * Creates a new map identical to the specified EnumMap. This will share a key universe with the given EnumMap, if non-null.
+	 * Creates a new map identical to the specified EnumOrderedMap. This will share a key universe with the given EnumOrderedMap, if non-null.
 	 *
 	 * @param map an EnumMap to copy
 	 */
@@ -130,10 +146,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	}
 
 	/**
-	 * Creates a new set by copying {@code count} items from the given ObjectObjectOrderedMap, starting at {@code offset} in that Map,
+	 * Creates a new map by copying {@code count} items from the given EnumOrderedMap, starting at {@code offset} in that Map,
 	 * into this.
 	 *
-	 * @param other  another ObjectObjectOrderedMap of the same types
+	 * @param other  another EnumOrderedMap of the same types
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
@@ -145,10 +161,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
-	 * If this EnumMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
-	 * from now on for this EnumMap.
+	 * If this EnumOrderedMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
+	 * from now on for this EnumOrderedMap.
 	 *
-	 * @param key the Enum key to try to place into this EnumMap
+	 * @param key the Enum key to try to place into this EnumOrderedMap
 	 * @param value the V value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
@@ -238,7 +254,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	}
 
 	/**
-	 * Adds up to {@code count} entries, starting from {@code offset}, in the map {@code other} to this set,
+	 * Adds up to {@code count} entries, starting from {@code offset}, in the map {@code other} to this map,
 	 * inserting at the end of the iteration order.
 	 *
 	 * @param other  a non-null ordered map with the same type and compatible generic types
@@ -250,7 +266,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	}
 
 	/**
-	 * Adds up to {@code count} entries, starting from {@code offset}, in the map {@code other} to this set,
+	 * Adds up to {@code count} entries, starting from {@code offset}, in the map {@code other} to this map,
 	 * inserting starting at {@code insertionIndex} in the iteration order.
 	 *
 	 * @param insertionIndex where to insert into the iteration order
@@ -286,8 +302,8 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 
 	/**
 	 * Changes the key {@code before} to {@code after} without changing its position in the order or its value. Returns true if
-	 * {@code after} has been added to the ObjectObjectOrderedMap and {@code before} has been removed; returns false if {@code after} is
-	 * already present or {@code before} is not present. If you are iterating over an ObjectObjectOrderedMap and have an index, you should
+	 * {@code after} has been added to the EnumOrderedMap and {@code before} has been removed; returns false if {@code after} is
+	 * already present or {@code before} is not present. If you are iterating over an EnumOrderedMap and have an index, you should
 	 * prefer {@link #alterAt(int, Enum)}, which doesn't need to search for an index like this does and so can be faster.
 	 *
 	 * @param before a key that must be present for this to succeed
@@ -383,7 +399,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * Otherwise, this allocates and uses a new table of a larger size, with nothing in it, and uses the given universe.
 	 * This always uses {@code universe} directly, without copying.
 	 * <br>
-	 * This can be useful to allow an EnumMap that was created with {@link #EnumOrderedMap()} to share a universe with other EnumMaps.
+	 * This can be useful to allow an EnumOrderedMap that was created with {@link #EnumOrderedMap()} to share a universe with other EnumOrderedMaps.
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
@@ -404,7 +420,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * This calls {@link Class#getEnumConstants()} if universe is non-null, which allocates a new array.
 	 * <br>
 	 * You may want to prefer calling {@link #clearToUniverse(Enum[])} (the overload that takes an array), because it can be used to
-	 * share one universe array between many EnumMap instances. This overload, given a Class, has to call {@link Class#getEnumConstants()}
+	 * share one universe array between many EnumOrderedMap instances. This overload, given a Class, has to call {@link Class#getEnumConstants()}
 	 * and thus allocate a new array each time this is called.
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
@@ -427,14 +443,14 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	}
 
 	/**
-	 * Sorts this ObjectObjectOrderedMap in-place by the keys' natural ordering.
+	 * Sorts this EnumOrderedMap in-place by the keys' natural ordering.
 	 */
 	public void sort () {
 		ordering.sort(null);
 	}
 
 	/**
-	 * Sorts this ObjectObjectOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
+	 * Sorts this EnumOrderedMap in-place by the given Comparator used on the keys. If {@code comp} is null, then this
 	 * will sort by the natural ordering of the keys.
 	 *
 	 * @param comp a Comparator that can compare two {@code Enum} keys, or null to use the keys' natural ordering
@@ -445,7 +461,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 
 	/**
 	 * Sorts this ObjectObjectOrderedMap in-place by the given Comparator used on the values. {@code comp} must not be null,
-	 * and must be able to compare {@code V} values. If any null values are present in this ObjectObjectOrderedMap, then comp
+	 * and must be able to compare {@code V} values. If any null values are present in this EnumOrderedMap, then comp
 	 * must be able to sort or otherwise handle null values. You can use {@link Comparator#naturalOrder()} to do
 	 * what {@link #sort()} does (just sorting values in this case instead of keys) if the values implement
 	 * {@link Comparable} (requiring all of them to be non-null).
@@ -489,14 +505,14 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	/**
 	 * Returns a {@link Set} view of the keys contained in this map.
 	 * The set is backed by the map, so changes to the map are
-	 * reflected in the set, and vice-versa.  If the map is modified
+	 * reflected in the set, and vice versa. If the map is modified
 	 * while an iteration over the set is in progress (except through
 	 * the iterator's own {@code remove} operation), the results of
-	 * the iteration are undefined.  The set supports element removal,
+	 * the iteration are undefined. The set supports element removal,
 	 * which removes the corresponding mapping from the map, via the
 	 * {@code Iterator.remove}, {@code Set.remove},
 	 * {@code removeAll}, {@code retainAll}, and {@code clear}
-	 * operations.  It does not support the {@code add} or {@code addAll}
+	 * operations. It does not support the {@code add} or {@code addAll}
 	 * operations.
 	 *
 	 * <p>Note that the same Collection instance is returned each time this
@@ -578,7 +594,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * Reuses the iterator of the reused {@link Entries}
 	 * produced by {@link #entrySet()}; does not permit nested iteration. Iterate over
 	 * {@link OrderedMapEntries#OrderedMapEntries(EnumOrderedMap)} if you need nested or
-	 * multithreaded iteration. You can remove an Entry from this ObjectObjectOrderedMap
+	 * multithreaded iteration. You can remove an Entry from this EnumOrderedMap
 	 * using this Iterator.
 	 *
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
@@ -589,7 +605,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this ObjectObjectOrderedMap, but uses the given {@link Appender} and
+	 * Appends to a StringBuilder from the contents of this EnumOrderedMap, but uses the given {@link Appender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
@@ -890,5 +906,19 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 			}
 		}
 		return map;
+	}
+
+	/**
+	 * Constructs an empty map that can store keys from the given universe, using the
+	 * specified generic type for values.
+	 * The universe is usually obtained from an Enum type's {@code values()} method,
+	 * and is often shared between Enum-keyed maps and sets.
+	 *
+	 * @param universe a key universe, as an array of Enum constants typically obtained via {@code values()}
+	 * @param <V>      the type of values
+	 * @return a new map containing nothing
+	 */
+	public static <V> EnumOrderedMap<V> noneOf (Enum<?>[] universe) {
+		return new EnumOrderedMap<>(universe);
 	}
 }

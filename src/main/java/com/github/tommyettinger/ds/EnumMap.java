@@ -101,7 +101,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	}
 
 	/**
-	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined by the
+	 * Initializes this map so that it has exactly enough capacity as needed to contain each Enum constant defined by the
 	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumMap(Enum[])}
 	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
 	 * if you use {@link #EnumMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
@@ -713,7 +713,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
 	}
 	/**
-	 * Makes a String from the contents of this ObjectObjectMap, but uses the given {@link Appender} and
+	 * Makes a String from the contents of this EnumMap, but uses the given {@link Appender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
@@ -734,19 +734,19 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	}
 
 	/**
-		 * Appends to a StringBuilder from the contents of this ObjectObjectMap, but uses the given {@link Appender} and
-		 * {@link Appender} to convert each key and each value to a customizable representation and append them
-		 * to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
-		 *
-		 * @param sb a StringBuilder that this can append to
-		 * @param entrySeparator how to separate entries, such as {@code ", "}
-		 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-		 * @param braces true to wrap the output in curly braces, or false to omit them
-		 * @param keyAppender a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
-		 * @param valueAppender a function that takes a StringBuilder and a V, and returns the modified StringBuilder
-		 * @return {@code sb}, with the appended keys and values of this map
-		 */
+	 * Appends to a StringBuilder from the contents of this EnumMap, but uses the given {@link Appender} and
+	 * {@link Appender} to convert each key and each value to a customizable representation and append them
+	 * to a StringBuilder. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 *
+	 * @param sb a StringBuilder that this can append to
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
+	 * @param valueAppender a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended keys and values of this map
+	 */
 		public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
 		Appender<Enum<?>> keyAppender, Appender<V> valueAppender) {
 			if (size == 0 || this.universe == null || this.valueTable == null) {
@@ -1974,5 +1974,19 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 */
 	public static <V> EnumMap<V> of (Enum<?> key0, V value0, Object... rest) {
 		return with(key0, value0, rest);
+	}
+
+	/**
+	 * Constructs an empty map that can store keys from the given universe, using the
+	 * specified generic type for values.
+	 * The universe is usually obtained from an Enum type's {@code values()} method,
+	 * and is often shared between Enum-keyed maps and sets.
+	 *
+	 * @param universe a key universe, as an array of Enum constants typically obtained via {@code values()}
+	 * @param <V>      the type of values
+	 * @return a new map containing nothing
+	 */
+	public static <V> EnumMap<V> noneOf (Enum<?>[] universe) {
+		return new EnumMap<>(universe);
 	}
 }

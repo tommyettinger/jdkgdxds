@@ -32,8 +32,6 @@ import java.util.*;
  * access enums via their index in the ordering, using methods such as {@link #getAt(int)}, {@link #alterAt(int, Enum)},
  * and {@link #removeAt(int)}.
  * <br>
- * {@link #iterator() Iteration} is ordered and faster than an unordered set. Keys can also be accessed and the order changed
- * using {@link #order()}. There is some additional overhead for put and remove.
  * The key universe is an important concept here; it is simply an array of all possible Enum values the EnumSet can use as keys, in
  * the specific order they are declared. You almost always get a key universe by calling {@code MyEnum.values()}, but you
  * can also use {@link Class#getEnumConstants()} for an Enum class. You can and generally should reuse key universes in order to
@@ -41,6 +39,9 @@ import java.util.*;
  * a given key universe. If you need to use the zero-argument constructor, you can, and the key universe will be obtained from the
  * first key placed into the EnumSet, though it won't be shared at first. You can also set the key universe with
  * {@link #clearToUniverse(Enum[])}, in the process of clearing the map.
+ * <br>
+ * {@link #iterator() Iteration} is ordered and faster than an unordered set. Keys can also be accessed and the order changed
+ * using {@link #order()}. There is some additional overhead for put and remove.
  * <br>
  * This class tries to be as compatible as possible with {@link java.util.EnumSet}, though this expands on that where possible.
  *
