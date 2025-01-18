@@ -16,18 +16,17 @@
 
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.EnumLongMap;
-import com.github.tommyettinger.ds.EnumLongOrderedMap;
-import com.github.tommyettinger.ds.LongList;
+import com.github.tommyettinger.ds.EnumMap;
+import com.github.tommyettinger.ds.EnumOrderedMap;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
-import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.random.AceRandom;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Iterator;
 
-public class EnumLongMapOpTest {
+public class EnumMapOpTest {
     enum Chem {
         HYDROGEN, HELIUM, LITHIUM, BERYLLIUM, BORON, CARBON, NITROGEN, OXYGEN, FLUORINE, NEON,
         SODIUM, MAGNESIUM, ALUMINIUM, SILICON, PHOSPHORUS, SULFUR, CHLORINE, ARGON, POTASSIUM,
@@ -52,8 +51,8 @@ public class EnumLongMapOpTest {
     @Test
     public void addThenRemoveTest() {
         AceRandom random = new AceRandom(123);
-        EnumLongMap map = new EnumLongMap(Chem.ALL);
-        LongList neo = new LongList(LIMIT);
+        EnumMap<Long> map = new EnumMap<Long>(Chem.ALL);
+        ObjectList<Long> neo = new ObjectList<Long>(LIMIT);
 
         for (int i = 0; i < LIMIT; i++) {
             Chem randomKey = random.randomElement(Chem.ALL);
@@ -76,8 +75,8 @@ public class EnumLongMapOpTest {
     @Test
     public void mixedAddRemoveTest() {
         AceRandom random = new AceRandom(123);
-        EnumLongMap map = new EnumLongMap(Chem.ALL);
-        LongList neo = new LongList(LIMIT);
+        EnumMap<Long> map = new EnumMap<Long>(Chem.ALL);
+        ObjectList<Long> neo = new ObjectList<Long>(LIMIT);
 
         for (int i = 0; i < LIMIT; i++) {
             Chem randomKey = random.randomElement(Chem.ALL);
@@ -96,9 +95,9 @@ public class EnumLongMapOpTest {
     @Test
     public void orderingTest() {
         AceRandom random = new AceRandom(123);
-        EnumLongOrderedMap map = new EnumLongOrderedMap(Chem.ALL);
+        EnumOrderedMap<Long> map = new EnumOrderedMap<Long>(Chem.ALL);
         for (int i = 0; i < 100; i++) {
-            map.put(Chem.ALL[i], i);
+            map.put(Chem.ALL[i], (long) i);
         }
         int startLength = map.size();
         map.shuffle(random);
@@ -106,7 +105,7 @@ public class EnumLongMapOpTest {
         Assert.assertEquals(startLength, map.order().size());
         Assert.assertEquals(startLength, map.keySet().size());
 
-        EnumLongOrderedMap byKey = new EnumLongOrderedMap(map), byValue = new EnumLongOrderedMap(map);
+        EnumOrderedMap<Long> byKey = new EnumOrderedMap<Long>(map), byValue = new EnumOrderedMap<Long>(map);
         byKey.sort();
         byValue.sortByValue(LongComparators.NATURAL_COMPARATOR);
         for (int i = 0; i < startLength; i++) {
@@ -117,10 +116,10 @@ public class EnumLongMapOpTest {
         Assert.assertEquals(byKey.keySet(), byValue.keySet());
         Assert.assertEquals(byKey.values(), byValue.values());
         Iterator<Enum<?>> byKeyIt = byKey.keySet().iterator();
-        LongIterator byValIt = byValue.values().iterator();
+        Iterator<Long> byValIt = byValue.values().iterator();
         int count = 0;
         while (byKeyIt.hasNext() && byValIt.hasNext()){
-            Assert.assertEquals(map.get(byKeyIt.next()), byValIt.nextLong());
+            Assert.assertEquals(map.get(byKeyIt.next()), byValIt.next());
             count++;
         }
         Assert.assertEquals(byKeyIt.hasNext(), byValIt.hasNext());
