@@ -25,7 +25,6 @@ import java.util.Comparator;
  * @see Comparator
  * @see BooleanComparators
  */
-@FunctionalInterface
 public interface BooleanComparator extends Comparator<Boolean> {
 	/**
 	 * Compares its two primitive-type arguments for order. Returns a negative

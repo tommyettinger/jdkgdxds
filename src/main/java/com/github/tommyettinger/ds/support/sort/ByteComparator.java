@@ -25,7 +25,6 @@ import java.util.Comparator;
  * @see Comparator
  * @see ByteComparators
  */
-@FunctionalInterface
 public interface ByteComparator extends Comparator<Byte> {
 	/**
 	 * Compares its two primitive-type arguments for order. Returns a negative

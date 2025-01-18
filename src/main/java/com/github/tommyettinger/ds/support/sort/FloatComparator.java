@@ -25,7 +25,6 @@ import java.util.Comparator;
  * @see Comparator
  * @see FloatComparators
  */
-@FunctionalInterface
 public interface FloatComparator extends Comparator<Float> {
 	/**
 	 * Compares its two primitive-type arguments for order. Returns a negative

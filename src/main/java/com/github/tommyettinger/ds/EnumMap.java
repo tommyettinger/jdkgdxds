@@ -1851,9 +1851,9 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * This is mostly useful as an optimization for {@link #with(Enum, Object, Object...)}
 	 * when there's no "rest" of the keys or values.
 	 *
-	 * @param key0   an Enum<?> key
+	 * @param key0   an Enum key
 	 * @param value0 a V value
-	 * @param key1   an Enum<?> key
+	 * @param key1   an Enum key
 	 * @param value1 a V value
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
@@ -1870,11 +1870,11 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * This is mostly useful as an optimization for {@link #with(Enum, Object, Object...)}
 	 * when there's no "rest" of the keys or values.
 	 *
-	 * @param key0   an Enum<?> key
+	 * @param key0   an Enum key
 	 * @param value0 a V value
-	 * @param key1   an Enum<?> key
+	 * @param key1   an Enum key
 	 * @param value1 a V value
-	 * @param key2   an Enum<?> key
+	 * @param key2   an Enum key
 	 * @param value2 a V value
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
@@ -1892,13 +1892,13 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * This is mostly useful as an optimization for {@link #with(Enum, Object, Object...)}
 	 * when there's no "rest" of the keys or values.
 	 *
-	 * @param key0   an Enum<?> key
+	 * @param key0   an Enum key
 	 * @param value0 a V value
-	 * @param key1   an Enum<?> key
+	 * @param key1   an Enum key
 	 * @param value1 a V value
-	 * @param key2   an Enum<?> key
+	 * @param key2   an Enum key
 	 * @param value2 a V value
-	 * @param key3   an Enum<?> key
+	 * @param key3   an Enum key
 	 * @param value3 a V value
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value

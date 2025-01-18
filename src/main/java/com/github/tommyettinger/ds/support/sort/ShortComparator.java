@@ -25,7 +25,6 @@ import java.util.Comparator;
  * @see Comparator
  * @see ShortComparators
  */
-@FunctionalInterface
 public interface ShortComparator extends Comparator<Short> {
 	/**
 	 * Compares its two primitive-type arguments for order. Returns a negative

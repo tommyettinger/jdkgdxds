@@ -1,3 +1,9 @@
+[1.8.0]
+- [SEED BREAKING, MAYBE] The dependency on digital is now 0.6.0, which changes the output of methods in Hasher with "Bulk" in their names. Those methods also pass more stringent testing than before.
+- Several new methods were added to EnumSet and EnumMap.
+- EnumOrderedSet and EnumOrderedMap are present now, and are insertion-ordered counterparts to EnumSet and EnumMap.
+- There are also maps from Enum to each of primitive int, primitive long, and primitive float, including ordered maps.
+
 [1.7.2]
 - Junction (and its supporting interface Term) are new in this version. They can be used as a type of predicate to match multiple items in a Collection.
 - A Junction can be parsed from a String, creating several Terms and their relationships. This can produce any type that a supplied function can convert from a String.

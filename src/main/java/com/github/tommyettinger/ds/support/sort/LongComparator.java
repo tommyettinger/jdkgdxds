@@ -25,7 +25,6 @@ import java.util.Comparator;
  * @see Comparator
  * @see LongComparators
  */
-@FunctionalInterface
 public interface LongComparator extends Comparator<Long> {
 	/**
 	 * Compares its two primitive-type arguments for order. Returns a negative

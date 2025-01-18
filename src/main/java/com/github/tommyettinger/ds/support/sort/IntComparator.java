@@ -25,7 +25,6 @@ import java.util.Comparator;
  * @see Comparator
  * @see IntComparators
  */
-@FunctionalInterface
 public interface IntComparator extends Comparator<Integer> {
 	/**
 	 * Compares its two primitive-type arguments for order. Returns a negative

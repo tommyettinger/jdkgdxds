@@ -25,7 +25,6 @@ import java.util.Comparator;
  * @see Comparator
  * @see CharComparators
  */
-@FunctionalInterface
 public interface CharComparator extends Comparator<Character> {
 	/**
 	 * Compares its two primitive-type arguments for order. Returns a negative

@@ -25,7 +25,6 @@ import java.util.Comparator;
  * @see Comparator
  * @see DoubleComparators
  */
-@FunctionalInterface
 public interface DoubleComparator extends Comparator<Double> {
 	/**
 	 * Compares its two primitive-type arguments for order. Returns a negative
