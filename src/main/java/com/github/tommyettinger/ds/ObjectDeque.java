@@ -48,7 +48,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	/**
 	 * Contains the values in the queue. Head and tail indices go in a circle around this array, wrapping at the end.
 	 */
-	protected T[] values;
+	protected @Nullable T[] values;
 
 	/**
 	 * Index of first element. Logically smaller than tail. Unless empty, it points to a valid element inside queue.
@@ -121,7 +121,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	}
 
 	/**
-	 * Creates a new ObjectDeque using all of the contents of the given array.
+	 * Creates a new ObjectDeque using all the contents of the given array.
 	 *
 	 * @param a an array of T that will be copied into this and used in full
 	 */
@@ -159,7 +159,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	 * @param object can be null
 	 */
 	public void addLast (@Nullable T object) {
-		T[] values = this.values;
+		@Nullable T[] values = this.values;
 
 		if (size == values.length) {
 			resize(values.length << 1);
@@ -180,7 +180,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	 * @see #addLast(Object)
 	 */
 	public void addFirst (@Nullable T object) {
-		T[] values = this.values;
+		@Nullable T[] values = this.values;
 
 		if (size == values.length) {
 			resize(values.length << 1);
@@ -213,11 +213,11 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	 * Resize backing array. newSize must be bigger than current size.
 	 */
 	protected void resize (int newSize) {
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final T[] newArray = (T[])new Object[Math.max(1, newSize)];
+		final @Nullable T[] newArray = (T[])new Object[Math.max(1, newSize)];
 		if (head < tail) {
 			// Continuous
 			System.arraycopy(values, head, newArray, 0, tail - head);
@@ -245,7 +245,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
 
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 
 		final T result = values[head];
 		values[head] = null;
@@ -271,7 +271,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
 
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 		int tail = this.tail;
 		tail--;
 		if (tail == -1) {
@@ -345,7 +345,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			return defaultValue;
 		}
 
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 
 		final T result = values[head];
 		values[head] = null;
@@ -371,7 +371,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			return defaultValue;
 		}
 
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 		int tail = this.tail;
 		tail--;
 		if (tail == -1) {
@@ -443,7 +443,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			// Underflow
 			return defaultValue;
 		}
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 		int tail = this.tail;
 		tail--;
 		if (tail == -1) {
@@ -541,7 +541,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		else if(index >= oldSize)
 			addLast(item);
 		else {
-			T[] values = this.values;
+			@Nullable T[] values = this.values;
 
 			if (size == values.length) {
 				resize(values.length << 1);
@@ -685,7 +685,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	}
 
 	/**
-	 * Adds all of the elements in the specified collection at the end
+	 * Adds all the elements in the specified collection at the end
 	 * of this deque, as if by calling {@link #addLast} on each one,
 	 * in the order that they are returned by the collection's iterator.
 	 *
@@ -835,7 +835,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	}
 
 	/**
-	 * Returns an array containing all of the elements in this collection.
+	 * Returns an array containing all the elements in this collection.
 	 * If this collection makes any guarantees as to what order its elements
 	 * are returned by its iterator, this method must return the elements in
 	 * the same order. The returned array's {@linkplain Class#getComponentType
@@ -847,7 +847,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	 * The caller is thus free to modify the returned array.
 	 *
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
-	 * type} is {@code Object}, containing all of the elements in this collection
+	 * type} is {@code Object}, containing all the elements in this collection
 	 */
 	@Override
 	public Object @NonNull [] toArray () {
@@ -862,7 +862,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	}
 
 	/**
-	 * Returns an array containing all of the elements in this collection;
+	 * Returns an array containing all the elements in this collection;
 	 * the runtime type of the returned array is that of the specified array.
 	 * If the collection fits in the specified array, it is returned therein.
 	 * Otherwise, a new array is allocated with the runtime type of the
@@ -882,19 +882,19 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	 * @param a the array into which the elements of this collection are to be
 	 *          stored, if it is big enough; otherwise, a new array of the same
 	 *          runtime type is allocated for this purpose.
-	 * @return an array containing all of the elements in this collection
+	 * @return an array containing all the elements in this collection
 	 * @throws ArrayStoreException  if the runtime type of any element in this
 	 *                              collection is not assignable to the {@linkplain Class#getComponentType
 	 *                              runtime component type} of the specified array
 	 * @throws NullPointerException if the specified array is null
 	 */
 	@Override
-	public <E> E @NonNull [] toArray (E[] a) {
+	public <E> @Nullable  E @NonNull [] toArray (@Nullable E[] a) {
 		int oldSize = size;
 		if (a.length < oldSize) {
 			a = Arrays.copyOf(a, oldSize);
 		}
-		Object[] result = a;
+		@Nullable Object[] result = a;
 		Iterator<T> it = iterator();
 		for (int i = 0; i < oldSize; ++i) {
 			result[i] = it.next();
@@ -906,11 +906,11 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	}
 
 	/**
-	 * Returns {@code true} if this collection contains all of the elements
+	 * Returns {@code true} if this collection contains all the elements
 	 * in the specified collection.
 	 *
 	 * @param c collection to be checked for containment in this collection
-	 * @return {@code true} if this collection contains all of the elements
+	 * @return {@code true} if this collection contains all the elements
 	 * in the specified collection
 	 * @throws ClassCastException   if the types of one or more elements
 	 *                              in the specified collection are incompatible with this
@@ -1237,7 +1237,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	public int indexOf (@Nullable Object value, boolean identity) {
 		if (size == 0)
 			return -1;
-		T[] values = this.values;
+		@Nullable T[] values = this.values;
 		final int head = this.head, tail = this.tail;
 		if (identity || value == null) {
 			if (head < tail) {
@@ -1288,7 +1288,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	public int lastIndexOf (@Nullable Object value, boolean identity) {
 		if (size == 0)
 			return -1;
-		T[] values = this.values;
+		@Nullable T[] values = this.values;
 		final int head = this.head, tail = this.tail;
 		if (identity || value == null) {
 			if (head < tail) {
@@ -1358,7 +1358,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		if (index >= size)
 			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
 
-		T[] values = this.values;
+		@Nullable T[] values = this.values;
 		int head = this.head, tail = this.tail;
 		index += head;
 		T value;
@@ -1427,7 +1427,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			// Underflow
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 		int tail = this.tail;
 		tail--;
 		if (tail == -1)
@@ -1436,8 +1436,8 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	}
 
 	/**
-	 * Retrieves the value in queue without removing it. Indexing is from the front to back, zero based. Therefore get(0) is the
-	 * same as {@link #first()}.
+	 * Retrieves the value in queue without removing it. Indexing is from the front to back, zero based. Therefore,
+	 * get(0) is the same as {@link #first()}.
 	 *
 	 * @throws IndexOutOfBoundsException when the index is negative or >= size
 	 */
@@ -1446,7 +1446,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size)
 			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 
 		int i = head + index;
 		if (i >= values.length)
@@ -1467,7 +1467,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
 		if (index >= size)
 			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 
 		int i = head + index;
 		if (i >= values.length)
@@ -1484,7 +1484,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	public void clear () {
 		if (size == 0)
 			return;
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
 
@@ -1560,7 +1560,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 
 	public int hashCode () {
 		final int size = this.size;
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 		final int backingLength = values.length;
 		int index = this.head;
 
@@ -1599,7 +1599,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		if (q.size != size)
 			return false;
 
-		final T[] myValues = this.values;
+		final @Nullable T[] myValues = this.values;
 		final int myBackingLength = myValues.length;
 		final Object[] itsValues = q.values;
 		final int itsBackingLength = itsValues.length;
@@ -1641,7 +1641,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		if (q.size != size)
 			return false;
 
-		final T[] myValues = this.values;
+		final @Nullable T[] myValues = this.values;
 		final int myBackingLength = myValues.length;
 		final Object[] itsValues = q.values;
 		final int itsBackingLength = itsValues.length;
@@ -1677,7 +1677,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
 		if (second >= size)
 			throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 
 		int f = head + first;
 		if (f >= values.length)
@@ -1698,7 +1698,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	 */
 	@Override
 	public void reverse () {
-		final T[] values = this.values;
+		final @Nullable T[] values = this.values;
 		int f, s, len = values.length;
 		T fv;
 		for (int n = size >> 1, b = 0, t = size - 1; b <= n && b != t; b++, t--) {
