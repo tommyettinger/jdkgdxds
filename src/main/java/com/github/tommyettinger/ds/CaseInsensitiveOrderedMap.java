@@ -47,10 +47,12 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * {@link Utilities#compareIgnoreCase(CharSequence, CharSequence)} can be used to sort this as case-insensitive.
  * <br>
  * This is also very similar to {@link FilteredStringOrderedMap} when its {@link CharFilter#getEditor() editor}
- * is {@link Character#toUpperCase(char)}. FilteredStringOrderedMap works with Strings rather than CharSequences, which
+ * is {@link Character#toUpperCase(char)} or {@link Casing#caseUp(char)}.
+ * FilteredStringOrderedMap works with Strings rather than CharSequences, which
  * may be more convenient, and allows filtering some characters out of hashing and equality comparisons. If you want a
  * case-insensitive map that ignores any non-letter characters in a String, then CaseInsensitiveOrderedMap won't do,
- * but {@code new FilteredStringOrderedMap<>(Character::isLetter, Character::toUpperCase)} will work.
+ * but {@code new FilteredStringOrderedMap<>(Character::isLetter, Character::toUpperCase)} will work. Note that GWT only
+ * handles {@link Character#isLetter(char)} for ASCII letters; the library RegExodus offers replacements in Category.
  */
 public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSequence, V> {
 

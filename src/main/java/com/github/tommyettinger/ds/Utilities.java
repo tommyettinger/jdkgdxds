@@ -132,7 +132,7 @@ public final class Utilities {
 	private static final int COPY_THRESHOLD = 128;
 	private static final int NIL_ARRAY_SIZE = 1024;
 	@SuppressWarnings({"MismatchedReadAndWriteOfArray"})
-	private static final Object[] NIL_ARRAY = new Object[NIL_ARRAY_SIZE];
+	private static final @Nullable Object[] NIL_ARRAY = new Object[NIL_ARRAY_SIZE];
 
 	/**
 	 * Not instantiable.
@@ -281,7 +281,7 @@ public final class Utilities {
 			return false;
 		for (int i = 0; i < al; i++) {
 			char ac = a.charAt(i), bc = b.charAt(i);
-			if (ac != bc && Character.toUpperCase(ac) != Character.toUpperCase(bc)) {
+			if (ac != bc && Casing.caseUp(ac) != Casing.caseUp(bc)) {
 				return false;
 			}
 		}
@@ -305,8 +305,8 @@ public final class Utilities {
 		if (l == r)
 			return 0;
 		for (int i = 0, len = Math.min(l.length(), r.length()); i < len; i++) {
-			char a = Character.toUpperCase(l.charAt(i));
-			char b = Character.toUpperCase(r.charAt(i));
+			char a = Casing.caseUp(l.charAt(i));
+			char b = Casing.caseUp(r.charAt(i));
 			if (a != b) {
 				return a - b;
 			}
@@ -319,7 +319,7 @@ public final class Utilities {
 	 * Gets a 64-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
 	 * Uses Water hash, which is a variant on <a href="https://github.com/vnmakarov/mum-hash">mum-hash</a> and
 	 * <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a>. This gets the hash as if all cased letters have been
-	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
+	 * converted to upper case by {@link Casing#caseUp(char)}; this should be correct for all alphabets in
 	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
 	 * would use this with {@code (int)(longHashCodeIgnoreCase(text) >>> shift)}.
 	 * <br>
@@ -337,7 +337,7 @@ public final class Utilities {
 	 * Gets a 64-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
 	 * Uses Water hash, which is a variant on <a href="https://github.com/vnmakarov/mum-hash">mum-hash</a> and
 	 * <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a>. This gets the hash as if all cased letters have been
-	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
+	 * converted to upper case by {@link Casing#caseUp(char)}; this should be correct for all alphabets in
 	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
 	 * would use this with {@code (int)(longHashCodeIgnoreCase(text) >>> shift)}.
 	 * <br>
@@ -352,8 +352,8 @@ public final class Utilities {
 		final int len = data.length();
 		for (int i = 3; i < len; i += 4) {
 			seed = mum(
-					mum(Character.toUpperCase(data.charAt(i - 3)) ^ b1, Character.toUpperCase(data.charAt(i - 2)) ^ b2) - seed,
-					mum(Character.toUpperCase(data.charAt(i - 1)) ^ b3, Character.toUpperCase(data.charAt(i)) ^ b4));
+					mum(Casing.caseUp(data.charAt(i - 3)) ^ b1, Casing.caseUp(data.charAt(i - 2)) ^ b2) - seed,
+					mum(Casing.caseUp(data.charAt(i - 1)) ^ b3, Casing.caseUp(data.charAt(i)) ^ b4));
 		}
 
 		switch (len & 3) {
@@ -361,13 +361,13 @@ public final class Utilities {
 				seed = mum(b1 - seed, b4 + seed);
 				break;
 			case 1:
-				seed = mum(b5 - seed, b3 ^ Character.toUpperCase(data.charAt(len - 1)));
+				seed = mum(b5 - seed, b3 ^ Casing.caseUp(data.charAt(len - 1)));
 				break;
 			case 2:
-				seed = mum(Character.toUpperCase(data.charAt(len - 2)) - seed, b0 ^ Character.toUpperCase(data.charAt(len - 1)));
+				seed = mum(Casing.caseUp(data.charAt(len - 2)) - seed, b0 ^ Casing.caseUp(data.charAt(len - 1)));
 				break;
 			case 3:
-				seed = mum(Character.toUpperCase(data.charAt(len - 3)) - seed, b2 ^ Character.toUpperCase(data.charAt(len - 2))) + mum(b5 ^ seed, b4 ^ Character.toUpperCase(data.charAt(len - 1)));
+				seed = mum(Casing.caseUp(data.charAt(len - 3)) - seed, b2 ^ Casing.caseUp(data.charAt(len - 2))) + mum(b5 ^ seed, b4 ^ Casing.caseUp(data.charAt(len - 1)));
 				break;
 		}
 		seed = (seed ^ len) * (seed << 16 ^ b0);
@@ -378,7 +378,7 @@ public final class Utilities {
 	 * Gets a 32-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
 	 * Uses <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a> version 4.2, but shrunk down to work on 16-bit
 	 * char values instead of 64-bit long values. This gets the hash as if all cased letters have been
-	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
+	 * converted to upper case by {@link Casing#caseUp(char)}; this should be correct for all alphabets in
 	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
 	 * would use this with {@code (hashCodeIgnoreCase(text) >>> shift)}.
 	 *
@@ -393,7 +393,7 @@ public final class Utilities {
 	 * Gets a 32-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
 	 * Uses <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a> version 4.2, but shrunk down to work on 16-bit
 	 * char values instead of 64-bit long values. This gets the hash as if all cased letters have been
-	 * converted to upper case by {@link Character#toUpperCase(char)}; this should be correct for all alphabets in
+	 * converted to upper case by {@link Casing#caseUp(char)}; this should be correct for all alphabets in
 	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
 	 * would use this with {@code (hashCodeIgnoreCase(text, seed) >>> shift)}.
 	 *
@@ -409,8 +409,8 @@ public final class Utilities {
 		int a, b;
 		int p = 0;
 		if(len<=2){
-			if(len==2){ a=Character.toUpperCase(data.charAt(0)); b=Character.toUpperCase(data.charAt(1)); }
-			else if(len==1){ a=Character.toUpperCase(data.charAt(0)); b=0;}
+			if(len==2){ a=Casing.caseUp(data.charAt(0)); b=Casing.caseUp(data.charAt(1)); }
+			else if(len==1){ a=Casing.caseUp(data.charAt(0)); b=0;}
 			else a=b=0;
 		}
 		else{
@@ -418,19 +418,19 @@ public final class Utilities {
 			if(i>=6){
 				int see1=seed, see2=seed;
 				do{
-					seed=BitConversion.imul(Character.toUpperCase(data.charAt(p  ))^x, Character.toUpperCase(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
-					see1=BitConversion.imul(Character.toUpperCase(data.charAt(p+2))^y, Character.toUpperCase(data.charAt(p+3))^see1);see1^=(see1<<21|see1>>>11)^(see1<<15|see1>>>19);
-					see2=BitConversion.imul(Character.toUpperCase(data.charAt(p+4))^z, Character.toUpperCase(data.charAt(p+5))^see2);see2^=(see2<<26|see2>>> 6)^(see2<< 7|see2>>>25);
+					seed=BitConversion.imul(Casing.caseUp(data.charAt(p  ))^x, Casing.caseUp(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
+					see1=BitConversion.imul(Casing.caseUp(data.charAt(p+2))^y, Casing.caseUp(data.charAt(p+3))^see1);see1^=(see1<<21|see1>>>11)^(see1<<15|see1>>>19);
+					see2=BitConversion.imul(Casing.caseUp(data.charAt(p+4))^z, Casing.caseUp(data.charAt(p+5))^see2);see2^=(see2<<26|see2>>> 6)^(see2<< 7|see2>>>25);
 					p+=6;i-=6;
 				}while(i>=6);
 				seed^=see1^see2;
 			}
 			while((i>2)){
-				seed=BitConversion.imul(Character.toUpperCase(data.charAt(p  ))^x, Character.toUpperCase(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
+				seed=BitConversion.imul(Casing.caseUp(data.charAt(p  ))^x, Casing.caseUp(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
 				i-=2; p+=2;
 			}
-			a=Character.toUpperCase(data.charAt(len-2));
-			b=Character.toUpperCase(data.charAt(len-1));
+			a=Casing.caseUp(data.charAt(len-2));
+			b=Casing.caseUp(data.charAt(len-1));
 		}
 		a=BitConversion.imul(a,z);
 		b^=seed+len;

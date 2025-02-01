@@ -38,10 +38,12 @@ import java.util.Iterator;
  * comparisons that are similarly case-insensitive, except for Georgian.
  * <br>
  * This is very similar to {@link FilteredStringSet} when its {@link CharFilter#getEditor() editor}
- * is {@link Character#toUpperCase(char)}. FilteredStringSet works with Strings rather than CharSequences, which
+ * is {@link Character#toUpperCase(char)} or {@link Casing#caseUp(char)}.
+ * FilteredStringSet works with Strings rather than CharSequences, which
  * may be more convenient, and allows filtering some characters out of hashing and equality comparisons. If you want a
  * case-insensitive set that ignores any non-letter characters in a String, then CaseInsensitiveSet won't do,
- * but {@code new FilteredStringSet<>(Character::isLetter, Character::toUpperCase)} will work.
+ * but {@code new FilteredStringSet<>(Character::isLetter, Character::toUpperCase)} will work. Note that GWT only
+ * handles {@link Character#isLetter(char)} for ASCII letters; the library RegExodus offers replacements in Category.
  */
 public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 

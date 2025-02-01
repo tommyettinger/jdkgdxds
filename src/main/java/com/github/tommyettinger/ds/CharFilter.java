@@ -29,8 +29,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * can't find one, then it creates, registers, and returns one. A suggested practice for names is to describe the
  * filter's effects first, if any, followed by the editor's effects. A typical filter might only allow letter chars through,
  * and would convert them to upper-case so that they can (almost always) be treated as case-insensitive. This could use method
- * references to {@link Character#isLetter(char)} for the filter, {@link Character#toUpperCase(char)} for the editor, and could be
- * named {@code "LetterOnlyCaseInsensitive"}.
+ * references to {@link Character#isLetter(char)} for the filter, {@link Character#toUpperCase(char)} (or
+ * {@link Casing#caseUp(char)}) for the editor, and could be named {@code "LetterOnlyCaseInsensitive"}.
  * <br>
  * Any CharFilter can be used as a factory to create {@link FilteredStringSet} and {@link FilteredStringOrderedSet}
  * collections as if using their {@link FilteredStringSet#with()} static method and this CharFilter. These use the
@@ -43,11 +43,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * or one or more String-V pairs if given an array or varargs.
  * <br>
  * If you target GWT, be aware that several built-in JDK methods for handling chars may work differently in HTML than on
- * desktop, Android, or other platforms. In particular, {@link Character#toUpperCase(char)} will not work on most Unicode
- * chars on GWT, so you need another way to handle case-insensitivity. If you depend on
- * <a href="https://github.com/tommyettinger/RegExodus">RegExodus</a>, you can use its {@code Category::caseUp} as an
- * editor to make a char upper-case (if such a transformation can be done), and this works on GWT. Similarly,
- * {@code Category.L::contains} can be used as a filter to allow only chars in Unicode category L (letters). Because
+ * desktop, Android, or other platforms. In particular, {@link Character#isLetter(char)} will not work on most Unicode
+ * chars on GWT, so you need another way to handle checks like that. If you depend on
+ * <a href="https://github.com/tommyettinger/RegExodus">RegExodus</a>, you can use its {@code Category.L::contains} as a
+ * filter to allow only chars in Unicode category L (letters), and this works on GWT. Because
  * jdkgdxds does not depend on RegExodus, these aren't used in predefined filters or editors here.
  */
 public class CharFilter {

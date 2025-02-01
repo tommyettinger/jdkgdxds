@@ -41,10 +41,12 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * comparisons that are similarly case-insensitive, except for Georgian.
  * <br>
  * This is also very similar to {@link FilteredStringMap} when its {@link CharFilter#getEditor() editor}
- * is {@link Character#toUpperCase(char)}. FilteredStringMap works with Strings rather than CharSequences, which
+ * is {@link Character#toUpperCase(char)} or {@link Casing#caseUp(char)}.
+ * FilteredStringMap works with Strings rather than CharSequences, which
  * may be more convenient, and allows filtering some characters out of hashing and equality comparisons. If you want a
  * case-insensitive map that ignores any non-letter characters in a String, then CaseInsensitiveMap won't do,
- * but {@code new FilteredStringMap<>(Character::isLetter, Character::toUpperCase)} will work.
+ * but {@code new FilteredStringMap<>(Character::isLetter, Character::toUpperCase)} may work. Note that GWT only handles
+ * {@link Character#isLetter(char)} for ASCII letters; the library RegExodus offers replacements in Category.
  */
 public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 

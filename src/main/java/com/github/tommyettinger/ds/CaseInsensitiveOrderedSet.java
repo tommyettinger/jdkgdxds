@@ -47,10 +47,12 @@ import java.util.Iterator;
  * {@link Utilities#compareIgnoreCase(CharSequence, CharSequence)} can be used to sort this as case-insensitive.
  * <br>
  * This is also very similar to {@link FilteredStringOrderedSet} when its {@link CharFilter#getEditor() editor}
- * is {@link Character#toUpperCase(char)}. FilteredStringOrderedSet works with Strings rather than CharSequences, which
+ * is {@link Character#toUpperCase(char)} or {@link Casing#caseUp(char)}.
+ * FilteredStringOrderedSet works with Strings rather than CharSequences, which
  * may be more convenient, and allows filtering some characters out of hashing and equality comparisons. If you want a
  * case-insensitive set that ignores any non-letter characters in a String, then CaseInsensitiveOrderedSet won't do,
- * but {@code new FilteredStringOrderedSet<>(Character::isLetter, Character::toUpperCase)} will work.
+ * but {@code new FilteredStringOrderedSet<>(Character::isLetter, Character::toUpperCase)} will work. Note that GWT only
+ * handles {@link Character#isLetter(char)} for ASCII letters; the library RegExodus offers replacements in Category.
  */
 public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
