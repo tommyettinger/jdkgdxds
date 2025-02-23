@@ -1,3 +1,6 @@
+[1.8.1]
+- For very large hash tables (used by most set and map types here), the capacity was calculated using float (single) precision instead of double, which would have sometimes led to unnecessary resizes. This bug was found in fastutil by Captain-S0L0 .
+
 [1.8.0]
 - [SEED BREAKING, MAYBE] The dependency on digital is now 0.6.0, which changes the output of methods in Hasher with "Bulk" in their names. Those methods also pass more stringent testing than before.
 - Several new methods were added to EnumSet and EnumMap.
