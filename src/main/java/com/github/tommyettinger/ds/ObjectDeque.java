@@ -18,26 +18,29 @@ package com.github.tommyettinger.ds;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Random;
+
+import java.util.*;
 
 /**
- * A resizable, insertion-ordered double-ended queue of objects with efficient add and remove at the beginning and end. Values in the
- * backing array may wrap back to the beginning, making add and remove at the beginning and end O(1) (unless the backing array needs to
- * resize when adding). Deque functionality is provided via {@link #removeLast()} and {@link #addFirst(Object)}.
+ * A resizable, insertion-ordered double-ended queue of objects with efficient add and remove at the beginning and end.
+ * This also implements the {@link List} interface (except for {@link #subList(int, int)}).
+ * Values in the backing array may wrap back to the beginning, making add and remove at the beginning and end O(1)
+ * (unless the backing array needs to resize when adding). Deque functionality is provided via {@link #removeLast()} and
+ * {@link #addFirst(Object)}.
  * <br>
- * Unlike most Deque implementations in the JDK, you can get and set items anywhere in the deque in constant time with {@link #get(int)}
- * and {@link #set(int, Object)}. Unlike ArrayDeque in the JDK, this implements {@link #equals(Object)} and {@link #hashCode()}, as well
- * as {@link #equalsIdentity(Object)}.
+ * Unlike most Deque implementations in the JDK, you can get and set items anywhere in the deque in constant time with
+ * {@link #get(int)} and {@link #set(int, Object)}. Relative to an {@link ObjectList}, {@link #get(int)} has slightly
+ * higher overhead, but it still runs in constant time. Unlike ArrayDeque in the JDK, this implements
+ * {@link #equals(Object)} and {@link #hashCode()}, as well as {@link #equalsIdentity(Object)}. This can provide
+ * full-blown {@link ListIterator ListIterators} for iteration from an index or in reverse order.
+ * <br>
+ * In general, this is an improvement over {@link ArrayDeque} in every type of functionality, and is mostly equivalent
+ * to {@link ObjectList} as long as you don't need {@link #subList(int, int)} and the performance of {@link #get(int)}
+ * is adequate. Because it is array-backed, it should usually be much faster than {@link LinkedList}, as well; only
+ * periodic resizing and modifications in the middle of the List using an iterator should be typically faster for
+ * {@link LinkedList}.
  */
-public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection<T> {
+public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedCollection<T> {
 
 	/**
 	 * The value returned when nothing can be obtained from this deque and an exception is not meant to be thrown,
@@ -534,7 +537,19 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	 * @param item a T item to insert; may be null
 	 * @return true if this deque was modified
 	 */
-	public boolean add (int index, @Nullable T item) {
+	public void add (int index, @Nullable T item) {
+		insert(index, item);
+	}
+
+	/**
+	 * This is an alias for {@link #add(int, Object)} that returns {@code true} to indicate it does modify
+	 * this ObjectDeque.
+	 *
+	 * @param index index at which the specified element is to be inserted
+	 * @param item  element to be inserted
+	 * @return true if this was modified, which should always happen
+	 */
+	public boolean insert (int index, @Nullable T item) {
 		int oldSize = size;
 		if(index <= 0)
 			addFirst(item);
@@ -578,16 +593,6 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 
 		}
 		return oldSize != size;
-	}
-
-	/**
-	 * This is an alias for {@link #add(int, Object)} to improve compatibility with primitive lists.
-	 *
-	 * @param index   index at which the specified element is to be inserted
-	 * @param element element to be inserted
-	 */
-	public boolean insert (int index, @Nullable T element) {
-		return add(index, element);
 	}
 
 	/**
@@ -713,6 +718,117 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		int oldSize = size;
 		for (T t : c) {
 			addLast(t);
+		}
+		return oldSize != size;
+	}
+
+	/**
+	 * An alias for {@link #addAll(Collection)}, this adds every item in {@code c} to this in order at the end.
+	 * @param c the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAllLast (Collection<? extends T> c) {
+		return addAll(c);
+	}
+
+	/**
+	 * Adds every item in {@code c} to this in order at the start. The iteration order of {@code c} will be preserved
+	 * for the added items.
+	 * @param c the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAllFirst (Collection<@Nullable ? extends T> c) {
+		@Nullable T[] values = this.values;
+		final int cs = c.size();
+		if(cs == 0) return false;
+		if (size + cs > values.length) {
+			ensureCapacity(cs);
+			values = this.values;
+		}
+
+		int head = this.head;
+		head -= cs;
+		if (head < 0) {
+			head = values.length - cs;
+		}
+		int index = 0;
+		for(T object : c){
+			values[head + index++] = object;
+		}
+
+		this.head = head;
+		size += cs;
+		return true;
+	}
+	/**
+	 * An alias for {@link #addAll(int, Collection)}; inserts all elements
+	 * in the specified collection into this list at the specified position.
+	 * Shifts the element currently at that position (if any) and any subsequent
+	 * elements to the right (increases their indices). The new elements
+	 * will appear in this list in the order that they are returned by the
+	 * specified collection's iterator. The behavior of this operation is
+	 * undefined if the specified collection is modified while the
+	 * operation is in progress. (Note that this will occur if the specified
+	 * collection is this list, and it's nonempty.)
+	 *
+	 * @param index index at which to insert the first element from the
+	 *              specified collection
+	 * @param c collection containing elements to be added to this list
+	 * @return {@code true} if this list changed as a result of the call
+	 */
+	public boolean insertAll(int index, Collection<? extends T> c) {
+		return addAll(index, c);
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends T> c) {
+		int oldSize = size;
+		if(index <= 0)
+			addAllFirst(c);
+		else if(index >= oldSize)
+			addAll(c);
+		else {
+			@Nullable T[] values = this.values;
+			final int cs = c.size();
+			if(cs == 0) return false;
+			if (size + cs > values.length) {
+				ensureCapacity(cs);
+				values = this.values;
+			}
+
+			if(head < tail) {
+				index += head;
+				if(index + cs > values.length) index -= values.length;
+				System.arraycopy(values, index, values, (index + cs) % values.length, tail - index);
+				for(T item : c) {
+					values[index++] = item;
+				}
+				tail += cs;
+				if (tail > values.length) {
+					tail = 1;
+				}
+			} else {
+				if (head + index < values.length) {
+					// backward shift
+					System.arraycopy(values, head, values, head - cs, index);
+					head -= cs;
+					for(T item : c) {
+						values[head + index++] = item;
+					}
+					// don't need to check for head being negative, because head is always > tail
+				}
+				else {
+					// forward shift
+					index -= values.length - cs;
+					System.arraycopy(values, head + index, values, head + index + cs, tail - head - index);
+					for(T item : c) {
+						values[head + index++] = item;
+					}
+					tail += cs;
+					// again, don't need to check for tail going around, because the head is in the way and doesn't need to move
+				}
+			}
+			size += cs;
 		}
 		return oldSize != size;
 	}
@@ -1145,7 +1261,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			int idx;
 			do {
 				if ((idx = indexOf(o, false)) != -1)
-					removeAt(idx);
+					remove(idx);
 			} while (idx == -1);
 		}
 		return oldSize != size;
@@ -1163,7 +1279,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			int idx;
 			do {
 				if ((idx = indexOf(o, false)) != -1)
-					removeAt(idx);
+					remove(idx);
 			} while (idx == -1);
 		}
 		return oldSize != size;
@@ -1184,7 +1300,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 			int idx;
 			do {
 				if ((idx = indexOf(o, false)) != -1)
-					removeAt(idx);
+					remove(idx);
 			} while (idx == -1);
 		}
 		return oldSize != size;
@@ -1320,6 +1436,54 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		return -1;
 	}
 
+	@Override
+	public ListIterator<T> listIterator() {
+		if (iterator1 == null || iterator2 == null) {
+			iterator1 = new ObjectDequeIterator<>(this);
+			iterator2 = new ObjectDequeIterator<>(this);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset();
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset();
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
+	}
+
+	@Override
+	public ListIterator<T> listIterator(int index) {
+		if (iterator1 == null || iterator2 == null) {
+			iterator1 = new ObjectDequeIterator<>(this, index, false);
+			iterator2 = new ObjectDequeIterator<>(this, index, false);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset(index);
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset(index);
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
+	}
+
+	/**
+	 * Not implemented and not intended to be; throws an {@link UnsupportedOperationException} always.
+	 * @param fromIndex ignored
+	 * @param toIndex ignored
+	 * @return never
+	 * @throws UnsupportedOperationException always
+	 */
+	@Override
+	public List<T> subList(int fromIndex, int toIndex) {
+		throw new UnsupportedOperationException("subList() is not supported.");
+	}
+
 	/**
 	 * Removes the first instance of the specified value in the queue.
 	 *
@@ -1330,7 +1494,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		int index = indexOf(value, identity);
 		if (index == -1)
 			return false;
-		removeAt(index);
+		remove(index);
 		return true;
 	}
 
@@ -1344,19 +1508,26 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		int index = lastIndexOf(value, identity);
 		if (index == -1)
 			return false;
-		removeAt(index);
+		remove(index);
 		return true;
 	}
 
 	/**
 	 * Removes and returns the item at the specified index.
+	 * This is an alias for {@link #remove(int)} for compatibility with primitive-backed lists and deques.
 	 */
 	@Nullable
-	public T removeAt (int index) {
-		if (index < 0)
-			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
+	public T removeAt(int index) {
+		return remove(index);
+	}
+
+	@Override
+	@Nullable
+	public T remove(int index) {
+		if (index <= 0)
+			return removeFirst();
 		if (index >= size)
-			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+			return removeLast();
 
 		@Nullable T[] values = this.values;
 		int head = this.head, tail = this.tail;
@@ -1396,6 +1567,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	/**
 	 * Returns true if the queue is empty.
 	 */
+	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
@@ -1407,6 +1579,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	 * @see #addFirst(Object)
 	 * @see #removeFirst()
 	 */
+	@Override
 	public @Nullable T first () {
 		if (size == 0) {
 			// Underflow
@@ -1435,17 +1608,12 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		return values[tail];
 	}
 
-	/**
-	 * Retrieves the value in queue without removing it. Indexing is from the front to back, zero based. Therefore,
-	 * get(0) is the same as {@link #first()}.
-	 *
-	 * @throws IndexOutOfBoundsException when the index is negative or >= size
-	 */
+	@Override
 	public @Nullable T get (int index) {
-		if (index < 0)
-			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
-		if (index >= size)
-			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (index <= 0)
+			return getFirst();
+		if (index >= size - 1)
+			return getLast();
 		final @Nullable T[] values = this.values;
 
 		int i = head + index;
@@ -1454,14 +1622,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		return values[i];
 	}
 
-	/**
-	 * Sets an existing position in this deque to the given item. Indexing is from the front to back, zero based.
-	 *
-	 * @param index the index to set
-	 * @param item  what value should replace the contents of the specified index
-	 * @return the previous contents of the specified index
-	 * @throws IndexOutOfBoundsException when the index is negative or >= size
-	 */
+	@Override
 	public @Nullable T set (int index, @Nullable T item) {
 		if (index < 0)
 			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
@@ -1478,9 +1639,10 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 	}
 
 	/**
-	 * Removes all values from this queue. Values in backing array are set to null to prevent memory leak, so this operates in
-	 * O(n).
+	 * Removes all values from this queue. Values in backing array are set to null to prevent memory leaks, so this
+	 * operates in O(n) time.
 	 */
+	@Override
 	public void clear () {
 		if (size == 0)
 			return;
@@ -1887,7 +2049,7 @@ public class ObjectDeque<T> implements Deque<T>, Arrangeable, EnhancedCollection
 		public void remove () {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (latest == -1 || latest >= deque.size()) {throw new NoSuchElementException();}
-			deque.removeAt(latest);
+			deque.remove(latest);
 			index = latest;
 			latest = -1;
 		}

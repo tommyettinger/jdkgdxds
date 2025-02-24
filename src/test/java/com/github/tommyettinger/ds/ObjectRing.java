@@ -149,9 +149,9 @@ public class ObjectRing<T> extends ObjectDeque<T> {
 	}
 
 	@Override
-	public boolean add (int index, @Nullable T item) {
-		if(index < forgotten) return false;
-		return super.add(index - forgotten, item);
+	public void add (int index, @Nullable T item) {
+		if(index >= forgotten)
+			super.add(index - forgotten, item);
 	}
 
 	@Override
@@ -162,6 +162,11 @@ public class ObjectRing<T> extends ObjectDeque<T> {
 
 	@Override
 	public @Nullable T removeAt (int index) {
+		throw new UnsupportedOperationException("Ring buffers are append-only.");
+	}
+
+	@Override
+	public @Nullable T remove(int index) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 

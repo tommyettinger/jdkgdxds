@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package com.github.tommyettinger.ds;
+package com.github.tommyettinger.ds.experimental;
 
+import com.github.tommyettinger.ds.Arrangeable;
+import com.github.tommyettinger.ds.EnhancedCollection;
+import com.github.tommyettinger.ds.Utilities;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -30,7 +33,7 @@ import java.util.*;
  * and {@link #set(int, Object)}. Unlike ArrayDeque in the JDK, this implements {@link #equals(Object)} and {@link #hashCode()}, as well
  * as {@link #equalsIdentity(Object)}.
  */
-public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, EnhancedCollection<T> {
+public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedCollection<T> {
 
 	/**
 	 * The value returned when nothing can be obtained from this deque and an exception is not meant to be thrown,
@@ -68,14 +71,14 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	/**
 	 * Creates a new ObjectDeque which can hold 16 values without needing to resize backing array.
 	 */
-	public ObjectDequist() {
+	public ObjectDeque() {
 		this(16);
 	}
 
 	/**
 	 * Creates a new ObjectDeque which can hold the specified number of values without needing to resize backing array.
 	 */
-	public ObjectDequist(int initialSize) {
+	public ObjectDeque(int initialSize) {
 		// noinspection unchecked
 		this.values = (T[])new Object[initialSize];
 	}
@@ -85,7 +88,7 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 *
 	 * @param coll a Collection of T that will be copied into this and used in full
 	 */
-	public ObjectDequist(Collection<? extends T> coll) {
+	public ObjectDeque(Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -95,7 +98,7 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public ObjectDequist(Iterator<? extends T> coll) {
+	public ObjectDeque(Iterator<? extends T> coll) {
 		this();
 		addAll(coll);
 	}
@@ -105,7 +108,7 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 *
 	 * @param deque another ObjectDeque to copy
 	 */
-	public ObjectDequist(ObjectDequist<? extends T> deque) {
+	public ObjectDeque(ObjectDeque<? extends T> deque) {
 		this.values = Arrays.copyOf(deque.values, deque.values.length);
 		this.size = deque.size;
 		this.head = deque.head;
@@ -118,7 +121,7 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 *
 	 * @param a an array of T that will be copied into this and used in full
 	 */
-	public ObjectDequist(T[] a) {
+	public ObjectDeque(T[] a) {
 		tail = a.length;
 		this.values = Arrays.copyOf(a, tail);
 		size = tail;
@@ -131,7 +134,7 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * @param offset where in {@code a} to start using items
 	 * @param count  how many items to use from {@code a}
 	 */
-	public ObjectDequist(T[] a, int offset, int count) {
+	public ObjectDeque(T[] a, int offset, int count) {
 		this.values = Arrays.copyOfRange(a, offset, offset + count);
 		tail = count;
 		size = count;
@@ -710,7 +713,6 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 		}
 		return oldSize != size;
 	}
-
 
 	public boolean addAllFirst (Collection<@Nullable ? extends T> c) {
 		@Nullable T[] values = this.values;
@@ -1619,7 +1621,7 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * Returns an iterator for the items in the deque. Remove is supported.
 	 * <br>
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDequist)}.
+	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque)}.
 	 */
 	@Override
 	public @NonNull ObjectDequeIterator<T> iterator () {
@@ -1645,7 +1647,7 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * last (tail) to first (head).
 	 * <br>
 	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDequist, boolean)}.
+	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque, boolean)}.
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
@@ -1704,10 +1706,10 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	public boolean equals (Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof ObjectDequist))
+		if (!(o instanceof ObjectDeque))
 			return false;
 
-		ObjectDequist<?> q = (ObjectDequist<?>)o;
+		ObjectDeque<?> q = (ObjectDeque<?>)o;
 		final int size = this.size;
 
 		if (q.size != size)
@@ -1746,10 +1748,10 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	public boolean equalsIdentity (Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof ObjectDequist))
+		if (!(o instanceof ObjectDeque))
 			return false;
 
-		ObjectDequist<?> q = (ObjectDequist<?>)o;
+		ObjectDeque<?> q = (ObjectDeque<?>)o;
 		final int size = this.size;
 
 		if (q.size != size)
@@ -1873,19 +1875,19 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 */
 	public static class ObjectDequeIterator<T> implements Iterable<T>, ListIterator<T> {
 		protected int index, latest = -1;
-		protected ObjectDequist<T> deque;
+		protected ObjectDeque<T> deque;
 		protected boolean valid = true;
 		private final int direction;
 
-		public ObjectDequeIterator (ObjectDequist<T> deque) {
+		public ObjectDequeIterator (ObjectDeque<T> deque) {
 			this(deque, false);
 		}
-		public ObjectDequeIterator (ObjectDequist<T> deque, boolean descendingOrder) {
+		public ObjectDequeIterator (ObjectDeque<T> deque, boolean descendingOrder) {
 			this.deque = deque;
 			direction = descendingOrder ? -1 : 1;
 		}
 
-		public ObjectDequeIterator (ObjectDequist<T> deque, int index, boolean descendingOrder) {
+		public ObjectDequeIterator (ObjectDeque<T> deque, int index, boolean descendingOrder) {
 			if (index < 0 || index >= deque.size())
 				throw new IndexOutOfBoundsException("ObjectDequeIterator does not satisfy index >= 0 && index < deque.size()");
 			this.deque = deque;
@@ -2093,8 +2095,8 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * @param <T>    the type of items; must be given explicitly
 	 * @return a new deque containing nothing
 	 */
-	public static <T> ObjectDequist<T> with () {
-		return new ObjectDequist<>(0);
+	public static <T> ObjectDeque<T> with () {
+		return new ObjectDeque<>(0);
 	}
 
 	/**
@@ -2103,8 +2105,8 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * @return a new ObjectDeque that holds the given item
 	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectDequist<T> with (T item) {
-		ObjectDequist<T> deque = new ObjectDequist<>(1);
+	public static <T> ObjectDeque<T> with (T item) {
+		ObjectDeque<T> deque = new ObjectDeque<>(1);
 		deque.add(item);
 		return deque;
 	}
@@ -2116,8 +2118,8 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * @return a new ObjectDeque that holds the given items
 	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectDequist<T> with (T item0, T item1) {
-		ObjectDequist<T> deque = new ObjectDequist<>(2);
+	public static <T> ObjectDeque<T> with (T item0, T item1) {
+		ObjectDeque<T> deque = new ObjectDeque<>(2);
 		deque.add(item0, item1);
 		return deque;
 	}
@@ -2130,8 +2132,8 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * @return a new ObjectDeque that holds the given items
 	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectDequist<T> with (T item0, T item1, T item2) {
-		ObjectDequist<T> deque = new ObjectDequist<>(3);
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2) {
+		ObjectDeque<T> deque = new ObjectDeque<>(3);
 		deque.add(item0, item1, item2);
 		return deque;
 	}
@@ -2145,8 +2147,8 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * @return a new ObjectDeque that holds the given items
 	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectDequist<T> with (T item0, T item1, T item2, T item3) {
-		ObjectDequist<T> deque = new ObjectDequist<>(4);
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2, T item3) {
+		ObjectDeque<T> deque = new ObjectDeque<>(4);
 		deque.add(item0, item1, item2, item3);
 		return deque;
 	}
@@ -2161,8 +2163,8 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * @return a new ObjectDeque that holds the given items
 	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectDequist<T> with (T item0, T item1, T item2, T item3, T item4) {
-		ObjectDequist<T> deque = new ObjectDequist<>(5);
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2, T item3, T item4) {
+		ObjectDeque<T> deque = new ObjectDeque<>(5);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4);
 		return deque;
@@ -2179,8 +2181,8 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * @return a new ObjectDeque that holds the given items
 	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectDequist<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
-		ObjectDequist<T> deque = new ObjectDequist<>(6);
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+		ObjectDeque<T> deque = new ObjectDeque<>(6);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5);
 		return deque;
@@ -2198,8 +2200,8 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * @return a new ObjectDeque that holds the given items
 	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectDequist<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
-		ObjectDequist<T> deque = new ObjectDequist<>(7);
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+		ObjectDeque<T> deque = new ObjectDeque<>(7);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6);
 		return deque;
@@ -2217,8 +2219,8 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * @return a new ObjectDeque that holds the given items
 	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectDequist<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
-		ObjectDequist<T> deque = new ObjectDequist<>(8);
+	public static <T> ObjectDeque<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+		ObjectDeque<T> deque = new ObjectDeque<>(8);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6, item7);
 		return deque;
@@ -2234,7 +2236,7 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 	 * @param <T> the type of items, typically inferred by all the items being the same type
 	 */
 	@SafeVarargs
-	public static <T> ObjectDequist<T> with (T... varargs) {
-		return new ObjectDequist<>(varargs);
+	public static <T> ObjectDeque<T> with (T... varargs) {
+		return new ObjectDeque<>(varargs);
 	}
 }

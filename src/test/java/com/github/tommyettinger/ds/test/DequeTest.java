@@ -52,12 +52,12 @@ public class DequeTest {
 			"tau", "upsilon", "phi", "chi", "psi", "omega"
 		);
 		deque.insert(3, "STEVE");
-		deque.removeAt(2);
-		deque.removeAt(6);
-		deque.removeAt(6);
-		deque.removeAt(6);
-		deque.removeAt(6);
-		deque.removeAt(6);
+		deque.remove(2);
+		deque.remove(6);
+		deque.remove(6);
+		deque.remove(6);
+		deque.remove(6);
+		deque.remove(6);
 		deque.insert(12, "BILLY");
 		deque.insert(4, "JIMBO");
 		Assert.assertEquals("[alpha, beta, STEVE, delta, JIMBO, epsilon, zeta, mu, nu, xi, omicron, pi, rho, "
@@ -87,9 +87,9 @@ public class DequeTest {
 		// the deque should contain eta through omega, followed by three all-caps names.
 		// the names should be at slots 0, 1, 2, and eta starts at slot 6.
 		System.out.println(deque);
-		deque.removeAt(1); // removes theta
+		deque.remove(1); // removes theta
 		System.out.println(deque);
-		deque.removeAt(18); // removes BETTY
+		deque.remove(18); // removes BETTY
 		System.out.println(deque);
 		deque.addFirst("alef");
 		deque.add(1, "bet");
