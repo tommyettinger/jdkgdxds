@@ -1353,12 +1353,38 @@ public class ObjectDequist<T> implements Deque<T>, List<T>, Arrangeable, Enhance
 
 	@Override
 	public ListIterator<T> listIterator() {
-		return null;
+		if (iterator1 == null || iterator2 == null) {
+			iterator1 = new ObjectDequeIterator<>(this);
+			iterator2 = new ObjectDequeIterator<>(this);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset();
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset();
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
 	}
 
 	@Override
 	public ListIterator<T> listIterator(int index) {
-		return null;
+		if (iterator1 == null || iterator2 == null) {
+			iterator1 = new ObjectDequeIterator<>(this, index, false);
+			iterator2 = new ObjectDequeIterator<>(this, index, false);
+		}
+		if (!iterator1.valid) {
+			iterator1.reset(index);
+			iterator1.valid = true;
+			iterator2.valid = false;
+			return iterator1;
+		}
+		iterator2.reset(index);
+		iterator2.valid = true;
+		iterator1.valid = false;
+		return iterator2;
 	}
 
 	@Override
