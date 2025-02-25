@@ -808,10 +808,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 				for(T item : c) {
 					values[index++] = item;
 				}
-				tail += cs;
-				if (tail > values.length) {
-					tail = 1;
-				}
+				tail = (tail + cs) % (values.length + 1);
 			} else {
 				if (head + index < values.length) {
 					// backward shift
@@ -932,6 +929,54 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		this.head = head;
 		size += cs;
 		return true;
+	}
+
+	public boolean addAll(int index, T[] array) {
+		return addAll(index, array, 0, array.length);
+	}
+	
+	public boolean addAll(int index, T[] array, int offset, int length) {
+		int oldSize = size;
+		if(index <= 0)
+			addAllFirst(array, offset, length);
+		else if(index >= oldSize)
+			addAll(array, offset, length);
+		else {
+			@Nullable T[] values = this.values;
+			final int cs = Math.min(array.length - offset, length);
+			if(cs <= 0) return false;
+			if (size + cs > values.length) {
+				ensureCapacity(Math.max(cs, oldSize));
+				values = this.values;
+			}
+
+			if(head < tail) {
+				index += head;
+				if(index + cs > values.length) index -= values.length;
+				System.arraycopy(values, index, values, (index + cs) % values.length, tail - index);
+				System.arraycopy(array, offset, values, index, cs);
+				tail = (tail + cs) % (values.length + 1);
+			} else {
+				if (head + index < values.length) {
+					// backward shift
+					System.arraycopy(values, head, values, head - cs, index);
+					head -= cs;
+					System.arraycopy(array, offset, values, head + index, cs);
+					// don't need to check for head being negative, because head is always > tail
+				}
+				else {
+					// forward shift
+					index -= values.length - cs;
+					System.arraycopy(values, head + index, values, head + index + cs, tail - head - index);
+
+					System.arraycopy(array, offset, values, head + index, cs);
+					tail += cs;
+					// again, don't need to check for tail going around, because the head is in the way and doesn't need to move
+				}
+			}
+			size += cs;
+		}
+		return oldSize != size;
 	}
 
 	/**
