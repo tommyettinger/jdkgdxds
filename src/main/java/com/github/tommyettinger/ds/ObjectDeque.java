@@ -221,14 +221,16 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		final int tail = this.tail;
 
 		final @Nullable T[] newArray = (T[])new Object[Math.max(1, newSize)];
-		if (head < tail) {
-			// Continuous
-			System.arraycopy(values, head, newArray, 0, tail - head);
-		} else if (size > 0) {
-			// Wrapped
-			final int rest = values.length - head;
-			System.arraycopy(values, head, newArray, 0, rest);
-			System.arraycopy(values, 0, newArray, rest, tail);
+		if (size > 0) {
+			if (head < tail) {
+				// Continuous
+				System.arraycopy(values, head, newArray, 0, tail - head);
+			} else {
+				// Wrapped
+				final int rest = values.length - head;
+				System.arraycopy(values, head, newArray, 0, rest);
+				System.arraycopy(values, 0, newArray, rest, tail);
+			}
 		}
 		this.values = newArray;
 		this.head = 0;
@@ -858,18 +860,46 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		int cs = Math.min(array.length - offset, length);
 		if(cs <= 0) return false;
 		ensureCapacity(Math.max(oldSize, cs));
-		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-			addLast(array[i]);
-		}
+		@Nullable T[] values = this.values;
+
+		int endSpace = Math.min(values.length - tail, cs);
+		if(endSpace > 0)
+			System.arraycopy(array, offset, values, tail, endSpace);
+		cs -= endSpace;
+		if(cs > 0)
+			System.arraycopy(array, offset + endSpace, values, 0, cs);
+
 		return oldSize != size;
 	}
 
+
 	/**
-	 * Exactly like {@link #addAllFirst(Collection)}, but takes an array instead of a Collection.
-	 * @see #addAllFirst(Collection)
+	 * An alias for {@link #addAll(Object[])}.
+	 * @see #addAll(Object[])
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
+	public boolean addAllLast (T[] array) {
+		return addAll(array, 0, array.length);
+	}
+	/**
+	 * An alias for {@link #addAll(Object[], int, int)}.
+	 * @see #addAll(Object[], int, int)
+	 * @param array the elements to be inserted into this deque
+	 * @param offset the index of the first item in array to add
+	 * @param length how many items, at most, to add from array into this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAllLast (T[] array, int offset, int length) {
+		return addAll(array, offset, length);
+	}
+
+	/**
+         * Exactly like {@link #addAllFirst(Collection)}, but takes an array instead of a Collection.
+         * @see #addAllFirst(Collection)
+         * @param array the elements to be inserted into this deque
+         * @return {@code true} if this deque changed as a result of the call
+         */
 	public boolean addAllFirst (T[] array) {
 		return addAllFirst(array, 0, array.length);
 	}
