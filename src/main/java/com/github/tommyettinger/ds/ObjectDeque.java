@@ -934,7 +934,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 	public boolean addAll(int index, T[] array) {
 		return addAll(index, array, 0, array.length);
 	}
-	
+
 	public boolean addAll(int index, T[] array, int offset, int length) {
 		int oldSize = size;
 		if(index <= 0)
@@ -1994,6 +1994,12 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 			fv = values[f];
 			values[f] = values[s];
 			values[s] = fv;
+		}
+	}
+
+	public void shuffle (Random rng) {
+		for (int i = size() - 1; i > 0; i--) {
+			set(i, set(rng.nextInt(i + 1), get(i)));
 		}
 	}
 
