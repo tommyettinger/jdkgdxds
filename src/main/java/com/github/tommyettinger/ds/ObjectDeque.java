@@ -716,6 +716,8 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 	@Override
 	public boolean addAll (Collection<? extends T> c) {
 		int oldSize = size;
+		if(c.isEmpty()) return false;
+		ensureCapacity(Math.max(c.size(), oldSize));
 		for (T t : c) {
 			addLast(t);
 		}
@@ -742,7 +744,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		final int cs = c.size();
 		if(cs == 0) return false;
 		if (size + cs > values.length) {
-			ensureCapacity(cs);
+			ensureCapacity(Math.max(cs, size));
 			values = this.values;
 		}
 
@@ -760,6 +762,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		size += cs;
 		return true;
 	}
+
 	/**
 	 * An alias for {@link #addAll(int, Collection)}; inserts all elements
 	 * in the specified collection into this list at the specified position.
@@ -792,7 +795,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 			final int cs = c.size();
 			if(cs == 0) return false;
 			if (size + cs > values.length) {
-				ensureCapacity(cs);
+				ensureCapacity(Math.max(cs, oldSize));
 				values = this.values;
 			}
 
@@ -852,10 +855,53 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 	 */
 	public boolean addAll (T[] array, int offset, int length) {
 		int oldSize = size;
+		int cs = Math.min(array.length - offset, length);
+		if(cs <= 0) return false;
+		ensureCapacity(Math.max(oldSize, cs));
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
 			addLast(array[i]);
 		}
 		return oldSize != size;
+	}
+
+	/**
+	 * Exactly like {@link #addAllFirst(Collection)}, but takes an array instead of a Collection.
+	 * @see #addAllFirst(Collection)
+	 * @param array the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAllFirst (T[] array) {
+		return addAllFirst(array, 0, array.length);
+	}
+
+	/**
+	 * Like {@link #addAllFirst(Object[])}, but only uses at most {@code length} items from {@code array}, starting at
+	 * {@code offset}. The order of {@code array} will be preserved, starting at the head of the deque.
+	 * @see #addAllFirst(Object[])
+	 * @param array the elements to be inserted into this deque
+	 * @param offset the index of the first item in array to add
+	 * @param length how many items, at most, to add from array into this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAllFirst (T[] array, int offset, int length) {
+		@Nullable T[] values = this.values;
+		final int cs = Math.min(array.length - offset, length);
+		if(cs <= 0) return false;
+		if (size + cs > values.length) {
+			ensureCapacity(Math.max(cs, size));
+			values = this.values;
+		}
+
+		int head = this.head;
+		head -= cs;
+		if (head < 0) {
+			head = values.length - cs;
+		}
+		System.arraycopy(array, offset, values, head, cs);
+
+		this.head = head;
+		size += cs;
+		return true;
 	}
 
 	/**
