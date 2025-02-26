@@ -2064,6 +2064,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		protected ObjectDeque<T> deque;
 		protected boolean valid = true;
 		private final int direction;
+		protected int expectedModCount;
 
 		public ObjectDequeIterator (ObjectDeque<T> deque) {
 			this(deque, false);
@@ -2079,6 +2080,18 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			this.deque = deque;
 			this.index = index;
 			direction = descendingOrder ? -1 : 1;
+			expectedModCount = deque.modCount;
+		}
+
+		/**
+		 * Checks if this iterator's expected amount of modifications to the deque matches what the deque reports.
+		 * This is used to ensure the {@link ObjectDeque#iterator()} and {@link ObjectDeque#listIterator()} are
+		 * both fail-fast iterators.
+		 * @throws ConcurrentModificationException if the check fails
+		 */
+		protected final void modCheck() {
+			if (deque.modCount != expectedModCount)
+				throw new ConcurrentModificationException("ObjectDeque's iterator is mismatched with its ObjectDeque.");
 		}
 
 		/**
@@ -2091,9 +2104,12 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		@Nullable
 		public T next () {
 			if (!hasNext()) {throw new NoSuchElementException();}
+			modCheck();
 			latest = index;
 			index += direction;
-			return deque.get(latest);
+			final T t = deque.get(latest);
+			modCheck();
+			return t;
 		}
 
 		/**
@@ -2140,7 +2156,12 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		@Nullable
 		public T previous () {
 			if (!hasPrevious()) {throw new NoSuchElementException();}
-			return deque.get(latest = (index -= direction));
+			modCheck();
+			latest = index -= direction;
+			final T t = deque.get(latest);
+			modCheck();
+			return t;
+
 		}
 
 		/**
@@ -2189,9 +2210,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		public void remove () {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (latest == -1 || latest >= deque.size()) {throw new NoSuchElementException();}
+			modCheck();
 			deque.remove(latest);
 			index = latest;
 			latest = -1;
+			expectedModCount = deque.modCount;
 		}
 
 		/**
@@ -2218,7 +2241,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		public void set (@Nullable T t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (latest == -1 || latest >= deque.size()) {throw new NoSuchElementException();}
+			modCheck();
 			deque.set(latest, t);
+			expectedModCount = deque.modCount;
 		}
 
 		/**
@@ -2245,14 +2270,18 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		public void add (@Nullable T t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > deque.size()) {throw new NoSuchElementException();}
+			modCheck();
 			deque.insert(index, t);
 			index += direction;
 			latest = -1;
+			expectedModCount = deque.modCount;
+
 		}
 
 		public void reset () {
 			index = deque.size - 1 & direction >> 31;
 			latest = -1;
+			expectedModCount = deque.modCount;
 		}
 
 		public void reset (int index) {
@@ -2260,6 +2289,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				throw new IndexOutOfBoundsException("ObjectDequeIterator does not satisfy index >= 0 && index < deque.size()");
 			this.index = index;
 			latest = -1;
+			expectedModCount = deque.modCount;
 		}
 
 		/**
