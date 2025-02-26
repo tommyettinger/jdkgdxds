@@ -23,7 +23,7 @@ import java.util.*;
 
 /**
  * A resizable, insertion-ordered double-ended queue of objects with efficient add and remove at the beginning and end.
- * This also implements the {@link List} interface (except for {@link #subList(int, int)}).
+ * This implements both the {@link List} and {@link Deque} interfaces, and supports {@link RandomAccess}.
  * Values in the backing array may wrap back to the beginning, making add and remove at the beginning and end O(1)
  * (unless the backing array needs to resize when adding). Deque functionality is provided via {@link #removeLast()} and
  * {@link #addFirst(Object)}.
@@ -35,12 +35,11 @@ import java.util.*;
  * full-blown {@link ListIterator ListIterators} for iteration from an index or in reverse order.
  * <br>
  * In general, this is an improvement over {@link ArrayDeque} in every type of functionality, and is mostly equivalent
- * to {@link ObjectList} as long as you don't need {@link #subList(int, int)} and the performance of {@link #get(int)}
- * is adequate. Because it is array-backed, it should usually be much faster than {@link LinkedList}, as well; only
- * periodic resizing and modifications in the middle of the List using an iterator should be typically faster for
- * {@link LinkedList}.
+ * to {@link ObjectList} as long as the performance of {@link #get(int)} is adequate. Because it is array-backed, it
+ * should usually be much faster than {@link LinkedList}, as well; only periodic resizing and modifications in the
+ * middle of the List using an iterator should be typically faster for {@link LinkedList}.
  */
-public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedCollection<T> {
+public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>, RandomAccess, Arrangeable, EnhancedCollection<T> {
 
 	/**
 	 * The value returned when nothing can be obtained from this deque and an exception is not meant to be thrown,
@@ -174,6 +173,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		}
 		values[tail++] = object;
 		size++;
+		modCount++;
 	}
 
 	/**
@@ -199,6 +199,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 
 		this.head = head;
 		size++;
+		modCount++;
 	}
 
 	/**
@@ -220,7 +221,9 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		final int head = this.head;
 		final int tail = this.tail;
 
+		@SuppressWarnings("unchecked")
 		final @Nullable T[] newArray = (T[])new Object[Math.max(1, newSize)];
+
 		if (size > 0) {
 			if (head < tail) {
 				// Continuous
@@ -259,6 +262,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 			head = 0;
 		}
 		size--;
+		modCount++;
 
 		return result;
 	}
@@ -286,6 +290,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		values[tail] = null;
 		this.tail = tail;
 		size--;
+		modCount++;
 
 		return result;
 	}
@@ -359,6 +364,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 			head = 0;
 		}
 		size--;
+		modCount++;
 
 		return result;
 	}
@@ -386,6 +392,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		values[tail] = null;
 		this.tail = tail;
 		size--;
+		modCount++;
 
 		return result;
 	}
@@ -537,7 +544,6 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 	 * (where it acts like offerLast()).
 	 * @param index the index in the deque's insertion order to insert the item
 	 * @param item a T item to insert; may be null
-	 * @return true if this deque was modified
 	 */
 	public void add (int index, @Nullable T item) {
 		insert(index, item);
@@ -592,7 +598,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 				}
 			}
 			size++;
-
+			modCount++;
 		}
 		return oldSize != size;
 	}
@@ -762,6 +768,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 
 		this.head = head;
 		size += cs;
+		modCount += cs;
 		return true;
 	}
 
@@ -831,6 +838,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 				}
 			}
 			size += cs;
+			modCount += cs;
 		}
 		return oldSize != size;
 	}
@@ -858,6 +866,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		if(cs <= 0) return false;
 		ensureCapacity(Math.max(oldSize, cs));
 		@Nullable T[] values = this.values;
+		modCount += cs;
 
 		int endSpace = Math.min(values.length - tail, cs);
 		if(endSpace > 0)
@@ -928,6 +937,8 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 
 		this.head = head;
 		size += cs;
+		modCount += cs;
+
 		return true;
 	}
 
@@ -975,6 +986,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 				}
 			}
 			size += cs;
+			modCount += cs;
 		}
 		return oldSize != size;
 	}
@@ -1433,11 +1445,12 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 	 */
 	public void truncate (int newSize) {
 		newSize = Math.max(0, newSize);
-		if (size() > newSize) {
+		int oldSize = size();
+		if (oldSize > newSize) {
 			if(head < tail) {
 				// only removing from tail, near the end, toward head, near the start
 				Arrays.fill(values, head + newSize, tail, null);
-				tail -= size() - newSize;
+				tail -= oldSize - newSize;
 				size = newSize;
 			} else if(head + newSize < values.length) {
 				// tail is near the start, but we have to remove elements through the start and into the back
@@ -1447,11 +1460,12 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 				size = newSize;
 			} else {
 				// tail is near the start, but we only have to remove some elements between tail and the start
-				final int newTail = tail - (size() - newSize);
+				final int newTail = tail - (oldSize - newSize);
 				Arrays.fill(values, newTail, tail, null);
 				tail = newTail;
 				size = newSize;
 			}
+			modCount += oldSize - newSize;
 		}
 	}
 
@@ -1593,16 +1607,9 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		return iterator2;
 	}
 
-	/**
-	 * Not implemented and not intended to be; throws an {@link UnsupportedOperationException} always.
-	 * @param fromIndex ignored
-	 * @param toIndex ignored
-	 * @return never
-	 * @throws UnsupportedOperationException always
-	 */
 	@Override
 	public List<T> subList(int fromIndex, int toIndex) {
-		throw new UnsupportedOperationException("subList() is not supported.");
+		return super.subList(fromIndex, toIndex);
 	}
 
 	/**
@@ -1675,6 +1682,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 			}
 		}
 		size--;
+		modCount++;
 		return value;
 	}
 
@@ -1745,13 +1753,11 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 
 	@Override
 	public @Nullable T set (int index, @Nullable T item) {
-		if (index < 0)
-			throw new IndexOutOfBoundsException("index can't be < 0: " + index);
-		if (index >= size)
-			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		if (size <= 0)
+			throw new IndexOutOfBoundsException("Cannot set in an empty Collection.");
 		final @Nullable T[] values = this.values;
 
-		int i = head + index;
+		int i = head + Math.min(Math.max(index, 0), size - 1);
 		if (i >= values.length)
 			i -= values.length;
 		T old = values[i];
@@ -1781,6 +1787,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		}
 		this.head = 0;
 		this.tail = 0;
+		modCount += size;
 		this.size = 0;
 	}
 
@@ -1851,7 +1858,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		for (int s = 0; s < size; s++) {
 			final T value = values[index];
 
-			hash *= 31;
+			hash *= 29;
 			if (value != null)
 				hash += value.hashCode();
 
@@ -1974,6 +1981,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 		values[f] = values[s];
 		values[s] = fv;
 
+		modCount += 2;
 	}
 
 	/**
@@ -1994,12 +2002,16 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 			fv = values[f];
 			values[f] = values[s];
 			values[s] = fv;
+			modCount += 2;
 		}
 	}
 
 	public void shuffle (Random rng) {
 		for (int i = size() - 1; i > 0; i--) {
-			set(i, set(rng.nextInt(i + 1), get(i)));
+			int r = rng.nextInt(i + 1);
+			// Necessary so modCount doesn't change if it would do a no-op swap.
+			if(r != i)
+				set(i, set(r, get(i)));
 		}
 	}
 
@@ -2032,6 +2044,7 @@ public class ObjectDeque<T> implements Deque<T>, List<T>, Arrangeable, EnhancedC
 			tail = tail + values.length - head;
 			head = 0;
 		}
+		modCount += size;
 	}
 
 	@Nullable
