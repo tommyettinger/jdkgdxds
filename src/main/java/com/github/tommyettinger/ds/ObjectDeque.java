@@ -1473,6 +1473,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * Returns the index of the first occurrence of value in the queue, or -1 if no such value exists.
 	 * Uses .equals() to compare items.
 	 *
+	 * @param value the Object to look for, which may be null
 	 * @return An index of the first occurrence of value in queue or -1 if no such value exists
 	 */
 	public int indexOf (@Nullable Object value) {
@@ -1480,8 +1481,23 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
-	 * Returns the index of first occurrence of value in the queue, or -1 if no such value exists.
+	 * Returns the index of the first occurrence of value in the queue, or -1 if no such value exists.
+	 * Uses .equals() to compare items. This returns {@code fromIndex} if {@code value} is present at that point,
+	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
+	 * @param value the Object to look for, which may be null
+	 * @param fromIndex the first index to check (zero-indexed, inclusive)
+	 * @return An index of the first occurrence of value in queue or -1 if no such value exists
+	 */
+	public int indexOf (@Nullable Object value, int fromIndex) {
+		return indexOf(value, fromIndex, false);
+	}
+
+	/**
+	 * Returns the index of first occurrence of value in the queue, or -1 if no such value exists.
+	 * When {@code identity} is false, uses .equals() to compare items; when identity is true, uses {@code ==} .
+	 *
+	 * @param value the Object to look for, which may be null
 	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
 	 * @return An index of first occurrence of value in queue or -1 if no such value exists
 	 */
@@ -1513,6 +1529,56 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 					if (value.equals(values[i]))
 						return i - head;
 				for (int i = 0; i < tail; i++)
+					if (value.equals(values[i]))
+						return i + values.length - head;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Returns the index of first occurrence of {@code value} in the queue, starting from {@code fromIndex},
+	 * or -1 if no such value exists. This returns {@code fromIndex} if {@code value} is present at that point,
+	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
+	 * When {@code identity} is false, uses .equals() to compare items; when identity is true, uses {@code ==} .
+	 *
+	 * @param value the Object to look for, which may be null
+	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
+	 * @param fromIndex the first index to check (zero-indexed, inclusive)
+	 * @return An index of first occurrence of value in queue or -1 if no such value exists
+	 */
+	public int indexOf (@Nullable Object value, int fromIndex, boolean identity) {
+		if (size == 0)
+			return -1;
+		@Nullable T[] values = this.values;
+		final int head = this.head, tail = this.tail;
+		int i = head + Math.min(Math.max(fromIndex, 0), size - 1);
+		if (i >= values.length)
+			i -= values.length;
+
+		if (identity || value == null) {
+			if (head < tail) {
+				for (; i < tail; i++)
+					if (values[i] == value)
+						return i - head;
+			} else {
+				for (int n = values.length; i < n; i++)
+					if (values[i] == value)
+						return i - head;
+				for (i = 0; i < tail; i++)
+					if (values[i] == value)
+						return i + values.length - head;
+			}
+		} else {
+			if (head < tail) {
+				for (; i < tail; i++)
+					if (value.equals(values[i]))
+						return i - head;
+			} else {
+				for (int n = values.length; i < n; i++)
+					if (value.equals(values[i]))
+						return i - head;
+				for (i = 0; i < tail; i++)
 					if (value.equals(values[i]))
 						return i + values.length - head;
 			}
