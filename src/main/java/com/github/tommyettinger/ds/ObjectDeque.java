@@ -1762,6 +1762,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			i -= values.length;
 		T old = values[i];
 		values[i] = item;
+		modCount++;
 		return old;
 	}
 
@@ -1858,7 +1859,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		for (int s = 0; s < size; s++) {
 			final T value = values[index];
 
-			hash *= 29;
+			hash *= 29; // avoids LEA pessimization
 			if (value != null)
 				hash += value.hashCode();
 
@@ -1890,9 +1891,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			return false;
 
 		final @Nullable T[] myValues = this.values;
-		final int myBackingLength = myValues.length;
+		final int myCapacity = myValues.length;
 		final Object[] itsValues = q.values;
-		final int itsBackingLength = itsValues.length;
+		final int itsCapacity = itsValues.length;
 
 		int myIndex = head;
 		int itsIndex = q.head;
@@ -1904,9 +1905,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				return false;
 			myIndex++;
 			itsIndex++;
-			if (myIndex == myBackingLength)
+			if (myIndex == myCapacity)
 				myIndex = 0;
-			if (itsIndex == itsBackingLength)
+			if (itsIndex == itsCapacity)
 				itsIndex = 0;
 		}
 		return true;
@@ -1932,9 +1933,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			return false;
 
 		final @Nullable T[] myValues = this.values;
-		final int myBackingLength = myValues.length;
+		final int myCapacity = myValues.length;
 		final Object[] itsValues = q.values;
-		final int itsBackingLength = itsValues.length;
+		final int itsCapacity = itsValues.length;
 
 		int myIndex = head;
 		int itsIndex = q.head;
@@ -1943,9 +1944,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				return false;
 			myIndex++;
 			itsIndex++;
-			if (myIndex == myBackingLength)
+			if (myIndex == myCapacity)
 				myIndex = 0;
-			if (itsIndex == itsBackingLength)
+			if (itsIndex == itsCapacity)
 				itsIndex = 0;
 		}
 		return true;
