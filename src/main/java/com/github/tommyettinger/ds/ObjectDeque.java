@@ -1470,6 +1470,30 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
+	 * Reduces the size of the deque to the specified size by removing from the head.
+	 * If the deque is already smaller than the specified size, no action is taken.
+	 */
+	public void truncateFirst (int newSize) {
+		newSize = Math.max(0, newSize);
+		int oldSize = size();
+		if (oldSize > newSize) {
+			if(head < tail || head + newSize < values.length) {
+				// only removing from tail, near the end, toward head, near the start
+				Arrays.fill(values, head, head + newSize, null);
+				head += oldSize - newSize;
+				size = newSize;
+			} else {
+				// tail is near the start, and we are removing from head to the end and then part near start
+				Arrays.fill(values, head, values.length, null);
+				head = tail - newSize;
+				Arrays.fill(values, 0, head, null);
+				size = newSize;
+			}
+			modCount += oldSize - newSize;
+		}
+	}
+
+	/**
 	 * Returns the index of the first occurrence of value in the queue, or -1 if no such value exists.
 	 * Uses .equals() to compare items.
 	 *
