@@ -1444,8 +1444,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * size, no action is taken.
 	 */
 	public void truncate (int newSize) {
-		newSize = Math.max(0, newSize);
-		int oldSize = size();
+		if(newSize <= 0) {
+			clear();
+			return;
+		}
+		int oldSize = size;
 		if (oldSize > newSize) {
 			if(head < tail) {
 				// only removing from tail, near the end, toward head, near the start
@@ -1474,11 +1477,14 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * If the deque is already smaller than the specified size, no action is taken.
 	 */
 	public void truncateFirst (int newSize) {
-		newSize = Math.max(0, newSize);
-		int oldSize = size();
+		if(newSize <= 0) {
+			clear();
+			return;
+		}
+		int oldSize = size;
 		if (oldSize > newSize) {
 			if(head < tail || head + newSize < values.length) {
-				// only removing from tail, near the end, toward head, near the start
+				// only removing from head to head + newSize, which is contiguous
 				Arrays.fill(values, head, head + newSize, null);
 				head += oldSize - newSize;
 				size = newSize;
@@ -1490,6 +1496,63 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				size = newSize;
 			}
 			modCount += oldSize - newSize;
+		}
+	}
+
+	/**
+	 * Removes from this list all the elements whose index is between
+	 * {@code fromIndex}, inclusive, and {@code toIndex}, exclusive.
+	 * Shifts any succeeding elements to the left (reduces their index).
+	 * This call shortens the list by {@code (toIndex - fromIndex)} elements.
+	 * If {@code toIndex==fromIndex}, this operation has no effect.
+	 * If {@code fromIndex} is 0 or less, this delegates to {@link #truncateFirst(int)};
+	 * if {@code toIndex} is equal to or greater than the
+	 * size of this collection, this delegates to {@link #truncate(int)}.
+	 *
+	 * @param fromIndex index of first element to be removed
+	 * @param toIndex index after last element to be removed
+	 */
+	@Override
+	public void removeRange(int fromIndex, int toIndex) {
+		if(fromIndex <= 0){
+			truncateFirst(size - toIndex);
+			return;
+		}
+		if(toIndex >= size) {
+			truncate(fromIndex);
+			return;
+		}
+		if (fromIndex < toIndex) {
+			int removedCount = toIndex - fromIndex;
+			if(head < tail) {
+				// tail is near the end, head is near the start
+				System.arraycopy(values, head + toIndex, values, head + fromIndex, tail - (head + toIndex));
+				Arrays.fill(values, tail - removedCount, tail, null);
+				tail -= removedCount;
+				size -= removedCount;
+			} else if(head + toIndex < values.length) {
+				// head is at the end, and tail wraps around, but we are only removing items between head and end
+				System.arraycopy(values, head, values, head + toIndex - removedCount, fromIndex);
+				Arrays.fill(values, head, head + removedCount, null);
+				head += removedCount;
+				size -= removedCount;
+			} else if(tail - removedCount >= 0) {
+				// head is at the end, and tail wraps around, but we are only removing items between start and tail
+				System.arraycopy(values, head + toIndex - size, values, head + fromIndex - size, tail - (head + toIndex - size));
+				Arrays.fill(values, tail - removedCount, tail, null);
+				tail -= removedCount;
+				size -= removedCount;
+			} else {
+				// head is at the end, tail wraps around, and we must remove items that wrap from end to start
+				System.arraycopy(values, head, values, size - (head + fromIndex), head + fromIndex);
+				System.arraycopy(values, head + toIndex - size, values, 0, tail - (head + toIndex - size));
+				Arrays.fill(values, head, size - fromIndex, null);
+				Arrays.fill(values, head + toIndex - size, tail, null);
+				head = (size - fromIndex);
+				tail = (head + toIndex - size);
+				size -= removedCount;
+			}
+			modCount += removedCount;
 		}
 	}
 
