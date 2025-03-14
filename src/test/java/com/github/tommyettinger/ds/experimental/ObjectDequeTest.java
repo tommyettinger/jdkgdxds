@@ -89,5 +89,11 @@ public class ObjectDequeTest {
         show(od);
         od.truncateFirst(1);
         show(od);
+        od.addFirst("M");
+        od.addFirst("L");
+        od.addLast("O");
+        show(od);
+        od.truncateFirst(1);
+        show(od);
     }
 }
