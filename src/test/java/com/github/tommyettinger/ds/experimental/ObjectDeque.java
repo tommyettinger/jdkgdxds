@@ -1898,8 +1898,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
 		final @Nullable T[] values = this.values;
-		int tail = this.tail;
-		tail--;
+		int tail = this.tail - 1;
 		if (tail == -1)
 			tail = values.length - 1;
 		return values[tail];
