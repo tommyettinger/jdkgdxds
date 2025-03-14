@@ -19,6 +19,8 @@ package com.github.tommyettinger.ds.experimental;
 import com.github.tommyettinger.digital.TextTools;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public class ObjectDequeTest {
     public void show(ObjectDeque<?> od){
         System.out.println(od + "  " + TextTools.join(" ", od.values) + "  with head: " + od.head + ", tail: " + od.tail);
@@ -27,8 +29,23 @@ public class ObjectDequeTest {
 
     public ObjectDeque<String> makeLinearNoGaps() {
         String[] alphabet = "A B C D E F G H I J K L M N O P".split(" ");
-//        System.out.println(TextTools.join(" ", alphabet));
         ObjectDeque<String> od = new ObjectDeque<>(alphabet);
+        return od;
+    }
+
+    public ObjectDeque<String> makeLinearGapsAtEnds() {
+        String[] alphabet = "A B C D E F G H I J K L M N O P".split(" ");
+        ObjectDeque<String> od = new ObjectDeque<>(alphabet);
+        od.truncate(14);
+        od.removeRange(0, 2);
+        return od;
+    }
+
+    public ObjectDeque<String> makeWrapAroundFull() {
+        String[] alphabet = "N O P A B C D E F G H I J K L M".split(" ");
+        ObjectDeque<String> od = new ObjectDeque<>(alphabet);
+        od.head = 3;
+        od.tail = 3;
         return od;
     }
 
@@ -44,6 +61,33 @@ public class ObjectDequeTest {
         od.removeLast();
         od.addFirst("A");
         od.addFirst("@");
+        show(od);
+    }
+
+    @Test
+    public void testGapsAtEnds() {
+        ObjectDeque<String> od = makeLinearGapsAtEnds();
+        show(od);
+        od.pollFirst();
+        od.addLast("Q");
+        show(od);
+        od.removeLast();
+        show(od);
+        od.removeLast();
+        od.addFirst("A");
+        od.addFirst("@");
+        show(od);
+    }
+
+    @Test
+    public void testTruncate() {
+        ObjectDeque<String> od = makeWrapAroundFull();
+        show(od);
+        od.truncate(14);
+        show(od);
+        od.truncateFirst(12);
+        show(od);
+        od.truncateFirst(1);
         show(od);
     }
 }
