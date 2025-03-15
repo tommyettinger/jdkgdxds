@@ -1557,8 +1557,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				System.arraycopy(values, head, values, values.length - fromIndex, fromIndex);
 				System.arraycopy(values, head + toIndex - values.length, values, 0, tail - (head + toIndex - values.length));
 				Arrays.fill(values, head, values.length - fromIndex, null);
-				Arrays.fill(values, head + toIndex - values.length, tail, null);
-				tail = (head + toIndex - values.length);
+				Arrays.fill(values, tail - (head + toIndex - values.length), tail, null);
+				tail -= (head + toIndex - values.length);
 				head = (values.length - fromIndex);
 				size -= removedCount;
 			}
@@ -2012,6 +2012,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		return descendingIterator2;
 	}
 
+	/**
+	 * Delegates to {@link #toString(String, boolean)} with a delimiter of {@code ", "} and square brackets enabled.
+	 * @return the square-bracketed String representation of this ObjectDeque, with items separated by ", "
+	 */
 	@Override
 	public String toString () {
 		return toString(", ", true);

@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 public class ObjectDequeTest {
     public void show(ObjectDeque<?> od){
-        System.out.println(od + "  " + TextTools.join(" ", od.values) + "  with head: " + od.head + ", tail: " + od.tail);
+        System.out.println(od.toString() + "  " + TextTools.join(" ", od.values) + "  with head: " + od.head + ", tail: " + od.tail);
         System.out.println();
     }
 
@@ -110,9 +110,9 @@ public class ObjectDequeTest {
         show(od);
         od.removeRange(11, 14);
         show(od);
-        od.insert(11, "K");
-        od.insert(12, "L");
-        od.insert(14, "m");
+        od.insert(11, "L");
+        od.insert(12, "M");
+        od.insert(14, "o");
         show(od);
     }
 }
