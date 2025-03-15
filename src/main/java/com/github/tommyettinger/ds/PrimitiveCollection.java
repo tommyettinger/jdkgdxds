@@ -439,14 +439,17 @@ public interface PrimitiveCollection<T> {
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
 		 */
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, IntAppender appender) {
-			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
-			if (brackets) {sb.append('[');}
+			if (isEmpty()) return brackets ? sb.append("[]") : sb;
+			if (brackets) sb.append('[');
 			IntIterator it = iterator();
-			while (it.hasNext()) {
-				appender.apply(sb, it.nextInt());
-				if(it.hasNext()) sb.append(separator);
+			if (it.hasNext()) {
+				while (true) {
+					appender.apply(sb, it.nextInt());
+					if (it.hasNext()) sb.append(separator);
+					else break;
+				}
 			}
-			if (brackets) {sb.append(']');}
+			if (brackets) sb.append(']');
 			return sb;
 		}
 	}
@@ -811,14 +814,17 @@ public interface PrimitiveCollection<T> {
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
 		 */
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, LongAppender appender) {
-			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
-			if (brackets) {sb.append('[');}
+			if (isEmpty()) return brackets ? sb.append("[]") : sb;
+			if (brackets) sb.append('[');
 			LongIterator it = iterator();
-			while (it.hasNext()) {
-				appender.apply(sb, it.nextLong());
-				if(it.hasNext()) sb.append(separator);
+			if (it.hasNext()) {
+				while (true) {
+					appender.apply(sb, it.nextLong());
+					if (it.hasNext()) sb.append(separator);
+					else break;
+				}
 			}
-			if (brackets) {sb.append(']');}
+			if (brackets) sb.append(']');
 			return sb;
 		}
 	}
@@ -1157,14 +1163,17 @@ public interface PrimitiveCollection<T> {
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
 		 */
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, FloatAppender appender) {
-			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
-			if (brackets) {sb.append('[');}
+			if (isEmpty()) return brackets ? sb.append("[]") : sb;
+			if (brackets) sb.append('[');
 			FloatIterator it = iterator();
-			while (it.hasNext()) {
-				appender.apply(sb, it.nextFloat());
-				if(it.hasNext()) sb.append(separator);
+			if (it.hasNext()) {
+				while (true) {
+					appender.apply(sb, it.nextFloat());
+					if (it.hasNext()) sb.append(separator);
+					else break;
+				}
 			}
-			if (brackets) {sb.append(']');}
+			if (brackets) sb.append(']');
 			return sb;
 		}
 	}
@@ -1503,14 +1512,17 @@ public interface PrimitiveCollection<T> {
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
 		 */
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, DoubleAppender appender) {
-			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
-			if (brackets) {sb.append('[');}
+			if (isEmpty()) return brackets ? sb.append("[]") : sb;
+			if (brackets) sb.append('[');
 			DoubleIterator it = iterator();
-			while (it.hasNext()) {
-				appender.apply(sb, it.nextDouble());
-				if(it.hasNext()) sb.append(separator);
+			if (it.hasNext()) {
+				while (true) {
+					appender.apply(sb, it.nextDouble());
+					if (it.hasNext()) sb.append(separator);
+					else break;
+				}
 			}
-			if (brackets) {sb.append(']');}
+			if (brackets) sb.append(']');
 			return sb;
 		}
 	}
@@ -1849,14 +1861,17 @@ public interface PrimitiveCollection<T> {
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
 		 */
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, ShortAppender appender) {
-			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
-			if (brackets) {sb.append('[');}
+			if (isEmpty()) return brackets ? sb.append("[]") : sb;
+			if (brackets) sb.append('[');
 			ShortIterator it = iterator();
-			while (it.hasNext()) {
-				appender.apply(sb, it.nextShort());
-				if(it.hasNext()) sb.append(separator);
+			if (it.hasNext()) {
+				while (true) {
+					appender.apply(sb, it.nextShort());
+					if (it.hasNext()) sb.append(separator);
+					else break;
+				}
 			}
-			if (brackets) {sb.append(']');}
+			if (brackets) sb.append(']');
 			return sb;
 		}
 	}
@@ -2195,14 +2210,17 @@ public interface PrimitiveCollection<T> {
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
 		 */
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, ByteAppender appender) {
-			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
-			if (brackets) {sb.append('[');}
+			if (isEmpty()) return brackets ? sb.append("[]") : sb;
+			if (brackets) sb.append('[');
 			ByteIterator it = iterator();
-			while (it.hasNext()) {
-				appender.apply(sb, it.nextByte());
-				if(it.hasNext()) sb.append(separator);
+			if (it.hasNext()) {
+				while (true) {
+					appender.apply(sb, it.nextByte());
+					if (it.hasNext()) sb.append(separator);
+					else break;
+				}
 			}
-			if (brackets) {sb.append(']');}
+			if (brackets) sb.append(']');
 			return sb;
 		}
 	}
@@ -2541,14 +2559,17 @@ public interface PrimitiveCollection<T> {
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
 		 */
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, CharAppender appender) {
-			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
-			if (brackets) {sb.append('[');}
+			if (isEmpty()) return brackets ? sb.append("[]") : sb;
+			if (brackets) sb.append('[');
 			CharIterator it = iterator();
-			while (it.hasNext()) {
-				appender.apply(sb, it.nextChar());
-				if(it.hasNext()) sb.append(separator);
+			if (it.hasNext()) {
+				while (true) {
+					appender.apply(sb, it.nextChar());
+					if (it.hasNext()) sb.append(separator);
+					else break;
+				}
 			}
-			if (brackets) {sb.append(']');}
+			if (brackets) sb.append(']');
 			return sb;
 		}
 	}
@@ -2887,14 +2908,17 @@ public interface PrimitiveCollection<T> {
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
 		 */
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, BooleanAppender appender) {
-			if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
-			if (brackets) {sb.append('[');}
+			if (isEmpty()) return brackets ? sb.append("[]") : sb;
+			if (brackets) sb.append('[');
 			BooleanIterator it = iterator();
-			while (it.hasNext()) {
-				appender.apply(sb, it.nextBoolean());
-				if(it.hasNext()) sb.append(separator);
+			if (it.hasNext()) {
+				while (true) {
+					appender.apply(sb, it.nextBoolean());
+					if (it.hasNext()) sb.append(separator);
+					else break;
+				}
 			}
-			if (brackets) {sb.append(']');}
+			if (brackets) sb.append(']');
 			return sb;
 		}
 	}
