@@ -95,5 +95,20 @@ public class ObjectDequeTest {
         show(od);
         od.truncateFirst(1);
         show(od);
+        od.addFirst("N");
+        od.addFirst("M");
+        od.addFirst("L");
+        od.addLast("P");
+        show(od);
+        od.truncate(1);
+        show(od);
+    }
+
+    @Test
+    public void testRemoveRange() {
+        ObjectDeque<String> od = makeWrapAroundFull();
+        show(od);
+        od.removeRange(11, 14);
+        show(od);
     }
 }
