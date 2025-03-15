@@ -110,5 +110,9 @@ public class ObjectDequeTest {
         show(od);
         od.removeRange(11, 14);
         show(od);
+        od.insert(11, "K");
+        od.insert(12, "L");
+        od.insert(14, "m");
+        show(od);
     }
 }
