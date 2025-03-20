@@ -1536,13 +1536,17 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			int removedCount = toIndex - fromIndex;
 			if(head < tail) {
 				// tail is near the end, head is near the start
-				System.arraycopy(values, head + toIndex, values, head + fromIndex, tail - (head + toIndex));
+				int tailMinusTo = tail - (head + toIndex);
+				if(tailMinusTo < 0) tailMinusTo += values.length;
+				System.arraycopy(values, head + toIndex, values, head + fromIndex, tailMinusTo);
 				Arrays.fill(values, tail - removedCount, tail, null);
 				tail -= removedCount;
 				size -= removedCount;
 			} else if(head + toIndex < values.length) {
 				// head is at the end, and tail wraps around, but we are only removing items between head and end
-				System.arraycopy(values, head, values, head + toIndex - removedCount, fromIndex);
+				int headPlusFrom = head + fromIndex;
+				if(headPlusFrom >= values.length) headPlusFrom -= values.length;
+				System.arraycopy(values, head, values, headPlusFrom, removedCount);
 				Arrays.fill(values, head, head + removedCount, null);
 				head += removedCount;
 				size -= removedCount;

@@ -116,6 +116,11 @@ public class ObjectDequeTest {
         od.insert(14, "o");
         show(od);
         System.out.println();
+        od = makeWrapAroundFull();
+        show(od);
+        od.removeRange(13, 15);
+        show(od);
+        System.out.println();
         od = makeLinearNoGaps();
         show(od);
         od.removeRange(11, 14);
