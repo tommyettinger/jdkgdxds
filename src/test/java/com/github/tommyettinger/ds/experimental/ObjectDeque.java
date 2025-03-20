@@ -2044,84 +2044,57 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
-	 * Using {@link Object#equals(Object)} between each item in order, compares for equality specifically with
-	 * other ObjectDeque collections. If {@code o} is not an ObjectDeque
+	 * Using {@link Objects#equals(Object)} between each item in order, compares for equality with
+	 * other types implementing {@link List} or {@link Queue}, including other {@link Deque} types.
+	 * If {@code o} is not a List or Queue
 	 * (and is also not somehow reference-equivalent to this collection), this returns false.
+	 * This uses the {@link Iterable#iterator()} of both this and {@code o}, so if either is in the
+	 * middle of a concurrent iteration that modifies the Collection, this may fail.
 	 * @param o object to be compared for equality with this collection
 	 * @return true if this is equal to o, or false otherwise
 	 */
-	public boolean equals (Object o) {
-		if (this == o)
+	public boolean equals(Object o) {
+		if (o == this)
 			return true;
-		if (!(o instanceof ObjectDeque))
+		if (!((o instanceof List) || (o instanceof Queue)))
 			return false;
 
-		ObjectDeque<?> q = (ObjectDeque<?>)o;
-		final int size = this.size;
-
-		if (q.size != size)
-			return false;
-
-		final @Nullable T[] myValues = this.values;
-		final int myCapacity = myValues.length;
-		final Object[] itsValues = q.values;
-		final int itsCapacity = itsValues.length;
-
-		int myIndex = head;
-		int itsIndex = q.head;
-		for (int s = 0; s < size; s++) {
-			T myValue = myValues[myIndex];
-			Object itsValue = itsValues[itsIndex];
-
-			if (!(Objects.equals(myValue, itsValue)))
+		Iterator<T> e1 = iterator();
+		Iterator<?> e2 = ((Iterable<?>) o).iterator();
+		while (e1.hasNext() && e2.hasNext()) {
+			T o1 = e1.next();
+			Object o2 = e2.next();
+			if (!Objects.equals(o1, o2))
 				return false;
-			myIndex++;
-			itsIndex++;
-			if (myIndex == myCapacity)
-				myIndex = 0;
-			if (itsIndex == itsCapacity)
-				itsIndex = 0;
 		}
-		return true;
+		return !(e1.hasNext() || e2.hasNext());
 	}
 
 	/**
-	 * Using {@code ==} between each item in order, compares for equality specifically with
-	 * other ObjectDeque collections. If {@code o} is not an ObjectDeque
+	 * Using {@code ==} between each item in order, compares for equality with
+	 * other types implementing {@link List} or {@link Queue}, including other {@link Deque} types.
+	 * If {@code o} is not a List or Queue
 	 * (and is also not somehow reference-equivalent to this collection), this returns false.
+	 * This uses the {@link Iterable#iterator()} of both this and {@code o}, so if either is in the
+	 * middle of a concurrent iteration that modifies the Collection, this may fail.
 	 * @param o object to be compared for equality with this collection
 	 * @return true if this is equal to o, or false otherwise
 	 */
 	public boolean equalsIdentity (Object o) {
-		if (this == o)
+		if (o == this)
 			return true;
-		if (!(o instanceof ObjectDeque))
+		if (!((o instanceof List) || (o instanceof Queue)))
 			return false;
 
-		ObjectDeque<?> q = (ObjectDeque<?>)o;
-		final int size = this.size;
-
-		if (q.size != size)
-			return false;
-
-		final @Nullable T[] myValues = this.values;
-		final int myCapacity = myValues.length;
-		final Object[] itsValues = q.values;
-		final int itsCapacity = itsValues.length;
-
-		int myIndex = head;
-		int itsIndex = q.head;
-		for (int s = 0; s < size; s++) {
-			if (myValues[myIndex] != itsValues[itsIndex])
+		Iterator<T> e1 = iterator();
+		Iterator<?> e2 = ((Iterable<?>) o).iterator();
+		while (e1.hasNext() && e2.hasNext()) {
+			T o1 = e1.next();
+			Object o2 = e2.next();
+			if (o1 != o2)
 				return false;
-			myIndex++;
-			itsIndex++;
-			if (myIndex == myCapacity)
-				myIndex = 0;
-			if (itsIndex == itsCapacity)
-				itsIndex = 0;
 		}
-		return true;
+		return !(e1.hasNext() || e2.hasNext());
 	}
 
 	/**
@@ -2140,6 +2113,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
 		if (second >= size)
 			throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
+		if(first == second) return;
 		final @Nullable T[] values = this.values;
 
 		int f = head + first;

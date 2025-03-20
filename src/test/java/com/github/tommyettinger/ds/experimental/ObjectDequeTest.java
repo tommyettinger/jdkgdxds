@@ -17,9 +17,10 @@
 package com.github.tommyettinger.ds.experimental;
 
 import com.github.tommyettinger.digital.TextTools;
+import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.ArrayDeque;
 
 public class ObjectDequeTest {
     public void show(ObjectDeque<?> od){
@@ -114,5 +115,55 @@ public class ObjectDequeTest {
         od.insert(12, "M");
         od.insert(14, "o");
         show(od);
+        System.out.println();
+        od = makeLinearNoGaps();
+        show(od);
+        od.removeRange(11, 14);
+        show(od);
+        od.insert(11, "L");
+        od.insert(12, "M");
+        od.insert(14, "o");
+        show(od);
+        System.out.println();
+        od = makeLinearGapsAtEnds();
+        show(od);
+        od.removeRange(8, 11);
+        show(od);
+        od.insert(8, "K");
+        od.insert(9, "L");
+        od.insert(11, "n");
+        show(od);
+    }
+
+    @Test
+    public void testEquals() {
+        {
+            ObjectDeque<String> od = makeLinearNoGaps();
+            show(od);
+            ArrayDeque<String> ad = new ArrayDeque<>(16);
+            ad.addAll(od);
+            System.out.println("Does od equal ad? " + od.equals(ad));
+            Assert.assertEquals(od, ad);
+            System.out.println("Does ad equal od? " + ad.equals(od));
+        }
+        {
+            ObjectDeque<String> od = makeLinearNoGaps();
+            show(od);
+            ArrayDeque<String> ad = new ArrayDeque<>(16);
+            ad.addAll(od);
+            System.out.println("Does od equal ad? " + od.equals(ad));
+            Assert.assertEquals(od, ad);
+            System.out.println("Does ad equal od? " + ad.equals(od));
+        }
+        {
+            ObjectDeque<String> od = makeWrapAroundFull();
+            show(od);
+            ArrayDeque<String> ad = new ArrayDeque<>(16);
+            ad.addAll(od);
+            System.out.println("Does od equal ad? " + od.equals(ad));
+            Assert.assertEquals(od, ad);
+            System.out.println("Does ad equal od? " + ad.equals(od));
+
+        }
     }
 }
