@@ -92,6 +92,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 
 	/**
 	 * Creates a new ObjectDeque which can hold the specified number of values without needing to resize backing array.
+	 * @param initialSize how large the backing array should be, without any padding
 	 */
 	public ObjectDeque(int initialSize) {
 		// noinspection unchecked
@@ -137,9 +138,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * @param a an array of T that will be copied into this and used in full
 	 */
 	public ObjectDeque(T[] a) {
-		tail = a.length;
-		this.values = Arrays.copyOf(a, tail);
-		size = tail;
+		this.values = Arrays.copyOf(a, a.length);
+		size = a.length;
+		tail = 0; // wraps around always, fully-filled
 	}
 
 	/**
@@ -151,7 +152,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 */
 	public ObjectDeque(T[] a, int offset, int count) {
 		this.values = Arrays.copyOfRange(a, offset, offset + count);
-		tail = count;
+		tail = 0;
 		size = count;
 	}
 
@@ -177,10 +178,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			values = this.values;
 		}
 
-		if (tail == values.length) {
-			tail = 0;
-		}
+		if (tail == values.length) tail = 0;
 		values[tail++] = object;
+		if (tail == values.length) tail = 0;
 		size++;
 		modCount++;
 	}
@@ -2579,6 +2579,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param item7 a T item
 	 * @return a new ObjectDeque that holds the given items
 	 * @param <T> the type of item, typically inferred
 	 */
