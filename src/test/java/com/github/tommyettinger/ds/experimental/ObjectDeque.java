@@ -237,7 +237,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			if (head < tail) {
 				// Continuous
 				System.arraycopy(values, head, newArray, 0, tail - head);
-			} else {
+			} else if(tail == 0){
+				// tail wraps but no items carry over
+				System.arraycopy(values, head, newArray, 0, values.length - head);
+			}
+			else {
 				// Wrapped
 				final int rest = values.length - head;
 				System.arraycopy(values, head, newArray, 0, rest);
@@ -290,8 +294,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		}
 
 		final @Nullable T[] values = this.values;
-		int tail = this.tail;
-		tail--;
+		int tail = this.tail - 1;
 		if (tail == -1) {
 			tail = values.length - 1;
 		}
@@ -1463,6 +1466,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				// only removing from tail, near the end, toward head, near the start
 				Arrays.fill(values, head + newSize, tail, null);
 				tail -= oldSize - newSize;
+				size = newSize;
+			} else if(tail == 0) {
+				// only removing from tail, which wraps but carries nothing, toward head, near the start
+				Arrays.fill(values, head + newSize, values.length, null);
+				tail = values.length - oldSize + newSize;
 				size = newSize;
 			} else if(head + newSize < values.length) {
 				// tail is near the start, but we have to remove elements through the start and into the back
