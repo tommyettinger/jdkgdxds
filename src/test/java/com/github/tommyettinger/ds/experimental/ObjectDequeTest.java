@@ -106,38 +106,115 @@ public class ObjectDequeTest {
     }
 
     @Test
+    public void testRemove() {
+        ObjectDeque<String> od;
+        {
+            od = makeWrapAroundFull();
+            show(od);
+            od.remove(13);
+            od.remove(12);
+            od.remove(11);
+            show(od);
+            od.insert(11, "L");
+            od.insert(12, "M");
+            od.insert(14, "o");
+            show(od);
+            System.out.println();
+        }
+        {
+            od = makeWrapAroundFull();
+            show(od);
+            od.remove(13);
+            od.remove(13);
+            show(od);
+            System.out.println();
+        }
+        {
+            od = makeLinearNoGaps();
+            show(od);
+            od.remove(11);
+            od.remove(12);
+            od.remove(11);
+            show(od);
+            od.insert(11, "L");
+            od.insert(12, "M");
+            od.insert(14, "o");
+            show(od);
+            od.insert(1, "a");
+            show(od);
+            System.out.println();
+        }
+        {
+            od = makeLinearGapsAtEnds();
+            show(od);
+            od.remove(8);
+            od.remove(8);
+            od.remove(8);
+            show(od);
+            od.insert(8, "K");
+            od.insert(9, "L");
+            od.insert(11, "n");
+            show(od);
+            System.out.println();
+        }
+        {
+            od = makeLinearNoGaps();
+            show(od);
+            od.removeFirst();
+            od.removeFirst();
+            show(od);
+            od.remove(1);
+            show(od);
+            od.remove(12);
+            show(od);
+            System.out.println();
+        }
+
+    }
+
+    @Test
     public void testRemoveRange() {
-        ObjectDeque<String> od = makeWrapAroundFull();
-        show(od);
-        od.removeRange(11, 14);
-        show(od);
-        od.insert(11, "L");
-        od.insert(12, "M");
-        od.insert(14, "o");
-        show(od);
-        System.out.println();
-        od = makeWrapAroundFull();
-        show(od);
-        od.removeRange(13, 15);
-        show(od);
-        System.out.println();
-        od = makeLinearNoGaps();
-        show(od);
-        od.removeRange(11, 14);
-        show(od);
-        od.insert(11, "L");
-        od.insert(12, "M");
-        od.insert(14, "o");
-        show(od);
-        System.out.println();
-        od = makeLinearGapsAtEnds();
-        show(od);
-        od.removeRange(8, 11);
-        show(od);
-        od.insert(8, "K");
-        od.insert(9, "L");
-        od.insert(11, "n");
-        show(od);
+        ObjectDeque<String> od;
+        {
+            od = makeWrapAroundFull();
+            show(od);
+            od.removeRange(11, 14);
+            show(od);
+            od.insert(11, "L");
+            od.insert(12, "M");
+            od.insert(14, "o");
+            show(od);
+            System.out.println();
+        }
+        {
+            od = makeWrapAroundFull();
+            show(od);
+            od.removeRange(13, 15);
+            show(od);
+            System.out.println();
+        }
+        {
+            od = makeLinearNoGaps();
+            show(od);
+            od.removeRange(11, 14);
+            show(od);
+            od.insert(11, "L");
+            od.insert(12, "M");
+            od.insert(14, "o");
+            show(od);
+            System.out.println();
+        }
+        {
+            od = makeLinearGapsAtEnds();
+            show(od);
+            od.removeRange(8, 11);
+            show(od);
+            od.insert(8, "K");
+            od.insert(9, "L");
+            od.insert(11, "n");
+            show(od);
+            System.out.println();
+        }
     }
 
     @Test

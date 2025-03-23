@@ -586,8 +586,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				System.arraycopy(values, index, values, (index + 1) % values.length, tail - index);
 				values[index] = item;
 				tail++;
-				if (tail > values.length) {
-					tail = 1;
+				if (tail >= values.length) {
+					tail -= values.length;
 				}
 			} else {
 				if (head + index < values.length) {
@@ -595,7 +595,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 					System.arraycopy(values, head, values, head - 1, index);
 					values[head - 1 + index] = item;
 					head--;
-					// don't need to check for head being negative, because head is always > tail
+					// don't need to check for head being negative, because head is always >= tail
 				}
 				else {
 					// forward shift
@@ -1831,19 +1831,21 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			return removeLast();
 
 		@Nullable T[] values = this.values;
-		int head = this.head, tail = this.tail;
+		int head = this.head, tail = this.tail == 0 ? values.length : this.tail;
 		index += head;
 		T value;
 		if (head < tail) { // index is between head and tail.
 			value = values[index];
 			System.arraycopy(values, index + 1, values, index, tail - index - 1);
 			this.tail--;
+			if(this.tail == -1) this.tail = values.length - 1;
 			values[this.tail] = null;
 		} else if (index >= values.length) { // index is between 0 and tail.
 			index -= values.length;
 			value = values[index];
 			System.arraycopy(values, index + 1, values, index, tail - index - 1);
 			this.tail--;
+			if(this.tail == -1) this.tail = values.length - 1;
 			values[this.tail] = null;
 		} else { // index is between head and values.length.
 			value = values[index];
@@ -1903,10 +1905,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
 		final @Nullable T[] values = this.values;
-		int tail = this.tail - 1;
-		if (tail == -1)
-			tail = values.length - 1;
-		return values[tail];
+		int last = this.tail == 0 ? values.length - 1 : this.tail - 1;
+		return values[last];
 	}
 
 	@Override
@@ -1953,6 +1953,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		if (head < tail) {
 			// Continuous
 			Utilities.clear(values, head, tail - head);
+		} else if(tail == 0){
+			Utilities.clear(values, head, values.length - head);
 		} else {
 			// Wrapped
 			Utilities.clear(values, head, values.length - head);
@@ -2187,8 +2189,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 *                   order of T items when T implements Comparable of T
 	 */
 	public void sort (@Nullable Comparator<? super T> comparator) {
-		if (head <= tail) {
+		if (head < tail) {
 			Arrays.sort(values, head, tail, comparator);
+		} else if (tail == 0) {
+			Arrays.sort(values, head, values.length, comparator);
 		} else {
 			System.arraycopy(values, head, values, tail, values.length - head);
 			Arrays.sort(values, 0, tail + values.length - head, comparator);
