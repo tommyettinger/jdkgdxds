@@ -296,10 +296,12 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		final @Nullable T[] values = this.values;
 		int tail = this.tail;
 		final T result = values[tail];
-		values[tail--] = null;
+		values[tail] = null;
 
-		if (tail == -1) {
+		if (tail == 0) {
 			tail = values.length - 1;
+		} else {
+			--tail;
 		}
 		this.tail = tail;
 
@@ -357,8 +359,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 
 	/**
 	 * Retrieves and removes the first element of this deque,
-	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty.
+	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
+	 * {@code null} unless it has been changed with {@link #setDefaultValue(Object)}.
 	 *
+	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	@Override
@@ -377,7 +381,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		if (head == values.length) {
 			head = 0;
 		}
-		size--;
+		if(--size == 0) tail = head;
 		modCount++;
 
 		return result;
@@ -385,8 +389,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 
 	/**
 	 * Retrieves and removes the last element of this deque,
-	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty.
+	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
+	 * {@code null} unless it has been changed with {@link #setDefaultValue(Object)}.
 	 *
+	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	@Override
@@ -398,14 +404,17 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 
 		final @Nullable T[] values = this.values;
 		int tail = this.tail;
-		tail--;
-		if (tail == -1) {
-			tail = values.length - 1;
-		}
 		final T result = values[tail];
 		values[tail] = null;
+
+		if (tail == 0) {
+			tail = values.length - 1;
+		} else {
+			--tail;
+		}
 		this.tail = tail;
-		size--;
+
+		if(--size == 0) head = tail;
 		modCount++;
 
 		return result;
@@ -468,12 +477,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
-		}
-		final @Nullable T[] values = this.values;
-		int tail = this.tail;
-		tail--;
-		if (tail == -1) {
-			tail = values.length - 1;
 		}
 		return values[tail];
 	}
@@ -1914,9 +1917,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			// Underflow
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
-		final @Nullable T[] values = this.values;
-		int last = this.tail == 0 ? values.length - 1 : this.tail - 1;
-		return values[last];
+		return values[tail];
 	}
 
 	@Override
