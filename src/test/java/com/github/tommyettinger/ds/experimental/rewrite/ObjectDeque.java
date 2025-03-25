@@ -583,19 +583,22 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		else {
 			@Nullable T[] values = this.values;
 
-			if (size == values.length) {
+			if (++size == values.length) {
 				resize(values.length << 1);
 				values = this.values;
 			}
 
-			if(head < tail) {
+			if(head <= tail) {
 				index += head;
 				if(index >= values.length) index -= values.length;
-				System.arraycopy(values, index, values, (index + 1) % values.length, tail - index);
+				int after = index + 1;
+				if(after >= values.length) after = 0;
+
+				System.arraycopy(values, index, values, after, tail - index + 1);
 				values[index] = item;
 				tail++;
-				if (tail >= values.length) {
-					tail -= values.length;
+				if (tail > values.length) {
+					tail = 0;
 				}
 			} else {
 				if (head + index < values.length) {
@@ -603,18 +606,15 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 					System.arraycopy(values, head, values, head - 1, index);
 					values[head - 1 + index] = item;
 					head--;
-					// don't need to check for head being negative, because head is always >= tail
 				}
 				else {
 					// forward shift
 					index = head + index - values.length;
-					System.arraycopy(values, index, values, index + 1, tail - index);
+					System.arraycopy(values, index, values, index + 1, tail - index + 1);
 					values[index] = item;
 					tail++;
-					// again, don't need to check for tail going around, because the head is in the way and doesn't need to move
 				}
 			}
-			size++;
 			modCount++;
 		}
 		return oldSize != size;
@@ -740,9 +740,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 */
 	@Override
 	public boolean addAll (Collection<? extends T> c) {
+		final int cs = c.size();
+		if(cs == 0) return false;
 		int oldSize = size;
-		if(c.isEmpty()) return false;
-		ensureCapacity(Math.max(c.size(), oldSize));
+		ensureCapacity(Math.max(cs, oldSize));
 		for (T t : c) {
 			addLast(t);
 		}
@@ -765,28 +766,14 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
 	public boolean addAllFirst (Collection<@Nullable ? extends T> c) {
-		@Nullable T[] values = this.values;
 		final int cs = c.size();
 		if(cs == 0) return false;
-		if (size + cs > values.length) {
-			ensureCapacity(Math.max(cs, size));
-			values = this.values;
+		int oldSize = size;
+		ensureCapacity(Math.max(cs, oldSize));
+		for (T t : c) {
+			addFirst(t);
 		}
-
-		int head = this.head;
-		head -= cs;
-		if (head < 0) {
-			head = values.length - cs;
-		}
-		int index = 0;
-		for(T object : c){
-			values[head + index++] = object;
-		}
-
-		this.head = head;
-		size += cs;
-		modCount += cs;
-		return true;
+		return oldSize != size;
 	}
 
 	/**
@@ -825,33 +812,42 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				values = this.values;
 			}
 
-			if(head < tail) {
+			if(head <= tail) {
 				index += head;
-				if(index + cs > values.length) index -= values.length;
-				System.arraycopy(values, index, values, (index + cs) % values.length, tail - index);
+				int after = index + cs;
+				if(after > values.length) after -= values.length;
+				System.arraycopy(values, index, values, after, tail - index + 1);
 				for(T item : c) {
 					values[index++] = item;
 				}
-				tail = (tail + cs) % (values.length + 1);
+				tail += cs;
+				if(tail >= values.length)
+					tail -= values.length;
 			} else {
 				if (head + index < values.length) {
 					// backward shift
 					System.arraycopy(values, head, values, head - cs, index);
 					head -= cs;
+					if(head < 0) head += values.length;
+					index += head;
+					if(index >= values.length) index -= values.length;
 					for(T item : c) {
-						values[head + index++] = item;
+						values[index++] = item;
+						if(index >= values.length) index -= values.length;
 					}
-					// don't need to check for head being negative, because head is always > tail
 				}
 				else {
 					// forward shift
 					index -= values.length - cs;
 					System.arraycopy(values, head + index, values, head + index + cs, tail - head - index);
+					index += head;
+					if(index >= values.length) index -= values.length;
 					for(T item : c) {
-						values[head + index++] = item;
+						values[index++] = item;
+						if(index >= values.length) index -= values.length;
 					}
 					tail += cs;
-					// again, don't need to check for tail going around, because the head is in the way and doesn't need to move
+					if(tail >= values.length) tail -= values.length;
 				}
 			}
 			size += cs;
