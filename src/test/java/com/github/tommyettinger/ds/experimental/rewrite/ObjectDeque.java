@@ -183,10 +183,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			values = this.values;
 		}
 
-		if (tail == values.length) tail = 0;
-		values[tail++] = object;
-		if (tail == values.length) tail = 0;
-		size++;
+		if (++tail == values.length) tail = 0;
+		if(++size == 1) tail = head;
+		values[tail] = object;
 		modCount++;
 	}
 
@@ -212,7 +211,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		values[head] = object;
 
 		this.head = head;
-		size++;
+		if(++size == 1) tail = head;
 		modCount++;
 	}
 
@@ -239,14 +238,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		final @Nullable T[] newArray = (T[])new Object[Math.max(1, newSize)];
 
 		if (size > 0) {
-			if (head < tail) {
+			if (head <= tail) {
 				// Continuous
-				System.arraycopy(values, head, newArray, 0, tail - head);
-			} else if(tail == 0){
-				// tail wraps but no items carry over
-				System.arraycopy(values, head, newArray, 0, values.length - head);
-			}
-			else {
+				System.arraycopy(values, head, newArray, 0, tail - head + 1);
+			} else {
 				// Wrapped
 				final int rest = values.length - head;
 				System.arraycopy(values, head, newArray, 0, rest);
@@ -255,7 +250,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		}
 		this.values = newArray;
 		this.head = 0;
-		this.tail = size;
+		this.tail = size - 1;
 	}
 
 	/**
@@ -279,7 +274,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		if (head == values.length) {
 			head = 0;
 		}
-		size--;
+		if(--size == 0) tail = head;
 		modCount++;
 
 		return result;
@@ -299,14 +294,16 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		}
 
 		final @Nullable T[] values = this.values;
-		int tail = this.tail - 1;
+		int tail = this.tail;
+		final T result = values[tail];
+		values[tail--] = null;
+
 		if (tail == -1) {
 			tail = values.length - 1;
 		}
-		final T result = values[tail];
-		values[tail] = null;
 		this.tail = tail;
-		size--;
+
+		if(--size == 0) head = tail;
 		modCount++;
 
 		return result;
