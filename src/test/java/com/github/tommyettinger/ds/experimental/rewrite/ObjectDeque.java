@@ -874,20 +874,17 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
 	public boolean addAll (T[] array, int offset, int length) {
-		int oldSize = size;
-		int cs = Math.min(array.length - offset, length);
-		if(cs <= 0) return false;
-		ensureCapacity(Math.max(oldSize, cs));
 		@Nullable T[] values = this.values;
-		modCount += cs;
-
-		int endSpace = Math.min(values.length - tail, cs);
-		if(endSpace > 0)
-			System.arraycopy(array, offset, values, tail, endSpace);
-		cs -= endSpace;
-		if(cs > 0)
-			System.arraycopy(array, offset + endSpace, values, 0, cs);
-
+		final int cs = Math.min(array.length - offset, length);
+		if(cs <= 0) return false;
+		if (size + cs > values.length) {
+			ensureCapacity(Math.max(cs, size));
+		}
+		int oldSize = size;
+		ensureCapacity(Math.max(cs, oldSize));
+		for (T t : array) {
+			addLast(t);
+		}
 		return oldSize != size;
 	}
 
@@ -938,21 +935,13 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		if(cs <= 0) return false;
 		if (size + cs > values.length) {
 			ensureCapacity(Math.max(cs, size));
-			values = this.values;
 		}
-
-		int head = this.head;
-		head -= cs;
-		if (head < 0) {
-			head = values.length - cs;
+		int oldSize = size;
+		ensureCapacity(Math.max(cs, oldSize));
+		for (T t : array) {
+			addFirst(t);
 		}
-		System.arraycopy(array, offset, values, head, cs);
-
-		this.head = head;
-		size += cs;
-		modCount += cs;
-
-		return true;
+		return oldSize != size;
 	}
 
 	public boolean addAll(int index, T[] array) {
