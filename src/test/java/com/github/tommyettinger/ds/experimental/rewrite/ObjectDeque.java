@@ -1620,12 +1620,12 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		}
 		if (fromIndex < toIndex) {
 			int removedCount = toIndex - fromIndex;
-			if(head < tail) {
+			if(head <= tail) {
 				// tail is near the end, head is near the start
-				int tailMinusTo = tail - (head + toIndex);
+				int tailMinusTo = tail + 1 - (head + toIndex);
 				if(tailMinusTo < 0) tailMinusTo += values.length;
 				System.arraycopy(values, head + toIndex, values, head + fromIndex, tailMinusTo);
-				Arrays.fill(values, tail - removedCount, tail, null);
+				Arrays.fill(values, tail + 1 - removedCount, tail + 1, null);
 				tail -= removedCount;
 				size -= removedCount;
 			} else if(head + toIndex < values.length) {
@@ -1638,16 +1638,16 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				size -= removedCount;
 			} else if(head + toIndex - values.length - removedCount >= 0) {
 				// head is at the end, and tail wraps around, but we are only removing items between start and tail
-				System.arraycopy(values, head + toIndex - values.length, values, head + fromIndex - values.length, tail - (head + toIndex - values.length));
-				Arrays.fill(values, tail - removedCount, tail, null);
+				System.arraycopy(values, head + toIndex - values.length, values, head + fromIndex - values.length, tail + 1 - (head + toIndex - values.length));
+				Arrays.fill(values, tail + 1 - removedCount, tail + 1, null);
 				tail -= removedCount;
 				size -= removedCount;
 			} else {
 				// head is at the end, tail wraps around, and we must remove items that wrap from end to start
 				System.arraycopy(values, head, values, values.length - fromIndex, fromIndex);
-				System.arraycopy(values, head + toIndex - values.length, values, 0, tail - (head + toIndex - values.length));
+				System.arraycopy(values, head + toIndex - values.length, values, 0, tail + 1 - (head + toIndex - values.length));
 				Arrays.fill(values, head, values.length - fromIndex, null);
-				Arrays.fill(values, tail - (head + toIndex - values.length), tail, null);
+				Arrays.fill(values, tail + 1 - (head + toIndex - values.length), tail + 1, null);
 				tail -= (head + toIndex - values.length);
 				head = (values.length - fromIndex);
 				size -= removedCount;
