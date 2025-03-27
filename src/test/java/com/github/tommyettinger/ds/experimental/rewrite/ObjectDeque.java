@@ -1196,11 +1196,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	@Override
 	public Object @NonNull [] toArray () {
 		Object[] next = new Object[size];
-		if (head < tail) {
-			System.arraycopy(values, head, next, 0, tail - head);
+		if (head <= tail) {
+			System.arraycopy(values, head, next, 0, tail - head + 1);
 		} else {
 			System.arraycopy(values, head, next, 0, size - head);
-			System.arraycopy(values, 0, next, size - head, tail);
+			System.arraycopy(values, 0, next, size - head, tail + 1);
 		}
 		return next;
 	}
@@ -1233,7 +1233,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * @throws NullPointerException if the specified array is null
 	 */
 	@Override
-	public <E> @Nullable  E @NonNull [] toArray (@Nullable E[] a) {
+	public <E> @Nullable E @NonNull [] toArray (@Nullable E @NonNull [] a) {
 		int oldSize = size;
 		if (a.length < oldSize) {
 			a = Arrays.copyOf(a, oldSize);
@@ -1545,15 +1545,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		}
 		int oldSize = size;
 		if (oldSize > newSize) {
-			if(head < tail) {
+			if(head <= tail) {
 				// only removing from tail, near the end, toward head, near the start
-				Arrays.fill(values, head + newSize, tail, null);
+				Arrays.fill(values, head + newSize, tail + 1, null);
 				tail -= oldSize - newSize;
-				size = newSize;
-			} else if(tail == 0) {
-				// only removing from tail, which wraps but carries nothing, toward head, near the start
-				Arrays.fill(values, head + newSize, values.length, null);
-				tail = values.length - oldSize + newSize;
 				size = newSize;
 			} else if(head + newSize < values.length) {
 				// tail is near the start, but we have to remove elements through the start and into the back
@@ -1583,7 +1578,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		}
 		int oldSize = size;
 		if (oldSize > newSize) {
-			if(head < tail || head + oldSize - newSize < values.length) {
+			if(head <= tail || head + oldSize - newSize < values.length) {
 				// only removing from head to head + newSize, which is contiguous
 				Arrays.fill(values, head, head + oldSize - newSize, null);
 				head += oldSize - newSize;
@@ -1592,7 +1587,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			} else {
 				// tail is near the start, and we are removing from head to the end and then part near start
 				Arrays.fill(values, head, values.length, null);
-				head = tail - newSize;
+				head = tail + 1 - newSize;
 				Arrays.fill(values, 0, head, null);
 				size = newSize;
 			}
