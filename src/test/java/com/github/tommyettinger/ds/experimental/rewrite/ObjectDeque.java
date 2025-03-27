@@ -258,6 +258,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * resize the backing array to achieve this goal. If possible, this will keep the same backing array and modify
 	 * it in-place. The "gap" is not assigned null, and may contain old/duplicate references; calling code <em>must</em>
 	 * overwrite the entire gap with additional values to ensure GC correctness.
+	 * @implNote This is considered an incomplete modification for the purpose of {@link #modCount}, so it does not
+	 * change modCount; the code that fills in the gap should change modCount instead.
+	 * @param index the 0-based index in the iteration order where the gap will be present
+	 * @param gapSize the number of items that will need filling in the gap, and can be filled without issues.
+	 * @return the position in the array where the gap will begin
 	 */
 	protected int ensureGap(int index, int gapSize) {
 		if (gapSize <= 0) return 0;
@@ -1000,15 +1005,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		@Nullable T[] values = this.values;
 		final int cs = Math.min(array.length - offset, length);
 		if(cs <= 0) return false;
-		if (size + cs > values.length) {
-			ensureCapacity(Math.max(cs, size));
-		}
-		int oldSize = size;
-		ensureCapacity(Math.max(cs, oldSize));
-		for (T t : array) {
-			addLast(t);
-		}
-		return oldSize != size;
+		int place = ensureGap(size, cs);
+		System.arraycopy(array, offset, values, place, cs);
+		size += cs;
+		modCount += cs;
+		return true;
 	}
 
 
@@ -1056,15 +1057,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		@Nullable T[] values = this.values;
 		final int cs = Math.min(array.length - offset, length);
 		if(cs <= 0) return false;
-		if (size + cs > values.length) {
-			ensureCapacity(Math.max(cs, size));
-		}
-		int oldSize = size;
-		ensureCapacity(Math.max(cs, oldSize));
-		for (T t : array) {
-			addFirst(t);
-		}
-		return oldSize != size;
+		int place = ensureGap(0, cs);
+		System.arraycopy(array, offset, values, place, cs);
+		size += cs;
+		modCount += cs;
+		return true;
 	}
 
 	public boolean addAll(int index, T[] array) {
@@ -1081,35 +1078,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			@Nullable T[] values = this.values;
 			final int cs = Math.min(array.length - offset, length);
 			if(cs <= 0) return false;
-			if (size + cs > values.length) {
-				ensureCapacity(Math.max(cs, oldSize));
-				values = this.values;
-			}
-
-			if(head < tail) {
-				index += head;
-				if(index + cs > values.length) index -= values.length;
-				System.arraycopy(values, index, values, (index + cs) % values.length, tail - index);
-				System.arraycopy(array, offset, values, index, cs);
-				tail = (tail + cs) % (values.length + 1);
-			} else {
-				if (head + index < values.length) {
-					// backward shift
-					System.arraycopy(values, head, values, head - cs, index);
-					head -= cs;
-					System.arraycopy(array, offset, values, head + index, cs);
-					// don't need to check for head being negative, because head is always > tail
-				}
-				else {
-					// forward shift
-					index -= values.length - cs;
-					System.arraycopy(values, head + index, values, head + index + cs, tail - head - index);
-
-					System.arraycopy(array, offset, values, head + index, cs);
-					tail += cs;
-					// again, don't need to check for tail going around, because the head is in the way and doesn't need to move
-				}
-			}
+			int place = ensureGap(index, cs);
+			System.arraycopy(array, offset, values, place, cs);
 			size += cs;
 			modCount += cs;
 		}
