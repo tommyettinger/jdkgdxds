@@ -1673,8 +1673,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
 	 * @param value the Object to look for, which may be null
-	 * @param fromIndex the initial index to check (zero-indexed, inclusive)
-	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
+	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
+	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
 	public int indexOf (@Nullable Object value, int fromIndex) {
 		return indexOf(value, fromIndex, false);
@@ -1699,9 +1699,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * When {@code identity} is false, uses .equals() to compare items; when identity is true, uses {@code ==} .
 	 *
 	 * @param value the Object to look for, which may be null
+	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
-	 * @param fromIndex the initial index to check (zero-indexed, inclusive)
-	 * @return An index of first occurrence of value in the deque or -1 if no such value exists
+	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
 	public int indexOf (@Nullable Object value, int fromIndex, boolean identity) {
 		if (size == 0)
@@ -1713,28 +1713,28 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			i -= values.length;
 
 		if (identity || value == null) {
-			if (head < tail) {
-				for (; i < tail; i++)
+			if (head <= tail) {
+				for (; i <= tail; i++)
 					if (values[i] == value)
 						return i - head;
 			} else {
 				for (int n = values.length; i < n; i++)
 					if (values[i] == value)
 						return i - head;
-				for (i = 0; i < tail; i++)
+				for (i = 0; i <= tail; i++)
 					if (values[i] == value)
 						return i + values.length - head;
 			}
 		} else {
-			if (head < tail) {
-				for (; i < tail; i++)
+			if (head <= tail) {
+				for (; i <= tail; i++)
 					if (value.equals(values[i]))
 						return i - head;
 			} else {
 				for (int n = values.length; i < n; i++)
 					if (value.equals(values[i]))
 						return i - head;
-				for (i = 0; i < tail; i++)
+				for (i = 0; i <= tail; i++)
 					if (value.equals(values[i]))
 						return i + values.length - head;
 			}
@@ -1760,8 +1760,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * index. Uses .equals() to compare items.
 	 *
 	 * @param value the Object to look for, which may be null
-	 * @param fromIndex the initial index to check (zero-indexed, inclusive)
-	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
+	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
+	 * @return An index of last occurrence of value at or before fromIndex in the deque, or -1 if no such value exists
 	 */
 	public int lastIndexOf (@Nullable Object value, int fromIndex) {
 		return lastIndexOf(value, fromIndex, false);
@@ -1775,7 +1775,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
 	public int lastIndexOf (@Nullable Object value, boolean identity) {
-		return lastIndexOf(value, size - 1, false);
+		return lastIndexOf(value, size - 1, identity);
 	}
 
 	/**
@@ -1785,23 +1785,23 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * index. When {@code identity} is false, uses .equals() to compare items; when identity is true, uses {@code ==} .
 	 *
 	 * @param value the Object to look for, which may be null
+	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
-	 * @param fromIndex the initial index to check (zero-indexed, inclusive)
-	 * @return An index of last occurrence of value in the deque or -1 if no such value exists
+	 * @return An index of last occurrence of value at or before fromIndex in the deque, or -1 if no such value exists
 	 */
 	public int lastIndexOf (@Nullable Object value, int fromIndex, boolean identity) {
 		if (size == 0)
 			return -1;
 		@Nullable T[] values = this.values;
 		final int head = this.head, tail = this.tail;
-		int i = tail - size + Math.min(Math.max(fromIndex, 0), size - 1);
+		int i = head + Math.min(Math.max(fromIndex, 0), size - 1);
 		if (i >= values.length)
 			i -= values.length;
 		else if (i < 0)
 			i += values.length;
 
 		if (identity || value == null) {
-			if (head < tail) {
+			if (head <= tail) {
 				for (; i >= head; i--)
 					if (values[i] == value)
 						return i - head;
@@ -1814,7 +1814,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 						return i - head;
 			}
 		} else {
-			if (head < tail) {
+			if (head <= tail) {
 				for (; i >= head; i--)
 					if (value.equals(values[i]))
 						return i - head;
