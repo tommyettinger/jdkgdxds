@@ -306,6 +306,39 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				}
 			}
 		} else {
+			@SuppressWarnings("unchecked") final @Nullable T[] newArray = (T[]) new Object[newSize];
+
+			if (head <= tail) {
+				// Continuous
+				if (head != 0) {
+					if (index > 0)
+						System.arraycopy(values, head, newArray, 0, index);
+					this.head = 0;
+				}
+				System.arraycopy(values, head + index, newArray, index + gapSize, size - head - index);
+				this.tail += gapSize;
+			} else {
+				// Wrapped
+				final int headPart = values.length - head;
+				if (index < headPart) {
+					if (head != 0) {
+						if (index > 0)
+							System.arraycopy(values, head, newArray, 0, index);
+						this.head = 0;
+					}
+					System.arraycopy(values, head + index, newArray, index + gapSize, headPart - index);
+					this.tail = size + gapSize - 1;
+				} else {
+					System.arraycopy(values, head, newArray, 0, headPart);
+					int wrapped = index - headPart; // same as: head + index - values.length;
+					System.arraycopy(values, 0, newArray, headPart, wrapped);
+					System.arraycopy(values, wrapped, newArray, headPart + wrapped + gapSize, tail + 1 - wrapped);
+					this.tail = size + gapSize - 1;
+					index = headPart + wrapped;
+				}
+			}
+			this.values = newArray;
+			return index;
 		}
 	}
 
