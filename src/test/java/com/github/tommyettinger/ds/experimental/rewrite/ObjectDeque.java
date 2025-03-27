@@ -275,6 +275,40 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			}
 			return 0;
 		} else if (size == 1) {
+			if (values.length < gapSize + size) {
+				T item = this.values[head];
+				//noinspection unchecked
+				this.values = (T[]) new Object[gapSize + size];
+				if (index == 0) {
+					this.values[gapSize] = item;
+					this.head = 0;
+					this.tail = gapSize;
+					return 0;
+				} else {
+					this.values[0] = item;
+					this.head = 0;
+					this.tail = gapSize;
+					return 1;
+				}
+			} else {
+				if (index == 0) {
+					if (head != 0) {
+						this.values[0] = this.values[head];
+						this.values[head] = null;
+					}
+					this.head = 0;
+					this.tail = gapSize;
+					return 0;
+				} else {
+					if (head != gapSize) {
+						this.values[gapSize] = this.values[head];
+						this.values[head] = null;
+					}
+					this.head = 0;
+					this.tail = gapSize;
+					return 1;
+				}
+			}
 		}
 
 		final @Nullable T[] values = this.values;
