@@ -254,6 +254,62 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
+	 * Make sure there is a "gap" of exactly {@code gapSize} values starting at {@code index}. This can
+	 * resize the backing array to achieve this goal. If possible, this will keep the same backing array and modify
+	 * it in-place. The "gap" is not assigned null, and may contain old/duplicate references; calling code <em>must</em>
+	 * overwrite the entire gap with additional values to ensure GC correctness.
+	 */
+	protected int ensureGap(int index, int gapSize) {
+		if (gapSize <= 0) return 0;
+		if (index < 0) index = 0;
+		if (index > size) {
+			int oldSize = size;
+			ensureCapacity(gapSize);
+			return oldSize;
+		}
+		if (size == 0) {
+			this.head = this.tail = 0;
+			if (values.length < gapSize) {
+				//noinspection unchecked
+				this.values = (T[]) new Object[gapSize];
+			}
+			return 0;
+		} else if (size == 1) {
+		}
+
+		final @Nullable T[] values = this.values;
+		final int head = this.head;
+		final int tail = this.tail;
+		final int newSize = Math.max(size + gapSize, values.length);
+		if (newSize == values.length) {
+			// keep the same array because there is enough room to form the gap.
+			if (head <= tail) {
+				if (head != 0) {
+					if (index > 0)
+						System.arraycopy(values, head, values, 0, index);
+					this.head = 0;
+				}
+				System.arraycopy(values, head + index, values, index + gapSize, size - head - index);
+				this.tail += gapSize;
+				return index;
+			} else {
+				if (head + index < values.length) {
+					if (index > 0)
+						System.arraycopy(values, head, values, head - gapSize, index);
+					this.head -= gapSize;
+					return this.head + index;
+				} else {
+					int wrapped = head + index - values.length;
+					System.arraycopy(values, wrapped, values, wrapped + gapSize, tail + 1 - wrapped);
+					this.tail += gapSize;
+					return wrapped;
+				}
+			}
+		} else {
+		}
+	}
+
+	/**
 	 * Remove the first item from the deque. (dequeue from head) Always O(1).
 	 *
 	 * @return removed object
