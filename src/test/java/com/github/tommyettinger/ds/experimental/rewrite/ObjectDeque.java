@@ -1917,22 +1917,22 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			return removeLast();
 
 		@Nullable T[] values = this.values;
-		int head = this.head, tail = this.tail == 0 ? values.length : this.tail;
+		int head = this.head, tail = this.tail;
 		index += head;
 		T value;
-		if (head < tail) { // index is between head and tail.
+		if (head <= tail) { // index is between head and tail.
 			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index - 1);
+			System.arraycopy(values, index + 1, values, index, tail - index);
+			values[this.tail] = null;
 			this.tail--;
 			if(this.tail == -1) this.tail = values.length - 1;
-			values[this.tail] = null;
 		} else if (index >= values.length) { // index is between 0 and tail.
 			index -= values.length;
 			value = values[index];
 			System.arraycopy(values, index + 1, values, index, tail - index - 1);
+			values[this.tail] = null;
 			this.tail--;
 			if(this.tail == -1) this.tail = values.length - 1;
-			values[this.tail] = null;
 		} else { // index is between head and values.length.
 			value = values[index];
 			System.arraycopy(values, head, values, head + 1, index - head);
@@ -2034,15 +2034,15 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		final int head = this.head;
 		final int tail = this.tail;
 
-		if (head < tail) {
+		if (head <= tail) {
 			// Continuous
-			Utilities.clear(values, head, tail - head);
+			Utilities.clear(values, head, tail - head + 1);
 		} else if(tail == 0){
 			Utilities.clear(values, head, values.length - head);
 		} else {
 			// Wrapped
 			Utilities.clear(values, head, values.length - head);
-			Utilities.clear(values, 0, tail);
+			Utilities.clear(values, 0, tail + 1);
 		}
 		this.head = 0;
 		this.tail = 0;
