@@ -2273,14 +2273,12 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 *                   order of T items when T implements Comparable of T
 	 */
 	public void sort (@Nullable Comparator<? super T> comparator) {
-		if (head < tail) {
-			Arrays.sort(values, head, tail, comparator);
-		} else if (tail == 0) {
-			Arrays.sort(values, head, values.length, comparator);
+		if (head <= tail) {
+			Arrays.sort(values, head, tail+1, comparator);
 		} else {
-			System.arraycopy(values, head, values, tail, values.length - head);
-			Arrays.sort(values, 0, tail + values.length - head, comparator);
-			tail = tail + values.length - head;
+			System.arraycopy(values, head, values, tail + 1, values.length - head);
+			Arrays.sort(values, 0, tail + 1 + values.length - head, comparator);
+			tail += values.length - head;
 			head = 0;
 		}
 		modCount += size;
