@@ -2074,13 +2074,33 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			i -= values.length;
 		return values[i];
 	}
+
+	/**
+	 * Replaces the element at the specified position in this list with the
+	 * specified element. If this deque is empty or the index is larger than the largest index currently in this
+	 * deque, this delegates to {@link #addLast(Object)} and returns {@link #getDefaultValue() the default value}.
+	 * If the index is negative, this delegates to {@link #addFirst(Object)} and returns
+	 * {@link #getDefaultValue() the default value}.
+	 *
+	 * @param index index of the element to replace
+	 * @param item element to be stored at the specified position
+	 * @return the element previously at the specified position
+	 * @throws ClassCastException if the class of the specified element
+	 *         prevents it from being put in this list
+	 */
 	@Override
 	public @Nullable T set (int index, @Nullable T item) {
-		if (size <= 0)
-			throw new IndexOutOfBoundsException("Cannot set in an empty Collection.");
+		if (size <= 0 || index >= size) {
+			addLast(item);
+			return defaultValue;
+		}
+		if (index < 0) {
+			addFirst(item);
+			return defaultValue;
+		}
 		final @Nullable T[] values = this.values;
 
-		int i = head + Math.min(Math.max(index, 0), size - 1);
+		int i = head + Math.max(Math.min(index, size - 1), 0);
 		if (i >= values.length)
 			i -= values.length;
 		T old = values[i];
