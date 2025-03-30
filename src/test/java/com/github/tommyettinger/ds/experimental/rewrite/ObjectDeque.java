@@ -1913,14 +1913,30 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
-	 * Removes and returns the item at the specified index.
-	 * This is an alias for {@link #remove(int)} for compatibility with primitive-backed lists and deques.
+	 * Removes the element at the specified position in this deque.
+	 * Shifts any subsequent elements to the left (subtracts one
+	 * from their indices).  Returns the element that was removed from the
+	 * deque.
+	 * <br>
+	 * This is an alias for {@link #remove(int)} for compatibility with primitive-backed lists and deques;
+	 * {@link #remove(int)} can refer to the method that removes an item by value, not by index, in those types.
+	 *
+	 * @param index the index of the element to be removed
+	 * @return the element previously at the specified position
 	 */
 	@Nullable
 	public T removeAt(int index) {
 		return remove(index);
 	}
-
+	/**
+	 * Removes the element at the specified position in this deque.
+	 * Shifts any subsequent elements to the left (subtracts one
+	 * from their indices).  Returns the element that was removed from the
+	 * deque.
+	 *
+	 * @param index the index of the element to be removed
+	 * @return the element previously at the specified position
+	 */
 	@Override
 	@Nullable
 	public T remove(int index) {
@@ -2006,6 +2022,19 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		return values[tail];
 	}
 
+	/**
+	 * Returns the element at the specified position in this deque.
+	 * Like {@link ArrayList} or {@link ObjectList}, but unlike {@link LinkedList}, this runs in O(1) time.
+	 * It is expected to be slightly slower than {@link ObjectList#get(int)}, which also runs in O(1) time.
+	 * Unlike get() in ArrayList or ObjectList, this considers negative indices to refer to the first item, and
+	 * too-large indices to refer to the last item. That means it delegates to {@link #getFirst()} or
+	 * {@link #getLast()} in those cases instead of throwing an {@link IndexOutOfBoundsException}, though it may
+	 * throw a {@link NoSuchElementException} if the deque is empty and there is no item it can get.
+	 *
+	 * @param index index of the element to return
+	 * @return the element at the specified position in this deque
+	 * @throws NoSuchElementException if the deque is empty
+	 */
 	@Override
 	public @Nullable T get (int index) {
 		if (index <= 0)
@@ -2020,6 +2049,31 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		return values[i];
 	}
 
+	/**
+	 * Returns the element at the specified position in this deque.
+	 * Like {@link ArrayList} or {@link ObjectList}, but unlike {@link LinkedList}, this runs in O(1) time.
+	 * It is expected to be slightly slower than {@link ObjectList#get(int)}, which also runs in O(1) time.
+	 * Unlike get() in ArrayList or ObjectList, this considers negative indices to refer to the first item, and
+	 * too-large indices to refer to the last item. That means it delegates to {@link #peekFirst()} or
+	 * {@link #peekLast()} in those cases instead of throwing an {@link IndexOutOfBoundsException}, and it will
+	 * return {@link #getDefaultValue() the default value} if the deque is empty. Unless changed, the default value
+	 * is usually {@code null}.
+	 *
+	 * @param index index of the element to return
+	 * @return the element at the specified position in this deque
+	 */
+	public @Nullable T peekAt (int index) {
+		if (index <= 0)
+			return peekFirst();
+		if (index >= size - 1)
+			return peekLast();
+		final @Nullable T[] values = this.values;
+
+		int i = head + index;
+		if (i >= values.length)
+			i -= values.length;
+		return values[i];
+	}
 	@Override
 	public @Nullable T set (int index, @Nullable T item) {
 		if (size <= 0)
