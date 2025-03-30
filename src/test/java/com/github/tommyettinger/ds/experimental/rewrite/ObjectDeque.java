@@ -711,7 +711,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		else {
 			@Nullable T[] values = this.values;
 
-			if (++size == values.length) {
+			if (++size > values.length) {
 				resize(values.length << 1);
 				values = this.values;
 			}
@@ -1929,7 +1929,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		} else if (index >= values.length) { // index is between 0 and tail.
 			index -= values.length;
 			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index - 1);
+			System.arraycopy(values, index + 1, values, index, tail - index);
 			values[this.tail] = null;
 			this.tail--;
 			if(this.tail == -1) this.tail = values.length - 1;
