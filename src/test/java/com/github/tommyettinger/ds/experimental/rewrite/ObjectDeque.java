@@ -1026,10 +1026,52 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		return true;
 	}
 
+	/**
+	 * Alias for {@link #addAll(int, Object[])}.
+	 * @param index the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean insertAll(int index, T[] array) {
+		return addAll(index, array, 0, array.length);
+	}
+
+	/**
+	 * Alias for {@link #addAll(int, Object[], int, int)}.
+	 * @param index the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array the elements to be inserted into this deque
+	 * @param offset the index of the first item in array to add
+	 * @param length how many items, at most, to add from array into this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean insertAll(int index, T[] array, int offset, int length) {
+		return addAll(index, array, offset, length);
+	}
+	/**
+	 * Like {@link #addAll(int, Collection)}, but takes an array instead of a Collection and inserts it
+	 * so the first item will be at the given {@code index}.
+	 * The order of {@code array} will be preserved, starting at the given index in this deque.
+	 * @see #addAll(Object[])
+	 * @param index the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
 	public boolean addAll(int index, T[] array) {
 		return addAll(index, array, 0, array.length);
 	}
 
+	/**
+	 * Like {@link #addAll(int, Collection)}, but takes an array instead of a Collection, gets items starting at
+	 * {@code offset} from that array, using {@code length} items, and inserts them
+	 * so the item at the given offset will be at the given {@code index}.
+	 * The order of {@code array} will be preserved, starting at the given index in this deque.
+	 * @see #addAll(Object[])
+	 * @param index the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array the elements to be inserted into this deque
+	 * @param offset the index of the first item in array to add
+	 * @param length how many items, at most, to add from array into this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
 	public boolean addAll(int index, T[] array, int offset, int length) {
 		int oldSize = size;
 		if(index <= 0)
@@ -1497,8 +1539,16 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
-	 * Reduces the size of the deque to the specified size. If the deque is already smaller than the specified
-	 * size, no action is taken.
+	 * Alias for {@link #truncate(int)}.
+	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
+	 */
+	public void truncateLast (int newSize) {
+		truncate(newSize);
+	}
+	/**
+	 * Reduces the size of the deque to the specified size by bulk-removing items from the tail end.
+	 * If the deque is already smaller than the specified size, no action is taken.
+	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
 	public void truncate (int newSize) {
 		if(newSize <= 0) {
@@ -1530,8 +1580,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
-	 * Reduces the size of the deque to the specified size by removing from the head.
+	 * Reduces the size of the deque to the specified size by bulk-removing from the head.
 	 * If the deque is already smaller than the specified size, no action is taken.
+	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
 	public void truncateFirst (int newSize) {
 		if(newSize <= 0) {
