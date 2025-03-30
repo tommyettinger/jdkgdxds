@@ -935,48 +935,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			@Nullable T[] values = this.values;
 			final int cs = c.size();
 			if(cs == 0) return false;
-			if (size + cs > values.length) {
-				ensureCapacity(Math.max(cs, oldSize));
-				values = this.values;
-			}
-
-			if(head <= tail) {
-				index += head;
-				int after = index + cs;
-				if(after > values.length) after -= values.length;
-				System.arraycopy(values, index, values, after, tail - index + 1);
-				for(T item : c) {
-					values[index++] = item;
-				}
-				tail += cs;
-				if(tail >= values.length)
-					tail -= values.length;
-			} else {
-				if (head + index < values.length) {
-					// backward shift
-					System.arraycopy(values, head, values, head - cs, index);
-					head -= cs;
-					if(head < 0) head += values.length;
-					index += head;
-					if(index >= values.length) index -= values.length;
-					for(T item : c) {
-						values[index++] = item;
-						if(index >= values.length) index -= values.length;
-					}
-				}
-				else {
-					// forward shift
-					index -= values.length - cs;
-					System.arraycopy(values, head + index, values, head + index + cs, tail - head - index);
-					index += head;
-					if(index >= values.length) index -= values.length;
-					for(T item : c) {
-						values[index++] = item;
-						if(index >= values.length) index -= values.length;
-					}
-					tail += cs;
-					if(tail >= values.length) tail -= values.length;
-				}
+			int place = ensureGap(index, cs);
+			for(T item : c) {
+				values[place++] = item;
+				if (place >= values.length) place -= values.length;
 			}
 			size += cs;
 			modCount += cs;
