@@ -184,7 +184,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		}
 
 		if (++tail == values.length) tail = 0;
-		if(++size == 1) tail = head;
+		if(++size == 1) head = tail;
 		values[tail] = object;
 		modCount++;
 	}
