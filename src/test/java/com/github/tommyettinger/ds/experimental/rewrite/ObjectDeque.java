@@ -872,8 +872,22 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		if(cs == 0) return false;
 		int oldSize = size;
 		ensureCapacity(Math.max(cs, oldSize));
-		for (T t : c) {
-			addLast(t);
+		if(c == this) {
+			if(head <= tail) {
+				if (tail + 1 < values.length)
+					System.arraycopy(values, head, values, tail + 1, Math.min(size, values.length - tail - 1));
+				if (values.length - tail - 1 < size)
+					System.arraycopy(values, head + values.length - tail - 1, values, 0, size - (values.length - tail - 1));
+			} else {
+				System.arraycopy(values, head, values, tail + 1, values.length - head);
+				System.arraycopy(values, 0, values, tail + 1 + values.length - head, tail + 1);
+			}
+			tail += oldSize;
+			size += oldSize;
+		} else {
+			for (T t : c) {
+				addLast(t);
+			}
 		}
 		return oldSize != size;
 	}
@@ -898,8 +912,25 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		if(cs == 0) return false;
 		int oldSize = size;
 		ensureCapacity(Math.max(cs, oldSize));
-		for (T t : c) {
-			addFirst(t);
+		if(c == this) {
+			if(head <= tail) {
+				if (head > 0) {
+					int amt = Math.min(oldSize, head);
+					System.arraycopy(values, head, values, head - amt, amt);
+				}
+				if (head < oldSize)
+					System.arraycopy(values, head + head, values, tail+1, oldSize - head);
+			} else {
+				System.arraycopy(values, head, values, head - oldSize, values.length - head);
+				System.arraycopy(values, 0, values, values.length - oldSize, tail + 1);
+			}
+			head -= oldSize;
+			if(head < 0) head += values.length;
+			size += oldSize;
+		} else {
+			for (T t : c) {
+				addFirst(t);
+			}
 		}
 		return oldSize != size;
 	}

@@ -428,17 +428,26 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
     }
 
     public void test_ArrayList_addAll_scenario2() {
-        // FIXME: This needs the change in addAll(int, Collection) to be applied to addAll() that appends to the end.
-//        {
-//            ObjectDeque objectDeque = new ObjectDeque();
-//            objectDeque.add(1);
-//            objectDeque.addAll(1, objectDeque);
-//            int size = objectDeque.size();
-//            assertEquals(2, size);
-//            for (int index = 0; index < size; index++) {
-//                assertEquals(1, objectDeque.get(index));
-//            }
-//        }
+        {
+            ObjectDeque objectDeque = new ObjectDeque();
+            objectDeque.add(1);
+            objectDeque.addAll(0, objectDeque);
+            int size = objectDeque.size();
+            assertEquals(2, size);
+            for (int index = 0; index < size; index++) {
+                assertEquals(1, objectDeque.get(index));
+            }
+        }
+        {
+            ObjectDeque objectDeque = new ObjectDeque();
+            objectDeque.add(1);
+            objectDeque.addAll(1, objectDeque);
+            int size = objectDeque.size();
+            assertEquals(2, size);
+            for (int index = 0; index < size; index++) {
+                assertEquals(1, objectDeque.get(index));
+            }
+        }
         {
             ObjectDeque objectDeque = new ObjectDeque();
             objectDeque.add(1);
@@ -446,7 +455,7 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
             objectDeque.addAll(1, objectDeque);
             int size = objectDeque.size();
             assertEquals(4, size);
-            System.out.println(objectDeque);
+
             for (int index = 0; index < 2; index++) {
                 assertEquals(1, objectDeque.get(index));
             }
