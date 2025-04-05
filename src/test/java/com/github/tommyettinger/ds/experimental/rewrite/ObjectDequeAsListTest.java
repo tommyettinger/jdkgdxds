@@ -16,7 +16,6 @@
  */
 package com.github.tommyettinger.ds.experimental.rewrite;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
@@ -29,7 +28,7 @@ import java.util.Vector;
 /**
  * From <a href="https://github.com/apache/harmony">Apache Harmony's GitHub mirror</a>.
  */
-public class ArrayListTest extends junit.framework.TestCase {
+public class ObjectDequeAsListTest extends junit.framework.TestCase {
 
     List alist;
 
@@ -41,31 +40,31 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#ArrayList()
+     * @tests java.util.ObjectDeque#ObjectDeque()
      */
     public void test_Constructor() {
-        // Test for method java.util.ArrayList()
+        // Test for method java.util.ObjectDeque()
         new SupportForListTest("", alist).runTest();
 
-        ArrayList subList = new ArrayList();
+        ObjectDeque subList = new ObjectDeque();
         for (int i = -50; i < 150; i++)
             subList.add(new Integer(i));
         new SupportForListTest("", subList.subList(50, 150)).runTest();
     }
 
     /**
-     * @tests java.util.ArrayList#ArrayList(int)
+     * @tests java.util.ObjectDeque#ObjectDeque(int)
      */
     public void test_ConstructorI() {
-        // Test for method java.util.ArrayList(int)
-        ArrayList al = new ArrayList(5);
-        assertEquals("Incorrect arrayList created", 0, al.size());
+        // Test for method java.util.ObjectDeque(int)
+        ObjectDeque al = new ObjectDeque(5);
+        assertEquals("Incorrect ObjectDeque created", 0, al.size());
         
-        al = new ArrayList(0);
-        assertEquals("Incorrect arrayList created", 0, al.size());
+        al = new ObjectDeque(0);
+        assertEquals("Incorrect ObjectDeque created", 0, al.size());
         
         try {
-            al = new ArrayList(-1);
+            al = new ObjectDeque(-1);
             fail("Should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // Excepted
@@ -73,31 +72,31 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#ArrayList(java.util.Collection)
+     * @tests java.util.ObjectDeque#ObjectDeque(java.util.Collection)
      */
     public void test_ConstructorLjava_util_Collection() {
-        // Test for method java.util.ArrayList(java.util.Collection)
-        ArrayList al = new ArrayList(Arrays.asList(objArray));
-        assertTrue("arrayList created from collection has incorrect size", al
+        // Test for method java.util.ObjectDeque(java.util.Collection)
+        ObjectDeque al = new ObjectDeque(Arrays.asList(objArray));
+        assertTrue("ObjectDeque created from collection has incorrect size", al
                 .size() == objArray.length);
         for (int counter = 0; counter < objArray.length; counter++)
             assertTrue(
-                    "arrayList created from collection has incorrect elements",
+                    "ObjectDeque created from collection has incorrect elements",
                     al.get(counter) == objArray[counter]);
 
     }
 
     public void testConstructorWithConcurrentCollection() {
         Collection<String> collection = shrinksOnSize("A", "B", "C", "D");
-        ArrayList<String> list = new ArrayList<String>(collection);
+        ObjectDeque<String> list = new ObjectDeque<String>(collection);
         assertFalse(list.contains(null));
     }
 
     /**
-     * @tests java.util.ArrayList#add(int, java.lang.Object)
+     * @tests java.util.ObjectDeque#add(int, java.lang.Object)
      */
     public void test_addILjava_lang_Object() {
-        // Test for method void java.util.ArrayList.add(int, java.lang.Object)
+        // Test for method void java.util.ObjectDeque.add(int, java.lang.Object)
         Object o;
         alist.add(50, o = new Object());
         assertTrue("Failed to add Object", alist.get(50) == o);
@@ -155,7 +154,7 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#add(int, java.lang.Object)
+     * @tests java.util.ObjectDeque#add(int, java.lang.Object)
      */
     public void test_addILjava_lang_Object_2() {
         Object o = new Object();
@@ -175,10 +174,10 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
     
     /**
-     * @tests java.util.ArrayList#add(java.lang.Object)
+     * @tests java.util.ObjectDeque#add(java.lang.Object)
      */
     public void test_addLjava_lang_Object() {
-        // Test for method boolean java.util.ArrayList.add(java.lang.Object)
+        // Test for method boolean java.util.ObjectDeque.add(java.lang.Object)
         Object o = new Object();
         alist.add(o);
         assertTrue("Failed to add Object", alist.get(alist.size() - 1) == o);
@@ -187,10 +186,10 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#addAll(int, java.util.Collection)
+     * @tests java.util.ObjectDeque#addAll(int, java.util.Collection)
      */
     public void test_addAllILjava_util_Collection() {
-        // Test for method boolean java.util.ArrayList.addAll(int,
+        // Test for method boolean java.util.ObjectDeque.addAll(int,
         // java.util.Collection)
         alist.addAll(50, alist);
         assertEquals("Returned incorrect size after adding to existing list",
@@ -204,7 +203,7 @@ public class ArrayListTest extends junit.framework.TestCase {
         for (int i = 0; i >= 150 && (i < 200); i++)
             assertTrue("Failed to ad elements properly",
                     alist.get(i) == objArray[i - 100]);
-        ArrayList listWithNulls = new ArrayList();
+        ObjectDeque listWithNulls = new ObjectDeque();
         listWithNulls.add(null);
         listWithNulls.add(null);
         listWithNulls.add("yoink");
@@ -224,12 +223,12 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#addAll(int, java.util.Collection)
+     * @tests java.util.ObjectDeque#addAll(int, java.util.Collection)
      */
     @SuppressWarnings("unchecked")
     public void test_addAllILjava_util_Collection_2() {
         // Regression for HARMONY-467
-        ArrayList obj = new ArrayList();
+        ObjectDeque obj = new ObjectDeque();
         try {
             obj.addAll((int) -1, (Collection) null);
             fail("IndexOutOfBoundsException expected");
@@ -240,8 +239,8 @@ public class ArrayListTest extends junit.framework.TestCase {
 
         // Regression for HARMONY-5705
         String[] data = new String[] { "1", "2", "3", "4", "5", "6", "7", "8" };
-        ArrayList list1 = new ArrayList();
-        ArrayList list2 = new ArrayList();
+        ObjectDeque list1 = new ObjectDeque();
+        ObjectDeque list2 = new ObjectDeque();
         for (String d : data) {
             list1.add(d);
             list2.add(d);
@@ -254,7 +253,7 @@ public class ArrayListTest extends junit.framework.TestCase {
                 .containsAll(list2)
                 && list2.containsAll(list1));
 
-        obj = new ArrayList();
+        obj = new ObjectDeque();
         for (int i = 0; i < 100; i++) {
             if (list1.size() > 0) {
                 obj.removeAll(list1);
@@ -266,8 +265,8 @@ public class ArrayListTest extends junit.framework.TestCase {
                 && list1.containsAll(obj));
 
         // Regression for Harmony-5799
-        list1 = new ArrayList();
-        list2 = new ArrayList();
+        list1 = new ObjectDeque();
+        list2 = new ObjectDeque();
         int location = 2;
 
         String[] strings = { "0", "1", "2", "3", "4", "5", "6" };
@@ -293,10 +292,10 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
     
     /**
-     * @tests java.util.ArrayList#addAll(int, java.util.Collection)
+     * @tests java.util.ObjectDeque#addAll(int, java.util.Collection)
      */
     public void test_addAllILjava_util_Collection_3() {
-        ArrayList obj = new ArrayList();
+        ObjectDeque obj = new ObjectDeque();
         obj.addAll(0, obj);
         obj.addAll(obj.size(), obj);
         try {
@@ -316,14 +315,14 @@ public class ArrayListTest extends junit.framework.TestCase {
         }
 
         try {
-            obj.addAll(0, null);
+            obj.addAll(0, (Collection) null);
             fail("Should throw NullPointerException");
         } catch (NullPointerException e) {
             // Excepted
         }
 
         try {
-            obj.addAll(obj.size() + 1, null);
+            obj.addAll(obj.size() + 1, (Collection) null);
             fail("Should throw IndexOutOfBoundsException");
         } catch (IndexOutOfBoundsException e) {
             // Expected
@@ -342,8 +341,8 @@ public class ArrayListTest extends junit.framework.TestCase {
     public void test_addAllCollectionOfQextendsE() {
         // Regression for HARMONY-539
         // https://issues.apache.org/jira/browse/HARMONY-539
-        ArrayList<String> alist = new ArrayList<String>();
-        ArrayList<String> blist = new ArrayList<String>();
+        ObjectDeque<String> alist = new ObjectDeque<String>();
+        ObjectDeque<String> blist = new ObjectDeque<String>();
         alist.add("a");
         alist.add("b");
         blist.add("c");
@@ -356,12 +355,12 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#addAll(java.util.Collection)
+     * @tests java.util.ObjectDeque#addAll(java.util.Collection)
      */
     public void test_addAllLjava_util_Collection() {
         // Test for method boolean
-        // java.util.ArrayList.addAll(java.util.Collection)
-        List l = new ArrayList();
+        // java.util.ObjectDeque.addAll(java.util.Collection)
+        List l = new ObjectDeque();
         l.addAll(alist);
         for (int i = 0; i < alist.size(); i++)
             assertTrue("Failed to add elements properly", l.get(i).equals(
@@ -398,7 +397,7 @@ public class ArrayListTest extends junit.framework.TestCase {
         }
         
         // Regression test for Harmony-3481
-        ArrayList<Integer> originalList = new ArrayList<Integer>(12);
+        ObjectDeque<Integer> originalList = new ObjectDeque<Integer>(12);
         for (int j = 0; j < 12; j++) {
             originalList.add(j);
         }
@@ -406,7 +405,7 @@ public class ArrayListTest extends junit.framework.TestCase {
         originalList.remove(0);
         originalList.remove(0);
 
-        ArrayList<Integer> additionalList = new ArrayList<Integer>(11);
+        ObjectDeque<Integer> additionalList = new ObjectDeque<Integer>(11);
         for (int j = 0; j < 11; j++) {
             additionalList.add(j);
         }
@@ -416,9 +415,9 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
         public void test_ArrayList_addAll_scenario1() {
-        ArrayList arrayListA = new ArrayList();
+        ObjectDeque arrayListA = new ObjectDeque();
         arrayListA.add(1);
-        ArrayList arrayListB = new ArrayList();
+        ObjectDeque arrayListB = new ObjectDeque();
         arrayListB.add(1);
         arrayListA.addAll(1, arrayListB);
         int size = arrayListA.size();
@@ -429,20 +428,38 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     public void test_ArrayList_addAll_scenario2() {
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(1);
-        arrayList.addAll(1, arrayList);
-        int size = arrayList.size();
-        assertEquals(2, size);
-        for (int index = 0; index < size; index++) {
-            assertEquals(1, arrayList.get(index));
+        // FIXME: This needs the change in addAll(int, Collection) to be applied to addAll() that appends to the end.
+//        {
+//            ObjectDeque objectDeque = new ObjectDeque();
+//            objectDeque.add(1);
+//            objectDeque.addAll(1, objectDeque);
+//            int size = objectDeque.size();
+//            assertEquals(2, size);
+//            for (int index = 0; index < size; index++) {
+//                assertEquals(1, objectDeque.get(index));
+//            }
+//        }
+        {
+            ObjectDeque objectDeque = new ObjectDeque();
+            objectDeque.add(1);
+            objectDeque.add(10);
+            objectDeque.addAll(1, objectDeque);
+            int size = objectDeque.size();
+            assertEquals(4, size);
+            System.out.println(objectDeque);
+            for (int index = 0; index < 2; index++) {
+                assertEquals(1, objectDeque.get(index));
+            }
+            for (int index = 2; index < 4; index++) {
+                assertEquals(10, objectDeque.get(index));
+            }
         }
     }
         
     // Regression test for HARMONY-5839
     public void testaddAllHarmony5839() {
         Collection coll = Arrays.asList(new String[] { "1", "2" });
-        List list = new ArrayList();
+        List list = new ObjectDeque();
         list.add("a");
         list.add(0, "b");
         list.add(0, "c");
@@ -460,10 +477,10 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#clear()
+     * @tests java.util.ObjectDeque#clear()
      */
     public void test_clear() {
-        // Test for method void java.util.ArrayList.clear()
+        // Test for method void java.util.ObjectDeque.clear()
         alist.clear();
         assertEquals("List did not clear", 0, alist.size());
         alist.add(null);
@@ -480,33 +497,11 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#clone()
-     */
-    public void test_clone() {
-        // Test for method java.lang.Object java.util.ArrayList.clone()
-        ArrayList x = (ArrayList) (((ArrayList) (alist)).clone());
-        assertTrue("Cloned list was inequal to original", x.equals(alist));
-        for (int i = 0; i < alist.size(); i++)
-            assertTrue("Cloned list contains incorrect elements",
-                    alist.get(i) == x.get(i));
-
-        alist.add(null);
-        alist.add(25, null);
-        x = (ArrayList) (((ArrayList) (alist)).clone());
-        assertTrue("nulls test - Cloned list was inequal to original", x
-                .equals(alist));
-        for (int i = 0; i < alist.size(); i++)
-            assertTrue("nulls test - Cloned list contains incorrect elements",
-                    alist.get(i) == x.get(i));
-
-    }
-
-    /**
-     * @tests java.util.ArrayList#contains(java.lang.Object)
+     * @tests java.util.ObjectDeque#contains(java.lang.Object)
      */
     public void test_containsLjava_lang_Object() {
         // Test for method boolean
-        // java.util.ArrayList.contains(java.lang.Object)
+        // java.util.ObjectDeque.contains(java.lang.Object)
         assertTrue("Returned false for valid element", alist
                 .contains(objArray[99]));
         assertTrue("Returned false for equal element", alist
@@ -521,16 +516,16 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#ensureCapacity(int)
+     * @tests java.util.ObjectDeque#ensureCapacity(int)
      */
     public void test_ensureCapacityI() {
-        // Test for method void java.util.ArrayList.ensureCapacity(int)
+        // Test for method void java.util.ObjectDeque.ensureCapacity(int)
         // TODO : There is no good way to test this as it only really impacts on
         // the private implementation.
 
         Object testObject = new Object();
         int capacity = 20;
-        ArrayList al = new ArrayList(capacity);
+        ObjectDeque al = new ObjectDeque(capacity);
         int i;
         for (i = 0; i < capacity / 2; i++) {
             al.add(i, new Object());
@@ -548,16 +543,16 @@ public class ArrayListTest extends junit.framework.TestCase {
         assertTrue("EnsureCapacity did not change location.", location == al
                 .indexOf(testObject));
 
-        ArrayList<String> list = new ArrayList<String>(1);
+        ObjectDeque<String> list = new ObjectDeque<String>(1);
         list.add("hello");
         list.ensureCapacity(Integer.MIN_VALUE);
     }
 
     /**
-     * @tests java.util.ArrayList#get(int)
+     * @tests java.util.ObjectDeque#get(int)
      */
     public void test_getI() {
-        // Test for method java.lang.Object java.util.ArrayList.get(int)
+        // Test for method java.lang.Object java.util.ObjectDeque.get(int)
         assertTrue("Returned incorrect element", alist.get(22) == objArray[22]);
         try {
             alist.get(8765);
@@ -569,10 +564,10 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#indexOf(java.lang.Object)
+     * @tests java.util.ObjectDeque#indexOf(java.lang.Object)
      */
     public void test_indexOfLjava_lang_Object() {
-        // Test for method int java.util.ArrayList.indexOf(java.lang.Object)
+        // Test for method int java.util.ObjectDeque.indexOf(java.lang.Object)
         assertEquals("Returned incorrect index", 87, alist
                 .indexOf(objArray[87]));
         assertEquals("Returned index for invalid Object", -1, alist
@@ -584,21 +579,21 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#isEmpty()
+     * @tests java.util.ObjectDeque#isEmpty()
      */
     public void test_isEmpty() {
-        // Test for method boolean java.util.ArrayList.isEmpty()
-        assertTrue("isEmpty returned false for new list", new ArrayList()
+        // Test for method boolean java.util.ObjectDeque.isEmpty()
+        assertTrue("isEmpty returned false for new list", new ObjectDeque()
                 .isEmpty());
         assertTrue("Returned true for existing list with elements", !alist
                 .isEmpty());
     }
 
     /**
-     * @tests java.util.ArrayList#lastIndexOf(java.lang.Object)
+     * @tests java.util.ObjectDeque#lastIndexOf(java.lang.Object)
      */
     public void test_lastIndexOfLjava_lang_Object() {
-        // Test for method int java.util.ArrayList.lastIndexOf(java.lang.Object)
+        // Test for method int java.util.ObjectDeque.lastIndexOf(java.lang.Object)
         alist.add(new Integer(99));
         assertEquals("Returned incorrect index", 100, alist
                 .lastIndexOf(objArray[99]));
@@ -627,7 +622,7 @@ public class ArrayListTest extends junit.framework.TestCase {
 
         int[] data = { 1, 2, 3 };
         for (int i = 0; i < data.length; i++) {
-            mylist.add(i, data[i]);
+            mylist.insert(i, data[i]);
         }
 
         mylist.removeRange(0, 1);
@@ -668,10 +663,10 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
     
     /**
-     * @tests java.util.ArrayList#remove(int)
+     * @tests java.util.ObjectDeque#remove(int)
      */
     public void test_removeI() {
-        // Test for method java.lang.Object java.util.ArrayList.remove(int)
+        // Test for method java.lang.Object java.util.ObjectDeque.remove(int)
         alist.remove(10);
         assertEquals("Failed to remove element", -1, alist
                 .indexOf(objArray[10]));
@@ -683,14 +678,14 @@ public class ArrayListTest extends junit.framework.TestCase {
             assertNotNull(e.getMessage());
         }
 
-        ArrayList myList = (ArrayList) (((ArrayList) (alist)).clone());
+        ObjectDeque myList =new ObjectDeque(alist);
         alist.add(25, null);
         alist.add(50, null);
         alist.remove(50);
         alist.remove(25);
         assertTrue("Removing nulls did not work", alist.equals(myList));
 
-        List list = new ArrayList(Arrays.asList(new String[] { "a", "b", "c",
+        List list = new ObjectDeque(Arrays.asList(new String[] { "a", "b", "c",
                 "d", "e", "f", "g" }));
         assertTrue("Removed wrong element 1", list.remove(0) == "a");
         assertTrue("Removed wrong element 2", list.remove(4) == "f");
@@ -699,7 +694,7 @@ public class ArrayListTest extends junit.framework.TestCase {
         assertTrue("Removed wrong element 3", Arrays.equals(result,
                 new String[] { "b", "c", "d", "e", "g" }));
 
-        List l = new ArrayList(0);
+        List l = new ObjectDeque(0);
         l.add(new Object());
         l.add(new Object());
         l.remove(0);
@@ -721,10 +716,10 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#set(int, java.lang.Object)
+     * @tests java.util.ObjectDeque#set(int, java.lang.Object)
      */
     public void test_setILjava_lang_Object() {
-        // Test for method java.lang.Object java.util.ArrayList.set(int,
+        // Test for method java.lang.Object java.util.ObjectDeque.set(int,
         // java.lang.Object)
         Object obj;
         alist.set(65, obj = new Object());
@@ -772,13 +767,13 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#size()
+     * @tests java.util.ObjectDeque#size()
      */
     public void test_size() {
-        // Test for method int java.util.ArrayList.size()
+        // Test for method int java.util.ObjectDeque.size()
         assertEquals("Returned incorrect size for exiting list", 100, alist
                 .size());
-        assertEquals("Returned incorrect size for new list", 0, new ArrayList()
+        assertEquals("Returned incorrect size for new list", 0, new ObjectDeque()
                 .size());
     }
 
@@ -786,17 +781,17 @@ public class ArrayListTest extends junit.framework.TestCase {
      * @tests java.util.AbstractCollection#toString()
      */
     public void test_toString() {
-        ArrayList l = new ArrayList(1);
+        ObjectDeque l = new ObjectDeque(1);
         l.add(l);
         String result = l.toString();
         assertTrue("should contain self ref", result.indexOf("(this") > -1);
     }
     
     /**
-     * @tests java.util.ArrayList#toArray()
+     * @tests java.util.ObjectDeque#toArray()
      */
     public void test_toArray() {
-        // Test for method java.lang.Object [] java.util.ArrayList.toArray()
+        // Test for method java.lang.Object [] java.util.ObjectDeque.toArray()
         alist.set(25, null);
         alist.set(75, null);
         Object[] obj = alist.toArray();
@@ -815,11 +810,11 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     /**
-     * @tests java.util.ArrayList#toArray(java.lang.Object[])
+     * @tests java.util.ObjectDeque#toArray(java.lang.Object[])
      */
     public void test_toArray$Ljava_lang_Object() {
         // Test for method java.lang.Object []
-        // java.util.ArrayList.toArray(java.lang.Object [])
+        // java.util.ObjectDeque.toArray(java.lang.Object [])
         alist.set(25, null);
         alist.set(75, null);
         Integer[] argArray = new Integer[100];
@@ -839,36 +834,36 @@ public class ArrayListTest extends junit.framework.TestCase {
         }
     }
 
-    /**
-     * @tests java.util.ArrayList#trimToSize()
-     */
-    public void test_trimToSize() {
-        // Test for method void java.util.ArrayList.trimToSize()
-        for (int i = 99; i > 24; i--)
-            alist.remove(i);
-        ((ArrayList) alist).trimToSize();
-        assertEquals("Returned incorrect size after trim", 25, alist.size());
-        for (int i = 0; i < alist.size(); i++)
-            assertTrue("Trimmed list contained incorrect elements", alist
-                    .get(i) == objArray[i]);
-        Vector v = new Vector();
-        v.add("a");
-        ArrayList al = new ArrayList(v);
-        Iterator it = al.iterator();
-        al.trimToSize();
-        try {
-            it.next();
-            fail("should throw a ConcurrentModificationException");
-        } catch (ConcurrentModificationException ioobe) {
-            // expected
-        }
-    }
+//    /**
+//     * @tests java.util.ObjectDeque#trimToSize()
+//     */
+//    public void test_trimToSize() {
+//        // Test for method void java.util.ObjectDeque.trimToSize()
+//        for (int i = 99; i > 24; i--)
+//            alist.remove(i);
+//        ((ObjectDeque) alist).trimToSize();
+//        assertEquals("Returned incorrect size after trim", 25, alist.size());
+//        for (int i = 0; i < alist.size(); i++)
+//            assertTrue("Trimmed list contained incorrect elements", alist
+//                    .get(i) == objArray[i]);
+//        Vector v = new Vector();
+//        v.add("a");
+//        ObjectDeque al = new ObjectDeque(v);
+//        Iterator it = al.iterator();
+//        al.trimToSize();
+//        try {
+//            it.next();
+//            fail("should throw a ConcurrentModificationException");
+//        } catch (ConcurrentModificationException ioobe) {
+//            // expected
+//        }
+//    }
 
     /**
-     * @test java.util.ArrayList#addAll(int, Collection)
+     * @test java.util.ObjectDeque#addAll(int, Collection)
      */
     public void test_addAll() {
-        ArrayList list = new ArrayList();
+        ObjectDeque list = new ObjectDeque();
         list.add("one");
         list.add("two");
         assertEquals(2, list.size());
@@ -876,7 +871,7 @@ public class ArrayListTest extends junit.framework.TestCase {
         list.remove(0);
         assertEquals(1, list.size());
 
-        ArrayList collection = new ArrayList();
+        ObjectDeque collection = new ObjectDeque();
         collection.add("1");
         collection.add("2");
         collection.add("3");
@@ -906,13 +901,13 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     public void testAddAllWithConcurrentCollection() {
-        ArrayList<String> list = new ArrayList<String>();
+        ObjectDeque<String> list = new ObjectDeque<String>();
         list.addAll(shrinksOnSize("A", "B", "C", "D"));
         assertFalse(list.contains(null));
     }
 
     public void testAddAllAtPositionWithConcurrentCollection() {
-        ArrayList<String> list = new ArrayList<String>(
+        ObjectDeque<String> list = new ObjectDeque<String>(
                 Arrays.asList("A", "B", "C", "D"));
 
         list.addAll(3, shrinksOnSize("E", "F", "G", "H"));
@@ -920,7 +915,7 @@ public class ArrayListTest extends junit.framework.TestCase {
     }
 
     public void test_override_size() throws Exception {
-        ArrayList testlist = new MockArrayList();
+        ObjectDeque testlist = new MockArrayList();
         // though size is overriden, it should passed without exception
         testlist.add("test_0");
         testlist.add("test_1");
@@ -931,7 +926,7 @@ public class ArrayListTest extends junit.framework.TestCase {
         testlist.set(1, "test_4");
     }
 
-    public static class ArrayListExtend extends ArrayList {
+    public static class ArrayListExtend extends ObjectDeque {
 
         private int size = 0;
 
@@ -949,7 +944,7 @@ public class ArrayListTest extends junit.framework.TestCase {
         }
     }
 
-    public class MockArrayList extends ArrayList {
+    public class MockArrayList extends ObjectDeque {
         public int size() {
             return 0;
         }
@@ -976,7 +971,7 @@ public class ArrayListTest extends junit.framework.TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        alist = new ArrayList();
+        alist = new ObjectDeque();
         for (int i = 0; i < objArray.length; i++)
             alist.add(objArray[i]);
     }

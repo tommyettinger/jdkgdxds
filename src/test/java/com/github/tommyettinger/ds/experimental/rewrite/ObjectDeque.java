@@ -328,8 +328,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 						System.arraycopy(values, head, values, 0, index);
 					this.head = 0;
 				}
-				System.arraycopy(values, head + index, values, index + gapSize, size - head - index);
-				this.tail += gapSize;
+				System.arraycopy(values, head + index, values, index + gapSize, size - this.head - index);
+				this.tail += gapSize - (head - this.head);
 				return index;
 			} else {
 				if (head + index < values.length) {
@@ -936,9 +936,14 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			final int cs = c.size();
 			if(cs == 0) return false;
 			int place = ensureGap(index, cs);
-			for(T item : c) {
-				values[place++] = item;
-				if (place >= values.length) place -= values.length;
+			if(c == this){
+				System.arraycopy(values, head, values, place, place - head);
+				System.arraycopy(values, place + cs, values, place + place - head, tail + 1 - place - cs);
+			} else {
+				for (T item : c) {
+					values[place++] = item;
+					if (place >= values.length) place -= values.length;
+				}
 			}
 			size += cs;
 			modCount += cs;
