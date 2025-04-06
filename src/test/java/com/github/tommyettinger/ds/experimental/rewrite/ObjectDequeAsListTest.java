@@ -463,8 +463,11 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         Collection coll = Arrays.asList(new String[] { "1", "2" });
         List list = new ObjectDeque();
         list.add("a");
+        System.out.println(list);
         list.add(0, "b");
+        System.out.println(list);
         list.add(0, "c");
+        System.out.println(list);
         list.add(0, "d");
         list.add(0, "e");
         list.add(0, "f");
@@ -472,9 +475,12 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         list.add(0, "h");
         list.add(0, "i");
 
+        System.out.println(list);
+
         list.addAll(6, coll);
 
         assertEquals(11, list.size());
+        System.out.println(list);
         assertFalse(list.contains(null));
     }
 

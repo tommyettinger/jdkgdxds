@@ -272,7 +272,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				// Wrapped
 				final int rest = values.length - head;
 				System.arraycopy(values, head, newArray, 0, rest);
-				System.arraycopy(values, 0, newArray, rest, tail);
+				System.arraycopy(values, 0, newArray, rest, tail + 1);
 			}
 		}
 		this.values = newArray;
