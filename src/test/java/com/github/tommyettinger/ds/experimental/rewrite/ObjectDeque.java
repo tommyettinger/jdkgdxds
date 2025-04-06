@@ -101,13 +101,14 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 */
 	public ObjectDeque(int initialSize) {
 		// noinspection unchecked
-		this.values = (T[])new Object[initialSize];
+		this.values = (T[])new Object[Math.min(1, initialSize)];
 	}
 
 	/**
 	 * Creates a new ObjectDeque using all the contents of the given Collection.
 	 *
 	 * @param coll a Collection of T that will be copied into this and used in full
+	 * @throws NullPointerException if {@code coll} is {@code null}
 	 */
 	public ObjectDeque(Collection<? extends T> coll) {
 		this(coll.size());
@@ -117,17 +118,19 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	/**
 	 * Creates a new instance containing the items in the specified iterator.
 	 *
-	 * @param coll an iterator that will have its remaining contents added to this
+	 * @param iter an iterator that will have its remaining contents added to this
+	 * @throws NullPointerException if {@code iter} is {@code null}
 	 */
-	public ObjectDeque(Iterator<? extends T> coll) {
+	public ObjectDeque(Iterator<? extends T> iter) {
 		this();
-		addAll(coll);
+		addAll(iter);
 	}
 
 	/**
 	 * Copies the given ObjectDeque exactly into this one. Individual values will be shallow-copied.
 	 *
 	 * @param deque another ObjectDeque to copy
+	 * @throws NullPointerException if {@code deque} is {@code null}
 	 */
 	public ObjectDeque(ObjectDeque<? extends T> deque) {
 		this.values = Arrays.copyOf(deque.values, deque.values.length);
@@ -141,24 +144,27 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * Creates a new ObjectDeque using all the contents of the given array.
 	 *
 	 * @param a an array of T that will be copied into this and used in full
+	 * @throws NullPointerException if {@code a} is {@code null}
 	 */
 	public ObjectDeque(T[] a) {
-		this.values = Arrays.copyOf(a, a.length);
+		this.values = Arrays.copyOf(a, Math.max(1, a.length));
 		size = a.length;
-		tail = size - 1;
+		tail = Math.max(0, size - 1);
 	}
 
 	/**
 	 * Creates a new ObjectDeque using {@code count} items from {@code a}, starting at {@code offset}.
-	 *
+	 * If {@code count} is 0 or less, this will create an empty ObjectDeque with capacity 1.
 	 * @param a      an array of T
 	 * @param offset where in {@code a} to start using items
 	 * @param count  how many items to use from {@code a}
+	 * @throws NullPointerException if {@code a} is {@code null}
 	 */
 	public ObjectDeque(T[] a, int offset, int count) {
-		this.values = Arrays.copyOfRange(a, offset, offset + count);
-		tail = count - 1;
-		size = count;
+		int adjusted = Math.max(1, count);
+		this.values = Arrays.copyOfRange(a, offset, offset + adjusted);
+		tail = adjusted - 1;
+		size = Math.max(0, count);
 	}
 
 	@Nullable
