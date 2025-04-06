@@ -16,14 +16,7 @@
  */
 package com.github.tommyettinger.ds.experimental.rewrite;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.ConcurrentModificationException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * From <a href="https://github.com/apache/harmony">Apache Harmony's GitHub mirror</a>.
@@ -836,27 +829,27 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
 //    /**
 //     * @tests java.util.ObjectDeque#trimToSize()
 //     */
-//    public void test_trimToSize() {
-//        // Test for method void java.util.ObjectDeque.trimToSize()
-//        for (int i = 99; i > 24; i--)
-//            alist.remove(i);
-//        ((ObjectDeque) alist).trimToSize();
-//        assertEquals("Returned incorrect size after trim", 25, alist.size());
-//        for (int i = 0; i < alist.size(); i++)
-//            assertTrue("Trimmed list contained incorrect elements", alist
-//                    .get(i) == objArray[i]);
-//        Vector v = new Vector();
-//        v.add("a");
-//        ObjectDeque al = new ObjectDeque(v);
-//        Iterator it = al.iterator();
-//        al.trimToSize();
-//        try {
-//            it.next();
-//            fail("should throw a ConcurrentModificationException");
-//        } catch (ConcurrentModificationException ioobe) {
-//            // expected
-//        }
-//    }
+    public void test_trimToSize() {
+        // Test for method void java.util.ObjectDeque.trimToSize()
+        for (int i = 99; i > 24; i--)
+            alist.remove(i);
+        ((ObjectDeque) alist).trimToSize();
+        assertEquals("Returned incorrect size after trim", 25, alist.size());
+        for (int i = 0; i < alist.size(); i++)
+            assertTrue("Trimmed list contained incorrect elements", alist
+                    .get(i) == objArray[i]);
+        Vector v = new Vector();
+        v.add("a");
+        ObjectDeque od = new ObjectDeque(v);
+        Iterator it = od.iterator();
+        od.trimToSize();
+        try {
+            it.next();
+            fail("should throw a ConcurrentModificationException");
+        } catch (ConcurrentModificationException ioobe) {
+            // expected
+        }
+    }
 
     /**
      * @test java.util.ObjectDeque#addAll(int, Collection)
