@@ -747,37 +747,22 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         alist.set(0, obj);
         assertTrue("Failed to set object", alist.get(0) == obj);
 
-        try {
-            alist.set(-1, obj);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        alist.set(-1, obj);
+        Object wasAdded = alist.remove(0);
+        assertEquals(obj, wasAdded);
 
-        try {
-            alist.set(alist.size(), obj);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        alist.set(alist.size(), obj);
+        wasAdded = alist.remove(alist.size() - 1);
+        assertEquals(obj, wasAdded);
 
-        try {
-            alist.set(-1, null);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        alist.set(-1, null);
+        wasAdded = alist.remove(0);
+        assertEquals(null, wasAdded);
 
-        try {
-            alist.set(alist.size(), null);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        alist.set(alist.size(), null);
+        wasAdded = alist.remove(alist.size() - 1);
+        assertEquals(null, wasAdded);
+
     }
 
     /**
