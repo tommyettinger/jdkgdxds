@@ -184,7 +184,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		}
 
 		if (++tail == values.length) tail = 0;
-		if(++size == 1) head = tail;
+		if(++size == 1) tail = head;
 		values[tail] = object;
 		modCount++;
 	}
@@ -349,22 +349,18 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 
 			if (head <= tail) {
 				// Continuous
-				if (head != 0) {
-					if (index > 0)
-						System.arraycopy(values, head, newArray, 0, index);
-					this.head = 0;
-				}
+				if (index > 0)
+					System.arraycopy(values, head, newArray, 0, index);
+				this.head = 0;
 				System.arraycopy(values, head + index, newArray, index + gapSize, size - head - index);
 				this.tail += gapSize;
 			} else {
 				// Wrapped
 				final int headPart = values.length - head;
 				if (index < headPart) {
-					if (head != 0) {
-						if (index > 0)
-							System.arraycopy(values, head, newArray, 0, index);
-						this.head = 0;
-					}
+					if (index > 0)
+						System.arraycopy(values, head, newArray, 0, index);
+					this.head = 0;
 					System.arraycopy(values, head + index, newArray, index + gapSize, headPart - index);
 					this.tail = size + gapSize - 1;
 				} else {
@@ -963,10 +959,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		else if(index >= oldSize)
 			addAll(c);
 		else {
-			@Nullable T[] values = this.values;
 			final int cs = c.size();
 			if(cs == 0) return false;
 			int place = ensureGap(index, cs);
+			@Nullable T[] values = this.values;
 			if(c == this){
 				System.arraycopy(values, head, values, place, place - head);
 				System.arraycopy(values, place + cs, values, place + place - head, tail + 1 - place - cs);
