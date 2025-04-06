@@ -910,12 +910,14 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		ensureCapacity(Math.max(cs, oldSize));
 		if(c == this) {
 			if(head <= tail) {
-				if (head > 0) {
-					int amt = Math.min(oldSize, head);
-					System.arraycopy(values, head, values, head - amt, amt);
+				if (head >= oldSize)
+					System.arraycopy(values, head, values, head - oldSize, oldSize);
+				else if (head > 0) {
+					System.arraycopy(values, tail + 1 - head, values, 0, head);
+					System.arraycopy(values, head, values, values.length - (oldSize - head), oldSize - head);
+				} else {
+					System.arraycopy(values, head, values, values.length - oldSize, oldSize);
 				}
-				if (head < oldSize)
-					System.arraycopy(values, head + head, values, tail+1, oldSize - head);
 			} else {
 				System.arraycopy(values, head, values, head - oldSize, values.length - head);
 				System.arraycopy(values, 0, values, values.length - oldSize, tail + 1);
