@@ -564,11 +564,16 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         // Test for method java.lang.Object java.util.ObjectDeque.get(int)
         assertTrue("Returned incorrect element", alist.get(22) == objArray[22]);
         try {
-            alist.get(8765);
-            fail("Failed to throw expected exception for index > size");
+            Object item = alist.get(8765);
+            assertEquals(item, alist.get(alist.size() - 1));
         } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
+            fail("Failed to clamp bounds when index > size");
+        }
+        try {
+            Object item = alist.get(-10);
+            assertEquals(item, alist.get(0));
+        } catch (IndexOutOfBoundsException e) {
+            fail("Failed to clamp bounds when index < 0");
         }
     }
 
