@@ -222,6 +222,27 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
+	 * Trims the capacity of this {@code ObjectDeque} instance to be the
+	 * deque's current size.  An application can use this operation to minimize
+	 * the storage of an {@code ObjectDeque} instance.
+	 */
+	public void trimToSize() {
+		modCount++;
+		if (size < values.length) {
+			if(head <= tail) {
+				values = Arrays.copyOfRange(values, head, tail+1);
+			} else {
+				@Nullable T[] next = Arrays.copyOf(values, size);
+				System.arraycopy(values, head, next, 0, values.length - head);
+				System.arraycopy(values, 0, next, values.length - head, tail + 1);
+				values = next;
+			}
+			head = 0;
+			tail = values.length - 1;
+		}
+	}
+
+	/**
 	 * Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
 	 * items to avoid multiple backing array resizes.
 	 */
