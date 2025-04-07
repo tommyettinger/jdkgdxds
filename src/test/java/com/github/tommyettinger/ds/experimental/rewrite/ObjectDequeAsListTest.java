@@ -624,14 +624,8 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
     public void test_removeRange() {
         MockArrayList mylist = new MockArrayList();
         mylist.removeRange(0, 0);
-
-        try {
-            mylist.removeRange(0, 1);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        mylist.removeRange(0, 1);
+        assertTrue(mylist.isEmpty());
 
         int[] data = { 1, 2, 3 };
         for (int i = 0; i < data.length; i++) {
@@ -642,37 +636,18 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         assertEquals(data[1], mylist.get(0));
         assertEquals(data[2], mylist.get(1));
 
-        try {
-            mylist.removeRange(-1, 1);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        mylist.removeRange(-1, 1);
+        assertEquals(1, mylist.size);
 
-        try {
-            mylist.removeRange(0, -1);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        mylist.removeRange(0, -1);
+        assertEquals(1, mylist.size);
 
-        try {
-            mylist.removeRange(1, 0);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        mylist.removeRange(1, 0);
+        assertEquals(1, mylist.size);
 
-        try {
-            mylist.removeRange(2, 1);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        mylist.removeRange(2, 1);
+        assertEquals(1, mylist.size);
+
     }
     
     /**
