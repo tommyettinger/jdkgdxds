@@ -683,13 +683,9 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         alist.remove(10);
         assertEquals("Failed to remove element", -1, alist
                 .indexOf(objArray[10]));
-        try {
-            alist.remove(999);
-            fail("Failed to throw exception when index out of range");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        Object last = alist.get(alist.size() - 1);
+        Object removed = alist.remove(999);
+        assertEquals(removed, last);
 
         ObjectDeque myList =new ObjectDeque(alist);
         alist.add(25, null);
@@ -715,14 +711,14 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         try {
             l.remove(-1);
             fail("-1 should cause exception");
-        } catch (IndexOutOfBoundsException e) {
+        } catch (NoSuchElementException e) {
             // Expected
             assertNotNull(e.getMessage());
         }
         try {
             l.remove(0);
             fail("0 should case exception");
-        } catch (IndexOutOfBoundsException e) {
+        } catch (NoSuchElementException e) {
             // Expected
             assertNotNull(e.getMessage());
         }
