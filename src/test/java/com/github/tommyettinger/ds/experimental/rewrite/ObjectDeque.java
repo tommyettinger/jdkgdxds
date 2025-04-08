@@ -1524,56 +1524,26 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
-	 * Retains only the elements in this collection that are contained in the
-	 * specified collection (optional operation).  In other words, removes from
-	 * this collection all of its elements that are not contained in the
-	 * specified collection.
-	 *
-	 * @param c collection containing elements to be retained in this collection
-	 * @return {@code true} if this collection changed as a result of the call
-	 * @throws UnsupportedOperationException if the {@code retainAll} operation
-	 *                                       is not supported by this collection
-	 * @throws ClassCastException            if the types of one or more elements
-	 *                                       in this collection are incompatible with the specified
-	 *                                       collection
-	 *                                       (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException          if this collection contains one or more
-	 *                                       null elements and the specified collection does not permit null
-	 *                                       elements
-	 *                                       (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>),
-	 *                                       or if the specified collection is null
-	 * @see #remove(Object)
-	 * @see #contains(Object)
-	 */
-	@Override
-	public boolean retainAll (Collection<?> c) {
-		int oldSize = size;
-		for (Object o : c) {
-			int idx;
-			do {
-				if ((idx = indexOf(o, false)) != -1)
-					remove(idx);
-			} while (idx == -1);
-		}
-		return oldSize != size;
-	}
-
-	/**
 	 * Exactly like {@link #retainAll(Collection)}, but takes an array instead of a Collection.
 	 * @see #retainAll(Collection)
 	 * @param array array containing elements to be retained in this collection
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
 	public boolean retainAll (Object[] array) {
-		int oldSize = size;
-		for (Object o : array) {
-			int idx;
-			do {
-				if ((idx = indexOf(o, false)) != -1)
-					remove(idx);
-			} while (idx == -1);
+		Objects.requireNonNull(array);
+		boolean modified = false;
+		ListIterator<T> it = iterator();
+		OUTER:
+		while (it.hasNext()) {
+			T check = it.next();
+			for (int i = 0, n = array.length; i < n; i++) {
+				if(Objects.equals(array[i], check))
+					continue OUTER;
+			}
+			it.remove();
+			modified = true;
 		}
-		return oldSize != size;
+		return modified;
 	}
 
 	/**
@@ -1585,16 +1555,20 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
 	public boolean retainAll (Object[] array, int offset, int length) {
-		int oldSize = size;
-		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-			Object o = array[i];
-			int idx;
-			do {
-				if ((idx = indexOf(o, false)) != -1)
-					remove(idx);
-			} while (idx == -1);
+		Objects.requireNonNull(array);
+		boolean modified = false;
+		ListIterator<T> it = iterator();
+		OUTER:
+		while (it.hasNext()) {
+			T check = it.next();
+			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+				if(Objects.equals(array[i], check))
+					continue OUTER;
+			}
+			it.remove();
+			modified = true;
 		}
-		return oldSize != size;
+		return modified;
 	}
 
 	/**
