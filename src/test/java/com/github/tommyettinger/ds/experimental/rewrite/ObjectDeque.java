@@ -2138,7 +2138,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			i -= values.length;
 		T old = values[i];
 		values[i] = item;
-		modCount++;
+//		modCount++; // apparently this isn't a structural modification?
 		return old;
 	}
 
