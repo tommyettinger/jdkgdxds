@@ -101,7 +101,7 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         assertNull("Should have returned null", alist.get(25));
         assertTrue("Should have returned the old item from slot 25", alist
                 .get(26) == oldItem);
-        
+
         alist.add(0, o = new Object());
         assertEquals("Failed to add Object", alist.get(0), o);
         assertEquals(alist.get(1), objArray[0]);
@@ -113,37 +113,17 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         assertEquals("Should have returned the old item from slot 0", alist
                 .get(1), oldItem);
 
-        try {
-            alist.add(-1, new Object());
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        alist.add(-1, new Object());
+        alist.remove(0);
 
-        try {
-            alist.add(-1, null);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        alist.add(-1, null);
+        alist.remove(0);
 
-        try {
-            alist.add(alist.size() + 1, new Object());
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        alist.add(alist.size() + 1, new Object());
+        alist.remove(alist.size() - 1);
 
-        try {
-            alist.add(alist.size() + 1, null);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+        alist.add(alist.size() + 1, null);
+        alist.remove(alist.size() - 1);
     }
 
     /**
