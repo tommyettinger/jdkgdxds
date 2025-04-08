@@ -55,13 +55,9 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         
         al = new ObjectDeque(0);
         assertEquals("Incorrect ObjectDeque created", 0, al.size());
-        
-        try {
-            al = new ObjectDeque(-1);
-            fail("Should throw IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
-            // Excepted
-        }
+
+        al = new ObjectDeque(-1);
+        assertTrue(al.isEmpty());
     }
 
     /**

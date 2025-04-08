@@ -101,7 +101,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 */
 	public ObjectDeque(int initialSize) {
 		// noinspection unchecked
-		this.values = (T[])new Object[Math.min(1, initialSize)];
+		this.values = (T[])new Object[Math.max(1, initialSize)];
 	}
 
 	/**
