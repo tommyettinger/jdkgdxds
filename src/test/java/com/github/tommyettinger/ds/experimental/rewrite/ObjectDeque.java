@@ -745,9 +745,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				int after = index + 1;
 				if(after >= values.length) after = 0;
 
-				System.arraycopy(values, index, values, after, tail - index + 1);
+				System.arraycopy(values, index, values, after, head + size - index - 1);
 				values[index] = item;
-				tail++;
+				tail = head + size - 1;
 				if (tail > values.length) {
 					tail = 0;
 				}
