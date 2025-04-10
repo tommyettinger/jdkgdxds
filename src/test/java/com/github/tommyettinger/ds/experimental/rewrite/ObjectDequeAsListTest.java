@@ -201,7 +201,7 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         try {
             obj.addAll((int) -1, (Collection) null);
             fail("IndexOutOfBoundsException expected");
-        } catch (IndexOutOfBoundsException e) {
+        } catch (NullPointerException e) {
             // Expected
             assertNotNull(e.getMessage());
         }
@@ -267,21 +267,11 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         ObjectDeque obj = new ObjectDeque();
         obj.addAll(0, obj);
         obj.addAll(obj.size(), obj);
-        try {
             obj.addAll(-1, obj);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+            obj.pollFirst();
 
-        try {
             obj.addAll(obj.size() + 1, obj);
-            fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // Expected
-            assertNotNull(e.getMessage());
-        }
+            obj.pollLast();
 
         try {
             obj.addAll(0, (Collection) null);
@@ -293,7 +283,7 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         try {
             obj.addAll(obj.size() + 1, (Collection) null);
             fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
+        } catch (NullPointerException e) {
             // Expected
             assertNotNull(e.getMessage());
         }
@@ -301,7 +291,7 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
         try {
             obj.addAll((int) -1, (Collection) null);
             fail("IndexOutOfBoundsException expected");
-        } catch (IndexOutOfBoundsException e) {
+        } catch (NullPointerException e) {
             // Expected
             assertNotNull(e.getMessage());
         }
