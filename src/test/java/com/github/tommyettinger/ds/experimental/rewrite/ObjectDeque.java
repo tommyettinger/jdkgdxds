@@ -1597,7 +1597,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				size = newSize;
 			} else if(head + newSize < values.length) {
 				// tail is near the start, but we have to remove elements through the start and into the back
-				Arrays.fill(values, 0, tail, null);
+				Arrays.fill(values, 0, tail + 1, null);
 				tail = head + newSize;
 				Arrays.fill(values, tail, values.length, null);
 				size = newSize;
