@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 
+import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
@@ -479,16 +480,20 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	}
 
 	/**
-	 * Sorts this IntObjectOrderedMap in-place by the given Comparator used on the values. {@code comp} must not be null,
-	 * and must be able to compare {@code V} values. If any null values are present in this IntObjectOrderedMap, then comp
-	 * must be able to sort or otherwise handle null values. You can use {@link Comparator#naturalOrder()} to do
-	 * what {@link #sort()} does (just sorting values in this case instead of keys) if the values implement
+	 * Sorts this IntObjectOrderedMap in-place by the given Comparator used on the values. {@code comp} must
+	 * be able to compare {@code V} values. If any null values are present in this IntObjectOrderedMap, then comp
+	 * must be able to sort or otherwise handle null values. You can use pass {@code null} to do what
+	 * {@link #sort()} does when given null (just sorting values in this case instead of keys) if the values implement
 	 * {@link Comparable} (requiring all of them to be non-null).
 	 *
-	 * @param comp a non-null Comparator that can compare {@code V} values; if this contains null values, comp must handle them
+	 * @param comp a Comparator that can compare {@code V} values; may be null to use natural order of Comparable values
 	 */
-	public void sortByValue (Comparator<V> comp) {
-		keys.sort((a, b) -> comp.compare(get(a), get(b)));
+	public void sortByValue (@Nullable Comparator<V> comp) {
+		if(comp == null)
+            //noinspection unchecked
+            keys.sort((a, b) -> ((Comparator<V>) ObjectComparators.NATURAL_COMPARATOR).compare(get(a), get(b)));
+		else
+			keys.sort((a, b) -> comp.compare(get(a), get(b)));
 	}
 
 	/**

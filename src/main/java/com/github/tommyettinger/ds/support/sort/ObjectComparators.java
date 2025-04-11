@@ -18,13 +18,82 @@ package com.github.tommyettinger.ds.support.sort;
 
 import com.github.tommyettinger.function.ObjToFloatFunction;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("unchecked")
 public final class ObjectComparators {
 	private ObjectComparators () {
+	}
+	/**
+	 * A type-specific comparator mimicking the natural order.
+	 */
+	protected static class NaturalImplicitComparator<T extends Comparable<? super T>> implements Comparator<T> {
+
+		@Override
+		public final int compare (final @NonNull T a, final T b) {
+			return a == b ? 0 : a.compareTo(b);
+		}
+
+		@Override
+		public Comparator<T> reversed () {
+			return (Comparator<T>)OPPOSITE_COMPARATOR;
+		}
+
+	}
+
+	public static final Comparator<?> NATURAL_COMPARATOR = new NaturalImplicitComparator<>();
+
+	/**
+	 * A type-specific comparator mimicking the opposite of the natural order.
+	 */
+    protected static class OppositeImplicitComparator<T extends Comparable<? super T>> implements Comparator<T> {
+
+		@Override
+		public final int compare (final T a, final @NonNull T b) {
+			return a == b ? 0 : b.compareTo(a);
+		}
+
+		@Override
+		public Comparator<T> reversed () {
+			return (Comparator<T>)NATURAL_COMPARATOR;
+		}
+
+	}
+
+	public static final Comparator<?> OPPOSITE_COMPARATOR = new OppositeImplicitComparator<>();
+
+	protected static class OppositeComparator<T> implements Comparator<T> {
+
+		final Comparator<T> comparator;
+
+		protected OppositeComparator (final Comparator<T> c) {
+			comparator = c;
+		}
+
+		@Override
+		public final int compare (final T a, final T b) {
+			return comparator.compare(b, a);
+		}
+
+		@Override
+		public final Comparator<T> reversed () {
+			return comparator;
+		}
+	}
+
+	/**
+	 * Returns a comparator representing the opposite order of the given comparator.
+	 *
+	 * @param c a comparator.
+	 * @return a comparator representing the opposite order of {@code c}.
+	 */
+	public static <T> Comparator<T> oppositeComparator (final Comparator<T> c) {
+		if (c instanceof OppositeComparator) {return ((OppositeComparator<T>)c).comparator;}
+		return new OppositeComparator<>(c);
 	}
 
 	/**
@@ -192,7 +261,7 @@ public final class ObjectComparators {
 			throw new UnsupportedOperationException("The given from/to range in Comparators.sort() is invalid.");
 		}
 		if (c == null) {
-			sort(items, from, to, (Comparator<K>)Comparator.naturalOrder());
+			sort(items, from, to, (Comparator<K>)NATURAL_COMPARATOR);
 			return;
 		}
 		/*
@@ -367,7 +436,7 @@ public final class ObjectComparators {
 			throw new UnsupportedOperationException("The given from/to range in Comparators.sort() is invalid.");
 		}
 		if (c == null) {
-			sort(items, from, to, (Comparator<K>)Comparator.naturalOrder());
+			sort(items, from, to, (Comparator<K>)NATURAL_COMPARATOR);
 			return;
 		}
 		/*
