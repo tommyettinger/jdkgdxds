@@ -22,6 +22,7 @@ import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.QuickSelect;
 import com.github.tommyettinger.ds.Select;
 import com.github.tommyettinger.ds.support.sort.FilteredComparators;
+import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.ds.support.sort.NaturalTextComparator;
 import org.junit.Assert;
@@ -94,12 +95,13 @@ public class SortTest {
 //			, "unicorn"
 		DistinctRandom random = new DistinctRandom(123456L);
 		random.shuffle(words);
-		Assert.assertEquals("cat", Select.select(words, Comparator.naturalOrder(), 3, 20));
-		Assert.assertEquals("anteater", Select.select(words, Comparator.naturalOrder(), 1, 20));
-		Assert.assertEquals("bee", Select.select(words, Comparator.naturalOrder(), 2, 20));
-		Assert.assertEquals("squirrel", Select.select(words, Collections.reverseOrder(), 2, 20));
+		Comparator<String> comp = String::compareTo;
+		Assert.assertEquals("cat", Select.select(words, comp, 3, 20));
+		Assert.assertEquals("anteater", Select.select(words, comp, 1, 20));
+		Assert.assertEquals("bee", Select.select(words, comp, 2, 20));
+		Assert.assertEquals("squirrel", Select.select(words, ObjectComparators.oppositeComparator(comp), 2, 20));
 		random.shuffle(words);
-		QuickSelect.multiSelect(words, Comparator.naturalOrder(), 7);
+		QuickSelect.multiSelect(words, comp, 7);
 		for (int row = 0, i = 0; row < 3; row++) {
 			for (int col = 0; col < 7 && i < words.length; col++) {
 				System.out.print(words[i++] + ", ");

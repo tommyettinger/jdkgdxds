@@ -27,9 +27,11 @@ import java.util.Comparator;
  * use {@link #CASE_SENSITIVE} or {@link #CASE_INSENSITIVE} to get a predefined immutable instance.
  */
 public class NaturalTextComparator implements Comparator<CharSequence> {
-	public static final NaturalTextComparator INSTANCE = new NaturalTextComparator(true);
-	public static final NaturalTextComparator CASE_INSENSITIVE = new NaturalTextComparator(false);
-	public static final NaturalTextComparator CASE_SENSITIVE = INSTANCE;
+	public static final Comparator<CharSequence> INSTANCE = new NaturalTextComparator(true);
+	public static final Comparator<CharSequence> CASE_INSENSITIVE = new NaturalTextComparator(false);
+	public static final Comparator<CharSequence> CASE_SENSITIVE = INSTANCE;
+	public static final Comparator<CharSequence> CASE_INSENSITIVE_OPPOSITE = ObjectComparators.oppositeComparator(new NaturalTextComparator(false));
+	public static final Comparator<CharSequence> CASE_SENSITIVE_OPPOSITE = ObjectComparators.oppositeComparator(INSTANCE);
 
 	private final boolean caseSensitive;
 
