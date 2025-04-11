@@ -62,10 +62,21 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return add(item0) | add(item1) | add(item2) | add(item3);
 	}
 
+	/**
+	 * Gets the {@link Iterable#iterator()} from the parameter and delegates to {@link #addAll(Iterator)}.
+	 * @param it an Iterable of items to append to this EnhancedCollection
+	 * @return true if this collection was modified.
+	 */
 	default boolean addAllIterable(Iterable<? extends T> it) {
 		return addAll(it.iterator());
 	}
 
+	/**
+	 * Goes through the given Iterator until it is exhausted, adding every item to this EnhancedCollection using
+	 * {@link #add(Object)}.
+	 * @param it an Iterator of items to append to this EnhancedCollection
+	 * @return true if this collection was modified.
+	 */
 	default boolean addAll (Iterator<? extends T> it) {
 		int oldSize = size();
 		while (it.hasNext()) {
@@ -74,6 +85,11 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return oldSize != size();
 	}
 
+	/**
+	 * Gets the {@link Iterable#iterator()} from the parameter and delegates to {@link #removeAll(Iterator)}.
+	 * @param it an Iterable of items to remove fully
+	 * @return true if this collection was modified.
+	 */
 	default boolean removeAllIterable(Iterable<? extends T> it) {
 		return removeAll(it.iterator());
 	}
@@ -99,10 +115,25 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return originalSize != size();
 	}
 
+	/**
+	 * Removes from this collection all occurrences of any elements contained in the specified array.
+	 *
+	 * @param array a non-null array of items to remove fully
+	 * @return true if this collection was modified.
+	 */
 	default boolean removeAll (Object[] array) {
 		return removeAll(array, 0, array.length);
 	}
 
+	/**
+	 * Removes from this collection all occurrences of any elements contained in the specified array, but only starts
+	 * reading elements from the array starting at the given {@code offset} and only uses {@code length} items.
+	 *
+	 * @param array a non-null array of items to remove fully
+	 * @param offset the first index in {@code array} to use
+	 * @param length how many items from {@code array} should be used
+	 * @return true if this collection was modified.
+	 */
 	default boolean removeAll (Object[] array, int offset, int length) {
 		Iterator<T> me;
 		int originalSize = size();
@@ -119,7 +150,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	}
 
 	/**
-	 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+	 * Removes from this collection element-wise occurrences of elements contained in the specified Iterable.
 	 * Note that if a value is present more than once in this collection, only one of those occurrences
 	 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
 	 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
@@ -132,12 +163,12 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	}
 
 	/**
-	 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
+	 * Removes from this collection element-wise occurrences of elements given by the specified Iterator.
 	 * Note that if a value is present more than once in this collection, only one of those occurrences
-	 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+	 * will be removed for each time {@code other} yields that value. If {@code other} has the same
 	 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
 	 *
-	 * @param it an Iterable of any items to remove one-by-one, such as an ObjectList or ObjectSet
+	 * @param it an Iterator of any items to remove one-by-one, such as an ObjectList or ObjectSet
 	 * @return true if this collection was modified.
 	 */
 	default boolean removeEach (Iterator<?> it) {
@@ -148,10 +179,30 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return changed;
 	}
 
+	/**
+	 * Removes from this collection element-wise occurrences of elements contained in the specified array.
+	 * Note that if a value is present more than once in this collection, only one of those occurrences
+	 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+	 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+	 *
+	 * @param array an array of any items to remove one-by-one, such as an ObjectList or ObjectSet
+	 * @return true if this collection was modified.
+	 */
 	default boolean removeEach (Object[] array) {
 		return removeEach(array, 0, array.length);
 	}
 
+	/**
+	 * Removes from this collection element-wise occurrences of elements contained in the specified array.
+	 * Note that if a value is present more than once in this collection, only one of those occurrences
+	 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
+	 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
+	 *
+	 * @param array an array of any items to remove one-by-one, such as an ObjectList or ObjectSet
+	 * @param offset the first index in {@code array} to use
+	 * @param length how many items from {@code array} should be used
+	 * @return true if this collection was modified.
+	 */
 	default boolean removeEach (Object[] array, int offset, int length) {
 		boolean changed = false;
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
@@ -160,10 +211,30 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return changed;
 	}
 
+	/**
+	 * Returns {@code true} if this collection contains all the elements
+	 * in the specified Iterable.
+	 *
+	 * @param it a non-null Collection or other Iterable to have items checked for containment in this collection
+	 * @return {@code true} if this collection contains all the elements
+	 * in the specified Iterable
+	 * @throws NullPointerException if the specified Iterable is null.
+	 * @see #contains(Object)
+	 */
 	default boolean containsAllIterable(Iterable<?> it) {
 		return containsAll(it.iterator());
 	}
 
+	/**
+	 * Returns {@code true} if this collection contains all the elements
+	 * remaining in the specified Iterator.
+	 *
+	 * @param it a non-null Iterator to have items checked for containment in this collection
+	 * @return {@code true} if this collection contains all the elements
+	 * in the specified Iterator
+	 * @throws NullPointerException if the specified Iterator is null.
+	 * @see #contains(Object)
+	 */
 	default boolean containsAll (Iterator<?> it) {
 		while (it.hasNext()) {
 			if(!contains(it.next())) return false;
@@ -171,10 +242,32 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return true;
 	}
 
+	/**
+	 * Returns {@code true} if this collection contains all the elements
+	 * in the specified array.
+	 *
+	 * @param array a non-null array to have items checked for containment in this collection
+	 * @return {@code true} if this collection contains all the elements
+	 * in the specified collection
+	 * @throws NullPointerException if the specified collection is null.
+	 * @see #contains(Object)
+	 */
 	default boolean containsAll (Object[] array) {
 		return containsAll(array, 0, array.length);
 	}
 
+	/**
+	 * Returns {@code true} if this collection contains all the elements
+	 * in the specified array starting from {@code offset} and using {@code length} items from the array.
+	 *
+	 * @param array a non-null array to have items checked for containment in this collection
+	 * @param offset the first index in {@code array} to use
+	 * @param length how many items from {@code array} should be used
+	 * @return {@code true} if this collection contains all the elements
+	 * in the specified collection
+	 * @throws NullPointerException if the specified collection is null.
+	 * @see #contains(Object)
+	 */
 	default boolean containsAll (Object[] array, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
 			if(!contains(array[i])) return false;
@@ -251,15 +344,28 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	// STRING CONVERSION
 
 	/**
-	 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without brackets.
+	 * Delegates to {@link #toString(String, boolean)} with the given itemSeparator and without surrounding brackets.
+	 * <br>
+	 * Delegates to {@link #toString(String, boolean)}.
 	 *
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param itemSeparator how to separate items, such as {@code ", "}
 	 * @return a new String representing this map
 	 */
 	default String toString (String itemSeparator) {
 		return toString(itemSeparator, false);
 	}
 
+	/**
+	 * Makes a String from the contents of this EnhancedCollection, using the {@link Object#toString()} method of each
+	 * item, separating items with the given {@code itemSeparator}, and wrapping the result in square brackets if
+	 * {@code brackets} is true.
+	 * <br>
+	 * Delegates to {@link #appendTo(StringBuilder, String, boolean)}.
+	 *
+	 * @param itemSeparator how to separate items, such as {@code ", "}
+	 * @param brackets true to wrap the result in square brackets, or false to leave the items unadorned
+	 * @return a new String representing this EnhancedCollection
+	 */
 	default String toString (String itemSeparator, boolean brackets) {
 		return appendTo(new StringBuilder(32), itemSeparator, brackets).toString();
 	}
@@ -268,6 +374,8 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * Makes a String from the contents of this EnhancedCollection, but uses the given {@link Appender}
 	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * <br>
+	 * Delegates to {@link #appendTo(StringBuilder, String, boolean, Appender)}.
 	 *
 	 * @param separator how to separate items, such as {@code ", "}
 	 * @param brackets true to wrap the output in square brackets, or false to omit them
@@ -279,6 +387,18 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return appendTo(new StringBuilder(), separator, brackets, appender).toString();
 	}
 
+	/**
+	 * Appends to a StringBuilder from the contents of this EnhancedCollection, using {@code StringBuilder::append} to
+	 * append each item's String representation, separating items with {@code separator}, and optionally wrapping the
+	 * output in square brackets if {@code brackets} is true.
+	 * <br>
+	 * Delegates to {@link #appendTo(StringBuilder, String, boolean, Appender)}.
+	 *
+	 * @param sb a StringBuilder that this can append to
+	 * @param separator how to separate items, such as {@code ", "}
+	 * @param brackets true to wrap the output in square brackets, or false to omit them
+	 * @return {@code sb}, with the appended items of this EnhancedCollection
+	 */
 	default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
 		return appendTo(sb, separator, brackets, StringBuilder::append);
 	}
