@@ -20,6 +20,7 @@ import com.github.tommyettinger.ds.Arrangeable;
 import com.github.tommyettinger.ds.EnhancedCollection;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.Utilities;
+import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -259,11 +260,14 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
-	 * Resize backing array. newSize must be greater than or equal than current size. If this is not empty, this will
+	 * Resizes the backing array. newSize should be greater than the current size; otherwise, newSize will be set to
+	 * size and the resize to the same size will (for most purposes) be wasted effort. If this is not empty, this will
 	 * rearrange the items internally to be linear and have the head at index 0, with the tail at {@code size - 1}.
+	 * This always allocates a new internal backing array.
 	 */
 	public void resize (int newSize) {
-		if(newSize < size) return;
+		if(newSize < size)
+			newSize = size;
 		final @Nullable T[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
@@ -296,7 +300,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * change modCount; the code that fills in the gap should change modCount instead.
 	 * @param index the 0-based index in the iteration order where the gap will be present
 	 * @param gapSize the number of items that will need filling in the gap, and can be filled without issues.
-	 * @return the position in the array where the gap will begin
+	 * @return the position in the array where the gap will begin, which is unrelated to the index
 	 */
 	protected int ensureGap(int index, int gapSize) {
 		if (gapSize <= 0) return 0;
@@ -1968,6 +1972,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	public T removeAt(int index) {
 		return remove(index);
 	}
+
 	/**
 	 * Removes the element at the specified position in this deque.
 	 * Shifts any subsequent elements to the left (subtracts one
@@ -2416,7 +2421,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		values[f] = values[s];
 		values[s] = fv;
 
-		modCount += 2;
+		//modCount += 2; // I don't think this is "structural"
 	}
 
 	/**
@@ -2437,14 +2442,14 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			fv = values[f];
 			values[f] = values[s];
 			values[s] = fv;
-			modCount += 2;
+//			modCount += 2; // I don't think this is "structural"
 		}
 	}
 
 	public void shuffle (Random rng) {
+		// This won't change modCount, because it isn't "structural"
 		for (int i = size() - 1; i > 0; i--) {
 			int r = rng.nextInt(i + 1);
-			// Necessary so modCount doesn't change if it would do a no-op swap.
 			if(r != i)
 				set(i, set(r, get(i)));
 		}
@@ -2459,7 +2464,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
-	 * Sorts this deque in-place using {@link Arrays#sort(Object[], int, int, Comparator)}.
+	 * Sorts this deque in-place using {@link ObjectComparators#sort(Object[], int, int, Comparator)}.
 	 * This should operate in O(n log(n)) time or less when the internals of the deque are
 	 * continuous (the head is before the tail in the array). If the internals are not
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
@@ -2472,6 +2477,30 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 */
 	public void sort (@Nullable Comparator<? super T> comparator) {
 		if (head <= tail) {
+			ObjectComparators.sort(values, head, tail+1, comparator);
+		} else {
+			System.arraycopy(values, head, values, tail + 1, values.length - head);
+			ObjectComparators.sort(values, 0, tail + 1 + values.length - head, comparator);
+			tail += values.length - head;
+			head = 0;
+		}
+//		modCount += size; // I don't think this is "structural"
+	}
+
+	/**
+	 * Sorts this deque in-place using {@link Arrays#sort(Object[], int, int, Comparator)}.
+	 * This should operate in O(n log(n)) time or less when the internals of the deque are
+	 * continuous (the head is before the tail in the array). If the internals are not
+	 * continuous, this takes an additional O(n) step (where n is less than the size of
+	 * the deque) to rearrange the internals before sorting. You can pass null as the value
+	 * for {@code comparator} if T implements {@link Comparable} of T, which will make this
+	 * use the natural ordering for T.
+	 *
+	 * @param comparator the Comparator to use for T items; may be null to use the natural
+	 *                   order of T items when T implements Comparable of T
+	 */
+	public void sortJDK (@Nullable Comparator<? super T> comparator) {
+		if (head <= tail) {
 			Arrays.sort(values, head, tail+1, comparator);
 		} else {
 			System.arraycopy(values, head, values, tail + 1, values.length - head);
@@ -2479,7 +2508,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 			tail += values.length - head;
 			head = 0;
 		}
-		modCount += size;
+//		modCount += size; // I don't think this is "structural"
 	}
 
 	@Nullable
