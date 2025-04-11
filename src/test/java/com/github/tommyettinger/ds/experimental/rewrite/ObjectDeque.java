@@ -38,17 +38,21 @@ import java.util.*;
  * {@link #equals(Object)} and {@link #hashCode()}, as well as {@link #equalsIdentity(Object)}. This can provide
  * full-blown {@link ListIterator ListIterators} for iteration from an index or in reverse order.
  * <br>
+ * Unlike {@link ArrayDeque} or {@link ArrayList}, most methods that take an index here try to be "forgiving;" that is,
+ * they treat negative indices as index 0, and too-large indices as the last index. An exception is in
+ * {@link #set(int, Object)}, which allows prepending by setting a negative index, or appending by setting a too-large
+ * index. This isn't a standard JDK behavior, and it doesn't always act how Deque or List is documented.
+ * <br>
  * In general, this is an improvement over {@link ArrayDeque} in every type of functionality, and is mostly equivalent
  * to {@link ObjectList} as long as the performance of {@link #get(int)} is adequate. Because it is array-backed, it
  * should usually be much faster than {@link LinkedList}, as well; only periodic resizing and modifications in the
  * middle of the List using an iterator should be typically faster for {@link LinkedList}.
  * <br>
- * This version in the {@code experimental} package should be the same as the official ObjectDeque, just with any
+ * This version in the {@code rewrite} package is, as you would expect, a rewrite of ObjectDeque, but also has any
  * {@code protected} or {@code private} aspects made {@code public} for easier testing. This allows manually setting
  * the {@link #values}, {@link #head}, {@link #tail}, and {@link #size} at any point, so unusual but possible conditions
  * can be tested without the sometimes-lengthy process of removals and additions at different ends to get there.
- * <br>
- * In contrast, the version in the {@code rewrite} subpackage of {@code experimental} makes significant changes to try
+ * The version in the {@code rewrite} package also makes significant changes to try
  * to simplify the class. This mostly applies to the {@link #tail}, which has changed from being an exclusive index to
  * an inclusive one, so it won't wrap around the end to 0 and cause lots of problems as a result.
  */
@@ -254,9 +258,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
-	 * Resize backing array. newSize must be bigger than current size.
+	 * Resize backing array. newSize must be greater than or equal than current size. If this is not empty, this will
+	 * rearrange the items internally to be linear and have the head at index 0, with the tail at {@code size - 1}.
 	 */
 	public void resize (int newSize) {
+		if(newSize < size) return;
 		final @Nullable T[] values = this.values;
 		final int head = this.head;
 		final int tail = this.tail;
@@ -274,10 +280,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				System.arraycopy(values, head, newArray, 0, rest);
 				System.arraycopy(values, 0, newArray, rest, tail + 1);
 			}
+			this.head = 0;
+			this.tail = size - 1;
 		}
 		this.values = newArray;
-		this.head = 0;
-		this.tail = size - 1;
 	}
 
 	/**
