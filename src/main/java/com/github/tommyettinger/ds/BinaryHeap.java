@@ -517,7 +517,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param values must not contain nulls, and must not be null itself
 	 * @return true if this set contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAny (Iterable<@NonNull ?> values) {
+	public boolean containsAnyIterable(Iterable<@NonNull ?> values) {
 		for (Object v : values) {
 			if (contains(v)) {return true;}
 		}
@@ -554,14 +554,14 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 
 	/**
 	 * Removes each object in {@code other} from this heap, removing an item once if it appears once, twice if it appears twice,
-	 * and so on. In this respect, this acts like {@link #removeEach(Iterable)} rather than Collection's removeAll().
-	 * @see #removeEach(Iterable)
+	 * and so on. In this respect, this acts like {@link #removeEachIterable(Iterable)} rather than Collection's removeAll().
+	 * @see #removeEachIterable(Iterable)
 	 * @param other collection containing elements to be removed from this collection
 	 * @return true if any elements were removed, or false otherwise
 	 */
 	@Override
 	public boolean removeAll (@NonNull Collection<@NonNull ?> other) {
-		return removeEach(other);
+		return removeEachIterable(other);
 	}
 
 	/**
@@ -599,7 +599,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param other an Iterable of T items to remove one-by-one, such as another ObjectList or an ObjectSet
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (@NonNull Iterable<@NonNull ?> other) {
+	public boolean removeEachIterable(@NonNull Iterable<@NonNull ?> other) {
 		boolean changed = false;
 		for(Object item : other) {
 			changed |= remove(item);
@@ -608,8 +608,8 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	}
 
 	/**
-	 * Exactly like {@link #removeEach(Iterable)}, but takes an array instead of a Collection.
-	 * @see #removeEach(Iterable)
+	 * Exactly like {@link #removeEachIterable(Iterable)}, but takes an array instead of a Collection.
+	 * @see #removeEachIterable(Iterable)
 	 * @param array array containing elements to be removed from this list
 	 * @return {@code true} if this list changed as a result of the call
 	 */

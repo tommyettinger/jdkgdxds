@@ -418,14 +418,14 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	@Override
-	public String toString (String separator) {
+	public String toString (String itemSeparator) {
 		if (size == 0) {return "{}";}
 		ObjectList<T> items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('{');
 		buffer.append(items.get(0));
 		for (int i = 1; i < size; i++) {
-			buffer.append(separator);
+			buffer.append(itemSeparator);
 			buffer.append(items.get(i));
 		}
 		buffer.append('}');

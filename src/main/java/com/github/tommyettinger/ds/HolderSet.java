@@ -424,7 +424,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
      * @param values must not contain nulls, and must not be null itself
      * @return true if this set contains any of the items in {@code values}, false otherwise
      */
-    public boolean containsAny(Iterable<@NonNull ?> values) {
+    public boolean containsAnyIterable(Iterable<@NonNull ?> values) {
         for (Object v : values) {
             if (contains(v)) {
                 return true;

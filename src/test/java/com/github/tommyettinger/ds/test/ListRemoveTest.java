@@ -50,7 +50,7 @@ public class ListRemoveTest {
 			"foo", "bar", "baz", "quux");
 		ObjectList<String> remover = ObjectList.with("foo", "bar", "baz", "quux");
 		Assert.assertEquals(list.size(), 12);
-		list.removeEach(remover);
+		list.removeEachIterable(remover);
 		Assert.assertEquals(list.size(), 8);
 		System.out.println(list);
 		list.removeAll(ObjectList.with("foo", "foo"));

@@ -62,6 +62,10 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return add(item0) | add(item1) | add(item2) | add(item3);
 	}
 
+	default boolean addAllIterable(Iterable<? extends T> it) {
+		return addAll(it.iterator());
+	}
+
 	default boolean addAll (Iterator<? extends T> it) {
 		int oldSize = size();
 		while (it.hasNext()) {
@@ -69,6 +73,11 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		}
 		return oldSize != size();
 	}
+
+	default boolean removeAllIterable(Iterable<? extends T> it) {
+		return removeAll(it.iterator());
+	}
+
 	/**
 	 * Removes from this collection all occurrences of any elements contained in the specified Iterator.
 	 *
@@ -118,7 +127,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param other an Iterable of any items to remove one-by-one, such as an ObjectList or ObjectSet
 	 * @return true if this collection was modified.
 	 */
-	default boolean removeEach (Iterable<?> other) {
+	default boolean removeEachIterable(Iterable<?> other) {
 		return removeEach(other.iterator());
 	}
 
@@ -151,6 +160,10 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return changed;
 	}
 
+	default boolean containsAllIterable(Iterable<?> it) {
+		return containsAll(it.iterator());
+	}
+
 	default boolean containsAll (Iterator<?> it) {
 		while (it.hasNext()) {
 			if(!contains(it.next())) return false;
@@ -175,7 +188,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param other a Collection or other Iterable of any type to look through
 	 * @return true if any items from the Iterable are present in this EnhancedCollection
 	 */
-	default boolean containsAny (Iterable<?> other) {
+	default boolean containsAnyIterable(Iterable<?> other) {
 		return containsAny(other.iterator());
 	}
 
@@ -243,12 +256,12 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @return a new String representing this map
 	 */
-	default String toString (String entrySeparator) {
-		return toString(entrySeparator, false);
+	default String toString (String itemSeparator) {
+		return toString(itemSeparator, false);
 	}
 
-	default String toString (String entrySeparator, boolean brackets) {
-		return appendTo(new StringBuilder(32), entrySeparator, brackets).toString();
+	default String toString (String itemSeparator, boolean brackets) {
+		return appendTo(new StringBuilder(32), itemSeparator, brackets).toString();
 	}
 
 	/**

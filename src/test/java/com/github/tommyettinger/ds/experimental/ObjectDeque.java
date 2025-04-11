@@ -1230,7 +1230,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * @param values may contain nulls, but must not be null itself
 	 * @return true if this ObjectDeque contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAny (Iterable<?> values) {
+	public boolean containsAnyIterable(Iterable<?> values) {
 		for (Object v : values) {
 			if (contains(v)) {return true;}
 		}
@@ -1343,7 +1343,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * @param other a Collection of items to remove one-by-one, such as an ObjectList or an ObjectSet
 	 * @return true if this deque was modified.
 	 */
-	public boolean removeEach (Iterable<?> other) {
+	public boolean removeEachIterable(Iterable<?> other) {
 		boolean changed = false;
 		for(Object item : other) {
 			changed |= remove(item);
@@ -1352,8 +1352,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	}
 
 	/**
-	 * Exactly like {@link #removeEach(Iterable)}, but takes an array instead of a Collection.
-	 * @see #removeEach(Iterable)
+	 * Exactly like {@link #removeEachIterable(Iterable)}, but takes an array instead of a Collection.
+	 * @see #removeEachIterable(Iterable)
 	 * @param array array containing elements to be removed from this collection
 	 * @return {@code true} if this deque changed as a result of the call
 	 */

@@ -273,7 +273,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return true;
 	}
 
-	public boolean containsAny (Iterable<@NonNull ?> c) {
+	public boolean containsAnyIterable(Iterable<@NonNull ?> c) {
 		for (Object e : c) {
 			if (map.containsKey(e))
 				return true;
@@ -833,15 +833,15 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without braces.
 	 * This is different from {@link #toString()}, which includes braces by default.
 	 *
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param itemSeparator how to separate entries, such as {@code ", "}
 	 * @return a new String representing this map
 	 */
-	public String toString (String entrySeparator) {
-		return map.toString(entrySeparator, false);
+	public String toString (String itemSeparator) {
+		return map.toString(itemSeparator, false);
 	}
 
-	public String toString (String entrySeparator, boolean braces) {
-		return map.appendTo(new StringBuilder(32), entrySeparator, braces).toString();
+	public String toString (String itemSeparator, boolean braces) {
+		return map.appendTo(new StringBuilder(32), itemSeparator, braces).toString();
 	}
 	/**
 	 * Makes a String from the contents of this NumberedSet, but uses the given {@link Appender} and

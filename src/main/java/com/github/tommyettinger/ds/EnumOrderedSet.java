@@ -446,14 +446,14 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	}
 
 	@Override
-	public String toString (String separator) {
+	public String toString (String itemSeparator) {
 		if (size == 0) {return "{}";}
 		ObjectList<Enum<?>> items = this.ordering;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('{');
 		buffer.append(items.get(0));
 		for (int i = 1; i < size; i++) {
-			buffer.append(separator);
+			buffer.append(itemSeparator);
 			buffer.append(items.get(i));
 		}
 		buffer.append('}');
