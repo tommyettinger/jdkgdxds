@@ -2016,6 +2016,78 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		return value;
 	}
 
+
+	/**
+	 * Removes the element at the specified position in this deque.
+	 * Shifts any subsequent elements to the left (subtracts one
+	 * from their indices).  Returns the element that was removed from the
+	 * deque, or {@link #getDefaultValue() the default value} if this is empty.
+	 * This will not throw an Exception in normal usage, even if index is
+	 * negative (which makes this simply return {@link #pollFirst()}) or greater
+	 * than or equal to {@link #size()} (which makes this return {@link #pollLast()}).
+	 * <br>
+	 * This is an alias for {@link #poll(int)} for compatibility with primitive-backed lists and deques;
+	 * {@link #poll(int)} can refer to the method that removes an item by value, not by index, in those types.
+	 *
+	 * @param index the index of the element to be removed
+	 * @return the element previously at the specified position
+	 */
+	@Nullable
+	public T pollAt(int index) {
+		return poll(index);
+	}
+
+	/**
+	 * Removes the element at the specified position in this deque.
+	 * Shifts any subsequent elements to the left (subtracts one
+	 * from their indices). Returns the element that was removed from the
+	 * deque, or {@link #getDefaultValue() the default value} if this is empty.
+	 * This will not throw an Exception in normal usage, even if index is
+	 * negative (which makes this simply return {@link #pollFirst()}) or greater
+	 * than or equal to {@link #size()} (which makes this return {@link #pollLast()}).
+	 *
+	 * @param index the index of the element to be removed
+	 * @return the element previously at the specified position
+	 */
+	@Nullable
+	public T poll(int index) {
+		if (index <= 0)
+			return pollFirst();
+		if (index >= size)
+			return pollLast();
+		// No need to check for size to be 0 because the above checks will already do that, and one will run.
+
+		@Nullable T[] values = this.values;
+		int head = this.head, tail = this.tail;
+		index += head;
+		T value;
+		if (head <= tail) { // index is between head and tail.
+			value = values[index];
+			System.arraycopy(values, index + 1, values, index, tail - index);
+			values[this.tail] = null;
+			this.tail--;
+			if(this.tail == -1) this.tail = values.length - 1;
+		} else if (index >= values.length) { // index is between 0 and tail.
+			index -= values.length;
+			value = values[index];
+			System.arraycopy(values, index + 1, values, index, tail - index);
+			values[this.tail] = null;
+			this.tail--;
+			if(this.tail == -1) this.tail = values.length - 1;
+		} else { // index is between head and values.length.
+			value = values[index];
+			System.arraycopy(values, head, values, head + 1, index - head);
+			values[this.head] = null;
+			this.head++;
+			if (this.head == values.length) {
+				this.head = 0;
+			}
+		}
+		size--;
+		modCount++;
+		return value;
+	}
+
 	/**
 	 * Returns true if the deque has one or more items.
 	 */
@@ -2035,7 +2107,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * Returns the first (head) item in the deque (without removing it).
 	 *
 	 * @throws NoSuchElementException when the deque is empty
-	 * @see #addFirst(Object)
+	 * @see #peekFirst() peeking won't throw an exception, and will return the ObjectDeque's default value if empty
 	 * @see #removeFirst()
 	 */
 	@Override
@@ -2051,8 +2123,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * Returns the last (tail) item in the deque (without removing it).
 	 *
 	 * @throws NoSuchElementException when the deque is empty
-	 * @see #addLast(Object)
-	 * @see #removeLast()
+	 * @see #peekLast() peeking won't throw an exception, and will return the ObjectDeque's default value if empty
 	 */
 	public @Nullable T last () {
 		if (size == 0) {
