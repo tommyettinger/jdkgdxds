@@ -39,7 +39,8 @@ import java.util.*;
  * full-blown {@link ListIterator ListIterators} for iteration from an index or in reverse order.
  * <br>
  * Unlike {@link ArrayDeque} or {@link ArrayList}, most methods that take an index here try to be "forgiving;" that is,
- * they treat negative indices as index 0, and too-large indices as the last index. An exception is in
+ * they treat negative indices as index 0, and too-large indices as the last index, rather than throwing an Exception,
+ * except in some cases where the ObjectDeque is empty and an item from it is required. An exception is in
  * {@link #set(int, Object)}, which allows prepending by setting a negative index, or appending by setting a too-large
  * index. This isn't a standard JDK behavior, and it doesn't always act how Deque or List is documented.
  * <br>
@@ -754,7 +755,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 				System.arraycopy(values, index, values, after, head + size - index - 1);
 				values[index] = item;
 				tail = head + size - 1;
-				if (tail > values.length) {
+				if (tail >= values.length) {
 					tail = 0;
 				}
 			} else {
