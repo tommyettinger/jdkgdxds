@@ -1,5 +1,8 @@
 [1.8.1]
+- [BREAKING] Methods in EnhancedCollection that took Iterable types, not Iterator or Collection, have all been renamed to have "Iterable" at the end of their method name, to avoid overlap with methods that take Collection.
+- [LIKELY BREAKING] ObjectDeque has been rewritten almost entirely as both a List and Deque, while also implementing RandomAccess, Arrangeable, and EnhancedCollection. It extends AbstractList, which gives it comparable features to ObjectList, plus additional features from being a Deque. It also adds quite a lot more functionality! The primitive deque types have not yet been updated.
 - For very large hash tables (used by most set and map types here), the capacity was calculated using float (single) precision instead of double, which would have sometimes led to unnecessary resizes. This bug was found in fastutil by Captain-S0L0 .
+- Casing, an internal class used to quickly convert lower-case letters to upper-case for case-insensitive code, has been updated to Unicode 16, which is used by Java 24.
 
 [1.8.0]
 - [SEED BREAKING, MAYBE] The dependency on digital is now 0.6.0, which changes the output of methods in Hasher with "Bulk" in their names. Those methods also pass more stringent testing than before.
