@@ -161,15 +161,15 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:1.8.0"
+api "com.github.tommyettinger:jdkgdxds:1.8.1"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
 `mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on [digital](https://github.com/tommyettinger/digital)
 (which provides common math code meant for use by multiple projects), [funderby](https://github.com/tommyettinger/funderby)
 (Java 8 functional interfaces for primitive types), and for annotations only, [checker-qual](https://github.com/typetools/checker-framework). The
-version for the `digital` dependency is 0.6.0 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.6.0"`). Funderby has only changed a bit since its initial release, and is on version
+version for the `digital` dependency is 0.6.2 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.6.2"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`). The version for
 `checker-qual` is 3.42.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes.
 Earlier versions of jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to
@@ -179,8 +179,8 @@ mention that JSR305 is currently unmaintained). You can manually specify a `chec
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.6.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.8.0:sources"
+implementation "com.github.tommyettinger:digital:0.6.2:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.8.1:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -218,23 +218,23 @@ to a higher value, depending on where it is already; 19 is known to work, and 16
 The dependency (and `inherits` line) on digital is not necessary for jdkgdxds 0.2.8, but is necessary starting in 1.0.3 and later.
 The dependency and `inherits` line for funderby is new in 1.0.4 . Versions 1.0.1 and 1.0.2 also depended on
 [juniper](https://github.com/tommyettinger/juniper) 0.1.0 ; if you intend to use the
-randomized algorithms here (like shuffles), then depending on Juniper (0.6.3) might be a good idea, though it is still optional.
+randomized algorithms here (like shuffles), then depending on Juniper (0.6.5) might be a good idea, though it is still optional.
 Another option for random number generation, if you use libGDX, is [cringe](https://github.com/tommyettinger/cringe), which is more closely-integrated with libGDX.
 The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
 for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
 The version for funderby is expected to stay at or around 0.1.2, since it is a relatively small library and is probably complete.
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/5740b3e4f1).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/4ab2119ad9).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:5740b3e4f1'` or `api 'com.github.tommyettinger:jdkgdxds:5740b3e4f1'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:4ab2119ad9'` or `api 'com.github.tommyettinger:jdkgdxds:4ab2119ad9'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.6.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:5740b3e4f1:sources"
+implementation "com.github.tommyettinger:digital:0.6.2:sources"
+implementation "com.github.tommyettinger:jdkgdxds:4ab2119ad9:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -243,7 +243,7 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="com.github.tommyettinger.digital" />
 <inherits name="com.github.tommyettinger.jdkgdxds" />
 ```
-in with the other `inherits` lines. `5740b3e4f1` is an example of a recent commit, and can be
+in with the other `inherits` lines. `4ab2119ad9` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
 
 There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to
