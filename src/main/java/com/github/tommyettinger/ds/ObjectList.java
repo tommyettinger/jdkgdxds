@@ -44,7 +44,7 @@ import java.util.Random;
  * @author Tommy Ettinger
  * @see ObjectBag ObjectBag is an unordered variant on ObjectList.
  */
-public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedCollection<T> {
+public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedCollection<T>, Arrangeable.ArrangeableList<T> {
 
 	@Nullable protected transient ObjectListIterator<T> iterator1;
 	@Nullable protected transient ObjectListIterator<T> iterator2;

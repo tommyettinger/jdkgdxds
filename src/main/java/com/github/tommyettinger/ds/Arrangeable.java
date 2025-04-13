@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.Hasher;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -79,5 +80,15 @@ public interface Arrangeable {
 	 */
 	default void rearrange (long seed) {
 		for (int i = size() - 1; i > 0; i--) swap(i, Hasher.randomize2Bounded(++seed, i + 1));
+	}
+
+	/**
+	 * An empty interface that merges Arrangeable and java.util.List APIs.
+	 * This is only really meant to make {@link Select} and {@link QuickSelect} able to take more List types
+	 * that also support the necessary {@link #swap(int, int)} method.
+	 * @param <T> the type of items this ArrangeableList contains
+	 */
+	interface ArrangeableList<T> extends Arrangeable, List<T>{
+
 	}
 }

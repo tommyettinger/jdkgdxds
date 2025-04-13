@@ -41,14 +41,19 @@ import java.util.*;
  * {@link #set(int, Object)}, which allows prepending by setting a negative index, or appending by setting a too-large
  * index. This isn't a standard JDK behavior, and it doesn't always act how Deque or List is documented.
  * <br>
- * Some new methods are present here, or have been made public when they weren't before.
+ * Some new methods are present here, or have been made public when they weren't before. {@link #removeRange(int, int)},
+ * for instance, is now public, as is {@link #resize(int)}. New APIs include Deque-like methods that affect the middle
+ * of the deque, such as {@link #peekAt(int)} and {@link #pollAt(int)}. There are more bulk methods that work at the
+ * head or tail region of the deque, such as {@link #addAllFirst(Collection)} and {@link #truncateFirst(int)}. There are
+ * the methods from {@link Arrangeable}, and relevant ones from {@link Ordered} (this isn't Ordered because it doesn't
+ * provide its order as an ObjectList, but can do similar things).
  * <br>
  * In general, this is an improvement over {@link ArrayDeque} in every type of functionality, and is mostly equivalent
  * to {@link ObjectList} as long as the performance of {@link #get(int)} is adequate. Because it is array-backed, it
  * should usually be much faster than {@link LinkedList}, as well; only periodic resizing and modifications in the
  * middle of the List using an iterator should be typically faster for {@link LinkedList}.
  */
-public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>, RandomAccess, Arrangeable, EnhancedCollection<T> {
+public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>, RandomAccess, Arrangeable, EnhancedCollection<T>, Arrangeable.ArrangeableList<T> {
 
 	/**
 	 * The value returned when nothing can be obtained from this deque and an exception is not meant to be thrown,
@@ -1598,6 +1603,41 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 		return modified;
 	}
 
+
+	/**
+	 * Selects the kth-lowest element from this ObjectDeque according to Comparator ranking. This might partially sort the ObjectDeque,
+	 * changing its order. The ObjectDeque must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+	 *
+	 * @param comparator used for comparison
+	 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+	 *                   value use 1, for max value use size of the ObjectDeque; using 0 results in a runtime exception.
+	 * @return the value of the kth lowest ranked object.
+	 * @see Select
+	 */
+	public T selectRanked (Comparator<T> comparator, int kthLowest) {
+		if (kthLowest < 1) {
+			throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
+		}
+		return Select.select(this, comparator, kthLowest, size());
+	}
+
+	/**
+	 * Gets the index of the kth-lowest element from this ObjectDeque according to Comparator ranking. This might partially sort the
+	 * ObjectDeque, changing its order. The ObjectDeque must have a size greater than 0, or a {@link RuntimeException} will be thrown.
+	 *
+	 * @param comparator used for comparison
+	 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
+	 *                   value use 1, for max value use size of the ObjectDeque; using 0 results in a runtime exception.
+	 * @return the index of the kth lowest ranked object.
+	 * @see #selectRanked(Comparator, int)
+	 */
+	public int selectRankedIndex (Comparator<T> comparator, int kthLowest) {
+		if (kthLowest < 1) {
+			throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
+		}
+		return Select.selectIndex(this, comparator, kthLowest, size());
+	}
+
 	/**
 	 * Alias for {@link #truncate(int)}.
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
@@ -1605,6 +1645,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	public void truncateLast (int newSize) {
 		truncate(newSize);
 	}
+
 	/**
 	 * Reduces the size of the deque to the specified size by bulk-removing items from the tail end.
 	 * If the deque is already smaller than the specified size, no action is taken.
@@ -2536,12 +2577,27 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 //		modCount += size; // I don't think this is "structural"
 	}
 
+	/**
+	 * Gets a randomly selected item from this ObjectDeque. Throws a {@link NoSuchElementException} if empty.
+	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
+	 * @return a randomly selected item from this deque, or the default value if empty
+	 */
 	@Nullable
 	public T random (Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
 		return get(random.nextInt(size));
+	}
+
+	/**
+	 * Like {@link #random(Random)}, but returns {@link #getDefaultValue() the default value} if empty.
+	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
+	 * @return a randomly selected item from this deque, or the default value if empty
+	 */
+	@Nullable
+	public T peekRandom (Random random) {
+		return peekAt(random.nextInt(size));
 	}
 
 	/**

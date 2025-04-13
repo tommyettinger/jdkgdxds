@@ -172,11 +172,11 @@ public final class QuickSelect {
 		}
 	}
 
-	public static <T> int select (ObjectList<T> items, Comparator<? super T> comp, int n, int size) {
+	public static <T> int select (Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}
 
-	public static <T> int partition (ObjectList<T> items, Comparator<? super T> comp, int left, int right, int pivot) {
+	public static <T> int partition (Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int left, int right, int pivot) {
 		T pivotValue = items.get(pivot);
 		items.swap(right, pivot);
 		int storage = left;
@@ -190,7 +190,7 @@ public final class QuickSelect {
 		return storage;
 	}
 
-	public static <T> int recursiveSelect (ObjectList<T> items, Comparator<? super T> comp, int left, int right, int k) {
+	public static <T> int recursiveSelect (Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int left, int right, int k) {
 		if (left == right)
 			return left;
 		int pivotIndex = medianOfThreePivot(items, comp, left, right);
@@ -210,7 +210,7 @@ public final class QuickSelect {
 	/**
 	 * Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays
 	 */
-	public static <T> int medianOfThreePivot (ObjectList<T> items, Comparator<? super T> comp, int leftIdx, int rightIdx) {
+	public static <T> int medianOfThreePivot (Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int leftIdx, int rightIdx) {
 		T left = items.get(leftIdx);
 		int midIdx = (leftIdx + rightIdx) / 2;
 		T mid = items.get(midIdx);
@@ -247,7 +247,7 @@ public final class QuickSelect {
 	 * @param n     the size of the partially-sorted sections to produce
 	 * @param <T>   the type of elements of items
 	 */
-	public static <T> void multiSelect (ObjectList<T> items, Comparator<T> comp, int n) {
+	public static <T> void multiSelect (Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -263,7 +263,7 @@ public final class QuickSelect {
 	 * @param n     the size of the partially-sorted sections to produce
 	 * @param <T>   the type of elements of items
 	 */
-	public static <T> void multiSelect (ObjectList<T> items, Comparator<T> comp, int left, int right, int n) {
+	public static <T> void multiSelect (Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
