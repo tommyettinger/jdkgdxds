@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds.experimental.rewrite;
 
+import org.junit.Ignore;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -26,6 +28,7 @@ import java.util.NoSuchElementException;
  * From <a href="https://github.com/apache/harmony">Apache Harmony's GitHub mirror</a>.
  * Originally {@code Support_ListTest}.
  */
+@Ignore
 public class SupportForListTest extends junit.framework.TestCase {
 
 	List<Integer> list; // must contain the Integers 0 to 99 in order

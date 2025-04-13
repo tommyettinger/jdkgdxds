@@ -23,11 +23,13 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
 /**
  * From <a href="https://github.com/apache/harmony">Apache Harmony's GitHub mirror</a>.
  * Originally {@code Support_UnmodifiableCollectionTest}.
  */
+@Ignore
 public class SupportForUnmodifiableCollectionTest extends TestCase {
 
 	Collection<Integer> col;

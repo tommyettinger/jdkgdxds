@@ -17,6 +17,8 @@
 
 package com.github.tommyettinger.ds.experimental.rewrite;
 
+import org.junit.Ignore;
+
 import java.util.Collection;
 import java.util.TreeSet;
 
@@ -24,6 +26,7 @@ import java.util.TreeSet;
  * From <a href="https://github.com/apache/harmony">Apache Harmony's GitHub mirror</a>.
  * Originally {@code Support_CollectionTest}.
  */
+@Ignore
 public class SupportForCollectionTest extends junit.framework.TestCase {
 
 	Collection<Integer> col; // must contain the Integers 0 to 99
