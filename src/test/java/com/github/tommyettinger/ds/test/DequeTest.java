@@ -140,7 +140,7 @@ public class DequeTest {
 				"tau", "upsilon", "phi", "chi", "psi", "omega"
 			);
 			deque.removeLast();
-			deque.truncate(deque.size - 5);
+			deque.truncate(deque.size() - 5);
 			// by now, the last row has been removed, and the first 6 of 24 slots are empty.
 			// the deque should contain eta through omega.
 			System.out.println(deque);
@@ -174,7 +174,7 @@ public class DequeTest {
 			// the deque should contain eta through omega, followed by three all-caps names.
 			// the names should be at slots 0, 1, 2, and eta starts at slot 6.
 			System.out.println(deque);
-			deque.truncate(deque.size - 5);
+			deque.truncate(deque.size() - 5);
 			System.out.println(deque);
 		}
 		{
@@ -200,7 +200,7 @@ public class DequeTest {
 			// the deque should contain eta through omega, followed by three all-caps names.
 			// the names should be at slots 0, 1, 2, and eta starts at slot 6.
 			System.out.println(deque);
-			deque.truncate(deque.size - 2);
+			deque.truncate(deque.size() - 2);
 			System.out.println(deque);
 		}
 	}

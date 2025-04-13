@@ -73,7 +73,7 @@ public class ObjectRing<T> extends ObjectDeque<T> {
 	}
 
 	@Override
-	protected void resize (int newSize) {
+	public void resize (int newSize) {
 		super.removeFirst();
 		forgotten++;
 	}
