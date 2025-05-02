@@ -53,7 +53,7 @@ import java.util.*;
  * should usually be much faster than {@link LinkedList}, as well; only periodic resizing and modifications in the
  * middle of the List using an iterator should be typically faster for {@link LinkedList}.
  */
-public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>, RandomAccess, Arrangeable, EnhancedCollection<T>, Arrangeable.ArrangeableList<T> {
+public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T>, List<T>, Lisque<T>, RandomAccess, Arrangeable, EnhancedCollection<T>, Arrangeable.ArrangeableList<T> {
 
 	/**
 	 * The value returned when nothing can be obtained from this deque and an exception is not meant to be thrown,
@@ -912,7 +912,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 *                                  specified collection prevents it from being added to this deque
 	 */
 	@Override
-	public boolean addAll (Collection<? extends T> c) {
+	public boolean addAll (Collection<@Nullable ? extends T> c) {
 		final int cs = c.size();
 		if(cs == 0) return false;
 		int oldSize = size;
@@ -942,7 +942,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (Collection<? extends T> c) {
+	public boolean addAllLast (Collection<@Nullable ? extends T> c) {
 		return addAll(c);
 	}
 
@@ -999,12 +999,12 @@ public class ObjectDeque<T> extends AbstractList<T> implements Deque<T>, List<T>
 	 * @param c collection containing elements to be added to this list
 	 * @return {@code true} if this list changed as a result of the call
 	 */
-	public boolean insertAll(int index, Collection<? extends T> c) {
+	public boolean insertAll(int index, Collection<@Nullable ? extends T> c) {
 		return addAll(index, c);
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<? extends T> c) {
+	public boolean addAll(int index, Collection<@Nullable ? extends T> c) {
 		int oldSize = size;
 		if(index <= 0)
 			addAllFirst(c);
