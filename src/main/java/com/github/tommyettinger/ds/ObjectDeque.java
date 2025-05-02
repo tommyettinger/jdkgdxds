@@ -736,22 +736,9 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 */
 	@Override
 	public void add (int index, @Nullable T item) {
-		insert(index, item);
-	}
-
-	/**
-	 * This is an alias for {@link #add(int, Object)} that returns {@code true} to indicate it does modify
-	 * this ObjectDeque.
-	 *
-	 * @param index index at which the specified element is to be inserted
-	 * @param item  element to be inserted
-	 * @return true if this was modified, which should always happen
-	 */
-	public boolean insert (int index, @Nullable T item) {
-		int oldSize = size;
 		if(index <= 0)
 			addFirst(item);
-		else if(index >= oldSize)
+		else if(index >= size)
 			addLast(item);
 		else {
 			@Nullable T[] values = this.values;
@@ -790,7 +777,20 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 			}
 			modCount++;
 		}
-		return oldSize != size;
+
+	}
+
+	/**
+	 * This is an alias for {@link #add(int, Object)} that returns {@code true} to indicate it does modify
+	 * this ObjectDeque.
+	 *
+	 * @param index index at which the specified element is to be inserted
+	 * @param item  element to be inserted
+	 * @return true if this was modified, which should always happen
+	 */
+	public boolean insert (int index, @Nullable T item) {
+		add(index, item);
+		return true;
 	}
 
 	/**

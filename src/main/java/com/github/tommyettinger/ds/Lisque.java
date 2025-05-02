@@ -27,9 +27,34 @@ import java.util.List;
  * @param <T> the generic type of items
  */
 public interface Lisque<@Nullable T> extends List<T>, Deque<T> {
-    boolean insert (int index, T item);
-    boolean insertAll(int index, Collection<@Nullable ? extends T> c);
-    boolean addAllLast (Collection<? extends T> c);
+    default boolean insert (int index, T item) {
+        add(index, item);
+        return true;
+    }
+    default boolean insertAll(int index, Collection<@Nullable ? extends T> c){
+        return addAll(index, c);
+    }
+    default boolean addAllLast (Collection<? extends T> c) {
+        return addAll(c);
+    }
     boolean addAllFirst (Collection<? extends T> c);
+    boolean addAll (T[] array);
+    boolean addAll (T[] array, int offset, int length);
+    boolean addAll (int index, T[] array);
+    boolean addAll (int index, T[] array, int offset, int length);
+    default boolean insertAll (int index, T[] array) {
+        return addAll(index, array);
+    }
+    default boolean insertAll (int index, T[] array, int offset, int length){
+        return addAll(index, array, offset, length);
+    }
+    default boolean addAllLast (T[] array) {
+        return addAll(array);
+    }
+    default boolean addAllLast (T[] array, int offset, int length) {
+        return addAll(array, offset, length);
+    }
+    boolean addAllFirst (T[] array);
+    boolean addAllFirst (T[] array, int offset, int length);
 
 }
