@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.tommyettinger.ds.experimental.rewrite;
+package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.TextTools;
 import org.junit.Assert;

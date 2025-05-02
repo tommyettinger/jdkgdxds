@@ -345,8 +345,6 @@ public interface EnhancedCollection<T> extends Collection<T> {
 
 	/**
 	 * Delegates to {@link #toString(String, boolean)} with the given itemSeparator and without surrounding brackets.
-	 * <br>
-	 * Delegates to {@link #toString(String, boolean)}.
 	 *
 	 * @param itemSeparator how to separate items, such as {@code ", "}
 	 * @return a new String representing this map
