@@ -21,6 +21,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A combination List/Deque with some expanded features based on Deque's mix of exceptional and non-exceptional methods.
@@ -57,4 +58,37 @@ public interface Lisque<@Nullable T> extends List<T>, Deque<T> {
     boolean addAllFirst (T[] array);
     boolean addAllFirst (T[] array, int offset, int length);
 
+    boolean retainAll (Object[] array);
+    boolean retainAll (Object[] array, int offset, int length);
+
+    void truncate (int newSize);
+    default void truncateLast (int newSize) {
+        truncate(newSize);
+    }
+    void truncateFirst (int newSize);
+
+    void removeRange(int fromIndex, int toIndex);
+
+    int indexOf (@Nullable Object value, int fromIndex);
+    int lastIndexOf (@Nullable Object value, int fromIndex);
+
+    default T removeAt(int index) {
+        return remove(index);
+    }
+
+    T poll(int index);
+    default T pollAt(int index) {
+        return poll(index);
+    }
+
+    default boolean notEmpty (){
+        return !isEmpty();
+    }
+    T last ();
+    T peekAt (int index);
+
+    T random (Random random);
+    default T peekRandom (Random random) {
+        return peekAt(random.nextInt(size()));
+    }
 }
