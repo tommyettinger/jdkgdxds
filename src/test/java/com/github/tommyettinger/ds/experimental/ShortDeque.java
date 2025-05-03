@@ -871,10 +871,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			if(head < 0) head += items.length;
 			size += oldSize;
 		} else {
-			int idx = 0;
+			int i = ensureGap(0, cs);
 			ShortIterator it = c.iterator();
 			while (it.hasNext()) {
-				insert(idx++, it.nextShort());
+				items[i++] = it.nextShort();
+				if(i == items.length) i = 0;
 			}
 		}
 		return oldSize != size;

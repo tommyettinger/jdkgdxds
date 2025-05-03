@@ -975,9 +975,10 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 			if(head < 0) head += values.length;
 			size += oldSize;
 		} else {
-			int idx = 0;
-			for (T t : c) {
-				insert(idx++, t);
+			int i = ensureGap(0, cs);
+			for(T t : c){
+				values[i++] = t;
+				if(i == values.length) i = 0;
 			}
 		}
 		return oldSize != size;
