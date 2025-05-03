@@ -18,8 +18,11 @@ package com.github.tommyettinger.ds.experimental;
 
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
+import com.github.tommyettinger.ds.support.sort.ShortComparator;
+import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.*;
 
@@ -28,18 +31,18 @@ import java.util.*;
  * beginning and end. This extends {@link } supports {@link RandomAccess}.
  * Values in the backing array may wrap back to the beginning, making add and remove at the beginning and end O(1)
  * (unless the backing array needs to resize when adding). Deque functionality is provided via {@link #removeLast()} and
- * {@link #addFirst(Object)}.
+ * {@link #addFirst(short)}.
  * <br>
  * Unlike most Deque implementations in the JDK, you can get and set items anywhere in the deque in constant time with
- * {@link #get(int)} and {@link #set(int, Object)}. Relative to an {@link ObjectList}, {@link #get(int)} has slightly
+ * {@link #get(int)} and {@link #set(int, short)}. Relative to an {@link ObjectList}, {@link #get(int)} has slightly
  * higher overhead, but it still runs in constant time. Unlike ArrayDeque in the JDK, this implements
- * {@link #equals(Object)} and {@link #hashCode()}, as well as {@link #equalsIdentity(Object)}. This can provide
- * full-blown {@link ListIterator ListIterators} for iteration from an index or in reverse order.
+ * {@link #equals(Object)} and {@link #hashCode()}. This can provide what are effectively
+ * {@link ListIterator ListIterators} for iteration from an index or in reverse order.
  * <br>
  * Unlike {@link ArrayDeque} or {@link ArrayList}, most methods that take an index here try to be "forgiving;" that is,
  * they treat negative indices as index 0, and too-large indices as the last index, rather than throwing an Exception,
  * except in some cases where the ObjectDeque is empty and an item from it is required. An exception is in
- * {@link #set(int, Object)}, which allows prepending by setting a negative index, or appending by setting a too-large
+ * {@link #set(int, short)}, which allows prepending by setting a negative index, or appending by setting a too-large
  * index. This isn't a standard JDK behavior, and it doesn't always act how Deque or List is documented.
  * <br>
  * Some new methods are present here, or have been made public when they weren't before. {@link #removeRange(int, int)},
@@ -61,10 +64,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * such as when calling {@link #peek()} on an empty deque.
 	 */
 	public short defaultValue = 0;
-	/**
-	 * Contains the values in the deque. Head and tail indices go in a circle around this array, wrapping at the end.
-	 */
-	protected short[] values;
 
 	/**
 	 * Index of first element. Logically smaller than tail. Unless empty, it points to a valid element inside the deque.
@@ -77,15 +76,9 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 */
 	protected int tail = 0;
 
-	/**
-	 * Number of elements in the deque.
-	 */
-	public int size = 0;
-
-	protected transient ShortDequeIterator iterator1;
-	protected transient ShortDequeIterator iterator2;
-	protected transient ShortDequeIterator descendingIterator1;
-	protected transient ShortDequeIterator descendingIterator2;
+	@Nullable protected transient ShortDequeIterator descendingIterator1;
+	@Nullable protected transient ShortDequeIterator descendingIterator2;
+	private int modCount;
 
 	/**
 	 * Creates a new ObjectDeque which can hold 16 values without needing to resize the backing array.
@@ -100,8 +93,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param initialSize how large the backing array should be, without any padding
 	 */
 	public ShortDeque(int initialSize) {
-		// noinspection unchecked
-		this.values = (short[])new Object[Math.max(1, initialSize)];
+		this.items = new short[Math.max(1, initialSize)];
 	}
 
 	/**
@@ -110,7 +102,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param coll a Collection of short that will be copied into this and used in full
 	 * @throws NullPointerException if {@code coll} is {@code null}
 	 */
-	public ShortDeque(Collection<? extends short> coll) {
+	public ShortDeque(PrimitiveCollection.OfShort coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -121,7 +113,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param iter an iterator that will have its remaining contents added to this
 	 * @throws NullPointerException if {@code iter} is {@code null}
 	 */
-	public ShortDeque(Iterator<? extends short> iter) {
+	public ShortDeque(ShortIterator iter) {
 		this();
 		addAll(iter);
 	}
@@ -132,8 +124,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param deque another ObjectDeque to copy
 	 * @throws NullPointerException if {@code deque} is {@code null}
 	 */
-	public ShortDeque(ShortDeque<? extends short> deque) {
-		this.values = Arrays.copyOf(deque.values, deque.values.length);
+	public ShortDeque(ShortDeque deque) {
+		this.items = Arrays.copyOf(deque.items, deque.items.length);
 		this.size = deque.size;
 		this.head = deque.head;
 		this.tail = deque.tail;
@@ -147,7 +139,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws NullPointerException if {@code a} is {@code null}
 	 */
 	public ShortDeque(short[] a) {
-		this.values = Arrays.copyOf(a, Math.max(1, a.length));
+		this.items = Arrays.copyOf(a, Math.max(1, a.length));
 		size = a.length;
 		tail = Math.max(0, size - 1);
 	}
@@ -162,7 +154,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 */
 	public ShortDeque(short[] a, int offset, int count) {
 		int adjusted = Math.max(1, count);
-		this.values = Arrays.copyOfRange(a, offset, offset + adjusted);
+		this.items = Arrays.copyOfRange(a, offset, offset + adjusted);
 		tail = adjusted - 1;
 		size = Math.max(0, count);
 	}
@@ -192,46 +184,42 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @param object can be null
 	 */
-	@Override
 	public void addLast (short object) {
-		short[] values = this.values;
+		short[] items = this.items;
 
-		if (size == values.length) {
-			resize(values.length << 1);
-			values = this.values;
+		if (size == items.length) {
+			resize(items.length << 1);
+			items = this.items;
 		}
 
-		if (++tail == values.length) tail = 0;
+		if (++tail == items.length) tail = 0;
 		if(++size == 1) tail = head;
-		values[tail] = object;
-		modCount++;
+		items[tail] = object;
 	}
 
 	/**
 	 * Prepend given object to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
 	 *
 	 * @param object can be null
-	 * @see #addLast(Object)
+	 * @see #addLast(short)
 	 */
-	@Override
 	public void addFirst (short object) {
-		short[] values = this.values;
+		short[] items = this.items;
 
-		if (size == values.length) {
-			resize(values.length << 1);
-			values = this.values;
+		if (size == items.length) {
+			resize(items.length << 1);
+			items = this.items;
 		}
 
 		int head = this.head;
 		head--;
 		if (head == -1) {
-			head = values.length - 1;
+			head = items.length - 1;
 		}
-		values[head] = object;
+		items[head] = object;
 
 		this.head = head;
 		if(++size == 1) tail = head;
-		modCount++;
 	}
 
 	/**
@@ -240,18 +228,17 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * the storage of an {@code ObjectDeque} instance.
 	 */
 	public void trimToSize() {
-		modCount++;
-		if (size < values.length) {
+		if (size < items.length) {
 			if(head <= tail) {
-				values = Arrays.copyOfRange(values, head, tail+1);
+				items = Arrays.copyOfRange(items, head, tail+1);
 			} else {
-				short[] next = Arrays.copyOf(values, size);
-				System.arraycopy(values, head, next, 0, values.length - head);
-				System.arraycopy(values, 0, next, values.length - head, tail + 1);
-				values = next;
+				short[] next = Arrays.copyOf(items, size);
+				System.arraycopy(items, head, next, 0, items.length - head);
+				System.arraycopy(items, 0, next, items.length - head, tail + 1);
+				items = next;
 			}
 			head = 0;
-			tail = values.length - 1;
+			tail = items.length - 1;
 		}
 	}
 
@@ -261,7 +248,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 */
 	public void ensureCapacity (int additional) {
 		final int needed = size + additional;
-		if (values.length < needed) {
+		if (items.length < needed) {
 			resize(needed);
 		}
 	}
@@ -271,31 +258,34 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * size and the resize to the same size will (for most purposes) be wasted effort. If this is not empty, this will
 	 * rearrange the items internally to be linear and have the head at index 0, with the tail at {@code size - 1}.
 	 * This always allocates a new internal backing array.
+	 *
+	 * @return
 	 */
-	public void resize (int newSize) {
+	public short[] resize (int newSize) {
 		if(newSize < size)
 			newSize = size;
-		final short[] values = this.values;
+		final short[] items = this.items;
 		final int head = this.head;
 		final int tail = this.tail;
 
 		@SuppressWarnings("unchecked")
-		final short[] newArray = (short[])new Object[Math.max(1, newSize)];
+		final short[] newArray = new short[Math.max(1, newSize)];
 
 		if (size > 0) {
 			if (head <= tail) {
 				// Continuous
-				System.arraycopy(values, head, newArray, 0, tail - head + 1);
+				System.arraycopy(items, head, newArray, 0, tail - head + 1);
 			} else {
 				// Wrapped
-				final int rest = values.length - head;
-				System.arraycopy(values, head, newArray, 0, rest);
-				System.arraycopy(values, 0, newArray, rest, tail + 1);
+				final int rest = items.length - head;
+				System.arraycopy(items, head, newArray, 0, rest);
+				System.arraycopy(items, 0, newArray, rest, tail + 1);
 			}
 			this.head = 0;
 			this.tail = size - 1;
 		}
-		this.values = newArray;
+		this.items = newArray;
+		return newArray;
 	}
 
 	/**
@@ -303,8 +293,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * resize the backing array to achieve this goal. If possible, this will keep the same backing array and modify
 	 * it in-place. The "gap" is not assigned null, and may contain old/duplicate references; calling code <em>must</em>
 	 * overwrite the entire gap with additional values to ensure GC correctness.
-	 * @implNote This is considered an incomplete modification for the purpose of {@link #modCount}, so it does not
-	 * change modCount; the code that fills in the gap should change modCount instead.
 	 * @param index the 0-based index in the iteration order where the gap will be present
 	 * @param gapSize the number of items that will need filling in the gap, and can be filled without issues.
 	 * @return the position in the array where the gap will begin, which is unrelated to the index
@@ -319,23 +307,22 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		}
 		if (size == 0) {
 			this.head = this.tail = 0;
-			if (values.length < gapSize) {
+			if (items.length < gapSize) {
 				//noinspection unchecked
-				this.values = (short[]) new Object[gapSize];
+				this.items = new short[gapSize];
 			}
 			return 0;
 		} else if (size == 1) {
-			if (values.length < gapSize + size) {
-				short item = this.values[head];
-				//noinspection unchecked
-				this.values = (short[]) new Object[gapSize + size];
+			if (items.length < gapSize + size) {
+				short item = this.items[head];
+				this.items = new short[gapSize + size];
 				if (index == 0) {
-					this.values[gapSize] = item;
+					this.items[gapSize] = item;
 					this.head = 0;
 					this.tail = gapSize;
 					return 0;
 				} else {
-					this.values[0] = item;
+					this.items[0] = item;
 					this.head = 0;
 					this.tail = gapSize;
 					return 1;
@@ -343,16 +330,14 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			} else {
 				if (index == 0) {
 					if (head != 0) {
-						this.values[0] = this.values[head];
-						this.values[head] = null;
+						this.items[0] = this.items[head];
 					}
 					this.head = 0;
 					this.tail = gapSize;
 					return 0;
 				} else {
 					if (head != gapSize) {
-						this.values[gapSize] = this.values[head];
-						this.values[head] = null;
+						this.items[gapSize] = this.items[head];
 					}
 					this.head = 0;
 					this.tail = gapSize;
@@ -361,63 +346,63 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			}
 		}
 
-		final short[] values = this.values;
+		final short[] items = this.items;
 		final int head = this.head;
 		final int tail = this.tail;
-		final int newSize = Math.max(size + gapSize, values.length);
-		if (newSize == values.length) {
+		final int newSize = Math.max(size + gapSize, items.length);
+		if (newSize == items.length) {
 			// keep the same array because there is enough room to form the gap.
 			if (head <= tail) {
 				if (head != 0) {
 					if (index > 0)
-						System.arraycopy(values, head, values, 0, index);
+						System.arraycopy(items, head, items, 0, index);
 					this.head = 0;
 				}
-				System.arraycopy(values, head + index, values, index + gapSize, size - this.head - index);
+				System.arraycopy(items, head + index, items, index + gapSize, size - this.head - index);
 				this.tail += gapSize - (head - this.head);
 				return index;
 			} else {
-				if (head + index < values.length) {
+				if (head + index < items.length) {
 					if (index > 0)
-						System.arraycopy(values, head, values, head - gapSize, index);
+						System.arraycopy(items, head, items, head - gapSize, index);
 					this.head -= gapSize;
 					return this.head + index;
 				} else {
-					int wrapped = head + index - values.length;
-					System.arraycopy(values, wrapped, values, wrapped + gapSize, tail + 1 - wrapped);
+					int wrapped = head + index - items.length;
+					System.arraycopy(items, wrapped, items, wrapped + gapSize, tail + 1 - wrapped);
 					this.tail += gapSize;
 					return wrapped;
 				}
 			}
 		} else {
-			@SuppressWarnings("unchecked") final short[] newArray = (short[]) new Object[newSize];
+			final short[] newArray = new short[newSize];
 
 			if (head <= tail) {
 				// Continuous
 				if (index > 0)
-					System.arraycopy(values, head, newArray, 0, index);
+					System.arraycopy(items, head, newArray, 0, index);
 				this.head = 0;
-				System.arraycopy(values, head + index, newArray, index + gapSize, size - head - index);
+				System.arraycopy(items, head + index, newArray, index + gapSize, size - head - index);
 				this.tail += gapSize;
 			} else {
 				// Wrapped
-				final int headPart = values.length - head;
+				final int headPart = items.length - head;
 				if (index < headPart) {
 					if (index > 0)
-						System.arraycopy(values, head, newArray, 0, index);
+						System.arraycopy(items, head, newArray, 0, index);
 					this.head = 0;
-					System.arraycopy(values, head + index, newArray, index + gapSize, headPart - index);
+					System.arraycopy(items, head + index, newArray, index + gapSize, headPart - index);
 					this.tail = size + gapSize - 1;
 				} else {
-					System.arraycopy(values, head, newArray, 0, headPart);
+					System.arraycopy(items, head, newArray, 0, headPart);
 					int wrapped = index - headPart; // same as: head + index - values.length;
-					System.arraycopy(values, 0, newArray, headPart, wrapped);
-					System.arraycopy(values, wrapped, newArray, headPart + wrapped + gapSize, tail + 1 - wrapped);
+					System.arraycopy(items, 0, newArray, headPart, wrapped);
+					System.arraycopy(items, wrapped, newArray, headPart + wrapped + gapSize, tail + 1 - wrapped);
 					this.tail = size + gapSize - 1;
 					index = headPart + wrapped;
 				}
 			}
-			this.values = newArray;
+			this.items = newArray;
 			return index;
 		}
 	}
@@ -428,23 +413,21 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return removed object
 	 * @throws NoSuchElementException when the deque is empty
 	 */
-	@Override
 	public short removeFirst () {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
 
-		final short[] values = this.values;
+		final short[] items = this.items;
 
-		final short result = values[head];
-		values[head] = null;
+		final short result = items[head];
+		items[head] = null;
 		head++;
-		if (head == values.length) {
+		if (head == items.length) {
 			head = 0;
 		}
 		if(--size == 0) tail = head;
-		modCount++;
 
 		return result;
 	}
@@ -456,26 +439,24 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #removeFirst()
 	 */
-	@Override
 	public short removeLast () {
 		if (size == 0) {
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
 
-		final short[] values = this.values;
+		final short[] items = this.items;
 		int tail = this.tail;
-		final short result = values[tail];
-		values[tail] = null;
+		final short result = items[tail];
+		items[tail] = null;
 
 		if (tail == 0) {
-			tail = values.length - 1;
+			tail = items.length - 1;
 		} else {
 			--tail;
 		}
 		this.tail = tail;
 
 		if(--size == 0) head = tail;
-		modCount++;
 
 		return result;
 	}
@@ -496,7 +477,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	@Override
 	public boolean offerFirst (short t) {
 		int oldSize = size;
 		addFirst(t);
@@ -519,7 +499,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	@Override
 	public boolean offerLast (short t) {
 		int oldSize = size;
 		addLast(t);
@@ -529,28 +508,26 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Retrieves and removes the first element of this deque,
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
-	 * {@code null} unless it has been changed with {@link #setDefaultValue(Object)}.
+	 * {@code null} unless it has been changed with {@link #setDefaultValue(short)}.
 	 *
 	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	@Override
 	public short pollFirst () {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
 		}
 
-		final short[] values = this.values;
+		final short[] items = this.items;
 
-		final short result = values[head];
-		values[head] = null;
+		final short result = items[head];
+		items[head] = null;
 		head++;
-		if (head == values.length) {
+		if (head == items.length) {
 			head = 0;
 		}
 		if(--size == 0) tail = head;
-		modCount++;
 
 		return result;
 	}
@@ -558,31 +535,29 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Retrieves and removes the last element of this deque,
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
-	 * {@code null} unless it has been changed with {@link #setDefaultValue(Object)}.
+	 * {@code null} unless it has been changed with {@link #setDefaultValue(short)}.
 	 *
 	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	@Override
 	public short pollLast () {
 		if (size == 0) {
 			return defaultValue;
 		}
 
-		final short[] values = this.values;
+		final short[] items = this.items;
 		int tail = this.tail;
-		final short result = values[tail];
-		values[tail] = null;
+		final short result = items[tail];
+		items[tail] = null;
 
 		if (tail == 0) {
-			tail = values.length - 1;
+			tail = items.length - 1;
 		} else {
 			--tail;
 		}
 		this.tail = tail;
 
 		if(--size == 0) head = tail;
-		modCount++;
 
 		return result;
 	}
@@ -596,7 +571,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return the head of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	@Override
 	public short getFirst () {
 		return first();
 	}
@@ -609,7 +583,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return the tail of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	@Override
 	public short getLast () {
 		return last();
 	}
@@ -620,13 +593,12 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	@Override
 	public short peekFirst () {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
 		}
-		return values[head];
+		return items[head];
 	}
 
 	/**
@@ -635,13 +607,12 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	@Override
 	public short peekLast () {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
 		}
-		return values[tail];
+		return items[tail];
 	}
 
 	/**
@@ -661,8 +632,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	@Override
-	public boolean removeFirstOccurrence (Object o) {
+	public boolean removeFirstOccurrence (short o) {
 		return removeValue(o, false);
 	}
 
@@ -683,8 +653,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	@Override
-	public boolean removeLastOccurrence (Object o) {
+	public boolean removeLastOccurrence (short o) {
 		return removeLastValue(o, false);
 	}
 
@@ -695,7 +664,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * {@code true} upon success and throwing an
 	 * {@code IllegalStateException} if no space is currently available.
 	 * When using a capacity-restricted deque, it is generally preferable to
-	 * use {@link #offer(Object) offer}.
+	 * use {@link #offer(short) offer}.
 	 *
 	 * <p>This method is equivalent to {@link #addLast}.
 	 *
@@ -710,7 +679,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	@Override
 	public boolean add (short t) {
 		int oldSize = size;
 		addLast(t);
@@ -719,60 +687,58 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Inserts the specified element into this deque at the specified index.
-	 * Unlike {@link #offerFirst(Object)} and {@link #offerLast(Object)}, this does not run in expected constant time unless
+	 * Unlike {@link #offerFirst(short)} and {@link #offerLast(short)}, this does not run in expected constant time unless
 	 * the index is less than or equal to 0 (where it acts like offerFirst()) or greater than or equal to {@link #size()}
 	 * (where it acts like offerLast()).
 	 * @param index the index in the deque's insertion order to insert the item
 	 * @param item a short item to insert; may be null
 	 */
-	@Override
 	public void add (int index, short item) {
 		if(index <= 0)
 			addFirst(item);
 		else if(index >= size)
 			addLast(item);
 		else {
-			short[] values = this.values;
+			short[] items = this.items;
 
-			if (++size > values.length) {
-				resize(values.length << 1);
-				values = this.values;
+			if (++size > items.length) {
+				resize(items.length << 1);
+				items = this.items;
 			}
 
 			if(head <= tail) {
 				index += head;
-				if(index >= values.length) index -= values.length;
+				if(index >= items.length) index -= items.length;
 				int after = index + 1;
-				if(after >= values.length) after = 0;
+				if(after >= items.length) after = 0;
 
-				System.arraycopy(values, index, values, after, head + size - index - 1);
-				values[index] = item;
+				System.arraycopy(items, index, items, after, head + size - index - 1);
+				items[index] = item;
 				tail = head + size - 1;
-				if (tail >= values.length) {
+				if (tail >= items.length) {
 					tail = 0;
 				}
 			} else {
-				if (head + index < values.length) {
+				if (head + index < items.length) {
 					// backward shift
-					System.arraycopy(values, head, values, head - 1, index);
-					values[head - 1 + index] = item;
+					System.arraycopy(items, head, items, head - 1, index);
+					items[head - 1 + index] = item;
 					head--;
 				}
 				else {
 					// forward shift
-					index = head + index - values.length;
-					System.arraycopy(values, index, values, index + 1, tail - index + 1);
-					values[index] = item;
+					index = head + index - items.length;
+					System.arraycopy(items, index, items, index + 1, tail - index + 1);
+					items[index] = item;
 					tail++;
 				}
 			}
-			modCount++;
 		}
 
 	}
 
 	/**
-	 * This is an alias for {@link #add(int, Object)} that returns {@code true} to indicate it does modify
+	 * This is an alias for {@link #add(int, short)} that returns {@code true} to indicate it does modify
 	 * this ObjectDeque.
 	 *
 	 * @param index index at which the specified element is to be inserted
@@ -805,7 +771,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	@Override
 	public boolean offer (short t) {
 		int oldSize = size;
 		addLast(t);
@@ -823,7 +788,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	@Override
 	public short remove () {
 		return removeFirst();
 	}
@@ -838,7 +802,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return the first element of this deque, or {@link #getDefaultValue() defaultValue} if
 	 * this deque is empty
 	 */
-	@Override
 	public short poll () {
 		return pollFirst();
 	}
@@ -854,7 +817,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	@Override
 	public short element () {
 		return first();
 	}
@@ -869,7 +831,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return the head of the queue represented by this deque, or
 	 * {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	@Override
 	public short peek () {
 		return peekFirst();
 	}
@@ -880,7 +841,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * in the order that they are returned by the collection's iterator.
 	 *
 	 * <p>When using a capacity-restricted deque, it is generally preferable
-	 * to call {@link #offer(Object) offer} separately on each element.
+	 * to call {@link #offer(short) offer} separately on each element.
 	 *
 	 * <p>An exception encountered while trying to add an element may result
 	 * in only some of the elements having been successfully added when
@@ -898,7 +859,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws IllegalArgumentException if some property of an element of the
 	 *                                  specified collection prevents it from being added to this deque
 	 */
-	@Override
 	public boolean addAll (Collection<? extends short> c) {
 		final int cs = c.size();
 		if(cs == 0) return false;
@@ -906,13 +866,13 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		ensureCapacity(Math.max(cs, oldSize));
 		if(c == this) {
 			if(head <= tail) {
-				if (tail + 1 < values.length)
-					System.arraycopy(values, head, values, tail + 1, Math.min(size, values.length - tail - 1));
-				if (values.length - tail - 1 < size)
-					System.arraycopy(values, head + values.length - tail - 1, values, 0, size - (values.length - tail - 1));
+				if (tail + 1 < items.length)
+					System.arraycopy(items, head, items, tail + 1, Math.min(size, items.length - tail - 1));
+				if (items.length - tail - 1 < size)
+					System.arraycopy(items, head + items.length - tail - 1, items, 0, size - (items.length - tail - 1));
 			} else {
-				System.arraycopy(values, head, values, tail + 1, values.length - head);
-				System.arraycopy(values, 0, values, tail + 1 + values.length - head, tail + 1);
+				System.arraycopy(items, head, items, tail + 1, items.length - head);
+				System.arraycopy(items, 0, items, tail + 1 + items.length - head, tail + 1);
 			}
 			tail += oldSize;
 			size += oldSize;
@@ -947,19 +907,19 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		if(c == this) {
 			if(head <= tail) {
 				if (head >= oldSize)
-					System.arraycopy(values, head, values, head - oldSize, oldSize);
+					System.arraycopy(items, head, items, head - oldSize, oldSize);
 				else if (head > 0) {
-					System.arraycopy(values, tail + 1 - head, values, 0, head);
-					System.arraycopy(values, head, values, values.length - (oldSize - head), oldSize - head);
+					System.arraycopy(items, tail + 1 - head, items, 0, head);
+					System.arraycopy(items, head, items, items.length - (oldSize - head), oldSize - head);
 				} else {
-					System.arraycopy(values, head, values, values.length - oldSize, oldSize);
+					System.arraycopy(items, head, items, items.length - oldSize, oldSize);
 				}
 			} else {
-				System.arraycopy(values, head, values, head - oldSize, values.length - head);
-				System.arraycopy(values, 0, values, values.length - oldSize, tail + 1);
+				System.arraycopy(items, head, items, head - oldSize, items.length - head);
+				System.arraycopy(items, 0, items, items.length - oldSize, tail + 1);
 			}
 			head -= oldSize;
-			if(head < 0) head += values.length;
+			if(head < 0) head += items.length;
 			size += oldSize;
 		} else {
 			int idx = 0;
@@ -990,7 +950,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return addAll(index, c);
 	}
 
-	@Override
 	public boolean addAll(int index, Collection<? extends short> c) {
 		int oldSize = size;
 		if(index <= 0)
@@ -1001,14 +960,14 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			final int cs = c.size();
 			if(c.isEmpty()) return false;
 			int place = ensureGap(index, cs);
-			short[] values = this.values;
+			short[] items = this.items;
 			if(c == this){
-				System.arraycopy(values, head, values, place, place - head);
-				System.arraycopy(values, place + cs, values, place + place - head, tail + 1 - place - cs);
+				System.arraycopy(items, head, items, place, place - head);
+				System.arraycopy(items, place + cs, items, place + place - head, tail + 1 - place - cs);
 			} else {
 				for (short item : c) {
-					values[place++] = item;
-					if (place >= values.length) place -= values.length;
+					items[place++] = item;
+					if (place >= items.length) place -= items.length;
 				}
 			}
 			size += cs;
@@ -1027,8 +986,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return addAll(array, 0, array.length);
 	}
 	/**
-	 * Like {@link #addAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #addAll(Object[])
+	 * Like {@link #addAll(short[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #addAll(short[])
 	 * @param array the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
@@ -1038,7 +997,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		final int cs = Math.min(array.length - offset, length);
 		if(cs <= 0) return false;
 		int place = ensureGap(size, cs);
-		System.arraycopy(array, offset, this.values, place, cs);
+		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
 		modCount += cs;
 		return true;
@@ -1046,8 +1005,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 
 	/**
-	 * An alias for {@link #addAll(Object[])}.
-	 * @see #addAll(Object[])
+	 * An alias for {@link #addAll(short[])}.
+	 * @see #addAll(short[])
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
@@ -1055,8 +1014,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return addAll(array, 0, array.length);
 	}
 	/**
-	 * An alias for {@link #addAll(Object[], int, int)}.
-	 * @see #addAll(Object[], int, int)
+	 * An alias for {@link #addAll(short[], int, int)}.
+	 * @see #addAll(short[], int, int)
 	 * @param array the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
@@ -1077,9 +1036,9 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Like {@link #addAllFirst(Object[])}, but only uses at most {@code length} items from {@code array}, starting at
+	 * Like {@link #addAllFirst(short[])}, but only uses at most {@code length} items from {@code array}, starting at
 	 * {@code offset}. The order of {@code array} will be preserved, starting at the head of the deque.
-	 * @see #addAllFirst(Object[])
+	 * @see #addAllFirst(short[])
 	 * @param array the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
@@ -1089,14 +1048,14 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		final int cs = Math.min(array.length - offset, length);
 		if(cs <= 0) return false;
 		int place = ensureGap(0, cs);
-		System.arraycopy(array, offset, this.values, place, cs);
+		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
 		modCount += cs;
 		return true;
 	}
 
 	/**
-	 * Alias for {@link #addAll(int, Object[])}.
+	 * Alias for {@link #addAll(int, short[])}.
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1106,7 +1065,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Alias for {@link #addAll(int, Object[], int, int)}.
+	 * Alias for {@link #addAll(int, short[], int, int)}.
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
@@ -1120,7 +1079,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Like {@link #addAll(int, Collection)}, but takes an array instead of a Collection and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Object[])
+	 * @see #addAll(short[])
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1134,7 +1093,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Object[])
+	 * @see #addAll(short[])
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
@@ -1151,7 +1110,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			final int cs = Math.min(array.length - offset, length);
 			if(cs <= 0) return false;
 			int place = ensureGap(index, cs);
-			System.arraycopy(array, offset, this.values, place, cs);
+			System.arraycopy(array, offset, this.items, place, cs);
 			size += cs;
 			modCount += cs;
 		}
@@ -1176,7 +1135,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	@Override
 	public void push (short t) {
 		addFirst(t);
 	}
@@ -1191,7 +1149,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * of the stack represented by this deque)
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	@Override
 	public short pop () {
 		return removeFirst();
 	}
@@ -1204,7 +1161,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Returns {@code true} if this deque contained the specified element
 	 * (or equivalently, if this deque changed as a result of the call).
 	 *
-	 * <p>This method is equivalent to {@link #removeFirstOccurrence(Object)}.
+	 * <p>This method is equivalent to {@link #removeFirstOccurrence(short)}.
 	 *
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
@@ -1215,8 +1172,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	@Override
-	public boolean remove (Object o) {
+	public boolean remove (short o) {
 		return removeFirstOccurrence(o);
 	}
 
@@ -1234,8 +1190,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *                              deque does not permit null elements
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
-	@Override
-	public boolean contains (Object o) {
+	public boolean contains (short o) {
 		return indexOf(o, false) != -1;
 	}
 
@@ -1244,7 +1199,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return the number of elements in this deque
 	 */
-	@Override
 	public int size () {
 		return size;
 	}
@@ -1254,7 +1208,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * If this collection makes any guarantees as to what order its elements
 	 * are returned by its iterator, this method must return the elements in
 	 * the same order. The returned array's {@linkplain Class#getComponentType
-	 * runtime component type} is {@code Object}.
+	 * runtime component type} is {@code short}.
 	 *
 	 * <p>The returned array will be "safe" in that no references to it are
 	 * maintained by this collection.  (In other words, this method must
@@ -1262,333 +1216,18 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * The caller is thus free to modify the returned array.
 	 *
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
-	 * type} is {@code Object}, containing all the elements in this collection
+	 * type} is {@code short}, containing all the elements in this collection
 	 */
-	@Override
-	public Object @NonNull [] toArray () {
-		Object[] next = new Object[size];
+	public short @NonNull [] toArray () {
+		short[] next = new short[size];
 		if (head <= tail) {
-			System.arraycopy(values, head, next, 0, tail - head + 1);
+			System.arraycopy(items, head, next, 0, tail - head + 1);
 		} else {
-			System.arraycopy(values, head, next, 0, size - head);
-			System.arraycopy(values, 0, next, size - head, tail + 1);
+			System.arraycopy(items, head, next, 0, size - head);
+			System.arraycopy(items, 0, next, size - head, tail + 1);
 		}
 		return next;
 	}
-
-	/**
-	 * Returns an array containing all the elements in this collection;
-	 * the runtime type of the returned array is that of the specified array.
-	 * If the collection fits in the specified array, it is returned therein.
-	 * Otherwise, a new array is allocated with the runtime type of the
-	 * specified array and the size of this collection.
-	 *
-	 * <p>If this collection fits in the specified array with room to spare
-	 * (i.e., the array has more elements than this collection), the element
-	 * in the array immediately following the end of the collection is set to
-	 * {@code null}.  (This is useful in determining the length of this
-	 * collection <i>only</i> if the caller knows that this collection does
-	 * not contain any {@code null} elements.)
-	 *
-	 * <p>If this collection makes any guarantees as to what order its elements
-	 * are returned by its iterator, this method must return the elements in
-	 * the same order.
-	 *
-	 * @param a the array into which the elements of this collection are to be
-	 *          stored, if it is big enough; otherwise, a new array of the same
-	 *          runtime type is allocated for this purpose.
-	 * @return an array containing all the elements in this collection
-	 * @throws ArrayStoreException  if the runtime type of any element in this
-	 *                              collection is not assignable to the {@linkplain Class#getComponentType
-	 *                              runtime component type} of the specified array
-	 * @throws NullPointerException if the specified array is null
-	 */
-	@Override
-	public <E> E @NonNull [] toArray (E @NonNull [] a) {
-		int oldSize = size;
-		if (a.length < oldSize) {
-			a = Arrays.copyOf(a, oldSize);
-		}
-		Object[] result = a;
-		Iterator<short> it = iterator();
-		for (int i = 0; i < oldSize; ++i) {
-			result[i] = it.next();
-		}
-		if (a.length > oldSize) {
-			a[oldSize] = null;
-		}
-		return a;
-	}
-
-	/**
-	 * Returns {@code true} if this collection contains all the elements
-	 * in the specified collection.
-	 *
-	 * @param c collection to be checked for containment in this collection
-	 * @return {@code true} if this collection contains all the elements
-	 * in the specified collection
-	 * @throws ClassCastException   if the types of one or more elements
-	 *                              in the specified collection are incompatible with this
-	 *                              collection
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException if the specified collection contains one
-	 *                              or more null elements and this collection does not permit null
-	 *                              elements
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>),
-	 *                              or if the specified collection is null.
-	 * @see #contains(Object)
-	 */
-	@Override
-	public boolean containsAll (Collection<?> c) {
-		for (Object o : c) {
-			if (!contains(o))
-				return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Exactly like {@link #containsAll(Collection)}, but takes an array instead of a Collection.
-	 * @see #containsAll(Collection)
-	 * @param array array to be checked for containment in this deque
-	 * @return {@code true} if this deque contains all the elements
-	 * in the specified array
-	 */
-	@Override
-	public boolean containsAll (Object[] array) {
-		for (Object o : array) {
-			if (!contains(o))
-				return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Like {@link #containsAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #containsAll(Object[])
-	 * @param array array to be checked for containment in this deque
-	 * @param offset the index of the first item in array to check
-	 * @param length how many items, at most, to check from array
-	 * @return {@code true} if this deque contains all the elements
-	 * in the specified range of array
-	 */
-	@Override
-	public boolean containsAll (Object[] array, int offset, int length) {
-		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-			if(!contains(array[i])) return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Returns true if this ObjectDeque contains any of the specified values.
-	 *
-	 * @param values may contain nulls, but must not be null itself
-	 * @return true if this ObjectDeque contains any of the items in {@code values}, false otherwise
-	 */
-	@Override
-	public boolean containsAnyIterable(Iterable<?> values) {
-		for (Object v : values) {
-			if (contains(v)) {return true;}
-		}
-		return false;
-	}
-
-	/**
-	 * Returns true if this ObjectDeque contains any of the specified values.
-	 *
-	 * @param values may contain nulls, but must not be null itself
-	 * @return true if this ObjectDeque contains any of the items in {@code values}, false otherwise
-	 */
-	@Override
-	public boolean containsAny (Object[] values) {
-		for (Object v : values) {
-			if (contains(v)) {return true;}
-		}
-		return false;
-	}
-
-	/**
-	 * Returns true if this ObjectDeque contains any items from the specified range of values.
-	 *
-	 * @param values may contain nulls, but must not be null itself
-	 * @param offset the index to start checking in values
-	 * @param length how many items to check from values
-	 * @return true if this ObjectDeque contains any of the items in the given range of {@code values}, false otherwise
-	 */
-	@Override
-	public boolean containsAny (Object[] values, int offset, int length) {
-		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
-			if (contains(values[i])) {return true;}
-		}
-		return false;
-	}
-
-	/**
-	 * Removes all of this collection's elements that are also contained in the
-	 * specified collection (optional operation).  After this call returns,
-	 * this collection will contain no elements in common with the specified
-	 * collection.
-	 *
-	 * @param  other collection containing elements to be removed from this collection
-	 * @return {@code true} if this deque changed as a result of the call
-	 * @throws UnsupportedOperationException if the {@code removeAll} method
-	 *                                       is not supported by this collection
-	 * @throws ClassCastException            if the types of one or more elements
-	 *                                       in this collection are incompatible with the specified
-	 *                                       collection
-	 *                                       (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException          if this collection contains one or more
-	 *                                       null elements and the specified collection does not support
-	 *                                       null elements
-	 *                                       (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>),
-	 *                                       or if the specified collection is null
-	 * @see #remove(Object)
-	 * @see #contains(Object)
-	 */
-	@Override
-	public boolean removeAll (Collection<?> other) {
-		ShortDequeIterator<?> me = iterator();
-		int originalSize = size();
-		for (Object item : other) {
-			me.reset();
-			while (me.hasNext()) {
-				if (Objects.equals(me.next(), item)) {
-					me.remove();
-				}
-			}
-		}
-		return originalSize != size();
-	}
-
-	/**
-	 * Exactly like {@link #removeAll(Collection)}, but takes an array instead of a Collection.
-	 * @see #removeAll(Collection)
-	 * @param other array containing elements to be removed from this collection
-	 * @return {@code true} if this deque changed as a result of the call
-	 */
-	@Override
-	public boolean removeAll (Object[] other) {
-		return removeAll(other, 0, other.length);
-	}
-	/**
-	 * Like {@link #removeAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #removeAll(Object[])
-	 * @param array the elements to be removed from this deque
-	 * @param offset the index of the first item in array to remove
-	 * @param length how many items, at most, to get from array and remove from this
-	 * @return {@code true} if this deque changed as a result of the call
-	 */
-	@Override
-	public boolean removeAll (Object[] array, int offset, int length) {
-		ShortDequeIterator<?> me = iterator();
-		int originalSize = size();
-		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-			Object item = array[i];
-			me.reset();
-			while (me.hasNext()) {
-				if (Objects.equals(me.next(), item)) {
-					me.remove();
-				}
-			}
-		}
-		return originalSize != size();
-	}
-
-	/**
-	 * Removes from this collection element-wise occurrences of elements contained in the specified other collection.
-	 * Note that if a value is present more than once in this collection, only one of those occurrences
-	 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
-	 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
-	 *
-	 * @param other a Collection of items to remove one-by-one, such as an ObjectList or an ObjectSet
-	 * @return true if this deque was modified.
-	 */
-	@Override
-	public boolean removeEachIterable(Iterable<?> other) {
-		boolean changed = false;
-		for(Object item : other) {
-			changed |= remove(item);
-		}
-		return changed;
-	}
-
-	/**
-	 * Exactly like {@link #removeEachIterable(Iterable)}, but takes an array instead of a Collection.
-	 * @see #removeEachIterable(Iterable)
-	 * @param array array containing elements to be removed from this collection
-	 * @return {@code true} if this deque changed as a result of the call
-	 */
-	@Override
-	public boolean removeEach (Object[] array) {
-		return removeEach(array, 0, array.length);
-	}
-
-	/**
-	 * Like {@link #removeEach(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #removeEach(Object[])
-	 * @param array the elements to be removed from this deque
-	 * @param offset the index of the first item in array to remove
-	 * @param length how many items, at most, to get from array and remove from this
-	 * @return {@code true} if this deque changed as a result of the call
-	 */
-	@Override
-	public boolean removeEach (Object[] array, int offset, int length) {
-		boolean changed = false;
-		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-			changed |= remove(array[i]);
-		}
-		return changed;
-	}
-
-	/**
-	 * Exactly like {@link #retainAll(Collection)}, but takes an array instead of a Collection.
-	 * @see #retainAll(Collection)
-	 * @param array array containing elements to be retained in this collection
-	 * @return {@code true} if this deque changed as a result of the call
-	 */
-	public boolean retainAll (Object[] array) {
-		Objects.requireNonNull(array);
-		boolean modified = false;
-		ListIterator<short> it = iterator();
-		OUTER:
-		while (it.hasNext()) {
-			short check = it.next();
-			for (int i = 0, n = array.length; i < n; i++) {
-				if(Objects.equals(array[i], check))
-					continue OUTER;
-			}
-			it.remove();
-			modified = true;
-		}
-		return modified;
-	}
-
-	/**
-	 * Like {@link #retainAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #retainAll(Object[])
-	 * @param array the elements to be retained in this deque
-	 * @param offset the index of the first item in array to retain
-	 * @param length how many items, at most, to retain from array in this
-	 * @return {@code true} if this deque changed as a result of the call
-	 */
-	public boolean retainAll (Object[] array, int offset, int length) {
-		Objects.requireNonNull(array);
-		boolean modified = false;
-		ListIterator<short> it = iterator();
-		OUTER:
-		while (it.hasNext()) {
-			short check = it.next();
-			for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-				if(Objects.equals(array[i], check))
-					continue OUTER;
-			}
-			it.remove();
-			modified = true;
-		}
-		return modified;
-	}
-
 
 	/**
 	 * Selects the kth-lowest element from this ObjectDeque according to Comparator ranking. This might partially sort the ObjectDeque,
@@ -1646,19 +1285,19 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		if (oldSize > newSize) {
 			if(head <= tail) {
 				// only removing from tail, near the end, toward head, near the start
-				Arrays.fill(values, head + newSize, tail + 1, null);
+				Arrays.fill(items, head + newSize, tail + 1, null);
 				tail -= oldSize - newSize;
 				size = newSize;
-			} else if(head + newSize < values.length) {
+			} else if(head + newSize < items.length) {
 				// tail is near the start, but we have to remove elements through the start and into the back
-				Arrays.fill(values, 0, tail + 1, null);
+				Arrays.fill(items, 0, tail + 1, null);
 				tail = head + newSize;
-				Arrays.fill(values, tail, values.length, null);
+				Arrays.fill(items, tail, items.length, null);
 				size = newSize;
 			} else {
 				// tail is near the start, but we only have to remove some elements between tail and the start
 				final int newTail = tail - (oldSize - newSize);
-				Arrays.fill(values, newTail + 1, tail + 1, null);
+				Arrays.fill(items, newTail + 1, tail + 1, null);
 				tail = newTail;
 				size = newSize;
 			}
@@ -1678,17 +1317,17 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		}
 		int oldSize = size;
 		if (oldSize > newSize) {
-			if(head <= tail || head + oldSize - newSize < values.length) {
+			if(head <= tail || head + oldSize - newSize < items.length) {
 				// only removing from head to head + newSize, which is contiguous
-				Arrays.fill(values, head, head + oldSize - newSize, null);
+				Arrays.fill(items, head, head + oldSize - newSize, null);
 				head += oldSize - newSize;
-				if(head >= values.length) head -= values.length;
+				if(head >= items.length) head -= items.length;
 				size = newSize;
 			} else {
 				// tail is near the start, and we are removing from head to the end and then part near start
-				Arrays.fill(values, head, values.length, null);
+				Arrays.fill(items, head, items.length, null);
 				head = tail + 1 - newSize;
-				Arrays.fill(values, 0, head, null);
+				Arrays.fill(items, 0, head, null);
 				size = newSize;
 			}
 			modCount += oldSize - newSize;
@@ -1711,7 +1350,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param fromIndex index of first element to be removed (inclusive)
 	 * @param toIndex index after last element to be removed (exclusive)
 	 */
-	@Override
 	public void removeRange(int fromIndex, int toIndex) {
 		if(fromIndex <= 0){
 			truncateFirst(size - toIndex);
@@ -1726,33 +1364,33 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			if(head <= tail) {
 				// tail is near the end, head is near the start
 				int tailMinusTo = tail + 1 - (head + toIndex);
-				if(tailMinusTo < 0) tailMinusTo += values.length;
-				System.arraycopy(values, head + toIndex, values, head + fromIndex, tailMinusTo);
-				Arrays.fill(values, tail + 1 - removedCount, tail + 1, null);
+				if(tailMinusTo < 0) tailMinusTo += items.length;
+				System.arraycopy(items, head + toIndex, items, head + fromIndex, tailMinusTo);
+				Arrays.fill(items, tail + 1 - removedCount, tail + 1, null);
 				tail -= removedCount;
 				size -= removedCount;
-			} else if(head + toIndex < values.length) {
+			} else if(head + toIndex < items.length) {
 				// head is at the end, and tail wraps around, but we are only removing items between head and end
 				int headPlusFrom = head + fromIndex;
-				if(headPlusFrom >= values.length) headPlusFrom -= values.length;
-				System.arraycopy(values, head, values, headPlusFrom, removedCount);
-				Arrays.fill(values, head, head + removedCount, null);
+				if(headPlusFrom >= items.length) headPlusFrom -= items.length;
+				System.arraycopy(items, head, items, headPlusFrom, removedCount);
+				Arrays.fill(items, head, head + removedCount, null);
 				head += removedCount;
 				size -= removedCount;
-			} else if(head + toIndex - values.length - removedCount >= 0) {
+			} else if(head + toIndex - items.length - removedCount >= 0) {
 				// head is at the end, and tail wraps around, but we are only removing items between start and tail
-				System.arraycopy(values, head + toIndex - values.length, values, head + fromIndex - values.length, tail + 1 - (head + toIndex - values.length));
-				Arrays.fill(values, tail + 1 - removedCount, tail + 1, null);
+				System.arraycopy(items, head + toIndex - items.length, items, head + fromIndex - items.length, tail + 1 - (head + toIndex - items.length));
+				Arrays.fill(items, tail + 1 - removedCount, tail + 1, null);
 				tail -= removedCount;
 				size -= removedCount;
 			} else {
 				// head is at the end, tail wraps around, and we must remove items that wrap from end to start
-				System.arraycopy(values, head, values, values.length - fromIndex, fromIndex);
-				System.arraycopy(values, head + toIndex - values.length, values, 0, tail + 1 - (head + toIndex - values.length));
-				Arrays.fill(values, head, values.length - fromIndex, null);
-				Arrays.fill(values, tail + 1 - (head + toIndex - values.length), tail + 1, null);
-				tail -= (head + toIndex - values.length);
-				head = (values.length - fromIndex);
+				System.arraycopy(items, head, items, items.length - fromIndex, fromIndex);
+				System.arraycopy(items, head + toIndex - items.length, items, 0, tail + 1 - (head + toIndex - items.length));
+				Arrays.fill(items, head, items.length - fromIndex, null);
+				Arrays.fill(items, tail + 1 - (head + toIndex - items.length), tail + 1, null);
+				tail -= (head + toIndex - items.length);
+				head = (items.length - fromIndex);
 				size -= removedCount;
 			}
 			modCount += removedCount;
@@ -1766,7 +1404,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param value the Object to look for, which may be null
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
-	@Override
 	public int indexOf (Object value) {
 		return indexOf(value, false);
 	}
@@ -1810,37 +1447,37 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public int indexOf (Object value, int fromIndex, boolean identity) {
 		if (size == 0)
 			return -1;
-		short[] values = this.values;
+		short[] items = this.items;
 		final int head = this.head, tail = this.tail;
 		int i = head + Math.min(Math.max(fromIndex, 0), size - 1);
-		if (i >= values.length)
-			i -= values.length;
+		if (i >= items.length)
+			i -= items.length;
 
 		if (identity || value == null) {
 			if (head <= tail) {
 				for (; i <= tail; i++)
-					if (values[i] == value)
+					if (items[i] == value)
 						return i - head;
 			} else {
-				for (int n = values.length; i < n; i++)
-					if (values[i] == value)
+				for (int n = items.length; i < n; i++)
+					if (items[i] == value)
 						return i - head;
 				for (i = 0; i <= tail; i++)
-					if (values[i] == value)
-						return i + values.length - head;
+					if (items[i] == value)
+						return i + items.length - head;
 			}
 		} else {
 			if (head <= tail) {
 				for (; i <= tail; i++)
-					if (value.equals(values[i]))
+					if (value.equals(items[i]))
 						return i - head;
 			} else {
-				for (int n = values.length; i < n; i++)
-					if (value.equals(values[i]))
+				for (int n = items.length; i < n; i++)
+					if (value.equals(items[i]))
 						return i - head;
 				for (i = 0; i <= tail; i++)
-					if (value.equals(values[i]))
-						return i + values.length - head;
+					if (value.equals(items[i]))
+						return i + items.length - head;
 			}
 		}
 		return -1;
@@ -1853,7 +1490,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param value the Object to look for, which may be null
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
-	@Override
 	public int lastIndexOf (Object value) {
 		return lastIndexOf(value, false);
 	}
@@ -1897,45 +1533,44 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public int lastIndexOf (Object value, int fromIndex, boolean identity) {
 		if (size == 0)
 			return -1;
-		short[] values = this.values;
+		short[] items = this.items;
 		final int head = this.head, tail = this.tail;
 		int i = head + Math.min(Math.max(fromIndex, 0), size - 1);
-		if (i >= values.length)
-			i -= values.length;
+		if (i >= items.length)
+			i -= items.length;
 		else if (i < 0)
-			i += values.length;
+			i += items.length;
 
 		if (identity || value == null) {
 			if (head <= tail) {
 				for (; i >= head; i--)
-					if (values[i] == value)
+					if (items[i] == value)
 						return i - head;
 			} else {
 				for (; i >= 0; i--)
-					if (values[i] == value)
-						return i + values.length - head;
-				for (i = values.length - 1; i >= head; i--)
-					if (values[i] == value)
+					if (items[i] == value)
+						return i + items.length - head;
+				for (i = items.length - 1; i >= head; i--)
+					if (items[i] == value)
 						return i - head;
 			}
 		} else {
 			if (head <= tail) {
 				for (; i >= head; i--)
-					if (value.equals(values[i]))
+					if (value.equals(items[i]))
 						return i - head;
 			} else {
 				for (; i >= 0; i--)
-					if (value.equals(values[i]))
-						return i + values.length - head;
-				for (i = values.length - 1; i >= head; i--)
-					if (value.equals(values[i]))
+					if (value.equals(items[i]))
+						return i + items.length - head;
+				for (i = items.length - 1; i >= head; i--)
+					if (value.equals(items[i]))
 						return i - head;
 			}
 		}
 		return -1;
 	}
 
-	@Override
 	public ListIterator<short> listIterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ShortDequeIterator<>(this);
@@ -1953,7 +1588,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return iterator2;
 	}
 
-	@Override
 	public ListIterator<short> listIterator(int index) {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ShortDequeIterator<>(this, index, false);
@@ -1971,7 +1605,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return iterator2;
 	}
 
-	@Override
 	public List<short> subList(int fromIndex, int toIndex) {
 		return super.subList(fromIndex, toIndex);
 	}
@@ -2029,41 +1662,39 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param index the index of the element to be removed
 	 * @return the element previously at the specified position
 	 */
-	@Override
 	public short remove(int index) {
 		if (index <= 0)
 			return removeFirst();
 		if (index >= size)
 			return removeLast();
 
-		short[] values = this.values;
+		short[] items = this.items;
 		int head = this.head, tail = this.tail;
 		index += head;
 		short value;
 		if (head <= tail) { // index is between head and tail.
-			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index);
-			values[this.tail] = null;
+			value = items[index];
+			System.arraycopy(items, index + 1, items, index, tail - index);
+			items[this.tail] = null;
 			this.tail--;
-			if(this.tail == -1) this.tail = values.length - 1;
-		} else if (index >= values.length) { // index is between 0 and tail.
-			index -= values.length;
-			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index);
-			values[this.tail] = null;
+			if(this.tail == -1) this.tail = items.length - 1;
+		} else if (index >= items.length) { // index is between 0 and tail.
+			index -= items.length;
+			value = items[index];
+			System.arraycopy(items, index + 1, items, index, tail - index);
+			items[this.tail] = null;
 			this.tail--;
-			if(this.tail == -1) this.tail = values.length - 1;
+			if(this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
-			value = values[index];
-			System.arraycopy(values, head, values, head + 1, index - head);
-			values[this.head] = null;
+			value = items[index];
+			System.arraycopy(items, head, items, head + 1, index - head);
+			items[this.head] = null;
 			this.head++;
-			if (this.head == values.length) {
+			if (this.head == items.length) {
 				this.head = 0;
 			}
 		}
 		size--;
-		modCount++;
 		return value;
 	}
 
@@ -2106,34 +1737,33 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			return pollLast();
 		// No need to check for size to be 0 because the above checks will already do that, and one will run.
 
-		short[] values = this.values;
+		short[] items = this.items;
 		int head = this.head, tail = this.tail;
 		index += head;
 		short value;
 		if (head <= tail) { // index is between head and tail.
-			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index);
-			values[this.tail] = null;
+			value = items[index];
+			System.arraycopy(items, index + 1, items, index, tail - index);
+			items[this.tail] = null;
 			this.tail--;
-			if(this.tail == -1) this.tail = values.length - 1;
-		} else if (index >= values.length) { // index is between 0 and tail.
-			index -= values.length;
-			value = values[index];
-			System.arraycopy(values, index + 1, values, index, tail - index);
-			values[this.tail] = null;
+			if(this.tail == -1) this.tail = items.length - 1;
+		} else if (index >= items.length) { // index is between 0 and tail.
+			index -= items.length;
+			value = items[index];
+			System.arraycopy(items, index + 1, items, index, tail - index);
+			items[this.tail] = null;
 			this.tail--;
-			if(this.tail == -1) this.tail = values.length - 1;
+			if(this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
-			value = values[index];
-			System.arraycopy(values, head, values, head + 1, index - head);
-			values[this.head] = null;
+			value = items[index];
+			System.arraycopy(items, head, items, head + 1, index - head);
+			items[this.head] = null;
 			this.head++;
-			if (this.head == values.length) {
+			if (this.head == items.length) {
 				this.head = 0;
 			}
 		}
 		size--;
-		modCount++;
 		return value;
 	}
 
@@ -2147,7 +1777,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Returns true if the deque is empty.
 	 */
-	@Override
 	public boolean isEmpty () {
 		return size == 0;
 	}
@@ -2159,13 +1788,12 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @see #peekFirst() peeking won't throw an exception, and will return the ObjectDeque's default value if empty
 	 * @see #removeFirst()
 	 */
-	@Override
 	public short first () {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
-		return values[head];
+		return items[head];
 	}
 
 	/**
@@ -2179,7 +1807,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			// Underflow
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
-		return values[tail];
+		return items[tail];
 	}
 
 	/**
@@ -2195,18 +1823,17 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return the element at the specified position in this deque
 	 * @throws NoSuchElementException if the deque is empty
 	 */
-	@Override
 	public short get (int index) {
 		if (index <= 0)
 			return getFirst();
 		if (index >= size - 1)
 			return getLast();
-		final short[] values = this.values;
+		final short[] items = this.items;
 
 		int i = head + index;
-		if (i >= values.length)
-			i -= values.length;
-		return values[i];
+		if (i >= items.length)
+			i -= items.length;
+		return items[i];
 	}
 
 	/**
@@ -2227,12 +1854,12 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			return peekFirst();
 		if (index >= size - 1)
 			return peekLast();
-		final short[] values = this.values;
+		final short[] items = this.items;
 
 		int i = head + index;
-		if (i >= values.length)
-			i -= values.length;
-		return values[i];
+		if (i >= items.length)
+			i -= items.length;
+		return items[i];
 	}
 
 	/**
@@ -2248,7 +1875,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws ClassCastException if the class of the specified element
 	 *         prevents it from being put in this list
 	 */
-	@Override
 	public short set (int index, short item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
@@ -2258,13 +1884,13 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			addFirst(item);
 			return defaultValue;
 		}
-		final short[] values = this.values;
+		final short[] items = this.items;
 
 		int i = head + Math.max(Math.min(index, size - 1), 0);
-		if (i >= values.length)
-			i -= values.length;
-		short old = values[i];
-		values[i] = item;
+		if (i >= items.length)
+			i -= items.length;
+		short old = items[i];
+		items[i] = item;
 //		modCount++; // apparently this isn't a structural modification?
 		return old;
 	}
@@ -2273,23 +1899,22 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Removes all values from this deque. Values in backing array are set to null to prevent memory leaks, so this
 	 * operates in O(n) time.
 	 */
-	@Override
 	public void clear () {
 		if (size == 0)
 			return;
-		final short[] values = this.values;
+		final short[] items = this.items;
 		final int head = this.head;
 		final int tail = this.tail;
 
 		if (head <= tail) {
 			// Continuous
-			Utilities.clear(values, head, tail - head + 1);
+			Utilities.clear(items, head, tail - head + 1);
 		} else if(tail == 0){
-			Utilities.clear(values, head, values.length - head);
+			Utilities.clear(items, head, items.length - head);
 		} else {
 			// Wrapped
-			Utilities.clear(values, head, values.length - head);
-			Utilities.clear(values, 0, tail + 1);
+			Utilities.clear(items, head, items.length - head);
+			Utilities.clear(items, 0, tail + 1);
 		}
 		this.head = 0;
 		this.tail = 0;
@@ -2303,7 +1928,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
 	 * iteration, use {@link ShortDequeIterator#ShortDequeIterator(ShortDeque)}.
 	 */
-	@Override
 	public @NonNull ShortDeque.ShortDequeIterator<short> iterator () {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ShortDequeIterator<>(this);
@@ -2331,7 +1955,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	@Override
 	public @NonNull ShortDeque.ShortDequeIterator<short> descendingIterator () {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new ShortDequeIterator<>(this, true);
@@ -2353,21 +1976,19 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Delegates to {@link #toString(String, boolean)} with a delimiter of {@code ", "} and square brackets enabled.
 	 * @return the square-bracketed String representation of this ObjectDeque, with items separated by ", "
 	 */
-	@Override
 	public String toString () {
 		return toString(", ", true);
 	}
 
-	@Override
 	public int hashCode () {
 		final int size = this.size;
-		final short[] values = this.values;
-		final int backingLength = values.length;
+		final short[] items = this.items;
+		final int backingLength = items.length;
 		int index = this.head;
 
 		int hash = size + 1;
 		for (int s = 0; s < size; s++) {
-			final short value = values[index];
+			final short value = items[index];
 
 			hash *= 29; // avoids LEA pessimization
 			if (value != null)
@@ -2391,7 +2012,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param o object to be compared for equality with this collection
 	 * @return true if this is equal to o, or false otherwise
 	 */
-	@Override
 	public boolean equals(Object o) {
 		if (o == this)
 			return true;
@@ -2442,7 +2062,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param first  the first position, must not be negative and must be less than {@link #size()}
 	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
-	@Override
 	public void swap (int first, int second) {
 		if (first < 0)
 			throw new IndexOutOfBoundsException("first index can't be < 0: " + first);
@@ -2453,19 +2072,19 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		if (second >= size)
 			throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
 		if(first == second) return;
-		final short[] values = this.values;
+		final short[] items = this.items;
 
 		int f = head + first;
-		if (f >= values.length)
-			f -= values.length;
+		if (f >= items.length)
+			f -= items.length;
 
 		int s = head + second;
-		if (s >= values.length)
-			s -= values.length;
+		if (s >= items.length)
+			s -= items.length;
 
-		short fv = values[f];
-		values[f] = values[s];
-		values[s] = fv;
+		short fv = items[f];
+		items[f] = items[s];
+		items[s] = fv;
 
 		//modCount += 2; // I don't think this is "structural"
 	}
@@ -2473,10 +2092,9 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Reverses this ObjectDeque in-place.
 	 */
-	@Override
 	public void reverse () {
-		final short[] values = this.values;
-		int f, s, len = values.length;
+		final short[] items = this.items;
+		int f, s, len = items.length;
 		short fv;
 		for (int n = size >> 1, b = 0, t = size - 1; b <= n && b != t; b++, t--) {
 			f = head + b;
@@ -2485,14 +2103,13 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			s = head + t;
 			if (s >= len)
 				s -= len;
-			fv = values[f];
-			values[f] = values[s];
-			values[s] = fv;
+			fv = items[f];
+			items[f] = items[s];
+			items[s] = fv;
 //			modCount += 2; // I don't think this is "structural"
 		}
 	}
 
-	@Override
 	public void shuffle (Random rng) {
 		// This won't change modCount, because it isn't "structural"
 		for (int i = size() - 1; i > 0; i--) {
@@ -2522,41 +2139,15 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param comparator the Comparator to use for short items; may be null to use the natural
 	 *                   order of short items when short implements Comparable of short
 	 */
-	@Override
-	public void sort (Comparator<? super short> comparator) {
+	public void sort (ShortComparator comparator) {
 		if (head <= tail) {
-			ObjectComparators.sort(values, head, tail+1, comparator);
+			ShortComparators.sort(items, head, tail+1, comparator);
 		} else {
-			System.arraycopy(values, head, values, tail + 1, values.length - head);
-			ObjectComparators.sort(values, 0, tail + 1 + values.length - head, comparator);
-			tail += values.length - head;
+			System.arraycopy(items, head, items, tail + 1, items.length - head);
+			ShortComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
+			tail += items.length - head;
 			head = 0;
 		}
-//		modCount += size; // I don't think this is "structural"
-	}
-
-	/**
-	 * Sorts this deque in-place using {@link Arrays#sort(Object[], int, int, Comparator)}.
-	 * This should operate in O(n log(n)) time or less when the internals of the deque are
-	 * continuous (the head is before the tail in the array). If the internals are not
-	 * continuous, this takes an additional O(n) step (where n is less than the size of
-	 * the deque) to rearrange the internals before sorting. You can pass null as the value
-	 * for {@code comparator} if short implements {@link Comparable} of short, which will make this
-	 * use the natural ordering for short.
-	 *
-	 * @param comparator the Comparator to use for short items; may be null to use the natural
-	 *                   order of short items when short implements Comparable of short
-	 */
-	public void sortJDK (Comparator<? super short> comparator) {
-		if (head <= tail) {
-			Arrays.sort(values, head, tail+1, comparator);
-		} else {
-			System.arraycopy(values, head, values, tail + 1, values.length - head);
-			Arrays.sort(values, 0, tail + 1 + values.length - head, comparator);
-			tail += values.length - head;
-			head = 0;
-		}
-//		modCount += size; // I don't think this is "structural"
 	}
 
 	/**
