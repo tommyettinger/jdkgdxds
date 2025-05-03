@@ -48,7 +48,7 @@ import java.util.*;
  * Some new methods are present here, or have been made public when they weren't before. {@link #removeRange(int, int)},
  * for instance, is now public, as is {@link #resize(int)}. New APIs include Deque-like methods that affect the middle
  * of the deque, such as {@link #peekAt(int)} and {@link #pollAt(int)}. There are more bulk methods that work at the
- * head or tail region of the deque, such as {@link #addAllFirst(Collection)} and {@link #truncateFirst(int)}. There are
+ * head or tail region of the deque, such as {@link #addAllFirst(PrimitiveCollection.OfShort)} and {@link #truncateFirst(int)}. There are
  * the methods from {@link Arrangeable}, and relevant ones from {@link Ordered} (this isn't Ordered because it doesn't
  * provide its order as an ObjectList, but can do similar things).
  * <br>
@@ -78,7 +78,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	@Nullable protected transient ShortDequeIterator descendingIterator1;
 	@Nullable protected transient ShortDequeIterator descendingIterator2;
-	private int modCount;
 
 	/**
 	 * Creates a new ObjectDeque which can hold 16 values without needing to resize the backing array.
@@ -246,7 +245,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
 	 * items to avoid multiple backing array resizes.
 	 *
-	 * @return
+	 * @return the backing array this will use after this call
 	 */
 	public short[] ensureCapacity (int additional) {
 		final int needed = size + additional;
@@ -271,7 +270,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		final int head = this.head;
 		final int tail = this.tail;
 
-		@SuppressWarnings("unchecked")
 		final short[] newArray = new short[Math.max(1, newSize)];
 
 		if (size > 0) {
@@ -311,8 +309,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		if (size == 0) {
 			this.head = this.tail = 0;
 			if (items.length < gapSize) {
-				//noinspection unchecked
-				this.items = new short[gapSize];
+                this.items = new short[gapSize];
 			}
 			return 0;
 		} else if (size == 1) {
@@ -634,7 +631,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	public boolean removeFirstOccurrence (short o) {
-		return removeValue(o, false);
+		return removeValue(o);
 	}
 
 	/**
@@ -655,7 +652,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	public boolean removeLastOccurrence (short o) {
-		return removeLastValue(o, false);
+		return removeLastValue(o);
 	}
 
 	/**
@@ -959,7 +956,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 				}
 			}
 			size += cs;
-			modCount += cs;
 		}
 		return oldSize != size;
 	}
@@ -987,8 +983,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		int place = ensureGap(size, cs);
 		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
-		modCount += cs;
-		return true;
+        return true;
 	}
 
 
@@ -1038,8 +1033,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		int place = ensureGap(0, cs);
 		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
-		modCount += cs;
-		return true;
+        return true;
 	}
 
 	/**
@@ -1100,8 +1094,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			int place = ensureGap(index, cs);
 			System.arraycopy(array, offset, this.items, place, cs);
 			size += cs;
-			modCount += cs;
-		}
+        }
 		return oldSize != size;
 	}
 
@@ -1235,8 +1228,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 				size = newSize;
 			} else {
 				// tail is near the start, but we only have to remove some elements between tail and the start
-				final int newTail = tail - (oldSize - newSize);
-				tail = newTail;
+                tail -= (oldSize - newSize);
 				size = newSize;
 			}
 		}
@@ -1416,10 +1408,10 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return -1;
 	}
 
-	public ListIterator<short> listIterator() {
+	public ShortListIterator listIterator() {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ShortDequeIterator<>(this);
-			iterator2 = new ShortDequeIterator<>(this);
+			iterator1 = new ShortDequeIterator(this);
+			iterator2 = new ShortDequeIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -1433,10 +1425,10 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return iterator2;
 	}
 
-	public ListIterator<short> listIterator(int index) {
+	public ShortListIterator listIterator(int index) {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ShortDequeIterator<>(this, index, false);
-			iterator2 = new ShortDequeIterator<>(this, index, false);
+			iterator1 = new ShortDequeIterator(this, index, false);
+			iterator2 = new ShortDequeIterator(this, index, false);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset(index);
@@ -1453,11 +1445,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Removes the first instance of the specified value in the deque.
 	 *
-	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
+	 * @param value the short to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeValue (Object value, boolean identity) {
-		int index = indexOf(value, identity);
+	public boolean removeValue (short value) {
+		int index = indexOf(value, 0);
 		if (index == -1)
 			return false;
 		removeAt(index);
@@ -1467,11 +1459,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Removes the last instance of the specified value in the deque.
 	 *
-	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
+	 * @param value the short to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeLastValue (Object value, boolean identity) {
-		int index = lastIndexOf(value, identity);
+	public boolean removeLastValue (short value) {
+		int index = lastIndexOf(value);
 		if (index == -1)
 			return false;
 		removeAt(index);
@@ -1756,10 +1748,10 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
 	 * iteration, use {@link ShortDequeIterator#ShortDequeIterator(ShortDeque)}.
 	 */
-	public @NonNull ShortDeque.ShortDequeIterator<short> iterator () {
+	public ShortListIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ShortDequeIterator<>(this);
-			iterator2 = new ShortDequeIterator<>(this);
+			iterator1 = new ShortDequeIterator(this);
+			iterator2 = new ShortDequeIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -1783,10 +1775,10 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public @NonNull ShortDeque.ShortDequeIterator<short> descendingIterator () {
+	public ShortListIterator descendingIterator () {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new ShortDequeIterator<>(this, true);
-			descendingIterator2 = new ShortDequeIterator<>(this, true);
+			descendingIterator1 = new ShortDequeIterator(this, true);
+			descendingIterator2 = new ShortDequeIterator(this, true);
 		}
 		if (!descendingIterator1.valid) {
 			descendingIterator1.reset();

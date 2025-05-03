@@ -897,7 +897,12 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	public static class ShortListIterator implements ShortIterator {
 		protected int index, latest = -1;
 		protected ShortList list;
-		protected boolean valid = true;
+		/**
+		 * Used to track if a reusable iterator can be used now.
+		 * This is public so subclasses of ShortList (in other packages) can still access this
+		 * directly even though it belongs to ShortListIterator, not ShortList.
+		 */
+		public boolean valid = true;
 
 		public ShortListIterator (ShortList list) {
 			this.list = list;
