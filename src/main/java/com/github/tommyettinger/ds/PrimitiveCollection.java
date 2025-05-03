@@ -44,6 +44,7 @@ import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 
 import java.util.Iterator;
+
 import com.github.tommyettinger.function.DoubleConsumer;
 import com.github.tommyettinger.function.DoublePredicate;
 import com.github.tommyettinger.function.IntConsumer;
@@ -287,6 +288,26 @@ public interface PrimitiveCollection<T> {
 				}
 			}
 			return changed;
+		}
+		
+		default boolean retainAll (int[] array) {
+			return retainAll(array, 0, array.length);
+		}
+
+		default boolean retainAll (int[] array, int offset, int length) {
+			boolean modified = false;
+			IntIterator it = iterator();
+			OUTER:
+			while (it.hasNext()) {
+				int check = it.next();
+				for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+					if(array[i] == check)
+						continue OUTER;
+				}
+				it.remove();
+				modified = true;
+			}
+			return modified;
 		}
 
 		@Override
@@ -664,6 +685,26 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean retainAll (long[] array) {
+			return retainAll(array, 0, array.length);
+		}
+
+		default boolean retainAll (long[] array, int offset, int length) {
+			boolean modified = false;
+			LongIterator it = iterator();
+			OUTER:
+			while (it.hasNext()) {
+				long check = it.next();
+				for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+					if(array[i] == check)
+						continue OUTER;
+				}
+				it.remove();
+				modified = true;
+			}
+			return modified;
+		}
+
 		@Override
 		LongIterator iterator ();
 
@@ -1039,6 +1080,26 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean retainAll (float[] array) {
+			return retainAll(array, 0, array.length);
+		}
+
+		default boolean retainAll (float[] array, int offset, int length) {
+			boolean modified = false;
+			FloatIterator it = iterator();
+			OUTER:
+			while (it.hasNext()) {
+				float check = it.next();
+				for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+					if(array[i] == check)
+						continue OUTER;
+				}
+				it.remove();
+				modified = true;
+			}
+			return modified;
+		}
+
 		@Override
 		FloatIterator iterator ();
 
@@ -1386,6 +1447,26 @@ public interface PrimitiveCollection<T> {
 				}
 			}
 			return changed;
+		}
+
+		default boolean retainAll (double[] array) {
+			return retainAll(array, 0, array.length);
+		}
+
+		default boolean retainAll (double[] array, int offset, int length) {
+			boolean modified = false;
+			DoubleIterator it = iterator();
+			OUTER:
+			while (it.hasNext()) {
+				double check = it.next();
+				for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+					if(array[i] == check)
+						continue OUTER;
+				}
+				it.remove();
+				modified = true;
+			}
+			return modified;
 		}
 
 		@Override
@@ -1737,6 +1818,26 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean retainAll (short[] array) {
+			return retainAll(array, 0, array.length);
+		}
+
+		default boolean retainAll (short[] array, int offset, int length) {
+			boolean modified = false;
+			ShortIterator it = iterator();
+			OUTER:
+			while (it.hasNext()) {
+				short check = it.next();
+				for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+					if(array[i] == check)
+						continue OUTER;
+				}
+				it.remove();
+				modified = true;
+			}
+			return modified;
+		}
+
 		@Override
 		ShortIterator iterator ();
 
@@ -2084,6 +2185,26 @@ public interface PrimitiveCollection<T> {
 				}
 			}
 			return changed;
+		}
+
+		default boolean retainAll (byte[] array) {
+			return retainAll(array, 0, array.length);
+		}
+
+		default boolean retainAll (byte[] array, int offset, int length) {
+			boolean modified = false;
+			ByteIterator it = iterator();
+			OUTER:
+			while (it.hasNext()) {
+				byte check = it.next();
+				for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+					if(array[i] == check)
+						continue OUTER;
+				}
+				it.remove();
+				modified = true;
+			}
+			return modified;
 		}
 
 		@Override
@@ -2435,6 +2556,26 @@ public interface PrimitiveCollection<T> {
 			return changed;
 		}
 
+		default boolean retainAll (char[] array) {
+			return retainAll(array, 0, array.length);
+		}
+
+		default boolean retainAll (char[] array, int offset, int length) {
+			boolean modified = false;
+			CharIterator it = iterator();
+			OUTER:
+			while (it.hasNext()) {
+				char check = it.next();
+				for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+					if(array[i] == check)
+						continue OUTER;
+				}
+				it.remove();
+				modified = true;
+			}
+			return modified;
+		}
+
 		@Override
 		CharIterator iterator ();
 
@@ -2782,6 +2923,26 @@ public interface PrimitiveCollection<T> {
 				}
 			}
 			return changed;
+		}
+
+		default boolean retainAll (boolean[] array) {
+			return retainAll(array, 0, array.length);
+		}
+
+		default boolean retainAll (boolean[] array, int offset, int length) {
+			boolean modified = false;
+			BooleanIterator it = iterator();
+			OUTER:
+			while (it.hasNext()) {
+				boolean check = it.next();
+				for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+					if(array[i] == check)
+						continue OUTER;
+				}
+				it.remove();
+				modified = true;
+			}
+			return modified;
 		}
 
 		@Override
