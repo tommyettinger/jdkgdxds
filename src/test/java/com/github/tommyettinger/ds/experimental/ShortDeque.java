@@ -245,12 +245,15 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
 	 * items to avoid multiple backing array resizes.
+	 *
+	 * @return
 	 */
-	public void ensureCapacity (int additional) {
+	public short[] ensureCapacity (int additional) {
 		final int needed = size + additional;
 		if (items.length < needed) {
 			resize(needed);
 		}
+		return items;
 	}
 
 	/**
@@ -259,7 +262,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * rearrange the items internally to be linear and have the head at index 0, with the tail at {@code size - 1}.
 	 * This always allocates a new internal backing array.
 	 *
-	 * @return
+	 * @return the new backing array, as a direct reference
 	 */
 	public short[] resize (int newSize) {
 		if(newSize < size)
@@ -422,7 +425,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		final short[] items = this.items;
 
 		final short result = items[head];
-		items[head] = null;
+
 		head++;
 		if (head == items.length) {
 			head = 0;
@@ -447,7 +450,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		final short[] items = this.items;
 		int tail = this.tail;
 		final short result = items[tail];
-		items[tail] = null;
 
 		if (tail == 0) {
 			tail = items.length - 1;
@@ -522,7 +524,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		final short[] items = this.items;
 
 		final short result = items[head];
-		items[head] = null;
+
 		head++;
 		if (head == items.length) {
 			head = 0;
@@ -548,7 +550,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		final short[] items = this.items;
 		int tail = this.tail;
 		final short result = items[tail];
-		items[tail] = null;
 
 		if (tail == 0) {
 			tail = items.length - 1;
@@ -685,6 +686,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return oldSize != size;
 	}
 
+
 	/**
 	 * Inserts the specified element into this deque at the specified index.
 	 * Unlike {@link #offerFirst(short)} and {@link #offerLast(short)}, this does not run in expected constant time unless
@@ -693,7 +695,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param index the index in the deque's insertion order to insert the item
 	 * @param item a short item to insert; may be null
 	 */
-	public void add (int index, short item) {
+	public void insert (int index, short item) {
 		if(index <= 0)
 			addFirst(item);
 		else if(index >= size)
@@ -734,20 +736,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 				}
 			}
 		}
-
-	}
-
-	/**
-	 * This is an alias for {@link #add(int, short)} that returns {@code true} to indicate it does modify
-	 * this ObjectDeque.
-	 *
-	 * @param index index at which the specified element is to be inserted
-	 * @param item  element to be inserted
-	 * @return true if this was modified, which should always happen
-	 */
-	public boolean insert (int index, short item) {
-		add(index, item);
-		return true;
 	}
 
 	/**
@@ -859,7 +847,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws IllegalArgumentException if some property of an element of the
 	 *                                  specified collection prevents it from being added to this deque
 	 */
-	public boolean addAll (Collection<? extends short> c) {
+	public boolean addAll (PrimitiveCollection.OfShort c) {
 		final int cs = c.size();
 		if(cs == 0) return false;
 		int oldSize = size;
@@ -877,19 +865,17 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			tail += oldSize;
 			size += oldSize;
 		} else {
-			for (short t : c) {
-				addLast(t);
-			}
+			addAll(c.iterator());
 		}
 		return oldSize != size;
 	}
 
 	/**
-	 * An alias for {@link #addAll(Collection)}, this adds every item in {@code c} to this in order at the end.
+	 * An alias for {@link #addAll(PrimitiveCollection.OfShort)}, this adds every item in {@code c} to this in order at the end.
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (Collection<? extends short> c) {
+	public boolean addAllLast (PrimitiveCollection.OfShort c) {
 		return addAll(c);
 	}
 
@@ -899,7 +885,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (Collection<? extends short> c) {
+	public boolean addAllFirst (PrimitiveCollection.OfShort c) {
 		final int cs = c.size();
 		if(cs == 0) return false;
 		int oldSize = size;
@@ -931,7 +917,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * An alias for {@link #addAll(int, Collection)}; inserts all elements
+	 * An alias for {@link #addAll(int, PrimitiveCollection.OfShort)}; inserts all elements
 	 * in the specified collection into this list at the specified position.
 	 * Shifts the element currently at that position (if any) and any subsequent
 	 * elements to the right (increases their indices). The new elements
@@ -946,11 +932,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param c collection containing elements to be added to this list
 	 * @return {@code true} if this list changed as a result of the call
 	 */
-	public boolean insertAll(int index, Collection<? extends short> c) {
+	public boolean insertAll(int index, PrimitiveCollection.OfShort c) {
 		return addAll(index, c);
 	}
 
-	public boolean addAll(int index, Collection<? extends short> c) {
+	public boolean addAll(int index, PrimitiveCollection.OfShort c) {
 		int oldSize = size;
 		if(index <= 0)
 			addAllFirst(c);
@@ -977,8 +963,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Exactly like {@link #addAll(Collection)}, but takes an array instead of a Collection.
-	 * @see #addAll(Collection)
+	 * Exactly like {@link #addAll(PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort.
+	 * @see #addAll(PrimitiveCollection.OfShort)
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
@@ -1026,8 +1012,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-         * Exactly like {@link #addAllFirst(Collection)}, but takes an array instead of a Collection.
-         * @see #addAllFirst(Collection)
+         * Exactly like {@link #addAllFirst(PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort.
+         * @see #addAllFirst(PrimitiveCollection.OfShort)
          * @param array the elements to be inserted into this deque
          * @return {@code true} if this deque changed as a result of the call
          */
@@ -1076,7 +1062,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return addAll(index, array, offset, length);
 	}
 	/**
-	 * Like {@link #addAll(int, Collection)}, but takes an array instead of a Collection and inserts it
+	 * Like {@link #addAll(int, PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
 	 * @see #addAll(short[])
@@ -1089,7 +1075,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Like {@link #addAll(int, Collection)}, but takes an array instead of a Collection, gets items starting at
+	 * Like {@link #addAll(int, PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort, gets items starting at
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
@@ -1165,12 +1151,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
-	 * @throws ClassCastException   if the class of the specified element
-	 *                              is incompatible with this deque
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException if the specified element is null and this
-	 *                              deque does not permit null elements
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	public boolean remove (short o) {
 		return removeFirstOccurrence(o);
@@ -1183,12 +1163,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @param o element whose presence in this deque is to be tested
 	 * @return {@code true} if this deque contains the specified element
-	 * @throws ClassCastException   if the class of the specified element
-	 *                              is incompatible with this deque
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException if the specified element is null and this
-	 *                              deque does not permit null elements
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	public boolean contains (short o) {
 		return indexOf(o, false) != -1;
@@ -1227,40 +1201,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			System.arraycopy(items, 0, next, size - head, tail + 1);
 		}
 		return next;
-	}
-
-	/**
-	 * Selects the kth-lowest element from this ObjectDeque according to Comparator ranking. This might partially sort the ObjectDeque,
-	 * changing its order. The ObjectDeque must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-	 *
-	 * @param comparator used for comparison
-	 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-	 *                   value use 1, for max value use size of the ObjectDeque; using 0 results in a runtime exception.
-	 * @return the value of the kth lowest ranked object.
-	 * @see Select
-	 */
-	public short selectRanked (Comparator<short> comparator, int kthLowest) {
-		if (kthLowest < 1) {
-			throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
-		}
-		return Select.select(this, comparator, kthLowest, size());
-	}
-
-	/**
-	 * Gets the index of the kth-lowest element from this ObjectDeque according to Comparator ranking. This might partially sort the
-	 * ObjectDeque, changing its order. The ObjectDeque must have a size greater than 0, or a {@link RuntimeException} will be thrown.
-	 *
-	 * @param comparator used for comparison
-	 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
-	 *                   value use 1, for max value use size of the ObjectDeque; using 0 results in a runtime exception.
-	 * @return the index of the kth lowest ranked object.
-	 * @see #selectRanked(Comparator, int)
-	 */
-	public int selectRankedIndex (Comparator<short> comparator, int kthLowest) {
-		if (kthLowest < 1) {
-			throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
-		}
-		return Select.selectIndex(this, comparator, kthLowest, size());
 	}
 
 	/**
@@ -1605,10 +1545,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return iterator2;
 	}
 
-	public List<short> subList(int fromIndex, int toIndex) {
-		return super.subList(fromIndex, toIndex);
-	}
-
 	/**
 	 * Removes the first instance of the specified value in the deque.
 	 *
@@ -1619,7 +1555,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		int index = indexOf(value, identity);
 		if (index == -1)
 			return false;
-		remove(index);
+		removeAt(index);
 		return true;
 	}
 
@@ -1633,7 +1569,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		int index = lastIndexOf(value, identity);
 		if (index == -1)
 			return false;
-		remove(index);
+		removeAt(index);
 		return true;
 	}
 
@@ -1642,27 +1578,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Shifts any subsequent elements to the left (subtracts one
 	 * from their indices).  Returns the element that was removed from the
 	 * deque.
-	 * <br>
-	 * This is an alias for {@link #remove(int)} for compatibility with primitive-backed lists and deques;
-	 * {@link #remove(int)} can refer to the method that removes an item by value, not by index, in those types.
 	 *
 	 * @param index the index of the element to be removed
 	 * @return the element previously at the specified position
 	 */
 	public short removeAt(int index) {
-		return remove(index);
-	}
-
-	/**
-	 * Removes the element at the specified position in this deque.
-	 * Shifts any subsequent elements to the left (subtracts one
-	 * from their indices).  Returns the element that was removed from the
-	 * deque.
-	 *
-	 * @param index the index of the element to be removed
-	 * @return the element previously at the specified position
-	 */
-	public short remove(int index) {
 		if (index <= 0)
 			return removeFirst();
 		if (index >= size)
@@ -1675,20 +1595,17 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		if (head <= tail) { // index is between head and tail.
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
-			items[this.tail] = null;
 			this.tail--;
 			if(this.tail == -1) this.tail = items.length - 1;
 		} else if (index >= items.length) { // index is between 0 and tail.
 			index -= items.length;
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
-			items[this.tail] = null;
 			this.tail--;
 			if(this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
 			value = items[index];
 			System.arraycopy(items, head, items, head + 1, index - head);
-			items[this.head] = null;
 			this.head++;
 			if (this.head == items.length) {
 				this.head = 0;
@@ -1744,20 +1661,17 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		if (head <= tail) { // index is between head and tail.
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
-			items[this.tail] = null;
 			this.tail--;
 			if(this.tail == -1) this.tail = items.length - 1;
 		} else if (index >= items.length) { // index is between 0 and tail.
 			index -= items.length;
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
-			items[this.tail] = null;
 			this.tail--;
 			if(this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
 			value = items[index];
 			System.arraycopy(items, head, items, head + 1, index - head);
-			items[this.head] = null;
 			this.head++;
 			if (this.head == items.length) {
 				this.head = 0;
@@ -1865,17 +1779,15 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Replaces the element at the specified position in this list with the
 	 * specified element. If this deque is empty or the index is larger than the largest index currently in this
-	 * deque, this delegates to {@link #addLast(Object)} and returns {@link #getDefaultValue() the default value}.
-	 * If the index is negative, this delegates to {@link #addFirst(Object)} and returns
+	 * deque, this delegates to {@link #addLast(short)} and returns {@link #getDefaultValue() the default value}.
+	 * If the index is negative, this delegates to {@link #addFirst(short)} and returns
 	 * {@link #getDefaultValue() the default value}.
 	 *
 	 * @param index index of the element to replace
 	 * @param item element to be stored at the specified position
 	 * @return the element previously at the specified position
-	 * @throws ClassCastException if the class of the specified element
-	 *         prevents it from being put in this list
 	 */
-	public short set (int index, short item) {
+	public short assign (int index, short item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return defaultValue;
@@ -1891,34 +1803,45 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			i -= items.length;
 		short old = items[i];
 		items[i] = item;
-//		modCount++; // apparently this isn't a structural modification?
 		return old;
 	}
 
 	/**
-	 * Removes all values from this deque. Values in backing array are set to null to prevent memory leaks, so this
-	 * operates in O(n) time.
+	 * Replaces the element at the specified position in this list with the
+	 * specified element. If this deque is empty or the index is larger than the largest index currently in this
+	 * deque, this delegates to {@link #addLast(short)} and returns {@link #getDefaultValue() the default value}.
+	 * If the index is negative, this delegates to {@link #addFirst(short)} and returns
+	 * {@link #getDefaultValue() the default value}.
+	 *
+	 * @param index index of the element to replace
+	 * @param item  element to be stored at the specified position
+	 */
+	public void set (int index, short item) {
+		if (size <= 0 || index >= size) {
+			addLast(item);
+			return;
+		}
+		if (index < 0) {
+			addFirst(item);
+			return;
+		}
+		final short[] items = this.items;
+
+		int i = head + Math.max(Math.min(index, size - 1), 0);
+		if (i >= items.length)
+			i -= items.length;
+		items[i] = item;
+	}
+
+
+	/**
+	 * Removes all values from this deque. This operates in O(1) time.
 	 */
 	public void clear () {
 		if (size == 0)
 			return;
-		final short[] items = this.items;
-		final int head = this.head;
-		final int tail = this.tail;
-
-		if (head <= tail) {
-			// Continuous
-			Utilities.clear(items, head, tail - head + 1);
-		} else if(tail == 0){
-			Utilities.clear(items, head, items.length - head);
-		} else {
-			// Wrapped
-			Utilities.clear(items, head, items.length - head);
-			Utilities.clear(items, 0, tail + 1);
-		}
 		this.head = 0;
 		this.tail = 0;
-		modCount += size;
 		this.size = 0;
 	}
 
@@ -2008,49 +1931,22 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * If {@code o} is not a List or Queue
 	 * (and is also not somehow reference-equivalent to this collection), this returns false.
 	 * This uses the {@link Iterable#iterator()} of both this and {@code o}, so if either is in the
-	 * middle of a concurrent iteration that modifies the Collection, this may fail.
+	 * middle of a concurrent iteration that modifies the collection, this may fail.
 	 * @param o object to be compared for equality with this collection
 	 * @return true if this is equal to o, or false otherwise
 	 */
 	public boolean equals(Object o) {
 		if (o == this)
 			return true;
-		if (!((o instanceof List) || (o instanceof Queue)))
+		if (!((o instanceof ShortList)))
 			return false;
 
-		Iterator<short> e1 = iterator();
-		Iterator<?> e2 = ((Iterable<?>) o).iterator();
+		ShortIterator e1 = iterator();
+		ShortIterator e2 = ((ShortList)o).iterator();
 		while (e1.hasNext() && e2.hasNext()) {
 			short o1 = e1.next();
 			Object o2 = e2.next();
 			if (!Objects.equals(o1, o2))
-				return false;
-		}
-		return !(e1.hasNext() || e2.hasNext());
-	}
-
-	/**
-	 * Using {@code ==} between each item in order, compares for equality with
-	 * other types implementing {@link List} or {@link Queue}, including other {@link Deque} types.
-	 * If {@code o} is not a List or Queue
-	 * (and is also not somehow reference-equivalent to this collection), this returns false.
-	 * This uses the {@link Iterable#iterator()} of both this and {@code o}, so if either is in the
-	 * middle of a concurrent iteration that modifies the Collection, this may fail.
-	 * @param o object to be compared for equality with this collection
-	 * @return true if this is equal to o, or false otherwise
-	 */
-	public boolean equalsIdentity (Object o) {
-		if (o == this)
-			return true;
-		if (!((o instanceof List) || (o instanceof Queue)))
-			return false;
-
-		Iterator<short> e1 = iterator();
-		Iterator<?> e2 = ((Iterable<?>) o).iterator();
-		while (e1.hasNext() && e2.hasNext()) {
-			short o1 = e1.next();
-			Object o2 = e2.next();
-			if (o1 != o2)
 				return false;
 		}
 		return !(e1.hasNext() || e2.hasNext());
@@ -2085,8 +1981,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		short fv = items[f];
 		items[f] = items[s];
 		items[s] = fv;
-
-		//modCount += 2; // I don't think this is "structural"
 	}
 
 	/**
@@ -2106,12 +2000,10 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			fv = items[f];
 			items[f] = items[s];
 			items[s] = fv;
-//			modCount += 2; // I don't think this is "structural"
 		}
 	}
 
 	public void shuffle (Random rng) {
-		// This won't change modCount, because it isn't "structural"
 		for (int i = size() - 1; i > 0; i--) {
 			int r = rng.nextInt(i + 1);
 			if(r != i)
@@ -2139,7 +2031,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param comparator the Comparator to use for short items; may be null to use the natural
 	 *                   order of short items when short implements Comparable of short
 	 */
-	public void sort (ShortComparator comparator) {
+	public void sort (@Nullable ShortComparator comparator) {
 		if (head <= tail) {
 			ShortComparators.sort(items, head, tail+1, comparator);
 		} else {
