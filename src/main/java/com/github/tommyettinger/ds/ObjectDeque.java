@@ -1966,7 +1966,11 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 		iterator1.valid = false;
 		return iterator2;
 	}
-
+	/**
+	 * Gets an iterator over this deque that starts at the given index.
+	 * @param index the index to start iterating from in this deque
+	 * @return a reused iterator starting at the given index
+	 */
 	@Override
 	public ListIterator<T> listIterator(int index) {
 		if (iterator1 == null || iterator2 == null) {
@@ -2362,6 +2366,34 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 			return descendingIterator1;
 		}
 		descendingIterator2.reset();
+		descendingIterator2.valid = true;
+		descendingIterator1.valid = false;
+		return descendingIterator2;
+	}
+
+	/**
+	 * Returns an iterator over the elements in this deque in reverse
+	 * sequential order. The elements will be returned in order from
+	 * {@code index} backwards to first (head).
+	 * <br>
+	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
+	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque, boolean)}.
+	 *
+	 * @param index the index to start iterating from in this deque
+	 * @return an iterator over the elements in this deque in reverse sequence
+	 */
+	public @NonNull ObjectDequeIterator<T> descendingIterator (int index) {
+		if (descendingIterator1 == null || descendingIterator2 == null) {
+			descendingIterator1 = new ObjectDequeIterator<>(this, index, true);
+			descendingIterator2 = new ObjectDequeIterator<>(this, index, true);
+		}
+		if (!descendingIterator1.valid) {
+			descendingIterator1.reset(index);
+			descendingIterator1.valid = true;
+			descendingIterator2.valid = false;
+			return descendingIterator1;
+		}
+		descendingIterator2.reset(index);
 		descendingIterator2.valid = true;
 		descendingIterator1.valid = false;
 		return descendingIterator2;

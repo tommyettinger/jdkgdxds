@@ -1275,7 +1275,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
 	 *
-	 * @param value the short to look for, which may be null
+	 * @param value the short to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
 	public int indexOf (short value) {
@@ -1287,7 +1287,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * This returns {@code fromIndex} if {@code value} is present at that point,
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
-	 * @param value the short to look for, which may be null
+	 * @param value the short to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
@@ -1318,7 +1318,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Returns the index of the last occurrence of value in the deque, or -1 if no such value exists.
 	 *
-	 * @param value the short to look for, which may be null
+	 * @param value the short to look for
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
 	public int lastIndexOf (short value) {
@@ -1379,6 +1379,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return iterator2;
 	}
 
+	/**
+	 * Gets an iterator over this deque that starts at the given index.
+	 * @param index the index to start iterating from in this deque
+	 * @return a reused iterator starting at the given index
+	 */
 	public ShortListIterator listIterator(int index) {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ShortDequeIterator(this, index, false);
@@ -1741,6 +1746,34 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			return descendingIterator1;
 		}
 		descendingIterator2.reset();
+		descendingIterator2.valid = true;
+		descendingIterator1.valid = false;
+		return descendingIterator2;
+	}
+
+	/**
+	 * Returns an iterator over the elements in this deque in reverse
+	 * sequential order. The elements will be returned in order from
+	 * {@code index} backwards to first (head).
+	 * <br>
+	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
+	 * iteration, use {@link ShortDequeIterator#ShortDequeIterator(ShortDeque, boolean)}.
+	 *
+	 * @param index the index to start iterating from in this deque
+	 * @return an iterator over the elements in this deque in reverse sequence
+	 */
+	public ShortListIterator descendingIterator (int index) {
+		if (descendingIterator1 == null || descendingIterator2 == null) {
+			descendingIterator1 = new ShortDequeIterator(this, index, true);
+			descendingIterator2 = new ShortDequeIterator(this, index, true);
+		}
+		if (!descendingIterator1.valid) {
+			descendingIterator1.reset(index);
+			descendingIterator1.valid = true;
+			descendingIterator2.valid = false;
+			return descendingIterator1;
+		}
+		descendingIterator2.reset(index);
 		descendingIterator2.valid = true;
 		descendingIterator1.valid = false;
 		return descendingIterator2;
