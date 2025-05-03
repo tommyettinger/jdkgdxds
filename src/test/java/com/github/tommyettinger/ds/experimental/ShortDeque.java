@@ -92,7 +92,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param initialSize how large the backing array should be, without any padding
 	 */
 	public ShortDeque(int initialSize) {
-		this.items = new short[Math.max(1, initialSize)];
+		super(Math.max(1, initialSize));
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws NullPointerException if {@code iter} is {@code null}
 	 */
 	public ShortDeque(ShortIterator iter) {
-		this();
+		this(16);
 		addAll(iter);
 	}
 
@@ -124,7 +124,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws NullPointerException if {@code deque} is {@code null}
 	 */
 	public ShortDeque(ShortDeque deque) {
-		this.items = Arrays.copyOf(deque.items, deque.items.length);
+		this(deque.items.length);
+		System.arraycopy(deque.items, 0, items, 0, deque.items.length);
 		this.size = deque.size;
 		this.head = deque.head;
 		this.tail = deque.tail;
@@ -138,7 +139,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws NullPointerException if {@code a} is {@code null}
 	 */
 	public ShortDeque(short[] a) {
-		this.items = Arrays.copyOf(a, Math.max(1, a.length));
+		this(a.length);
+		System.arraycopy(a, 0, items, 0, a.length);
 		size = a.length;
 		tail = Math.max(0, size - 1);
 	}
@@ -152,10 +154,10 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @throws NullPointerException if {@code a} is {@code null}
 	 */
 	public ShortDeque(short[] a, int offset, int count) {
-		int adjusted = Math.max(1, count);
-		this.items = Arrays.copyOfRange(a, offset, offset + adjusted);
-		tail = adjusted - 1;
-		size = Math.max(0, count);
+		this(count);
+		System.arraycopy(a, offset, items, 0, count);
+		size = count;
+		tail = Math.max(0, count - 1);
 	}
 
 	/**
