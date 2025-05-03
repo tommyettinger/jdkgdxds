@@ -625,12 +625,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
-	 * @throws ClassCastException   if the class of the specified element
-	 *                              is incompatible with this deque
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException if the specified element is null and this
-	 *                              deque does not permit null elements
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	public boolean removeFirstOccurrence (short o) {
 		return removeValue(o);
@@ -646,12 +640,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
-	 * @throws ClassCastException   if the class of the specified element
-	 *                              is incompatible with this deque
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
-	 * @throws NullPointerException if the specified element is null and this
-	 *                              deque does not permit null elements
-	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	public boolean removeLastOccurrence (short o) {
 		return removeLastValue(o);
@@ -670,14 +658,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @param t the element to add
 	 * @return {@code true} (as specified by {@link Collection#add})
-	 * @throws IllegalStateException    if the element cannot be added at this
-	 *                                  time due to capacity restrictions
-	 * @throws ClassCastException       if the class of the specified element
-	 *                                  prevents it from being added to this deque
-	 * @throws NullPointerException     if the specified element is null and this
-	 *                                  deque does not permit null elements
-	 * @throws IllegalArgumentException if some property of the specified
-	 *                                  element prevents it from being added to this deque
 	 */
 	public boolean add (short t) {
 		int oldSize = size;
@@ -749,14 +729,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * <p>This method is equivalent to {@link #offerLast}.
 	 *
 	 * @param t the element to add
-	 * @return {@code true} if the element was added to this deque, else
-	 * {@code false}
-	 * @throws ClassCastException       if the class of the specified element
-	 *                                  prevents it from being added to this deque
-	 * @throws NullPointerException     if the specified element is null and this
-	 *                                  deque does not permit null elements
-	 * @throws IllegalArgumentException if some property of the specified
-	 *                                  element prevents it from being added to this deque
+	 * @return {@code true} if the element was added to this deque, else {@code false}
 	 */
 	public boolean offer (short t) {
 		int oldSize = size;
@@ -836,15 +809,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
-	 * @throws IllegalStateException    if not all the elements can be added at
-	 *                                  this time due to insertion restrictions
-	 * @throws ClassCastException       if the class of an element of the specified
-	 *                                  collection prevents it from being added to this deque
-	 * @throws NullPointerException     if the specified collection contains a
-	 *                                  null element and this deque does not permit null elements,
-	 *                                  or if the specified collection is null
-	 * @throws IllegalArgumentException if some property of an element of the
-	 *                                  specified collection prevents it from being added to this deque
 	 */
 	public boolean addAll (PrimitiveCollection.OfShort c) {
 		final int cs = c.size();
@@ -1102,21 +1066,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Pushes an element onto the stack represented by this deque (in other
-	 * words, at the head of this deque) if it is possible to do so
-	 * immediately without violating capacity restrictions, throwing an
-	 * {@code IllegalStateException} if no space is currently available.
+	 * words, at the head of this deque).
 	 *
 	 * <p>This method is equivalent to {@link #addFirst}.
 	 *
 	 * @param t the element to push
-	 * @throws IllegalStateException    if the element cannot be added at this
-	 *                                  time due to capacity restrictions
-	 * @throws ClassCastException       if the class of the specified element
-	 *                                  prevents it from being added to this deque
-	 * @throws NullPointerException     if the specified element is null and this
-	 *                                  deque does not permit null elements
-	 * @throws IllegalArgumentException if some property of the specified
-	 *                                  element prevents it from being added to this deque
 	 */
 	public void push (short t) {
 		addFirst(t);
@@ -1320,7 +1274,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
-	 * Uses .equals() to compare items.
 	 *
 	 * @param value the short to look for, which may be null
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
@@ -1331,7 +1284,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
-	 * Uses .equals() to compare items. This returns {@code fromIndex} if {@code value} is present at that point,
+	 * This returns {@code fromIndex} if {@code value} is present at that point,
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
 	 * @param value the short to look for, which may be null
@@ -1364,7 +1317,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Returns the index of the last occurrence of value in the deque, or -1 if no such value exists.
-	 * Uses .equals() to compare items.
 	 *
 	 * @param value the short to look for, which may be null
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
