@@ -132,6 +132,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		this.defaultValue = deque.defaultValue;
 	}
 
+	public ShortDeque(Ordered.OfShort other, int offset, int count) {
+		this(count);
+		addAll(0, other, offset, count);
+	}
+
 	/**
 	 * Creates a new ShortDeque using all the contents of the given array.
 	 *
@@ -942,6 +947,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public boolean addAll (short[] array) {
 		return addAll(array, 0, array.length);
 	}
+
 	/**
 	 * Like {@link #addAll(short[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
 	 * @see #addAll(short[])
@@ -959,7 +965,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
         return true;
 	}
 
-
 	/**
 	 * An alias for {@link #addAll(short[])}.
 	 * @see #addAll(short[])
@@ -969,6 +974,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public boolean addAllLast (short[] array) {
 		return addAll(array, 0, array.length);
 	}
+
 	/**
 	 * An alias for {@link #addAll(short[], int, int)}.
 	 * @see #addAll(short[], int, int)
@@ -982,11 +988,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-         * Exactly like {@link #addAllFirst(PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort.
-         * @see #addAllFirst(PrimitiveCollection.OfShort)
-         * @param array the elements to be inserted into this deque
-         * @return {@code true} if this deque changed as a result of the call
-         */
+	 * Exactly like {@link #addAllFirst(PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort.
+	 * @see #addAllFirst(PrimitiveCollection.OfShort)
+	 * @param array the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
 	public boolean addAllFirst (short[] array) {
 		return addAllFirst(array, 0, array.length);
 	}
@@ -1030,6 +1036,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public boolean insertAll(int index, short[] array, int offset, int length) {
 		return addAll(index, array, offset, length);
 	}
+
 	/**
 	 * Like {@link #addAll(int, PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort and inserts it
 	 * so the first item will be at the given {@code index}.
@@ -1069,6 +1076,133 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			size += cs;
         }
 		return oldSize != size;
+	}
+
+	/**
+	 * Exactly like {@link #addAll(PrimitiveCollection.OfShort)}, but takes an Ordered.OfShort instead of a PrimitiveCollection.OfShort.
+	 * @see #addAll(PrimitiveCollection.OfShort)
+	 * @param ord the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAll (Ordered.OfShort ord) {
+		return addAll(size, ord, 0, ord.size());
+	}
+
+	/**
+	 * Like {@link #addAll(short[])}, but only uses at most {@code length} items from {@code ord}, starting at {@code offset}.
+	 * @see #addAll(short[])
+	 * @param ord the elements to be inserted into this deque
+	 * @param offset the index of the first item in ord to add
+	 * @param length how many items, at most, to add from ord into this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAll (Ordered.OfShort ord, int offset, int length) {
+		return addAll(size, ord, offset, length);
+	}
+
+	/**
+	 * Like {@link #addAll(int, PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort and inserts it
+	 * so the first item will be at the given {@code index}.
+	 * The order of {@code array} will be preserved, starting at the given index in this deque.
+	 * @see #addAll(Ordered.OfShort)
+	 * @param index the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAll(int index, Ordered.OfShort array) {
+		return addAll(index, array, 0, array.size());
+	}
+
+	/**
+	 * Like {@link #addAll(int, PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort, gets items starting at
+	 * {@code offset} from that array, using {@code length} items, and inserts them
+	 * so the item at the given offset will be at the given {@code index}.
+	 * The order of {@code array} will be preserved, starting at the given index in this deque.
+	 * @see #addAll(Ordered.OfShort)
+	 * @param index the index in this deque's iteration order to place the first item in {@code array}
+	 * @param ord the elements to be inserted into this deque
+	 * @param offset the index of the first item in array to add
+	 * @param length how many items, at most, to add from array into this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAll (int index, Ordered.OfShort ord, int offset, int length) {
+		final int cs = Math.min(ord.size() - offset, length);
+		if(cs <= 0) return false;
+		int place = ensureGap(index, cs);
+		ShortList er = ord.order();
+		for (int i = offset, n = offset + cs; i < n; i++) {
+			items[place++] = er.get(i);
+			if(place == items.length) place = 0;
+		}
+		size += cs;
+        return true;
+	}
+
+	/**
+	 * An alias for {@link #addAll(Ordered.OfShort)}.
+	 * @see #addAll(Ordered.OfShort)
+	 * @param ord the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAllLast (Ordered.OfShort ord) {
+		return addAll(size, ord, 0, ord.size());
+	}
+
+	/**
+	 * An alias for {@link #addAll(Ordered.OfShort, int, int)}.
+	 * @see #addAll(Ordered.OfShort, int, int)
+	 * @param ord the elements to be inserted into this deque
+	 * @param offset the index of the first item in ord to add
+	 * @param length how many items, at most, to add from ord into this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAllLast (Ordered.OfShort ord, int offset, int length) {
+		return addAll(size, ord, offset, length);
+	}
+
+	/**
+	 * Exactly like {@link #addAllFirst(PrimitiveCollection.OfShort)}, but takes an ord instead of a PrimitiveCollection.OfShort.
+	 * @see #addAllFirst(PrimitiveCollection.OfShort)
+	 * @param ord the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAllFirst (Ordered.OfShort ord) {
+		return addAll(0, ord, 0, ord.size());
+	}
+
+	/**
+	 * Like {@link #addAllFirst(Ordered.OfShort)}, but only uses at most {@code length} items from {@code ord}, starting at
+	 * {@code offset}. The order of {@code ord} will be preserved, starting at the head of the deque.
+	 * @see #addAllFirst(Ordered.OfShort)
+	 * @param ord the elements to be inserted into this deque
+	 * @param offset the index of the first item in ord to add
+	 * @param length how many items, at most, to add from ord into this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean addAllFirst (Ordered.OfShort ord, int offset, int length) {
+		return addAll(0, ord, offset, length);
+	}
+
+	/**
+	 * Alias for {@link #addAll(int, Ordered.OfShort)}.
+	 * @param index the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array the elements to be inserted into this deque
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean insertAll(int index, Ordered.OfShort array) {
+		return addAll(index, array, 0, array.size());
+	}
+
+	/**
+	 * Alias for {@link #addAll(int, Ordered.OfShort, int, int)}.
+	 * @param index the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array the elements to be inserted into this deque
+	 * @param offset the index of the first item in array to add
+	 * @param length how many items, at most, to add from array into this
+	 * @return {@code true} if this deque changed as a result of the call
+	 */
+	public boolean insertAll(int index, Ordered.OfShort array, int offset, int length) {
+		return addAll(index, array, offset, length);
 	}
 
 	/**
