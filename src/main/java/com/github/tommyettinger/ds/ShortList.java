@@ -22,10 +22,8 @@ import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
-import java.util.Arrays;
-import java.util.ListIterator;
-import java.util.NoSuchElementException;
-import java.util.Random;
+
+import java.util.*;
 
 /**
  * A resizable, insertion-ordered short list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Short.
@@ -36,7 +34,7 @@ import java.util.Random;
  * @author Tommy Ettinger
  * @see ShortBag ShortBag is an unordered variant on ShortList.
  */
-public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, Arrangeable {
+public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, Arrangeable, RandomAccess {
 	/**
 	 * Returns true if this implementation retains order, which it does.
 	 * @return true

@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds.experimental;
 
 import com.github.tommyettinger.ds.*;
-import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
@@ -29,13 +28,14 @@ import java.util.*;
 
 /**
  * A resizable, insertion-ordered double-ended queue of primitive {@code short} with efficient add and remove at the
- * beginning and end. This extends {@link } supports {@link RandomAccess}.
+ * beginning and end. This extends {@link ShortList} and supports {@link RandomAccess}. Like ShortList, it is a
+ * {@link PrimitiveCollection.OfShort}, {@link Arrangeable}, and {@link Ordered.OfShort}.
  * Values in the backing array may wrap back to the beginning, making add and remove at the beginning and end O(1)
  * (unless the backing array needs to resize when adding). Deque functionality is provided via {@link #removeLast()} and
  * {@link #addFirst(short)}.
  * <br>
  * Unlike most Deque implementations in the JDK, you can get and set items anywhere in the deque in constant time with
- * {@link #get(int)} and {@link #set(int, short)}. Relative to an {@link ObjectList}, {@link #get(int)} has slightly
+ * {@link #get(int)} and {@link #set(int, short)}. Relative to a {@link ShortList}, {@link #get(int)} has slightly
  * higher overhead, but it still runs in constant time. Unlike ArrayDeque in the JDK, this implements
  * {@link #equals(Object)} and {@link #hashCode()}. This can provide what are effectively
  * {@link ListIterator ListIterators} for iteration from an index or in reverse order.
@@ -50,15 +50,14 @@ import java.util.*;
  * for instance, is now public, as is {@link #resize(int)}. New APIs include Deque-like methods that affect the middle
  * of the deque, such as {@link #peekAt(int)} and {@link #pollAt(int)}. There are more bulk methods that work at the
  * head or tail region of the deque, such as {@link #addAllFirst(PrimitiveCollection.OfShort)} and {@link #truncateFirst(int)}. There are
- * the methods from {@link Arrangeable}, and relevant ones from {@link Ordered} (this isn't Ordered because it doesn't
- * provide its order as an ObjectList, but can do similar things).
+ * the methods from {@link Arrangeable}, and many default methods from PrimitiveCollection and Ordered.
  * <br>
  * In general, this is an improvement over {@link ArrayDeque} in every type of functionality, and is mostly equivalent
- * to {@link ObjectList} as long as the performance of {@link #get(int)} is adequate. Because it is array-backed, it
+ * to {@link ShortList} as long as the performance of {@link #get(int)} is adequate. Because it is array-backed, it
  * should usually be much faster than {@link LinkedList}, as well; only periodic resizing and modifications in the
  * middle of the List using an iterator should be typically faster for {@link LinkedList}.
  */
-public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, PrimitiveCollection.OfShort {
+public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, PrimitiveCollection.OfShort, Ordered.OfShort {
 
 	/**
 	 * The value returned when nothing can be obtained from this deque and an exception is not meant to be thrown,
@@ -190,18 +189,18 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Sets the default value, which is the value returned when nothing can be obtained from this deque and an exception
 	 * is not meant to be thrown, such as when calling peek() on an empty deque. Unless changed, the default value is
 	 * usually {@code null}.
-	 * @param defaultValue any short object this can return instead of throwing an Exception, or {@code null}
+	 * @param defaultValue any short this can return instead of throwing an Exception, or {@code null}
 	 */
 	public void setDefaultValue (short defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
 	/**
-	 * Append given object to the tail (enqueue to tail). Unless backing array needs resizing, operates in O(1) time.
+	 * Appends given short to the tail (enqueue to tail). Unless the backing array needs resizing, operates in O(1) time.
 	 *
-	 * @param object can be null
+	 * @param value can be null
 	 */
-	public void addLast (short object) {
+	public void addLast (short value) {
 		short[] items = this.items;
 
 		if (size == items.length)
@@ -209,7 +208,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 		if (++tail == items.length) tail = 0;
 		if(++size == 1) tail = head;
-		items[tail] = object;
+		items[tail] = value;
 	}
 
 	public void addLast(short value1, short value2) {
@@ -261,12 +260,12 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Prepend given object to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
+	 * Prepend given value to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
 	 *
-	 * @param object can be null
+	 * @param value can be null
 	 * @see #addLast(short)
 	 */
-	public void addFirst (short object) {
+	public void addFirst (short value) {
 		short[] items = this.items;
 
 		if (size == items.length)
@@ -274,7 +273,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		items[head] = object;
+		items[head] = value;
 
 		this.head = head;
 		if(++size == 1) tail = head;
@@ -341,7 +340,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Trims the capacity of this {@code ShortDeque} instance to be the
 	 * deque's current size.  An application can use this operation to minimize
-	 * the storage of a {@code ObjectDeque} instance.
+	 * the storage of a {@code ShortDeque} instance.
 	 */
 	public void trimToSize() {
 		if (size < items.length) {
@@ -542,7 +541,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Remove the first item from the deque. (dequeue from head) Always O(1).
 	 *
-	 * @return removed object
+	 * @return removed short
 	 * @throws NoSuchElementException when the deque is empty
 	 */
 	public short removeFirst () {
@@ -567,7 +566,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Remove the last item from the deque. (dequeue from tail) Always O(1).
 	 *
-	 * @return removed object
+	 * @return removed short
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #removeFirst()
 	 */
@@ -749,7 +748,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Removes the first occurrence of the specified element from this deque.
 	 * If the deque does not contain the element, it is unchanged.
 	 * More formally, removes the first element {@code e} such that
-	 * {@code Objects.equals(o, e)} (if such an element exists).
+	 * {@code o == e} (if such an element exists).
 	 * Returns {@code true} if this deque contained the specified element
 	 * (or equivalently, if this deque changed as a result of the call).
 	 *
@@ -764,7 +763,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Removes the last occurrence of the specified element from this deque.
 	 * If the deque does not contain the element, it is unchanged.
 	 * More formally, removes the last element {@code e} such that
-	 * {@code Objects.equals(o, e)} (if such an element exists).
+	 * {@code o == e} (if such an element exists).
 	 * Returns {@code true} if this deque contained the specified element
 	 * (or equivalently, if this deque changed as a result of the call).
 	 *
@@ -1368,7 +1367,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Removes the first occurrence of the specified element from this deque.
 	 * If the deque does not contain the element, it is unchanged.
 	 * More formally, removes the first element {@code e} such that
-	 * {@code Objects.equals(o, e)} (if such an element exists).
+	 * {@code o == e} (if such an element exists).
 	 * Returns {@code true} if this deque contained the specified element
 	 * (or equivalently, if this deque changed as a result of the call).
 	 *
@@ -1384,7 +1383,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	/**
 	 * Returns {@code true} if this deque contains the specified element.
 	 * More formally, returns {@code true} if and only if this deque contains
-	 * at least one element {@code e} such that {@code Objects.equals(o, e)}.
+	 * at least one element {@code e} such that {@code o == e}.
 	 *
 	 * @param o element whose presence in this deque is to be tested
 	 * @return {@code true} if this deque contains the specified element
@@ -1899,9 +1898,9 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Returns the element at the specified position in this deque.
-	 * Like {@link ArrayList} or {@link ObjectList}, but unlike {@link LinkedList}, this runs in O(1) time.
-	 * It is expected to be slightly slower than {@link ObjectList#get(int)}, which also runs in O(1) time.
-	 * Unlike get() in ArrayList or ObjectList, this considers negative indices to refer to the first item, and
+	 * Like {@link ArrayList} or {@link ShortList}, but unlike {@link LinkedList}, this runs in O(1) time.
+	 * It is expected to be slightly slower than {@link ShortList#get(int)}, which also runs in O(1) time.
+	 * Unlike get() in ArrayList or ShortList, this considers negative indices to refer to the first item, and
 	 * too-large indices to refer to the last item. That means it delegates to {@link #getFirst()} or
 	 * {@link #getLast()} in those cases instead of throwing an {@link IndexOutOfBoundsException}, though it may
 	 * throw a {@link NoSuchElementException} if the deque is empty and there is no item it can get.
@@ -1925,9 +1924,9 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Returns the element at the specified position in this deque.
-	 * Like {@link ArrayList} or {@link ObjectList}, but unlike {@link LinkedList}, this runs in O(1) time.
-	 * It is expected to be slightly slower than {@link ObjectList#get(int)}, which also runs in O(1) time.
-	 * Unlike get() in ArrayList or ObjectList, this considers negative indices to refer to the first item, and
+	 * Like {@link ArrayList} or {@link ShortList}, but unlike {@link LinkedList}, this runs in O(1) time.
+	 * It is expected to be slightly slower than {@link ShortList#get(int)}, which also runs in O(1) time.
+	 * Unlike get() in ArrayList or ShortList, this considers negative indices to refer to the first item, and
 	 * too-large indices to refer to the last item. That means it delegates to {@link #peekFirst()} or
 	 * {@link #peekLast()} in those cases instead of throwing an {@link IndexOutOfBoundsException}, and it will
 	 * return {@link #getDefaultValue() the default value} if the deque is empty. Unless changed, the default value
@@ -2314,9 +2313,9 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		ShortIterator e1 = iterator();
 		ShortIterator e2 = ((ShortList)o).iterator();
 		while (e1.hasNext() && e2.hasNext()) {
-			short o1 = e1.next();
-			Object o2 = e2.next();
-			if (!Objects.equals(o1, o2))
+			short o1 = e1.nextShort();
+			short o2 = e2.nextShort();
+			if (o1 != o2)
 				return false;
 		}
 		return !(e1.hasNext() || e2.hasNext());
@@ -2390,12 +2389,12 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Sorts this deque in-place using {@link ObjectComparators#sort(Object[], int, int, Comparator)}.
+	 * Sorts this deque in-place using {@link ShortComparators#sort(short[], int, int, ShortComparator)}.
 	 * This should operate in O(n log(n)) time or less when the internals of the deque are
 	 * continuous (the head is before the tail in the array). If the internals are not
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
 	 * the deque) to rearrange the internals before sorting. You can pass null as the value
-	 * for {@code comparator} if short implements {@link Comparable} of short, which will make this
+	 * for {@code comparator}, which will make this
 	 * use the natural ordering for short.
 	 *
 	 * @param comparator the Comparator to use for short items; may be null to use the natural
