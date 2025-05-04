@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
+import com.github.tommyettinger.function.ShortToShortFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -1392,6 +1393,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return indexOf(o, 0) != -1;
 	}
 
+	@Override
+	public boolean containsAll(ShortList other) {
+		return containsAll(other.iterator());
+	}
+
 	/**
 	 * Returns the number of elements in this deque.
 	 *
@@ -1425,6 +1431,27 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			System.arraycopy(items, 0, next, size - head, tail + 1);
 		}
 		return next;
+	}
+
+	@Override
+	public short[] toArray(short[] array) {
+		if (array.length < size)
+			array = new short[size];
+		if (head <= tail) {
+			System.arraycopy(items, head, array, 0, tail - head + 1);
+		} else {
+			System.arraycopy(items, head, array, 0, size - head);
+			System.arraycopy(items, 0, array, size - head, tail + 1);
+		}
+		return array;
+	}
+
+	@Override
+	public short[] setSize(int newSize) {
+		if (newSize < 0) clear();
+		else if (newSize > items.length) resize(Math.max(8, newSize));
+		else truncate(newSize);
+		return items;
 	}
 
 	/**
@@ -1744,7 +1771,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return value;
 	}
 
-
 	/**
 	 * Removes the element at the specified position in this deque.
 	 * Shifts any subsequent elements to the left (subtracts one
@@ -1808,6 +1834,24 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		}
 		size--;
 		return value;
+	}
+
+	@Override
+	public boolean removeAll(OfShort c) {
+		return removeAll(c.iterator());
+	}
+
+	@Override
+	public boolean removeEach(OfShort c) {
+		return removeEach(c.iterator());
+	}
+
+	@Override
+	public boolean retainAll(OfShort other) {
+		// Gets the deque to be internally the same as a ShortList, if not already.
+		if(head != 0) resize(items.length);
+		// That allows us to use the ShortList retainAll() verbatim.
+		return super.retainAll(other);
 	}
 
 	/**
@@ -2100,6 +2144,23 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			}
 		}
 		return this;
+	}
+
+	@Override
+	public void replaceAll(ShortToShortFunction operator) {
+		final short[] items = this.items;
+		if(head <= tail){
+			for (int i = head; i <= tail; i++) {
+				items[i] = operator.applyAsShort(items[i]);
+			}
+		} else {
+			for (int i = head; i < items.length; i++) {
+				items[i] = operator.applyAsShort(items[i]);
+			}
+			for (int i = 0; i <= tail; i++) {
+				items[i] = operator.applyAsShort(items[i]);
+			}
+		}
 	}
 
 	@Override
