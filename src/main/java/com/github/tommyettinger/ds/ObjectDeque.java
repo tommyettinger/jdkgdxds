@@ -415,7 +415,6 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 					System.arraycopy(values, 0, newArray, headPart, wrapped);
 					System.arraycopy(values, wrapped, newArray, headPart + wrapped + gapSize, tail + 1 - wrapped);
 					this.tail = size + gapSize - 1;
-					index = headPart + wrapped;
 				}
 			}
 			this.values = newArray;

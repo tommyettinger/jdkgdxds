@@ -521,7 +521,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 					System.arraycopy(items, 0, newArray, headPart, wrapped);
 					System.arraycopy(items, wrapped, newArray, headPart + wrapped + gapSize, tail + 1 - wrapped);
 					this.tail = size + gapSize - 1;
-					index = headPart + wrapped;
 				}
 			}
 			this.items = newArray;
@@ -2101,6 +2100,19 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			}
 		}
 		return this;
+	}
+
+	@Override
+	public boolean duplicateRange(int index, int count) {
+		// TODO: REALLY NEEDS TESTING
+		int place = ensureGap(index + count, count);
+		if(place >= head + index + count){
+			System.arraycopy(items, head + index, items, place, count);
+		} else {
+			System.arraycopy(items, 0, items, count - place, place);
+			System.arraycopy(items, head, items, place, count - place);
+		}
+		return count > 0;
 	}
 
 	/**
