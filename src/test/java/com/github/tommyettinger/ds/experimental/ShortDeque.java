@@ -165,6 +165,16 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		tail = Math.max(0, count - 1);
 	}
 
+
+	public ShortDeque(Ordered.OfShort other) {
+		this(other, 0, other.size());
+	}
+
+	@Override
+	public ShortDeque order() {
+		return this;
+	}
+
 	/**
 	 * Gets the default value, which is the value returned when nothing can be obtained from this deque and an exception
 	 * is not meant to be thrown, such as when calling peek() on an empty deque. Unless changed, the default value is
@@ -203,6 +213,57 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		items[tail] = object;
 	}
 
+	public void addLast(short value1, short value2) {
+		short[] items = this.items;
+
+		if (size + 2 > items.length) {
+			items = resize(size + 2 << 1);
+		}
+
+		if (++tail == items.length) tail = 0;
+		if(size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		size += 2;
+	}
+
+	public void addLast(short value1, short value2, short value3) {
+		short[] items = this.items;
+
+		if (size + 3 > items.length) {
+			items = resize(size + 3 << 1);
+		}
+
+		if (++tail == items.length) tail = 0;
+		if(size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		size += 3;
+	}
+
+	public void addLast(short value1, short value2, short value3, short value4) {
+		short[] items = this.items;
+
+		if (size + 4 > items.length) {
+			items = resize(size + 4 << 1);
+		}
+
+		if (++tail == items.length) tail = 0;
+		if(size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		size += 4;
+	}
+
 	/**
 	 * Prepend given object to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
 	 *
@@ -217,11 +278,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			items = this.items;
 		}
 
-		int head = this.head;
-		head--;
-		if (head == -1) {
-			head = items.length - 1;
-		}
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
 		items[head] = object;
 
 		this.head = head;
@@ -676,6 +734,20 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		return oldSize != size;
 	}
 
+	@Override
+	public void add(short value1, short value2) {
+		addLast(value1, value2);
+	}
+
+	@Override
+	public void add(short value1, short value2, short value3) {
+		addLast(value1, value2, value3);
+	}
+
+	@Override
+	public void add(short value1, short value2, short value3, short value4) {
+		addLast(value1, value2, value3, value4);
+	}
 
 	/**
 	 * Inserts the specified element into this deque at the specified index.
@@ -1101,16 +1173,16 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Like {@link #addAll(int, PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort and inserts it
+	 * Like {@link #addAll(int, PrimitiveCollection.OfShort)}, but takes an ord instead of a PrimitiveCollection.OfShort and inserts it
 	 * so the first item will be at the given {@code index}.
-	 * The order of {@code array} will be preserved, starting at the given index in this deque.
+	 * The order of {@code ord} will be preserved, starting at the given index in this deque.
 	 * @see #addAll(Ordered.OfShort)
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param array the elements to be inserted into this deque
+	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
+	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll(int index, Ordered.OfShort array) {
-		return addAll(index, array, 0, array.size());
+	public boolean addAll(int index, Ordered.OfShort ord) {
+		return addAll(index, ord, 0, ord.size());
 	}
 
 	/**
@@ -1185,24 +1257,24 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Alias for {@link #addAll(int, Ordered.OfShort)}.
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param array the elements to be inserted into this deque
+	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
+	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean insertAll(int index, Ordered.OfShort array) {
-		return addAll(index, array, 0, array.size());
+	public boolean insertAll(int index, Ordered.OfShort ord) {
+		return addAll(index, ord, 0, ord.size());
 	}
 
 	/**
 	 * Alias for {@link #addAll(int, Ordered.OfShort, int, int)}.
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param array the elements to be inserted into this deque
-	 * @param offset the index of the first item in array to add
-	 * @param length how many items, at most, to add from array into this
+	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
+	 * @param ord the elements to be inserted into this deque
+	 * @param offset the index of the first item in ord to add
+	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean insertAll(int index, Ordered.OfShort array, int offset, int length) {
-		return addAll(index, array, offset, length);
+	public boolean insertAll(int index, Ordered.OfShort ord, int offset, int length) {
+		return addAll(index, ord, offset, length);
 	}
 
 	/**
