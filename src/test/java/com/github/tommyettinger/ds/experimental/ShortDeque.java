@@ -203,10 +203,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public void addLast (short object) {
 		short[] items = this.items;
 
-		if (size == items.length) {
-			resize(items.length << 1);
-			items = this.items;
-		}
+		if (size == items.length)
+			items = resize(items.length << 1);
 
 		if (++tail == items.length) tail = 0;
 		if(++size == 1) tail = head;
@@ -216,9 +214,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public void addLast(short value1, short value2) {
 		short[] items = this.items;
 
-		if (size + 2 > items.length) {
+		if (size + 2 > items.length)
 			items = resize(size + 2 << 1);
-		}
 
 		if (++tail == items.length) tail = 0;
 		if(size == 0) tail = head;
@@ -231,9 +228,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public void addLast(short value1, short value2, short value3) {
 		short[] items = this.items;
 
-		if (size + 3 > items.length) {
+		if (size + 3 > items.length)
 			items = resize(size + 3 << 1);
-		}
 
 		if (++tail == items.length) tail = 0;
 		if(size == 0) tail = head;
@@ -248,9 +244,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public void addLast(short value1, short value2, short value3, short value4) {
 		short[] items = this.items;
 
-		if (size + 4 > items.length) {
+		if (size + 4 > items.length)
 			items = resize(size + 4 << 1);
-		}
 
 		if (++tail == items.length) tail = 0;
 		if(size == 0) tail = head;
@@ -273,10 +268,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public void addFirst (short object) {
 		short[] items = this.items;
 
-		if (size == items.length) {
-			resize(items.length << 1);
-			items = this.items;
-		}
+		if (size == items.length)
+			items = resize(items.length << 1);
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
@@ -284,6 +277,64 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 		this.head = head;
 		if(++size == 1) tail = head;
+	}
+
+	public void addFirst (short value1, short value2) {
+		short[] items = this.items;
+
+		if (size + 2 > items.length)
+			items = resize(size + 2 << 1);
+
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if(size == 0) tail = head;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 2;
+
+		this.head = head;
+	}
+
+	public void addFirst (short value1, short value2, short value3) {
+		short[] items = this.items;
+
+		if (size + 3 > items.length)
+			items = resize(size + 3 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if(size == 0) tail = head;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 3;
+
+		this.head = head;
+	}
+
+	public void addFirst (short value1, short value2, short value3, short value4) {
+		short[] items = this.items;
+
+		if (size + 4 > items.length)
+			items = resize(size + 4 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if(size == 0) tail = head;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 4;
+
+		this.head = head;
 	}
 
 	/**
