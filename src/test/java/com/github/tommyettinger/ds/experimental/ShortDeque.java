@@ -1974,6 +1974,24 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	@Override
+	public ShortList plus(short value) {
+		final short[] items = this.items;
+		if(head <= tail){
+			for (int i = head; i <= tail; i++) {
+				items[i] += value;
+			}
+		} else {
+			for (int i = head; i < items.length; i++) {
+				items[i] += value;
+			}
+			for (int i = 0; i <= tail; i++) {
+				items[i] += value;
+			}
+		}
+		return this;
+	}
+
+	@Override
 	public void times(int index, short value) {
 		final short[] items = this.items;
 
@@ -1981,6 +1999,24 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		if (i >= items.length)
 			i -= items.length;
 		items[i] *= value;
+	}
+
+	@Override
+	public ShortList times(short value) {
+		final short[] items = this.items;
+		if(head <= tail){
+			for (int i = head; i <= tail; i++) {
+				items[i] *= value;
+			}
+		} else {
+			for (int i = head; i < items.length; i++) {
+				items[i] *= value;
+			}
+			for (int i = 0; i <= tail; i++) {
+				items[i] *= value;
+			}
+		}
+		return this;
 	}
 
 	@Override
@@ -1994,6 +2030,24 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	@Override
+	public ShortList minus(short value) {
+		final short[] items = this.items;
+		if(head <= tail){
+			for (int i = head; i <= tail; i++) {
+				items[i] -= value;
+			}
+		} else {
+			for (int i = head; i < items.length; i++) {
+				items[i] -= value;
+			}
+			for (int i = 0; i <= tail; i++) {
+				items[i] -= value;
+			}
+		}
+		return this;
+	}
+
+	@Override
 	public void div(int index, short value) {
 		final short[] items = this.items;
 
@@ -2004,6 +2058,24 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	@Override
+	public ShortList div(short value) {
+		final short[] items = this.items;
+		if(head <= tail){
+			for (int i = head; i <= tail; i++) {
+				items[i] /= value;
+			}
+		} else {
+			for (int i = head; i < items.length; i++) {
+				items[i] /= value;
+			}
+			for (int i = 0; i <= tail; i++) {
+				items[i] /= value;
+			}
+		}
+		return this;
+	}
+
+	@Override
 	public void rem(int index, short value) {
 		final short[] items = this.items;
 
@@ -2011,6 +2083,24 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		if (i >= items.length)
 			i -= items.length;
 		items[i] %= value;
+	}
+
+	@Override
+	public ShortList rem(short value) {
+		final short[] items = this.items;
+		if(head <= tail){
+			for (int i = head; i <= tail; i++) {
+				items[i] %= value;
+			}
+		} else {
+			for (int i = head; i < items.length; i++) {
+				items[i] %= value;
+			}
+			for (int i = 0; i <= tail; i++) {
+				items[i] %= value;
+			}
+		}
+		return this;
 	}
 
 	/**
