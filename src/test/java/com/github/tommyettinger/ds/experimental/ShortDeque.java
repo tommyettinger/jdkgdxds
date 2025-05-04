@@ -41,7 +41,7 @@ import java.util.*;
  * <br>
  * Unlike {@link ArrayDeque} or {@link ArrayList}, most methods that take an index here try to be "forgiving;" that is,
  * they treat negative indices as index 0, and too-large indices as the last index, rather than throwing an Exception,
- * except in some cases where the ObjectDeque is empty and an item from it is required. An exception is in
+ * except in some cases where the ShortDeque is empty and an item from it is required. An exception is in
  * {@link #set(int, short)}, which allows prepending by setting a negative index, or appending by setting a too-large
  * index. This isn't a standard JDK behavior, and it doesn't always act how Deque or List is documented.
  * <br>
@@ -80,14 +80,14 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	@Nullable protected transient ShortDequeIterator descendingIterator2;
 
 	/**
-	 * Creates a new ObjectDeque which can hold 16 values without needing to resize the backing array.
+	 * Creates a new ShortDeque which can hold 16 values without needing to resize the backing array.
 	 */
 	public ShortDeque() {
 		this(16);
 	}
 
 	/**
-	 * Creates a new ObjectDeque which can hold the specified number of values without needing to resize the backing
+	 * Creates a new ShortDeque which can hold the specified number of values without needing to resize the backing
 	 * array.
 	 * @param initialSize how large the backing array should be, without any padding
 	 */
@@ -96,7 +96,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Creates a new ObjectDeque using all the contents of the given Collection.
+	 * Creates a new ShortDeque using all the contents of the given Collection.
 	 *
 	 * @param coll a Collection of short that will be copied into this and used in full
 	 * @throws NullPointerException if {@code coll} is {@code null}
@@ -118,9 +118,9 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Copies the given ObjectDeque exactly into this one. Individual values will be shallow-copied.
+	 * Copies the given ShortDeque exactly into this one. Individual values will be shallow-copied.
 	 *
-	 * @param deque another ObjectDeque to copy
+	 * @param deque another ShortDeque to copy
 	 * @throws NullPointerException if {@code deque} is {@code null}
 	 */
 	public ShortDeque(ShortDeque deque) {
@@ -133,7 +133,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Creates a new ObjectDeque using all the contents of the given array.
+	 * Creates a new ShortDeque using all the contents of the given array.
 	 *
 	 * @param a an array of short that will be copied into this and used in full
 	 * @throws NullPointerException if {@code a} is {@code null}
@@ -146,8 +146,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Creates a new ObjectDeque using {@code count} items from {@code a}, starting at {@code offset}.
-	 * If {@code count} is 0 or less, this will create an empty ObjectDeque with capacity 1.
+	 * Creates a new ShortDeque using {@code count} items from {@code a}, starting at {@code offset}.
+	 * If {@code count} is 0 or less, this will create an empty ShortDeque with capacity 1.
 	 * @param a      an array of short
 	 * @param offset where in {@code a} to start using items
 	 * @param count  how many items to use from {@code a}
@@ -224,16 +224,16 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Trims the capacity of this {@code ObjectDeque} instance to be the
+	 * Trims the capacity of this {@code ShortDeque} instance to be the
 	 * deque's current size.  An application can use this operation to minimize
-	 * the storage of an {@code ObjectDeque} instance.
+	 * the storage of a {@code ObjectDeque} instance.
 	 */
 	public void trimToSize() {
 		if (size < items.length) {
 			if(head <= tail) {
 				items = Arrays.copyOfRange(items, head, tail+1);
 			} else {
-				short[] next = Arrays.copyOf(items, size);
+				short[] next = new short[size];
 				System.arraycopy(items, head, next, 0, items.length - head);
 				System.arraycopy(items, 0, next, items.length - head, tail + 1);
 				items = next;
@@ -241,6 +241,12 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			head = 0;
 			tail = items.length - 1;
 		}
+	}
+
+	@Override
+	public short[] shrink() {
+		if (items.length != size) resize(size);
+		return items;
 	}
 
 	/**
@@ -418,7 +424,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public short removeFirst () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("ObjectDeque is empty.");
+			throw new NoSuchElementException("ShortDeque is empty.");
 		}
 
 		final short[] items = this.items;
@@ -443,7 +449,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 */
 	public short removeLast () {
 		if (size == 0) {
-			throw new NoSuchElementException("ObjectDeque is empty.");
+			throw new NoSuchElementException("ShortDeque is empty.");
 		}
 
 		final short[] items = this.items;
@@ -1556,13 +1562,13 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Returns the first (head) item in the deque (without removing it).
 	 *
 	 * @throws NoSuchElementException when the deque is empty
-	 * @see #peekFirst() peeking won't throw an exception, and will return the ObjectDeque's default value if empty
+	 * @see #peekFirst() peeking won't throw an exception, and will return the ShortDeque's default value if empty
 	 * @see #removeFirst()
 	 */
 	public short first () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("ObjectDeque is empty.");
+			throw new NoSuchElementException("ShortDeque is empty.");
 		}
 		return items[head];
 	}
@@ -1571,12 +1577,12 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Returns the last (tail) item in the deque (without removing it).
 	 *
 	 * @throws NoSuchElementException when the deque is empty
-	 * @see #peekLast() peeking won't throw an exception, and will return the ObjectDeque's default value if empty
+	 * @see #peekLast() peeking won't throw an exception, and will return the ShortDeque's default value if empty
 	 */
 	public short last () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("ObjectDeque is empty.");
+			throw new NoSuchElementException("ShortDeque is empty.");
 		}
 		return items[tail];
 	}
@@ -1782,7 +1788,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Delegates to {@link #toString(String, boolean)} with a delimiter of {@code ", "} and square brackets enabled.
-	 * @return the square-bracketed String representation of this ObjectDeque, with items separated by ", "
+	 * @return the square-bracketed String representation of this ShortDeque, with items separated by ", "
 	 */
 	public String toString () {
 		return toString(", ", true);
@@ -1869,7 +1875,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Reverses this ObjectDeque in-place.
+	 * Reverses this ShortDeque in-place.
 	 */
 	public void reverse () {
 		final short[] items = this.items;
@@ -1928,13 +1934,13 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Gets a randomly selected item from this ObjectDeque. Throws a {@link NoSuchElementException} if empty.
+	 * Gets a randomly selected item from this ShortDeque. Throws a {@link NoSuchElementException} if empty.
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
 	public short random (Random random) {
 		if (size <= 0) {
-			throw new NoSuchElementException("ObjectDeque is empty.");
+			throw new NoSuchElementException("ShortDeque is empty.");
 		}
 		return get(random.nextInt(size));
 	}
@@ -2155,20 +2161,20 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Constructs an empty deque given the type as a generic type argument.
+	 * Constructs an empty deque.
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
 	 * @return a new deque containing nothing
 	 */
 	public static ShortDeque with () {
-		return new ShortDeque(0);
+		return new ShortDeque(1);
 	}
 
 	/**
-	 * Creates a new ObjectDeque that holds only the given item, but can be resized.
+	 * Creates a new ShortDeque that holds only the given item, but can be resized.
 	 * @param item one short item
-	 * @return a new ObjectDeque that holds the given item
+	 * @return a new ShortDeque that holds the given item
 	 */
 	public static ShortDeque with (short item) {
 		ShortDeque deque = new ShortDeque(1);
@@ -2177,10 +2183,10 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
 	 * @param item0 a short item
 	 * @param item1 a short item
-	 * @return a new ObjectDeque that holds the given items
+	 * @return a new ShortDeque that holds the given items
 	 */
 	public static ShortDeque with (short item0, short item1) {
 		ShortDeque deque = new ShortDeque(2);
@@ -2189,11 +2195,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
-	 * @return a new ObjectDeque that holds the given items
+	 * @return a new ShortDeque that holds the given items
 	 */
 	public static ShortDeque with (short item0, short item1, short item2) {
 		ShortDeque deque = new ShortDeque(3);
@@ -2202,12 +2208,12 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
 	 * @param item3 a short item
-	 * @return a new ObjectDeque that holds the given items
+	 * @return a new ShortDeque that holds the given items
 	 */
 	public static ShortDeque with (short item0, short item1, short item2, short item3) {
 		ShortDeque deque = new ShortDeque(4);
@@ -2216,13 +2222,13 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
 	 * @param item3 a short item
 	 * @param item4 a short item
-	 * @return a new ObjectDeque that holds the given items
+	 * @return a new ShortDeque that holds the given items
 	 */
 	public static ShortDeque with (short item0, short item1, short item2, short item3, short item4) {
 		ShortDeque deque = new ShortDeque(5);
@@ -2232,14 +2238,14 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
 	 * @param item3 a short item
 	 * @param item4 a short item
 	 * @param item5 a short item
-	 * @return a new ObjectDeque that holds the given items
+	 * @return a new ShortDeque that holds the given items
 	 */
 	public static ShortDeque with (short item0, short item1, short item2, short item3, short item4, short item5) {
 		ShortDeque deque = new ShortDeque(6);
@@ -2249,7 +2255,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
@@ -2257,7 +2263,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param item4 a short item
 	 * @param item5 a short item
 	 * @param item6 a short item
-	 * @return a new ObjectDeque that holds the given items
+	 * @return a new ShortDeque that holds the given items
 	 */
 	public static ShortDeque with (short item0, short item1, short item2, short item3, short item4, short item5, short item6) {
 		ShortDeque deque = new ShortDeque(7);
@@ -2267,7 +2273,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Creates a new ObjectDeque that holds only the given items, but can be resized.
+	 * Creates a new ShortDeque that holds only the given items, but can be resized.
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
@@ -2276,7 +2282,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param item5 a short item
 	 * @param item6 a short item
 	 * @param item7 a short item
-	 * @return a new ObjectDeque that holds the given items
+	 * @return a new ShortDeque that holds the given items
 	 */
 	public static ShortDeque with (short item0, short item1, short item2, short item3, short item4, short item5, short item6, short item7) {
 		ShortDeque deque = new ShortDeque(8);
@@ -2286,12 +2292,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Creates a new ObjectDeque that will hold the items in the given array or varargs.
-	 * This overload will only be used when an array is supplied and the type of the
-	 * items requested is the component type of the array, or if varargs are used and
+	 * Creates a new ShortDeque that will hold the items in the given array or varargs.
+	 * This overload will only be used when a short array is supplied, or if varargs are used and
 	 * there are 9 or more arguments.
 	 * @param varargs either 0 or more short items, or an array of short
-	 * @return a new ObjectDeque that holds the given short items
+	 * @return a new ShortDeque that holds the given short items
 	 */
 	public static ShortDeque with (short... varargs) {
 		return new ShortDeque(varargs);
