@@ -2582,7 +2582,28 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 			tail += values.length - head;
 			head = 0;
 		}
-//		modCount += size; // I don't think this is "structural"
+	}
+
+	/**
+	 * Sorts this deque in-place using {@link ObjectComparators#sort(Object[], int, int, Comparator)}.
+	 * This only sorts between indices {@code from} (inclusive) and {@code to} (exclusive).
+	 * This should operate in O(n log(n)) time or less when the internals of the deque are
+	 * continuous (the head is before the tail in the array). If the internals are not
+	 * continuous, this takes an additional O(n) step (where n is less than the size of
+	 * the deque) to rearrange the internals before sorting. You can pass null as the value
+	 * for {@code comparator} if T implements {@link Comparable} of T, which will make this
+	 * use the natural ordering for T.
+	 *
+	 * @param comparator the Comparator to use for T items; may be null to use the natural
+	 *                   order of T items when T implements Comparable of T
+	 */
+	public void sort (int from, int to, @Nullable Comparator<? super T> comparator) {
+		if (head <= tail) {
+			ObjectComparators.sort(values, head + from, head + to, comparator);
+		} else {
+			resize(values.length);
+			ObjectComparators.sort(values, from, to, comparator);
+		}
 	}
 
 	/**

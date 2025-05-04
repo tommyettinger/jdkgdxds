@@ -2351,6 +2351,16 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		}
 	}
 
+	@Override
+	public void sort(int from, int to, ShortComparator comparator) {
+		if (head <= tail) {
+			ShortComparators.sort(items, head + from, head + to, comparator);
+		} else {
+			resize(items.length); // rearranges items so it is linear starting at 0
+			ShortComparators.sort(items, from, to, comparator);
+		}
+	}
+
 	/**
 	 * Gets a randomly selected item from this ShortDeque. Throws a {@link NoSuchElementException} if empty.
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
