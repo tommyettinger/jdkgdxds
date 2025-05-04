@@ -529,6 +529,16 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		}
 	}
 
+	@Override
+	public boolean addAll(ShortList list) {
+		return addAll(size, list, 0, list.size());
+	}
+
+	@Override
+	public boolean addAll(ShortList list, int offset, int count) {
+		return addAll(size, list, offset, count);
+	}
+
 	/**
 	 * Remove the first item from the deque. (dequeue from head) Always O(1).
 	 *
@@ -1947,12 +1957,61 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		}
 		final short[] items = this.items;
 
-		int i = head + Math.max(Math.min(index, size - 1), 0);
+		int i = head + Math.min(Math.max(index, 0), size - 1);
 		if (i >= items.length)
 			i -= items.length;
 		items[i] = item;
 	}
 
+	@Override
+	public void plus(int index, short value) {
+		final short[] items = this.items;
+
+		int i = head + Math.min(Math.max(index, 0), size - 1);
+		if (i >= items.length)
+			i -= items.length;
+		items[i] += value;
+	}
+
+	@Override
+	public void times(int index, short value) {
+		final short[] items = this.items;
+
+		int i = head + Math.min(Math.max(index, 0), size - 1);
+		if (i >= items.length)
+			i -= items.length;
+		items[i] *= value;
+	}
+
+	@Override
+	public void minus(int index, short value) {
+		final short[] items = this.items;
+
+		int i = head + Math.min(Math.max(index, 0), size - 1);
+		if (i >= items.length)
+			i -= items.length;
+		items[i] -= value;
+	}
+
+	@Override
+	public void div(int index, short value) {
+		final short[] items = this.items;
+
+		int i = head + Math.min(Math.max(index, 0), size - 1);
+		if (i >= items.length)
+			i -= items.length;
+		items[i] /= value;
+	}
+
+	@Override
+	public void rem(int index, short value) {
+		final short[] items = this.items;
+
+		int i = head + Math.min(Math.max(index, 0), size - 1);
+		if (i >= items.length)
+			i -= items.length;
+		items[i] %= value;
+	}
 
 	/**
 	 * Removes all values from this deque. This operates in O(1) time.
