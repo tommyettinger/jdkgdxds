@@ -16,7 +16,10 @@
 
 package com.github.tommyettinger.ds.experimental;
 
-import com.github.tommyettinger.ds.*;
+import com.github.tommyettinger.ds.Arrangeable;
+import com.github.tommyettinger.ds.Ordered;
+import com.github.tommyettinger.ds.PrimitiveCollection;
+import com.github.tommyettinger.ds.ShortList;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
@@ -29,7 +32,7 @@ import java.util.*;
 /**
  * A resizable, insertion-ordered double-ended queue of primitive {@code short} with efficient add and remove at the
  * beginning and end. This extends {@link ShortList} and supports {@link RandomAccess}. Like ShortList, it is a
- * {@link PrimitiveCollection.OfShort}, {@link Arrangeable}, and {@link Ordered.OfShort}.
+ * {@link OfShort}, {@link Arrangeable}, and {@link Ordered.OfShort}.
  * Values in the backing array may wrap back to the beginning, making add and remove at the beginning and end O(1)
  * (unless the backing array needs to resize when adding). Deque functionality is provided via {@link #removeLast()} and
  * {@link #addFirst(short)}.
@@ -49,7 +52,7 @@ import java.util.*;
  * Some new methods are present here, or have been made public when they weren't before. {@link #removeRange(int, int)},
  * for instance, is now public, as is {@link #resize(int)}. New APIs include Deque-like methods that affect the middle
  * of the deque, such as {@link #peekAt(int)} and {@link #pollAt(int)}. There are more bulk methods that work at the
- * head or tail region of the deque, such as {@link #addAllFirst(PrimitiveCollection.OfShort)} and {@link #truncateFirst(int)}. There are
+ * head or tail region of the deque, such as {@link #addAllFirst(OfShort)} and {@link #truncateFirst(int)}. There are
  * the methods from {@link Arrangeable}, and many default methods from PrimitiveCollection and Ordered.
  * <br>
  * In general, this is an improvement over {@link ArrayDeque} in every type of functionality, and is mostly equivalent
@@ -101,7 +104,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param coll a Collection of short that will be copied into this and used in full
 	 * @throws NullPointerException if {@code coll} is {@code null}
 	 */
-	public ShortDeque(PrimitiveCollection.OfShort coll) {
+	public ShortDeque(OfShort coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -484,11 +487,16 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 				this.tail += gapSize - (head - this.head);
 				return index;
 			} else {
-				if (head + gapSize <= items.length) {
-					if (head - gapSize >= 0)
-						System.arraycopy(items, head, items, head - gapSize, gapSize);
-					this.head -= gapSize;
-					return this.head + index;
+				if (head + index <= this.items.length) {
+					if(head - gapSize >= 0) {
+						System.arraycopy(this.items, head, this.items, head - gapSize, index);
+						this.head -= gapSize;
+						return this.head + index;
+					} else {
+						System.arraycopy(this.items, head + index, this.items, head + index + gapSize, this.items.length - (head + index + gapSize));
+						this.tail += gapSize;
+						return this.head + index;
+					}
 				} else {
 					int wrapped = head + index - items.length;
 					System.arraycopy(items, wrapped, items, wrapped + gapSize, tail + 1 - wrapped);
@@ -950,7 +958,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (PrimitiveCollection.OfShort c) {
+	public boolean addAll (OfShort c) {
 		final int cs = c.size();
 		if(cs == 0) return false;
 		int oldSize = size;
@@ -974,11 +982,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * An alias for {@link #addAll(PrimitiveCollection.OfShort)}, this adds every item in {@code c} to this in order at the end.
+	 * An alias for {@link #addAll(OfShort)}, this adds every item in {@code c} to this in order at the end.
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (PrimitiveCollection.OfShort c) {
+	public boolean addAllLast (OfShort c) {
 		return addAll(c);
 	}
 
@@ -988,7 +996,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (PrimitiveCollection.OfShort c) {
+	public boolean addAllFirst (OfShort c) {
 		final int cs = c.size();
 		if(cs == 0) return false;
 		int oldSize = size;
@@ -1022,7 +1030,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * An alias for {@link #addAll(int, PrimitiveCollection.OfShort)}; inserts all elements
+	 * An alias for {@link #addAll(int, OfShort)}; inserts all elements
 	 * in the specified collection into this list at the specified position.
 	 * Shifts the element currently at that position (if any) and any subsequent
 	 * elements to the right (increases their indices). The new elements
@@ -1037,11 +1045,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param c collection containing elements to be added to this list
 	 * @return {@code true} if this list changed as a result of the call
 	 */
-	public boolean insertAll(int index, PrimitiveCollection.OfShort c) {
+	public boolean insertAll(int index, OfShort c) {
 		return addAll(index, c);
 	}
 
-	public boolean addAll(int index, PrimitiveCollection.OfShort c) {
+	public boolean addAll(int index, OfShort c) {
 		int oldSize = size;
 		if(index <= 0)
 			addAllFirst(c);
@@ -1068,8 +1076,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Exactly like {@link #addAll(PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort.
-	 * @see #addAll(PrimitiveCollection.OfShort)
+	 * Exactly like {@link #addAll(OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort.
+	 * @see #addAll(OfShort)
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
@@ -1117,8 +1125,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Exactly like {@link #addAllFirst(PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort.
-	 * @see #addAllFirst(PrimitiveCollection.OfShort)
+	 * Exactly like {@link #addAllFirst(OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort.
+	 * @see #addAllFirst(OfShort)
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
@@ -1167,7 +1175,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Like {@link #addAll(int, PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort and inserts it
+	 * Like {@link #addAll(int, OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
 	 * @see #addAll(short[])
@@ -1180,7 +1188,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Like {@link #addAll(int, PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort, gets items starting at
+	 * Like {@link #addAll(int, OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort, gets items starting at
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
@@ -1208,8 +1216,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Exactly like {@link #addAll(PrimitiveCollection.OfShort)}, but takes an Ordered.OfShort instead of a PrimitiveCollection.OfShort.
-	 * @see #addAll(PrimitiveCollection.OfShort)
+	 * Exactly like {@link #addAll(OfShort)}, but takes an Ordered.OfShort instead of a PrimitiveCollection.OfShort.
+	 * @see #addAll(OfShort)
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
@@ -1230,7 +1238,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Like {@link #addAll(int, PrimitiveCollection.OfShort)}, but takes an ord instead of a PrimitiveCollection.OfShort and inserts it
+	 * Like {@link #addAll(int, OfShort)}, but takes an ord instead of a PrimitiveCollection.OfShort and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code ord} will be preserved, starting at the given index in this deque.
 	 * @see #addAll(Ordered.OfShort)
@@ -1243,7 +1251,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Like {@link #addAll(int, PrimitiveCollection.OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort, gets items starting at
+	 * Like {@link #addAll(int, OfShort)}, but takes an array instead of a PrimitiveCollection.OfShort, gets items starting at
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
@@ -1290,8 +1298,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Exactly like {@link #addAllFirst(PrimitiveCollection.OfShort)}, but takes an ord instead of a PrimitiveCollection.OfShort.
-	 * @see #addAllFirst(PrimitiveCollection.OfShort)
+	 * Exactly like {@link #addAllFirst(OfShort)}, but takes an ord instead of a PrimitiveCollection.OfShort.
+	 * @see #addAllFirst(OfShort)
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
@@ -2169,6 +2177,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 			System.arraycopy(items, 0, items, count - place, place);
 			System.arraycopy(items, head, items, place, count - place);
 		}
+		size += count;
 		return count > 0;
 	}
 
@@ -2295,7 +2304,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * other subtypes of {@link ShortList}
 	 * If {@code o} is not a ShortList
 	 * (and is also not somehow reference-equivalent to this collection), this returns false.
-	 * This uses the {@link PrimitiveCollection.OfShort#iterator()} of both this and {@code o},
+	 * This uses the {@link OfShort#iterator()} of both this and {@code o},
 	 * so if either is in the
 	 * middle of a concurrent iteration that modifies the collection, this may fail.
 	 * @param o object to be compared for equality with this collection
@@ -2640,7 +2649,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		 *
 		 * @return a ShortIterator; really this same ShortDequeIterator.
 		 */
-		public ShortDeque.ShortDequeIterator iterator () {
+		public ShortDequeIterator iterator () {
 			return this;
 		}
 	}

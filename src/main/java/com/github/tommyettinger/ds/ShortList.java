@@ -411,7 +411,8 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	public boolean duplicateRange (int index, int count) {
 		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
 		int sizeNeeded = size + count;
-		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length)
+			items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
 		return count > 0;
