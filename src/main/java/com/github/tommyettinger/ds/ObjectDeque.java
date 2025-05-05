@@ -189,12 +189,12 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	}
 
 	/**
-	 * Append given object to the tail (enqueue to tail). Unless backing array needs resizing, operates in O(1) time.
+	 * Appends {@code value} to the tail (enqueue to tail). Unless backing array needs resizing, operates in O(1) time.
 	 *
-	 * @param object can be null
+	 * @param value can be null
 	 */
 	@Override
-	public void addLast (@Nullable T object) {
+	public void addLast (@Nullable T value) {
 		@Nullable T[] values = this.values;
 
 		if (size == values.length) {
@@ -204,35 +204,150 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 
 		if (++tail == values.length) tail = 0;
 		if(++size == 1) tail = head;
-		values[tail] = object;
+		values[tail] = value;
 		modCount++;
 	}
 
-	/**
-	 * Prepend given object to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
-	 *
-	 * @param object can be null
-	 * @see #addLast(Object)
-	 */
-	@Override
-	public void addFirst (@Nullable T object) {
+	public void addLast(@Nullable T value1, @Nullable T value2) {
 		@Nullable T[] values = this.values;
 
-		if (size == values.length) {
-			resize(values.length << 1);
+		if (size + 2 > values.length) {
+			resize(size + 2 << 1);
 			values = this.values;
 		}
 
-		int head = this.head;
-		head--;
-		if (head == -1) {
-			head = values.length - 1;
+		if (++tail == values.length) tail = 0;
+		if(size == 0) tail = head;
+		values[tail] = value1;
+		if (++tail == values.length) tail = 0;
+		values[tail] = value2;
+		size += 2;
+		modCount += 2;
+	}
+
+	public void addLast(@Nullable T value1, @Nullable T value2, @Nullable T value3) {
+		@Nullable T[] values = this.values;
+
+		if (size + 3 > values.length) {
+			resize(size + 3 << 1);
+			values = this.values;
 		}
-		values[head] = object;
+		if (++tail == values.length) tail = 0;
+		if(size == 0) tail = head;
+		values[tail] = value1;
+		if (++tail == values.length) tail = 0;
+		values[tail] = value2;
+		if (++tail == values.length) tail = 0;
+		values[tail] = value3;
+		size += 3;
+		modCount += 3;
+	}
+
+	public void addLast(@Nullable T value1, @Nullable T value2, @Nullable T value3, @Nullable T value4) {
+		@Nullable T[] values = this.values;
+
+		if (size + 4 > values.length) {
+			resize(size + 4 << 1);
+			values = this.values;
+		}
+		if (++tail == values.length) tail = 0;
+		if(size == 0) tail = head;
+		values[tail] = value1;
+		if (++tail == values.length) tail = 0;
+		values[tail] = value2;
+		if (++tail == values.length) tail = 0;
+		values[tail] = value3;
+		if (++tail == values.length) tail = 0;
+		values[tail] = value4;
+		size += 4;
+		modCount += 4;
+	}
+
+	/**
+	 * Prepends {@code value} to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
+	 *
+	 * @param value can be null
+	 * @see #addLast(Object)
+	 */
+	public void addFirst (@Nullable T value) {
+		@Nullable T[] values = this.values;
+
+		if (size == values.length) {
+			resize(size << 1);
+			values = this.values;
+		}
+		int head = this.head - 1;
+		if (head == -1) head = values.length - 1;
+		values[head] = value;
 
 		this.head = head;
 		if(++size == 1) tail = head;
 		modCount++;
+	}
+
+	public void addFirst (@Nullable T value1, @Nullable T value2) {
+		@Nullable T[] values = this.values;
+
+		if (size + 2 > values.length) {
+			resize(size + 2 << 1);
+			values = this.values;
+		}
+
+		int head = this.head - 1;
+		if (head == -1) head = values.length - 1;
+		if(size == 0) tail = head;
+		values[head] = value2;
+		if (--head == -1) head = values.length - 1;
+		values[head] = value1;
+		size += 2;
+
+		this.head = head;
+		modCount += 2;
+	}
+
+	public void addFirst (@Nullable T value1, @Nullable T value2, @Nullable T value3) {
+		@Nullable T[] values = this.values;
+
+		if (size + 3 > values.length) {
+			resize(size + 3 << 1);
+			values = this.values;
+		}
+		int head = this.head - 1;
+		if (head == -1) head = values.length - 1;
+		if(size == 0) tail = head;
+		values[head] = value3;
+		if (--head == -1) head = values.length - 1;
+		values[head] = value2;
+		if (--head == -1) head = values.length - 1;
+		values[head] = value1;
+		size += 3;
+
+		this.head = head;
+		modCount += 3;
+	}
+
+	public void addFirst (@Nullable T value1, @Nullable T value2, @Nullable T value3, @Nullable T value4) {
+		@Nullable T[] values = this.values;
+
+		if (size + 4 > values.length) {
+			resize(size + 4 << 1);
+			values = this.values;
+		}
+
+		int head = this.head - 1;
+		if (head == -1) head = values.length - 1;
+		if(size == 0) tail = head;
+		values[head] = value4;
+		if (--head == -1) head = values.length - 1;
+		values[head] = value3;
+		if (--head == -1) head = values.length - 1;
+		values[head] = value2;
+		if (--head == -1) head = values.length - 1;
+		values[head] = value1;
+		size += 4;
+
+		this.head = head;
+		modCount += 4;
 	}
 
 	/**
@@ -720,9 +835,26 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 */
 	@Override
 	public boolean add (@Nullable T t) {
-		int oldSize = size;
 		addLast(t);
-		return oldSize != size;
+		return true;
+	}
+
+	@Override
+	public boolean add(T item0, T item1) {
+		addLast(item0, item1);
+		return true;
+	}
+
+	@Override
+	public boolean add(T item0, T item1, T item2) {
+		addLast(item0, item1, item2);
+		return true;
+	}
+
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3) {
+		addLast(item0, item1, item2, item3);
+		return true;
 	}
 
 	/**
