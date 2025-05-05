@@ -359,7 +359,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	@Override
 	public short[] shrink() {
-		if (items.length != size) resize(size);
+		trimToSize();
 		return items;
 	}
 
@@ -608,9 +608,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *                                  element prevents it from being added to this deque
 	 */
 	public boolean offerFirst (short t) {
-		int oldSize = size;
 		addFirst(t);
-		return oldSize != size;
+		return true;
 	}
 
 	/**
@@ -630,9 +629,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *                                  element prevents it from being added to this deque
 	 */
 	public boolean offerLast (short t) {
-		int oldSize = size;
 		addLast(t);
-		return oldSize != size;
+		return true;
 	}
 
 	/**
@@ -789,9 +787,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return {@code true} (as specified by {@link Collection#add})
 	 */
 	public boolean add (short t) {
-		int oldSize = size;
 		addLast(t);
-		return oldSize != size;
+		return true;
 	}
 
 	@Override
@@ -875,9 +872,8 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return {@code true} if the element was added to this deque, else {@code false}
 	 */
 	public boolean offer (short t) {
-		int oldSize = size;
 		addLast(t);
-		return oldSize != size;
+		return true;
 	}
 
 	/**
@@ -1848,7 +1844,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	@Override
 	public boolean retainAll(OfShort other) {
 		// Gets the deque to be internally the same as a ShortList, if not already.
-		if(head != 0) resize(items.length);
+		if(head != 0) trimToSize();
 		// That allows us to use the ShortList retainAll() verbatim.
 		return super.retainAll(other);
 	}
@@ -2416,7 +2412,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		if (head <= tail) {
 			ShortComparators.sort(items, head + from, head + to, comparator);
 		} else {
-			resize(items.length); // rearranges items so it is linear starting at 0
+			trimToSize(); // rearranges items so it is linear starting at 0
 			ShortComparators.sort(items, from, to, comparator);
 		}
 	}
@@ -2641,7 +2637,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		/**
 		 * Returns an iterator over elements of type {@code short}.
 		 *
-		 * @return a ListIterator; really this same ShortDequeIterator.
+		 * @return a ShortIterator; really this same ShortDequeIterator.
 		 */
 		public ShortDeque.ShortDequeIterator iterator () {
 			return this;
