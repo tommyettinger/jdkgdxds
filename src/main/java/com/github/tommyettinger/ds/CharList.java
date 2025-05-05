@@ -584,6 +584,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		return items;
 	}
 
+	public void trimToSize() {
+		shrink();
+	}
+
 	/**
 	 * Increases the size of the backing array to accommodate the specified number of additional items. Useful before adding many
 	 * items to avoid multiple backing array resizes.

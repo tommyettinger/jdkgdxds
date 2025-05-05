@@ -356,8 +356,8 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * the storage of an {@code ObjectDeque} instance.
 	 */
 	public void trimToSize() {
-		modCount++;
 		if (size < values.length) {
+			modCount++;
 			if(head <= tail) {
 				values = Arrays.copyOfRange(values, head, tail+1);
 			} else {
@@ -380,6 +380,15 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 		if (values.length < needed) {
 			resize(needed);
 		}
+	}
+
+	/**
+	 * Reduces the size of the backing array to the size of the actual items. This is useful to release memory when many items
+	 * have been removed, or if it is known that more items will not be added.
+	 * This is an alias for {@link #trimToSize()}.
+	 */
+	public void shrink() {
+		trimToSize();
 	}
 
 	/**

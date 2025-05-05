@@ -502,6 +502,14 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		super.ensureCapacity(size() + additionalCapacity);
 	}
 
+	public void shrink () {
+		trimToSize();
+	}
+
+	public void trimToSize() {
+		super.trimToSize();
+	}
+
 	/**
 	 * Uses == for comparison of each item.
 	 */
