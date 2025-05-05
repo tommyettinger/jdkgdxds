@@ -121,12 +121,48 @@ public class DequeTest {
 		deque.add(17, "PSI");
 		String text = deque.toString(", ");
 		System.out.println(text);
+
+		String[] put = "foo bar baz quux blin".split(" ");
+//		deque.duplicateRange(4, 5);
+		deque.addAll(4, put);
+		text = deque.toString(", ");
+//		text = deque.subList(4, 9).toString();
+		System.out.println(text);
+
+//		deque.duplicateRange(2, 5);
+		deque.addAll(2, put);
+		text = deque.toString(", ");
+//		text = deque.subList(2, 7).toString();
+		System.out.println(text);
+
+//		deque.duplicateRange(0, 5);
+		deque.addAll(0, put);
+		text = deque.toString(", ");
+//		text = deque.subList(0, 5).toString();
+		System.out.println(text);
+
 		deque.clear();
 		deque.addFirst("wombat");
 		deque.addLast("kangaroo");
 		deque.addFirst("boomerang");
 		deque.addLast("didgeridoo");
 		deque.clear();
+
+		System.out.println("NOW WITH LIST");
+		ObjectList<String> list = new ObjectList<>("eta, theta, iota, kappa, lambda, mu, nu, xi, omicron, pi, rho, sigma, tau, upsilon, phi, chi, OMEGA, PSI, CAPTAIN SPECTACULAR".split(", "));
+
+		list.duplicateRange(4, 5);
+		text = list.toString(", ");
+		System.out.println(text);
+
+		list.duplicateRange(2, 5);
+		text = list.toString(", ");
+		System.out.println(text);
+
+		list.duplicateRange(0, 5);
+		text = list.toString(", ");
+		System.out.println(text);
+
 	}
 
 	@Test

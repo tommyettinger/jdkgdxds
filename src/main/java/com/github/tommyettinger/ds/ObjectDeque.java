@@ -502,9 +502,9 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 				this.tail += gapSize - (head - this.head);
 				return index;
 			} else {
-				if (head + index < values.length) {
-					if (index > 0)
-						System.arraycopy(values, head, values, head - gapSize, index);
+				if (head + gapSize <= values.length) {
+					if (head - gapSize >= 0)
+						System.arraycopy(values, head, values, head - gapSize, gapSize);
 					this.head -= gapSize;
 					return this.head + index;
 				} else {
@@ -532,6 +532,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 						System.arraycopy(values, head, newArray, 0, index);
 					this.head = 0;
 					System.arraycopy(values, head + index, newArray, index + gapSize, headPart - index);
+					System.arraycopy(values, 0, newArray, index + gapSize + headPart - index, tail + 1);
 					this.tail = size + gapSize - 1;
 				} else {
 					System.arraycopy(values, head, newArray, 0, headPart);

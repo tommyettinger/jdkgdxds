@@ -484,9 +484,9 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 				this.tail += gapSize - (head - this.head);
 				return index;
 			} else {
-				if (head + index < items.length) {
-					if (index > 0)
-						System.arraycopy(items, head, items, head - gapSize, index);
+				if (head + gapSize <= items.length) {
+					if (head - gapSize >= 0)
+						System.arraycopy(items, head, items, head - gapSize, gapSize);
 					this.head -= gapSize;
 					return this.head + index;
 				} else {
@@ -514,6 +514,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 						System.arraycopy(items, head, newArray, 0, index);
 					this.head = 0;
 					System.arraycopy(items, head + index, newArray, index + gapSize, headPart - index);
+					System.arraycopy(items, 0, newArray, index + gapSize + headPart - index, tail + 1);
 					this.tail = size + gapSize - 1;
 				} else {
 					System.arraycopy(items, head, newArray, 0, headPart);
