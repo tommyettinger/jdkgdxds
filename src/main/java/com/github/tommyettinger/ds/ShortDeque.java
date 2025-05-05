@@ -1519,7 +1519,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Removes from this list all the elements whose index is between
 	 * {@code fromIndex}, inclusive, and {@code toIndex}, exclusive.
 	 * Shifts any succeeding elements to the left (reduces their index).
-	 * This call shortens the list by {@code (toIndex - fromIndex)} elements.
+	 * This call shrinks the list by {@code (toIndex - fromIndex)} elements.
 	 * If {@code toIndex==fromIndex}, this operation has no effect.
 	 * If {@code fromIndex} is 0 or less, this delegates to {@link #truncateFirst(int)};
 	 * if {@code toIndex} is equal to or greater than the

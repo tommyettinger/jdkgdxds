@@ -901,7 +901,12 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	public static class IntListIterator implements IntIterator {
 		protected int index, latest = -1;
 		protected IntList list;
-		protected boolean valid = true;
+		/**
+		 * Used to track if a reusable iterator can be used now.
+		 * This is public so subclasses of IntList (in other packages) can still access this
+		 * directly even though it belongs to IntListIterator, not IntList.
+		 */
+		public boolean valid = true;
 
 		public IntListIterator (IntList list) {
 			this.list = list;

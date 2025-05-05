@@ -936,7 +936,12 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	public static class FloatListIterator implements FloatIterator {
 		protected int index, latest = -1;
 		protected FloatList list;
-		protected boolean valid = true;
+		/**
+		 * Used to track if a reusable iterator can be used now.
+		 * This is public so subclasses of FloatList (in other packages) can still access this
+		 * directly even though it belongs to FloatListIterator, not FloatList.
+		 */
+		public boolean valid = true;
 
 		public FloatListIterator (FloatList list) {
 			this.list = list;

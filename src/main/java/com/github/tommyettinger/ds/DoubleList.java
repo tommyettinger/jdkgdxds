@@ -918,7 +918,12 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	public static class DoubleListIterator implements DoubleIterator {
 		protected int index, latest = -1;
 		protected DoubleList list;
-		protected boolean valid = true;
+		/**
+		 * Used to track if a reusable iterator can be used now.
+		 * This is public so subclasses of DoubleList (in other packages) can still access this
+		 * directly even though it belongs to DoubleListIterator, not DoubleList.
+		 */
+		public boolean valid = true;
 
 		public DoubleListIterator (DoubleList list) {
 			this.list = list;

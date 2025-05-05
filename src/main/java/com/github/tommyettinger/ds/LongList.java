@@ -901,7 +901,12 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	public static class LongListIterator implements LongIterator {
 		protected int index, latest = -1;
 		protected LongList list;
-		protected boolean valid = true;
+		/**
+		 * Used to track if a reusable iterator can be used now.
+		 * This is public so subclasses of LongList (in other packages) can still access this
+		 * directly even though it belongs to LongListIterator, not LongList.
+		 */
+		public boolean valid = true;
 
 		public LongListIterator (LongList list) {
 			this.list = list;

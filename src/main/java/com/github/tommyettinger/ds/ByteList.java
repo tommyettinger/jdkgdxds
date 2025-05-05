@@ -901,7 +901,12 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	public static class ByteListIterator implements ByteIterator {
 		protected int index, latest = -1;
 		protected ByteList list;
-		protected boolean valid = true;
+		/**
+		 * Used to track if a reusable iterator can be used now.
+		 * This is public so subclasses of ByteList (in other packages) can still access this
+		 * directly even though it belongs to ByteListIterator, not ByteList.
+		 */
+		public boolean valid = true;
 
 		public ByteListIterator (ByteList list) {
 			this.list = list;

@@ -807,7 +807,12 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	public static class BooleanListIterator implements BooleanIterator {
 		protected int index, latest = -1;
 		protected BooleanList list;
-		protected boolean valid = true;
+		/**
+		 * Used to track if a reusable iterator can be used now.
+		 * This is public so subclasses of BooleanList (in other packages) can still access this
+		 * directly even though it belongs to BooleanListIterator, not BooleanList.
+		 */
+		public boolean valid = true;
 
 		public BooleanListIterator (BooleanList list) {
 			this.list = list;

@@ -800,7 +800,12 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	public static class CharListIterator implements CharIterator {
 		protected int index, latest = -1;
 		protected CharList list;
-		protected boolean valid = true;
+		/**
+		 * Used to track if a reusable iterator can be used now.
+		 * This is public so subclasses of CharList (in other packages) can still access this
+		 * directly even though it belongs to CharListIterator, not CharList.
+		 */
+		public boolean valid = true;
 
 		public CharListIterator (CharList list) {
 			this.list = list;
