@@ -502,11 +502,16 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 				this.tail += gapSize - (head - this.head);
 				return index;
 			} else {
-				if (head + gapSize <= values.length) {
-					if (head - gapSize >= 0)
-						System.arraycopy(values, head, values, head - gapSize, gapSize);
-					this.head -= gapSize;
-					return this.head + index;
+				if (head + index <= values.length) {
+					if(head - gapSize >= 0) {
+						System.arraycopy(values, head, values, head - gapSize, index);
+						this.head -= gapSize;
+						return this.head + index;
+					} else {
+						System.arraycopy(values, head + index, values, head + index + gapSize, values.length - (head + index + gapSize));
+						this.tail += gapSize;
+						return this.head + index;
+					}
 				} else {
 					int wrapped = head + index - values.length;
 					System.arraycopy(values, wrapped, values, wrapped + gapSize, tail + 1 - wrapped);
@@ -545,6 +550,29 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 			this.values = newArray;
 			return index;
 		}
+	}
+
+	/**
+	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
+	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 * @param index the first index to duplicate
+	 * @param count how many items to duplicate
+	 */
+//	public boolean duplicateRange (int index, int count) {
+//		if (index + count >= size()) {throw new IllegalStateException("Sum of index and count is too large: " + (index + count) + " must not be >= " + size());}
+//		addAll(index, subList(index, index + count));
+//		return count > 0;
+//	}
+	public boolean duplicateRange(int index, int count) {
+		int place = ensureGap(index + count, count);
+		if(place >= head + index + count){
+			System.arraycopy(values, head + index, values, place, count);
+		} else {
+			System.arraycopy(values, 0, values, count - place, place);
+			System.arraycopy(values, head, values, place, count - place);
+		}
+		size += count;
+		return count > 0;
 	}
 
 	/**

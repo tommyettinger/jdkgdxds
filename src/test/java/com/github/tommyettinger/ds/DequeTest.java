@@ -122,21 +122,21 @@ public class DequeTest {
 		String text = deque.toString(", ");
 		System.out.println(text);
 
-		String[] put = "foo bar baz quux blin".split(" ");
-//		deque.duplicateRange(4, 5);
-		deque.addAll(4, put);
+//		String[] put = "foo bar baz quux blin".split(" ");
+		deque.duplicateRange(4, 5);
+//		deque.addAll(4, put);
 		text = deque.toString(", ");
 //		text = deque.subList(4, 9).toString();
 		System.out.println(text);
 
-//		deque.duplicateRange(2, 5);
-		deque.addAll(2, put);
+		deque.duplicateRange(2, 5);
+//		deque.addAll(2, put);
 		text = deque.toString(", ");
 //		text = deque.subList(2, 7).toString();
 		System.out.println(text);
 
-//		deque.duplicateRange(0, 5);
-		deque.addAll(0, put);
+		deque.duplicateRange(0, 5);
+//		deque.addAll(0, put);
 		text = deque.toString(", ");
 //		text = deque.subList(0, 5).toString();
 		System.out.println(text);
