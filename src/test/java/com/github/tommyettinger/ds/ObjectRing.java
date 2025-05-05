@@ -64,7 +64,7 @@ public class ObjectRing<T> extends ObjectDeque<T> {
 	}
 
 	public int capacity() {
-		return values.length;
+		return items.length;
 	}
 
 	@Override

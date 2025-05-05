@@ -24,7 +24,7 @@ import java.util.ArrayDeque;
 
 public class ObjectDequeTest {
     public void show(ObjectDeque<?> od){
-        System.out.println(od.toString() + "  " + TextTools.join(" ", od.values) + "  with head: " + od.head + ", tail: " + od.tail);
+        System.out.println(od.toString() + "  " + TextTools.join(" ", od.items) + "  with head: " + od.head + ", tail: " + od.tail);
         System.out.println();
     }
 
