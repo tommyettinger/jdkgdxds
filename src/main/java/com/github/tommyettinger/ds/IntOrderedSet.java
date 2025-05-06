@@ -53,17 +53,29 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	protected final IntList items;
 
 	public IntOrderedSet () {
-		items = new IntList();
+		this(44);
+	}
+
+	/**
+	 * Creates an IntOrderedSet with the option to use an IntDeque for keeping order.
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 */
+	public IntOrderedSet (boolean useDequeOrder) {
+		this(44, Utilities.getDefaultLoadFactor(), useDequeOrder);
 	}
 
 	public IntOrderedSet (int initialCapacity, float loadFactor) {
+		this(initialCapacity, loadFactor, false);
+	}
+
+	public IntOrderedSet (int initialCapacity, float loadFactor, boolean useDequeOrder) {
 		super(initialCapacity, loadFactor);
-		items = new IntList(initialCapacity);
+		if(useDequeOrder) items = new IntDeque(initialCapacity);
+		else items = new IntList(initialCapacity);
 	}
 
 	public IntOrderedSet (int initialCapacity) {
-		super(initialCapacity);
-		items = new IntList(initialCapacity);
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), false);
 	}
 
 	/**
@@ -78,14 +90,24 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 
 	public IntOrderedSet (IntOrderedSet set) {
 		super(set);
-		items = new IntList(set.items);
+		if(set.items instanceof IntDeque) items = new IntDeque((IntDeque) set.items);
+		else items = new IntList(set.items);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
 	public IntOrderedSet (OfInt coll) {
-		this(coll.size());
+		this(coll, false);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code coll}.
+	 * @param coll any {@link PrimitiveCollection.OfInt}
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 */
+	public IntOrderedSet (OfInt coll, boolean useDequeOrder) {
+		this(coll.size(), Utilities.getDefaultLoadFactor(), useDequeOrder);
 		addAll(coll);
 	}
 
@@ -98,7 +120,20 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param count  how many items to copy from other
 	 */
 	public IntOrderedSet (Ordered.OfInt other, int offset, int count) {
-		this(count);
+		this(other, offset, count, false);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this.
+	 *
+	 * @param other  another Ordered.OfInt
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 */
+	public IntOrderedSet (Ordered.OfInt other, int offset, int count, boolean useDequeOrder) {
+		this(count, Utilities.getDefaultLoadFactor(), useDequeOrder);
 		addAll(0, other, offset, count);
 	}
 
@@ -110,7 +145,19 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
 	public IntOrderedSet (int[] array, int offset, int length) {
-		this(length);
+		this(array, offset, length, false);
+	}
+
+	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 *
+	 * @param array  an array to draw items from
+	 * @param offset the first index in array to draw an item from
+	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 */
+	public IntOrderedSet (int[] array, int offset, int length, boolean useDequeOrder) {
+		this(length, Utilities.getDefaultLoadFactor(), useDequeOrder);
 		addAll(array, offset, length);
 	}
 
@@ -120,8 +167,17 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param items an array that will be used in full, except for duplicate items
 	 */
 	public IntOrderedSet (int[] items) {
-		this(items.length);
-		addAll(items);
+		this(items, 0, items.length, false);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code items}.
+	 *
+	 * @param items an array that will be used in full, except for duplicate items
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 */
+	public IntOrderedSet (int[] items, boolean useDequeOrder) {
+		this(items, 0, items.length, useDequeOrder);
 	}
 
 	@Override
