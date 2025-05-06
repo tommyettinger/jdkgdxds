@@ -1093,6 +1093,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 			}
 			tail += oldSize;
 			size += oldSize;
+			modCount += oldSize;
 		} else {
 			for (T t : c) {
 				addLast(t);
@@ -1138,6 +1139,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 			head -= oldSize;
 			if(head < 0) head += items.length;
 			size += oldSize;
+			modCount += oldSize;
 		} else {
 			int i = ensureGap(0, cs);
 			for(T t : c){
@@ -1145,6 +1147,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 				if(i == items.length) i = 0;
 			}
 			size += cs;
+			modCount += cs;
 		}
 		return oldSize != size;
 	}

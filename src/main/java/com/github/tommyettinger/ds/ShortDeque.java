@@ -1021,6 +1021,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 				items[i++] = it.nextShort();
 				if(i == items.length) i = 0;
 			}
+			size += cs;
 		}
 		return oldSize != size;
 	}

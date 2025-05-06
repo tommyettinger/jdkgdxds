@@ -1021,6 +1021,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 				items[i++] = it.nextInt();
 				if(i == items.length) i = 0;
 			}
+			size += cs;
 		}
 		return oldSize != size;
 	}

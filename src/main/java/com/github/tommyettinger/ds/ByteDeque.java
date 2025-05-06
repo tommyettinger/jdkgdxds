@@ -1021,6 +1021,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 				items[i++] = it.nextByte();
 				if(i == items.length) i = 0;
 			}
+			size += cs;
 		}
 		return oldSize != size;
 	}

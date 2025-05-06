@@ -1022,6 +1022,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 				items[i++] = it.nextFloat();
 				if(i == items.length) i = 0;
 			}
+			size += cs;
 		}
 		return oldSize != size;
 	}

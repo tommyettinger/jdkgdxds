@@ -1021,6 +1021,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 				items[i++] = it.nextBoolean();
 				if(i == items.length) i = 0;
 			}
+			size += cs;
 		}
 		return oldSize != size;
 	}
