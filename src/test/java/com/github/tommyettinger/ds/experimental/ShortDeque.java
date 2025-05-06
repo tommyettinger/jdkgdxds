@@ -2004,7 +2004,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		}
 		final short[] items = this.items;
 
-		int i = head + Math.min(Math.max(index, 0), size - 1);
+		int i = head + index;
 		if (i >= items.length)
 			i -= items.length;
 		items[i] = item;
