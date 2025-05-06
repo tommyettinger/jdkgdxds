@@ -449,20 +449,20 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 					return 1;
 				}
 			} else {
-				if (index == 0) {
+				if (index != 0) {
 					if (head != 0) {
 						this.items[0] = this.items[head];
 					}
 					this.head = 0;
 					this.tail = gapSize;
-					return 0;
+					return 1;
 				} else {
 					if (head != gapSize) {
 						this.items[gapSize] = this.items[head];
 					}
 					this.head = 0;
 					this.tail = gapSize;
-					return 1;
+					return 0;
 				}
 			}
 		}

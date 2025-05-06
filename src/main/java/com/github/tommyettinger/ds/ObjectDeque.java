@@ -356,8 +356,8 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * the storage of an {@code ObjectDeque} instance.
 	 */
 	public void trimToSize() {
+		modCount++;
 		if (size < items.length) {
-			modCount++;
 			if(head <= tail) {
 				items = Arrays.copyOfRange(items, head, tail+1);
 			} else {
@@ -466,14 +466,14 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 					return 1;
 				}
 			} else {
-				if (index == 0) {
+				if (index != 0) {
 					if (head != 0) {
 						this.items[0] = this.items[head];
 						this.items[head] = null;
 					}
 					this.head = 0;
 					this.tail = gapSize;
-					return 0;
+					return 1;
 				} else {
 					if (head != gapSize) {
 						this.items[gapSize] = this.items[head];
@@ -481,7 +481,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 					}
 					this.head = 0;
 					this.tail = gapSize;
-					return 1;
+					return 0;
 				}
 			}
 		}
@@ -1144,6 +1144,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 				items[i++] = t;
 				if(i == items.length) i = 0;
 			}
+			size += cs;
 		}
 		return oldSize != size;
 	}
