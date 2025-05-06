@@ -2167,9 +2167,14 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		}
 	}
 
+	/**
+	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
+	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 * @param index the first index to duplicate
+	 * @param count how many items to duplicate
+	 */
 	@Override
 	public boolean duplicateRange(int index, int count) {
-		// TODO: REALLY NEEDS TESTING
 		int place = ensureGap(index + count, count);
 		if(place >= head + index + count){
 			System.arraycopy(items, head + index, items, place, count);
@@ -2301,7 +2306,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Using {@code ==} between each item in order, compares for equality with
-	 * other subtypes of {@link IntList}
+	 * other subtypes of {@link IntList}.
 	 * If {@code o} is not an IntList
 	 * (and is also not somehow reference-equivalent to this collection), this returns false.
 	 * This uses the {@link OfInt#iterator()} of both this and {@code o},

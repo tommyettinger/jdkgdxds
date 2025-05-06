@@ -16,57 +16,58 @@
 
 package com.github.tommyettinger.ds.experimental;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.Arrangeable;
 import com.github.tommyettinger.ds.Ordered;
 import com.github.tommyettinger.ds.PrimitiveCollection;
-import com.github.tommyettinger.ds.LongList;
-import com.github.tommyettinger.ds.support.sort.LongComparator;
-import com.github.tommyettinger.ds.support.sort.LongComparators;
-import com.github.tommyettinger.ds.support.util.LongIterator;
-import com.github.tommyettinger.function.LongToLongFunction;
+import com.github.tommyettinger.ds.FloatList;
+import com.github.tommyettinger.ds.support.sort.FloatComparator;
+import com.github.tommyettinger.ds.support.sort.FloatComparators;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
+import com.github.tommyettinger.function.FloatToFloatFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.*;
 
 /**
- * A resizable, insertion-ordered double-ended queue of primitive {@code long} with efficient add and remove at the
- * beginning and end. This extends {@link LongList} and supports {@link RandomAccess}. Like LongList, it is a
- * {@link OfLong}, {@link Arrangeable}, and {@link Ordered.OfLong}.
+ * A resizable, insertion-ordered double-ended queue of primitive {@code float} with efficient add and remove at the
+ * beginning and end. This extends {@link FloatList} and supports {@link RandomAccess}. Like FloatList, it is a
+ * {@link OfFloat}, {@link Arrangeable}, and {@link Ordered.OfFloat}.
  * Values in the backing array may wrap back to the beginning, making add and remove at the beginning and end O(1)
  * (unless the backing array needs to resize when adding). Deque functionality is provided via {@link #removeLast()} and
- * {@link #addFirst(long)}.
+ * {@link #addFirst(float)}.
  * <br>
  * Unlike most Deque implementations in the JDK, you can get and set items anywhere in the deque in constant time with
- * {@link #get(int)} and {@link #set(int, long)}. Relative to a {@link LongList}, {@link #get(int)} has slightly
+ * {@link #get(int)} and {@link #set(int, float)}. Relative to a {@link FloatList}, {@link #get(int)} has slightly
  * higher overhead, but it still runs in constant time. Unlike ArrayDeque in the JDK, this implements
  * {@link #equals(Object)} and {@link #hashCode()}. This can provide what are effectively
  * {@link ListIterator ListIterators} for iteration from an index or in reverse order.
  * <br>
  * Unlike {@link ArrayDeque} or {@link ArrayList}, most methods that take an index here try to be "forgiving;" that is,
  * they treat negative indices as index 0, and too-large indices as the last index, rather than throwing an Exception,
- * except in some cases where the LongDeque is empty and an item from it is required. An exception is in
- * {@link #set(int, long)}, which allows prepending by setting a negative index, or appending by setting a too-large
+ * except in some cases where the FloatDeque is empty and an item from it is required. An exception is in
+ * {@link #set(int, float)}, which allows prepending by setting a negative index, or appending by setting a too-large
  * index. This isn't a standard JDK behavior, and it doesn't always act how Deque or List is documented.
  * <br>
  * Some new methods are present here, or have been made public when they weren't before. {@link #removeRange(int, int)},
  * for instance, is now public, as is {@link #resize(int)}. New APIs include Deque-like methods that affect the middle
  * of the deque, such as {@link #peekAt(int)} and {@link #pollAt(int)}. There are more bulk methods that work at the
- * head or tail region of the deque, such as {@link #addAllFirst(OfLong)} and {@link #truncateFirst(int)}. There are
+ * head or tail region of the deque, such as {@link #addAllFirst(OfFloat)} and {@link #truncateFirst(int)}. There are
  * the methods from {@link Arrangeable}, and many default methods from PrimitiveCollection and Ordered.
  * <br>
  * In general, this is an improvement over {@link ArrayDeque} in every type of functionality, and is mostly equivalent
- * to {@link LongList} as long as the performance of {@link #get(int)} is adequate. Because it is array-backed, it
+ * to {@link FloatList} as long as the performance of {@link #get(int)} is adequate. Because it is array-backed, it
  * should usually be much faster than {@link LinkedList}, as well; only periodic resizing and modifications in the
  * middle of the List using an iterator should be typically faster for {@link LinkedList}.
  */
-public class LongDeque extends LongList implements RandomAccess, Arrangeable, PrimitiveCollection.OfLong, Ordered.OfLong {
+public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, PrimitiveCollection.OfFloat, Ordered.OfFloat {
 
 	/**
 	 * The value returned when nothing can be obtained from this deque and an exception is not meant to be thrown,
 	 * such as when calling {@link #peek()} on an empty deque.
 	 */
-	public long defaultValue = 0;
+	public float defaultValue = 0;
 
 	/**
 	 * Index of first element. Logically smaller than tail. Unless empty, it points to a valid element inside the deque.
@@ -79,32 +80,32 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 */
 	protected int tail = 0;
 
-	@Nullable protected transient LongDequeIterator descendingIterator1;
-	@Nullable protected transient LongDequeIterator descendingIterator2;
+	@Nullable protected transient FloatDequeIterator descendingIterator1;
+	@Nullable protected transient FloatDequeIterator descendingIterator2;
 
 	/**
-	 * Creates a new LongDeque which can hold 16 values without needing to resize the backing array.
+	 * Creates a new FloatDeque which can hold 16 values without needing to resize the backing array.
 	 */
-	public LongDeque() {
+	public FloatDeque() {
 		this(16);
 	}
 
 	/**
-	 * Creates a new LongDeque which can hold the specified number of values without needing to resize the backing
+	 * Creates a new FloatDeque which can hold the specified number of values without needing to resize the backing
 	 * array.
 	 * @param initialSize how large the backing array should be, without any padding
 	 */
-	public LongDeque(int initialSize) {
+	public FloatDeque(int initialSize) {
 		super(Math.max(1, initialSize));
 	}
 
 	/**
-	 * Creates a new LongDeque using all the contents of the given Collection.
+	 * Creates a new FloatDeque using all the contents of the given Collection.
 	 *
-	 * @param coll a Collection of long that will be copied into this and used in full
+	 * @param coll a Collection of float that will be copied into this and used in full
 	 * @throws NullPointerException if {@code coll} is {@code null}
 	 */
-	public LongDeque(OfLong coll) {
+	public FloatDeque(OfFloat coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -115,18 +116,18 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param iter an iterator that will have its remaining contents added to this
 	 * @throws NullPointerException if {@code iter} is {@code null}
 	 */
-	public LongDeque(LongIterator iter) {
+	public FloatDeque(FloatIterator iter) {
 		this(16);
 		addAll(iter);
 	}
 
 	/**
-	 * Copies the given LongDeque exactly into this one. Individual values will be shallow-copied.
+	 * Copies the given FloatDeque exactly into this one. Individual values will be shallow-copied.
 	 *
-	 * @param deque another LongDeque to copy
+	 * @param deque another FloatDeque to copy
 	 * @throws NullPointerException if {@code deque} is {@code null}
 	 */
-	public LongDeque(LongDeque deque) {
+	public FloatDeque(FloatDeque deque) {
 		this(deque.items.length);
 		System.arraycopy(deque.items, 0, items, 0, deque.items.length);
 		this.size = deque.size;
@@ -135,18 +136,18 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		this.defaultValue = deque.defaultValue;
 	}
 
-	public LongDeque(Ordered.OfLong other, int offset, int count) {
+	public FloatDeque(Ordered.OfFloat other, int offset, int count) {
 		this(count);
 		addAll(0, other, offset, count);
 	}
 
 	/**
-	 * Creates a new LongDeque using all the contents of the given array.
+	 * Creates a new FloatDeque using all the contents of the given array.
 	 *
-	 * @param a an array of long that will be copied into this and used in full
+	 * @param a an array of float that will be copied into this and used in full
 	 * @throws NullPointerException if {@code a} is {@code null}
 	 */
-	public LongDeque(long[] a) {
+	public FloatDeque(float[] a) {
 		this(a.length);
 		System.arraycopy(a, 0, items, 0, a.length);
 		size = a.length;
@@ -154,14 +155,14 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Creates a new LongDeque using {@code count} items from {@code a}, starting at {@code offset}.
-	 * If {@code count} is 0 or less, this will create an empty LongDeque with capacity 1.
-	 * @param a      an array of long
+	 * Creates a new FloatDeque using {@code count} items from {@code a}, starting at {@code offset}.
+	 * If {@code count} is 0 or less, this will create an empty FloatDeque with capacity 1.
+	 * @param a      an array of float
 	 * @param offset where in {@code a} to start using items
 	 * @param count  how many items to use from {@code a}
 	 * @throws NullPointerException if {@code a} is {@code null}
 	 */
-	public LongDeque(long[] a, int offset, int count) {
+	public FloatDeque(float[] a, int offset, int count) {
 		this(count);
 		System.arraycopy(a, offset, items, 0, count);
 		size = count;
@@ -169,12 +170,12 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 
-	public LongDeque(Ordered.OfLong other) {
+	public FloatDeque(Ordered.OfFloat other) {
 		this(other, 0, other.size());
 	}
 
 	@Override
-	public LongDeque order() {
+	public FloatDeque order() {
 		return this;
 	}
 
@@ -184,7 +185,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * usually {@code null}.
 	 * @return the current default value
 	 */
-	public long getDefaultValue () {
+	public float getDefaultValue () {
 		return defaultValue;
 	}
 
@@ -192,19 +193,19 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * Sets the default value, which is the value returned when nothing can be obtained from this deque and an exception
 	 * is not meant to be thrown, such as when calling peek() on an empty deque. Unless changed, the default value is
 	 * usually {@code null}.
-	 * @param defaultValue any long this can return instead of throwing an Exception, or {@code null}
+	 * @param defaultValue any float this can return instead of throwing an Exception, or {@code null}
 	 */
-	public void setDefaultValue (long defaultValue) {
+	public void setDefaultValue (float defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
 	/**
-	 * Appends given long to the tail (enqueue to tail). Unless the backing array needs resizing, operates in O(1) time.
+	 * Appends given float to the tail (enqueue to tail). Unless the backing array needs resizing, operates in O(1) time.
 	 *
 	 * @param value can be null
 	 */
-	public void addLast (long value) {
-		long[] items = this.items;
+	public void addLast (float value) {
+		float[] items = this.items;
 
 		if (size == items.length)
 			items = resize(items.length << 1);
@@ -214,8 +215,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		items[tail] = value;
 	}
 
-	public void addLast(long value1, long value2) {
-		long[] items = this.items;
+	public void addLast(float value1, float value2) {
+		float[] items = this.items;
 
 		if (size + 2 > items.length)
 			items = resize(size + 2 << 1);
@@ -228,8 +229,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		size += 2;
 	}
 
-	public void addLast(long value1, long value2, long value3) {
-		long[] items = this.items;
+	public void addLast(float value1, float value2, float value3) {
+		float[] items = this.items;
 
 		if (size + 3 > items.length)
 			items = resize(size + 3 << 1);
@@ -244,8 +245,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		size += 3;
 	}
 
-	public void addLast(long value1, long value2, long value3, long value4) {
-		long[] items = this.items;
+	public void addLast(float value1, float value2, float value3, float value4) {
+		float[] items = this.items;
 
 		if (size + 4 > items.length)
 			items = resize(size + 4 << 1);
@@ -266,10 +267,10 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * Prepend given value to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
 	 *
 	 * @param value can be null
-	 * @see #addLast(long)
+	 * @see #addLast(float)
 	 */
-	public void addFirst (long value) {
-		long[] items = this.items;
+	public void addFirst (float value) {
+		float[] items = this.items;
 
 		if (size == items.length)
 			items = resize(items.length << 1);
@@ -282,8 +283,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		if(++size == 1) tail = head;
 	}
 
-	public void addFirst (long value1, long value2) {
-		long[] items = this.items;
+	public void addFirst (float value1, float value2) {
+		float[] items = this.items;
 
 		if (size + 2 > items.length)
 			items = resize(size + 2 << 1);
@@ -300,8 +301,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		this.head = head;
 	}
 
-	public void addFirst (long value1, long value2, long value3) {
-		long[] items = this.items;
+	public void addFirst (float value1, float value2, float value3) {
+		float[] items = this.items;
 
 		if (size + 3 > items.length)
 			items = resize(size + 3 << 1);
@@ -319,8 +320,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		this.head = head;
 	}
 
-	public void addFirst (long value1, long value2, long value3, long value4) {
-		long[] items = this.items;
+	public void addFirst (float value1, float value2, float value3, float value4) {
+		float[] items = this.items;
 
 		if (size + 4 > items.length)
 			items = resize(size + 4 << 1);
@@ -341,16 +342,16 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Trims the capacity of this {@code LongDeque} instance to be the
+	 * Trims the capacity of this {@code FloatDeque} instance to be the
 	 * deque's current size.  An application can use this operation to minimize
-	 * the storage of a {@code LongDeque} instance.
+	 * the storage of a {@code FloatDeque} instance.
 	 */
 	public void trimToSize() {
 		if (size < items.length) {
 			if(head <= tail) {
 				items = Arrays.copyOfRange(items, head, tail+1);
 			} else {
-				long[] next = new long[size];
+				float[] next = new float[size];
 				System.arraycopy(items, head, next, 0, items.length - head);
 				System.arraycopy(items, 0, next, items.length - head, tail + 1);
 				items = next;
@@ -361,7 +362,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public long[] shrink() {
+	public float[] shrink() {
 		trimToSize();
 		return items;
 	}
@@ -372,7 +373,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return the backing array this will use after this call
 	 */
-	public long[] ensureCapacity (int additional) {
+	public float[] ensureCapacity (int additional) {
 		final int needed = size + additional;
 		if (items.length < needed) {
 			resize(needed);
@@ -388,14 +389,14 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return the new backing array, as a direct reference
 	 */
-	public long[] resize (int newSize) {
+	public float[] resize (int newSize) {
 		if(newSize < size)
 			newSize = size;
-		final long[] items = this.items;
+		final float[] items = this.items;
 		final int head = this.head;
 		final int tail = this.tail;
 
-		final long[] newArray = new long[Math.max(1, newSize)];
+		final float[] newArray = new float[Math.max(1, newSize)];
 
 		if (size > 0) {
 			if (head <= tail) {
@@ -434,13 +435,13 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		if (size == 0) {
 			this.head = this.tail = 0;
 			if (items.length < gapSize) {
-                this.items = new long[gapSize];
+                this.items = new float[gapSize];
 			}
 			return 0;
 		} else if (size == 1) {
 			if (items.length < gapSize + size) {
-				long item = this.items[head];
-				this.items = new long[gapSize + size];
+				float item = this.items[head];
+				this.items = new float[gapSize + size];
 				if (index == 0) {
 					this.items[gapSize] = item;
 					this.head = 0;
@@ -471,7 +472,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 			}
 		}
 
-		final long[] items = this.items;
+		final float[] items = this.items;
 		final int head = this.head;
 		final int tail = this.tail;
 		final int newSize = Math.max(size + gapSize, items.length);
@@ -505,7 +506,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 				}
 			}
 		} else {
-			final long[] newArray = new long[newSize];
+			final float[] newArray = new float[newSize];
 
 			if (head <= tail) {
 				// Continuous
@@ -538,30 +539,30 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public boolean addAll(LongList list) {
+	public boolean addAll(FloatList list) {
 		return addAll(size, list, 0, list.size());
 	}
 
 	@Override
-	public boolean addAll(LongList list, int offset, int count) {
+	public boolean addAll(FloatList list, int offset, int count) {
 		return addAll(size, list, offset, count);
 	}
 
 	/**
 	 * Remove the first item from the deque. (dequeue from head) Always O(1).
 	 *
-	 * @return removed long
+	 * @return removed float
 	 * @throws NoSuchElementException when the deque is empty
 	 */
-	public long removeFirst () {
+	public float removeFirst () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("LongDeque is empty.");
+			throw new NoSuchElementException("FloatDeque is empty.");
 		}
 
-		final long[] items = this.items;
+		final float[] items = this.items;
 
-		final long result = items[head];
+		final float result = items[head];
 
 		head++;
 		if (head == items.length) {
@@ -575,18 +576,18 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Remove the last item from the deque. (dequeue from tail) Always O(1).
 	 *
-	 * @return removed long
+	 * @return removed float
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #removeFirst()
 	 */
-	public long removeLast () {
+	public float removeLast () {
 		if (size == 0) {
-			throw new NoSuchElementException("LongDeque is empty.");
+			throw new NoSuchElementException("FloatDeque is empty.");
 		}
 
-		final long[] items = this.items;
+		final float[] items = this.items;
 		int tail = this.tail;
-		final long result = items[tail];
+		final float result = items[tail];
 
 		if (tail == 0) {
 			tail = items.length - 1;
@@ -616,7 +617,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerFirst (long t) {
+	public boolean offerFirst (float t) {
 		addFirst(t);
 		return true;
 	}
@@ -637,7 +638,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerLast (long t) {
+	public boolean offerLast (float t) {
 		addLast(t);
 		return true;
 	}
@@ -645,20 +646,20 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Retrieves and removes the first element of this deque,
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
-	 * {@code null} unless it has been changed with {@link #setDefaultValue(long)}.
+	 * {@code null} unless it has been changed with {@link #setDefaultValue(float)}.
 	 *
 	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public long pollFirst () {
+	public float pollFirst () {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
 		}
 
-		final long[] items = this.items;
+		final float[] items = this.items;
 
-		final long result = items[head];
+		final float result = items[head];
 
 		head++;
 		if (head == items.length) {
@@ -672,19 +673,19 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Retrieves and removes the last element of this deque,
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
-	 * {@code null} unless it has been changed with {@link #setDefaultValue(long)}.
+	 * {@code null} unless it has been changed with {@link #setDefaultValue(float)}.
 	 *
 	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public long pollLast () {
+	public float pollLast () {
 		if (size == 0) {
 			return defaultValue;
 		}
 
-		final long[] items = this.items;
+		final float[] items = this.items;
 		int tail = this.tail;
-		final long result = items[tail];
+		final float result = items[tail];
 
 		if (tail == 0) {
 			tail = items.length - 1;
@@ -707,7 +708,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @return the head of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public long getFirst () {
+	public float getFirst () {
 		return first();
 	}
 
@@ -719,7 +720,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @return the tail of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public long getLast () {
+	public float getLast () {
 		return last();
 	}
 
@@ -729,7 +730,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public long peekFirst () {
+	public float peekFirst () {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -743,7 +744,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public long peekLast () {
+	public float peekLast () {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -762,7 +763,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean removeFirstOccurrence (long o) {
+	public boolean removeFirstOccurrence (float o) {
 		return removeValue(o);
 	}
 
@@ -777,7 +778,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean removeLastOccurrence (long o) {
+	public boolean removeLastOccurrence (float o) {
 		return removeLastValue(o);
 	}
 
@@ -788,48 +789,48 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * {@code true} upon success and throwing an
 	 * {@code IllegalStateException} if no space is currently available.
 	 * When using a capacity-restricted deque, it is generally preferable to
-	 * use {@link #offer(long) offer}.
+	 * use {@link #offer(float) offer}.
 	 *
 	 * <p>This method is equivalent to {@link #addLast}.
 	 *
 	 * @param t the element to add
 	 * @return {@code true} (as specified by {@link Collection#add})
 	 */
-	public boolean add (long t) {
+	public boolean add (float t) {
 		addLast(t);
 		return true;
 	}
 
 	@Override
-	public void add(long value1, long value2) {
+	public void add(float value1, float value2) {
 		addLast(value1, value2);
 	}
 
 	@Override
-	public void add(long value1, long value2, long value3) {
+	public void add(float value1, float value2, float value3) {
 		addLast(value1, value2, value3);
 	}
 
 	@Override
-	public void add(long value1, long value2, long value3, long value4) {
+	public void add(float value1, float value2, float value3, float value4) {
 		addLast(value1, value2, value3, value4);
 	}
 
 	/**
 	 * Inserts the specified element into this deque at the specified index.
-	 * Unlike {@link #offerFirst(long)} and {@link #offerLast(long)}, this does not run in expected constant time unless
+	 * Unlike {@link #offerFirst(float)} and {@link #offerLast(float)}, this does not run in expected constant time unless
 	 * the index is less than or equal to 0 (where it acts like offerFirst()) or greater than or equal to {@link #size()}
 	 * (where it acts like offerLast()).
 	 * @param index the index in the deque's insertion order to insert the item
-	 * @param item a long item to insert; may be null
+	 * @param item a float item to insert; may be null
 	 */
-	public void insert (int index, long item) {
+	public void insert (int index, float item) {
 		if(index <= 0)
 			addFirst(item);
 		else if(index >= size)
 			addLast(item);
 		else {
-			long[] items = this.items;
+			float[] items = this.items;
 
 			if (++size > items.length) {
 				resize(items.length << 1);
@@ -880,7 +881,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param t the element to add
 	 * @return {@code true} if the element was added to this deque, else {@code false}
 	 */
-	public boolean offer (long t) {
+	public boolean offer (float t) {
 		addLast(t);
 		return true;
 	}
@@ -896,7 +897,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public long remove () {
+	public float remove () {
 		return removeFirst();
 	}
 
@@ -910,7 +911,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @return the first element of this deque, or {@link #getDefaultValue() defaultValue} if
 	 * this deque is empty
 	 */
-	public long poll () {
+	public float poll () {
 		return pollFirst();
 	}
 
@@ -925,7 +926,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public long element () {
+	public float element () {
 		return first();
 	}
 
@@ -939,7 +940,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @return the head of the queue represented by this deque, or
 	 * {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public long peek () {
+	public float peek () {
 		return peekFirst();
 	}
 
@@ -949,7 +950,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * in the order that they are returned by the collection's iterator.
 	 *
 	 * <p>When using a capacity-restricted deque, it is generally preferable
-	 * to call {@link #offer(long) offer} separately on each element.
+	 * to call {@link #offer(float) offer} separately on each element.
 	 *
 	 * <p>An exception encountered while trying to add an element may result
 	 * in only some of the elements having been successfully added when
@@ -958,7 +959,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (OfLong c) {
+	public boolean addAll (OfFloat c) {
 		final int cs = c.size();
 		if(cs == 0) return false;
 		int oldSize = size;
@@ -982,11 +983,11 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * An alias for {@link #addAll(OfLong)}, this adds every item in {@code c} to this in order at the end.
+	 * An alias for {@link #addAll(OfFloat)}, this adds every item in {@code c} to this in order at the end.
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (OfLong c) {
+	public boolean addAllLast (OfFloat c) {
 		return addAll(c);
 	}
 
@@ -996,7 +997,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (OfLong c) {
+	public boolean addAllFirst (OfFloat c) {
 		final int cs = c.size();
 		if(cs == 0) return false;
 		int oldSize = size;
@@ -1020,9 +1021,9 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 			size += oldSize;
 		} else {
 			int i = ensureGap(0, cs);
-			LongIterator it = c.iterator();
+			FloatIterator it = c.iterator();
 			while (it.hasNext()) {
-				items[i++] = it.nextLong();
+				items[i++] = it.nextFloat();
 				if(i == items.length) i = 0;
 			}
 		}
@@ -1030,7 +1031,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * An alias for {@link #addAll(int, OfLong)}; inserts all elements
+	 * An alias for {@link #addAll(int, OfFloat)}; inserts all elements
 	 * in the specified collection into this list at the specified position.
 	 * Shifts the element currently at that position (if any) and any subsequent
 	 * elements to the right (increases their indices). The new elements
@@ -1045,11 +1046,11 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param c collection containing elements to be added to this list
 	 * @return {@code true} if this list changed as a result of the call
 	 */
-	public boolean insertAll(int index, OfLong c) {
+	public boolean insertAll(int index, OfFloat c) {
 		return addAll(index, c);
 	}
 
-	public boolean addAll(int index, OfLong c) {
+	public boolean addAll(int index, OfFloat c) {
 		int oldSize = size;
 		if(index <= 0)
 			addAllFirst(c);
@@ -1059,14 +1060,14 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 			final int cs = c.size();
 			if(c.isEmpty()) return false;
 			int place = ensureGap(index, cs);
-			long[] items = this.items;
+			float[] items = this.items;
 			if(c == this){
 				System.arraycopy(items, head, items, place, place - head);
 				System.arraycopy(items, place + cs, items, place + place - head, tail + 1 - place - cs);
 			} else {
-				LongIterator it = c.iterator();
+				FloatIterator it = c.iterator();
 				while (it.hasNext()) {
-					items[place++] = it.nextLong();
+					items[place++] = it.nextFloat();
 					if (place >= items.length) place -= items.length;
 				}
 			}
@@ -1076,24 +1077,24 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Exactly like {@link #addAll(OfLong)}, but takes an array instead of a PrimitiveCollection.OfLong.
-	 * @see #addAll(OfLong)
+	 * Exactly like {@link #addAll(OfFloat)}, but takes an array instead of a PrimitiveCollection.OfFloat.
+	 * @see #addAll(OfFloat)
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (long[] array) {
+	public boolean addAll (float[] array) {
 		return addAll(array, 0, array.length);
 	}
 
 	/**
-	 * Like {@link #addAll(long[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #addAll(long[])
+	 * Like {@link #addAll(float[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
+	 * @see #addAll(float[])
 	 * @param array the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (long[] array, int offset, int length) {
+	public boolean addAll (float[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
 		if(cs <= 0) return false;
 		int place = ensureGap(size, cs);
@@ -1103,47 +1104,47 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * An alias for {@link #addAll(long[])}.
-	 * @see #addAll(long[])
+	 * An alias for {@link #addAll(float[])}.
+	 * @see #addAll(float[])
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (long[] array) {
+	public boolean addAllLast (float[] array) {
 		return addAll(array, 0, array.length);
 	}
 
 	/**
-	 * An alias for {@link #addAll(long[], int, int)}.
-	 * @see #addAll(long[], int, int)
+	 * An alias for {@link #addAll(float[], int, int)}.
+	 * @see #addAll(float[], int, int)
 	 * @param array the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (long[] array, int offset, int length) {
+	public boolean addAllLast (float[] array, int offset, int length) {
 		return addAll(array, offset, length);
 	}
 
 	/**
-	 * Exactly like {@link #addAllFirst(OfLong)}, but takes an array instead of a PrimitiveCollection.OfLong.
-	 * @see #addAllFirst(OfLong)
+	 * Exactly like {@link #addAllFirst(OfFloat)}, but takes an array instead of a PrimitiveCollection.OfFloat.
+	 * @see #addAllFirst(OfFloat)
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (long[] array) {
+	public boolean addAllFirst (float[] array) {
 		return addAllFirst(array, 0, array.length);
 	}
 
 	/**
-	 * Like {@link #addAllFirst(long[])}, but only uses at most {@code length} items from {@code array}, starting at
+	 * Like {@link #addAllFirst(float[])}, but only uses at most {@code length} items from {@code array}, starting at
 	 * {@code offset}. The order of {@code array} will be preserved, starting at the head of the deque.
-	 * @see #addAllFirst(long[])
+	 * @see #addAllFirst(float[])
 	 * @param array the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (long[] array, int offset, int length) {
+	public boolean addAllFirst (float[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
 		if(cs <= 0) return false;
 		int place = ensureGap(0, cs);
@@ -1153,53 +1154,53 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Alias for {@link #addAll(int, long[])}.
+	 * Alias for {@link #addAll(int, float[])}.
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean insertAll(int index, long[] array) {
+	public boolean insertAll(int index, float[] array) {
 		return addAll(index, array, 0, array.length);
 	}
 
 	/**
-	 * Alias for {@link #addAll(int, long[], int, int)}.
+	 * Alias for {@link #addAll(int, float[], int, int)}.
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean insertAll(int index, long[] array, int offset, int length) {
+	public boolean insertAll(int index, float[] array, int offset, int length) {
 		return addAll(index, array, offset, length);
 	}
 
 	/**
-	 * Like {@link #addAll(int, OfLong)}, but takes an array instead of a PrimitiveCollection.OfLong and inserts it
+	 * Like {@link #addAll(int, OfFloat)}, but takes an array instead of a PrimitiveCollection.OfFloat and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(long[])
+	 * @see #addAll(float[])
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll(int index, long[] array) {
+	public boolean addAll(int index, float[] array) {
 		return addAll(index, array, 0, array.length);
 	}
 
 	/**
-	 * Like {@link #addAll(int, OfLong)}, but takes an array instead of a PrimitiveCollection.OfLong, gets items starting at
+	 * Like {@link #addAll(int, OfFloat)}, but takes an array instead of a PrimitiveCollection.OfFloat, gets items starting at
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(long[])
+	 * @see #addAll(float[])
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll(int index, long[] array, int offset, int length) {
+	public boolean addAll(int index, float[] array, int offset, int length) {
 		int oldSize = size;
 		if(index <= 0)
 			addAllFirst(array, offset, length);
@@ -1216,57 +1217,57 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Exactly like {@link #addAll(OfLong)}, but takes an Ordered.OfLong instead of a PrimitiveCollection.OfLong.
-	 * @see #addAll(OfLong)
+	 * Exactly like {@link #addAll(OfFloat)}, but takes an Ordered.OfFloat instead of a PrimitiveCollection.OfFloat.
+	 * @see #addAll(OfFloat)
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (Ordered.OfLong ord) {
+	public boolean addAll (Ordered.OfFloat ord) {
 		return addAll(size, ord, 0, ord.size());
 	}
 
 	/**
-	 * Like {@link #addAll(long[])}, but only uses at most {@code length} items from {@code ord}, starting at {@code offset}.
-	 * @see #addAll(long[])
+	 * Like {@link #addAll(float[])}, but only uses at most {@code length} items from {@code ord}, starting at {@code offset}.
+	 * @see #addAll(float[])
 	 * @param ord the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (Ordered.OfLong ord, int offset, int length) {
+	public boolean addAll (Ordered.OfFloat ord, int offset, int length) {
 		return addAll(size, ord, offset, length);
 	}
 
 	/**
-	 * Like {@link #addAll(int, OfLong)}, but takes an ord instead of a PrimitiveCollection.OfLong and inserts it
+	 * Like {@link #addAll(int, OfFloat)}, but takes an ord instead of a PrimitiveCollection.OfFloat and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code ord} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Ordered.OfLong)
+	 * @see #addAll(Ordered.OfFloat)
 	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll(int index, Ordered.OfLong ord) {
+	public boolean addAll(int index, Ordered.OfFloat ord) {
 		return addAll(index, ord, 0, ord.size());
 	}
 
 	/**
-	 * Like {@link #addAll(int, OfLong)}, but takes an array instead of a PrimitiveCollection.OfLong, gets items starting at
+	 * Like {@link #addAll(int, OfFloat)}, but takes an array instead of a PrimitiveCollection.OfFloat, gets items starting at
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Ordered.OfLong)
+	 * @see #addAll(Ordered.OfFloat)
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param ord the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (int index, Ordered.OfLong ord, int offset, int length) {
+	public boolean addAll (int index, Ordered.OfFloat ord, int offset, int length) {
 		final int cs = Math.min(ord.size() - offset, length);
 		if(cs <= 0) return false;
 		int place = ensureGap(index, cs);
-		LongList er = ord.order();
+		FloatList er = ord.order();
 		for (int i = offset, n = offset + cs; i < n; i++) {
 			items[place++] = er.get(i);
 			if(place == items.length) place = 0;
@@ -1276,69 +1277,69 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * An alias for {@link #addAll(Ordered.OfLong)}.
-	 * @see #addAll(Ordered.OfLong)
+	 * An alias for {@link #addAll(Ordered.OfFloat)}.
+	 * @see #addAll(Ordered.OfFloat)
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (Ordered.OfLong ord) {
+	public boolean addAllLast (Ordered.OfFloat ord) {
 		return addAll(size, ord, 0, ord.size());
 	}
 
 	/**
-	 * An alias for {@link #addAll(Ordered.OfLong, int, int)}.
-	 * @see #addAll(Ordered.OfLong, int, int)
+	 * An alias for {@link #addAll(Ordered.OfFloat, int, int)}.
+	 * @see #addAll(Ordered.OfFloat, int, int)
 	 * @param ord the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (Ordered.OfLong ord, int offset, int length) {
+	public boolean addAllLast (Ordered.OfFloat ord, int offset, int length) {
 		return addAll(size, ord, offset, length);
 	}
 
 	/**
-	 * Exactly like {@link #addAllFirst(OfLong)}, but takes an ord instead of a PrimitiveCollection.OfLong.
-	 * @see #addAllFirst(OfLong)
+	 * Exactly like {@link #addAllFirst(OfFloat)}, but takes an ord instead of a PrimitiveCollection.OfFloat.
+	 * @see #addAllFirst(OfFloat)
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (Ordered.OfLong ord) {
+	public boolean addAllFirst (Ordered.OfFloat ord) {
 		return addAll(0, ord, 0, ord.size());
 	}
 
 	/**
-	 * Like {@link #addAllFirst(Ordered.OfLong)}, but only uses at most {@code length} items from {@code ord}, starting at
+	 * Like {@link #addAllFirst(Ordered.OfFloat)}, but only uses at most {@code length} items from {@code ord}, starting at
 	 * {@code offset}. The order of {@code ord} will be preserved, starting at the head of the deque.
-	 * @see #addAllFirst(Ordered.OfLong)
+	 * @see #addAllFirst(Ordered.OfFloat)
 	 * @param ord the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (Ordered.OfLong ord, int offset, int length) {
+	public boolean addAllFirst (Ordered.OfFloat ord, int offset, int length) {
 		return addAll(0, ord, offset, length);
 	}
 
 	/**
-	 * Alias for {@link #addAll(int, Ordered.OfLong)}.
+	 * Alias for {@link #addAll(int, Ordered.OfFloat)}.
 	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean insertAll(int index, Ordered.OfLong ord) {
+	public boolean insertAll(int index, Ordered.OfFloat ord) {
 		return addAll(index, ord, 0, ord.size());
 	}
 
 	/**
-	 * Alias for {@link #addAll(int, Ordered.OfLong, int, int)}.
+	 * Alias for {@link #addAll(int, Ordered.OfFloat, int, int)}.
 	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
 	 * @param ord the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean insertAll(int index, Ordered.OfLong ord, int offset, int length) {
+	public boolean insertAll(int index, Ordered.OfFloat ord, int offset, int length) {
 		return addAll(index, ord, offset, length);
 	}
 
@@ -1350,7 +1351,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @param t the element to push
 	 */
-	public void push (long t) {
+	public void push (float t) {
 		addFirst(t);
 	}
 
@@ -1364,7 +1365,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * of the stack represented by this deque)
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public long pop () {
+	public float pop () {
 		return removeFirst();
 	}
 
@@ -1376,12 +1377,12 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * Returns {@code true} if this deque contained the specified element
 	 * (or equivalently, if this deque changed as a result of the call).
 	 *
-	 * <p>This method is equivalent to {@link #removeFirstOccurrence(long)}.
+	 * <p>This method is equivalent to {@link #removeFirstOccurrence(float)}.
 	 *
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean remove (long o) {
+	public boolean remove (float o) {
 		return removeFirstOccurrence(o);
 	}
 
@@ -1393,12 +1394,12 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param o element whose presence in this deque is to be tested
 	 * @return {@code true} if this deque contains the specified element
 	 */
-	public boolean contains (long o) {
+	public boolean contains (float o) {
 		return indexOf(o, 0) != -1;
 	}
 
 	@Override
-	public boolean containsAll(LongList other) {
+	public boolean containsAll(FloatList other) {
 		return containsAll(other.iterator());
 	}
 
@@ -1416,7 +1417,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * If this collection makes any guarantees as to what order its elements
 	 * are returned by its iterator, this method must return the elements in
 	 * the same order. The returned array's {@linkplain Class#getComponentType
-	 * runtime component type} is {@code long}.
+	 * runtime component type} is {@code float}.
 	 *
 	 * <p>The returned array will be "safe" in that no references to it are
 	 * maintained by this collection.  (In other words, this method must
@@ -1424,10 +1425,10 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * The caller is thus free to modify the returned array.
 	 *
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
-	 * type} is {@code long}, containing all the elements in this collection
+	 * type} is {@code float}, containing all the elements in this collection
 	 */
-	public long @NonNull [] toArray () {
-		long[] next = new long[size];
+	public float @NonNull [] toArray () {
+		float[] next = new float[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
 		} else {
@@ -1438,9 +1439,9 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public long[] toArray(long[] array) {
+	public float[] toArray(float[] array) {
 		if (array.length < size)
-			array = new long[size];
+			array = new float[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, array, 0, tail - head + 1);
 		} else {
@@ -1451,7 +1452,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public long[] setSize(int newSize) {
+	public float[] setSize(int newSize) {
 		if (newSize < 0) clear();
 		else if (newSize > items.length) resize(Math.max(8, newSize));
 		else truncate(newSize);
@@ -1579,10 +1580,10 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
 	 *
-	 * @param value the long to look for
+	 * @param value the float to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int indexOf (long value) {
+	public int indexOf (float value) {
 		return indexOf(value, 0);
 	}
 
@@ -1591,14 +1592,14 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * This returns {@code fromIndex} if {@code value} is present at that point,
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
-	 * @param value the long to look for
+	 * @param value the float to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int indexOf (long value, int fromIndex) {
+	public int indexOf (float value, int fromIndex) {
 		if (size == 0)
 			return -1;
-		long[] items = this.items;
+		float[] items = this.items;
 		final int head = this.head, tail = this.tail;
 		int i = head + Math.min(Math.max(fromIndex, 0), size - 1);
 		if (i >= items.length)
@@ -1606,14 +1607,14 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 
 		if (head <= tail) {
 			for (; i <= tail; i++)
-				if (items[i] == value)
+				if (Float.compare(items[i], value) == 0)
 					return i - head;
 		} else {
 			for (int n = items.length; i < n; i++)
-				if (items[i] == value)
+				if (Float.compare(items[i], value) == 0)
 					return i - head;
 			for (i = 0; i <= tail; i++)
-				if (items[i] == value)
+				if (Float.compare(items[i], value) == 0)
 					return i + items.length - head;
 		}
 		return -1;
@@ -1622,10 +1623,10 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Returns the index of the last occurrence of value in the deque, or -1 if no such value exists.
 	 *
-	 * @param value the long to look for
+	 * @param value the float to look for
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int lastIndexOf (long value) {
+	public int lastIndexOf (float value) {
 		return lastIndexOf(value, size - 1);
 	}
 
@@ -1635,14 +1636,14 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * point, so if you chain calls to indexOf(), the subsequent fromIndex should be smaller than the last-returned
 	 * index.
 	 *
-	 * @param value the long to look for
+	 * @param value the float to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of last occurrence of value at or before fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int lastIndexOf (long value, int fromIndex) {
+	public int lastIndexOf (float value, int fromIndex) {
 		if (size == 0)
 			return -1;
-		long[] items = this.items;
+		float[] items = this.items;
 		final int head = this.head, tail = this.tail;
 		int i = head + Math.min(Math.max(fromIndex, 0), size - 1);
 		if (i >= items.length)
@@ -1653,23 +1654,23 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 
 		if (head <= tail) {
 			for (; i >= head; i--)
-				if (items[i] == value)
+				if (Float.compare(items[i], value) == 0)
 					return i - head;
 		} else {
 			for (; i >= 0; i--)
-				if (items[i] == value)
+				if (Float.compare(items[i], value) == 0)
 					return i + items.length - head;
 			for (i = items.length - 1; i >= head; i--)
-				if (items[i] == value)
+				if (Float.compare(items[i], value) == 0)
 					return i - head;
 		}
 		return -1;
 	}
 
-	public LongListIterator listIterator() {
+	public FloatListIterator listIterator() {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new LongDequeIterator(this);
-			iterator2 = new LongDequeIterator(this);
+			iterator1 = new FloatDequeIterator(this);
+			iterator2 = new FloatDequeIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -1688,10 +1689,10 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param index the index to start iterating from in this deque
 	 * @return a reused iterator starting at the given index
 	 */
-	public LongListIterator listIterator(int index) {
+	public FloatListIterator listIterator(int index) {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new LongDequeIterator(this, index, false);
-			iterator2 = new LongDequeIterator(this, index, false);
+			iterator1 = new FloatDequeIterator(this, index, false);
+			iterator2 = new FloatDequeIterator(this, index, false);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset(index);
@@ -1708,10 +1709,10 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Removes the first instance of the specified value in the deque.
 	 *
-	 * @param value the long to remove
+	 * @param value the float to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeValue (long value) {
+	public boolean removeValue (float value) {
 		int index = indexOf(value, 0);
 		if (index == -1)
 			return false;
@@ -1722,10 +1723,10 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Removes the last instance of the specified value in the deque.
 	 *
-	 * @param value the long to remove
+	 * @param value the float to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeLastValue (long value) {
+	public boolean removeLastValue (float value) {
 		int index = lastIndexOf(value);
 		if (index == -1)
 			return false;
@@ -1742,16 +1743,16 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param index the index of the element to be removed
 	 * @return the element previously at the specified position
 	 */
-	public long removeAt(int index) {
+	public float removeAt(int index) {
 		if (index <= 0)
 			return removeFirst();
 		if (index >= size)
 			return removeLast();
 
-		long[] items = this.items;
+		float[] items = this.items;
 		int head = this.head, tail = this.tail;
 		index += head;
-		long value;
+		float value;
 		if (head <= tail) { // index is between head and tail.
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
@@ -1790,7 +1791,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param index the index of the element to be removed
 	 * @return the element previously at the specified position
 	 */
-	public long pollAt(int index) {
+	public float pollAt(int index) {
 		return poll(index);
 	}
 
@@ -1806,17 +1807,17 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param index the index of the element to be removed
 	 * @return the element previously at the specified position
 	 */
-	public long poll(int index) {
+	public float poll(int index) {
 		if (index <= 0)
 			return pollFirst();
 		if (index >= size)
 			return pollLast();
 		// No need to check for size to be 0 because the above checks will already do that, and one will run.
 
-		long[] items = this.items;
+		float[] items = this.items;
 		int head = this.head, tail = this.tail;
 		index += head;
-		long value;
+		float value;
 		if (head <= tail) { // index is between head and tail.
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
@@ -1841,20 +1842,20 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public boolean removeAll(OfLong c) {
+	public boolean removeAll(OfFloat c) {
 		return removeAll(c.iterator());
 	}
 
 	@Override
-	public boolean removeEach(OfLong c) {
+	public boolean removeEach(OfFloat c) {
 		return removeEach(c.iterator());
 	}
 
 	@Override
-	public boolean retainAll(OfLong other) {
-		// Gets the deque to be internally the same as a LongList, if not already.
+	public boolean retainAll(OfFloat other) {
+		// Gets the deque to be internally the same as a FloatList, if not already.
 		if(head != 0) trimToSize();
-		// That allows us to use the LongList retainAll() verbatim.
+		// That allows us to use the FloatList retainAll() verbatim.
 		return super.retainAll(other);
 	}
 
@@ -1876,13 +1877,13 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * Returns the first (head) item in the deque (without removing it).
 	 *
 	 * @throws NoSuchElementException when the deque is empty
-	 * @see #peekFirst() peeking won't throw an exception, and will return the LongDeque's default value if empty
+	 * @see #peekFirst() peeking won't throw an exception, and will return the FloatDeque's default value if empty
 	 * @see #removeFirst()
 	 */
-	public long first () {
+	public float first () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("LongDeque is empty.");
+			throw new NoSuchElementException("FloatDeque is empty.");
 		}
 		return items[head];
 	}
@@ -1891,21 +1892,21 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * Returns the last (tail) item in the deque (without removing it).
 	 *
 	 * @throws NoSuchElementException when the deque is empty
-	 * @see #peekLast() peeking won't throw an exception, and will return the LongDeque's default value if empty
+	 * @see #peekLast() peeking won't throw an exception, and will return the FloatDeque's default value if empty
 	 */
-	public long last () {
+	public float last () {
 		if (size == 0) {
 			// Underflow
-			throw new NoSuchElementException("LongDeque is empty.");
+			throw new NoSuchElementException("FloatDeque is empty.");
 		}
 		return items[tail];
 	}
 
 	/**
 	 * Returns the element at the specified position in this deque.
-	 * Like {@link ArrayList} or {@link LongList}, but unlike {@link LinkedList}, this runs in O(1) time.
-	 * It is expected to be slightly slower than {@link LongList#get(int)}, which also runs in O(1) time.
-	 * Unlike get() in ArrayList or LongList, this considers negative indices to refer to the first item, and
+	 * Like {@link ArrayList} or {@link FloatList}, but unlike {@link LinkedList}, this runs in O(1) time.
+	 * It is expected to be slightly slower than {@link FloatList#get(int)}, which also runs in O(1) time.
+	 * Unlike get() in ArrayList or FloatList, this considers negative indices to refer to the first item, and
 	 * too-large indices to refer to the last item. That means it delegates to {@link #getFirst()} or
 	 * {@link #getLast()} in those cases instead of throwing an {@link IndexOutOfBoundsException}, though it may
 	 * throw a {@link NoSuchElementException} if the deque is empty and there is no item it can get.
@@ -1914,12 +1915,12 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @return the element at the specified position in this deque
 	 * @throws NoSuchElementException if the deque is empty
 	 */
-	public long get (int index) {
+	public float get (int index) {
 		if (index <= 0)
 			return getFirst();
 		if (index >= size - 1)
 			return getLast();
-		final long[] items = this.items;
+		final float[] items = this.items;
 
 		int i = head + index;
 		if (i >= items.length)
@@ -1929,9 +1930,9 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Returns the element at the specified position in this deque.
-	 * Like {@link ArrayList} or {@link LongList}, but unlike {@link LinkedList}, this runs in O(1) time.
-	 * It is expected to be slightly slower than {@link LongList#get(int)}, which also runs in O(1) time.
-	 * Unlike get() in ArrayList or LongList, this considers negative indices to refer to the first item, and
+	 * Like {@link ArrayList} or {@link FloatList}, but unlike {@link LinkedList}, this runs in O(1) time.
+	 * It is expected to be slightly slower than {@link FloatList#get(int)}, which also runs in O(1) time.
+	 * Unlike get() in ArrayList or FloatList, this considers negative indices to refer to the first item, and
 	 * too-large indices to refer to the last item. That means it delegates to {@link #peekFirst()} or
 	 * {@link #peekLast()} in those cases instead of throwing an {@link IndexOutOfBoundsException}, and it will
 	 * return {@link #getDefaultValue() the default value} if the deque is empty. Unless changed, the default value
@@ -1940,12 +1941,12 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param index index of the element to return
 	 * @return the element at the specified position in this deque
 	 */
-	public long peekAt (int index) {
+	public float peekAt (int index) {
 		if (index <= 0)
 			return peekFirst();
 		if (index >= size - 1)
 			return peekLast();
-		final long[] items = this.items;
+		final float[] items = this.items;
 
 		int i = head + index;
 		if (i >= items.length)
@@ -1956,15 +1957,15 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Replaces the element at the specified position in this list with the
 	 * specified element. If this deque is empty or the index is larger than the largest index currently in this
-	 * deque, this delegates to {@link #addLast(long)} and returns {@link #getDefaultValue() the default value}.
-	 * If the index is negative, this delegates to {@link #addFirst(long)} and returns
+	 * deque, this delegates to {@link #addLast(float)} and returns {@link #getDefaultValue() the default value}.
+	 * If the index is negative, this delegates to {@link #addFirst(float)} and returns
 	 * {@link #getDefaultValue() the default value}.
 	 *
 	 * @param index index of the element to replace
 	 * @param item element to be stored at the specified position
 	 * @return the element previously at the specified position
 	 */
-	public long assign (int index, long item) {
+	public float assign (int index, float item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return defaultValue;
@@ -1973,12 +1974,12 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 			addFirst(item);
 			return defaultValue;
 		}
-		final long[] items = this.items;
+		final float[] items = this.items;
 
 		int i = head + Math.max(Math.min(index, size - 1), 0);
 		if (i >= items.length)
 			i -= items.length;
-		long old = items[i];
+		float old = items[i];
 		items[i] = item;
 		return old;
 	}
@@ -1986,14 +1987,14 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Replaces the element at the specified position in this list with the
 	 * specified element. If this deque is empty or the index is larger than the largest index currently in this
-	 * deque, this delegates to {@link #addLast(long)} and returns {@link #getDefaultValue() the default value}.
-	 * If the index is negative, this delegates to {@link #addFirst(long)} and returns
+	 * deque, this delegates to {@link #addLast(float)} and returns {@link #getDefaultValue() the default value}.
+	 * If the index is negative, this delegates to {@link #addFirst(float)} and returns
 	 * {@link #getDefaultValue() the default value}.
 	 *
 	 * @param index index of the element to replace
 	 * @param item  element to be stored at the specified position
 	 */
-	public void set (int index, long item) {
+	public void set (int index, float item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return;
@@ -2002,7 +2003,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 			addFirst(item);
 			return;
 		}
-		final long[] items = this.items;
+		final float[] items = this.items;
 
 		int i = head + index;
 		if (i >= items.length)
@@ -2011,8 +2012,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public void plus(int index, long value) {
-		final long[] items = this.items;
+	public void plus(int index, float value) {
+		final float[] items = this.items;
 
 		int i = head + Math.min(Math.max(index, 0), size - 1);
 		if (i >= items.length)
@@ -2021,8 +2022,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public LongList plus(long value) {
-		final long[] items = this.items;
+	public FloatList plus(float value) {
+		final float[] items = this.items;
 		if(head <= tail){
 			for (int i = head; i <= tail; i++) {
 				items[i] += value;
@@ -2039,8 +2040,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public void times(int index, long value) {
-		final long[] items = this.items;
+	public void times(int index, float value) {
+		final float[] items = this.items;
 
 		int i = head + Math.min(Math.max(index, 0), size - 1);
 		if (i >= items.length)
@@ -2049,8 +2050,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public LongList times(long value) {
-		final long[] items = this.items;
+	public FloatList times(float value) {
+		final float[] items = this.items;
 		if(head <= tail){
 			for (int i = head; i <= tail; i++) {
 				items[i] *= value;
@@ -2067,8 +2068,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public void minus(int index, long value) {
-		final long[] items = this.items;
+	public void minus(int index, float value) {
+		final float[] items = this.items;
 
 		int i = head + Math.min(Math.max(index, 0), size - 1);
 		if (i >= items.length)
@@ -2077,8 +2078,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public LongList minus(long value) {
-		final long[] items = this.items;
+	public FloatList minus(float value) {
+		final float[] items = this.items;
 		if(head <= tail){
 			for (int i = head; i <= tail; i++) {
 				items[i] -= value;
@@ -2095,8 +2096,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public void div(int index, long value) {
-		final long[] items = this.items;
+	public void div(int index, float value) {
+		final float[] items = this.items;
 
 		int i = head + Math.min(Math.max(index, 0), size - 1);
 		if (i >= items.length)
@@ -2105,8 +2106,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public LongList div(long value) {
-		final long[] items = this.items;
+	public FloatList div(float value) {
+		final float[] items = this.items;
 		if(head <= tail){
 			for (int i = head; i <= tail; i++) {
 				items[i] /= value;
@@ -2123,8 +2124,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public void rem(int index, long value) {
-		final long[] items = this.items;
+	public void rem(int index, float value) {
+		final float[] items = this.items;
 
 		int i = head + Math.min(Math.max(index, 0), size - 1);
 		if (i >= items.length)
@@ -2133,8 +2134,8 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public LongList rem(long value) {
-		final long[] items = this.items;
+	public FloatList rem(float value) {
+		final float[] items = this.items;
 		if(head <= tail){
 			for (int i = head; i <= tail; i++) {
 				items[i] %= value;
@@ -2151,18 +2152,18 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public void replaceAll(LongToLongFunction operator) {
-		final long[] items = this.items;
+	public void replaceAll(FloatToFloatFunction operator) {
+		final float[] items = this.items;
 		if(head <= tail){
 			for (int i = head; i <= tail; i++) {
-				items[i] = operator.applyAsLong(items[i]);
+				items[i] = operator.applyAsFloat(items[i]);
 			}
 		} else {
 			for (int i = head; i < items.length; i++) {
-				items[i] = operator.applyAsLong(items[i]);
+				items[i] = operator.applyAsFloat(items[i]);
 			}
 			for (int i = 0; i <= tail; i++) {
-				items[i] = operator.applyAsLong(items[i]);
+				items[i] = operator.applyAsFloat(items[i]);
 			}
 		}
 	}
@@ -2201,12 +2202,12 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * Returns an iterator for the items in the deque. Remove is supported.
 	 * <br>
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link LongDequeIterator#LongDequeIterator(LongDeque)}.
+	 * iteration, use {@link FloatDequeIterator#FloatDequeIterator(FloatDeque)}.
 	 */
-	public LongListIterator iterator () {
+	public FloatListIterator iterator () {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new LongDequeIterator(this);
-			iterator2 = new LongDequeIterator(this);
+			iterator1 = new FloatDequeIterator(this);
+			iterator2 = new FloatDequeIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -2226,14 +2227,14 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * last (tail) to first (head).
 	 * <br>
 	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link LongDequeIterator#LongDequeIterator(LongDeque, boolean)}.
+	 * iteration, use {@link FloatDequeIterator#FloatDequeIterator(FloatDeque, boolean)}.
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public LongListIterator descendingIterator () {
+	public FloatListIterator descendingIterator () {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new LongDequeIterator(this, true);
-			descendingIterator2 = new LongDequeIterator(this, true);
+			descendingIterator1 = new FloatDequeIterator(this, true);
+			descendingIterator2 = new FloatDequeIterator(this, true);
 		}
 		if (!descendingIterator1.valid) {
 			descendingIterator1.reset();
@@ -2253,15 +2254,15 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * {@code index} backwards to first (head).
 	 * <br>
 	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link LongDequeIterator#LongDequeIterator(LongDeque, boolean)}.
+	 * iteration, use {@link FloatDequeIterator#FloatDequeIterator(FloatDeque, boolean)}.
 	 *
 	 * @param index the index to start iterating from in this deque
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public LongListIterator descendingIterator (int index) {
+	public FloatListIterator descendingIterator (int index) {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new LongDequeIterator(this, index, true);
-			descendingIterator2 = new LongDequeIterator(this, index, true);
+			descendingIterator1 = new FloatDequeIterator(this, index, true);
+			descendingIterator2 = new FloatDequeIterator(this, index, true);
 		}
 		if (!descendingIterator1.valid) {
 			descendingIterator1.reset(index);
@@ -2277,7 +2278,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Delegates to {@link #toString(String, boolean)} with a delimiter of {@code ", "} and square brackets enabled.
-	 * @return the square-bracketed String representation of this LongDeque, with items separated by ", "
+	 * @return the square-bracketed String representation of this FloatDeque, with items separated by ", "
 	 */
 	public String toString () {
 		return toString(", ", true);
@@ -2285,16 +2286,16 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 
 	public int hashCode () {
 		final int size = this.size;
-		final long[] items = this.items;
+		final float[] items = this.items;
 		final int backingLength = items.length;
 		int index = this.head;
 
 		int hash = size + 1;
 		for (int s = 0; s < size; s++) {
-			final long value = items[index];
+			final float value = items[index];
 
 			hash *= 43; // avoids LEA pessimization
-			hash ^= (int) (value ^ value >>> 32); // avoids precision loss on GWT
+			hash ^= BitConversion.floatToIntBits(value); // avoids precision loss on GWT
 
 			index++;
 			if (index == backingLength)
@@ -2305,11 +2306,11 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Using {@code ==} between each item in order, compares for equality with
-	 * other subtypes of {@link LongList}.
-	 * If {@code o} is not a LongList
+	 * Using {@link Float#compare(float, float)} between each item in order, compares for equality with
+	 * other subtypes of {@link FloatList}.
+	 * If {@code o} is not a FloatList
 	 * (and is also not somehow reference-equivalent to this collection), this returns false.
-	 * This uses the {@link OfLong#iterator()} of both this and {@code o},
+	 * This uses the {@link OfFloat#iterator()} of both this and {@code o},
 	 * so if either is in the
 	 * middle of a concurrent iteration that modifies the collection, this may fail.
 	 * @param o object to be compared for equality with this collection
@@ -2318,15 +2319,15 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	public boolean equals(Object o) {
 		if (o == this)
 			return true;
-		if (!((o instanceof LongList)))
+		if (!((o instanceof FloatList)))
 			return false;
 
-		LongIterator e1 = iterator();
-		LongIterator e2 = ((LongList)o).iterator();
+		FloatIterator e1 = iterator();
+		FloatIterator e2 = ((FloatList)o).iterator();
 		while (e1.hasNext() && e2.hasNext()) {
-			long o1 = e1.nextLong();
-			long o2 = e2.nextLong();
-			if (o1 != o2)
+			float o1 = e1.nextFloat();
+			float o2 = e2.nextFloat();
+			if (Float.compare(o1, o2) != 0)
 				return false;
 		}
 		return !(e1.hasNext() || e2.hasNext());
@@ -2348,7 +2349,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		if (second >= size)
 			throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
 		if(first == second) return;
-		final long[] items = this.items;
+		final float[] items = this.items;
 
 		int f = head + first;
 		if (f >= items.length)
@@ -2358,18 +2359,18 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		if (s >= items.length)
 			s -= items.length;
 
-		long fv = items[f];
+		float fv = items[f];
 		items[f] = items[s];
 		items[s] = fv;
 	}
 
 	/**
-	 * Reverses this LongDeque in-place.
+	 * Reverses this FloatDeque in-place.
 	 */
 	public void reverse () {
-		final long[] items = this.items;
+		final float[] items = this.items;
 		int f, s, len = items.length;
-		long fv;
+		float fv;
 		for (int n = size >> 1, b = 0, t = size - 1; b <= n && b != t; b++, t--) {
 			f = head + b;
 			if (f >= len)
@@ -2392,54 +2393,54 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Attempts to sort this deque in-place using its natural ordering, which requires long to
-	 * implement {@link Comparable} of long.
+	 * Attempts to sort this deque in-place using its natural ordering, which requires float to
+	 * implement {@link Comparable} of float.
 	 */
 	public void sort () {
 		sort(null);
 	}
 
 	/**
-	 * Sorts this deque in-place using {@link LongComparators#sort(long[], int, int, LongComparator)}.
+	 * Sorts this deque in-place using {@link FloatComparators#sort(float[], int, int, FloatComparator)}.
 	 * This should operate in O(n log(n)) time or less when the internals of the deque are
 	 * continuous (the head is before the tail in the array). If the internals are not
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
 	 * the deque) to rearrange the internals before sorting. You can pass null as the value
 	 * for {@code comparator}, which will make this
-	 * use the natural ordering for long.
+	 * use the natural ordering for float.
 	 *
-	 * @param comparator the Comparator to use for long items; may be null to use the natural
-	 *                   order of long items when long implements Comparable of long
+	 * @param comparator the Comparator to use for float items; may be null to use the natural
+	 *                   order of float items when float implements Comparable of float
 	 */
-	public void sort (@Nullable LongComparator comparator) {
+	public void sort (@Nullable FloatComparator comparator) {
 		if (head <= tail) {
-			LongComparators.sort(items, head, tail+1, comparator);
+			FloatComparators.sort(items, head, tail+1, comparator);
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
-			LongComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
+			FloatComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
 			tail += items.length - head;
 			head = 0;
 		}
 	}
 
 	@Override
-	public void sort(int from, int to, LongComparator comparator) {
+	public void sort(int from, int to, FloatComparator comparator) {
 		if (head <= tail) {
-			LongComparators.sort(items, head + from, head + to, comparator);
+			FloatComparators.sort(items, head + from, head + to, comparator);
 		} else {
 			trimToSize(); // rearranges items so it is linear starting at 0
-			LongComparators.sort(items, from, to, comparator);
+			FloatComparators.sort(items, from, to, comparator);
 		}
 	}
 
 	/**
-	 * Gets a randomly selected item from this LongDeque. Throws a {@link NoSuchElementException} if empty.
+	 * Gets a randomly selected item from this FloatDeque. Throws a {@link NoSuchElementException} if empty.
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public long random (Random random) {
+	public float random (Random random) {
 		if (size <= 0) {
-			throw new NoSuchElementException("LongDeque is empty.");
+			throw new NoSuchElementException("FloatDeque is empty.");
 		}
 		return get(random.nextInt(size));
 	}
@@ -2449,39 +2450,39 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public long peekRandom (Random random) {
+	public float peekRandom (Random random) {
 		return peekAt(random.nextInt(size));
 	}
 
 	/**
-	 * A {@link LongIterator} over the elements of a LongDeque.
+	 * A {@link FloatIterator} over the elements of a FloatDeque.
 	 */
-	public static class LongDequeIterator extends LongListIterator implements LongIterator {
+	public static class FloatDequeIterator extends FloatListIterator implements FloatIterator {
 		protected int index, latest = -1;
 		protected boolean valid = true;
 		protected final int direction;
 
-		public LongDequeIterator(LongDeque deque) {
+		public FloatDequeIterator(FloatDeque deque) {
 			this(deque, false);
 		}
-		public LongDequeIterator(LongDeque deque, boolean descendingOrder) {
+		public FloatDequeIterator(FloatDeque deque, boolean descendingOrder) {
 			super(deque);
 			direction = descendingOrder ? -1 : 1;
 		}
 
-		public LongDequeIterator(LongDeque deque, int index, boolean descendingOrder) {
+		public FloatDequeIterator(FloatDeque deque, int index, boolean descendingOrder) {
 			super(deque, index);
 			direction = descendingOrder ? -1 : 1;
 		}
 
 		/**
-		 * Returns the next {@code long} element in the iteration.
+		 * Returns the next {@code float} element in the iteration.
 		 *
-		 * @return the next {@code long} element in the iteration
+		 * @return the next {@code float} element in the iteration
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public long nextLong () {
+		public float nextFloat () {
 			if (!hasNext()) {throw new NoSuchElementException();}
 			latest = index;
 			index += direction;
@@ -2527,7 +2528,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		 * @throws NoSuchElementException if the iteration has no previous
 		 *                                element
 		 */
-		public long previous () {
+		public float previous () {
 			if (!hasPrevious()) {throw new NoSuchElementException();}
 			latest = index -= direction;
             return list.get(latest);
@@ -2603,7 +2604,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		 *                                       {@code add} have been called after the last call to
 		 *                                       {@code next} or {@code previous}
 		 */
-		public void set (long t) {
+		public void set (float t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
 			list.set(latest, t);
@@ -2629,7 +2630,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		 * @throws IllegalArgumentException      if some aspect of this element
 		 *                                       prevents it from being added to this list
 		 */
-		public void add (long t) {
+		public void add (float t) {
 			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
 			if (index > list.size()) {throw new NoSuchElementException();}
 			list.insert(index, t);
@@ -2644,17 +2645,17 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 
 		public void reset (int index) {
 			if (index < 0 || index >= list.size())
-				throw new IndexOutOfBoundsException("LongDequeIterator does not satisfy index >= 0 && index < deque.size()");
+				throw new IndexOutOfBoundsException("FloatDequeIterator does not satisfy index >= 0 && index < deque.size()");
 			this.index = index;
 			latest = -1;
 		}
 
 		/**
-		 * Returns an iterator over elements of type {@code long}.
+		 * Returns an iterator over elements of type {@code float}.
 		 *
-		 * @return a LongIterator; really this same LongDequeIterator.
+		 * @return a FloatIterator; really this same FloatDequeIterator.
 		 */
-		public LongDequeIterator iterator () {
+		public FloatDequeIterator iterator () {
 			return this;
 		}
 	}
@@ -2666,138 +2667,138 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return a new deque containing nothing
 	 */
-	public static LongDeque with () {
-		return new LongDeque(1);
+	public static FloatDeque with () {
+		return new FloatDeque(1);
 	}
 
 	/**
-	 * Creates a new LongDeque that holds only the given item, but can be resized.
-	 * @param item one long item
-	 * @return a new LongDeque that holds the given item
+	 * Creates a new FloatDeque that holds only the given item, but can be resized.
+	 * @param item one float item
+	 * @return a new FloatDeque that holds the given item
 	 */
-	public static LongDeque with (long item) {
-		LongDeque deque = new LongDeque(1);
+	public static FloatDeque with (float item) {
+		FloatDeque deque = new FloatDeque(1);
 		deque.add(item);
 		return deque;
 	}
 
 	/**
-	 * Creates a new LongDeque that holds only the given items, but can be resized.
-	 * @param item0 a long item
-	 * @param item1 a long item
-	 * @return a new LongDeque that holds the given items
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @return a new FloatDeque that holds the given items
 	 */
-	public static LongDeque with (long item0, long item1) {
-		LongDeque deque = new LongDeque(2);
+	public static FloatDeque with (float item0, float item1) {
+		FloatDeque deque = new FloatDeque(2);
 		deque.add(item0, item1);
 		return deque;
 	}
 
 	/**
-	 * Creates a new LongDeque that holds only the given items, but can be resized.
-	 * @param item0 a long item
-	 * @param item1 a long item
-	 * @param item2 a long item
-	 * @return a new LongDeque that holds the given items
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @return a new FloatDeque that holds the given items
 	 */
-	public static LongDeque with (long item0, long item1, long item2) {
-		LongDeque deque = new LongDeque(3);
+	public static FloatDeque with (float item0, float item1, float item2) {
+		FloatDeque deque = new FloatDeque(3);
 		deque.add(item0, item1, item2);
 		return deque;
 	}
 
 	/**
-	 * Creates a new LongDeque that holds only the given items, but can be resized.
-	 * @param item0 a long item
-	 * @param item1 a long item
-	 * @param item2 a long item
-	 * @param item3 a long item
-	 * @return a new LongDeque that holds the given items
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @return a new FloatDeque that holds the given items
 	 */
-	public static LongDeque with (long item0, long item1, long item2, long item3) {
-		LongDeque deque = new LongDeque(4);
+	public static FloatDeque with (float item0, float item1, float item2, float item3) {
+		FloatDeque deque = new FloatDeque(4);
 		deque.add(item0, item1, item2, item3);
 		return deque;
 	}
 
 	/**
-	 * Creates a new LongDeque that holds only the given items, but can be resized.
-	 * @param item0 a long item
-	 * @param item1 a long item
-	 * @param item2 a long item
-	 * @param item3 a long item
-	 * @param item4 a long item
-	 * @return a new LongDeque that holds the given items
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @return a new FloatDeque that holds the given items
 	 */
-	public static LongDeque with (long item0, long item1, long item2, long item3, long item4) {
-		LongDeque deque = new LongDeque(5);
+	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4) {
+		FloatDeque deque = new FloatDeque(5);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4);
 		return deque;
 	}
 
 	/**
-	 * Creates a new LongDeque that holds only the given items, but can be resized.
-	 * @param item0 a long item
-	 * @param item1 a long item
-	 * @param item2 a long item
-	 * @param item3 a long item
-	 * @param item4 a long item
-	 * @param item5 a long item
-	 * @return a new LongDeque that holds the given items
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @param item5 a float item
+	 * @return a new FloatDeque that holds the given items
 	 */
-	public static LongDeque with (long item0, long item1, long item2, long item3, long item4, long item5) {
-		LongDeque deque = new LongDeque(6);
+	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4, float item5) {
+		FloatDeque deque = new FloatDeque(6);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5);
 		return deque;
 	}
 
 	/**
-	 * Creates a new LongDeque that holds only the given items, but can be resized.
-	 * @param item0 a long item
-	 * @param item1 a long item
-	 * @param item2 a long item
-	 * @param item3 a long item
-	 * @param item4 a long item
-	 * @param item5 a long item
-	 * @param item6 a long item
-	 * @return a new LongDeque that holds the given items
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @param item5 a float item
+	 * @param item6 a float item
+	 * @return a new FloatDeque that holds the given items
 	 */
-	public static LongDeque with (long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
-		LongDeque deque = new LongDeque(7);
+	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
+		FloatDeque deque = new FloatDeque(7);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6);
 		return deque;
 	}
 
 	/**
-	 * Creates a new LongDeque that holds only the given items, but can be resized.
-	 * @param item0 a long item
-	 * @param item1 a long item
-	 * @param item2 a long item
-	 * @param item3 a long item
-	 * @param item4 a long item
-	 * @param item5 a long item
-	 * @param item6 a long item
-	 * @param item7 a long item
-	 * @return a new LongDeque that holds the given items
+	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 * @param item0 a float item
+	 * @param item1 a float item
+	 * @param item2 a float item
+	 * @param item3 a float item
+	 * @param item4 a float item
+	 * @param item5 a float item
+	 * @param item6 a float item
+	 * @param item7 a float item
+	 * @return a new FloatDeque that holds the given items
 	 */
-	public static LongDeque with (long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
-		LongDeque deque = new LongDeque(8);
+	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
+		FloatDeque deque = new FloatDeque(8);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6, item7);
 		return deque;
 	}
 
 	/**
-	 * Creates a new LongDeque that will hold the items in the given array or varargs.
-	 * This overload will only be used when a long array is supplied, or if varargs are used and
+	 * Creates a new FloatDeque that will hold the items in the given array or varargs.
+	 * This overload will only be used when a float array is supplied, or if varargs are used and
 	 * there are 9 or more arguments.
-	 * @param varargs either 0 or more long items, or an array of long
-	 * @return a new LongDeque that holds the given long items
+	 * @param varargs either 0 or more float items, or an array of float
+	 * @return a new FloatDeque that holds the given float items
 	 */
-	public static LongDeque with (long... varargs) {
-		return new LongDeque(varargs);
+	public static FloatDeque with (float... varargs) {
+		return new FloatDeque(varargs);
 	}
 }

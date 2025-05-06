@@ -2027,9 +2027,14 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 		}
 	}
 
+	/**
+	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
+	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 * @param index the first index to duplicate
+	 * @param count how many items to duplicate
+	 */
 	@Override
 	public boolean duplicateRange(int index, int count) {
-		// TODO: REALLY NEEDS TESTING
 		int place = ensureGap(index + count, count);
 		if(place >= head + index + count){
 			System.arraycopy(items, head + index, items, place, count);
@@ -2168,7 +2173,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Using {@code ==} between each item in order, compares for equality with
-	 * other subtypes of {@link CharList}
+	 * other subtypes of {@link CharList}.
 	 * If {@code o} is not a CharList
 	 * (and is also not somehow reference-equivalent to this collection), this returns false.
 	 * This uses the {@link OfChar#iterator()} of both this and {@code o},
