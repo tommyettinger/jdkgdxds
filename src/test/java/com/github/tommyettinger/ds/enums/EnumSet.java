@@ -28,7 +28,7 @@ import java.util.Collection;
  */
 public class EnumSet<E extends Enum<E>> extends ObjectSet<E> {
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public EnumSet () {
 		super();

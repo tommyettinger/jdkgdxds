@@ -63,7 +63,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	protected int hashMultiplier = 0xEFAA28F1;
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all characters in a String key and does not edit them.
 	 */
 	public FilteredStringOrderedSet () {
@@ -94,7 +94,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	}
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This uses the specified CharFilter.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}

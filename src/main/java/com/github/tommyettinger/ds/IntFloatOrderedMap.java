@@ -64,7 +64,7 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	protected final IntList keys;
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public IntFloatOrderedMap () {
 		super();

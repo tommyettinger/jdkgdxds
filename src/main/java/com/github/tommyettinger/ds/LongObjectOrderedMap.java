@@ -66,7 +66,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	protected final LongList keys;
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public LongObjectOrderedMap () {
 		super();

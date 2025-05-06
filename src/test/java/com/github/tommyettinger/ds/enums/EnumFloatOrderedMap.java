@@ -31,7 +31,7 @@ import java.util.Collection;
 public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMap<K> {
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public EnumFloatOrderedMap () {
 		super();

@@ -52,7 +52,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	protected int hashMultiplier = 0xEFAA28F1;
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
 	 */
 	public FilteredIterableMap () {
@@ -83,7 +83,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This uses the specified filter and editor.
 	 *
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing

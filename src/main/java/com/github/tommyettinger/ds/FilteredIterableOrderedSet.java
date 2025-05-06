@@ -62,7 +62,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	protected int hashMultiplier = 0xEFAA28F1;
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
 	 */
 	public FilteredIterableOrderedSet () {
@@ -93,7 +93,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	}
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This uses the specified filter and editor.
 	 *
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing

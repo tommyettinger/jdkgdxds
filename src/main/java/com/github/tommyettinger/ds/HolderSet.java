@@ -83,7 +83,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
     protected transient ObjToObjFunction<T, K> extractor;
 
     /**
-     * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}. This does not set the
+     * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}. This does not set the
      * extractor, so the HolderSet will not be usable until {@link #setExtractor(ObjToObjFunction)} is called with
      * a valid ObjToObjFunction that gets K keys from T items.
      */
@@ -92,7 +92,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 
         loadFactor = Utilities.getDefaultLoadFactor();
 
-        int tableSize = tableSize(51, loadFactor);
+        int tableSize = tableSize(Utilities.getDefaultTableCapacity(), loadFactor);
         threshold = (int) (tableSize * loadFactor);
         mask = tableSize - 1;
         shift = BitConversion.countLeadingZeros(mask) + 32;
@@ -102,12 +102,12 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
     }
 
     /**
-     * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+     * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
      *
      * @param extractor a function that will be used to extract K keys from the T items put into this
      */
     public HolderSet(ObjToObjFunction<T, K> extractor) {
-        this(extractor, 51, Utilities.getDefaultLoadFactor());
+        this(extractor, Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
     }
 
     /**

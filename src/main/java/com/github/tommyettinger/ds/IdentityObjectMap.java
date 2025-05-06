@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public IdentityObjectMap () {
 		super();

@@ -32,7 +32,7 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
 public class EnumObjectOrderedMap<K extends Enum<K>, V> extends ObjectObjectOrderedMap<K, V> {
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public EnumObjectOrderedMap () {
 		super();

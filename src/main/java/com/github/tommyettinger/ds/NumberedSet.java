@@ -95,7 +95,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	@Nullable protected transient NumberedSetIterator<T> iterator2;
 
 	public NumberedSet () {
-		this(51, Utilities.getDefaultLoadFactor());
+		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
 	}
 
 	public NumberedSet (int initialCapacity, float loadFactor) {

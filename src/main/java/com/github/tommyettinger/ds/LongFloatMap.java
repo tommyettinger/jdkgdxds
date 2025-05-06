@@ -107,10 +107,10 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	public float defaultValue = 0;
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public LongFloatMap () {
-		this(51, Utilities.getDefaultLoadFactor());
+		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
 	}
 
 	/**

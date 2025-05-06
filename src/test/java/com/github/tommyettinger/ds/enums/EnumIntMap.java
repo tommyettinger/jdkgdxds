@@ -29,7 +29,7 @@ import java.util.Collection;
 public class EnumIntMap<K extends Enum<K>> extends ObjectIntMap<K> {
 
 	/**
-	 * Creates a new map with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public EnumIntMap () {
 		super();

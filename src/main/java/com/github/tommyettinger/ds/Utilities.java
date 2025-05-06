@@ -175,6 +175,17 @@ public final class Utilities {
 	}
 
 	/**
+	 * Gets the default capacity for maps and sets backed by hash tables, meant to be used when no capacity is specified
+	 * during the construction of a map or set. This depends on the current {@link #getDefaultLoadFactor()}, and is
+	 * equivalent to the floor of {@code 64 * getDefaultLoadFactor()}, or 44 if unchanged.
+	 *
+	 * @return the default capacity for hash-based maps and sets, when none is given
+	 */
+	public static int getDefaultTableCapacity () {
+		return (int)(64 * getDefaultLoadFactor());
+	}
+
+	/**
 	 * Used to establish the size of a hash table for {@link ObjectSet}, {@link ObjectObjectMap}, and related code.
 	 * The table size will always be a power of two, and should be the next power of two that is at least equal
 	 * to {@code capacity / loadFactor}.

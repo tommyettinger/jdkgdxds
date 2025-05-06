@@ -82,10 +82,10 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	@Nullable protected transient IntSetIterator iterator2;
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public IntSet() {
-		this(51, Utilities.getDefaultLoadFactor());
+		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
 	}
 
 	/**

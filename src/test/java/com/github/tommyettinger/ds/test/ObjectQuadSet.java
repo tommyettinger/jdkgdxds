@@ -95,10 +95,10 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	@Nullable protected transient ObjectSetIterator<T> iterator2;
 
 	/**
-	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public ObjectQuadSet () {
-		this(51, Utilities.getDefaultLoadFactor());
+		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
 	}
 
 	/**
