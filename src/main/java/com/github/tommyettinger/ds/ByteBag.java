@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
 
 import java.util.List;

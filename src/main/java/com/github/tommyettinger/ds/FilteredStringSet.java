@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
-import com.github.tommyettinger.function.ObjToObjFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
