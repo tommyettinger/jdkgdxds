@@ -52,18 +52,31 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	protected final LongList items;
 
+
 	public LongOrderedSet () {
-		items = new LongList();
+		this(Utilities.getDefaultTableCapacity());
+	}
+
+	/**
+	 * Creates an IntOrderedSet with the option to use an IntDeque for keeping order.
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 */
+	public LongOrderedSet (boolean useDequeOrder) {
+		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor(), useDequeOrder);
 	}
 
 	public LongOrderedSet (int initialCapacity, float loadFactor) {
+		this(initialCapacity, loadFactor, false);
+	}
+
+	public LongOrderedSet (int initialCapacity, float loadFactor, boolean useDequeOrder) {
 		super(initialCapacity, loadFactor);
-		items = new LongList(initialCapacity);
+		if(useDequeOrder) items = new LongDeque(initialCapacity);
+		else items = new LongList(initialCapacity);
 	}
 
 	public LongOrderedSet (int initialCapacity) {
-		super(initialCapacity);
-		items = new LongList(initialCapacity);
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), false);
 	}
 
 	/**
@@ -78,17 +91,51 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	public LongOrderedSet (LongOrderedSet set) {
 		super(set);
-		items = new LongList(set.items);
+		if(set.items instanceof LongDeque) items = new LongDeque((LongDeque) set.items);
+		else items = new LongList(set.items);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
-	 *
-	 * @param coll a PrimitiveCollection like {@link LongList} or {@link LongObjectMap.Keys}
 	 */
-	public LongOrderedSet (PrimitiveCollection.OfLong coll) {
-		this(coll.size());
+	public LongOrderedSet (OfLong coll) {
+		this(coll, false);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code coll}.
+	 * @param coll any {@link PrimitiveCollection.OfInt}
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 */
+	public LongOrderedSet (OfLong coll, boolean useDequeOrder) {
+		this(coll.size(), Utilities.getDefaultLoadFactor(), useDequeOrder);
 		addAll(coll);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this.
+	 *
+	 * @param other  another Ordered.OfInt
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public LongOrderedSet (Ordered.OfLong other, int offset, int count) {
+		this(other, offset, count, false);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this.
+	 *
+	 * @param other  another Ordered.OfInt
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 */
+	public LongOrderedSet (Ordered.OfLong other, int offset, int count, boolean useDequeOrder) {
+		this(count, Utilities.getDefaultLoadFactor(), useDequeOrder);
+		addAll(0, other, offset, count);
 	}
 
 	/**
@@ -99,7 +146,19 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
 	public LongOrderedSet (long[] array, int offset, int length) {
-		this(length);
+		this(array, offset, length, false);
+	}
+
+	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 *
+	 * @param array  an array to draw items from
+	 * @param offset the first index in array to draw an item from
+	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 */
+	public LongOrderedSet (long[] array, int offset, int length, boolean useDequeOrder) {
+		this(length, Utilities.getDefaultLoadFactor(), useDequeOrder);
 		addAll(array, offset, length);
 	}
 
@@ -109,21 +168,17 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param items an array that will be used in full, except for duplicate items
 	 */
 	public LongOrderedSet (long[] items) {
-		this(items.length);
-		addAll(items);
+		this(items, 0, items.length, false);
 	}
 
 	/**
-	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
-	 * into this.
+	 * Creates a new set that contains all distinct elements in {@code items}.
 	 *
-	 * @param other  another Ordered.OfLong
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
+	 * @param items an array that will be used in full, except for duplicate items
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
 	 */
-	public LongOrderedSet (Ordered.OfLong other, int offset, int count) {
-		this(count);
-		addAll(0, other, offset, count);
+	public LongOrderedSet (long[] items, boolean useDequeOrder) {
+		this(items, 0, items.length, useDequeOrder);
 	}
 
 	@Override

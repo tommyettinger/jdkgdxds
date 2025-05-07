@@ -53,7 +53,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	protected final IntList items;
 
 	public IntOrderedSet () {
-		this(44);
+		this(Utilities.getDefaultTableCapacity());
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
 	 */
 	public IntOrderedSet (boolean useDequeOrder) {
-		this(44, Utilities.getDefaultLoadFactor(), useDequeOrder);
+		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor(), useDequeOrder);
 	}
 
 	public IntOrderedSet (int initialCapacity, float loadFactor) {
