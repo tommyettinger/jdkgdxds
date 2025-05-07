@@ -33,8 +33,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static com.github.tommyettinger.ds.Utilities.tableSize;
-
 /**
  * A {@link LongObjectMap} that also stores keys in an {@link LongList} using the insertion order. Null keys are not allowed. No
  * allocation is done except when growing the table size.
@@ -68,9 +66,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public LongObjectOrderedMap () {
-		super();
-		keys = new LongList();
+	public LongObjectOrderedMap (boolean useDequeOrder) {
+		this(Utilities.getDefaultTableCapacity(), useDequeOrder);
 	}
 
 	/**
@@ -78,9 +75,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public LongObjectOrderedMap (int initialCapacity) {
-		super(initialCapacity);
-		keys = new LongList(initialCapacity);
+	public LongObjectOrderedMap (int initialCapacity, boolean useDequeOrder) {
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), useDequeOrder);
 	}
 
 	/**
@@ -90,9 +86,10 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public LongObjectOrderedMap (int initialCapacity, float loadFactor) {
+	public LongObjectOrderedMap (int initialCapacity, float loadFactor, boolean useDequeOrder) {
 		super(initialCapacity, loadFactor);
-		keys = new LongList(initialCapacity);
+		if(useDequeOrder) keys = new LongDeque(initialCapacity);
+		else keys = new LongList(initialCapacity);
 	}
 
 	/**
@@ -102,7 +99,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 */
 	public LongObjectOrderedMap (LongObjectOrderedMap<? extends V> map) {
 		super(map);
-		keys = new LongList(map.keys);
+		if(map.keys instanceof LongDeque) keys = new LongDeque((LongDeque) map.keys);
+		else keys = new LongList(map.keys);
 	}
 
 	/**
@@ -110,8 +108,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 *
 	 * @param map the map to copy
 	 */
-	public LongObjectOrderedMap (LongObjectMap<? extends V> map) {
-		this(map.size());
+	public LongObjectOrderedMap (LongObjectMap<? extends V> map, boolean useDequeOrder) {
+		this(map.size(), useDequeOrder);
 		LongIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			long k = it.nextLong();
@@ -126,8 +124,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public LongObjectOrderedMap (long[] keys, V[] values) {
-		this(Math.min(keys.length, values.length));
+	public LongObjectOrderedMap (long[] keys, V[] values, boolean useDequeOrder) {
+		this(Math.min(keys.length, values.length), useDequeOrder);
 		putAll(keys, values);
 	}
 
@@ -138,8 +136,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public LongObjectOrderedMap (PrimitiveCollection.OfLong keys, Collection<? extends V> values) {
-		this(Math.min(keys.size(), values.size()));
+	public LongObjectOrderedMap (PrimitiveCollection.OfLong keys, Collection<? extends V> values, boolean useDequeOrder) {
+		this(Math.min(keys.size(), values.size()), useDequeOrder);
 		putAll(keys, values);
 	}
 
@@ -151,9 +149,79 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public LongObjectOrderedMap (LongObjectOrderedMap<? extends V> other, int offset, int count) {
-		this(count);
+	public LongObjectOrderedMap (LongObjectOrderedMap<? extends V> other, int offset, int count, boolean useDequeOrder) {
+		this(count, useDequeOrder);
 		putAll(0, other, offset, count);
+	}
+
+	/**
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 */
+	public LongObjectOrderedMap () {
+		this(false);
+	}
+
+	/**
+	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public LongObjectOrderedMap (int initialCapacity) {
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), false);
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public LongObjectOrderedMap (int initialCapacity, float loadFactor) {
+		this(initialCapacity, loadFactor, false);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public LongObjectOrderedMap (LongObjectMap<? extends V> map) {
+		this(map, false);
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 */
+	public LongObjectOrderedMap (long[] keys, V[] values) {
+		this(keys, values, false);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 *
+	 * @param keys   a PrimitiveCollection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public LongObjectOrderedMap (PrimitiveCollection.OfLong keys, Collection<? extends V> values) {
+		this(keys, values, false);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given LongObjectOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 *
+	 * @param other  another LongObjectOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public LongObjectOrderedMap (LongObjectOrderedMap<? extends V> other, int offset, int count) {
+		this(other, offset, count, false);
 	}
 
 	@Override
@@ -357,7 +425,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 */
 	@Override
 	public void ensureCapacity (int additionalCapacity) {
-		int tableSize = tableSize(size + additionalCapacity, loadFactor);
+		int tableSize = Utilities.tableSize(size + additionalCapacity, loadFactor);
 		if (keyTable.length < tableSize) {resize(tableSize);}
 		keys.ensureCapacity(additionalCapacity);
 
