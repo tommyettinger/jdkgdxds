@@ -64,12 +64,103 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 
 	protected final IntList keys;
 
+
+	/**
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 */
+	public IntObjectOrderedMap (boolean useDequeOrder) {
+		this(Utilities.getDefaultTableCapacity(), useDequeOrder);
+	}
+
+	/**
+	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public IntObjectOrderedMap (int initialCapacity, boolean useDequeOrder) {
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), useDequeOrder);
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public IntObjectOrderedMap (int initialCapacity, float loadFactor, boolean useDequeOrder) {
+		super(initialCapacity, loadFactor);
+		if(useDequeOrder) keys = new IntDeque(initialCapacity);
+		else keys = new IntList(initialCapacity);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> map) {
+		super(map);
+		if(map.keys instanceof IntDeque) keys = new IntDeque((IntDeque) map.keys);
+		else keys = new IntList(map.keys);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public IntObjectOrderedMap (IntObjectMap<? extends V> map, boolean useDequeOrder) {
+		this(map.size(), useDequeOrder);
+		IntIterator it = map.keySet().iterator();
+		while (it.hasNext()) {
+			int k = it.nextInt();
+			put(k, map.get(k));
+		}
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 */
+	public IntObjectOrderedMap (int[] keys, V[] values, boolean useDequeOrder) {
+		this(Math.min(keys.length, values.length), useDequeOrder);
+		putAll(keys, values);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 *
+	 * @param keys   a PrimitiveCollection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public IntObjectOrderedMap (PrimitiveCollection.OfInt keys, Collection<? extends V> values, boolean useDequeOrder) {
+		this(Math.min(keys.size(), values.size()), useDequeOrder);
+		putAll(keys, values);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given LongObjectOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 *
+	 * @param other  another LongObjectOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> other, int offset, int count, boolean useDequeOrder) {
+		this(count, useDequeOrder);
+		putAll(0, other, offset, count);
+	}
+
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public IntObjectOrderedMap () {
-		super();
-		keys = new IntList();
+		this(false);
 	}
 
 	/**
@@ -78,8 +169,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public IntObjectOrderedMap (int initialCapacity) {
-		super(initialCapacity);
-		keys = new IntList(initialCapacity);
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), false);
 	}
 
 	/**
@@ -90,8 +180,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public IntObjectOrderedMap (int initialCapacity, float loadFactor) {
-		super(initialCapacity, loadFactor);
-		keys = new IntList(initialCapacity);
+		this(initialCapacity, loadFactor, false);
 	}
 
 	/**
@@ -99,9 +188,8 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 *
 	 * @param map the map to copy
 	 */
-	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> map) {
-		super(map);
-		keys = new IntList(map.keys);
+	public IntObjectOrderedMap (IntObjectMap<? extends V> map) {
+		this(map, false);
 	}
 
 	/**
@@ -112,22 +200,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param values an array of values
 	 */
 	public IntObjectOrderedMap (int[] keys, V[] values) {
-		this(Math.min(keys.length, values.length));
-		putAll(keys, values);
-	}
-
-	/**
-	 * Creates a new map identical to the specified map.
-	 *
-	 * @param map the map to copy
-	 */
-	public IntObjectOrderedMap (IntObjectMap<? extends V> map) {
-		this(map.size());
-		IntIterator it = map.keySet().iterator();
-		while (it.hasNext()) {
-			int k = it.nextInt();
-			put(k, map.get(k));
-		}
+		this(keys, values, false);
 	}
 
 	/**
@@ -138,21 +211,19 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param values a PrimitiveCollection of values
 	 */
 	public IntObjectOrderedMap (PrimitiveCollection.OfInt keys, Collection<? extends V> values) {
-		this(Math.min(keys.size(), values.size()));
-		putAll(keys, values);
+		this(keys, values, false);
 	}
 
 	/**
-	 * Creates a new set by copying {@code count} items from the given IntObjectOrderedMap, starting at {@code offset} in that Map,
+	 * Creates a new set by copying {@code count} items from the given LongObjectOrderedMap, starting at {@code offset} in that Map,
 	 * into this.
 	 *
-	 * @param other  another IntObjectOrderedMap of the same type
+	 * @param other  another LongObjectOrderedMap of the same type
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
 	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> other, int offset, int count) {
-		this(count);
-		putAll(0, other, offset, count);
+		this(other, offset, count, false);
 	}
 
 	@Override
