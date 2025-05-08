@@ -17,9 +17,9 @@
 package com.github.tommyettinger.ds.experimental;
 
 import com.github.tommyettinger.ds.Arrangeable;
+import com.github.tommyettinger.ds.CharList;
 import com.github.tommyettinger.ds.Ordered;
 import com.github.tommyettinger.ds.PrimitiveCollection;
-import com.github.tommyettinger.ds.CharList;
 import com.github.tommyettinger.ds.support.sort.CharComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparators;
 import com.github.tommyettinger.ds.support.util.CharIterator;
@@ -453,20 +453,20 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 					return 1;
 				}
 			} else {
-				if (index == 0) {
+				if (index != 0) {
 					if (head != 0) {
 						this.items[0] = this.items[head];
 					}
 					this.head = 0;
 					this.tail = gapSize;
-					return 0;
+					return 1;
 				} else {
 					if (head != gapSize) {
 						this.items[gapSize] = this.items[head];
 					}
 					this.head = 0;
 					this.tail = gapSize;
-					return 1;
+					return 0;
 				}
 			}
 		}
@@ -1025,6 +1025,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 				items[i++] = it.nextChar();
 				if(i == items.length) i = 0;
 			}
+			size += cs;
 		}
 		return oldSize != size;
 	}

@@ -44,7 +44,7 @@ import java.util.Set;
 
 import com.github.tommyettinger.function.IntIntToIntBiFunction;
 
-@Ignore
+//@Ignore
 public class PileupTest {
     public static final int LEN = 200000;//500000;//1000000;//
     public static final float LOAD = 0.5f; //0.6f
@@ -133,6 +133,54 @@ public class PileupTest {
      * total collisions: 28233
      * longest pileup: 15
      * total of 12 pileups: 88
+     * <br>
+     * I didn't think I changed anything, but this seems different...
+     * average pileup: 0.21602630615234375
+     * 51168100 ns
+     * hash multiplier: EFAA28F1 with final size 200000
+     * total collisions: 28315
+     * longest pileup: 11
+     * total of 12 pileups: 73
+     * <br>
+     * Using imul of golden ratio and hashCode, lower bits:
+     * average pileup: 0.16037750244140625
+     * 49177400 ns
+     * hash multiplier: EFAA28F1 with final size 200000
+     * total collisions: 21021
+     * longest pileup: 14
+     * total of 12 pileups: 73
+     * <br>
+     * Same as above, but upper bits:
+     * average pileup: 0.14096832275390625
+     * 49312000 ns
+     * hash multiplier: EFAA28F1 with final size 200000
+     * total collisions: 18477
+     * longest pileup: 9
+     * total of 12 pileups: 77
+     * <br>
+     * Using GWT-safe multiplier 0x19E377, low bits:
+     * average pileup: 0.15993499755859375
+     * 48731100 ns
+     * hash multiplier: EFAA28F1 with final size 200000
+     * total collisions: 20963
+     * longest pileup: 10
+     * total of 12 pileups: 90
+     * <br>
+     * XMUL, lower bits:
+     * average pileup: 0.16020965576171875
+     * 48294000 ns
+     * hash multiplier: EFAA28F1 with final size 200000
+     * total collisions: 20999
+     * longest pileup: 9
+     * total of 12 pileups: 77
+     * <br>
+     * XMUL, upper bits:
+     * average pileup: 0.170196533203125
+     * 49598800 ns
+     * hash multiplier: EFAA28F1 with final size 200000
+     * total collisions: 22308
+     * longest pileup: 11
+     * total of 12 pileups: 71
      */
     //@Ignore // this test used to take much longer to run than the others here (over a minute; everything else is under a second).
     @Test
@@ -140,15 +188,24 @@ public class PileupTest {
         final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging and the constant in place() changed back
-        com.github.tommyettinger.ds.test.ObjectSet set = new com.github.tommyettinger.ds.test.ObjectSet(51, LOAD) {
+        ObjectSet set = new ObjectSet(64, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
 
             @Override
             protected int place (@NonNull Object item) {
-                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+//                return (item.hashCode() * 0x9E3779B9) >>> shift;
+//                return (item.hashCode() * 0x9E3779B9) & mask;
+//                return (item.hashCode() * 0x19E377) & mask;
+//                return (item.hashCode() ^ 0x7F4A7C15) * 0x19E373 & mask;
+                return (item.hashCode() ^ 0x7F4A7C15) * 0x19E373 >>> shift;
             }
+
+//            @Override
+//            protected int place (@NonNull Object item) {
+//                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
+//            }
 
 //            @Override
 //            protected int place (Object item) {
@@ -232,19 +289,37 @@ public class PileupTest {
      * total collisions: 21624
      * longest pileup: 8
      * total of 12 pileups: 72
+     * <br>
+     * Using imul of an int from GOOD_MULTIPLIERS with the hashCode, upper bits:
+     * average pileup: 0.20114898681640625
+     * 47200000 ns
+     * hash multiplier: E993C987 with final size 200000
+     * total collisions: 26365
+     * longest pileup: 8
+     * total of 12 pileups: 69
+     * <br>
+     * Same as above but lower bits:
+     * average pileup: 0.1577911376953125
+     * 46397500 ns
+     * hash multiplier: E993C987 with final size 200000
+     * total collisions: 20682
+     * longest pileup: 8
+     * total of 12 pileups: 72
      */
     @Test
     public void testObjectSetNew () {
         final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, LOAD) {
+        ObjectSet set = new ObjectSet(64, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
 
             @Override
             protected int place (@NonNull Object item) {
-                return (int)(hashMultiplier * item.hashCode()) >>> shift;
+//                return BitConversion.imul(hashMultiplier, item.hashCode()) & mask;
+//                return (hashMultiplier * item.hashCode()) & mask;
+                return (hashMultiplier * item.hashCode()) >>> shift;
             }
 
             @Override
@@ -279,7 +354,9 @@ public class PileupTest {
                 // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 
-                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+
+                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier >>> 48 + shift) & 511];
 
                 Object[] oldKeyTable = keyTable;
 
@@ -345,12 +422,20 @@ public class PileupTest {
      * total collisions: 22995
      * longest pileup: 8
      * total of 12 pileups: 61
+     * <br>
+     * Using only the XOR-ROL(9)-XOR-ROL(21) step on the hashCode:
+     * average pileup: 0.16771697998046875
+     * 48049200 ns
+     * final size: 200000
+     * total collisions: 21983
+     * longest pileup: 10
+     * total of 12 pileups: 71
      */
     @Test
     public void testObjectSetCurrent () {
         final String[] words = generateUniqueWords(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, LOAD) {
+        com.github.tommyettinger.ds.ObjectSet set = new com.github.tommyettinger.ds.ObjectSet(64, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -377,20 +462,6 @@ public class PileupTest {
                 mask = newSize - 1;
                 shift = BitConversion.countLeadingZeros(mask) + 32;
 
-                // multiplier from Steele and Vigna, Computationally Easy, Spectrally Good Multipliers for Congruential
-                // Pseudorandom Number Generators
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-                // ensures hashMultiplier is never too small, and is always odd
-//                hashMultiplier |= 0x0000010000000001L;
-
-                // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
-                // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
-//                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
-
-//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-
-                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];
-
                 Object[] oldKeyTable = keyTable;
 
                 keyTable = new Object[newSize];
@@ -407,7 +478,7 @@ public class PileupTest {
                         if (key != null) {addResize(key);}
                     }
                 }
-                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+                System.out.println("new size: " + newSize);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
                 System.out.println("average pileup: " + (averagePileup / size));
@@ -415,19 +486,13 @@ public class PileupTest {
 
             @Override
             public void clear () {
-                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("final size: " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
                 System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
                 super.clear();
             }
         };
-//        final int limit = (int)(Math.sqrt(LEN));
-//        for (int x = -limit; x < limit; x+=2) {
-//            for (int y = -limit; y < limit; y+=2) {
-//                set.add(new Vector2(x, y));
-//            }
-//        }
         for (int i = 0; i < LEN; i++) {
             set.add(words[i]);
         }

@@ -17,7 +17,10 @@
 package com.github.tommyettinger.ds.experimental;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.*;
+import com.github.tommyettinger.ds.Arrangeable;
+import com.github.tommyettinger.ds.DoubleList;
+import com.github.tommyettinger.ds.Ordered;
+import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
 import com.github.tommyettinger.ds.support.util.DoubleIterator;
@@ -451,20 +454,20 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 					return 1;
 				}
 			} else {
-				if (index == 0) {
+				if (index != 0) {
 					if (head != 0) {
 						this.items[0] = this.items[head];
 					}
 					this.head = 0;
 					this.tail = gapSize;
-					return 0;
+					return 1;
 				} else {
 					if (head != gapSize) {
 						this.items[gapSize] = this.items[head];
 					}
 					this.head = 0;
 					this.tail = gapSize;
-					return 1;
+					return 0;
 				}
 			}
 		}
@@ -1023,6 +1026,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 				items[i++] = it.nextDouble();
 				if(i == items.length) i = 0;
 			}
+			size += cs;
 		}
 		return oldSize != size;
 	}
