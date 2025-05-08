@@ -142,10 +142,10 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	}
 
 	/**
-	 * Creates a new set by copying {@code count} items from the given LongObjectOrderedMap, starting at {@code offset} in that Map,
+	 * Creates a new set by copying {@code count} items from the given LongIntOrderedMap, starting at {@code offset} in that Map,
 	 * into this.
 	 *
-	 * @param other  another LongObjectOrderedMap of the same type
+	 * @param other  another LongIntOrderedMap of the same type
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
@@ -213,10 +213,10 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	}
 
 	/**
-	 * Creates a new set by copying {@code count} items from the given LongObjectOrderedMap, starting at {@code offset} in that Map,
+	 * Creates a new set by copying {@code count} items from the given LongIntOrderedMap, starting at {@code offset} in that Map,
 	 * into this.
 	 *
-	 * @param other  another LongObjectOrderedMap of the same type
+	 * @param other  another LongIntOrderedMap of the same type
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
