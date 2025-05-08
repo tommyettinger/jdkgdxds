@@ -631,6 +631,20 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	}
 
 	/**
+	 * Gets a new ObjectDeque (which is both List and Deque) that has had its order reversed. Doesn't create a view;
+	 * this does actually copy the ObjectDeque. Consider using {@link #descendingIterator()} to get a reverse-order
+	 * Iterator over this collection. This runs in O(n) time, and iterates over this deque once (in descending order)
+	 * to add all items to a new ObjectDeque using {@link #addAll(Iterator)}.
+	 * @return a new ObjectDeque that copies this in reverse order
+	 */
+	public ObjectDeque<T> reversed() {
+		ObjectDeque<T> od = new ObjectDeque<>(size);
+		od.addAll(descendingIterator());
+		return od;
+
+	}
+
+	/**
 	 * Inserts the specified element at the front of this deque unless it would
 	 * violate capacity restrictions.  When using a capacity-restricted deque,
 	 * this method is generally preferable to the {@link #addFirst} method,
@@ -648,9 +662,8 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 */
 	@Override
 	public boolean offerFirst (@Nullable T t) {
-		int oldSize = size;
 		addFirst(t);
-		return oldSize != size;
+		return true;
 	}
 
 	/**
@@ -671,9 +684,8 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 */
 	@Override
 	public boolean offerLast (@Nullable T t) {
-		int oldSize = size;
 		addLast(t);
-		return oldSize != size;
+		return true;
 	}
 
 	/**
@@ -980,9 +992,8 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 */
 	@Override
 	public boolean offer (@Nullable T t) {
-		int oldSize = size;
 		addLast(t);
-		return oldSize != size;
+		return true;
 	}
 
 	/**
@@ -1205,7 +1216,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (T[] array) {
+	public boolean addAll (@Nullable T[] array) {
 		return addAll(array, 0, array.length);
 	}
 	/**
@@ -1216,7 +1227,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (T[] array, int offset, int length) {
+	public boolean addAll (@Nullable T[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
 		if(cs <= 0) return false;
 		int place = ensureGap(size, cs);
@@ -1233,7 +1244,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (T[] array) {
+	public boolean addAllLast (@Nullable T[] array) {
 		return addAll(array, 0, array.length);
 	}
 	/**
@@ -1244,7 +1255,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (T[] array, int offset, int length) {
+	public boolean addAllLast (@Nullable T[] array, int offset, int length) {
 		return addAll(array, offset, length);
 	}
 
@@ -1254,7 +1265,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
          * @param array the elements to be inserted into this deque
          * @return {@code true} if this deque changed as a result of the call
          */
-	public boolean addAllFirst (T[] array) {
+	public boolean addAllFirst (@Nullable T[] array) {
 		return addAllFirst(array, 0, array.length);
 	}
 
@@ -1267,7 +1278,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (T[] array, int offset, int length) {
+	public boolean addAllFirst (@Nullable T[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
 		if(cs <= 0) return false;
 		int place = ensureGap(0, cs);
@@ -1283,7 +1294,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean insertAll(int index, T[] array) {
+	public boolean insertAll(int index, @Nullable T[] array) {
 		return addAll(index, array, 0, array.length);
 	}
 
@@ -1295,7 +1306,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean insertAll(int index, T[] array, int offset, int length) {
+	public boolean insertAll(int index, @Nullable T[] array, int offset, int length) {
 		return addAll(index, array, offset, length);
 	}
 	/**
@@ -1307,7 +1318,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll(int index, T[] array) {
+	public boolean addAll(int index, @Nullable T[] array) {
 		return addAll(index, array, 0, array.length);
 	}
 
@@ -1323,7 +1334,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll(int index, T[] array, int offset, int length) {
+	public boolean addAll(int index, @Nullable T[] array, int offset, int length) {
 		int oldSize = size;
 		if(index <= 0)
 			addAllFirst(array, offset, length);
@@ -1730,13 +1741,13 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @param array array containing elements to be retained in this collection
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean retainAll (Object[] array) {
+	public boolean retainAll (@Nullable Object[] array) {
 		Objects.requireNonNull(array);
 		boolean modified = false;
 		ListIterator<T> it = iterator();
 		OUTER:
 		while (it.hasNext()) {
-			T check = it.next();
+			@Nullable T check = it.next();
 			for (int i = 0, n = array.length; i < n; i++) {
 				if(Objects.equals(array[i], check))
 					continue OUTER;
@@ -1755,7 +1766,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @param length how many items, at most, to retain from array in this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean retainAll (Object[] array, int offset, int length) {
+	public boolean retainAll (@Nullable Object[] array, int offset, int length) {
 		Objects.requireNonNull(array);
 		boolean modified = false;
 		ListIterator<T> it = iterator();
