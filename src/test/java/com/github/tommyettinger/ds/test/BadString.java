@@ -48,10 +48,10 @@ public class BadString implements CharSequence {
 //            return h;
 //            return (text.hashCode());
 
-		return Float.floatToIntBits(text.hashCode());
+//		return Float.floatToIntBits(text.hashCode());
 
-//		final int h = text.hashCode();
-//		return h & (h * h); // should use BitConversion.imul() if this would run on GWT, but it won't
+		final int h = text.hashCode();
+		return h & (h * h); // should use BitConversion.imul() if this would run on GWT, but it won't
 	}
 
 	@Override

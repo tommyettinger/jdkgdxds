@@ -46,7 +46,7 @@ import com.github.tommyettinger.function.IntIntToIntBiFunction;
 
 //@Ignore
 public class PileupTest {
-    public static final int LEN = 200000;//500000;//1000000;//
+    public static final int LEN = 2000000;//500000;//1000000;//
     public static final float LOAD = 0.5f; //0.6f
 
     public static String[] generateUniqueWordsFibSet (int size) {
@@ -968,7 +968,7 @@ public class PileupTest {
      * With BadStrings that use floatToIntBits:
      * <br>
      * average pileup: 0.1641387939453125
-     * 52876100 ns
+     * 52647700 ns
      * hash multiplier: EFAA28F1 with final size 200000
      * total collisions: 21514
      * longest pileup: 9
@@ -979,7 +979,7 @@ public class PileupTest {
         final BadString[] words = generateUniqueBad(LEN, -123456789L);
         long start = System.nanoTime();
         // replicates old ObjectSet behavior, with added logging
-        ObjectSet set = new ObjectSet(51, LOAD) {
+        ObjectSet set = new ObjectSet(64, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -1071,6 +1071,14 @@ public class PileupTest {
      * longest pileup: 89
      * total of 12 pileups: 197
      * <br>
+     * Same as above, but 2 million items:
+     * average pileup: 1.2349624633789062
+     * 646469700 ns
+     * hash multiplier: CDCBFDE3 with final size 2000000
+     * total collisions: 1294952
+     * longest pileup: 585
+     * total of 15 pileups: 1216
+     * <br>
      * Multiply with a GOOD_MULTIPLIERS int, lower bits:
      * average pileup: 54.30384063720703
      * 461599500 ns
@@ -1078,6 +1086,14 @@ public class PileupTest {
      * total collisions: 7117713
      * longest pileup: 2786
      * total of 12 pileups: 6817
+     * <br>
+     * Same as above, but 2 million items:
+     * average pileup: 112.36906814575195
+     * 15071464800 ns
+     * hash multiplier: CDCBFDE3 with final size 2000000
+     * total collisions: 117827508
+     * longest pileup: 8642
+     * total of 15 pileups: 24936
      * <br>
      * With BadStrings that use floatToIntBits(h) for the hashCode...
      * <br>
@@ -1115,8 +1131,8 @@ public class PileupTest {
             @Override
             protected int place (@NonNull Object item) {
 //                return BitConversion.imul(hashMultiplier, item.hashCode()) & mask;
-                return (hashMultiplier * item.hashCode()) & mask;
-//                return (hashMultiplier * item.hashCode()) >>> shift;
+//                return (hashMultiplier * item.hashCode()) & mask;
+                return (hashMultiplier * item.hashCode()) >>> shift;
             }
 
             @Override
@@ -1219,6 +1235,14 @@ public class PileupTest {
      * total collisions: 400338
      * longest pileup: 1435
      * total of 12 pileups: 2756
+     * <br>
+     * Same as above, but 2 million items:
+     * average pileup: 12.597228050231934
+     * 18113255800 ns
+     * final size: 2000000
+     * total collisions: 13209151
+     * longest pileup: 5287
+     * total of 15 pileups: 13421
      * <br>
      * With BadStrings that use floatToIntBits(h) for the hashCode...
      * <br>
