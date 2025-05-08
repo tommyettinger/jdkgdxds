@@ -161,7 +161,7 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:1.9.0"
+api "com.github.tommyettinger:jdkgdxds:1.9.1"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -180,7 +180,7 @@ If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
 implementation "com.github.tommyettinger:digital:0.6.2:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.9.0:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.9.1:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
