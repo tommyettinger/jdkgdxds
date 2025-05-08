@@ -956,12 +956,23 @@ public class PileupTest {
     }
 
     /**
+     * Testing with BadStrings that use `(h * h) & h` for the hashCode...
+     * <br>
      * average pileup: 0.3085174560546875
      * 71534200 ns
      * hash multiplier: D1B54A32D192ED03 with final size 200000
      * total collisions: 40438
      * longest pileup: 101
      * total of 12 pileups: 225
+     * <br>
+     * With BadStrings that use floatToIntBits:
+     * <br>
+     * average pileup: 0.1641387939453125
+     * 52876100 ns
+     * hash multiplier: EFAA28F1 with final size 200000
+     * total collisions: 21514
+     * longest pileup: 9
+     * total of 12 pileups: 72
      */
     @Test
     public void testBadStringSetOld () {
@@ -1042,6 +1053,9 @@ public class PileupTest {
     }
 
     /**
+     * Testing with BadStrings that use `(h * h) & h` for the hashCode...
+     * <br>
+     * With some older method...
      * average pileup: 0.29967498779296875
      * 66977800 ns
      * hash multiplier: 620F7FCC96CA89A5 with final size 200000
@@ -1064,12 +1078,30 @@ public class PileupTest {
      * total collisions: 7117713
      * longest pileup: 2786
      * total of 12 pileups: 6817
+     * <br>
+     * With BadStrings that use floatToIntBits(h) for the hashCode...
+     * <br>
+     * Multiply with a GOOD_MULTIPLIERS int, upper bits:
+     * average pileup: 0.21096038818359375
+     * 45957000 ns
+     * hash multiplier: E993C987 with final size 200000
+     * total collisions: 27651
+     * longest pileup: 12
+     * total of 12 pileups: 79
+     * <br>
+     * Multiply with a GOOD_MULTIPLIERS int, lower bits:
+     * average pileup: 0.17116546630859375
+     * 39000200 ns
+     * hash multiplier: E993C987 with final size 200000
+     * total collisions: 22435
+     * longest pileup: 11
+     * total of 12 pileups: 78
      */
     @Test
     public void testBadStringSetNew () {
         final BadString[] words = generateUniqueBad(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, LOAD) {
+        ObjectSet set = new ObjectSet(64, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -1083,8 +1115,8 @@ public class PileupTest {
             @Override
             protected int place (@NonNull Object item) {
 //                return BitConversion.imul(hashMultiplier, item.hashCode()) & mask;
-//                return (hashMultiplier * item.hashCode()) & mask;
-                return (hashMultiplier * item.hashCode()) >>> shift;
+                return (hashMultiplier * item.hashCode()) & mask;
+//                return (hashMultiplier * item.hashCode()) >>> shift;
             }
 
             @Override
@@ -1170,6 +1202,9 @@ public class PileupTest {
     }
 
     /**
+     * Testing with BadStrings that use `(h * h) & h` for the hashCode...
+     * <br>
+     * Older method using GOOD_MULTIPLIERS
      * average pileup: 0.3052825927734375
      * 80341400 ns
      * hash multiplier: 8BA92E4143ACC451 with final size 200000
@@ -1184,6 +1219,16 @@ public class PileupTest {
      * total collisions: 400338
      * longest pileup: 1435
      * total of 12 pileups: 2756
+     * <br>
+     * With BadStrings that use floatToIntBits(h) for the hashCode...
+     * <br>
+     * With XRR...
+     * average pileup: 0.21096038818359375
+     * 40184400 ns
+     * hash multiplier: E993C987 with final size 200000
+     * total collisions: 27651
+     * longest pileup: 12
+     * total of 12 pileups: 79
      */
     @Test
     public void testBadStringSetCurrent () {
