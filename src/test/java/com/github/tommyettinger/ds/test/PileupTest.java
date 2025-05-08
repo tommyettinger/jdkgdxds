@@ -1048,6 +1048,22 @@ public class PileupTest {
      * total collisions: 39279
      * longest pileup: 74
      * total of 12 pileups: 177
+     * <br>
+     * Multiply with a GOOD_MULTIPLIERS int, upper bits:
+     * average pileup: 0.30040740966796875
+     * 54214400 ns
+     * hash multiplier: E993C987 with final size 200000
+     * total collisions: 39375
+     * longest pileup: 89
+     * total of 12 pileups: 197
+     * <br>
+     * Multiply with a GOOD_MULTIPLIERS int, lower bits:
+     * average pileup: 54.30384063720703
+     * 461599500 ns
+     * hash multiplier: E993C987 with final size 200000
+     * total collisions: 7117713
+     * longest pileup: 2786
+     * total of 12 pileups: 6817
      */
     @Test
     public void testBadStringSetNew () {
@@ -1058,10 +1074,17 @@ public class PileupTest {
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
 
-            {
+//            {
 //                hashMultiplier = 0x9E3779B97F4A7C15L; // total collisions: 69101, longest pileup: 15
 //                hashMultiplier = 0x769C3DC968DB6A07L; // total collisions: 74471, longest pileup: 14
 //                hashMultiplier = 0xD1B54A32D192ED03L; // total collisions: 68210, longest pileup: 19
+//            }
+
+            @Override
+            protected int place (@NonNull Object item) {
+//                return BitConversion.imul(hashMultiplier, item.hashCode()) & mask;
+//                return (hashMultiplier * item.hashCode()) & mask;
+                return (hashMultiplier * item.hashCode()) >>> shift;
             }
 
             @Override
@@ -1104,7 +1127,8 @@ public class PileupTest {
 //                hashMultiplier *= MathTools.GOLDEN_LONGS[size & 1023];
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
-                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+//                hashMultiplier *= 0xF1357AEA2E62A9C5L;
+                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier >>> 48 + shift) & 511];
 
                 Object[] oldKeyTable = keyTable;
 
@@ -1152,12 +1176,20 @@ public class PileupTest {
      * total collisions: 40014
      * longest pileup: 98
      * total of 12 pileups: 208
+     * <br>
+     * With XRR...
+     * average pileup: 3.0543365478515625
+     * 235703500 ns
+     * final size: 200000
+     * total collisions: 400338
+     * longest pileup: 1435
+     * total of 12 pileups: 2756
      */
     @Test
     public void testBadStringSetCurrent () {
         final BadString[] words = generateUniqueBad(LEN, -123456789L);
         long start = System.nanoTime();
-        ObjectSet set = new ObjectSet(51, LOAD) {
+        com.github.tommyettinger.ds.ObjectSet set = new com.github.tommyettinger.ds.ObjectSet(64, LOAD) {
             long collisionTotal = 0;
             int longestPileup = 0, allPileups = 0, pileupChecks = 0;
             double averagePileup = 0;
@@ -1185,7 +1217,7 @@ public class PileupTest {
                 mask = newSize - 1;
                 shift = BitConversion.countLeadingZeros(mask) + 32;
 
-                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
+//                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier >>> 48 + shift) & 511];
 
                 Object[] oldKeyTable = keyTable;
 
@@ -1203,7 +1235,7 @@ public class PileupTest {
                         if (key != null) {addResize(key);}
                     }
                 }
-                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
+                System.out.println("new size: " + newSize);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
                 System.out.println("average pileup: " + (averagePileup / size));
@@ -1211,7 +1243,7 @@ public class PileupTest {
 
             @Override
             public void clear () {
-                System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with final size " + size);
+                System.out.println("final size: " + size);
                 System.out.println("total collisions: " + collisionTotal);
                 System.out.println("longest pileup: " + longestPileup);
                 System.out.println("total of " + pileupChecks + " pileups: " + (allPileups + longestPileup));
