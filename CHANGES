@@ -1,3 +1,10 @@
+[1.9.0]
+- [LIKELY BREAKING] All primitive-backed deques have been updated to use the same algorithms as ObjectDeque's updated version from 1.8.1.
+- The primitive-backed deques now extend their primitive-backed list counterpart, such as ShortDeque extending ShortList.
+- Because IntDeque and LongDeque extend IntList and LongList, Ordered.OfInt and Ordered.OfLong sets and maps can now be configured at construction to use the deque subclass instead of the list.
+- Several bugs were fixed in ensureGap(), affecting all deque types, mostly in rare cases.
+- A serious bug was also fixed in addAllFirst() in all deques, where the size wouldn't always be updated correctly.
+
 [1.8.1]
 - [BREAKING] Methods in EnhancedCollection that took Iterable types, not Iterator or Collection, have all been renamed to have "Iterable" at the end of their method name, to avoid overlap with methods that take Collection.
 - [LIKELY BREAKING] ObjectDeque has been rewritten almost entirely as both a List and Deque, while also implementing RandomAccess, Arrangeable, and EnhancedCollection. It extends AbstractList, which gives it comparable features to ObjectList, plus additional features from being a Deque. It also adds quite a lot more functionality! The primitive deque types have not yet been updated.

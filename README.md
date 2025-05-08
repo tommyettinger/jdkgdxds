@@ -161,7 +161,7 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:1.8.1"
+api "com.github.tommyettinger:jdkgdxds:1.9.0"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -180,7 +180,7 @@ If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
 implementation "com.github.tommyettinger:digital:0.6.2:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.8.1:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.9.0:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -205,13 +205,13 @@ android.compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
 android.compileOptions.targetCompatibility JavaVersion.VERSION_1_8
 
 dependencies {
-	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 }
 ```
 to whatever module uses an `android` or `com.android.application` plugin. The `desugar_jdk_libs` version should only be updated if
 you have checked for compatibility with your Android Gradle Plugin version; see [Android docs](https://developer.android.com/studio/write/java8-support#library-desugaring-versions).
-In short, if you use Android Gradle Plugin 7.4.0 or later (the default for gdx-liftoff projects is 8.5.2), you should use
-`'com.android.tools:desugar_jdk_libs:2.0.4'`. If you use Android Gradle Plugin 7.3.0, you should use
+In short, if you use Android Gradle Plugin 7.4.0 or later (the default for gdx-liftoff projects is 8.6.1), you should use
+`'com.android.tools:desugar_jdk_libs:2.1.5'`. If you use Android Gradle Plugin 7.3.0, you should use
 `'com.android.tools:desugar_jdk_libs:1.2.3'`. You may need to set the `minSdkVersion`
 to a higher value, depending on where it is already; 19 is known to work, and 16 probably works.
 
