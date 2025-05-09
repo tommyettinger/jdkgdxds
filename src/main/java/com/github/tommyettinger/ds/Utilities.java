@@ -40,7 +40,7 @@ public final class Utilities {
 	 * resizes with a particular multiplier from this table. Any int m you set into this array must
 	 * satisfy {@code (m & 0x80000001) == 0x80000001}, and should ideally have an "unpredictable" bit
 	 * pattern. This last quality is the hardest to define, but
-	 * generally dividing 2 to the 32 by an irrational number (that is greater than 1) using BigDecimal
+	 * generally dividing 2 to the 32 by an irrational number between 1 and 2 using BigDecimal or double
 	 * math gets such an unpredictable pattern. Not all irrational numbers work, and the ones here were
 	 * found empirically.
 	 * <br>

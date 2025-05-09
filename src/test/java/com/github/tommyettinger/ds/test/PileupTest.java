@@ -44,7 +44,7 @@ import java.util.Set;
 
 import com.github.tommyettinger.function.IntIntToIntBiFunction;
 
-@Ignore
+//@Ignore
 public class PileupTest {
     public static final int LEN = 2000000;//500000;//1000000;//
     public static final float LOAD = 0.5f; //0.6f
@@ -1063,6 +1063,14 @@ public class PileupTest {
      * longest pileup: 74
      * total of 12 pileups: 177
      * <br>
+     * Multiply with hashMultiplier, but hashMultiplier is squared every resize(), upper bits:
+     * average pileup: 68.09420871734619
+     * 16807753600 ns
+     * hash multiplier: 24380001 with final size 2000000
+     * total collisions: 71401953
+     * longest pileup: 11073
+     * total of 15 pileups: 16641
+     * <br>
      * Multiply with a GOOD_MULTIPLIERS int, upper bits:
      * average pileup: 0.30040740966796875
      * 54214400 ns
@@ -1073,11 +1081,43 @@ public class PileupTest {
      * <br>
      * Same as above, but 2 million items:
      * average pileup: 1.2349624633789062
-     * 646469700 ns
+     * 577683700 ns
      * hash multiplier: CDCBFDE3 with final size 2000000
      * total collisions: 1294952
      * longest pileup: 585
      * total of 15 pileups: 1216
+     * <br>
+     * Same as above, 2 million items again, but selecting multiplier with {@code hashMultiplier >>> 16 & 511}:
+     * average pileup: 1.246358871459961
+     * 579392600 ns
+     * hash multiplier: D68F0657 with final size 2000000
+     * total collisions: 1306902
+     * longest pileup: 628
+     * total of 15 pileups: 1271
+     * <br>
+     * Same as above, 2 million items, but selecting multiplier with {@code 64 - shift}:
+     * average pileup: 1.244131088256836
+     * 585086400 ns
+     * hash multiplier: BFA927CB with final size 2000000
+     * total collisions: 1304566
+     * longest pileup: 627
+     * total of 15 pileups: 1239
+     * <br>
+     * Same as above, 2 million items, but selecting multiplier with {@code 63 - shift}:
+     * average pileup: 1.2399606704711914
+     * 587314300 ns
+     * hash multiplier: C33AFB2F with final size 2000000
+     * total collisions: 1300193
+     * longest pileup: 627
+     * total of 15 pileups: 1303
+     * <br>
+     * Same as above, 2 million items, but selecting multiplier with {@code shift}:
+     * average pileup: 1.3248004913330078
+     * 598893900 ns
+     * hash multiplier: F16A6DCD with final size 2000000
+     * total collisions: 1389154
+     * longest pileup: 667
+     * total of 15 pileups: 1295
      * <br>
      * Multiply with a GOOD_MULTIPLIERS int, lower bits:
      * average pileup: 54.30384063720703
@@ -1094,6 +1134,32 @@ public class PileupTest {
      * total collisions: 117827508
      * longest pileup: 8642
      * total of 15 pileups: 24936
+     * <br>
+     * 2 million items multiplying by a GOOD, then mixing lower and upper bits with XOR:
+     * average pileup: 1.2725563049316406
+     * 614320900 ns
+     * hash multiplier: CDCBFDE3 with final size 2000000
+     * total collisions: 1334372
+     * longest pileup: 591
+     * total of 15 pileups: 1194
+     * <br>
+     * 2 million items multiplying by GOOD and then XRXR:
+     * average pileup: 1.2690820693969727
+     * 621597700 ns
+     * hash multiplier: CDCBFDE3 with final size 2000000
+     * total collisions: 1330729
+     * longest pileup: 694
+     * total of 15 pileups: 1311
+     * <br>
+     * 2 million items using {@code (h ^ h >>> 16) * hashMultiplier >>> shift}:
+     * average pileup: 1.2753381729125977
+     * 589847800 ns
+     * hash multiplier: CDCBFDE3 with final size 2000000
+     * total collisions: 1337289
+     * longest pileup: 587
+     * total of 15 pileups: 1192
+     * <br>
+     * 2 million items
      * <br>
      * With BadStrings that use floatToIntBits(h) for the hashCode...
      * <br>
@@ -1133,6 +1199,12 @@ public class PileupTest {
 //                return BitConversion.imul(hashMultiplier, item.hashCode()) & mask;
 //                return (hashMultiplier * item.hashCode()) & mask;
                 return (hashMultiplier * item.hashCode()) >>> shift;
+//                final int h = hashMultiplier * item.hashCode();
+//                return h >>> shift;
+//                return (h & mask) ^ h >>> shift;
+//                return (h ^ (h << 21 | h >>> 11) ^ (h << 9 | h >>> 23)) & mask;
+//                final int h = item.hashCode();
+//                return (h ^ h >>> 16) * hashMultiplier >>> shift;
             }
 
             @Override
@@ -1172,11 +1244,16 @@ public class PileupTest {
                 // we modify the hash multiplier by multiplying it by a number that Vigna and Steele considered optimal
                 // for a 64-bit MCG random number generator, XORed with 2 times size to randomize the low bits more.
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;//0x59E3779B97F4A7C1L;
-//                hashMultiplier *= MathTools.GOLDEN_LONGS[size & 1023];
+//                hashMultiplier = (int)MathTools.GOLDEN_LONGS[(hashMultiplier >>> 48 + shift) & 1023];
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier >>> 48 + shift) & 511];
+//                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier >>> 48 + shift) & 511];
+//                hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier >>> 16 & 511];
+//                hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier >>> 8 & 511];
+//                hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier >>> 1 & 511];
+                hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
+//                hashMultiplier *= hashMultiplier;
 
                 Object[] oldKeyTable = keyTable;
 
