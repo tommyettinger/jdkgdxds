@@ -1272,6 +1272,14 @@ public class PileupTest {
      * total collisions: 182948
      * longest pileup: 13
      * total of 15 pileups: 101
+     * <br>
+     * Selecting GOOD_MULTIPLIER with {@code hashMultiplier >>> 48 + shift}, upper bits:
+     * average pileup: 0.15322017669677734
+     * 324264400 ns
+     * hash multiplier: CDCBFDE3 with final size 2000000
+     * total collisions: 160663
+     * longest pileup: 10
+     * total of 15 pileups: 111
      */
     @Test
     public void testBadStringSetNew () {
@@ -1342,11 +1350,11 @@ public class PileupTest {
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 //                hashMultiplier *= size + size ^ 0xF1357AEA2E62A9C5L;
 //                hashMultiplier *= 0xF1357AEA2E62A9C5L;
-//                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier >>> 48 + shift) & 511];
+                hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier >>> 48 + shift) & 511];
 //                hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier >>> 16 & 511];
 //                hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier >>> 8 & 511];
 //                hashMultiplier = Utilities.GOOD_MULTIPLIERS[hashMultiplier >>> 1 & 511];
-                hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
+//                hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 //                hashMultiplier *= hashMultiplier;
 
                 Object[] oldKeyTable = keyTable;
