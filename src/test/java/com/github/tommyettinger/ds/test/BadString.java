@@ -16,6 +16,8 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -27,14 +29,23 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * a float, and the same bits will be used for otherwise identical hashes.
  */
 public class BadString implements CharSequence {
+	private static int COUNTER = 1;
 	public CharSequence text;
+	public final int hash;
 
 	public BadString () {
 		text = "aaa0";
+		hash = 0;
 	}
 
 	public BadString (CharSequence text) {
 		this.text = text;
+		hash = text.toString().hashCode();
+//		hash = Hasher.hashBulk(1234567890123456789L, text);
+//		hash = Hasher.hash(1234567890123456789L, text);
+//		hash = System.identityHashCode(text);
+//		hash = COUNTER++;
+//		hash = Integer.reverse(COUNTER++);
 	}
 
 	@Override
@@ -50,8 +61,11 @@ public class BadString implements CharSequence {
 
 //		return Float.floatToIntBits(text.hashCode());
 
-		final int h = text.hashCode();
-		return h & (h * h); // should use BitConversion.imul() if this would run on GWT, but it won't
+//		return BitConversion.doubleToMixedIntBits(text.hashCode());
+		return hash;
+
+//		final int h = text.hashCode();
+//		return h & (h * h); // should use BitConversion.imul() if this would run on GWT, but it won't
 	}
 
 	@Override

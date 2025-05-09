@@ -1178,6 +1178,100 @@ public class PileupTest {
      * total collisions: 22435
      * longest pileup: 11
      * total of 12 pileups: 78
+     * <br>
+     * With BadStrings that use BitConversion.doubleToMixedIntBits(h) for the hashCode...
+     * <br>
+     * Select GOOD_MULTIPLIER with {@code 64 - shift}, multiply and use upper bits:
+     * average pileup: 0.16861629486083984
+     * 423045800 ns
+     * hash multiplier: BFA927CB with final size 2000000
+     * total collisions: 176807
+     * longest pileup: 13
+     * total of 15 pileups: 112
+     * <br>
+     * With BadStrings that use a precomputed int by identity per BadString, but use a ++ counter...
+     * <br>
+     * Select GOOD_MULTIPLIER with {@code 64 - shift}, multiply and use upper bits:
+     * average pileup: 0.01916980743408203
+     * 270676000 ns
+     * hash multiplier: BFA927CB with final size 2000000
+     * total collisions: 20101
+     * longest pileup: 1
+     * total of 15 pileups: 96
+     * <br>
+     * With BadStrings that use a precomputed int by identity per BadString, but use a reversed-bits ++ counter...
+     * <br>
+     * Select GOOD_MULTIPLIER with {@code 64 - shift}, multiply and use upper bits:
+     * average pileup: 0.0
+     * 257917100 ns
+     * hash multiplier: BFA927CB with final size 2000000
+     * total collisions: 0
+     * longest pileup: 0
+     * total of 15 pileups: 75
+     * <br>
+     * With BadStrings that use a precomputed {@link System#identityHashCode(Object)} on the text...
+     * <br>
+     * Select GOOD_MULTIPLIER with {@code 64 - shift}, multiply and use upper bits:
+     * average pileup: 0.16813087463378906
+     * 326049100 ns
+     * hash multiplier: BFA927CB with final size 2000000
+     * total collisions: 176298
+     * longest pileup: 13
+     * total of 15 pileups: 116
+     * <br>
+     * With BadStrings that use a precomputed {@link com.github.tommyettinger.digital.Hasher#hashBulk(CharSequence)}
+     * on the text...
+     * <br>
+     * Select GOOD_MULTIPLIER with {@code 64 - shift}, multiply and use upper bits:
+     * average pileup: 0.16617584228515625
+     * 324275400 ns
+     * hash multiplier: BFA927CB with final size 2000000
+     * total collisions: 174248
+     * longest pileup: 14
+     * total of 15 pileups: 106
+     * <br>
+     * With BadStrings that use a precomputed {@link com.github.tommyettinger.digital.Hasher#hash(CharSequence)}
+     * on the text...
+     * <br>
+     * Select GOOD_MULTIPLIER with {@code 64 - shift}, multiply and use upper bits:
+     * average pileup: 0.1665639877319336
+     * 321122900 ns
+     * hash multiplier: BFA927CB with final size 2000000
+     * total collisions: 174655
+     * longest pileup: 14
+     * total of 15 pileups: 121
+     * <br>
+     * With BadStrings that use precomputed {@code Hasher.hash(1234567890123456789L, text)}:
+     * on the text...
+     * <br>
+     * Select GOOD_MULTIPLIER with {@code 64 - shift}, multiply and use upper bits:
+     * average pileup: 0.16701221466064453
+     * 332232300 ns
+     * hash multiplier: BFA927CB with final size 2000000
+     * total collisions: 175125
+     * longest pileup: 14
+     * total of 15 pileups: 106
+     * <br>
+     * With BadStrings that use precomputed {@code Hasher.hashBulk(1234567890123456789L, text)}:
+     * on the text...
+     * <br>
+     * Select GOOD_MULTIPLIER with {@code 64 - shift}, multiply and use upper bits:
+     * average pileup: 0.16585063934326172
+     * 301888300 ns
+     * hash multiplier: BFA927CB with final size 2000000
+     * total collisions: 173907
+     * longest pileup: 13
+     * total of 15 pileups: 106
+     * <br>
+     * Using just the normal String.hashCode() on text:
+     * <br>
+     * Select GOOD_MULTIPLIER with {@code 64 - shift}, multiply and use upper bits:
+     * average pileup: 0.17447280883789062
+     * 330542100 ns
+     * hash multiplier: BFA927CB with final size 2000000
+     * total collisions: 182948
+     * longest pileup: 13
+     * total of 15 pileups: 101
      */
     @Test
     public void testBadStringSetNew () {
