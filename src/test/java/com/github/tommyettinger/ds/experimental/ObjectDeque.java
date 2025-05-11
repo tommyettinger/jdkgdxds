@@ -444,7 +444,8 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 			return oldSize;
 		}
 		if (size == 0) {
-			this.head = this.tail = 0;
+			this.head = 0;
+			this.tail = gapSize - 1;
 			if (items.length < gapSize) {
 				//noinspection unchecked
 				this.items = (T[]) new Object[gapSize];
@@ -504,7 +505,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 				return index;
 			} else {
 				if (head + index <= items.length) {
-					if(head - gapSize >= 0) {
+					if (head - gapSize >= 0) {
 						System.arraycopy(items, head, items, head - gapSize, index);
 						this.head -= gapSize;
 						return this.head + index;
@@ -593,7 +594,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size == 0) tail = head;
+		if(--size <= 1) tail = head;
 		modCount++;
 
 		return result;
@@ -623,9 +624,9 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 		} else {
 			--tail;
 		}
-		this.tail = tail;
+		if(--size <= 1) tail = head;
 
-		if(--size == 0) head = tail;
+		this.tail = tail;
 		modCount++;
 
 		return result;
@@ -713,7 +714,7 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size == 0) tail = head;
+		if(--size <= 1) tail = head;
 		modCount++;
 
 		return result;
@@ -744,9 +745,9 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 		} else {
 			--tail;
 		}
-		this.tail = tail;
+		if(--size <= 1) tail = head;
 
-		if(--size == 0) head = tail;
+		this.tail = tail;
 		modCount++;
 
 		return result;

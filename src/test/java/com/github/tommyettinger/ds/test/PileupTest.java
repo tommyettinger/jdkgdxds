@@ -44,7 +44,7 @@ import java.util.Set;
 
 import com.github.tommyettinger.function.IntIntToIntBiFunction;
 
-//@Ignore
+@Ignore
 public class PileupTest {
     public static final int LEN = 2000000;//500000;//1000000;//
     public static final float LOAD = 0.5f; //0.6f

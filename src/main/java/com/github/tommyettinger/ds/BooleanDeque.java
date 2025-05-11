@@ -428,7 +428,8 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 			return oldSize;
 		}
 		if (size == 0) {
-			this.head = this.tail = 0;
+			this.head = 0;
+			this.tail = gapSize - 1;
 			if (items.length < gapSize) {
                 this.items = new boolean[gapSize];
 			}
@@ -563,7 +564,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size == 0) tail = head;
+		if(--size <= 1) tail = head;
 
 		return result;
 	}
@@ -589,9 +590,9 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 		} else {
 			--tail;
 		}
-		this.tail = tail;
+		if(--size <= 1) tail = head;
 
-		if(--size == 0) head = tail;
+		this.tail = tail;
 
 		return result;
 	}
@@ -660,7 +661,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size == 0) tail = head;
+		if(--size <= 1) tail = head;
 
 		return result;
 	}
@@ -687,9 +688,9 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 		} else {
 			--tail;
 		}
-		this.tail = tail;
+		if(--size <= 1) tail = head;
 
-		if(--size == 0) head = tail;
+		this.tail = tail;
 
 		return result;
 	}

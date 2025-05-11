@@ -419,12 +419,19 @@ public interface PrimitiveCollection<T> {
 		 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without brackets.
 		 *
 		 * @param entrySeparator how to separate entries, such as {@code ", "}
-		 * @return a new String representing this map
+		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString (String entrySeparator) {
 			return toString(entrySeparator, false);
 		}
 
+		/**
+		 * Delegates to {@link #appendTo(StringBuilder, String, boolean)} using a new StringBuilder and converts it to
+		 * a new String.
+		 * @param entrySeparator how to separate entries, such as {@code ", "}
+		 * @param brackets true to wrap the output in square brackets, or false to omit them
+		 * @return a new String representing this PrimitiveCollection
+		 */
 		default String toString (String entrySeparator, boolean brackets) {
 			return appendTo(new StringBuilder(32), entrySeparator, brackets).toString();
 		}
@@ -444,6 +451,14 @@ public interface PrimitiveCollection<T> {
 			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
 		}
 
+		/**
+		 * Delegates to {@link #appendTo(StringBuilder, String, boolean, IntAppender)} using
+		 * {@link StringBuilder#append(int)} to append int items.
+		 * @param sb a StringBuilder that this can append to
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets true to wrap the output in square brackets, or false to omit them
+		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 */
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, StringBuilder::append);
 		}
