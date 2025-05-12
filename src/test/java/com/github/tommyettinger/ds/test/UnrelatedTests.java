@@ -42,8 +42,8 @@ public class UnrelatedTests {
     public static void testMaskedUniquenessDeposit() {
         long mask = 0x003569CA5369AC00L;
 //        long[] table = computeDepositTable(mask, new long[5]);
-        long[] table = new long[]{0x0004600240602000L, 0x0030380830381C00L, 0x000F0003000F8000L, 0x0000FFC00000FF00L, 0x000000FFFF000000L};
-        for (int i = 0; i < table.length; i++) {
+        long[] table = {0x0004600240602000L, 0x0030380830381C00L, 0x000F0003000F8000L, 0x0000FFC00000FF00L, 0x000000FFFF000000L};
+        for (int i = 0; i < 5; i++) {
             System.out.print("0x" + Base.BASE16.unsigned(table[i]) + "L, ");
         }
         System.out.println();
@@ -70,32 +70,85 @@ public class UnrelatedTests {
     /**
      * Given a long {@code bits} where the first N positions can have variable bits, and a long {@code mask} with N bits
      * set to 1, produces a long where the least-significant N bits of {@code bits} have been placed into consecutively
-     * greater set bits in {@code mask}. Based on Hacker's Delight (2nd edition).
+     * greater set bits in {@code mask}. This method does not allocate, but it spends much of its time computing five
+     * long "table" values that can be precomputed using {@link #computeDepositTable(long, long[])} and then used with
+     * {@link #depositPrecomputed(long, long, long[])} for cases when the mask stays the same across many calls.
+     * <br>
+     * Based on Hacker's Delight (2nd edition).
      * @param bits the bit values to be deposited into positions denoted by mask
      * @param mask where a bit is 1, a bit from {@code bits} will be deposited
      * @return a long where only bits in mask can be set
      */
     public static long deposit(long bits, long mask) {
-        long[] table = new long[5];
-        long m0 = mask; // Save original mask.
+        long table0, table1, table2, table3, table4;
+        long mp, t, m0 = mask; // Save original mask.
         long mk = ~mask; // We will count 0's to right.
-        for (int i = 0; i < 5; i++) {
-            long mp = mk ^ (mk << 1); // Parallel suffix.
-            mp ^= mp << 2;
-            mp ^= mp << 4;
-            mp ^= mp << 8;
-            mp ^= mp << 16;
-            mp ^= mp << 32;
-            long v = mp & mask; // Bits to move.
-            table[i] = v;
-            mask = (mask ^ v) | (v >>> (1 << i)); // Compress mask.
-            mk = mk & ~mp;
-        }
-        for (int i = 4; i >= 0; i--) {
-            long mv = table[i];
-            long t = bits << (1 << i);
-            bits = (bits & ~mv) | (t & mv);
-        }
+
+        mp = mk ^ mk << 1; // Parallel suffix.
+        mp ^= mp << 2;
+        mp ^= mp << 4;
+        mp ^= mp << 8;
+        mp ^= mp << 16;
+        mp ^= mp << 32;
+        t = mp & mask; // Bits to move.
+        table0 = t;
+        mask = (mask ^ t) | (t >>> 1); // Compress mask.
+        mk = mk & ~mp;
+
+        mp = mk ^ mk << 1; // Parallel suffix.
+        mp ^= mp << 2;
+        mp ^= mp << 4;
+        mp ^= mp << 8;
+        mp ^= mp << 16;
+        mp ^= mp << 32;
+        t = mp & mask; // Bits to move.
+        table1 = t;
+        mask = (mask ^ t) | (t >>> 2); // Compress mask.
+        mk = mk & ~mp;
+
+        mp = mk ^ mk << 1; // Parallel suffix.
+        mp ^= mp << 2;
+        mp ^= mp << 4;
+        mp ^= mp << 8;
+        mp ^= mp << 16;
+        mp ^= mp << 32;
+        t = mp & mask; // Bits to move.
+        table2 = t;
+        mask = (mask ^ t) | (t >>> 4); // Compress mask.
+        mk = mk & ~mp;
+
+        mp = mk ^ mk << 1; // Parallel suffix.
+        mp ^= mp << 2;
+        mp ^= mp << 4;
+        mp ^= mp << 8;
+        mp ^= mp << 16;
+        mp ^= mp << 32;
+        t = mp & mask; // Bits to move.
+        table3 = t;
+        mask = (mask ^ t) | (t >>> 8); // Compress mask.
+        mk = mk & ~mp;
+
+        mp = mk ^ mk << 1; // Parallel suffix.
+        mp ^= mp << 2;
+        mp ^= mp << 4;
+        mp ^= mp << 8;
+        mp ^= mp << 16;
+        mp ^= mp << 32;
+        t = mp & mask; // Bits to move.
+        table4 = t;
+        // done making the table values.
+
+        // actually using the five table values:
+        t = bits << 1;
+        bits = (bits & ~table0) | (t & table0);
+        t = bits << 2;
+        bits = (bits & ~table1) | (t & table1);
+        t = bits << 4;
+        bits = (bits & ~table2) | (t & table2);
+        t = bits << 8;
+        bits = (bits & ~table3) | (t & table3);
+        t = bits << 16;
+        bits = (bits & ~table4) | (t & table4);
         return bits & m0; // Clear out extraneous bits.
     }
     /**
@@ -134,7 +187,7 @@ public class UnrelatedTests {
             table = new long[5];
         long mk = ~mask; // We will count 0's to right.
         for (int i = 0; i < 5; i++) {
-            long mp = mk ^ (mk << 1); // Parallel suffix.
+            long mp = mk ^ mk << 1; // Parallel suffix.
             mp ^= mp << 2;
             mp ^= mp << 4;
             mp ^= mp << 8;
