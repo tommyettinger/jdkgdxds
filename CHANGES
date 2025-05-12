@@ -1,3 +1,10 @@
+[1.9.2]
+- Fixed significant bugs with ensureGap() and some removal methods in all Deque types.
+
+[1.9.1]
+- Fixed an issue on recent JDKs where SequencedCollection defined conflicting types for a new default method, `reversed()`, shared by List and Deque.
+- Almost immediately superseded by 1.9.2.
+
 [1.9.0]
 - [LIKELY BREAKING] All primitive-backed deques have been updated to use the same algorithms as ObjectDeque's updated version from 1.8.1.
 - The primitive-backed deques now extend their primitive-backed list counterpart, such as ShortDeque extending ShortList.
