@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.LongSet;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 
 public class UnrelatedTests {
     public static void main(String[] args) {
@@ -48,10 +49,22 @@ public class UnrelatedTests {
         System.out.println();
         LongSet all = new LongSet(1 << 25, 0.5f);
         long ctr = 0;
+        long max = 0;
         for (int i = 0, n = 1 << 24; i < n; i++) {
-            all.add(depositPrecomputed(ctr++, mask, table));
+            long r = depositPrecomputed(ctr++, mask, table);
+            all.add(r);
+            max = Math.max(r, max);
         }
-        System.out.println(all.size());
+        System.out.println("Forward has " + all.size() + " items and a max value of 0x" + Base.BASE16.unsigned(max));
+        LongSet inverse = new LongSet(1 << 25, 0.5f);
+        LongIterator it = all.iterator();
+        max = 0;
+        while (it.hasNext()){
+            long r = extract(it.next(), mask);
+            inverse.add(r);
+            max = Math.max(r, max);
+        }
+        System.out.println("Inverse has " + inverse.size() + " items and a max value of 0x" + Base.BASE16.unsigned(max));
     }
 
     /**
@@ -68,11 +81,11 @@ public class UnrelatedTests {
         long mk = ~mask; // We will count 0's to right.
         for (int i = 0; i < 5; i++) {
             long mp = mk ^ (mk << 1); // Parallel suffix.
-            mp = mp ^ (mp << 2);
-            mp = mp ^ (mp << 4);
-            mp = mp ^ (mp << 8);
-            mp = mp ^ (mp << 16);
-            mp = mp ^ (mp << 32);
+            mp ^= mp << 2;
+            mp ^= mp << 4;
+            mp ^= mp << 8;
+            mp ^= mp << 16;
+            mp ^= mp << 32;
             long v = mp & mask; // Bits to move.
             table[i] = v;
             mask = (mask ^ v) | (v >>> (1 << i)); // Compress mask.
@@ -122,16 +135,46 @@ public class UnrelatedTests {
         long mk = ~mask; // We will count 0's to right.
         for (int i = 0; i < 5; i++) {
             long mp = mk ^ (mk << 1); // Parallel suffix.
-            mp = mp ^ (mp << 2);
-            mp = mp ^ (mp << 4);
-            mp = mp ^ (mp << 8);
-            mp = mp ^ (mp << 16);
-            mp = mp ^ (mp << 32);
+            mp ^= mp << 2;
+            mp ^= mp << 4;
+            mp ^= mp << 8;
+            mp ^= mp << 16;
+            mp ^= mp << 32;
             long v = mp & mask; // Bits to move.
             table[i] = v;
             mask = (mask ^ v) | (v >>> (1 << i)); // Compress mask.
             mk = mk & ~mp;
         }
         return table;
+    }
+
+    /**
+     * Given a long {@code bits} where any bits may be set, and a long {@code mask} with N bits set to 1 that determines
+     * which positions in {@code bits} will matter, this produces an up-to-N-bit long result where positions in
+     * {@code bits} matching positions in {@code mask} were placed in sequentially-more-significant positions, starting
+     * at the least significant bit.
+     * <br>
+     * Based on Hacker's Delight (2nd edition).
+     * @param bits the bit values that will be masked by {@code mask} and placed into the low-order bits of the result
+     * @param mask where a bit is 1, a bit from {@code bits} will be extracted to be returned
+     * @return a long with the highest bit that can be set equal to the {@link Long#bitCount(long)} of {@code mask}
+     */
+    public static long extract(long bits, long mask) {
+        bits &= mask; // Clear irrelevant bits.
+        long mk = ~mask; // We will count 0's to right.
+        for (int i = 0; i < 5; i++) {
+            long mp = mk ^ mk << 1; // Parallel suffix.
+            mp ^= mp << 2;
+            mp ^= mp << 4;
+            mp ^= mp << 8;
+            mp ^= mp << 16;
+            mp ^= mp << 32;
+            long mv = mp & mask; // Bits to move.
+            mask = (mask ^ mv) | (mv >>> (1 << i)); // Compress mask.
+            long t = bits & mv;
+            bits = (bits ^ t) | (t >>> (1 << i)); // Compress bits.
+            mk = mk & ~mp;
+        }
+        return bits;
     }
 }
