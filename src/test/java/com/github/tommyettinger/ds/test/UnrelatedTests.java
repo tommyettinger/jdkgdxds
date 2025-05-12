@@ -55,7 +55,9 @@ public class UnrelatedTests {
     }
 
     /**
-     * Based on Hacker's Delight (2nd edition).
+     * Given a long {@code bits} where the first N positions can have variable bits, and a long {@code mask} with N bits
+     * set to 1, produces a long where the least-significant N bits of {@code bits} have been placed into consecutively
+     * greater set bits in {@code mask}. Based on Hacker's Delight (2nd edition).
      * @param bits the bit values to be deposited into positions denoted by mask
      * @param mask where a bit is 1, a bit from {@code bits} will be deposited
      * @return a long where only bits in mask can be set
@@ -83,7 +85,22 @@ public class UnrelatedTests {
         }
         return bits & m0; // Clear out extraneous bits.
     }
+    /**
+     * Given a long {@code bits} where the first N positions can have variable bits, and a long {@code mask} with N bits
+     * set to 1, produces a long where the least-significant N bits of {@code bits} have been placed into consecutively
+     * greater set bits in {@code mask}. This permits taking a long array with 5 items, {@code table}, that can be null
+     * if the mask is expected to change often, making this recompute a table every time, or precomputed via
+     * {@link #computeDepositTable(long, long[])} and passed here for when the mask will be the same many times.
+     * <br>
+     * Based on Hacker's Delight (2nd edition).
+     * @param bits the bit values to be deposited into positions denoted by mask
+     * @param mask where a bit is 1, a bit from {@code bits} will be deposited
+     * @param table if null, will be computed each time, but can be precomputed with {@link #computeDepositTable(long, long[])}
+     * @return a long where only bits in mask can be set
+     */
     public static long depositPrecomputed(long bits, long mask, long[] table) {
+        if(table == null || table.length < 5)
+            table = computeDepositTable(mask, table);
         for (int i = 4; i >= 0; i--) {
             long mv = table[i];
             long t = bits << (1 << i);
@@ -91,6 +108,14 @@ public class UnrelatedTests {
         }
         return bits & mask; // Clear out extraneous bits.
     }
+
+    /**
+     * Precomputes the {@code table} argument for the given {@code mask} that can be given to
+     * {@link #depositPrecomputed(long, long, long[])} to avoid recalculating and reallocating a 5-item table.
+     * @param mask the mask that will be used with {@link #depositPrecomputed(long, long, long[])}
+     * @param table an existing long array of length 5 or greater that will be overwritten, otherwise this will create a new array
+     * @return {@code table} after reassignment, or a new long array if {@code table} was null or too small
+     */
     public static long[] computeDepositTable(long mask, long[] table) {
         if(table == null || table.length < 5)
             table = new long[5];
