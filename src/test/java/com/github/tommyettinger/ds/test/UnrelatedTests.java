@@ -25,7 +25,9 @@ public class UnrelatedTests {
         // 10700330 unique results in mask
 //        testMaskedUniquenessCounter();
         // 16777216 unique results in mask
-        testMaskedUniquenessDeposit();
+//        testMaskedUniquenessDeposit();
+        System.out.println(Base.BASE16.unsigned(deposit(1L, 0x003569CA5369AC00L)));
+        System.out.println(Base.BASE16.unsigned(depositPrecomputed(1L, 0x003569CA5369AC00L, new long[]{0x0004600240602000L, 0x0030380830381C00L, 0x000F0003000F8000L, 0x0000FFC00000FF00L, 0x000000FFFF000000L})));
     }
 
     public static void testMaskedUniquenessCounter() {
@@ -41,8 +43,9 @@ public class UnrelatedTests {
 
     public static void testMaskedUniquenessDeposit() {
         long mask = 0x003569CA5369AC00L;
-//        long[] table = computeDepositTable(mask, new long[5]);
         long[] table = {0x0004600240602000L, 0x0030380830381C00L, 0x000F0003000F8000L, 0x0000FFC00000FF00L, 0x000000FFFF000000L};
+//        long[] table = computeDepositTable(mask, new long[5]);
+
         for (int i = 0; i < 5; i++) {
             System.out.print("0x" + Base.BASE16.unsigned(table[i]) + "L, ");
         }
@@ -138,17 +141,19 @@ public class UnrelatedTests {
         table4 = t;
         // done making the table values.
 
+        System.out.println("deposit() table values: " + Base.BASE16.unsigned(table0) + ", " + Base.BASE16.unsigned(table1) + ", " + Base.BASE16.unsigned(table2) + ", " + Base.BASE16.unsigned(table3) + ", " + Base.BASE16.unsigned(table4));
+
         // actually using the five table values:
-        t = bits << 1;
-        bits = (bits & ~table0) | (t & table0);
-        t = bits << 2;
-        bits = (bits & ~table1) | (t & table1);
-        t = bits << 4;
-        bits = (bits & ~table2) | (t & table2);
-        t = bits << 8;
-        bits = (bits & ~table3) | (t & table3);
         t = bits << 16;
         bits = (bits & ~table4) | (t & table4);
+        t = bits << 8;
+        bits = (bits & ~table3) | (t & table3);
+        t = bits << 4;
+        bits = (bits & ~table2) | (t & table2);
+        t = bits << 2;
+        bits = (bits & ~table1) | (t & table1);
+        t = bits << 1;
+        bits = (bits & ~table0) | (t & table0);
         return bits & m0; // Clear out extraneous bits.
     }
     /**
