@@ -25,9 +25,13 @@ public class UnrelatedTests {
         // 10700330 unique results in mask
 //        testMaskedUniquenessCounter();
         // 16777216 unique results in mask
-//        testMaskedUniquenessDeposit();
-        System.out.println(Base.BASE16.unsigned(deposit(1L, 0x003569CA5369AC00L)));
-        System.out.println(Base.BASE16.unsigned(depositPrecomputed(1L, 0x003569CA5369AC00L, new long[]{0x0004600240602000L, 0x0030380830381C00L, 0x000F0003000F8000L, 0x0000FFC00000FF00L, 0x000000FFFF000000L})));
+        testMaskedUniquenessDeposit();
+        System.out.println(Base.BASE16.unsigned(deposit(1L, 0x9E3779B97F4A7C15L)));
+        System.out.println(Base.BASE16.unsigned(depositPrecomputed(1L, 0x9E3779B97F4A7C15L, 0x003079807F027C04L, 0x80003C0100083E10L, 0x001F00007FC00F80L, 0x3E00000007FF0000L, 0x003FFFF800000000L)));
+        System.out.println(Base.BASE16.unsigned(deposit((1L << 38) - 1L, 0x9E3779B97F4A7C15L)));
+        System.out.println(Base.BASE16.unsigned(depositPrecomputed((1L << 38) - 1L, 0x9E3779B97F4A7C15L, new long[]{0x003079807F027C04L, 0x80003C0100083E10L, 0x001F00007FC00F80L, 0x3E00000007FF0000L, 0x003FFFF800000000L})));
+        System.out.println(Base.BASE16.unsigned(deposit((1L << 57) - 1L, -255L)));
+        System.out.println(Base.BASE16.unsigned(depositPrecomputed((1L << 57) - 1L, -255L)));
     }
 
     public static void testMaskedUniquenessCounter() {
@@ -43,12 +47,10 @@ public class UnrelatedTests {
 
     public static void testMaskedUniquenessDeposit() {
         long mask = 0x003569CA5369AC00L;
-        long[] table = {0x0004600240602000L, 0x0030380830381C00L, 0x000F0003000F8000L, 0x0000FFC00000FF00L, 0x000000FFFF000000L};
-//        long[] table = computeDepositTable(mask, new long[5]);
+//        long[] table = {0x0004600240602000L, 0x0030380830381C00L, 0x000F0003000F8000L, 0x0000FFC00000FF00L, 0x000000FFFF000000L};
+        long[] table = computeDepositTable(mask, new long[5]);
 
-        for (int i = 0; i < 5; i++) {
-            System.out.print("0x" + Base.BASE16.unsigned(table[i]) + "L, ");
-        }
+        printTable(table);
         System.out.println();
         LongSet all = new LongSet(1 << 25, 0.5f);
         long ctr = 0;
@@ -141,7 +143,7 @@ public class UnrelatedTests {
         table4 = t;
         // done making the table values.
 
-        System.out.println("deposit() table values: " + Base.BASE16.unsigned(table0) + ", " + Base.BASE16.unsigned(table1) + ", " + Base.BASE16.unsigned(table2) + ", " + Base.BASE16.unsigned(table3) + ", " + Base.BASE16.unsigned(table4));
+//        System.out.println("deposit() table values: 0x" + Base.BASE16.unsigned(table0) + "L, 0x" + Base.BASE16.unsigned(table1) + "L, 0x" + Base.BASE16.unsigned(table2) + "L, 0x" + Base.BASE16.unsigned(table3) + "L, 0x" + Base.BASE16.unsigned(table4) + "L");
 
         // actually using the five table values:
         t = bits << 16;
@@ -162,6 +164,8 @@ public class UnrelatedTests {
      * greater set bits in {@code mask}. This permits taking a long array with 5 items, {@code table}, that can be null
      * if the mask is expected to change often, making this recompute a table every time, or precomputed via
      * {@link #computeDepositTable(long, long[])} and passed here for when the mask will be the same many times.
+     * In the case where {@code table} is passed as varargs and has exactly 5 elements, this should instead delegate to
+     * {@link #depositPrecomputed(long, long, long, long, long, long, long)}, which doesn't allocate an array.
      * <br>
      * Based on Hacker's Delight (2nd edition).
      * @param bits the bit values to be deposited into positions denoted by mask
@@ -169,7 +173,7 @@ public class UnrelatedTests {
      * @param table if null, will be computed each time, but can be precomputed with {@link #computeDepositTable(long, long[])}
      * @return a long where only bits in mask can be set
      */
-    public static long depositPrecomputed(long bits, long mask, long[] table) {
+    public static long depositPrecomputed(long bits, long mask, long... table) {
         if(table == null || table.length < 5)
             table = computeDepositTable(mask, table);
         for (int i = 4; i >= 0; i--) {
@@ -181,13 +185,42 @@ public class UnrelatedTests {
     }
 
     /**
+     * Given a long {@code bits} where the first N positions can have variable bits, and a long {@code mask} with N bits
+     * set to 1, produces a long where the least-significant N bits of {@code bits} have been placed into consecutively
+     * greater set bits in {@code mask}. This overload takes 5 long "table" arguments explicitly to avoid allocating an
+     * array when exactly 5 longs are given as varargs to {@link #depositPrecomputed(long, long, long...)}. The table
+     * arguments should be exactly what {@link #printTable(long...)} prints for a table produced by
+     * {@link #computeDepositTable(long, long[])}, and can also be
+     * {@code table[0], table[1], table[2], table[3], table[4]}. This version is optimized relative to
+     * {@link #depositPrecomputed(long, long, long...)}, and should perform better if called often.
+     * <br>
+     * Based on Hacker's Delight (2nd edition).
+     * @param bits the bit values to be deposited into positions denoted by mask
+     * @param mask where a bit is 1, a bit from {@code bits} will be deposited
+     * @param table0 item from a precomputed table produced by {@link #computeDepositTable(long, long[])}
+     * @param table1 item from a precomputed table produced by {@link #computeDepositTable(long, long[])}
+     * @param table2 item from a precomputed table produced by {@link #computeDepositTable(long, long[])}
+     * @param table3 item from a precomputed table produced by {@link #computeDepositTable(long, long[])}
+     * @param table4 item from a precomputed table produced by {@link #computeDepositTable(long, long[])}
+     * @return a long where only bits in mask can be set
+     */
+    public static long depositPrecomputed(long bits, long mask, long table0, long table1, long table2, long table3, long table4) {
+        bits = (bits & ~table4) | (bits << 16 & table4);
+        bits = (bits & ~table3) | (bits <<  8 & table3);
+        bits = (bits & ~table2) | (bits <<  4 & table2);
+        bits = (bits & ~table1) | (bits <<  2 & table1);
+        bits = (bits & ~table0) | (bits <<  1 & table0);
+        return bits & mask;
+    }
+
+    /**
      * Precomputes the {@code table} argument for the given {@code mask} that can be given to
      * {@link #depositPrecomputed(long, long, long[])} to avoid recalculating and reallocating a 5-item table.
      * @param mask the mask that will be used with {@link #depositPrecomputed(long, long, long[])}
      * @param table an existing long array of length 5 or greater that will be overwritten, otherwise this will create a new array
      * @return {@code table} after reassignment, or a new long array if {@code table} was null or too small
      */
-    public static long[] computeDepositTable(long mask, long[] table) {
+    public static long[] computeDepositTable(long mask, long... table) {
         if(table == null || table.length < 5)
             table = new long[5];
         long mk = ~mask; // We will count 0's to right.
@@ -204,6 +237,25 @@ public class UnrelatedTests {
             mk = mk & ~mp;
         }
         return table;
+    }
+
+    /**
+     * Intended for debugging, this takes an array or varargs of 5 long items, which should have been produced by
+     * {@link #computeDepositTable(long, long[])}, and prints them in a format that can be entered as Java or Kotlin
+     * source code, either as varargs to {@link #depositPrecomputed(long, long, long...)} or as the 5 closing arguments
+     * to {@link #depositPrecomputed(long, long, long, long, long, long, long)}.
+     * @param table
+     */
+    public static void printTable(long... table) {
+        if(table == null || table.length < 5)
+            System.out.println("Invalid table.");
+        else {
+            for (int i = 0; i < 5; i++) {
+                System.out.print(Base.readable(table[i]));
+                if(i < 4) System.out.print(", ");
+            }
+        }
+
     }
 
     /**
