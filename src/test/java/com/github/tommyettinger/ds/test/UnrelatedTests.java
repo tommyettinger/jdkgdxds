@@ -79,7 +79,8 @@ public class UnrelatedTests {
      * long "table" values that can be precomputed using {@link #computeDepositTable(long, long[])} and then used with
      * {@link #depositPrecomputed(long, long, long[])} for cases when the mask stays the same across many calls.
      * <br>
-     * Based on Hacker's Delight (2nd edition).
+     * Based on Hacker's Delight (2nd edition). This can be replaced with {@code Long.expand(bits, mask)} in Java 19 or
+     * later, which may perform better if the processor in use has a fast PDEP instruction.
      * @param bits the bit values to be deposited into positions denoted by mask
      * @param mask where a bit is 1, a bit from {@code bits} will be deposited
      * @return a long where only bits in mask can be set
@@ -167,7 +168,9 @@ public class UnrelatedTests {
      * In the case where {@code table} is passed as varargs and has exactly 5 elements, this should instead delegate to
      * {@link #depositPrecomputed(long, long, long, long, long, long, long)}, which doesn't allocate an array.
      * <br>
-     * Based on Hacker's Delight (2nd edition).
+     * Based on Hacker's Delight (2nd edition). This is similar to {@code Long.expand(bits, mask)} in Java 19 or later,
+     * which may perform better if the processor in use has a fast PDEP instruction, though this saves a substantial
+     * amount of effort on the software fallback for expand().
      * @param bits the bit values to be deposited into positions denoted by mask
      * @param mask where a bit is 1, a bit from {@code bits} will be deposited
      * @param table if null, will be computed each time, but can be precomputed with {@link #computeDepositTable(long, long[])}
@@ -194,7 +197,9 @@ public class UnrelatedTests {
      * {@code table[0], table[1], table[2], table[3], table[4]}. This version is optimized relative to
      * {@link #depositPrecomputed(long, long, long...)}, and should perform better if called often.
      * <br>
-     * Based on Hacker's Delight (2nd edition).
+     * Based on Hacker's Delight (2nd edition). This is similar to {@code Long.expand(bits, mask)} in Java 19 or later,
+     * which may perform better if the processor in use has a fast PDEP instruction, though this saves a substantial
+     * amount of effort on the software fallback for expand().
      * @param bits the bit values to be deposited into positions denoted by mask
      * @param mask where a bit is 1, a bit from {@code bits} will be deposited
      * @param table0 item from a precomputed table produced by {@link #computeDepositTable(long, long[])}
@@ -216,6 +221,8 @@ public class UnrelatedTests {
     /**
      * Precomputes the {@code table} argument for the given {@code mask} that can be given to
      * {@link #depositPrecomputed(long, long, long[])} to avoid recalculating and reallocating a 5-item table.
+     * <br>
+     * Based on Hacker's Delight (2nd edition).
      * @param mask the mask that will be used with {@link #depositPrecomputed(long, long, long[])}
      * @param table an existing long array of length 5 or greater that will be overwritten, otherwise this will create a new array
      * @return {@code table} after reassignment, or a new long array if {@code table} was null or too small
@@ -264,7 +271,8 @@ public class UnrelatedTests {
      * {@code bits} matching positions in {@code mask} were placed in sequentially-more-significant positions, starting
      * at the least significant bit.
      * <br>
-     * Based on Hacker's Delight (2nd edition).
+     * Based on Hacker's Delight (2nd edition). This can be replaced with {@code Long.compress(bits, mask)} in Java 19
+     * or later, which may perform better if the processor in use has a fast PEXT instruction.
      * @param bits the bit values that will be masked by {@code mask} and placed into the low-order bits of the result
      * @param mask where a bit is 1, a bit from {@code bits} will be extracted to be returned
      * @return a long with the highest bit that can be set equal to the {@link Long#bitCount(long)} of {@code mask}
