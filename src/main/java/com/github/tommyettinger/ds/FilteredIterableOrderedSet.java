@@ -260,7 +260,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
 	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
 	 *
-	 * @return any int; the value isn't used internally, but may be used by subclasses to identify something
+	 * @return the current hashMultiplier
 	 */
 	public int getHashMultiplier() {
 		return hashMultiplier;

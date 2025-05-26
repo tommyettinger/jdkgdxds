@@ -76,7 +76,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * This only needs to be serialized if the full key table is serialized, or if the iteration order should be
 	 * the same before and after serialization. Iteration order is better handled by using {@link IntOrderedSet}.
 	 */
-	protected int hashMultiplier = 0xEFAA28F1;
+	protected int hashMultiplier;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
@@ -119,6 +119,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		mask = tableSize - 1;
 		threshold = Math.min((int)(tableSize * (double)loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 
 		keyTable = new int[tableSize];
 	}
@@ -184,7 +185,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (int item) {
-		return (item ^ (item << 9 | item >>> 23) ^ (item << 21 | item >>> 11)) & mask;
+		return BitConversion.imul(item, hashMultiplier) >>> shift;
 	}
 
 	/**
@@ -386,7 +387,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		threshold = Math.min((int)(newSize * (double)loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, shift) >>> 5 & 511];
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 		int[] oldKeyTable = keyTable;
 
 		keyTable = new int[newSize];

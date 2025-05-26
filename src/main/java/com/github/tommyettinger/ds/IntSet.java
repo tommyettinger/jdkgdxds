@@ -78,6 +78,14 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 */
 	protected int mask;
 
+	/**
+	 * Used by {@link #place(int)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
+	 * This should always change when {@link #shift} changes, meaning, when the backing table resizes.
+	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
+	 * the same before and after serialization. Iteration order is better handled by using {@link LongOrderedSet}.
+	 */
+	protected int hashMultiplier;
+
 	@Nullable protected transient IntSetIterator iterator1;
 	@Nullable protected transient IntSetIterator iterator2;
 
@@ -112,6 +120,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		mask = tableSize - 1;
 		threshold = Math.min((int)(tableSize * (double)loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 
 		keyTable = new int[tableSize];
 	}
@@ -175,7 +184,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (int item) {
-		return (item ^ (item << 9 | item >>> 23) ^ (item << 21 | item >>> 11)) & mask;
+		return BitConversion.imul(item, hashMultiplier) >>> shift;
 	}
 
 	/**
@@ -376,6 +385,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		mask = newSize - 1;
 		threshold = Math.min((int)(newSize * (double)loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 
 		int[] oldKeyTable = keyTable;
 
@@ -390,22 +400,25 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
-	 * Subclasses can use this as some kind of identifier or user data, though.
+	 * Gets the current hashMultiplier, used in {@link #place(int)} to mix hash codes.
+	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
+	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
 	 *
-	 * @return any int; the value isn't used internally, but may be used by subclasses to identify something
+	 * @return the current hashMultiplier
 	 */
 	public int getHashMultiplier() {
-		return 0;
+		return hashMultiplier;
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
-	 * Subclasses can use this to set some kind of identifier or user data, though.
+	 * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
+	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
+	 * {@link Utilities#GOOD_MULTIPLIERS} or something like it.
 	 *
-	 * @param unused any int; will not be used as-is
+	 * @param hashMultiplier any int; will be made odd if even.
 	 */
-	public void setHashMultiplier(int unused) {
+	public void setHashMultiplier(int hashMultiplier) {
+		this.hashMultiplier = hashMultiplier | 0x80000001;
 	}
 
 	public float getLoadFactor () {
