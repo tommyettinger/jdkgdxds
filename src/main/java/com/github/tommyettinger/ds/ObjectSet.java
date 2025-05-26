@@ -79,6 +79,15 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * hash.
 	 */
 	protected int mask;
+
+	/**
+	 * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
+	 * This should always change when {@link #shift} changes, meaning, when the backing table resizes.
+	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
+	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectOrderedSet}.
+	 */
+	protected int hashMultiplier;
+
 	@Nullable protected transient ObjectSetIterator<T> iterator1;
 	@Nullable protected transient ObjectSetIterator<T> iterator2;
 
@@ -113,7 +122,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 		keyTable = (T[])new Object[tableSize];
 	}
 
@@ -135,6 +144,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		threshold = set.threshold;
 		mask = set.mask;
 		shift = set.shift;
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 		keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
 		size = set.size;
 	}
@@ -175,8 +185,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (@NonNull Object item) {
-		final int h = item.hashCode();
-		return (h ^ (h << 9 | h >>> 23) ^ (h << 21 | h >>> 11)) & mask;
+		return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
 	}
@@ -531,6 +540,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 
 		@Nullable T[] oldKeyTable = keyTable;
 
@@ -545,22 +555,24 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
     /**
-     * Effectively does nothing here because the hashMultiplier is no longer stored or used.
-     * Subclasses can use this as some kind of identifier or user data, though.
+     * Gets the current hashMultiplier, used in {@link #place(Object)} to mix hash codes.
+	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
+	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
      *
      * @return any int; the value isn't used internally, but may be used by subclasses to identify something
      */
     public int getHashMultiplier() {
-        return 0;
+        return hashMultiplier;
     }
 
     /**
-     * Effectively does nothing here because the hashMultiplier is no longer stored or used.
-     * Subclasses can use this to set some kind of identifier or user data, though.
+     * Sets the hashMultiplier to the given int, which will be made odd if even (by OR-ing with 1). This can be any odd
+	 * int, but should almost always be drawn from {@link Utilities#GOOD_MULTIPLIERS} or something like it.
      *
-     * @param unused any int; will not be used as-is
+     * @param hashMultiplier any int; will be made odd if even.
      */
-    public void setHashMultiplier(int unused) {
+    public void setHashMultiplier(int hashMultiplier) {
+		this.hashMultiplier = hashMultiplier | 1;
     }
 
 	/**
