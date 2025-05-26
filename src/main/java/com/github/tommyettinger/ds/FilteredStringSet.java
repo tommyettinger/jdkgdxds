@@ -47,13 +47,6 @@ public class FilteredStringSet extends ObjectSet<String> {
 	protected CharFilter filter = CharFilter.getOrCreate("Identity", c -> true, c -> c);
 
 	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectOrderedSet}.
-	 */
-	protected int hashMultiplier = 0xEFAA28F1;
-
-	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all characters in a String key and does not edit them.
 	 */
@@ -220,24 +213,25 @@ public class FilteredStringSet extends ObjectSet<String> {
 	}
 
 	/**
-	 * This actually does something here because the hash multiplier can change.
+	 * Gets the current hashMultiplier, used in {@link #place(Object)} to mix hash codes.
+	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
+	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
 	 *
-	 * @return this class' current hash multiplier
+	 * @return any int; the value isn't used internally, but may be used by subclasses to identify something
 	 */
-	@Override
 	public int getHashMultiplier() {
 		return hashMultiplier;
 	}
 
 	/**
-	 * This actually does something here because the hash multiplier can change.
-	 * The {@code mul} will be made negative and odd if it wasn't both already.
+	 * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
+	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
+	 * {@link Utilities#GOOD_MULTIPLIERS} or something like it.
 	 *
-	 * @param mul any int; will be made negative and odd before using
+	 * @param hashMultiplier any int; will be made odd if even.
 	 */
-	@Override
-	public void setHashMultiplier(int mul) {
-		hashMultiplier = mul | 0x80000001;
+	public void setHashMultiplier(int hashMultiplier) {
+		this.hashMultiplier = hashMultiplier | 0x80000001;
 	}
 
 	/**
@@ -294,7 +288,6 @@ public class FilteredStringSet extends ObjectSet<String> {
 	}
 
 	protected void resize (int newSize) {
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, BitConversion.countLeadingZeros(newSize - 1) + 32) >>> 5 & 511];
 		super.resize(newSize);
 	}
 

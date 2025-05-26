@@ -144,7 +144,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		threshold = set.threshold;
 		mask = set.mask;
 		shift = set.shift;
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
+		hashMultiplier = set.hashMultiplier;
 		keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
 		size = set.size;
 	}
@@ -566,13 +566,14 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
     }
 
     /**
-     * Sets the hashMultiplier to the given int, which will be made odd if even (by OR-ing with 1). This can be any odd
-	 * int, but should almost always be drawn from {@link Utilities#GOOD_MULTIPLIERS} or something like it.
+     * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
+	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
+	 * {@link Utilities#GOOD_MULTIPLIERS} or something like it.
      *
      * @param hashMultiplier any int; will be made odd if even.
      */
     public void setHashMultiplier(int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 1;
+		this.hashMultiplier = hashMultiplier | 0x80000001;
     }
 
 	/**
