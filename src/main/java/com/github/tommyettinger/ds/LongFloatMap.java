@@ -97,6 +97,15 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * hash.
 	 */
 	protected int mask;
+
+	/**
+	 * Used by {@link #place(long)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
+	 * This should always change when {@link #shift} changes, meaning, when the backing table resizes.
+	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
+	 * the same before and after serialization. Iteration order is better handled by using {@link LongFloatOrderedMap}.
+	 */
+	protected int hashMultiplier;
+
 	@Nullable protected transient Entries entries1;
 	@Nullable protected transient Entries entries2;
 	@Nullable protected transient Values values1;
@@ -137,7 +146,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 		keyTable = new long[tableSize];
 		valueTable = new float[tableSize];
 	}
@@ -153,6 +162,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
 		defaultValue = map.defaultValue;
+		hashMultiplier = map.hashMultiplier;
 		zeroValue = map.zeroValue;
 		hasZeroValue = map.hasZeroValue;
 	}
@@ -204,7 +214,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (long item) {
-		return (int)(item ^ (item << 11 | item >>> 53) ^ (item << 43 | item >>> 21)) & mask;
+		return (int)(hashMultiplier * (item ^ item << 32) >>> shift);
 	}
 
 	/**
@@ -621,7 +631,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 		long[] oldKeyTable = keyTable;
 		float[] oldValueTable = valueTable;
 
