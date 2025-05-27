@@ -110,6 +110,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 */
 	public ObjectFloatOrderedMap (ObjectFloatMap<? extends K> map) {
 		this(map.size());
+		hashMultiplier = map.hashMultiplier;
 		for (K k : map.keySet()) {
 			put(k, map.get(k));
 		}
@@ -149,6 +150,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 */
 	public ObjectFloatOrderedMap (ObjectFloatOrderedMap<? extends K> other, int offset, int count) {
 		this(count);
+		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 
