@@ -96,6 +96,25 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	}
 
 	/**
+	 * Creates a new set that contains all distinct elements in {@code set}.
+	 * @param set a LongSet without an order
+	 */
+	public LongOrderedSet (LongSet set) {
+		this(set, false);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code set}.
+	 * @param set a LongSet without an order
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 */
+	public LongOrderedSet (LongSet set, boolean useDequeOrder) {
+		this(set.size(), set.loadFactor, useDequeOrder);
+		hashMultiplier = set.hashMultiplier;
+		addAll(set);
+	}
+
+	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
 	public LongOrderedSet (OfLong coll) {

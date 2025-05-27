@@ -110,7 +110,8 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 	 * @param map the map to copy
 	 */
 	public LongFloatOrderedMap (LongFloatMap map, boolean useDequeOrder) {
-		this(map.size(), useDequeOrder);
+		this(map.size(), map.loadFactor, useDequeOrder);
+		hashMultiplier = map.hashMultiplier;
 		LongIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			long k = it.nextLong();
@@ -151,7 +152,8 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 	 * @param count  how many items to copy from other
 	 */
 	public LongFloatOrderedMap (LongFloatOrderedMap other, int offset, int count, boolean useDequeOrder) {
-		this(count, useDequeOrder);
+		this(count, other.loadFactor, useDequeOrder);
+		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 

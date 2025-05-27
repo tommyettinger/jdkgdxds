@@ -109,7 +109,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param map the map to copy
 	 */
 	public LongObjectOrderedMap (LongObjectMap<? extends V> map, boolean useDequeOrder) {
-		this(map.size(), useDequeOrder);
+		this(map.size(), map.loadFactor, useDequeOrder);
+		hashMultiplier = map.hashMultiplier;
 		LongIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			long k = it.nextLong();
@@ -150,7 +151,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param count  how many items to copy from other
 	 */
 	public LongObjectOrderedMap (LongObjectOrderedMap<? extends V> other, int offset, int count, boolean useDequeOrder) {
-		this(count, useDequeOrder);
+		this(count, other.loadFactor, useDequeOrder);
+		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 
