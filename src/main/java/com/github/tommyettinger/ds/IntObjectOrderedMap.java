@@ -111,7 +111,8 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param map the map to copy
 	 */
 	public IntObjectOrderedMap (IntObjectMap<? extends V> map, boolean useDequeOrder) {
-		this(map.size(), useDequeOrder);
+		this(map.size(), map.loadFactor, useDequeOrder);
+		hashMultiplier = map.hashMultiplier;
 		IntIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			int k = it.nextInt();
@@ -120,15 +121,38 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	}
 
 	/**
-	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
-	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 * Creates a new set by copying {@code count} items from the given IntObjectOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
 	 *
-	 * @param keys   an array of keys
-	 * @param values an array of values
+	 * @param other  another IntObjectOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
 	 */
-	public IntObjectOrderedMap (int[] keys, V[] values, boolean useDequeOrder) {
-		this(Math.min(keys.length, values.length), useDequeOrder);
-		putAll(keys, values);
+	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> other, int offset, int count) {
+		this(other, offset, count, false);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public IntObjectOrderedMap (IntObjectMap<? extends V> map) {
+		this(map, false);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given IntObjectOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 *
+	 * @param other  another IntObjectOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> other, int offset, int count, boolean useDequeOrder) {
+		this(count, other.loadFactor, useDequeOrder);
+		hashMultiplier = other.hashMultiplier;
+		putAll(0, other, offset, count);
 	}
 
 	/**
@@ -141,19 +165,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	public IntObjectOrderedMap (PrimitiveCollection.OfInt keys, Collection<? extends V> values, boolean useDequeOrder) {
 		this(Math.min(keys.size(), values.size()), useDequeOrder);
 		putAll(keys, values);
-	}
-
-	/**
-	 * Creates a new set by copying {@code count} items from the given IntObjectOrderedMap, starting at {@code offset} in that Map,
-	 * into this.
-	 *
-	 * @param other  another IntObjectOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
-	 */
-	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> other, int offset, int count, boolean useDequeOrder) {
-		this(count, useDequeOrder);
-		putAll(0, other, offset, count);
 	}
 
 	/**
@@ -184,15 +195,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	}
 
 	/**
-	 * Creates a new map identical to the specified map.
-	 *
-	 * @param map the map to copy
-	 */
-	public IntObjectOrderedMap (IntObjectMap<? extends V> map) {
-		this(map, false);
-	}
-
-	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
@@ -204,6 +206,18 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	}
 
 	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 */
+	public IntObjectOrderedMap (int[] keys, V[] values, boolean useDequeOrder) {
+		this(Math.min(keys.length, values.length), useDequeOrder);
+		putAll(keys, values);
+	}
+
+	/**
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
 	 *
@@ -212,18 +226,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 */
 	public IntObjectOrderedMap (PrimitiveCollection.OfInt keys, Collection<? extends V> values) {
 		this(keys, values, false);
-	}
-
-	/**
-	 * Creates a new set by copying {@code count} items from the given IntObjectOrderedMap, starting at {@code offset} in that Map,
-	 * into this.
-	 *
-	 * @param other  another IntObjectOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
-	 */
-	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> other, int offset, int count) {
-		this(other, offset, count, false);
 	}
 
 	@Override

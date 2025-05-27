@@ -109,7 +109,7 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	 * @param map the map to copy
 	 */
 	public IntFloatOrderedMap (IntFloatMap map, boolean useDequeOrder) {
-		this(map.size(), useDequeOrder);
+		this(map.size(), map.loadFactor, useDequeOrder);
 		IntIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			int k = it.nextInt();
@@ -117,6 +117,40 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 		}
 	}
 
+	/**
+	 * Creates a new set by copying {@code count} items from the given IntFloatOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 *
+	 * @param other  another IntFloatOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public IntFloatOrderedMap (IntFloatOrderedMap other, int offset, int count, boolean useDequeOrder) {
+		this(count, other.loadFactor, useDequeOrder);
+		putAll(0, other, offset, count);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public IntFloatOrderedMap (IntFloatMap map) {
+		this(map, false);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given IntFloatOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 *
+	 * @param other  another IntFloatOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public IntFloatOrderedMap (IntFloatOrderedMap other, int offset, int count) {
+		this(other, offset, count, false);
+	}
+	
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
@@ -139,19 +173,6 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	public IntFloatOrderedMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfFloat values, boolean useDequeOrder) {
 		this(Math.min(keys.size(), values.size()), useDequeOrder);
 		putAll(keys, values);
-	}
-
-	/**
-	 * Creates a new set by copying {@code count} items from the given IntFloatOrderedMap, starting at {@code offset} in that Map,
-	 * into this.
-	 *
-	 * @param other  another IntFloatOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
-	 */
-	public IntFloatOrderedMap (IntFloatOrderedMap other, int offset, int count, boolean useDequeOrder) {
-		this(count, useDequeOrder);
-		putAll(0, other, offset, count);
 	}
 
 	/**
@@ -182,15 +203,6 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	}
 
 	/**
-	 * Creates a new map identical to the specified map.
-	 *
-	 * @param map the map to copy
-	 */
-	public IntFloatOrderedMap (IntFloatMap map) {
-		this(map, false);
-	}
-
-	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
@@ -210,18 +222,6 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	 */
 	public IntFloatOrderedMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfFloat values) {
 		this(keys, values, false);
-	}
-
-	/**
-	 * Creates a new set by copying {@code count} items from the given IntFloatOrderedMap, starting at {@code offset} in that Map,
-	 * into this.
-	 *
-	 * @param other  another IntFloatOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
-	 */
-	public IntFloatOrderedMap (IntFloatOrderedMap other, int offset, int count) {
-		this(other, offset, count, false);
 	}
 
 	@Override

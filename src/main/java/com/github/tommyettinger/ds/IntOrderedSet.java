@@ -95,6 +95,25 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	}
 
 	/**
+	 * Creates a new set that contains all distinct elements in {@code set}.
+	 * @param set a IntSet without an order
+	 */
+	public IntOrderedSet (IntSet set) {
+		this(set, false);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code set}.
+	 * @param set a IntSet without an order
+	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 */
+	public IntOrderedSet (IntSet set, boolean useDequeOrder) {
+		this(set.size(), set.loadFactor, useDequeOrder);
+		hashMultiplier = set.hashMultiplier;
+		addAll(set);
+	}
+
+	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
 	public IntOrderedSet (OfInt coll) {

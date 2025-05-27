@@ -90,31 +90,6 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	}
 
 	/**
-	 * Creates a new map identical to the specified map.
-	 *
-	 * @param map the map to copy
-	 */
-	public IntIntOrderedMap (IntIntOrderedMap map) {
-		super(map);
-		if(map.keys instanceof IntDeque) keys = new IntDeque((IntDeque) map.keys);
-		else keys = new IntList(map.keys);
-	}
-
-	/**
-	 * Creates a new map identical to the specified map.
-	 *
-	 * @param map the map to copy
-	 */
-	public IntIntOrderedMap (IntIntMap map, boolean useDequeOrder) {
-		this(map.size(), useDequeOrder);
-		IntIterator it = map.keySet().iterator();
-		while (it.hasNext()) {
-			int k = it.nextInt();
-			put(k, map.get(k));
-		}
-	}
-
-	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
@@ -139,6 +114,31 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	}
 
 	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public IntIntOrderedMap (IntIntOrderedMap map) {
+		super(map);
+		if(map.keys instanceof IntDeque) keys = new IntDeque((IntDeque) map.keys);
+		else keys = new IntList(map.keys);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public IntIntOrderedMap (IntIntMap map, boolean useDequeOrder) {
+		this(map.size(), map.loadFactor, useDequeOrder);
+		IntIterator it = map.keySet().iterator();
+		while (it.hasNext()) {
+			int k = it.nextInt();
+			put(k, map.get(k));
+		}
+	}
+
+	/**
 	 * Creates a new set by copying {@code count} items from the given IntIntOrderedMap, starting at {@code offset} in that Map,
 	 * into this.
 	 *
@@ -147,8 +147,29 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param count  how many items to copy from other
 	 */
 	public IntIntOrderedMap (IntIntOrderedMap other, int offset, int count, boolean useDequeOrder) {
-		this(count, useDequeOrder);
+		this(count, other.loadFactor, useDequeOrder);
 		putAll(0, other, offset, count);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public IntIntOrderedMap (IntIntMap map) {
+		this(map, false);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given IntIntOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 *
+	 * @param other  another IntIntOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public IntIntOrderedMap (IntIntOrderedMap other, int offset, int count) {
+		this(other, offset, count, false);
 	}
 
 	/**
@@ -179,15 +200,6 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	}
 
 	/**
-	 * Creates a new map identical to the specified map.
-	 *
-	 * @param map the map to copy
-	 */
-	public IntIntOrderedMap (IntIntMap map) {
-		this(map, false);
-	}
-
-	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
@@ -207,18 +219,6 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 */
 	public IntIntOrderedMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values) {
 		this(keys, values, false);
-	}
-
-	/**
-	 * Creates a new set by copying {@code count} items from the given IntIntOrderedMap, starting at {@code offset} in that Map,
-	 * into this.
-	 *
-	 * @param other  another IntIntOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
-	 */
-	public IntIntOrderedMap (IntIntOrderedMap other, int offset, int count) {
-		this(other, offset, count, false);
 	}
 
 	@Override
