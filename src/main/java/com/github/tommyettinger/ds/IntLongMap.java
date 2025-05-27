@@ -98,6 +98,15 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 * hash.
 	 */
 	protected int mask;
+
+	/**
+	 * Used by {@link #place(int)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
+	 * This should always change when {@link #shift} changes, meaning, when the backing table resizes.
+	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
+	 * the same before and after serialization. Iteration order is better handled by using {@link IntObjectOrderedMap}.
+	 */
+	protected int hashMultiplier;
+
 	@Nullable protected transient Entries entries1;
 	@Nullable protected transient Entries entries2;
 	@Nullable protected transient Values values1;
@@ -138,7 +147,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 		keyTable = new int[tableSize];
 		valueTable = new long[tableSize];
 	}
@@ -154,6 +163,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
 		defaultValue = map.defaultValue;
+		hashMultiplier = map.hashMultiplier;
 		zeroValue = map.zeroValue;
 		hasZeroValue = map.hasZeroValue;
 	}
@@ -205,7 +215,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place (int item) {
-		return (item ^ (item << 9 | item >>> 23) ^ (item << 21 | item >>> 11)) & mask;
+		return BitConversion.imul(item, hashMultiplier) >>> shift;
 	}
 
 	/**
@@ -579,7 +589,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-
+		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 		int[] oldKeyTable = keyTable;
 		long[] oldValueTable = valueTable;
 
@@ -594,24 +604,27 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		}
 	}
 
-    /**
-     * Effectively does nothing here because the hashMultiplier is no longer stored or used.
-     * Subclasses can use this as some kind of identifier or user data, though.
-     *
-     * @return any int; the value isn't used internally, but may be used by subclasses to identify something
-     */
-    public int getHashMultiplier() {
-        return 0;
-    }
+	/**
+	 * Gets the current hashMultiplier, used in {@link #place(int)} to mix hash codes.
+	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
+	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
+	 *
+	 * @return the current hashMultiplier
+	 */
+	public int getHashMultiplier() {
+		return hashMultiplier;
+	}
 
-    /**
-     * Effectively does nothing here because the hashMultiplier is no longer stored or used.
-     * Subclasses can use this to set some kind of identifier or user data, though.
-     *
-     * @param unused any int; will not be used as-is
-     */
-    public void setHashMultiplier(int unused) {
-    }
+	/**
+	 * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
+	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
+	 * {@link Utilities#GOOD_MULTIPLIERS} or something like it.
+	 *
+	 * @param hashMultiplier any int; will be made odd if even.
+	 */
+	public void setHashMultiplier(int hashMultiplier) {
+		this.hashMultiplier = hashMultiplier | 0x80000001;
+	}
 
 	/**
 	 * Gets the length of the internal array used to store all keys, as well as empty space awaiting more items to be
