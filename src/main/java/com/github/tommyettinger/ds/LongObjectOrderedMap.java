@@ -22,6 +22,7 @@ import com.github.tommyettinger.ds.support.sort.LongComparators;
 
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -119,6 +120,41 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	}
 
 	/**
+	 * Creates a new set by copying {@code count} items from the given LongObjectOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 *
+	 * @param other  another LongObjectOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public LongObjectOrderedMap (LongObjectOrderedMap<? extends V> other, int offset, int count) {
+		this(other, offset, count, false);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public LongObjectOrderedMap (LongObjectMap<? extends V> map) {
+		this(map, false);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given LongObjectOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 *
+	 * @param other  another LongObjectOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public LongObjectOrderedMap (LongObjectOrderedMap<? extends V> other, int offset, int count, boolean useDequeOrder) {
+		this(count, other.loadFactor, useDequeOrder);
+		hashMultiplier = other.hashMultiplier;
+		putAll(0, other, offset, count);
+	}
+
+	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
@@ -140,20 +176,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	public LongObjectOrderedMap (PrimitiveCollection.OfLong keys, Collection<? extends V> values, boolean useDequeOrder) {
 		this(Math.min(keys.size(), values.size()), useDequeOrder);
 		putAll(keys, values);
-	}
-
-	/**
-	 * Creates a new set by copying {@code count} items from the given LongObjectOrderedMap, starting at {@code offset} in that Map,
-	 * into this.
-	 *
-	 * @param other  another LongObjectOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
-	 */
-	public LongObjectOrderedMap (LongObjectOrderedMap<? extends V> other, int offset, int count, boolean useDequeOrder) {
-		this(count, other.loadFactor, useDequeOrder);
-		hashMultiplier = other.hashMultiplier;
-		putAll(0, other, offset, count);
 	}
 
 	/**
@@ -184,15 +206,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	}
 
 	/**
-	 * Creates a new map identical to the specified map.
-	 *
-	 * @param map the map to copy
-	 */
-	public LongObjectOrderedMap (LongObjectMap<? extends V> map) {
-		this(map, false);
-	}
-
-	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
@@ -214,18 +227,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 		this(keys, values, false);
 	}
 
-	/**
-	 * Creates a new set by copying {@code count} items from the given LongObjectOrderedMap, starting at {@code offset} in that Map,
-	 * into this.
-	 *
-	 * @param other  another LongObjectOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
-	 */
-	public LongObjectOrderedMap (LongObjectOrderedMap<? extends V> other, int offset, int count) {
-		this(other, offset, count, false);
-	}
-
+	
 	@Override
 	public V put (long key, @Nullable V value) {
 		if (key == 0) {
