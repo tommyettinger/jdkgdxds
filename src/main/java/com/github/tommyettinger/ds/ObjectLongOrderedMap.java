@@ -109,7 +109,7 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 * @param map the map to copy
 	 */
 	public ObjectLongOrderedMap (ObjectLongMap<? extends K> map) {
-		this(map.size());
+		this(map.size(), map.loadFactor);
 		hashMultiplier = map.hashMultiplier;
 		for (K k : map.keySet()) {
 			put(k, map.get(k));
@@ -149,7 +149,7 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 * @param count  how many items to copy from other
 	 */
 	public ObjectLongOrderedMap (ObjectLongOrderedMap<? extends K> other, int offset, int count) {
-		this(count);
+		this(count, other.loadFactor);
 		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}

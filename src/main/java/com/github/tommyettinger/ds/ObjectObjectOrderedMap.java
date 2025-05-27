@@ -104,7 +104,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @param map the map to copy
 	 */
 	public ObjectObjectOrderedMap (ObjectObjectMap<? extends K, ? extends V> map) {
-		this(map.size());
+		this(map.size(), map.loadFactor);
 		hashMultiplier = map.hashMultiplier;
 		for (K k : map.keySet()) {
 			put(k, map.get(k));
@@ -156,7 +156,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @param count  how many items to copy from other
 	 */
 	public ObjectObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> other, int offset, int count) {
-		this(count);
+		this(count, other.loadFactor);
 		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}

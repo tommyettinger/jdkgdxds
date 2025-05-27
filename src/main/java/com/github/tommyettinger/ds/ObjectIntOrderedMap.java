@@ -109,7 +109,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param map the map to copy
 	 */
 	public ObjectIntOrderedMap (ObjectIntMap<? extends K> map) {
-		this(map.size());
+		this(map.size(), map.loadFactor);
 		hashMultiplier = map.hashMultiplier;
 		for (K k : map.keySet()) {
 			put(k, map.get(k));
@@ -149,7 +149,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param count  how many items to copy from other
 	 */
 	public ObjectIntOrderedMap (ObjectIntOrderedMap<? extends K> other, int offset, int count) {
-		this(count);
+		this(count, other.loadFactor);
 		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
