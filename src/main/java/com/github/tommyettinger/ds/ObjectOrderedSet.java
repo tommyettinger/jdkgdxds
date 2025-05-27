@@ -83,6 +83,16 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	/**
+	 * Creates a new set that contains all distinct elements in {@code set}.
+	 */
+	public ObjectOrderedSet (ObjectSet<? extends T> set) {
+		this(set.size());
+		hashMultiplier = set.hashMultiplier;
+		addAll(set);
+	}
+
+
+	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
 	public ObjectOrderedSet (Collection<? extends T> coll) {

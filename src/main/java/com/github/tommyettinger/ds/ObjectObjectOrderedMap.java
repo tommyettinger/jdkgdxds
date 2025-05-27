@@ -98,6 +98,18 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		super(map);
 		keys = new ObjectList<>(map.keys);
 	}
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public ObjectObjectOrderedMap (ObjectObjectMap<? extends K, ? extends V> map) {
+		this(map.size());
+		hashMultiplier = map.hashMultiplier;
+		for (K k : map.keySet()) {
+			put(k, map.get(k));
+		}
+	}
 
 	/**
 	 * Creates a new map identical to the specified map.
@@ -145,6 +157,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 */
 	public ObjectObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> other, int offset, int count) {
 		this(count);
+		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 
