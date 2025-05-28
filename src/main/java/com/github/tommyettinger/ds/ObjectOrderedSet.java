@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -386,6 +387,21 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		}
 		buffer.append('}');
 		return buffer.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		int h = size;
+		// Iterating over the order rather than the key table avoids wasting time on empty entries.
+		ObjectList<@Nullable T> order = items;
+		for (int i = 0, n = order.size(); i < n; i++) {
+			T key = order.get(i);
+			if (key != null) {h += key.hashCode();}
+		}
+		// Using any bitwise operation can help by keeping results in int range on GWT.
+		// This also can improve the low-order bits on problematic item types like Vector2.
+		return h ^ h >>> 16;
+
 	}
 
 	@Override
