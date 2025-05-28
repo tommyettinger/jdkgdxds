@@ -130,7 +130,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 * @param set another FilteredStringOrderedSet to copy
 	 */
 	public FilteredStringOrderedSet (FilteredStringOrderedSet set) {
-		super(set.size());
+		super(set.size(), set.loadFactor);
 		filter = set.filter;
 		this.hashMultiplier = set.hashMultiplier;
 		addAll(set);
@@ -236,28 +236,6 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	}
 
 	/**
-	 * Gets the current hashMultiplier, used in {@link #place(Object)} to mix hash codes.
-	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
-	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
-	 *
-	 * @return the current hashMultiplier
-	 */
-	public int getHashMultiplier() {
-		return hashMultiplier;
-	}
-
-	/**
-	 * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
-	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
-	 * {@link Utilities#GOOD_MULTIPLIERS} or something like it.
-	 *
-	 * @param hashMultiplier any int; will be made odd if even.
-	 */
-	public void setHashMultiplier(int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 0x80000001;
-	}
-
-	/**
 	 * Compares two objects for equality by the rules this filtered data structure uses for keys.
 	 * This will return true if the arguments are reference-equivalent or both null. Otherwise, it
 	 * requires that both are {@link String}s and compares them using the {@link #getFilter() filter}
@@ -308,10 +286,6 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 			if (key != null) {h += hashHelper(key);}
 		}
 		return h ^ h >>> 16;
-	}
-
-	protected void resize (int newSize) {
-		super.resize(newSize);
 	}
 
 	/**

@@ -59,13 +59,6 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	protected CharFilter filter = CharFilter.getOrCreate("Identity", c -> true, c -> c);
 
 	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectObjectOrderedMap}.
-	 */
-	protected int hashMultiplier = 0xEFAA28F1;
-
-	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public FilteredStringOrderedMap () {
@@ -137,7 +130,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param map an FilteredStringOrderedMap to copy
 	 */
 	public FilteredStringOrderedMap (FilteredStringOrderedMap<? extends V> map) {
-		super(map.size());
+		super(map.size(), map.loadFactor);
 		filter = map.filter;
 		this.hashMultiplier = map.hashMultiplier;
 		putAll(map);
@@ -195,7 +188,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param count  how many items to copy from other
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, ObjectObjectOrderedMap<String, ? extends V> other, int offset, int count) {
-		this(filter, count);
+		this(filter, count, other.loadFactor);
+		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 
@@ -251,27 +245,6 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	}
 
 	/**
-	 * This actually does something here because the hash multiplier can change.
-	 *
-	 * @return this class' current hash multiplier
-	 */
-	@Override
-	public int getHashMultiplier() {
-		return hashMultiplier;
-	}
-
-	/**
-	 * This actually does something here because the hash multiplier can change.
-	 * The {@code mul} will be made negative and odd if it wasn't both already.
-	 *
-	 * @param mul any int; will be made negative and odd before using
-	 */
-	@Override
-	public void setHashMultiplier(int mul) {
-		hashMultiplier = mul | 0x80000001;
-	}
-
-	/**
 	 * Compares two objects for equality by the rules this filtered data structure uses for keys.
 	 * This will return true if the arguments are reference-equivalent or both null. Otherwise, it
 	 * requires that both are {@link String}s and compares them using the {@link #getFilter() filter}
@@ -316,10 +289,10 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	@Override
 	public int hashCode () {
 		int h = size;
-		String[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
+		@Nullable String[] keyTable = this.keyTable;
+		@Nullable V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			String key = keyTable[i];
+			@Nullable String key = keyTable[i];
 			if (key != null) {
 				h ^= hashHelper(key);
 				V value = valueTable[i];
@@ -336,10 +309,10 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 		if (!(obj instanceof Map)) {return false;}
 		Map other = (Map)obj;
 		if (other.size() != size) {return false;}
-		Object[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
+		@Nullable Object[] keyTable = this.keyTable;
+		@Nullable V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			Object key = keyTable[i];
+			@Nullable Object key = keyTable[i];
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
@@ -351,12 +324,6 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 		}
 		return true;
 	}
-
-	protected void resize (int newSize) {
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, BitConversion.countLeadingZeros(newSize - 1) + 32) >>> 5 & 511];
-		super.resize(newSize);
-	}
-
 
 	/**
 	 * Constructs an empty map given just a CharFilter.

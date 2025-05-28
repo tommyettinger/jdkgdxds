@@ -50,13 +50,6 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	protected CharFilter filter = CharFilter.getOrCreate("Identity", c -> true, c -> c);
 
 	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectObjectOrderedMap}.
-	 */
-	protected int hashMultiplier = 0xEFAA28F1;
-
-	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public FilteredStringMap () {
@@ -128,7 +121,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param map an FilteredStringMap to copy
 	 */
 	public FilteredStringMap (FilteredStringMap<? extends V> map) {
-		super(map.size());
+		super(map.size(), map.loadFactor);
 		filter = map.filter;
 		this.hashMultiplier = map.hashMultiplier;
 		putAll(map);
@@ -225,27 +218,6 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	}
 
 	/**
-	 * This actually does something here because the hash multiplier can change.
-	 *
-	 * @return this class' current hash multiplier
-	 */
-	@Override
-	public int getHashMultiplier() {
-		return hashMultiplier;
-	}
-
-	/**
-	 * This actually does something here because the hash multiplier can change.
-	 * The {@code mul} will be made negative and odd if it wasn't both already.
-	 *
-	 * @param mul any int; will be made negative and odd before using
-	 */
-	@Override
-	public void setHashMultiplier(int mul) {
-		hashMultiplier = mul | 0x80000001;
-	}
-
-	/**
 	 * Compares two objects for equality by the rules this filtered data structure uses for keys.
 	 * This will return true if the arguments are reference-equivalent or both null. Otherwise, it
 	 * requires that both are {@link String}s and compares them using the {@link #getFilter() filter}
@@ -257,7 +229,6 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 */
 	@Override
 	public boolean equate (Object left, @Nullable Object right) {
-
 		if (left == right)
 			return true;
 		if(right == null) return false;
@@ -290,10 +261,10 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	@Override
 	public int hashCode () {
 		int h = size;
-		String[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
+		@Nullable String[] keyTable = this.keyTable;
+		@Nullable V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			String key = keyTable[i];
+			@Nullable String key = keyTable[i];
 			if (key != null) {
 				h ^= hashHelper(key);
 				V value = valueTable[i];
@@ -310,10 +281,10 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 		if (!(obj instanceof Map)) {return false;}
 		Map other = (Map)obj;
 		if (other.size() != size) {return false;}
-		Object[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
+		@Nullable Object[] keyTable = this.keyTable;
+		@Nullable V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			Object key = keyTable[i];
+			@Nullable Object key = keyTable[i];
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
@@ -324,12 +295,6 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 			}
 		}
 		return true;
-	}
-
-	protected void resize (int newSize) {
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, BitConversion.countLeadingZeros(newSize - 1) + 32) >>> 5 & 511];
-		super.resize(newSize);
-
 	}
 
 	/**
