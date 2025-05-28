@@ -172,10 +172,10 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	@Override
 	public int hashCode () {
 		int h = size;
-		CharSequence[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
+		@Nullable CharSequence[] keyTable = this.keyTable;
+		@Nullable V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			CharSequence key = keyTable[i];
+			@Nullable CharSequence key = keyTable[i];
 			if (key != null) {
 				h ^= Utilities.hashCodeIgnoreCase(key);
 				V value = valueTable[i];

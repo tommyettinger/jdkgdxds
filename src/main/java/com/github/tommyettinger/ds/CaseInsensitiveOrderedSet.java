@@ -200,9 +200,9 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	@Override
 	public int hashCode () {
 		int h = size;
-		CharSequence[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {
-			CharSequence key = keyTable[i];
+		ObjectList<@Nullable CharSequence> order = items;
+		for (int i = 0, n = order.size(); i < n; i++) {
+			@Nullable CharSequence key = order.get(i);
 			if (key != null) {h ^= Utilities.hashCodeIgnoreCase(key);}
 		}
 		return h;

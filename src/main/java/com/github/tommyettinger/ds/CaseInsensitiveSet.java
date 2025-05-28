@@ -180,9 +180,9 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	@Override
 	public int hashCode () {
 		int h = size;
-		CharSequence[] keyTable = this.keyTable;
+		@Nullable CharSequence[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			CharSequence key = keyTable[i];
+			@Nullable CharSequence key = keyTable[i];
 			if (key != null) {h ^= Utilities.hashCodeIgnoreCase(key);}
 		}
 		return h;
