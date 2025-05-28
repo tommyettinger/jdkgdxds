@@ -302,12 +302,12 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	@Override
 	public int hashCode () {
 		int h = size;
-		String[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {
-			String key = keyTable[i];
+		ObjectList<@Nullable String> order = items;
+		for (int i = 0, n = order.size(); i < n; i++) {
+			@Nullable String key = order.get(i);
 			if (key != null) {h += hashHelper(key);}
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	protected void resize (int newSize) {

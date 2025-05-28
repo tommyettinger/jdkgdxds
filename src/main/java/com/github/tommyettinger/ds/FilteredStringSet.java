@@ -284,7 +284,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 			String key = keyTable[i];
 			if (key != null) {h += hashHelper(key);}
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	protected void resize (int newSize) {

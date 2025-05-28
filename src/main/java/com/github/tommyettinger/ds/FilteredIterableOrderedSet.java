@@ -328,12 +328,12 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	@Override
 	public int hashCode () {
 		int h = size;
-		Object[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {
-			Object key = keyTable[i];
-			if (key != null) {h += hashHelper((I)key);}
+		ObjectList<@Nullable I> order = items;
+		for (int i = 0, n = order.size(); i < n; i++) {
+			@Nullable I key = order.get(i);
+			if (key != null) {h += hashHelper(key);}
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	protected void resize (int newSize) {
