@@ -765,14 +765,16 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
     @Override
     public int hashCode() {
         int h = size;
-        T[] keyTable = this.keyTable;
-        for (int i = 0, n = keyTable.length; i < n; i++) {
-            T key = keyTable[i];
-            if (key != null) {
-                h += key.hashCode();
+        if(extractor != null) {
+            @Nullable T[] keyTable = this.keyTable;
+            for (int i = 0, n = keyTable.length; i < n; i++) {
+                T key = keyTable[i];
+                if (key != null) {
+                    h += extractor.apply(key).hashCode();
+                }
             }
         }
-        return h;
+        return h ^ h >>> 16;
     }
 
     @SuppressWarnings("unchecked")

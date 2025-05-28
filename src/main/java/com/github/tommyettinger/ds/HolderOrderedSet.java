@@ -418,6 +418,21 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	@Override
+	public int hashCode() {
+		int h = size;
+		if(extractor != null) {
+			ObjectList<@Nullable T> order = items;
+			for (int i = 0, n = order.size(); i < n; i++) {
+				T key = order.get(i);
+				if (key != null) {
+					h += extractor.apply(key).hashCode();
+				}
+			}
+		}
+		return h ^ h >>> 16;
+	}
+
+	@Override
 	public String toString (String itemSeparator) {
 		if (size == 0) {return "{}";}
 		ObjectList<T> items = this.items;
