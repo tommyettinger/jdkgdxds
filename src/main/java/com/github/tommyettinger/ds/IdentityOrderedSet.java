@@ -91,31 +91,31 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	@Override
 	public int hashCode () {
 		int h = size;
-		T[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {
-			T key = keyTable[i];
-			if (key != null) {h += System.identityHashCode(key);}
+		ObjectList<@Nullable T> order = items;
+		for (int i = 0, n = order.size(); i < n; i++) {
+			h += System.identityHashCode(order.get(i)); // checking for null items doesn't matter here; their hash is 0.
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
-	 * Subclasses can use this as some kind of identifier or user data, though.
+	 * Effectively does nothing here because the hashMultiplier is not used by identity hashing.
 	 *
 	 * @return any int; the value isn't used internally, but may be used by subclasses to identify something
 	 */
 	public int getHashMultiplier() {
-		return 0;
+		return hashMultiplier;
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
+	 * Effectively does nothing here because the hashMultiplier is not used by identity hashing.
 	 * Subclasses can use this to set some kind of identifier or user data, though.
+	 * Unlike the superclass implementation, this does not alter the given int to make it negative or odd.
 	 *
-	 * @param unused any int; will not be used as-is
+	 * @param hashMultiplier any int; will not be used
 	 */
-	public void setHashMultiplier(int unused) {
+	public void setHashMultiplier(int hashMultiplier) {
+		this.hashMultiplier = hashMultiplier;
 	}
 
 	/**

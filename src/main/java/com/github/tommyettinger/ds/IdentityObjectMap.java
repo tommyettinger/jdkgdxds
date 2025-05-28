@@ -126,8 +126,8 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	@Override
 	public int hashCode () {
 		int h = size;
-		K[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
+		@Nullable K[] keyTable = this.keyTable;
+		@Nullable V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
 			if (key != null) {
@@ -140,22 +140,23 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
-	 * Subclasses can use this as some kind of identifier or user data, though.
+	 * Effectively does nothing here because the hashMultiplier is not used by identity hashing.
 	 *
 	 * @return any int; the value isn't used internally, but may be used by subclasses to identify something
 	 */
 	public int getHashMultiplier() {
-		return 0;
+		return hashMultiplier;
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
+	 * Effectively does nothing here because the hashMultiplier is not used by identity hashing.
 	 * Subclasses can use this to set some kind of identifier or user data, though.
+	 * Unlike the superclass implementation, this does not alter the given int to make it negative or odd.
 	 *
-	 * @param unused any int; will not be used as-is
+	 * @param hashMultiplier any int; will not be used
 	 */
-	public void setHashMultiplier(int unused) {
+	public void setHashMultiplier(int hashMultiplier) {
+		this.hashMultiplier = hashMultiplier;
 	}
 
 
