@@ -49,14 +49,6 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * {@link Character#isLetter(char)} for ASCII letters; the library RegExodus offers replacements in Category.
  */
 public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
-
-	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectObjectOrderedMap}.
-	 */
-	protected int hashMultiplier = 0xEFAA28F1;
-
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
@@ -92,7 +84,6 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	 */
 	public CaseInsensitiveMap (Map<? extends CharSequence, ? extends V> map) {
 		super(map.size());
-		hashMultiplier = 0xEFAA28F1;
 		putAll(map);
 	}
 
@@ -105,7 +96,6 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	 */
 	public CaseInsensitiveMap (CharSequence[] keys, V[] values) {
 		super(Math.min(keys.length, values.length));
-		hashMultiplier = 0xEFAA28F1;
 		putAll(keys, values);
 	}
 	/**
@@ -114,7 +104,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	 * @param map a CaseInsensitiveMap to copy
 	 */
 	public CaseInsensitiveMap(CaseInsensitiveMap<? extends V> map) {
-		super(map.size());
+		super(map.size(), map.loadFactor);
 		this.hashMultiplier = map.hashMultiplier;
 		putAll(map);
 
@@ -129,8 +119,6 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	 */
 	public CaseInsensitiveMap (Collection<? extends CharSequence> keys, Collection<? extends V> values) {
 		super(Math.min(keys.size(), values.size()));
-		hashMultiplier = 0xEFAA28F1;
-		putAll(keys, values);
 	}
 
 	@Override
@@ -138,27 +126,6 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 		if (item instanceof CharSequence)
 			return Utilities.hashCodeIgnoreCase((CharSequence)item, hashMultiplier) & mask;
 		return super.place(item);
-	}
-
-	/**
-	 * This actually does something here because the hash multiplier can change.
-	 *
-	 * @return this class' current hash multiplier
-	 */
-	@Override
-	public int getHashMultiplier() {
-		return hashMultiplier;
-	}
-
-	/**
-	 * This actually does something here because the hash multiplier can change.
-	 * The {@code mul} will be made negative and odd if it wasn't both already.
-	 *
-	 * @param mul any int; will be made negative and odd before using
-	 */
-	@Override
-	public void setHashMultiplier(int mul) {
-		hashMultiplier = mul | 0x80000001;
 	}
 
 	@Override
@@ -192,10 +159,10 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 		if (!(obj instanceof CaseInsensitiveMap)) {return false;}
 		CaseInsensitiveMap other = (CaseInsensitiveMap)obj;
 		if (other.size != size) {return false;}
-		Object[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
+		@Nullable Object[] keyTable = this.keyTable;
+		@Nullable V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			Object key = keyTable[i];
+			@Nullable Object key = keyTable[i];
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
@@ -206,11 +173,6 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 			}
 		}
 		return true;
-	}
-
-	protected void resize (int newSize) {
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, BitConversion.countLeadingZeros(newSize - 1) + 32) >>> 5 & 511];
-		super.resize(newSize);
 	}
 
 	@Override

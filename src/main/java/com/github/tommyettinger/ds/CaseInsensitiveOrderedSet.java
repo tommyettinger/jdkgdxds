@@ -99,7 +99,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param set an ObjectSet or one of its subclasses
 	 */
 	public CaseInsensitiveOrderedSet (ObjectSet<? extends CharSequence> set) {
-		this(set.size());
+		this(set.size(), set.loadFactor);
 		addAll(set);
 	}
 
@@ -142,7 +142,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param set another CaseInsensitiveOrderedSet
 	 */
 	public CaseInsensitiveOrderedSet (CaseInsensitiveOrderedSet set) {
-		super(set.size);
+		super(set.size, set.loadFactor);
 		this.hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
