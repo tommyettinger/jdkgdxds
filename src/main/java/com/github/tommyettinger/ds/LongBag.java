@@ -181,7 +181,7 @@ public class LongBag extends LongList {
 	@Override
 	public int hashCode () {
 		long[] items = this.items;
-		long h = 1;
+		long h = size;
 		for (int i = 0, n = size; i < n; i++) {
 			h += items[i];
 		}

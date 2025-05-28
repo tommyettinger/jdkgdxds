@@ -182,7 +182,7 @@ public class FloatBag extends FloatList {
 	@Override
 	public int hashCode () {
 		float[] items = this.items;
-		int h = 1;
+		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
 			h += BitConversion.floatToRawIntBits(items[i]);
 		}

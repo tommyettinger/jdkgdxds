@@ -181,11 +181,11 @@ public class BooleanBag extends BooleanList {
 	@Override
 	public int hashCode () {
 		boolean[] items = this.items;
-		int h = 1;
+		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
 			h += items[i] ? 421 : 5;
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	/**

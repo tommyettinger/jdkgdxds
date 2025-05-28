@@ -842,11 +842,11 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	@Override
 	public int hashCode () {
 		short[] items = this.items;
-		int h = 1;
+		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
 			h = h * 31 + items[i];
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	@Override

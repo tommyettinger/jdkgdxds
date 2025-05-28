@@ -845,12 +845,12 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	public int hashCode () {
 		double[] items = this.items;
 
-		int h = 1;
+		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
 			h = h * 421 + BitConversion.doubleToMixedIntBits(items[i]);
 		}
 
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	@Override

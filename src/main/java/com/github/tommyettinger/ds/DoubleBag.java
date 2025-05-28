@@ -182,11 +182,11 @@ public class DoubleBag extends DoubleList {
 	@Override
 	public int hashCode () {
 		double[] items = this.items;
-		int h = 1;
+		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
 			h += BitConversion.doubleToMixedIntBits(items[i]);
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	/**

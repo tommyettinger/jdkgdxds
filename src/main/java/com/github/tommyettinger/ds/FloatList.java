@@ -860,7 +860,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	@Override
 	public int hashCode () {
 		float[] items = this.items;
-		int h = 1;
+		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
 			h = h * 31 + BitConversion.floatToRawIntBits(items[i]);
 		}

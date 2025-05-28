@@ -181,11 +181,11 @@ public class IntBag extends IntList {
 	@Override
 	public int hashCode () {
 		int[] items = this.items;
-		int h = 1;
+		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
 			h += items[i];
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	/**
