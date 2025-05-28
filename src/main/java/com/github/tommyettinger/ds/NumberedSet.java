@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -172,8 +173,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @return an index between 0 and {@link InternalMap#mask} (both inclusive)
 	 */
 	protected int place (@NonNull Object item) {
-		final int h = item.hashCode();
-		return (h ^ (h << 9 | h >>> 23) ^ (h << 21 | h >>> 11)) & map.mask;
+		return BitConversion.imul(item.hashCode(), map.hashMultiplier) >>> map.shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & map.mask;
 	}
@@ -486,25 +486,27 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
-	 * Subclasses can use this as some kind of identifier or user data, though.
+	 * Gets the current hashMultiplier, used in {@link #place(Object)} to mix hash codes.
+	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
+	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
 	 *
-	 * @return any int; the value isn't used internally, but may be used by subclasses to identify something
+	 * @return the current hashMultiplier
 	 */
 	public int getHashMultiplier() {
-		return 0;
+		return map.getHashMultiplier();
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
-	 * Subclasses can use this to set some kind of identifier or user data, though.
-	 * This passes on {@code passedOn} to another map, which might implement this differently.
+	 * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
+	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
+	 * {@link Utilities#GOOD_MULTIPLIERS} or something like it.
 	 *
-	 * @param passedOn any int; will not be used as-is
+	 * @param hashMultiplier any int; will be made odd if even.
 	 */
-	public void setHashMultiplier(int passedOn) {
-		map.setHashMultiplier(passedOn);
+	public void setHashMultiplier(int hashMultiplier) {
+		map.setHashMultiplier(hashMultiplier);
 	}
+
 	/**
 	 * Gets the length of the internal array used to store all keys, as well as empty space awaiting more items to be
 	 * entered. This length is equal to the length of the array used to store all values, and empty space for values,
