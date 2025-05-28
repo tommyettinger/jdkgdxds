@@ -643,7 +643,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 			T key = keyTable[i];
 			if (key != null) {h += key.hashCode();}
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	@Override

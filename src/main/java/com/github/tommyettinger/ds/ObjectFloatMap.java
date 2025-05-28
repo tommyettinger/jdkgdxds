@@ -659,10 +659,10 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	@Override
 	public int hashCode () {
 		int h = size;
-		K[] keyTable = this.keyTable;
+		@Nullable K[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			K key = keyTable[i];
+			@Nullable K key = keyTable[i];
 			if (key != null) {
 				h ^= key.hashCode();
 				h ^= BitConversion.floatToRawIntBits(valueTable[i]);

@@ -710,13 +710,13 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	@Override
 	public int hashCode () {
 		int h = size;
-		K[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
+		@Nullable K[] keyTable = this.keyTable;
+		@Nullable V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			K key = keyTable[i];
+			@Nullable K key = keyTable[i];
 			if (key != null) {
 				h ^= key.hashCode();
-				V value = valueTable[i];
+				@Nullable V value = valueTable[i];
 				if (value != null) {h ^= value.hashCode();}
 			}
 		}

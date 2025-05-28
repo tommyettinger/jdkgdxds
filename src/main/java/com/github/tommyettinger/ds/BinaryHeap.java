@@ -645,7 +645,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 
 	@Override
 	public int hashCode () {
-		int h = 1;
+		int h = size;
 		Node[] nodes = this.nodes;
 		for (int i = 0, n = size; i < n; i++) {
 			h += BitConversion.floatToRawIntBits(nodes[i].value);

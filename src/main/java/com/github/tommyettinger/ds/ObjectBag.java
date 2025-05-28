@@ -162,11 +162,11 @@ public class ObjectBag<T> extends ObjectList<T> {
 
 	@Override
 	public int hashCode () {
-		int h = 1, n = size();
+		int n = size(), h = n;
 		for (int i = 0; i < n; i++) {
 			h += get(i).hashCode();
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	/**

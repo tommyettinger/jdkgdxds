@@ -91,7 +91,7 @@ public class IdentitySet<T> extends ObjectSet<T> {
 			T key = keyTable[i];
 			if (key != null) {h += System.identityHashCode(key);}
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	/**

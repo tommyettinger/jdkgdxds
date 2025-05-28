@@ -640,8 +640,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	public int hashCode () {
 		int h = hasZeroValue && zeroValue != null ? zeroValue.hashCode() ^ size : size;
 		int[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
-		V v;
+		@Nullable V[] valueTable = this.valueTable;
+		@Nullable V v;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			int key = keyTable[i];
 			if (key != 0) {

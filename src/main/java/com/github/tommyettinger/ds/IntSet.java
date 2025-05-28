@@ -439,10 +439,9 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		int h = size;
 		int[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			int key = keyTable[i];
-			if (key != 0) {h += key;}
+			h += keyTable[i];
 		}
-		return h;
+		return h ^ h >>> 16;
 	}
 
 	@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")

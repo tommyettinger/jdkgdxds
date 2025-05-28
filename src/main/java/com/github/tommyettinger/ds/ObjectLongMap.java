@@ -622,10 +622,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	@Override
 	public int hashCode () {
 		long h = size;
-		K[] keyTable = this.keyTable;
+		@Nullable K[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			K key = keyTable[i];
+			@Nullable K key = keyTable[i];
 			if (key != null) {
 				h += key.hashCode() * 0x9E3779B97F4A7C15L;
 				h += valueTable[i];

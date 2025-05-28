@@ -536,7 +536,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		Enum<?>[] universe = keys.universe;
 		long[] valueTable = this.valueTable;
 		for (int i = keys.nextOrdinal(0); i != -1; i = keys.nextOrdinal(i+1)) {
-			Enum<?> key = keys.universe[i];
+			Enum<?> key = universe[i];
 			h ^= key.hashCode();
 			long value = valueTable[i];
 			h ^= value ^ value >>> 32;
