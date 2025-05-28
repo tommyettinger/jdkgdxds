@@ -135,7 +135,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param set another FilteredIterableOrderedSet to copy
 	 */
 	public FilteredIterableOrderedSet (FilteredIterableOrderedSet<T, ? extends I> set) {
-		super(set.size());
+		super(set.size(), set.loadFactor);
 		filter = set.filter;
 		editor = set.editor;
 		this.hashMultiplier = set.hashMultiplier;
@@ -256,28 +256,6 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	}
 
 	/**
-	 * Gets the current hashMultiplier, used in {@link #place(Object)} to mix hash codes.
-	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
-	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
-	 *
-	 * @return the current hashMultiplier
-	 */
-	public int getHashMultiplier() {
-		return hashMultiplier;
-	}
-
-	/**
-	 * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
-	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
-	 * {@link Utilities#GOOD_MULTIPLIERS} or something like it.
-	 *
-	 * @param hashMultiplier any int; will be made odd if even.
-	 */
-	public void setHashMultiplier(int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 0x80000001;
-	}
-
-	/**
 	 * Compares two objects for equality by the rules this filtered data structure uses for keys.
 	 * This will return true if the arguments are reference-equivalent or both null. Otherwise, it
 	 * requires that both are {@link Iterable}s and compares them using the {@link #getFilter() filter}
@@ -336,12 +314,6 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 		return h ^ h >>> 16;
 	}
 
-	protected void resize (int newSize) {
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, BitConversion.countLeadingZeros(newSize - 1) + 32) >>> 5 & 511];
-		super.resize(newSize);
-
-	}
-
 	/**
 	 * Constructs a new FilteredIterableOrderedSet with the given filter and editor, without contents, and returns the set.
 	 *
@@ -352,8 +324,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param <I> the type of items, which must be either Iterable or an implementing class, containing {@code T} sub-items
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> with (ObjPredicate<T> filter, ObjToSameFunction<T> editor) {
-		FilteredIterableOrderedSet<T, I> set = new FilteredIterableOrderedSet<>(filter, editor);
-		return set;
+        return new FilteredIterableOrderedSet<>(filter, editor);
 	}
 
 	/**

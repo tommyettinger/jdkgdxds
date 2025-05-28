@@ -54,13 +54,6 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	protected ObjToSameFunction<K> editor = c -> c;
 
 	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectObjectOrderedMap}.
-	 */
-	protected int hashMultiplier = 0xEFAA28F1;
-
-	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
 	 */
@@ -141,7 +134,7 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * @param map another FilteredIterableMap to copy
 	 */
 	public FilteredIterableOrderedMap (FilteredIterableOrderedMap<K, ? extends I, ? extends V> map) {
-		super(map.size());
+		super(map.size(), map.loadFactor);
 		filter = map.filter;
 		editor = map.editor;
 		this.hashMultiplier = map.hashMultiplier;
@@ -265,27 +258,6 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	}
 
 	/**
-	 * This actually does something here because the hash multiplier can change.
-	 *
-	 * @return this class' current hash multiplier
-	 */
-	@Override
-	public int getHashMultiplier() {
-		return hashMultiplier;
-	}
-
-	/**
-	 * This actually does something here because the hash multiplier can change.
-	 * The {@code mul} will be made negative and odd if it wasn't both already.
-	 *
-	 * @param mul any int; will be made negative and odd before using
-	 */
-	@Override
-	public void setHashMultiplier(int mul) {
-		hashMultiplier = mul | 0x80000001;
-	}
-
-	/**
 	 * Compares two objects for equality by the rules this filtered data structure uses for keys.
 	 * This will return true if the arguments are reference-equivalent or both null. Otherwise, it
 	 * requires that both are {@link Iterable}s and compares them using the {@link #getFilter() filter}
@@ -347,12 +319,6 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 			}
 		}
 		return h;
-	}
-
-	protected void resize (int newSize) {
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[BitConversion.imul(hashMultiplier, BitConversion.countLeadingZeros(newSize - 1) + 32) >>> 5 & 511];
-		super.resize(newSize);
-
 	}
 
 	/**
