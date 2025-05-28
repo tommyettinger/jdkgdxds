@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.LongIterator;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -414,6 +415,21 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		iterator2.valid = true;
 		iterator1.valid = false;
 		return iterator2;
+	}
+
+	@Override
+	public int hashCode() {
+		int h = size;
+		// Iterating over the order rather than the key table avoids wasting time on empty entries.
+		// The order may be a LongDeque internally, so we cannot just iterate over the internal array.
+		LongList order = items;
+		for (int i = 0, n = order.size(); i < n; i++) {
+			long key = order.get(i);
+			h += (int)(key ^ key >>> 32);
+		}
+		// Using any bitwise operation can help by keeping results in int range on GWT.
+		// This also can improve the low-order bits on problematic item types like Vector2.
+		return h ^ h >>> 16;
 	}
 
 	public String toString (String separator) {

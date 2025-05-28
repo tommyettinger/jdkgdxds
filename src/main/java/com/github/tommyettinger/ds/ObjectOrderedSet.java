@@ -401,7 +401,6 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		// Using any bitwise operation can help by keeping results in int range on GWT.
 		// This also can improve the low-order bits on problematic item types like Vector2.
 		return h ^ h >>> 16;
-
 	}
 
 	@Override
