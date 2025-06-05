@@ -203,7 +203,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         @Override
         public int compareTo(Term<T> o) {
-            return o instanceof Leaf ? item.compareTo(((Leaf<T>)o).item) : Integer.signum(symbol() - o.symbol());
+            return o instanceof Leaf ? item.compareTo(((Leaf<T>)o).item) : (symbol() - o.symbol());
         }
 
         public static <T extends Comparable<T>> Leaf<T> of(T item) {
@@ -291,7 +291,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
         @Override
         public int compareTo(Term<T> o) {
-            return o instanceof Not ? term.compareTo(((Not<T>)o).term) : Integer.signum(symbol() - o.symbol());
+            return o instanceof Not ? term.compareTo(((Not<T>)o).term) : (symbol() - o.symbol());
         }
 
         public static <T extends Comparable<T>> Not<T> of(Term<T> term) {
@@ -417,7 +417,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                     if(comp != 0) return comp;
                 }
             }
-            return Integer.signum(symbol() - o.symbol());
+            return (symbol() - o.symbol());
         }
 
         @SafeVarargs
@@ -547,7 +547,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                     if(comp != 0) return comp;
                 }
             }
-            return Integer.signum(symbol() - o.symbol());
+            return (symbol() - o.symbol());
         }
 
         @SafeVarargs
@@ -676,7 +676,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
                     if(comp != 0) return comp;
                 }
             }
-            return Integer.signum(symbol() - o.symbol());
+            return (symbol() - o.symbol());
         }
 
         @SafeVarargs
