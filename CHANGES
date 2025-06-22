@@ -1,3 +1,6 @@
+[1.10.1]
+- Dependency on digital updated to 0.7.0; this version change doesn't directly affect jdkgdxds, but calls to `TrigTools` methods may have very slightly different results because its lookup tables are calculated differently (now they are fully deterministic).
+
 [1.10.0]
 - Most hashed collections switched back from the xor-rotate-xor-rotate approach and use the earlier multiply-shift implementation for place(). This differs from before in that hashMultiplier is usually determined now by the map's/set's shift value, unless setHashMultiplier() changed it.
 - This changed back because the multiplication and shift approach seems more resilient when hashCode() results are very low-quality.
