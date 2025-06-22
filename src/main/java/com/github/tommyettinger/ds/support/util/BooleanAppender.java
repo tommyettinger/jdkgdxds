@@ -24,4 +24,10 @@ import com.github.tommyettinger.function.ObjBooleanToObjBiFunction;
  * This is not typically a method reference to anything in {@link Base}, which is different from other Appender types.
  */
 public interface BooleanAppender extends ObjBooleanToObjBiFunction<StringBuilder, StringBuilder> {
+    /**
+     * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
+     * {@code StringBuilder::append} is present at a call-site. This should be used in place of
+     * {@link StringBuilder#append(boolean)} when you want to use that as a BooleanAppender.
+     */
+    BooleanAppender DEFAULT = StringBuilder::append;
 }
