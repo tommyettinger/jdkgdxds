@@ -3069,6 +3069,14 @@ public interface PrimitiveCollection<T> {
 			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
 		}
 
+		/**
+		 * Appends to {@code sb} any items in this PrimitiveCollection as either "true" or "false", separated by
+		 * {@code separator} and optionally with square brackets surrounding the text if {@code brackets} is true.
+		 * @param sb the StringBuilder to append to
+		 * @param separator the String that will separate each item
+		 * @param brackets if true, square brackets will surround the appended text
+		 * @return {@code sb}, for chaining
+		 */
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, BooleanAppender.DEFAULT);
 		}
@@ -3098,6 +3106,37 @@ public interface PrimitiveCollection<T> {
 			}
 			if (brackets) sb.append(']');
 			return sb;
+		}
+
+
+		/**
+		 * Returns a String representing this PrimitiveCollection with "1" for true items and "0" for false, with no
+		 * surrounding brackets.
+		 * @return a String made of "0" and "1"
+		 */
+		default String toDenseString () {
+			return denseAppendTo(new StringBuilder(size()), false).toString();
+		}
+
+		/**
+		 * Returns a String representing this PrimitiveCollection with "1" for true items and "0" for false, with
+		 * surrounding square brackets if {@code brackets} is true.
+		 * @param brackets if true, the result will be surrounded by square brackets
+		 * @return a String made of "0" and "1", optionally with surrounding square brackets
+		 */
+		default String toDenseString (boolean brackets) {
+			return denseAppendTo(new StringBuilder(size() + 2), brackets).toString();
+		}
+
+		/**
+		 * Appends to {@code sb} any items in this PrimitiveCollection as either "1" for true items or "0" for false,
+		 * with no separators and optionally with square brackets surrounding the text if {@code brackets} is true.
+		 * @param sb the StringBuilder to append to
+		 * @param brackets if true, square brackets will surround the appended text
+		 * @return {@code sb}, for chaining
+		 */
+		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
+			return appendTo(sb, "", brackets, BooleanAppender.BINARY);
 		}
 	}
 }

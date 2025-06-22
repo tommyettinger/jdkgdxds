@@ -30,4 +30,13 @@ public interface BooleanAppender extends ObjBooleanToObjBiFunction<StringBuilder
      * {@link StringBuilder#append(boolean)} when you want to use that as a BooleanAppender.
      */
     BooleanAppender DEFAULT = StringBuilder::append;
+
+    /**
+     * An alternative BooleanAppender constant that appends {@code '1'} when the given boolean item is
+     * true, or {@code '0'} when it is false.
+     * <br>
+     * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
+     * this lambda would be present at a call-site.
+     */
+    BooleanAppender BINARY = (StringBuilder sb, boolean item) -> sb.append(item ? '1' : '0');
 }
