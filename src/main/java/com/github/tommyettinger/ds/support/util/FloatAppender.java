@@ -24,4 +24,10 @@ import com.github.tommyettinger.function.ObjFloatToObjBiFunction;
  * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, float)}.
  */
 public interface FloatAppender extends ObjFloatToObjBiFunction<StringBuilder, StringBuilder> {
+    /**
+     * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
+     * {@code StringBuilder::append} is present at a call-site. This should be used in place of
+     * {@link StringBuilder#append(float)} when you want to use that as a FloatAppender.
+     */
+    FloatAppender DEFAULT = StringBuilder::append;
 }

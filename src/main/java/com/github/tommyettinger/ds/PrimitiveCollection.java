@@ -1215,7 +1215,8 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link FloatAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * use {@link FloatAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets true to wrap the output in square brackets, or false to omit them
@@ -1228,13 +1229,14 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
-			return appendTo(sb, separator, brackets, StringBuilder::append);
+			return appendTo(sb, separator, brackets, FloatAppender.DEFAULT);
 		}
 
 		/**
 		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link FloatAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * use {@link FloatAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param sb a StringBuilder that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
@@ -1584,7 +1586,8 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link DoubleAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * use {@link DoubleAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets true to wrap the output in square brackets, or false to omit them
@@ -1597,13 +1600,14 @@ public interface PrimitiveCollection<T> {
 		}
 
 		default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
-			return appendTo(sb, separator, brackets, StringBuilder::append);
+			return appendTo(sb, separator, brackets, DoubleAppender.DEFAULT);
 		}
 
 		/**
 		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link DoubleAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * use {@link DoubleAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param sb a StringBuilder that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
