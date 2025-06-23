@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.util.BooleanAppender;
 import com.github.tommyettinger.ds.support.util.ByteAppender;
 import com.github.tommyettinger.ds.support.util.CharAppender;
@@ -490,6 +491,37 @@ public interface PrimitiveCollection<T> {
 			if (brackets) sb.append(']');
 			return sb;
 		}
+
+
+		/**
+		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE86} digits per item,
+		 * with no surrounding brackets.
+		 * @return a String made of {@link Base#BASE86} digits
+		 */
+		default String toDenseString () {
+			return denseAppendTo(new StringBuilder(size() * 5), false).toString();
+		}
+
+		/**
+		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE86} digits per item,
+		 * with surrounding square brackets if {@code brackets} is true.
+		 * @param brackets if true, the result will be surrounded by square brackets
+		 * @return a String made of {@link Base#BASE86} digits, optionally with surrounding square brackets
+		 */
+		default String toDenseString (boolean brackets) {
+			return denseAppendTo(new StringBuilder(size() * 5 + 2), brackets).toString();
+		}
+
+		/**
+		 * Appends to {@code sb} any items in this PrimitiveCollection as five {@link Base#BASE86} digits per item,
+		 * with no separators and optionally with square brackets surrounding the text if {@code brackets} is true.
+		 * @param sb the StringBuilder to append to
+		 * @param brackets if true, square brackets will surround the appended text
+		 * @return {@code sb}, for chaining
+		 */
+		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
+			return appendTo(sb, "", brackets, IntAppender.DENSE);
+		}
 	}
 
 	/**
@@ -887,6 +919,37 @@ public interface PrimitiveCollection<T> {
 			if (brackets) sb.append(']');
 			return sb;
 		}
+
+
+		/**
+		 * Returns a String representing this PrimitiveCollection with ten {@link Base#BASE86} digits per item,
+		 * with no surrounding brackets.
+		 * @return a String made of {@link Base#BASE86} digits
+		 */
+		default String toDenseString () {
+			return denseAppendTo(new StringBuilder(size() * 5), false).toString();
+		}
+
+		/**
+		 * Returns a String representing this PrimitiveCollection with ten {@link Base#BASE86} digits per item,
+		 * with surrounding square brackets if {@code brackets} is true.
+		 * @param brackets if true, the result will be surrounded by square brackets
+		 * @return a String made of {@link Base#BASE86} digits, optionally with surrounding square brackets
+		 */
+		default String toDenseString (boolean brackets) {
+			return denseAppendTo(new StringBuilder(size() * 5 + 2), brackets).toString();
+		}
+
+		/**
+		 * Appends to {@code sb} any items in this PrimitiveCollection as ten {@link Base#BASE86} digits per item,
+		 * with no separators and optionally with square brackets surrounding the text if {@code brackets} is true.
+		 * @param sb the StringBuilder to append to
+		 * @param brackets if true, square brackets will surround the appended text
+		 * @return {@code sb}, for chaining
+		 */
+		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
+			return appendTo(sb, "", brackets, LongAppender.DENSE);
+		}
 	}
 
 	/**
@@ -1257,6 +1320,37 @@ public interface PrimitiveCollection<T> {
 			}
 			if (brackets) sb.append(']');
 			return sb;
+		}
+
+
+		/**
+		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE86} digits per item,
+		 * with no surrounding brackets.
+		 * @return a String made of {@link Base#BASE86} digits
+		 */
+		default String toDenseString () {
+			return denseAppendTo(new StringBuilder(size() * 5), false).toString();
+		}
+
+		/**
+		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE86} digits per item,
+		 * with surrounding square brackets if {@code brackets} is true.
+		 * @param brackets if true, the result will be surrounded by square brackets
+		 * @return a String made of {@link Base#BASE86} digits, optionally with surrounding square brackets
+		 */
+		default String toDenseString (boolean brackets) {
+			return denseAppendTo(new StringBuilder(size() * 5 + 2), brackets).toString();
+		}
+
+		/**
+		 * Appends to {@code sb} any items in this PrimitiveCollection as five {@link Base#BASE86} digits per item,
+		 * with no separators and optionally with square brackets surrounding the text if {@code brackets} is true.
+		 * @param sb the StringBuilder to append to
+		 * @param brackets if true, square brackets will surround the appended text
+		 * @return {@code sb}, for chaining
+		 */
+		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
+			return appendTo(sb, "", brackets, FloatAppender.DENSE);
 		}
 	}
 
