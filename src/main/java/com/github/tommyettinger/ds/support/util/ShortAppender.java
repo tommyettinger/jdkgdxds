@@ -30,4 +30,12 @@ public interface ShortAppender extends ObjShortToObjBiFunction<StringBuilder, St
      * {@link StringBuilder#append(int)} when you want to use that as a ShortAppender.
      */
     ShortAppender DEFAULT = StringBuilder::append;
+
+    /**
+     * An alternative ShortAppender constant that appends three {@link Base#SIMPLE64} digits for every short input.
+     * <br>
+     * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
+     * this lambda would be present at a call-site.
+     */
+    ShortAppender DENSE = Base.SIMPLE64::appendUnsigned;
 }

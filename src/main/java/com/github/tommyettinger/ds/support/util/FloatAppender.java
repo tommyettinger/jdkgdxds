@@ -30,4 +30,13 @@ public interface FloatAppender extends ObjFloatToObjBiFunction<StringBuilder, St
      * {@link StringBuilder#append(float)} when you want to use that as a FloatAppender.
      */
     FloatAppender DEFAULT = StringBuilder::append;
+
+    /**
+     * An alternative FloatAppender constant that appends five {@link Base#BASE86} digits for every float input.
+     * The five ASCII chars are not expected to be human-readable.
+     * <br>
+     * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
+     * this lambda would be present at a call-site.
+     */
+    FloatAppender DENSE = Base.BASE86::appendUnsigned;
 }

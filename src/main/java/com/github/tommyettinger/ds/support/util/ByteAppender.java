@@ -30,4 +30,12 @@ public interface ByteAppender extends ObjByteToObjBiFunction<StringBuilder, Stri
      * {@link StringBuilder#append(int)} when you want to use that as a ByteAppender.
      */
     ByteAppender DEFAULT = StringBuilder::append;
+
+    /**
+     * An alternative ByteAppender constant that appends two {@link Base#BASE16} digits for every byte input.
+     * <br>
+     * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
+     * this lambda would be present at a call-site.
+     */
+    ByteAppender DENSE = Base.BASE16::appendUnsigned;
 }

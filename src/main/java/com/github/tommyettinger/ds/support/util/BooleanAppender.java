@@ -38,5 +38,5 @@ public interface BooleanAppender extends ObjBooleanToObjBiFunction<StringBuilder
      * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
      * this lambda would be present at a call-site.
      */
-    BooleanAppender BINARY = (StringBuilder sb, boolean item) -> sb.append(item ? '1' : '0');
+    BooleanAppender DENSE = (StringBuilder sb, boolean item) -> sb.append(item ? '1' : '0');
 }

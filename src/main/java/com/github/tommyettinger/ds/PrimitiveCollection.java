@@ -3150,7 +3150,7 @@ public interface PrimitiveCollection<T> {
 		 * @return {@code sb}, for chaining
 		 */
 		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
-			return appendTo(sb, "", brackets, BooleanAppender.BINARY);
+			return appendTo(sb, "", brackets, BooleanAppender.DENSE);
 		}
 	}
 }
