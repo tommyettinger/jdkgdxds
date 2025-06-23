@@ -24,4 +24,10 @@ import com.github.tommyettinger.function.ObjCharToObjBiFunction;
  * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, char)}.
  */
 public interface CharAppender extends ObjCharToObjBiFunction<StringBuilder, StringBuilder> {
+    /**
+     * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
+     * {@code StringBuilder::append} is present at a call-site. This should be used in place of
+     * {@link StringBuilder#append(char)} when you want to use that as a CharAppender.
+     */
+    CharAppender DEFAULT = StringBuilder::append;
 }

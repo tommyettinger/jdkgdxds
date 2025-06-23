@@ -386,7 +386,8 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this EnhancedCollection, using {@code StringBuilder::append} to
+	 * Appends to a StringBuilder from the contents of this EnhancedCollection, using {@link Appender#DEFAULT}
+	 * (which wraps {@link StringBuilder#append(Object)} but is cached even on Android) to
 	 * append each item's String representation, separating items with {@code separator}, and optionally wrapping the
 	 * output in square brackets if {@code brackets} is true.
 	 * <br>
@@ -397,14 +398,16 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param brackets true to wrap the output in square brackets, or false to omit them
 	 * @return {@code sb}, with the appended items of this EnhancedCollection
 	 */
-	default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
-		return appendTo(sb, separator, brackets, StringBuilder::append);
+	@SuppressWarnings("unchecked")
+    default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
+		return appendTo(sb, separator, brackets, Appender.DEFAULT);
 	}
 
 	/**
 	 * Appends to a StringBuilder from the contents of this EnhancedCollection, but uses the given {@link Appender}
 	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default String representation, you can use {@link Appender#DEFAULT} (which wraps
+	 * {@link StringBuilder#append(Object)} but is cached even on Android) as an appender.
 	 *
 	 * @param sb a StringBuilder that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
