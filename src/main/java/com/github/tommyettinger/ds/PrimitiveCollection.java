@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.BooleanAppender;
 import com.github.tommyettinger.ds.support.util.ByteAppender;
 import com.github.tommyettinger.ds.support.util.CharAppender;
@@ -967,6 +968,28 @@ public interface PrimitiveCollection<T> {
 		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
 			return appendTo(sb, "", brackets, LongAppender.DENSE);
 		}
+
+		/**
+		 * Reads in exactly ten BASE90 chars from the given {@code position} in the given {@code CharSequence},
+		 * such as a String or StringBuilder, and returns the long they represent. This does no validation of the
+		 * CharSequence or position; ensuring that {@code position} is non-negative and that {@code position + 9}
+		 * is less than {@code cs.length()} is the caller's responsibility.
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param position the first position to read exactly ten chars from in {@code cs}
+		 * @return the long the ten BASE90 chars represent
+		 */
+		static long readDense(CharSequence cs, int position) {
+			return (cs.charAt(position) - 37) * -2025644137419103232L
+					+ (cs.charAt(position+1) - 37) * 387420489000000000L
+					+ (cs.charAt(position+2) - 37) * 4304672100000000L
+					+ (cs.charAt(position+3) - 37) * 47829690000000L
+					+ (cs.charAt(position+4) - 37) * 531441000000L
+					+ (cs.charAt(position+5) - 37) * 5904900000L
+					+ (cs.charAt(position+6) - 37) * 65610000L
+					+ (cs.charAt(position+7) - 37) * 729000L
+					+ (cs.charAt(position+8) - 37) * 8100L
+					+ (cs.charAt(position+9) - 37) * 90L;
+		}
 	}
 
 	/**
@@ -1369,6 +1392,24 @@ public interface PrimitiveCollection<T> {
 		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
 			return appendTo(sb, "", brackets, FloatAppender.DENSE);
 		}
+
+		/**
+		 * Reads in exactly five BASE90 chars from the given {@code position} in the given {@code CharSequence},
+		 * such as a String or StringBuilder, and returns the float they represent. This does no validation of the
+		 * CharSequence or position; ensuring that {@code position} is non-negative and that {@code position + 4}
+		 * is less than {@code cs.length()} is the caller's responsibility.
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param position the first position to read exactly five chars from in {@code cs}
+		 * @return the float the five BASE90 chars represent
+		 */
+		static float readDense(CharSequence cs, int position) {
+			return BitConversion.intBitsToFloat(
+					  (cs.charAt(position  ) - 37) * 1609932704
+					+ (cs.charAt(position+1) - 37) * 65610000
+					+ (cs.charAt(position+2) - 37) * 729000
+					+ (cs.charAt(position+3) - 37) * 8100
+					+ (cs.charAt(position+4) - 37) * 90);
+		}
 	}
 
 	/**
@@ -1770,6 +1811,29 @@ public interface PrimitiveCollection<T> {
 		 */
 		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
 			return appendTo(sb, "", brackets, DoubleAppender.DENSE);
+		}
+
+		/**
+		 * Reads in exactly ten BASE90 chars from the given {@code position} in the given {@code CharSequence},
+		 * such as a String or StringBuilder, and returns the double they represent. This does no validation of the
+		 * CharSequence or position; ensuring that {@code position} is non-negative and that {@code position + 9}
+		 * is less than {@code cs.length()} is the caller's responsibility.
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param position the first position to read exactly ten chars from in {@code cs}
+		 * @return the double the ten BASE90 chars represent
+		 */
+		static double readDense(CharSequence cs, int position) {
+			return BitConversion.longBitsToDouble(
+					  (cs.charAt(position  ) - 37) * -2025644137419103232L
+					+ (cs.charAt(position+1) - 37) * 387420489000000000L
+					+ (cs.charAt(position+2) - 37) * 4304672100000000L
+					+ (cs.charAt(position+3) - 37) * 47829690000000L
+					+ (cs.charAt(position+4) - 37) * 531441000000L
+					+ (cs.charAt(position+5) - 37) * 5904900000L
+					+ (cs.charAt(position+6) - 37) * 65610000L
+					+ (cs.charAt(position+7) - 37) * 729000L
+					+ (cs.charAt(position+8) - 37) * 8100L
+					+ (cs.charAt(position+9) - 37) * 90L);
 		}
 	}
 
