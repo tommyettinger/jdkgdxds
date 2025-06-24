@@ -534,11 +534,13 @@ public interface PrimitiveCollection<T> {
 		 * @return the int the five BASE90 chars represent
 		 */
 		static int readDense(CharSequence cs, int position) {
-			return (cs.charAt(position) - 37) * 1609932704
-					+ (cs.charAt(position+1) - 37) * 65610000
-					+ (cs.charAt(position+2) - 37) * 729000
-					+ (cs.charAt(position+3) - 37) * 8100
-					+ (cs.charAt(position+4) - 37) * 90;
+			return
+					  (cs.charAt(position  ) - 37) * 65610000
+					+ (cs.charAt(position+1) - 37) * 729000
+					+ (cs.charAt(position+2) - 37) * 8100
+					+ (cs.charAt(position+3) - 37) * 90
+					+ (cs.charAt(position+4) - 37)
+					;
 		}
 	}
 
@@ -979,16 +981,18 @@ public interface PrimitiveCollection<T> {
 		 * @return the long the ten BASE90 chars represent
 		 */
 		static long readDense(CharSequence cs, int position) {
-			return (cs.charAt(position) - 37) * -2025644137419103232L
-					+ (cs.charAt(position+1) - 37) * 387420489000000000L
-					+ (cs.charAt(position+2) - 37) * 4304672100000000L
-					+ (cs.charAt(position+3) - 37) * 47829690000000L
-					+ (cs.charAt(position+4) - 37) * 531441000000L
-					+ (cs.charAt(position+5) - 37) * 5904900000L
-					+ (cs.charAt(position+6) - 37) * 65610000L
-					+ (cs.charAt(position+7) - 37) * 729000L
-					+ (cs.charAt(position+8) - 37) * 8100L
-					+ (cs.charAt(position+9) - 37) * 90L;
+			return
+					  (cs.charAt(position  ) - 37) * 387420489000000000L
+					+ (cs.charAt(position+1) - 37) * 4304672100000000L
+					+ (cs.charAt(position+2) - 37) * 47829690000000L
+					+ (cs.charAt(position+3) - 37) * 531441000000L
+					+ (cs.charAt(position+4) - 37) * 5904900000L
+					+ (cs.charAt(position+5) - 37) * 65610000L
+					+ (cs.charAt(position+6) - 37) * 729000L
+					+ (cs.charAt(position+7) - 37) * 8100L
+					+ (cs.charAt(position+8) - 37) * 90L
+					+ (cs.charAt(position+9) - 37)
+					;
 		}
 	}
 
@@ -1404,11 +1408,12 @@ public interface PrimitiveCollection<T> {
 		 */
 		static float readDense(CharSequence cs, int position) {
 			return BitConversion.intBitsToFloat(
-					  (cs.charAt(position  ) - 37) * 1609932704
-					+ (cs.charAt(position+1) - 37) * 65610000
-					+ (cs.charAt(position+2) - 37) * 729000
-					+ (cs.charAt(position+3) - 37) * 8100
-					+ (cs.charAt(position+4) - 37) * 90);
+					  (cs.charAt(position  ) - 37) * 65610000
+					+ (cs.charAt(position+1) - 37) * 729000
+					+ (cs.charAt(position+2) - 37) * 8100
+					+ (cs.charAt(position+3) - 37) * 90
+					+ (cs.charAt(position+4) - 37)
+			);
 		}
 	}
 
@@ -1824,16 +1829,17 @@ public interface PrimitiveCollection<T> {
 		 */
 		static double readDense(CharSequence cs, int position) {
 			return BitConversion.longBitsToDouble(
-					  (cs.charAt(position  ) - 37) * -2025644137419103232L
-					+ (cs.charAt(position+1) - 37) * 387420489000000000L
-					+ (cs.charAt(position+2) - 37) * 4304672100000000L
-					+ (cs.charAt(position+3) - 37) * 47829690000000L
-					+ (cs.charAt(position+4) - 37) * 531441000000L
-					+ (cs.charAt(position+5) - 37) * 5904900000L
-					+ (cs.charAt(position+6) - 37) * 65610000L
-					+ (cs.charAt(position+7) - 37) * 729000L
-					+ (cs.charAt(position+8) - 37) * 8100L
-					+ (cs.charAt(position+9) - 37) * 90L);
+					  (cs.charAt(position  ) - 37) * 387420489000000000L
+					+ (cs.charAt(position+1) - 37) * 4304672100000000L
+					+ (cs.charAt(position+2) - 37) * 47829690000000L
+					+ (cs.charAt(position+3) - 37) * 531441000000L
+					+ (cs.charAt(position+4) - 37) * 5904900000L
+					+ (cs.charAt(position+5) - 37) * 65610000L
+					+ (cs.charAt(position+6) - 37) * 729000L
+					+ (cs.charAt(position+7) - 37) * 8100L
+					+ (cs.charAt(position+8) - 37) * 90L
+					+ (cs.charAt(position+9) - 37)
+			);
 		}
 	}
 
@@ -2237,6 +2243,21 @@ public interface PrimitiveCollection<T> {
 		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
 			return appendTo(sb, "", brackets, ShortAppender.DENSE);
 		}
+
+		/**
+		 * Reads in exactly three BASE90 chars from the given {@code position} in the given {@code CharSequence},
+		 * such as a String or StringBuilder, and returns the short they represent. This does no validation of the
+		 * CharSequence or position; ensuring that {@code position} is non-negative and that {@code position + 2}
+		 * is less than {@code cs.length()} is the caller's responsibility.
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param position the first position to read exactly three chars from in {@code cs}
+		 * @return the short the three BASE90 chars represent
+		 */
+		static short readDense(CharSequence cs, int position) {
+			return (short)((cs.charAt(position) - 37) * 8100
+					+ (cs.charAt(position+1) - 37) * 90
+					+ (cs.charAt(position+2) - 37));
+		}
 	}
 
 	/**
@@ -2638,6 +2659,20 @@ public interface PrimitiveCollection<T> {
 		 */
 		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
 			return appendTo(sb, "", brackets, ByteAppender.DENSE);
+		}
+
+		/**
+		 * Reads in exactly two BASE90 chars from the given {@code position} in the given {@code CharSequence},
+		 * such as a String or StringBuilder, and returns the byte they represent. This does no validation of the
+		 * CharSequence or position; ensuring that {@code position} is non-negative and that {@code position + 1}
+		 * is less than {@code cs.length()} is the caller's responsibility.
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param position the first position to read exactly two chars from in {@code cs}
+		 * @return the byte the two BASE90 chars represent
+		 */
+		static byte readDense(CharSequence cs, int position) {
+			return (byte) ((cs.charAt(position) - 37) * 90
+					+ (cs.charAt(position+1) - 37));
 		}
 	}
 
@@ -3046,6 +3081,18 @@ public interface PrimitiveCollection<T> {
 		 */
 		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
 			return appendTo(sb, "", brackets, CharAppender.DEFAULT);
+		}
+
+		/**
+		 * Reads in exactly one {@code char} from the given {@code position} in the given {@code CharSequence},
+		 * such as a String or StringBuilder, and returns that char. As you may have guessed, this is equivalent to
+		 * {@link CharSequence#charAt(int)}. This is only here for completeness.
+		 * @param cs a CharSequence
+		 * @param position the first position to read exactly one char from in {@code cs}
+		 * @return the char at the given {@code position} in {@code cs}
+		 */
+		static char readDense(CharSequence cs, int position) {
+			return cs.charAt(position);
 		}
 	}
 
@@ -3456,6 +3503,17 @@ public interface PrimitiveCollection<T> {
 		 */
 		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
 			return appendTo(sb, "", brackets, BooleanAppender.BINARY);
+		}
+
+		/**
+		 * Reads in exactly one {@code char} from the given {@code position} in the given {@code CharSequence},
+		 * such as a String or StringBuilder, and returns true if it is the char {@code '1'} or returns false otherwise.
+		 * @param cs a CharSequence
+		 * @param position the first position to read exactly one char from in {@code cs}
+		 * @return true if the char at the given {@code position} in {@code cs} is {@code '1'}, or false otherwise
+		 */
+		static boolean readDense(CharSequence cs, int position) {
+			return cs.charAt(position) == '1';
 		}
 	}
 }
