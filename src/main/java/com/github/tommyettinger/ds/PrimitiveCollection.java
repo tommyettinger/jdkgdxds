@@ -542,6 +542,25 @@ public interface PrimitiveCollection<T> {
 					+ (cs.charAt(position+4) - 37)
 					;
 		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly five characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
+		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
+		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param offset the first position to read BASE90 chars from in {@code cs}
+		 * @param length how many chars to read; should be a multiple of five (but is shortened if not)
+		 */
+		default void addDense(CharSequence cs, int offset, int length) {
+			int cl;
+			length -= length % 5;
+			if(cs == null || (cl = cs.length()) < 5 || offset < 0 || offset > cl - 5 || length < 5 || offset + length >= cl) return;
+			for (int i = offset, n = offset + length; i < n; i += 5) {
+				add(readDense(cs, i));
+			}
+		}
 	}
 
 	/**
