@@ -2334,6 +2334,25 @@ public interface PrimitiveCollection<T> {
 					+ (cs.charAt(position+1) - 37) * 90
 					+ (cs.charAt(position+2) - 37));
 		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly three characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
+		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
+		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param offset the first position to read BASE90 chars from in {@code cs}
+		 * @param length how many chars to read; should be a multiple of three (but is shortened if not)
+		 */
+		default void addDense(CharSequence cs, int offset, int length) {
+			int cl;
+			length -= length % 3;
+			if(cs == null || (cl = cs.length()) < 3 || offset < 0 || offset > cl - 3 || length < 3 || offset + length >= cl) return;
+			for (int i = offset, n = offset + length; i < n; i += 3) {
+				add(readDense(cs, i));
+			}
+		}
 	}
 
 	/**
@@ -2749,6 +2768,25 @@ public interface PrimitiveCollection<T> {
 		static byte readDense(CharSequence cs, int position) {
 			return (byte) ((cs.charAt(position) - 37) * 90
 					+ (cs.charAt(position+1) - 37));
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly two characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
+		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
+		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param offset the first position to read BASE90 chars from in {@code cs}
+		 * @param length how many chars to read; should be a multiple of two (but is shortened if not)
+		 */
+		default void addDense(CharSequence cs, int offset, int length) {
+			int cl;
+			length -= length % 2;
+			if(cs == null || (cl = cs.length()) < 2 || offset < 0 || offset > cl - 2 || length < 2 || offset + length >= cl) return;
+			for (int i = offset, n = offset + length; i < n; i += 2) {
+				add(readDense(cs, i));
+			}
 		}
 	}
 
@@ -3170,6 +3208,24 @@ public interface PrimitiveCollection<T> {
 		static char readDense(CharSequence cs, int position) {
 			return cs.charAt(position);
 		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly the shown character in the CharSequence.
+		 * Any brackets inside the given range
+		 * of characters will be interpreted as items, not as visual wrappers, so increase offset by 1 and
+		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * @param cs a CharSequence containing arbitrary chars
+		 * @param offset the first position to read chars from in {@code cs}
+		 * @param length how many chars to read
+		 */
+		default void addDense(CharSequence cs, int offset, int length) {
+			int cl;
+			if(cs == null || (cl = cs.length()) < 1 || offset < 0 || offset >= cl || length < 1 || offset + length >= cl) return;
+			for (int i = offset, n = offset + length; i < n; i++) {
+				add(cs.charAt(i));
+			}
+		}
 	}
 
 	/**
@@ -3590,6 +3646,24 @@ public interface PrimitiveCollection<T> {
 		 */
 		static boolean readDense(CharSequence cs, int position) {
 			return cs.charAt(position) == '1';
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is either true if a char is {@code '1'} or false
+		 * otherwise. Any brackets inside the given range
+		 * of characters will be interpreted as false, not as visual wrappers, so increase offset by 1 and
+		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * @param cs a CharSequence containing {@code '1'} and likely {@code '0'} chars
+		 * @param offset the first position to read chars from in {@code cs}
+		 * @param length how many chars to read
+		 */
+		default void addDense(CharSequence cs, int offset, int length) {
+			int cl;
+			if(cs == null || (cl = cs.length()) < 1 || offset < 0 || offset >= cl || length < 1 || offset + length >= cl) return;
+			for (int i = offset, n = offset + length; i < n; i++) {
+				add(readDense(cs, i));
+			}
 		}
 	}
 }
