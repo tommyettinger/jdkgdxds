@@ -555,9 +555,9 @@ public interface PrimitiveCollection<T> {
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			length -= length % 5;
-			if(cs == null || (cl = cs.length()) < 5 || offset < 0 || offset > cl - 5 || length < 5 || offset + length >= cl) return;
-			for (int i = offset, n = offset + length; i < n; i += 5) {
+			if(cs == null || (cl = cs.length()) < 5 || offset < 0 || offset > cl - 5 || length < 5) return;
+			final int lim = Math.min(offset + (length - length % 5), cl - cl % 5);
+			for (int i = offset; i < lim; i += 5) {
 				add(readDense(cs, i));
 			}
 		}
@@ -1026,9 +1026,9 @@ public interface PrimitiveCollection<T> {
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			length -= length % 10;
-			if(cs == null || (cl = cs.length()) < 10 || offset < 0 || offset > cl - 10 || length < 10 || offset + length >= cl) return;
-			for (int i = offset, n = offset + length; i < n; i += 10) {
+			if(cs == null || (cl = cs.length()) < 10 || offset < 0 || offset > cl - 10 || length < 10) return;
+			final int lim = Math.min(offset + (length - length % 10), cl - cl % 10);
+			for (int i = offset; i < lim; i += 10) {
 				add(readDense(cs, i));
 			}
 		}
@@ -1466,9 +1466,9 @@ public interface PrimitiveCollection<T> {
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			length -= length % 5;
-			if(cs == null || (cl = cs.length()) < 5 || offset < 0 || offset > cl - 5 || length < 5 || offset + length >= cl) return;
-			for (int i = offset, n = offset + length; i < n; i += 5) {
+			if(cs == null || (cl = cs.length()) < 5 || offset < 0 || offset > cl - 5 || length < 5) return;
+			final int lim = Math.min(offset + (length - length % 5), cl - cl % 5);
+			for (int i = offset; i < lim; i += 5) {
 				add(readDense(cs, i));
 			}
 		}
@@ -1911,9 +1911,9 @@ public interface PrimitiveCollection<T> {
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			length -= length % 10;
-			if(cs == null || (cl = cs.length()) < 10 || offset < 0 || offset > cl - 10 || length < 10 || offset + length >= cl) return;
-			for (int i = offset, n = offset + length; i < n; i += 10) {
+			if(cs == null || (cl = cs.length()) < 10 || offset < 0 || offset > cl - 10 || length < 10) return;
+			final int lim = Math.min(offset + (length - length % 10), cl - cl % 10);
+			for (int i = offset; i < lim; i += 10) {
 				add(readDense(cs, i));
 			}
 		}
@@ -2347,9 +2347,9 @@ public interface PrimitiveCollection<T> {
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			length -= length % 3;
-			if(cs == null || (cl = cs.length()) < 3 || offset < 0 || offset > cl - 3 || length < 3 || offset + length >= cl) return;
-			for (int i = offset, n = offset + length; i < n; i += 3) {
+			if(cs == null || (cl = cs.length()) < 3 || offset < 0 || offset > cl - 3 || length < 3) return;
+			final int lim = Math.min(offset + (length - length % 3), cl - cl % 3);
+			for (int i = offset; i < lim; i += 3) {
 				add(readDense(cs, i));
 			}
 		}
@@ -2782,9 +2782,9 @@ public interface PrimitiveCollection<T> {
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			length -= length % 2;
-			if(cs == null || (cl = cs.length()) < 2 || offset < 0 || offset > cl - 2 || length < 2 || offset + length >= cl) return;
-			for (int i = offset, n = offset + length; i < n; i += 2) {
+			if(cs == null || (cl = cs.length()) < 2 || offset < 0 || offset > cl - 2 || length < 2) return;
+			final int lim = Math.min(offset + (length & -2), cl & -2);
+			for (int i = offset; i < lim; i += 2) {
 				add(readDense(cs, i));
 			}
 		}
@@ -3221,8 +3221,9 @@ public interface PrimitiveCollection<T> {
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			if(cs == null || (cl = cs.length()) < 1 || offset < 0 || offset >= cl || length < 1 || offset + length >= cl) return;
-			for (int i = offset, n = offset + length; i < n; i++) {
+			if(cs == null || (cl = cs.length()) < 1 || offset < 0 || offset >= cl || length < 1) return;
+			final int lim = Math.min(offset + length, cl);
+			for (int i = offset; i < lim; i++) {
 				add(cs.charAt(i));
 			}
 		}
@@ -3660,8 +3661,9 @@ public interface PrimitiveCollection<T> {
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			if(cs == null || (cl = cs.length()) < 1 || offset < 0 || offset >= cl || length < 1 || offset + length >= cl) return;
-			for (int i = offset, n = offset + length; i < n; i++) {
+			if(cs == null || (cl = cs.length()) < 1 || offset < 0 || offset >= cl || length < 1) return;
+			final int lim = Math.min(offset + length, cl);
+			for (int i = offset; i < lim; i++) {
 				add(readDense(cs, i));
 			}
 		}
