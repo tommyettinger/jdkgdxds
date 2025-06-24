@@ -522,6 +522,23 @@ public interface PrimitiveCollection<T> {
 		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
 			return appendTo(sb, "", brackets, IntAppender.DENSE);
 		}
+
+		/**
+		 * Reads in exactly five BASE90 chars from the given {@code position} in the given {@code CharSequence},
+		 * such as a String or StringBuilder, and returns the int they represent. This does no validation of the
+		 * CharSequence or position; ensuring that {@code position} is non-negative and that {@code position + 4}
+		 * is less than {@code cs.length()} is the caller's responsibility.
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param position the first position to read exactly five chars from in {@code cs}
+		 * @return the int the five BASE90 chars represent
+		 */
+		static int readDense(CharSequence cs, int position) {
+			return (cs.charAt(position) - 37) * 1609932704
+					+ (cs.charAt(position+1) - 37) * 65610000
+					+ (cs.charAt(position+2) - 37) * 729000
+					+ (cs.charAt(position+3) - 37) * 8100
+					+ (cs.charAt(position+4) - 37) * 90;
+		}
 	}
 
 	/**
