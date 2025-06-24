@@ -494,26 +494,26 @@ public interface PrimitiveCollection<T> {
 
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE86} digits per item,
+		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE90} digits per item,
 		 * with no surrounding brackets.
-		 * @return a String made of {@link Base#BASE86} digits
+		 * @return a String made of {@link Base#BASE90} digits
 		 */
 		default String toDenseString () {
 			return denseAppendTo(new StringBuilder(size() * 5), false).toString();
 		}
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE86} digits per item,
+		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE90} digits per item,
 		 * with surrounding square brackets if {@code brackets} is true.
 		 * @param brackets if true, the result will be surrounded by square brackets
-		 * @return a String made of {@link Base#BASE86} digits, optionally with surrounding square brackets
+		 * @return a String made of {@link Base#BASE90} digits, optionally with surrounding square brackets
 		 */
 		default String toDenseString (boolean brackets) {
 			return denseAppendTo(new StringBuilder(size() * 5 + 2), brackets).toString();
 		}
 
 		/**
-		 * Appends to {@code sb} any items in this PrimitiveCollection as five {@link Base#BASE86} digits per item,
+		 * Appends to {@code sb} any items in this PrimitiveCollection as five {@link Base#BASE90} digits per item,
 		 * with no separators and optionally with square brackets surrounding the text if {@code brackets} is true.
 		 * @param sb the StringBuilder to append to
 		 * @param brackets if true, square brackets will surround the appended text
@@ -922,26 +922,26 @@ public interface PrimitiveCollection<T> {
 
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with ten {@link Base#BASE86} digits per item,
+		 * Returns a String representing this PrimitiveCollection with ten {@link Base#BASE90} digits per item,
 		 * with no surrounding brackets.
-		 * @return a String made of {@link Base#BASE86} digits
+		 * @return a String made of {@link Base#BASE90} digits
 		 */
 		default String toDenseString () {
 			return denseAppendTo(new StringBuilder(size() * 10), false).toString();
 		}
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with ten {@link Base#BASE86} digits per item,
+		 * Returns a String representing this PrimitiveCollection with ten {@link Base#BASE90} digits per item,
 		 * with surrounding square brackets if {@code brackets} is true.
 		 * @param brackets if true, the result will be surrounded by square brackets
-		 * @return a String made of {@link Base#BASE86} digits, optionally with surrounding square brackets
+		 * @return a String made of {@link Base#BASE90} digits, optionally with surrounding square brackets
 		 */
 		default String toDenseString (boolean brackets) {
 			return denseAppendTo(new StringBuilder(size() * 10 + 2), brackets).toString();
 		}
 
 		/**
-		 * Appends to {@code sb} any items in this PrimitiveCollection as ten {@link Base#BASE86} digits per item,
+		 * Appends to {@code sb} any items in this PrimitiveCollection as ten {@link Base#BASE90} digits per item,
 		 * with no separators and optionally with square brackets surrounding the text if {@code brackets} is true.
 		 * @param sb the StringBuilder to append to
 		 * @param brackets if true, square brackets will surround the appended text
@@ -1324,26 +1324,26 @@ public interface PrimitiveCollection<T> {
 
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE86} digits per item,
+		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE90} digits per item,
 		 * with no surrounding brackets.
-		 * @return a String made of {@link Base#BASE86} digits
+		 * @return a String made of {@link Base#BASE90} digits
 		 */
 		default String toDenseString () {
 			return denseAppendTo(new StringBuilder(size() * 5), false).toString();
 		}
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE86} digits per item,
+		 * Returns a String representing this PrimitiveCollection with five {@link Base#BASE90} digits per item,
 		 * with surrounding square brackets if {@code brackets} is true.
 		 * @param brackets if true, the result will be surrounded by square brackets
-		 * @return a String made of {@link Base#BASE86} digits, optionally with surrounding square brackets
+		 * @return a String made of {@link Base#BASE90} digits, optionally with surrounding square brackets
 		 */
 		default String toDenseString (boolean brackets) {
 			return denseAppendTo(new StringBuilder(size() * 5 + 2), brackets).toString();
 		}
 
 		/**
-		 * Appends to {@code sb} any items in this PrimitiveCollection as five {@link Base#BASE86} digits per item,
+		 * Appends to {@code sb} any items in this PrimitiveCollection as five {@link Base#BASE90} digits per item,
 		 * with no separators and optionally with square brackets surrounding the text if {@code brackets} is true.
 		 * @param sb the StringBuilder to append to
 		 * @param brackets if true, square brackets will surround the appended text
@@ -1726,26 +1726,26 @@ public interface PrimitiveCollection<T> {
 
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with ten {@link Base#BASE86} digits per item,
+		 * Returns a String representing this PrimitiveCollection with ten {@link Base#BASE90} digits per item,
 		 * with no surrounding brackets.
-		 * @return a String made of {@link Base#BASE86} digits
+		 * @return a String made of {@link Base#BASE90} digits
 		 */
 		default String toDenseString () {
 			return denseAppendTo(new StringBuilder(size() * 10), false).toString();
 		}
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with ten {@link Base#BASE86} digits per item,
+		 * Returns a String representing this PrimitiveCollection with ten {@link Base#BASE90} digits per item,
 		 * with surrounding square brackets if {@code brackets} is true.
 		 * @param brackets if true, the result will be surrounded by square brackets
-		 * @return a String made of {@link Base#BASE86} digits, optionally with surrounding square brackets
+		 * @return a String made of {@link Base#BASE90} digits, optionally with surrounding square brackets
 		 */
 		default String toDenseString (boolean brackets) {
 			return denseAppendTo(new StringBuilder(size() * 10 + 2), brackets).toString();
 		}
 
 		/**
-		 * Appends to {@code sb} any items in this PrimitiveCollection as ten {@link Base#BASE86} digits per item,
+		 * Appends to {@code sb} any items in this PrimitiveCollection as ten {@link Base#BASE90} digits per item,
 		 * with no separators and optionally with square brackets surrounding the text if {@code brackets} is true.
 		 * @param sb the StringBuilder to append to
 		 * @param brackets if true, square brackets will surround the appended text
@@ -2128,26 +2128,26 @@ public interface PrimitiveCollection<T> {
 
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with three {@link Base#SIMPLE64} digits per item,
+		 * Returns a String representing this PrimitiveCollection with three {@link Base#BASE90} digits per item,
 		 * with no surrounding brackets.
-		 * @return a String made of {@link Base#SIMPLE64} digits
+		 * @return a String made of {@link Base#BASE90} digits
 		 */
 		default String toDenseString () {
 			return denseAppendTo(new StringBuilder(size() * 3), false).toString();
 		}
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with three {@link Base#SIMPLE64} digits per item,
+		 * Returns a String representing this PrimitiveCollection with three {@link Base#BASE90} digits per item,
 		 * with surrounding square brackets if {@code brackets} is true.
 		 * @param brackets if true, the result will be surrounded by square brackets
-		 * @return a String made of {@link Base#SIMPLE64} digits, optionally with surrounding square brackets
+		 * @return a String made of {@link Base#BASE90} digits, optionally with surrounding square brackets
 		 */
 		default String toDenseString (boolean brackets) {
 			return denseAppendTo(new StringBuilder(size() * 3 + 2), brackets).toString();
 		}
 
 		/**
-		 * Appends to {@code sb} any items in this PrimitiveCollection as three {@link Base#SIMPLE64} digits per item,
+		 * Appends to {@code sb} any items in this PrimitiveCollection as three {@link Base#BASE90} digits per item,
 		 * with no separators and optionally with square brackets surrounding the text if {@code brackets} is true.
 		 * @param sb the StringBuilder to append to
 		 * @param brackets if true, square brackets will surround the appended text
@@ -2530,26 +2530,26 @@ public interface PrimitiveCollection<T> {
 
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with two {@link Base#BASE16} digits per item,
+		 * Returns a String representing this PrimitiveCollection with two {@link Base#BASE90} digits per item,
 		 * with no surrounding brackets.
-		 * @return a String made of {@link Base#BASE16} digits
+		 * @return a String made of {@link Base#BASE90} digits
 		 */
 		default String toDenseString () {
 			return denseAppendTo(new StringBuilder(size() * 2), false).toString();
 		}
 
 		/**
-		 * Returns a String representing this PrimitiveCollection with two {@link Base#BASE16} digits per item,
+		 * Returns a String representing this PrimitiveCollection with two {@link Base#BASE90} digits per item,
 		 * with surrounding square brackets if {@code brackets} is true.
 		 * @param brackets if true, the result will be surrounded by square brackets
-		 * @return a String made of {@link Base#BASE16} digits, optionally with surrounding square brackets
+		 * @return a String made of {@link Base#BASE90} digits, optionally with surrounding square brackets
 		 */
 		default String toDenseString (boolean brackets) {
 			return denseAppendTo(new StringBuilder(size() * 2 + 2), brackets).toString();
 		}
 
 		/**
-		 * Appends to {@code sb} any items in this PrimitiveCollection as two {@link Base#BASE16} digits per item,
+		 * Appends to {@code sb} any items in this PrimitiveCollection as two {@link Base#BASE90} digits per item,
 		 * with no separators and optionally with square brackets surrounding the text if {@code brackets} is true.
 		 * @param sb the StringBuilder to append to
 		 * @param brackets if true, square brackets will surround the appended text
@@ -2928,6 +2928,43 @@ public interface PrimitiveCollection<T> {
 			}
 			if (brackets) sb.append(']');
 			return sb;
+		}
+
+
+		/**
+		 * Returns a String representing this PrimitiveCollection  as the char items themselves, with no
+		 * surrounding brackets.
+		 * This does not necessarily make semantically-well-formed text, particularly if it contains surrogate
+		 * characters without matching them into pairs, but it should always be possible to append any {@code char}s.
+		 * @return a String made of "0" and "1"
+		 */
+		default String toDenseString () {
+			return denseAppendTo(new StringBuilder(size()), false).toString();
+		}
+
+		/**
+		 * Returns a String representing this PrimitiveCollection as the char items themselves, with
+		 * surrounding square brackets if {@code brackets} is true.
+		 * This does not necessarily make semantically-well-formed text, particularly if it contains surrogate
+		 * characters without matching them into pairs, but it should always be possible to append any {@code char}s.
+		 * @param brackets if true, the result will be surrounded by square brackets
+		 * @return a String made of "0" and "1", optionally with surrounding square brackets
+		 */
+		default String toDenseString (boolean brackets) {
+			return denseAppendTo(new StringBuilder(size() + 2), brackets).toString();
+		}
+
+		/**
+		 * Appends to {@code sb} any items in this PrimitiveCollection as the char items themselves,
+		 * with no separators and optionally with square brackets surrounding the text if {@code brackets} is true.
+		 * This does not necessarily make semantically-well-formed text, particularly if it contains surrogate
+		 * characters without matching them into pairs, but it should always be possible to append any {@code char}s.
+		 * @param sb the StringBuilder to append to
+		 * @param brackets if true, square brackets will surround the appended text
+		 * @return {@code sb}, for chaining
+		 */
+		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
+			return appendTo(sb, "", brackets, CharAppender.DEFAULT);
 		}
 	}
 
@@ -3337,7 +3374,7 @@ public interface PrimitiveCollection<T> {
 		 * @return {@code sb}, for chaining
 		 */
 		default StringBuilder denseAppendTo (StringBuilder sb, boolean brackets) {
-			return appendTo(sb, "", brackets, BooleanAppender.DENSE);
+			return appendTo(sb, "", brackets, BooleanAppender.BINARY);
 		}
 	}
 }

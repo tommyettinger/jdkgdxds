@@ -32,11 +32,11 @@ public interface IntAppender extends ObjIntToObjBiFunction<StringBuilder, String
     IntAppender DEFAULT = StringBuilder::append;
 
     /**
-     * An alternative IntAppender constant that appends five {@link Base#BASE86} digits for every int input.
+     * An alternative IntAppender constant that appends five {@link Base#BASE90} digits for every int input.
      * The five ASCII chars are not expected to be human-readable.
      * <br>
      * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
      * this lambda would be present at a call-site.
      */
-    IntAppender DENSE = Base.BASE86::appendUnsigned;
+    IntAppender DENSE = Base.BASE90::appendUnsigned;
 }

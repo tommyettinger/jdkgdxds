@@ -33,10 +33,12 @@ public interface BooleanAppender extends ObjBooleanToObjBiFunction<StringBuilder
 
     /**
      * An alternative BooleanAppender constant that appends {@code '1'} when the given boolean item is
-     * true, or {@code '0'} when it is false.
+     * true, or {@code '0'} when it is false. This is named differently from the {@code DENSE} method
+     * reference in other Appender functional interfaces because there's no need or ability to use
+     * base-90 digits to show true and false values densely.
      * <br>
      * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
      * this lambda would be present at a call-site.
      */
-    BooleanAppender DENSE = (StringBuilder sb, boolean item) -> sb.append(item ? '1' : '0');
+    BooleanAppender BINARY = (StringBuilder sb, boolean item) -> sb.append(item ? '1' : '0');
 }

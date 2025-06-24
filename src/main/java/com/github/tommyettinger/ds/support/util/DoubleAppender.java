@@ -32,11 +32,11 @@ public interface DoubleAppender extends ObjDoubleToObjBiFunction<StringBuilder, 
     DoubleAppender DEFAULT = StringBuilder::append;
 
     /**
-     * An alternative DoubleAppender constant that appends ten {@link Base#BASE86} digits for every double input.
+     * An alternative DoubleAppender constant that appends ten {@link Base#BASE90} digits for every double input.
      * The ten ASCII chars are not expected to be human-readable.
      * <br>
      * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
      * this lambda would be present at a call-site.
      */
-    DoubleAppender DENSE = Base.BASE86::appendUnsigned;
+    DoubleAppender DENSE = Base.BASE90::appendUnsigned;
 }
