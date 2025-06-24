@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.function.ObjDoubleToObjBiFunction;
 
 /**
@@ -38,5 +39,5 @@ public interface DoubleAppender extends ObjDoubleToObjBiFunction<StringBuilder, 
      * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
      * this lambda would be present at a call-site.
      */
-    DoubleAppender DENSE = Base.BASE90::appendUnsigned;
+    DoubleAppender DENSE = (StringBuilder sb, double d) -> Base.BASE90.appendUnsigned(sb, BitConversion.doubleToRawLongBits(d));
 }

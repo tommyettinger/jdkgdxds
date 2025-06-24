@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.function.ObjFloatToObjBiFunction;
 
 /**
@@ -38,5 +39,5 @@ public interface FloatAppender extends ObjFloatToObjBiFunction<StringBuilder, St
      * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
      * this lambda would be present at a call-site.
      */
-    FloatAppender DENSE = Base.BASE90::appendUnsigned;
+    FloatAppender DENSE = (StringBuilder sb, float f) -> Base.BASE90.appendUnsigned(sb, BitConversion.floatToRawIntBits(f));
 }
