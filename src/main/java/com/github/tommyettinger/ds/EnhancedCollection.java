@@ -373,6 +373,11 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
 	 * <br>
+	 * Be advised that {@code StringBuilder::append} will
+	 * allocate a method reference, each time this is called, on minimized Android builds due to R8 behavior. You can
+	 * cache an Appender of the appropriate T type easily, however, as with this for when T is String:
+	 * {@code public static final Appender<String> STRING_APPENDER = StringBuilder::append;}
+	 * <br>
 	 * Delegates to {@link #appendTo(StringBuilder, String, boolean, Appender)}.
 	 *
 	 * @param separator how to separate items, such as {@code ", "}
@@ -386,10 +391,14 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this EnhancedCollection, using {@link Appender#DEFAULT}
-	 * (which wraps {@link StringBuilder#append(Object)} but is cached even on Android) to
+	 * Appends to a StringBuilder from the contents of this EnhancedCollection, using {@code StringBuilder::append} to
 	 * append each item's String representation, separating items with {@code separator}, and optionally wrapping the
 	 * output in square brackets if {@code brackets} is true.
+	 * <br>
+	 * Be advised that {@code StringBuilder::append} will
+	 * allocate a method reference, each time this is called, on minimized Android builds due to R8 behavior. You can
+	 * cache an Appender of the appropriate T type easily, however, as with this for when T is String:
+	 * {@code public static final Appender<String> STRING_APPENDER = StringBuilder::append;}
 	 * <br>
 	 * Delegates to {@link #appendTo(StringBuilder, String, boolean, Appender)}.
 	 *
@@ -398,16 +407,17 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param brackets true to wrap the output in square brackets, or false to omit them
 	 * @return {@code sb}, with the appended items of this EnhancedCollection
 	 */
-	@SuppressWarnings("unchecked")
     default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
-		return appendTo(sb, separator, brackets, Appender.DEFAULT);
+		return appendTo(sb, separator, brackets, StringBuilder::append);
 	}
 
 	/**
 	 * Appends to a StringBuilder from the contents of this EnhancedCollection, but uses the given {@link Appender}
 	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-	 * the default String representation, you can use {@link Appender#DEFAULT} (which wraps
-	 * {@link StringBuilder#append(Object)} but is cached even on Android) as an appender.
+	 * the default String representation, you can use {@code StringBuilder::append}, but be advised that it will
+	 * allocate a method reference, each time this is called, on minimized Android builds due to R8 behavior. You can
+	 * cache an Appender of the appropriate T type easily, however, as with this for when T is String:
+	 * {@code public static final Appender<String> STRING_APPENDER = StringBuilder::append;}
 	 *
 	 * @param sb a StringBuilder that this can append to
 	 * @param separator how to separate items, such as {@code ", "}

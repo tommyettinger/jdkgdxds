@@ -25,11 +25,4 @@ import com.github.tommyettinger.function.ObjObjToObjBiFunction;
  * use a lambda.
  */
 public interface Appender<T> extends ObjObjToObjBiFunction<StringBuilder, T, StringBuilder> {
-    /**
-     * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
-     * {@code StringBuilder::append} is present at a call-site. This should be used in place of
-     * {@link StringBuilder#append(Object)} when you want to use that as a CharAppender.
-     */
-    @SuppressWarnings("rawtypes")
-    Appender DEFAULT = StringBuilder::append;
 }
