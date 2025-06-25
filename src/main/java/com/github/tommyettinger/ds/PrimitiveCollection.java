@@ -1103,7 +1103,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Reads zero or more items from the result of {@link #toDenseString()} or
-		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new int array
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new long array
 		 * sized to {@code cs.length() / 10}. Each item is exactly ten characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable.
 		 * <br>
@@ -1600,7 +1600,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Reads zero or more items from the result of {@link #toDenseString()} or
-		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new int array
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new float array
 		 * sized to {@code cs.length() / 5}. Each item is exactly five characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable.
 		 * <br>
@@ -2102,7 +2102,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Reads zero or more items from the result of {@link #toDenseString()} or
-		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new int array
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new double array
 		 * sized to {@code cs.length() / 10}. Each item is exactly ten characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable.
 		 * <br>
@@ -2592,6 +2592,52 @@ public interface PrimitiveCollection<T> {
 				add(readDense(cs, i));
 			}
 		}
+
+		/**
+		 * Reads zero or more items from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new short array
+		 * sized to {@code cs.length() / 3}. Each item is exactly three characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable.
+		 * <br>
+		 * This may be useful to parse the dense output of one primitive collection into an array to be given to a
+		 * map constructor or map's addAll() method, which may be able to take an array for keys and for values.
+		 *
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @return a new array sized to {@code cs.length() / 3} items, or sized to 0 if {@code cs} is null
+		 */
+		static short[] readArrayDense(CharSequence cs) {
+			if(cs == null) return new short[0];
+			return readArrayDense(new short[cs.length() / 3], 0, cs, 0, -1);
+		}
+
+		/**
+		 * Reads zero or more items from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in {@code buffer},
+		 * starting at {@code bufferIndex}. Each item is exactly three characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable.
+		 * <br>
+		 * This may be useful to parse the dense output of one primitive collection into an array to be given to a
+		 * map constructor or map's addAll() method, which may be able to take an array for keys and for values.
+		 *
+		 * @param buffer an array that will be modified in-place; should not be null
+		 * @param bufferIndex the first index in {@code buffer} to assign to
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param offset the first position to read BASE90 chars from in {@code cs}
+		 * @param length how many chars to read; should be a multiple of three; -1 is treated as maximum length
+		 * @return {@code buffer}, potentially after modifications
+		 */
+		static short[] readArrayDense(short[] buffer, int bufferIndex, CharSequence cs, int offset, int length) {
+			int cl, bl;
+			if(!(cs == null || buffer == null || (bl = buffer.length) == 0 || (cl = cs.length()) < 3
+					|| offset < 0 || offset > cl - 3
+					|| bufferIndex < 0 || bufferIndex >= bl)) {
+				final int lim = Math.min(Math.min(length & 0x7FFFFFFF, cl - offset), (bl - bufferIndex) * 3);
+				for (int i = offset, o = 2; o < lim; i += 3, o += 3) {
+					buffer[bufferIndex++] = readDense(cs, i);
+				}
+			}
+			return buffer;
+		}
 	}
 
 	/**
@@ -3037,6 +3083,52 @@ public interface PrimitiveCollection<T> {
 			for (int i = offset, o = 1; o < lim; i += 2, o += 2) {
 				add(readDense(cs, i));
 			}
+		}
+
+		/**
+		 * Reads zero or more items from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new byte array
+		 * sized to {@code cs.length() / 2}. Each item is exactly two characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable.
+		 * <br>
+		 * This may be useful to parse the dense output of one primitive collection into an array to be given to a
+		 * map constructor or map's addAll() method, which may be able to take an array for keys and for values.
+		 *
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @return a new array sized to {@code cs.length() / 2} items, or sized to 0 if {@code cs} is null
+		 */
+		static byte[] readArrayDense(CharSequence cs) {
+			if(cs == null) return new byte[0];
+			return readArrayDense(new byte[cs.length() >> 1], 0, cs, 0, -1);
+		}
+
+		/**
+		 * Reads zero or more items from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in {@code buffer},
+		 * starting at {@code bufferIndex}. Each item is exactly two characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable.
+		 * <br>
+		 * This may be useful to parse the dense output of one primitive collection into an array to be given to a
+		 * map constructor or map's addAll() method, which may be able to take an array for keys and for values.
+		 *
+		 * @param buffer an array that will be modified in-place; should not be null
+		 * @param bufferIndex the first index in {@code buffer} to assign to
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param offset the first position to read BASE90 chars from in {@code cs}
+		 * @param length how many chars to read; should be a multiple of two; -1 is treated as maximum length
+		 * @return {@code buffer}, potentially after modifications
+		 */
+		static byte[] readArrayDense(byte[] buffer, int bufferIndex, CharSequence cs, int offset, int length) {
+			int cl, bl;
+			if(!(cs == null || buffer == null || (bl = buffer.length) == 0 || (cl = cs.length()) < 2
+					|| offset < 0 || offset > cl - 2
+					|| bufferIndex < 0 || bufferIndex >= bl)) {
+				final int lim = Math.min(Math.min(length & 0x7FFFFFFF, cl - offset), (bl - bufferIndex) * 2);
+				for (int i = offset, o = 1; o < lim; i += 2, o += 2) {
+					buffer[bufferIndex++] = readDense(cs, i);
+				}
+			}
+			return buffer;
 		}
 	}
 
@@ -3488,6 +3580,50 @@ public interface PrimitiveCollection<T> {
 				add(cs.charAt(i));
 			}
 		}
+
+		/**
+		 * Reads zero or more items from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new char array
+		 * sized to {@code cs.length()}. Each item is exactly one character and can be any Java {@code char}.
+		 * <br>
+		 * This may be useful to parse the dense output of one primitive collection into an array to be given to a
+		 * map constructor or map's addAll() method, which may be able to take an array for keys and for values.
+		 *
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @return a new array sized to {@code cs.length()} items, or sized to 0 if {@code cs} is null
+		 */
+		static char[] readArrayDense(CharSequence cs) {
+			if(cs == null) return new char[0];
+			return readArrayDense(new char[cs.length()], 0, cs, 0, -1);
+		}
+
+		/**
+		 * Reads zero or more items from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in {@code buffer},
+		 * starting at {@code bufferIndex}. Each item is exactly one character and can be any Java {@code char}.
+		 * <br>
+		 * This may be useful to parse the dense output of one primitive collection into an array to be given to a
+		 * map constructor or map's addAll() method, which may be able to take an array for keys and for values.
+		 *
+		 * @param buffer an array that will be modified in-place; should not be null
+		 * @param bufferIndex the first index in {@code buffer} to assign to
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param offset the first position to read BASE90 chars from in {@code cs}
+		 * @param length how many chars to read; -1 is treated as maximum length
+		 * @return {@code buffer}, potentially after modifications
+		 */
+		static char[] readArrayDense(char[] buffer, int bufferIndex, CharSequence cs, int offset, int length) {
+			int cl, bl;
+			if(!(cs == null || buffer == null || (bl = buffer.length) == 0 || (cl = cs.length()) < 1
+					|| offset < 0 || offset > cl - 1
+					|| bufferIndex < 0 || bufferIndex >= bl)) {
+				final int lim = Math.min(Math.min(length & 0x7FFFFFFF, cl - offset), (bl - bufferIndex));
+				for (int i = offset, o = 0; o < lim; i++, o++) {
+					buffer[bufferIndex++] = cs.charAt(i);
+				}
+			}
+			return buffer;
+		}
 	}
 
 	/**
@@ -3938,6 +4074,52 @@ public interface PrimitiveCollection<T> {
 			for (int i = offset, o = 0; o < lim; i++, o++) {
 				add(readDense(cs, i));
 			}
+		}
+
+		/**
+		 * Reads zero or more items from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new boolean array
+		 * sized to {@code cs.length()}. Each item is exactly one character and can be any Java {@code char}, but only
+		 * {@code '1'} is treated as true.
+		 * <br>
+		 * This may be useful to parse the dense output of one primitive collection into an array to be given to a
+		 * map constructor or map's addAll() method, which may be able to take an array for keys and for values.
+		 *
+		 * @param cs a CharSequence containing typically {@code '1'} and {@code '0'} as its contents
+		 * @return a new array sized to {@code cs.length()} items, or sized to 0 if {@code cs} is null
+		 */
+		static boolean[] readArrayDense(CharSequence cs) {
+			if(cs == null) return new boolean[0];
+			return readArrayDense(new boolean[cs.length()], 0, cs, 0, -1);
+		}
+
+		/**
+		 * Reads zero or more items from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in {@code buffer},
+		 * starting at {@code bufferIndex}. Each item is exactly one character and can be any Java {@code char}, but only
+		 * {@code '1'} is treated as true.
+		 * <br>
+		 * This may be useful to parse the dense output of one primitive collection into an array to be given to a
+		 * map constructor or map's addAll() method, which may be able to take an array for keys and for values.
+		 *
+		 * @param buffer an array that will be modified in-place; should not be null
+		 * @param bufferIndex the first index in {@code buffer} to assign to
+		 * @param cs a CharSequence containing typically {@code '1'} and {@code '0'} as its contents
+		 * @param offset the first position to read chars from in {@code cs}
+		 * @param length how many chars to read; -1 is treated as maximum length
+		 * @return {@code buffer}, potentially after modifications
+		 */
+		static boolean[] readArrayDense(boolean[] buffer, int bufferIndex, CharSequence cs, int offset, int length) {
+			int cl, bl;
+			if(!(cs == null || buffer == null || (bl = buffer.length) == 0 || (cl = cs.length()) < 1
+					|| offset < 0 || offset > cl - 1
+					|| bufferIndex < 0 || bufferIndex >= bl)) {
+				final int lim = Math.min(Math.min(length & 0x7FFFFFFF, cl - offset), (bl - bufferIndex));
+				for (int i = offset, o = 0; o < lim; i++, o++) {
+					buffer[bufferIndex++] = readDense(cs, i);
+				}
+			}
+			return buffer;
 		}
 	}
 }
