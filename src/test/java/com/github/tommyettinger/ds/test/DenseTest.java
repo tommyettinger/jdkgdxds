@@ -123,7 +123,7 @@ public class DenseTest {
 	@Test
 	public void testLongListDense() {
 		LongList data = LongList.with(longs), loaded = new LongList(longs.length);
-		String dense = data.toDenseString();
+		String dense = data.toDenseString(false);
 		loaded.addDense(dense);
 		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
 	}
@@ -132,15 +132,15 @@ public class DenseTest {
 	public void testLongDequeDense() {
 		LongDeque data = LongDeque.with(longs), loaded = new LongDeque(longs.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense);
+		loaded.addAll(PrimitiveCollection.OfLong.readArrayDense(dense));
 		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 	}
 
 	@Test
 	public void testFloatListDense() {
 		FloatList data = FloatList.with(floats), loaded = new FloatList(floats.length);
-		String dense = data.toDenseString();
-		loaded.addDense(dense);
+		String dense = data.toDenseString(true);
+		loaded.addDense(dense, 1, -1);
 		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -148,7 +148,7 @@ public class DenseTest {
 	public void testFloatDequeDense() {
 		FloatDeque data = FloatDeque.with(floats), loaded = new FloatDeque(floats.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense);
+		loaded.addAll(PrimitiveCollection.OfFloat.readArrayDense(dense));
 		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 	}
 
