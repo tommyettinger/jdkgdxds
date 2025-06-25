@@ -107,8 +107,8 @@ public class DenseTest {
 	@Test
 	public void testIntListDense() {
 		IntList data = IntList.with(ints), loaded = new IntList(ints.length);
-		String dense = data.toDenseString();
-		loaded.addDense(dense);
+		String dense = data.toDenseString(true);
+		loaded.addDense(dense, 1, -1);
 		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
 	}
 

@@ -562,13 +562,13 @@ public interface PrimitiveCollection<T> {
 		 * reduce length by 1 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
 		 * @param offset the first position to read BASE90 chars from in {@code cs}
-		 * @param length how many chars to read; should be a multiple of five (but is shortened if not)
+		 * @param length how many chars to read; should be a multiple of five; -1 is treated as maximum length
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			if(cs == null || (cl = cs.length()) < 5 || offset < 0 || offset > cl - 5 || length < 5) return;
-			final int lim = Math.min(offset + (length - length % 5), cl - cl % 5);
-			for (int i = offset; i < lim; i += 5) {
+			if(cs == null || (cl = cs.length()) < 5 || offset < 0 || offset > cl - 5) return;
+			final int lim = Math.min(length & 0x7FFFFFFF, cl - offset);
+			for (int i = offset, o = 4; o < lim; i += 5, o += 5) {
 				add(readDense(cs, i));
 			}
 		}
@@ -1044,13 +1044,13 @@ public interface PrimitiveCollection<T> {
 		 * reduce length by 1 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
 		 * @param offset the first position to read BASE90 chars from in {@code cs}
-		 * @param length how many chars to read; should be a multiple of ten (but is shortened if not)
+		 * @param length how many chars to read; should be a multiple of ten; -1 is treated as maximum length
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			if(cs == null || (cl = cs.length()) < 10 || offset < 0 || offset > cl - 10 || length < 10) return;
-			final int lim = Math.min(offset + (length - length % 10), cl - cl % 10);
-			for (int i = offset; i < lim; i += 10) {
+			if(cs == null || (cl = cs.length()) < 10 || offset < 0 || offset > cl - 10) return;
+			final int lim = Math.min(length & 0x7FFFFFFF, cl - offset);
+			for (int i = offset, o = 9; o < lim; i += 10, o += 10) {
 				add(readDense(cs, i));
 			}
 		}
@@ -1495,13 +1495,13 @@ public interface PrimitiveCollection<T> {
 		 * reduce length by 1 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
 		 * @param offset the first position to read BASE90 chars from in {@code cs}
-		 * @param length how many chars to read; should be a multiple of five (but is shortened if not)
+		 * @param length how many chars to read; should be a multiple of five; -1 is treated as maximum length
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			if(cs == null || (cl = cs.length()) < 5 || offset < 0 || offset > cl - 5 || length < 5) return;
-			final int lim = Math.min(offset + (length - length % 5), cl - cl % 5);
-			for (int i = offset; i < lim; i += 5) {
+			if(cs == null || (cl = cs.length()) < 5 || offset < 0 || offset > cl - 5) return;
+			final int lim = Math.min(length & 0x7FFFFFFF, cl - offset);
+			for (int i = offset, o = 4; o < lim; i += 5, o += 5) {
 				add(readDense(cs, i));
 			}
 		}
