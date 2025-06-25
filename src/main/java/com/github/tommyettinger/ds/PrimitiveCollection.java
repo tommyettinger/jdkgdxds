@@ -559,7 +559,7 @@ public interface PrimitiveCollection<T> {
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly five characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
 		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
-		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * reduce length by 2 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
 		 * @param offset the first position to read BASE90 chars from in {@code cs}
 		 * @param length how many chars to read; should be a multiple of five; -1 is treated as maximum length
@@ -571,6 +571,52 @@ public interface PrimitiveCollection<T> {
 			for (int i = offset, o = 4; o < lim; i += 5, o += 5) {
 				add(readDense(cs, i));
 			}
+		}
+
+		/**
+		 * Reads zero or more items from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new int array
+		 * sized to {@code cs.length() / 5}. Each item is exactly five characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable.
+		 * <br>
+		 * This may be useful to parse the dense output of one primitive collection into an array to be given to a
+		 * map constructor or map's addAll() method, which may be able to take an array for keys and for values.
+		 *
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @return a new array sized to {@code cs.length() / 5} items, or sized to 0 if {@code cs} is null
+		 */
+		static int[] readArrayDense(CharSequence cs) {
+			if(cs == null) return new int[0];
+			return readArrayDense(new int[cs.length() / 5], 0, cs, 0, -1);
+		}
+
+		/**
+		 * Reads zero or more items from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in {@code buffer},
+		 * starting at {@code bufferIndex}. Each item is exactly five characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable.
+		 * <br>
+		 * This may be useful to parse the dense output of one primitive collection into an array to be given to a
+		 * map constructor or map's addAll() method, which may be able to take an array for keys and for values.
+		 *
+		 * @param buffer an array that will be modified in-place; should not be null
+		 * @param bufferIndex the first index in {@code buffer} to assign to
+		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param offset the first position to read BASE90 chars from in {@code cs}
+		 * @param length how many chars to read; should be a multiple of five; -1 is treated as maximum length
+		 * @return {@code buffer}, potentially after modifications
+		 */
+		static int[] readArrayDense(int[] buffer, int bufferIndex, CharSequence cs, int offset, int length) {
+			int cl, bl;
+			if(!(cs == null || buffer == null || (bl = buffer.length) == 0 || (cl = cs.length()) < 5
+					|| offset < 0 || offset > cl - 5
+					|| bufferIndex < 0 || bufferIndex >= bl)) {
+				final int lim = Math.min(Math.min(length & 0x7FFFFFFF, cl - offset), bl - bufferIndex);
+				for (int i = offset, o = 4; o < lim; i += 5, o += 5) {
+					buffer[bufferIndex++] = readDense(cs, i);
+				}
+			}
+			return buffer;
 		}
 	}
 
@@ -1041,7 +1087,7 @@ public interface PrimitiveCollection<T> {
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly ten characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
 		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
-		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * reduce length by 2 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
 		 * @param offset the first position to read BASE90 chars from in {@code cs}
 		 * @param length how many chars to read; should be a multiple of ten; -1 is treated as maximum length
@@ -1492,7 +1538,7 @@ public interface PrimitiveCollection<T> {
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly five characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
 		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
-		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * reduce length by 2 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
 		 * @param offset the first position to read BASE90 chars from in {@code cs}
 		 * @param length how many chars to read; should be a multiple of five; -1 is treated as maximum length
@@ -1948,7 +1994,7 @@ public interface PrimitiveCollection<T> {
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly ten characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
 		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
-		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * reduce length by 2 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
 		 * @param offset the first position to read BASE90 chars from in {@code cs}
 		 * @param length how many chars to read; should be a multiple of ten; -1 is treated as maximum length
@@ -2395,7 +2441,7 @@ public interface PrimitiveCollection<T> {
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly three characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
 		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
-		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * reduce length by 2 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
 		 * @param offset the first position to read BASE90 chars from in {@code cs}
 		 * @param length how many chars to read; should be a multiple of three; -1 is treated as maximum length
@@ -2841,7 +2887,7 @@ public interface PrimitiveCollection<T> {
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly two characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
 		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
-		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * reduce length by 2 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
 		 * @param offset the first position to read BASE90 chars from in {@code cs}
 		 * @param length how many chars to read; should be a multiple of two; -1 is treated as maximum length
@@ -3291,7 +3337,7 @@ public interface PrimitiveCollection<T> {
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly the shown character in the CharSequence.
 		 * Any brackets inside the given range
 		 * of characters will be interpreted as items, not as visual wrappers, so increase offset by 1 and
-		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * reduce length by 2 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing arbitrary chars
 		 * @param offset the first position to read chars from in {@code cs}
 		 * @param length how many chars to read; -1 is treated as maximum length
@@ -3742,7 +3788,7 @@ public interface PrimitiveCollection<T> {
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is either true if a char is {@code '1'} or false
 		 * otherwise. Any brackets inside the given range
 		 * of characters will be interpreted as false, not as visual wrappers, so increase offset by 1 and
-		 * reduce length by 1 if the original CharSequence had brackets added to it.
+		 * reduce length by 2 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing {@code '1'} and likely {@code '0'} chars
 		 * @param offset the first position to read chars from in {@code cs}
 		 * @param length how many chars to read; -1 is treated as maximum length
