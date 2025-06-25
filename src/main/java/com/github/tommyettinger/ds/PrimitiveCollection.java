@@ -3283,7 +3283,7 @@ public interface PrimitiveCollection<T> {
 		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
 		 */
 		default void addDense(CharSequence cs) {
-			addDense(cs, 0, Integer.MAX_VALUE);
+			addDense(cs, 0, -1);
 		}
 
 		/**
@@ -3294,13 +3294,13 @@ public interface PrimitiveCollection<T> {
 		 * reduce length by 1 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing arbitrary chars
 		 * @param offset the first position to read chars from in {@code cs}
-		 * @param length how many chars to read
+		 * @param length how many chars to read; -1 is treated as maximum length
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			if(cs == null || (cl = cs.length()) < 1 || offset < 0 || offset >= cl || length < 1) return;
-			final int lim = Math.min(offset + length, cl);
-			for (int i = offset; i < lim; i++) {
+			if(cs == null || (cl = cs.length()) < 1 || offset < 0 || offset >= cl) return;
+			final int lim = Math.min(length & 0x7FFFFFFF, cl - offset);
+			for (int i = offset, o = 0; o < lim; i++, o++) {
 				add(cs.charAt(i));
 			}
 		}
@@ -3734,7 +3734,7 @@ public interface PrimitiveCollection<T> {
 		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
 		 */
 		default void addDense(CharSequence cs) {
-			addDense(cs, 0, Integer.MAX_VALUE);
+			addDense(cs, 0, -1);
 		}
 
 		/**
@@ -3745,13 +3745,13 @@ public interface PrimitiveCollection<T> {
 		 * reduce length by 1 if the original CharSequence had brackets added to it.
 		 * @param cs a CharSequence containing {@code '1'} and likely {@code '0'} chars
 		 * @param offset the first position to read chars from in {@code cs}
-		 * @param length how many chars to read
+		 * @param length how many chars to read; -1 is treated as maximum length
 		 */
 		default void addDense(CharSequence cs, int offset, int length) {
 			int cl;
-			if(cs == null || (cl = cs.length()) < 1 || offset < 0 || offset >= cl || length < 1) return;
-			final int lim = Math.min(offset + length, cl);
-			for (int i = offset; i < lim; i++) {
+			if(cs == null || (cl = cs.length()) < 1 || offset < 0 || offset >= cl) return;
+			final int lim = Math.min(length & 0x7FFFFFFF, cl - offset);
+			for (int i = offset, o = 0; o < lim; i++, o++) {
 				add(readDense(cs, i));
 			}
 		}
