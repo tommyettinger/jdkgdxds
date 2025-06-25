@@ -611,7 +611,7 @@ public interface PrimitiveCollection<T> {
 			if(!(cs == null || buffer == null || (bl = buffer.length) == 0 || (cl = cs.length()) < 5
 					|| offset < 0 || offset > cl - 5
 					|| bufferIndex < 0 || bufferIndex >= bl)) {
-				final int lim = Math.min(Math.min(length & 0x7FFFFFFF, cl - offset), bl - bufferIndex);
+				final int lim = Math.min(Math.min(length & 0x7FFFFFFF, cl - offset), (bl - bufferIndex) * 5);
 				for (int i = offset, o = 4; o < lim; i += 5, o += 5) {
 					buffer[bufferIndex++] = readDense(cs, i);
 				}

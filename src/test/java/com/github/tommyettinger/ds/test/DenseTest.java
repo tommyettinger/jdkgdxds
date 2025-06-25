@@ -116,7 +116,7 @@ public class DenseTest {
 	public void testIntDequeDense() {
 		IntDeque data = IntDeque.with(ints), loaded = new IntDeque(ints.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense);
+		loaded.addAll(PrimitiveCollection.OfInt.readArrayDense(dense));
 		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 	}
 
