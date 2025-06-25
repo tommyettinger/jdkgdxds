@@ -546,6 +546,17 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly five characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable. No surrounding brackets should be
+		 * present in {@code cs} (they will be treated as digits).
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 */
+		default void addDense(CharSequence cs) {
+			addDense(cs, 0, Integer.MAX_VALUE);
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly five characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
 		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
 		 * reduce length by 1 if the original CharSequence had brackets added to it.
@@ -1017,6 +1028,17 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly ten characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable. No surrounding brackets should be
+		 * present in {@code cs} (they will be treated as digits).
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 */
+		default void addDense(CharSequence cs) {
+			addDense(cs, 0, Integer.MAX_VALUE);
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly ten characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
 		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
 		 * reduce length by 1 if the original CharSequence had brackets added to it.
@@ -1452,6 +1474,17 @@ public interface PrimitiveCollection<T> {
 					+ (cs.charAt(position+3) - 37) * 90
 					+ (cs.charAt(position+4) - 37)
 			);
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly five characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable. No surrounding brackets should be
+		 * present in {@code cs} (they will be treated as digits).
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 */
+		default void addDense(CharSequence cs) {
+			addDense(cs, 0, Integer.MAX_VALUE);
 		}
 
 		/**
@@ -1902,6 +1935,17 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly ten characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable. No surrounding brackets should be
+		 * present in {@code cs} (they will be treated as digits).
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 */
+		default void addDense(CharSequence cs) {
+			addDense(cs, 0, Integer.MAX_VALUE);
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly ten characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
 		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
 		 * reduce length by 1 if the original CharSequence had brackets added to it.
@@ -2338,6 +2382,17 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly three characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable. No surrounding brackets should be
+		 * present in {@code cs} (they will be treated as digits).
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 */
+		default void addDense(CharSequence cs) {
+			addDense(cs, 0, Integer.MAX_VALUE);
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly three characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
 		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
 		 * reduce length by 1 if the original CharSequence had brackets added to it.
@@ -2768,6 +2823,17 @@ public interface PrimitiveCollection<T> {
 		static byte readDense(CharSequence cs, int position) {
 			return (byte) ((cs.charAt(position) - 37) * 90
 					+ (cs.charAt(position+1) - 37));
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly two characters long and uses the
+		 * {@link Base#BASE90} digits, which are not meant to be human-readable. No surrounding brackets should be
+		 * present in {@code cs} (they will be treated as digits).
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 */
+		default void addDense(CharSequence cs) {
+			addDense(cs, 0, Integer.MAX_VALUE);
 		}
 
 		/**
@@ -3211,6 +3277,17 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly one character long and is exactly
+		 * that character, so all chars in the Unicode BMP can be present. No surrounding brackets should be
+		 * present in {@code cs} (they will be treated as items).
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 */
+		default void addDense(CharSequence cs) {
+			addDense(cs, 0, Integer.MAX_VALUE);
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
 		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly the shown character in the CharSequence.
 		 * Any brackets inside the given range
 		 * of characters will be interpreted as items, not as visual wrappers, so increase offset by 1 and
@@ -3647,6 +3724,17 @@ public interface PrimitiveCollection<T> {
 		 */
 		static boolean readDense(CharSequence cs, int position) {
 			return cs.charAt(position) == '1';
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
+		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly one character long and should use
+		 * {@code '1'} to represent true, or any other character to represent false. No surrounding brackets should be
+		 * present in {@code cs} (they will be treated as false items).
+		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 */
+		default void addDense(CharSequence cs) {
+			addDense(cs, 0, Integer.MAX_VALUE);
 		}
 
 		/**

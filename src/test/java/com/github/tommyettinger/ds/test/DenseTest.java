@@ -76,7 +76,7 @@ public class DenseTest {
 	public void testByteListDense() {
 		ByteList data = ByteList.with(bytes), loaded = new ByteList(bytes.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -84,7 +84,7 @@ public class DenseTest {
 	public void testByteDequeDense() {
 		ByteDeque data = ByteDeque.with(bytes), loaded = new ByteDeque(bytes.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -92,7 +92,7 @@ public class DenseTest {
 	public void testShortListDense() {
 		ShortList data = ShortList.with(shorts), loaded = new ShortList(shorts.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -100,7 +100,7 @@ public class DenseTest {
 	public void testShortDequeDense() {
 		ShortDeque data = ShortDeque.with(shorts), loaded = new ShortDeque(shorts.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -108,7 +108,7 @@ public class DenseTest {
 	public void testIntListDense() {
 		IntList data = IntList.with(ints), loaded = new IntList(ints.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -116,7 +116,7 @@ public class DenseTest {
 	public void testIntDequeDense() {
 		IntDeque data = IntDeque.with(ints), loaded = new IntDeque(ints.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -124,7 +124,7 @@ public class DenseTest {
 	public void testLongListDense() {
 		LongList data = LongList.with(longs), loaded = new LongList(longs.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -132,7 +132,7 @@ public class DenseTest {
 	public void testLongDequeDense() {
 		LongDeque data = LongDeque.with(longs), loaded = new LongDeque(longs.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -140,7 +140,7 @@ public class DenseTest {
 	public void testFloatListDense() {
 		FloatList data = FloatList.with(floats), loaded = new FloatList(floats.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -148,7 +148,7 @@ public class DenseTest {
 	public void testFloatDequeDense() {
 		FloatDeque data = FloatDeque.with(floats), loaded = new FloatDeque(floats.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -156,7 +156,7 @@ public class DenseTest {
 	public void testDoubleListDense() {
 		DoubleList data = DoubleList.with(doubles), loaded = new DoubleList(doubles.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -164,7 +164,7 @@ public class DenseTest {
 	public void testDoubleDequeDense() {
 		DoubleDeque data = DoubleDeque.with(doubles), loaded = new DoubleDeque(doubles.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -172,7 +172,7 @@ public class DenseTest {
 	public void testCharListDense() {
 		CharList data = CharList.with(chars), loaded = new CharList(chars.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -180,7 +180,7 @@ public class DenseTest {
 	public void testCharDequeDense() {
 		CharDeque data = CharDeque.with(chars), loaded = new CharDeque(chars.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -188,7 +188,7 @@ public class DenseTest {
 	public void testBooleanListDense() {
 		BooleanList data = BooleanList.with(booleans), loaded = new BooleanList(booleans.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
 	}
 
@@ -196,7 +196,7 @@ public class DenseTest {
 	public void testBooleanDequeDense() {
 		BooleanDeque data = BooleanDeque.with(booleans), loaded = new BooleanDeque(booleans.length);
 		String dense = data.toDenseString();
-		loaded.addDense(dense, 0, dense.length());
+		loaded.addDense(dense);
 		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 	}
 }
