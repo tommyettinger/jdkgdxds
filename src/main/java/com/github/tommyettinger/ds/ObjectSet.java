@@ -229,6 +229,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 */
 	@Override
 	public boolean add (T key) {
+		if(key == null) return false;
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
@@ -408,6 +409,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 */
 	@Override
 	public boolean remove (@NonNull Object key) {
+		if(key == null) return false;
 		int pos = locateKey(key);
 		if (pos < 0) return false;
 		@Nullable T[] keyTable = this.keyTable;
@@ -495,6 +497,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	@Override
 	public boolean contains (@NonNull Object key) {
+		if(key == null) return false;
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
@@ -507,6 +510,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	@Nullable
 	public T get (T key) {
+		if(key == null) return null;
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
@@ -517,11 +521,11 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		}
 	}
 
-	public T first () {
+	public @Nullable T first () {
 		@Nullable T[] keyTable = this.keyTable;
-		@Nullable T k;
-		for (int i = 0, n = keyTable.length; i < n; i++) {if ((k = keyTable[i]) != null) {return k;}}
-		throw new IllegalStateException("ObjectSet is empty.");
+		@Nullable T k = null;
+		for (int i = 0, n = keyTable.length; i < n; i++) {if ((k = keyTable[i]) != null) break;}
+		return k;
 	}
 
 	/**
