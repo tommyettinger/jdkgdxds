@@ -151,6 +151,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
 	public boolean add (int index, T key) {
+		if(key == null || index < 0 || index > size) return false;
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
 			if (oldIndex != index) {items.add(index, items.remove(oldIndex));}
@@ -253,7 +254,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
 	public boolean alterAt (int index, T after) {
-		if (index < 0 || index >= size || contains(after)) {return false;}
+		if (after == null || index < 0 || index >= size || contains(after)) {return false;}
 		super.remove(items.get(index));
 		super.add(after);
 		items.set(index, after);
@@ -271,11 +272,14 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		return items.get(index);
 	}
 
+	/**
+	 * Returns the first item in the order of this set, or null if the set is empty. This set can never contain null
+	 * normally, so if this returns null, that indicates an abnormal situation, and you can opt to throw an Exception.
+	 * @return the first item in the order, or null if this set is empty
+	 */
 	@Override
-	public T first () {
-		if (size == 0)
-			throw new IllegalStateException("ObjectOrderedSet is empty.");
-		return items.first();
+	public @Nullable T first () {
+		return (size == 0) ? null : items.first();
 	}
 
 	@Override
