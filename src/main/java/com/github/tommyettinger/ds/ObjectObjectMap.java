@@ -247,6 +247,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	@Override
 	@Nullable
 	public V put (K key, @Nullable V value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -262,6 +263,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	@Nullable
 	public V putOrDefault (K key, @Nullable V value, @Nullable V defaultValue) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -405,7 +407,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	@Override
 	@Nullable
 	public V get (Object key) {
-		K[] keyTable = this.keyTable;
+		if(key == null) return defaultValue;
+		@Nullable K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
 			if (equate(key, other))
@@ -420,7 +423,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 */
 	@Nullable
 	public V getOrDefault (Object key, @Nullable V defaultValue) {
-		K[] keyTable = this.keyTable;
+		if(key == null) return defaultValue;
+		@Nullable K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
 			if (equate(key, other))
@@ -433,6 +437,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	@Override
 	@Nullable
 	public V remove (Object key) {
+		if(key == null) return defaultValue;
 		int pos = locateKey(key);
 		if (pos < 0) return defaultValue;
 		K rem;
@@ -562,6 +567,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	@Override
 	public boolean containsKey (Object key) {
+		if(key == null) return false;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -882,6 +888,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	@Override
 	@Nullable
 	public V replace (K key, V value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) {
 			V oldValue = valueTable[i];
@@ -904,6 +911,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 */
 	@Nullable
 	public V combine (K key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
 		put(key, next);
