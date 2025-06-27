@@ -250,6 +250,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
 	public float put (K key, float value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
@@ -267,6 +268,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * Returns the old value associated with the specified key, or the given {@code defaultValue} if there was no prior value.
 	 */
 	public float putOrDefault (K key, float value, float defaultValue) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
@@ -357,6 +359,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
 	public float get (Object key) {
+		if(key == null) return defaultValue;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -371,6 +374,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
 	public float getOrDefault (Object key, float defaultValue) {
+		if(key == null) return defaultValue;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -386,6 +390,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * put into the map and defaultValue is returned.
 	 */
 	public float getAndIncrement (K key, float defaultValue, float increment) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
@@ -400,6 +405,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	}
 
 	public float remove (Object key) {
+		if(key == null) return defaultValue;
 		int pos = locateKey(key);
 		if (pos < 0) return defaultValue;
 		K rem;
@@ -502,6 +508,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	}
 
 	public boolean containsKey (Object key) {
+		if(key == null) return false;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -1420,6 +1427,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	}
 
 	public float putIfAbsent (K key, float value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) {
 			return valueTable[i];
@@ -1428,6 +1436,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	}
 
 	public boolean replace (K key, float oldValue, float newValue) {
+		if(key == null) return false;
 		float curValue = get(key);
 		if (curValue != oldValue || !containsKey(key)) {
 			return false;
@@ -1437,6 +1446,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	}
 
 	public float replace (K key, float value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) {
 			float oldValue = valueTable[i];
@@ -1447,6 +1457,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	}
 
 	public float computeIfAbsent (K key, ObjToFloatFunction<? super K> mappingFunction) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i < 0) {
 			float newValue = mappingFunction.applyAsFloat(key);
@@ -1457,6 +1468,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	}
 
 	public boolean remove (Object key, float value) {
+		if(key == null) return false;
 		int i = locateKey(key);
 		if (i >= 0 && valueTable[i] == value) {
 			remove(key);
@@ -1478,6 +1490,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * @return the value now associated with key
 	 */
 	public float combine (K key, float value, FloatFloatToFloatBiFunction remappingFunction) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		float next = (i < 0) ? value : remappingFunction.applyAsFloat(valueTable[i], value);
 		put(key, next);
