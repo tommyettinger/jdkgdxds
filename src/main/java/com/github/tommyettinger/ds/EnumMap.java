@@ -193,7 +193,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	@Override
 	@Nullable
 	public V put (Enum<?> key, @Nullable V value) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
+		if(key == null) return defaultValue;
 		if(universe == null) universe = key.getDeclaringClass().getEnumConstants();
 		if(valueTable == null) valueTable = new Object[universe.length];
 		int i = key.ordinal();
@@ -219,7 +219,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 */
 	@Nullable
 	public V putOrDefault (Enum<?> key, @Nullable V value, @Nullable V defaultValue) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
+		if(key == null) return defaultValue;
 		if(universe == null) universe = key.getDeclaringClass().getEnumConstants();
 		if(valueTable == null) valueTable = new Object[universe.length];
 		int i = key.ordinal();
@@ -783,11 +783,13 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	@Override
 	@Nullable
 	public V replace (Enum<?> key, V value) {
-		int i = key.ordinal();
-		if (i < universe.length) {
-			V oldValue = release(valueTable[i]);
-			valueTable[i] = hold(value);
-			return oldValue;
+		if (key != null) {
+			int i = key.ordinal();
+			if (i < universe.length) {
+				V oldValue = release(valueTable[i]);
+				valueTable[i] = hold(value);
+				return oldValue;
+			}
 		}
 		return defaultValue;
 	}
@@ -805,6 +807,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 */
 	@Nullable
 	public V combine (Enum<?> key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+		if(key == null) return defaultValue;
 		int i = key.ordinal();
 		V next = (valueTable[i] == null) ? value : remappingFunction.apply(release(valueTable[i]), value);
 		put(key, next);
