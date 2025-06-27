@@ -250,6 +250,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
 	public int put (K key, int value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			int oldValue = valueTable[i];
@@ -267,6 +268,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * Returns the old value associated with the specified key, or the given {@code defaultValue} if there was no prior value.
 	 */
 	public int putOrDefault (K key, int value, int defaultValue) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			int oldValue = valueTable[i];
@@ -357,6 +359,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
 	public int get (Object key) {
+		if(key == null) return defaultValue;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -371,6 +374,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
 	public int getOrDefault (Object key, int defaultValue) {
+		if(key == null) return defaultValue;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -386,6 +390,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * put into the map and defaultValue is returned.
 	 */
 	public int getAndIncrement (K key, int defaultValue, int increment) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			int oldValue = valueTable[i];
@@ -400,6 +405,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	public int remove (Object key) {
+		if(key == null) return defaultValue;
 		int pos = locateKey(key);
 		if (pos < 0) return defaultValue;
 		K rem;
@@ -515,6 +521,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	public boolean containsKey (Object key) {
+		if(key == null) return false;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -1383,6 +1390,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	public int putIfAbsent (K key, int value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) {
 			return valueTable[i];
@@ -1400,6 +1408,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	public int replace (K key, int value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) {
 			int oldValue = valueTable[i];
@@ -1410,6 +1419,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	public int computeIfAbsent (K key, ObjToIntFunction<? super K> mappingFunction) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i < 0) {
 			int newValue = mappingFunction.applyAsInt(key);
@@ -1420,6 +1430,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	public boolean remove (Object key, int value) {
+		if(key == null) return false;
 		int i = locateKey(key);
 		if (i >= 0 && valueTable[i] == value) {
 			remove(key);
@@ -1441,6 +1452,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * @return the value now associated with key
 	 */
 	public int combine (K key, int value, IntIntToIntBiFunction remappingFunction) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		int next = (i < 0) ? value : remappingFunction.applyAsInt(valueTable[i], value);
 		put(key, next);
