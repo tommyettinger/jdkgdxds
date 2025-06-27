@@ -164,6 +164,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	@Override
 	@Nullable
 	public V put (K key, @Nullable V value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -190,6 +191,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 */
 	@Nullable
 	public V put (K key, @Nullable V value, int index) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -209,6 +211,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	@Nullable
 	@Override
 	public V putOrDefault (K key, @Nullable V value, @Nullable V defaultValue) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -267,6 +270,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 
 	@Override
 	public V remove (Object key) {
+		if(key == null) return defaultValue;
 		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
 		if (!super.containsKey(key)) {return defaultValue;}
 		keys.remove(key);
@@ -309,6 +313,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
 	public boolean alter (K before, K after) {
+		if(before == null || after == null) return false;
 		if (containsKey(after)) {return false;}
 		int index = keys.indexOf(before);
 		if (index == -1) {return false;}
@@ -327,7 +332,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
 	public boolean alterAt (int index, K after) {
-		if (index < 0 || index >= size || containsKey(after)) {return false;}
+		if (after == null || index < 0 || index >= size || containsKey(after)) return false;
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);
 		return true;
