@@ -156,6 +156,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 
 	@Override
 	public float put (K key, float value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
@@ -181,6 +182,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
 	 */
 	public float put (K key, float value, int index) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
@@ -199,6 +201,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 
 	@Override
 	public float putOrDefault (K key, float value, float defaultValue) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
@@ -257,6 +260,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 
 	@Override
 	public float remove (Object key) {
+		if(key == null) return defaultValue;
 		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
 		if (!super.containsKey(key)) {return defaultValue;}
 		keys.remove(key);
@@ -319,6 +323,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 
 	@Override
 	public float getAndIncrement (K key, float defaultValue, float increment) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
@@ -344,7 +349,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
 	public boolean alter (K before, K after) {
-		if (containsKey(after)) {return false;}
+		if (before == null || after == null || containsKey(after)) {return false;}
 		int index = keys.indexOf(before);
 		if (index == -1) {return false;}
 		super.put(after, super.remove(before));
@@ -362,7 +367,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
 	public boolean alterAt (int index, K after) {
-		if (index < 0 || index >= size || containsKey(after)) {return false;}
+		if (after == null || index < 0 || index >= size || containsKey(after)) {return false;}
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);
 		return true;
