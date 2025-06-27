@@ -357,6 +357,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
 	public long get (Object key) {
+		if(key == null) return defaultValue;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -371,6 +372,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
 	public long getOrDefault (Object key, long defaultValue) {
+		if(key == null) return defaultValue;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -386,6 +388,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * put into the map and defaultValue is returned.
 	 */
 	public long getAndIncrement (K key, long defaultValue, long increment) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			long oldValue = valueTable[i];
@@ -400,6 +403,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	public long remove (Object key) {
+		if(key == null) return defaultValue;
 		int pos = locateKey(key);
 		if (pos < 0) return defaultValue;
 		K rem;
@@ -515,6 +519,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	public boolean containsKey (Object key) {
+		if(key == null) return false;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -1384,6 +1389,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	public long putIfAbsent (K key, long value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) {
 			return valueTable[i];
@@ -1401,6 +1407,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	public long replace (K key, long value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) {
 			long oldValue = valueTable[i];
@@ -1411,6 +1418,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	public long computeIfAbsent (K key, ObjToLongFunction<? super K> mappingFunction) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i < 0) {
 			long newValue = mappingFunction.applyAsLong(key);
@@ -1421,10 +1429,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	public boolean remove (Object key, long value) {
-		int i = locateKey(key);
-		if (i >= 0 && valueTable[i] == value) {
-			remove(key);
-			return true;
+		if(key != null) {
+			int i = locateKey(key);
+			if (i >= 0 && valueTable[i] == value) {
+				remove(key);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -1442,6 +1452,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @return the value now associated with key
 	 */
 	public long combine (K key, long value, LongLongToLongBiFunction remappingFunction) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
 		put(key, next);
