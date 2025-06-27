@@ -156,6 +156,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 
 	@Override
 	public int put (K key, int value) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			int oldValue = valueTable[i];
@@ -181,6 +182,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
 	 */
 	public int put (K key, int value, int index) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			int oldValue = valueTable[i];
@@ -199,6 +201,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 
 	@Override
 	public int putOrDefault (K key, int value, int defaultValue) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			int oldValue = valueTable[i];
@@ -319,6 +322,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 
 	@Override
 	public int getAndIncrement (K key, int defaultValue, int increment) {
+		if(key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			int oldValue = valueTable[i];
@@ -344,7 +348,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
 	public boolean alter (K before, K after) {
-		if (containsKey(after)) {return false;}
+		if (before == null || after == null || containsKey(after)) {return false;}
 		int index = keys.indexOf(before);
 		if (index == -1) {return false;}
 		super.put(after, super.remove(before));
@@ -362,7 +366,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
 	public boolean alterAt (int index, K after) {
-		if (index < 0 || index >= size || containsKey(after)) {return false;}
+		if (after == null || index < 0 || index >= size || containsKey(after)) {return false;}
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);
 		return true;
