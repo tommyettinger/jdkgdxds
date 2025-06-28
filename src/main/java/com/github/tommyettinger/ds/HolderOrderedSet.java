@@ -174,6 +174,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
 	public boolean add (int index, T key) {
+		if(key == null) return false;
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
 			if (oldIndex != index) {items.add(index, items.remove(oldIndex));}
@@ -233,7 +234,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 */
 	@Override
 	public boolean remove (Object key) {
-		return items.remove(super.get(key)) && super.remove(key);
+		return key != null && items.remove(super.get(key)) && super.remove(key);
 	}
 
 	/**
@@ -250,15 +251,13 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Gets the first item in the order.
+	 * Gets the first item in the order. If the set is empty, this returns null. Note that this set cannot contain null.
 	 *
 	 * @return the first item in this set's order
-	 * @throws IllegalStateException if this is empty.
 	 */
 	@Override
 	public T first () {
-		if (size == 0)
-			throw new IllegalStateException("HolderOrderedSet is empty.");
+		if (size == 0) return null;
 		return items.get(0);
 	}
 
@@ -286,7 +285,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
 	public boolean alter (T before, T after) {
-		if (contains(extractor.apply(after))) {return false;}
+		if (before == null || after == null || contains(extractor.apply(after))) {return false;}
 		if (!super.remove(extractor.apply(before))) {return false;}
 		super.add(after);
 		items.set(items.indexOf(before), after);
@@ -303,7 +302,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
 	public boolean alterAt (int index, T after) {
-		if (index < 0 || index >= size || contains(extractor.apply(after))) {return false;}
+		if (after == null || index < 0 || index >= size || contains(extractor.apply(after))) {return false;}
 		super.remove(items.get(index));
 		super.add(after);
 		items.set(index, after);
