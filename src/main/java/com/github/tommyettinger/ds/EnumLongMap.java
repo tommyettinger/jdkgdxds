@@ -171,7 +171,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	public long put (@NonNull Enum<?> key, long value) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumLongMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new long[universe.length];
@@ -195,7 +195,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
 	 */
 	public long putOrDefault (@NonNull Enum<?> key, long value, long defaultValue) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumLongMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new long[universe.length];
@@ -346,7 +346,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * put into the map and defaultValue is returned.
 	 */
 	public long getAndIncrement (@NonNull Enum<?> key, long defaultValue, long increment) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumLongMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new long[universe.length];
@@ -652,7 +652,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	}
 
 	public long replace (Enum<?> key, long value) {
-		if(keys != null && keys.contains(key)) {
+		if(key != null && keys != null && keys.contains(key)) {
 			int i = key.ordinal();
 			if (i < valueTable.length) {
 				long oldValue = valueTable[i];
@@ -664,7 +664,8 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	}
 
 	public long computeIfAbsent (Enum<?> key, ObjToLongFunction<? super Enum<?>> mappingFunction) {
-        if (keys != null && keys.universe != null && keys.contains(key)) {
+        if(key == null) return defaultValue;
+		if (keys != null && keys.universe != null && keys.contains(key)) {
             return valueTable[key.ordinal()];
         } else {
             long newValue = mappingFunction.applyAsLong(key);
@@ -674,7 +675,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
     }
 
 	public boolean remove (Object key, long value) {
-		if (keys != null && keys.contains(key) && valueTable[((Enum<?>)key).ordinal()] == value) {
+		if (key != null && keys != null && keys.contains(key) && valueTable[((Enum<?>)key).ordinal()] == value) {
 			remove(key);
 			return true;
 		}
@@ -694,6 +695,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * @return the value now associated with key
 	 */
 	public long combine (Enum<?> key, long value, LongLongToLongBiFunction remappingFunction) {
+		if(key == null) return defaultValue;
 		if(keys == null || keys.universe == null) {
 			put(key, value);
 			return value;
