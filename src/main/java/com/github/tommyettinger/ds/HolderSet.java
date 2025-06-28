@@ -286,6 +286,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
      */
     @Override
     public boolean add(T key) {
+        if(key == null) return false;
         assert extractor != null;
         int i = locateKey(extractor.apply(key));
         if (i >= 0) {
@@ -496,6 +497,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
      */
     @Override
     public boolean remove(Object key) {
+        if(key == null) return false;
         int pos = locateKey(key);
         if (pos < 0) return false;
         assert extractor != null;
@@ -597,7 +599,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
      */
     @Override
     public boolean contains(Object key) {
-        return locateKey(key) >= 0;
+        return key != null && locateKey(key) >= 0;
     }
 
     /**
@@ -609,6 +611,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
      */
     @Nullable
     public T get(Object key) {
+        if(key == null) return null;
         int i = locateKey(key);
         return i < 0 ? null : keyTable[i];
     }
@@ -623,6 +626,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
      */
     @Nullable
     public T getOrDefault(Object key, @Nullable T defaultValue) {
+        if(key == null) return defaultValue;
         int i = locateKey(key);
         return i < 0 ? defaultValue : keyTable[i];
     }
@@ -630,11 +634,11 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
     /**
      * Gets the (arbitrarily-chosen) first item in this HolderSet. Which item is "first" can change
      * when this resizes, and you can't rely on the order of items in an unordered set like this.
+     * If this HolderSet is empty, this will return null. Note that this set cannot contain null.
      *
      * @return the "first" item in this HolderSet; really an arbitrary item in this
-     * @throws IllegalStateException if this HolderSet is empty
      */
-    public T first() {
+    public @Nullable T first() {
         @Nullable T[] keyTable = this.keyTable;
         for (int i = 0, n = keyTable.length; i < n; i++) {
             @Nullable T key = keyTable[i];
@@ -642,7 +646,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
                 return key;
             }
         }
-        throw new IllegalStateException("HolderSet is empty.");
+        return null;
     }
 
     /**
