@@ -164,7 +164,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	public int put (@NonNull Enum<?> key, int value) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumIntMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new int[universe.length];
@@ -188,7 +188,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
 	 */
 	public int putOrDefault (@NonNull Enum<?> key, int value, int defaultValue) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumIntMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new int[universe.length];
@@ -337,7 +337,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * put into the map and defaultValue is returned.
 	 */
 	public int getAndIncrement (Enum<?> key, int defaultValue, int increment) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumIntMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new int[universe.length];
@@ -643,7 +643,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	}
 
 	public int replace (Enum<?> key, int value) {
-		if(keys != null && keys.contains(key)) {
+		if(key != null && keys != null && keys.contains(key)) {
 			int i = key.ordinal();
 			if (i < valueTable.length) {
 				int oldValue = valueTable[i];
@@ -655,17 +655,17 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	}
 
 	public int computeIfAbsent (Enum<?> key, ObjToIntFunction<? super Enum<?>> mappingFunction) {
+		if(key == null) return defaultValue;
         if (keys != null && keys.universe != null && keys.contains(key)) {
             return valueTable[key.ordinal()];
-        } else {
-            int newValue = mappingFunction.applyAsInt(key);
-            put(key, newValue);
-            return newValue;
         }
+		int newValue = mappingFunction.applyAsInt(key);
+		put(key, newValue);
+		return newValue;
     }
 
 	public boolean remove (Object key, int value) {
-		if (keys != null && keys.contains(key) && valueTable[((Enum<?>)key).ordinal()] == value) {
+		if (key != null && keys != null && keys.contains(key) && valueTable[((Enum<?>)key).ordinal()] == value) {
 			remove(key);
 			return true;
 		}
@@ -685,6 +685,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @return the value now associated with key
 	 */
 	public int combine (Enum<?> key, int value, IntIntToIntBiFunction remappingFunction) {
+		if(key == null) return defaultValue;
 		if(keys == null || keys.universe == null) {
 			put(key, value);
 			return value;
