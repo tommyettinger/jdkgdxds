@@ -195,6 +195,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
 	public boolean add (int index, Enum<?> key) {
+		if(key == null) return false;
 		if (!super.add(key)) {
 			int oldIndex = ordering.indexOf(key);
 			if (oldIndex != index) {
@@ -300,7 +301,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
 	public boolean alter (Enum<?> before, Enum<?> after) {
-		if (contains(after)) {return false;}
+		if (before == null || after == null || contains(after)) {return false;}
 		if (!super.remove(before)) {return false;}
 		super.add(after);
 		ordering.set(ordering.indexOf(before), after);
@@ -317,7 +318,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
 	public boolean alterAt (int index, Enum<?> after) {
-		if (index < 0 || index >= size || contains(after)) {return false;}
+		if (after == null || index < 0 || index >= size || contains(after)) {return false;}
 		super.remove(ordering.get(index));
 		super.add(after);
 		ordering.set(index, after);

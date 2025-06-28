@@ -233,7 +233,8 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * element
 	 */
 	@Override
-	public boolean add (@NonNull Enum<?> item) {
+	public boolean add (Enum<?> item) {
+		if(item == null) return false;
 		if(universe == null) universe = item.getDeclaringClass().getEnumConstants();
 		if(table == null) table = new int[universe.length + 31 >>> 5];
 		final int ord = item.ordinal();
