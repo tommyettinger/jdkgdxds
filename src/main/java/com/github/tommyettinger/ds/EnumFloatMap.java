@@ -165,7 +165,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	public float put (@NonNull Enum<?> key, float value) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumFloatMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new float[universe.length];
@@ -189,7 +189,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
 	 */
 	public float putOrDefault (@NonNull Enum<?> key, float value, float defaultValue) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumFloatMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new float[universe.length];
@@ -340,7 +340,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * put into the map and defaultValue is returned.
 	 */
 	public float getAndIncrement (@NonNull Enum<?> key, float defaultValue, float increment) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumFloatMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new float[universe.length];
@@ -646,7 +646,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	}
 
 	public float replace (Enum<?> key, float value) {
-		if(keys != null && keys.contains(key)) {
+		if(key != null && keys != null && keys.contains(key)) {
 			int i = key.ordinal();
 			if (i < valueTable.length) {
 				float oldValue = valueTable[i];
@@ -658,17 +658,18 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	}
 
 	public float computeIfAbsent (Enum<?> key, ObjToFloatFunction<? super Enum<?>> mappingFunction) {
-        if (keys != null && keys.universe != null && keys.contains(key)) {
+        if(key == null) return defaultValue;
+		if (keys != null && keys.universe != null && keys.contains(key)) {
             return valueTable[key.ordinal()];
-        } else {
-            float newValue = mappingFunction.applyAsFloat(key);
-            put(key, newValue);
-            return newValue;
         }
+		float newValue = mappingFunction.applyAsFloat(key);
+		put(key, newValue);
+		return newValue;
+
     }
 
 	public boolean remove (Object key, float value) {
-		if (keys != null && keys.contains(key) && valueTable[((Enum<?>)key).ordinal()] == value) {
+		if (key != null && keys != null && keys.contains(key) && valueTable[((Enum<?>)key).ordinal()] == value) {
 			remove(key);
 			return true;
 		}
@@ -688,6 +689,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @return the value now associated with key
 	 */
 	public float combine (Enum<?> key, float value, FloatFloatToFloatBiFunction remappingFunction) {
+		if(key == null) return defaultValue;
 		if(keys == null || keys.universe == null) {
 			put(key, value);
 			return value;
