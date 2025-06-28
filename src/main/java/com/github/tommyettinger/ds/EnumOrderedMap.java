@@ -169,20 +169,21 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	@Override
 	@Nullable
 	public V put (Enum<?> key, @Nullable V value) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
-		if(universe == null) universe = key.getDeclaringClass().getEnumConstants();
-		if(valueTable == null) valueTable = new Object[universe.length];
-		int i = key.ordinal();
-		if(i >= valueTable.length || universe[i] != key)
-			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
-		Object oldValue = valueTable[i];
-		valueTable[i] = hold(value);
-		if (oldValue != null) {
-			// Existing key was found.
-			return release(oldValue);
+		if(key != null) {
+			if (universe == null) universe = key.getDeclaringClass().getEnumConstants();
+			if (valueTable == null) valueTable = new Object[universe.length];
+			int i = key.ordinal();
+			if (i >= valueTable.length || universe[i] != key)
+				throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+			Object oldValue = valueTable[i];
+			valueTable[i] = hold(value);
+			if (oldValue != null) {
+				// Existing key was found.
+				return release(oldValue);
+			}
+			ordering.add(key);
+			++size;
 		}
-		ordering.add(key);
-		++size;
 		return defaultValue;
 	}
 
@@ -198,44 +199,47 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 */
 	@Nullable
 	public V put (Enum<?> key, @Nullable V value, int index) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
-		if(universe == null) universe = key.getDeclaringClass().getEnumConstants();
-		if(valueTable == null) valueTable = new Object[universe.length];
-		int i = key.ordinal();
-		if(i >= valueTable.length || universe[i] != key)
-			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
-		Object oldValue = valueTable[i];
-		valueTable[i] = hold(value);
-		if (oldValue != null) {
-			// Existing key was found.
-			int oldIndex = ordering.indexOf(key);
-			if (oldIndex != index) {
-				ordering.insert(index, ordering.removeAt(oldIndex));}
-			return release(oldValue);
+		if(key != null) {
+			if (universe == null) universe = key.getDeclaringClass().getEnumConstants();
+			if (valueTable == null) valueTable = new Object[universe.length];
+			int i = key.ordinal();
+			if (i >= valueTable.length || universe[i] != key)
+				throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+			Object oldValue = valueTable[i];
+			valueTable[i] = hold(value);
+			if (oldValue != null) {
+				// Existing key was found.
+				int oldIndex = ordering.indexOf(key);
+				if (oldIndex != index) {
+					ordering.insert(index, ordering.removeAt(oldIndex));
+				}
+				return release(oldValue);
+			}
+			ordering.add(key);
+			ordering.insert(index, key);
+			++size;
 		}
-		ordering.add(key);
-		ordering.insert(index, key);
-		++size;
 		return defaultValue;
 	}
 
 	@Nullable
 	@Override
 	public V putOrDefault (Enum<?> key, @Nullable V value, @Nullable V defaultValue) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumMap must not be null.");
-		if(universe == null) universe = key.getDeclaringClass().getEnumConstants();
-		if(valueTable == null) valueTable = new Object[universe.length];
-		int i = key.ordinal();
-		if(i >= valueTable.length || universe[i] != key)
-			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
-		Object oldValue = valueTable[i];
-		valueTable[i] = hold(value);
-		if (oldValue != null) {
-			// Existing key was found.
-			return release(oldValue);
+		if(key != null) {
+			if (universe == null) universe = key.getDeclaringClass().getEnumConstants();
+			if (valueTable == null) valueTable = new Object[universe.length];
+			int i = key.ordinal();
+			if (i >= valueTable.length || universe[i] != key)
+				throw new ClassCastException("Incompatible key for the EnumMap's universe.");
+			Object oldValue = valueTable[i];
+			valueTable[i] = hold(value);
+			if (oldValue != null) {
+				// Existing key was found.
+				return release(oldValue);
+			}
+			ordering.add(key);
+			++size;
 		}
-		ordering.add(key);
-		++size;
 		return defaultValue;
 	}
 
@@ -309,7 +313,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
 	public boolean alter (Enum<?> before, Enum<?> after) {
-		if (containsKey(after)) {return false;}
+		if (before == null || after == null || containsKey(after)) {return false;}
 		int index = ordering.indexOf(before);
 		if (index == -1) {return false;}
 		super.put(after, super.remove(before));
@@ -327,7 +331,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
 	public boolean alterAt (int index, Enum<?> after) {
-		if (index < 0 || index >= size || containsKey(after)) {return false;}
+		if (after == null || index < 0 || index >= size || containsKey(after)) {return false;}
 		super.put(after, super.remove(ordering.get(index)));
 		ordering.set(index, after);
 		return true;
