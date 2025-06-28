@@ -176,7 +176,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	public long put (@NonNull Enum<?> key, long value) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumLongOrderedMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new long[universe.length];
@@ -203,7 +203,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
 	 */
 	public long put (@NonNull Enum<?> key, long value, @NonNegative int index) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumLongOrderedMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new long[universe.length];
@@ -223,7 +223,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 
 	@Override
 	public long putOrDefault (@NonNull Enum<?> key, long value, long defaultValue) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumLongOrderedMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new long[universe.length];
@@ -356,7 +356,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 
 	@Override
 	public long getAndIncrement (@NonNull Enum<?> key, long defaultValue, long increment) {
-		if(key == null) throw new NullPointerException("Keys added to an EnumLongOrderedMap must not be null.");
+		if(key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if(keys == null) keys = new EnumSet();
 		if(valueTable == null) valueTable = new long[universe.length];
@@ -384,7 +384,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
 	public boolean alter (@NonNull Enum<?> before, @NonNull Enum<?> after) {
-		if (containsKey(after)) {return false;}
+		if (before == null || after == null || containsKey(after)) {return false;}
 		int index = ordering.indexOf(before);
 		if (index == -1) {return false;}
 		super.put(after, super.remove(before));
@@ -402,7 +402,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
 	public boolean alterAt (@NonNegative int index, @NonNull Enum<?> after) {
-		if (index < 0 || index >= size() || containsKey(after)) {return false;}
+		if (after == null || index < 0 || index >= size() || containsKey(after)) {return false;}
 		super.put(after, super.remove(ordering.get(index)));
 		ordering.set(index, after);
 		return true;
