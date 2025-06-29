@@ -935,7 +935,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 *
 	 * @param key0   the first key; will be converted to primitive long
 	 * @param value0 the first value; will be used to determine the type of all values
-	 * @param rest   an array or varargs of alternating Number, V, Number, V... elements
+	 * @param rest   a varargs or non-null array of alternating Number, V, Number, V... elements
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
@@ -943,13 +943,34 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	public static <V> LongObjectOrderedMap<V> with (Number key0, V value0, Object... rest) {
 		LongObjectOrderedMap<V> map = new LongObjectOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0.longValue(), value0);
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put(((Number)rest[i - 1]).longValue(), (V)rest[i]);
-			} catch (ClassCastException ignored) {
+		map.putPairs(rest);
+		return map;
+	}
+
+	/**
+	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
+	 * another key, another value, and so on until another pair cannot be drawn.  All keys must be some type of boxed
+	 * Number, such as {@link Integer} or {@link Double}, and will be converted to primitive {@code long}s. Any keys
+	 * keys that aren't {@code Number}s or values that don't have V as their type have that entry skipped.
+	 * <br>
+	 * If any item in {@code pairs} cannot be cast to the appropriate Number or V type for its position in the
+	 * arguments, that pair is ignored and neither that key nor value is put into the map. If any key is null, that pair
+	 * is ignored, as well. If {@code pairs} is an Object array that is null, the entire call to putPairs() is ignored.
+	 * If the length of {@code pairs} is odd, the last item (which will be unpaired) is ignored.
+	 *
+	 * @param pairs an array or varargs of alternating Number, V, Number, V... elements
+	 */
+	@SuppressWarnings("unchecked")
+	public void putPairs(Object... pairs) {
+		if(pairs != null) {
+			for (int i = 1; i < pairs.length; i += 2) {
+				try {
+					if(pairs[i-1] != null)
+						put(((Number)pairs[i - 1]).longValue(), (V)pairs[i]);
+				} catch (ClassCastException ignored) {
+				}
 			}
 		}
-		return map;
 	}
 
 	/**
