@@ -877,7 +877,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		return map;
 	}
 
-
 	/**
 	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
 	 * another key, another value, and so on until another pair cannot be drawn. Any keys that don't
@@ -901,5 +900,4 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			}
 		}
 	}
-
 }

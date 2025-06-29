@@ -827,7 +827,7 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 * have K as their type or values that aren't {@code Number}s have that entry skipped.
 	 *
 	 * @param key0   the first key; will be used to determine the type of all keys
-	 * @param value0 the first value; will be converted to primitive long
+	 * @param value0 the first value; a Number that will be converted to primitive long
 	 * @param rest   an array or varargs of alternating K, Number, K, Number... elements
 	 * @param <K>    the type of keys, inferred from key0
 	 * @return a new map containing the given keys and values
@@ -836,13 +836,33 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	public static <K> ObjectLongOrderedMap<K> with (K key0, Number value0, Object... rest) {
 		ObjectLongOrderedMap<K> map = new ObjectLongOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0.longValue());
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put((K)rest[i - 1], ((Number)rest[i]).longValue());
-			} catch (ClassCastException ignored) {
+		map.putPairs(rest);
+		return map;
+	}
+
+	/**
+	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
+	 * another key, another value, and so on until another pair cannot be drawn.  All values must be some type of boxed
+	 * Number, such as {@link Integer} or {@link Double}, and will be converted to primitive {@code long}s. Any keys
+	 * that don't have K as their type or values that aren't {@code Number}s have that entry skipped.
+	 * <br>
+	 * If any item in {@code pairs} cannot be cast to the appropriate K or Number type for its position in the
+	 * arguments, that pair is ignored and neither that key nor value is put into the map. If any key is null, that pair
+	 * is ignored, as well. If {@code pairs} is an Object array that is null, the entire call to putPairs() is ignored.
+	 * If the length of {@code pairs} is odd, the last item (which will be unpaired) is ignored.
+	 *
+	 * @param pairs an array or varargs of alternating K, Number, K, Number... elements
+	 */
+	@SuppressWarnings("unchecked")
+	public void putPairs(Object... pairs) {
+		if(pairs != null) {
+			for (int i = 1; i < pairs.length; i += 2) {
+				try {
+					put((K) pairs[i - 1], ((Number)pairs[i]).longValue());
+				} catch (ClassCastException ignored) {
+				}
 			}
 		}
-		return map;
 	}
 
 	/**
