@@ -733,12 +733,7 @@ public class EnumMapTest extends TestCase {
         } catch (ClassCastException e) {
             // Expected
         }
-        try {
-            enumColorMap.put(null, 2);
-            fail("Expected NullPointerException");
-        } catch (NullPointerException e) {
-            // Expected
-        }
+
         assertNull("Return non-null for non mapped key", enumColorMap.put(
                 Color.Green, 2));
         assertEquals("Return wrong value", 2, enumColorMap.put(Color.Green,

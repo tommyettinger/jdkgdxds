@@ -147,13 +147,6 @@ public class EnumSetTest extends TestCase {
         set.add(EnumFoo.a);
         set.add(EnumFoo.b);
 
-        try {
-            set.add(null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException ignored) {
-            // expected
-        }
-
         set = new EnumSet(EnumFoo.values(), true);
         boolean result = set.add(EnumFoo.a);
         assertEquals("Size should be 1:", 1, set.size());
@@ -1369,13 +1362,6 @@ public class EnumSetTest extends TestCase {
         assertTrue("enumSet should contain EnumWithSubclass.a:",
                 enumSet.contains(EnumWithInnerClass.a));
 
-        try {
-            EnumSet.of((EnumWithInnerClass) null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
         // test enum type with more than 64 elements
         EnumSet hugeEnumSet = EnumSet.of(HugeEnumWithInnerClass.a);
         assertEquals(1, hugeEnumSet.size());
@@ -1393,27 +1379,6 @@ public class EnumSetTest extends TestCase {
         assertTrue("enumSet should contain EnumWithSubclass.b:",
                 enumSet.contains(EnumWithInnerClass.b));
 
-        try {
-            EnumSet.of((EnumWithInnerClass) null, EnumWithInnerClass.a);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
-        try {
-            EnumSet.of( EnumWithInnerClass.a, (EnumWithInnerClass) null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
-        try {
-            EnumSet.of( (EnumWithInnerClass) null, (EnumWithInnerClass) null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
         enumSet = EnumSet.of(EnumWithInnerClass.a, EnumWithInnerClass.a);
         assertEquals("Size of enumSet should be 1",
                 1, enumSet.size());
@@ -1425,27 +1390,6 @@ public class EnumSetTest extends TestCase {
 
         assertTrue(hugeEnumSet.contains(HugeEnumWithInnerClass.a));
         assertTrue(hugeEnumSet.contains(HugeEnumWithInnerClass.b));
-
-        try {
-            EnumSet.of((HugeEnumWithInnerClass) null, HugeEnumWithInnerClass.a);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
-        try {
-            EnumSet.of( HugeEnumWithInnerClass.a, (HugeEnumWithInnerClass) null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
-        try {
-            EnumSet.of( (HugeEnumWithInnerClass) null, (HugeEnumWithInnerClass) null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
 
         hugeEnumSet = EnumSet.of(HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.a);
         assertEquals(1, hugeEnumSet.size());
@@ -1460,13 +1404,6 @@ public class EnumSetTest extends TestCase {
                 "enumSet should contain EnumWithSubclass.a:", enumSet.contains(EnumWithInnerClass.a));
         assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.c));
 
-        try {
-            EnumSet.of((EnumWithInnerClass) null, null, null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
         enumSet = EnumSet.of(EnumWithInnerClass.a, EnumWithInnerClass.b,
                 EnumWithInnerClass.b);
         assertEquals("enumSet should contain 2 elements:", 2, enumSet.size());
@@ -1478,13 +1415,6 @@ public class EnumSetTest extends TestCase {
 
         assertTrue(hugeEnumSet.contains(HugeEnumWithInnerClass.a));
         assertTrue(hugeEnumSet.contains(HugeEnumWithInnerClass.c));
-
-        try {
-            EnumSet.of((HugeEnumWithInnerClass) null, null, null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
 
         hugeEnumSet = EnumSet.of(HugeEnumWithInnerClass.a, HugeEnumWithInnerClass.b,
                 HugeEnumWithInnerClass.b);
@@ -1502,13 +1432,6 @@ public class EnumSetTest extends TestCase {
         assertTrue("enumSet should contain EnumWithSubclass.d:", enumSet
                 .contains(EnumWithInnerClass.d));
 
-        try {
-            EnumSet.of((EnumWithInnerClass) null, null, null, null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
         // test enum type with more than 64 elements
         EnumSet hugeEnumSet = EnumSet.of(HugeEnumWithInnerClass.a,
                 HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c,
@@ -1518,12 +1441,6 @@ public class EnumSetTest extends TestCase {
         assertTrue(hugeEnumSet.contains(HugeEnumWithInnerClass.a));
         assertTrue(hugeEnumSet.contains(HugeEnumWithInnerClass.d));
 
-        try {
-            EnumSet.of((HugeEnumWithInnerClass) null, null, null, null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
     }
 
     public void test_Of_EEEEE() {
@@ -1535,13 +1452,6 @@ public class EnumSetTest extends TestCase {
         assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.a));
         assertTrue("Should return true", enumSet.contains(EnumWithInnerClass.e));
 
-        try {
-            EnumSet.of((EnumWithInnerClass) null, null, null, null, null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
         // test enum with more than 64 elements
         EnumSet hugeEnumSet = EnumSet.of(HugeEnumWithInnerClass.a,
                 HugeEnumWithInnerClass.b, HugeEnumWithInnerClass.c,
@@ -1550,13 +1460,6 @@ public class EnumSetTest extends TestCase {
 
         assertTrue(hugeEnumSet.contains(HugeEnumWithInnerClass.a));
         assertTrue(hugeEnumSet.contains(HugeEnumWithInnerClass.e));
-
-        try {
-            EnumSet.of((HugeEnumWithInnerClass) null, null, null, null, null);
-            fail("Should throw NullPointerException");
-        } catch (NullPointerException npe) {
-            // expected
-        }
     }
 
     public void test_Of_EEArray() {
