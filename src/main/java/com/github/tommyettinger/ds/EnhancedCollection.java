@@ -85,6 +85,30 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return oldSize != size();
 	}
 
+	default boolean addAll (T[] array) {
+		return addAll(array, 0, array.length);
+	}
+
+	default boolean addAll (T[] array, int offset, int length) {
+		boolean changed = false;
+		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
+			changed |= add(array[i]);
+		}
+		return changed;
+	}
+
+	/**
+	 * Takes an array of items to add, or more simply 0 or more arguments that will each be added.
+	 * If {@code varargs} is null, this won't add anything and will return false.
+	 * If you have what is usually an array, consider calling {@link #addAll(Object[])} to avoid the
+	 * possibility of heap pollution from a varargs with a generic type.
+	 *
+	 * @param varargs 0 or more items to add; may also be an array
+	 * @return true if this collection was modified
+	 */
+	default boolean addVarargs(T... varargs) {
+		return varargs != null && addAll(varargs, 0, varargs.length);
+	}
 	/**
 	 * Gets the {@link Iterable#iterator()} from the parameter and delegates to {@link #removeAll(Iterator)}.
 	 * @param it an Iterable of items to remove fully
