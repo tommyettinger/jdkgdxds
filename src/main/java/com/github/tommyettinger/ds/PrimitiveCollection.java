@@ -117,6 +117,17 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
+		 * Takes an array of items to add, or more simply 0 or more arguments that will each be added.
+		 * If {@code varargs} is null, this won't add anything and will return false.
+		 *
+		 * @param varargs 0 or more items to add; may also be an array
+		 * @return true if this collection was modified
+		 */
+		default boolean addVarargs (int... varargs) {
+			return varargs != null && addAll(varargs, 0, varargs.length);
+		}
+
+		/**
 		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
 		 *
 		 * @param other a primitive collection of int items to remove fully, such as an IntList or an IntSet
@@ -655,6 +666,17 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
+		 * Takes an array of items to add, or more simply 0 or more arguments that will each be added.
+		 * If {@code varargs} is null, this won't add anything and will return false.
+		 *
+		 * @param varargs 0 or more items to add; may also be an array
+		 * @return true if this collection was modified
+		 */
+		default boolean addVarargs (long... varargs) {
+			return varargs != null && addAll(varargs, 0, varargs.length);
+		}
+
+		/**
 		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
 		 *
 		 * @param other a primitive collection of long items to remove fully, such as a LongList or a LongSet
@@ -1183,6 +1205,17 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
+		 * Takes an array of items to add, or more simply 0 or more arguments that will each be added.
+		 * If {@code varargs} is null, this won't add anything and will return false.
+		 *
+		 * @param varargs 0 or more items to add; may also be an array
+		 * @return true if this collection was modified
+		 */
+		default boolean addVarargs (float... varargs) {
+			return varargs != null && addAll(varargs, 0, varargs.length);
+		}
+
+		/**
 		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
 		 *
 		 * @param other a primitive collection of float items to remove fully, such as a FloatList or a FloatDeque
@@ -1677,6 +1710,17 @@ public interface PrimitiveCollection<T> {
 				changed |= add(array[i]);
 			}
 			return changed;
+		}
+
+		/**
+		 * Takes an array of items to add, or more simply 0 or more arguments that will each be added.
+		 * If {@code varargs} is null, this won't add anything and will return false.
+		 *
+		 * @param varargs 0 or more items to add; may also be an array
+		 * @return true if this collection was modified
+		 */
+		default boolean addVarargs (double... varargs) {
+			return varargs != null && addAll(varargs, 0, varargs.length);
 		}
 
 		/**
@@ -2182,6 +2226,17 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
+		 * Takes an array of items to add, or more simply 0 or more arguments that will each be added.
+		 * If {@code varargs} is null, this won't add anything and will return false.
+		 *
+		 * @param varargs 0 or more items to add; may also be an array
+		 * @return true if this collection was modified
+		 */
+		default boolean addVarargs (short... varargs) {
+			return varargs != null && addAll(varargs, 0, varargs.length);
+		}
+
+		/**
 		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
 		 *
 		 * @param other a primitive collection of short items to remove fully, such as a ShortList or a ShortDeque
@@ -2672,6 +2727,17 @@ public interface PrimitiveCollection<T> {
 				changed |= add(array[i]);
 			}
 			return changed;
+		}
+
+		/**
+		 * Takes an array of items to add, or more simply 0 or more arguments that will each be added.
+		 * If {@code varargs} is null, this won't add anything and will return false.
+		 *
+		 * @param varargs 0 or more items to add; may also be an array
+		 * @return true if this collection was modified
+		 */
+		default boolean addVarargs (byte... varargs) {
+			return varargs != null && addAll(varargs, 0, varargs.length);
 		}
 
 		/**
@@ -3167,6 +3233,17 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
+		 * Takes an array of items to add, or more simply 0 or more arguments that will each be added.
+		 * If {@code varargs} is null, this won't add anything and will return false.
+		 *
+		 * @param varargs 0 or more items to add; may also be an array
+		 * @return true if this collection was modified
+		 */
+		default boolean addVarargs (char... varargs) {
+			return varargs != null && addAll(varargs, 0, varargs.length);
+		}
+
+		/**
 		 * Removes from this collection all occurrences of any elements contained in the specified other collection.
 		 *
 		 * @param other a primitive collection of char items to remove fully, such as a CharList or a CharDeque
@@ -3658,6 +3735,17 @@ public interface PrimitiveCollection<T> {
 				changed |= add(array[i]);
 			}
 			return changed;
+		}
+
+		/**
+		 * Takes an array of items to add, or more simply 0 or more arguments that will each be added.
+		 * If {@code varargs} is null, this won't add anything and will return false.
+		 *
+		 * @param varargs 0 or more items to add; may also be an array
+		 * @return true if this collection was modified
+		 */
+		default boolean addVarargs (boolean... varargs) {
+			return varargs != null && addAll(varargs, 0, varargs.length);
 		}
 
 		/**
