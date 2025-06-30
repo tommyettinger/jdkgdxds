@@ -1723,6 +1723,24 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	}
 
 	/**
+	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
+	 * another key, another value, and so on until another pair cannot be drawn.  All keys and values must be primitive
+	 * {@code int}s.
+	 * <br>
+	 * If {@code pairs} is an int array that is null, the entire call to putPairs() is ignored.
+	 * If the length of {@code pairs} is odd, the last item (which will be unpaired) is ignored.
+	 *
+	 * @param pairs an array or varargs of int elements
+	 */
+	public void putPairsPrimitive(int... pairs) {
+		if(pairs != null) {
+			for (int i = 1; i < pairs.length; i += 2) {
+				put(pairs[i - 1], pairs[i]);
+			}
+		}
+	}
+
+	/**
 	 * Constructs an empty map.
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
@@ -1835,9 +1853,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	public static IntIntMap withPrimitive (int key0, int value0, int... rest) {
 		IntIntMap map = new IntIntMap(1 + (rest.length >>> 1));
 		map.put(key0, value0);
-		for (int i = 1; i < rest.length; i += 2) {
-			map.put(rest[i - 1], rest[i]);
-		}
+		map.putPairsPrimitive(rest);
 		return map;
 	}
 }

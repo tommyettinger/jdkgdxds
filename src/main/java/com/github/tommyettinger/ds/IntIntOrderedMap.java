@@ -1065,9 +1065,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	public static IntIntOrderedMap withPrimitive (int key0, int value0, int... rest) {
 		IntIntOrderedMap map = new IntIntOrderedMap(1 + (rest.length >>> 1));
 		map.put(key0, value0);
-		for (int i = 1; i < rest.length; i += 2) {
-			map.put(rest[i - 1], rest[i]);
-		}
+		map.putPairsPrimitive(rest);
 		return map;
 	}
 }
