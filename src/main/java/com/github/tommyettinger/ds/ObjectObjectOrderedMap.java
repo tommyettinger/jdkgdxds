@@ -876,28 +876,4 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		map.putPairs(rest);
 		return map;
 	}
-
-	/**
-	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
-	 * another key, another value, and so on until another pair cannot be drawn. Any keys that don't
-	 * have K as their type or values that don't have V as their type have that entry skipped.
-	 * <br>
-	 * If any item in {@code pairs} cannot be cast to the appropriate K or V type for its position in the arguments,
-	 * that pair is ignored and neither that key nor value is put into the map. If any key is null, that pair is
-	 * ignored, as well. If {@code pairs} is an Object array that is null, the entire call to putPairs() is ignored.
-	 * If the length of {@code pairs} is odd, the last item (which will be unpaired) is ignored.
-	 *
-	 * @param pairs an array or varargs of alternating K, V, K, V... elements
-	 */
-	@SuppressWarnings("unchecked")
-	public void putPairs(Object... pairs) {
-		if(pairs != null) {
-			for (int i = 1; i < pairs.length; i += 2) {
-				try {
-					put((K) pairs[i - 1], (V) pairs[i]);
-				} catch (ClassCastException ignored) {
-				}
-			}
-		}
-	}
 }

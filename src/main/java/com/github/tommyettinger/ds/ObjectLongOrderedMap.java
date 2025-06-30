@@ -841,31 +841,6 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	}
 
 	/**
-	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
-	 * another key, another value, and so on until another pair cannot be drawn.  All values must be some type of boxed
-	 * Number, such as {@link Integer} or {@link Double}, and will be converted to primitive {@code long}s. Any keys
-	 * that don't have K as their type or values that aren't {@code Number}s have that entry skipped.
-	 * <br>
-	 * If any item in {@code pairs} cannot be cast to the appropriate K or Number type for its position in the
-	 * arguments, that pair is ignored and neither that key nor value is put into the map. If any key is null, that pair
-	 * is ignored, as well. If {@code pairs} is an Object array that is null, the entire call to putPairs() is ignored.
-	 * If the length of {@code pairs} is odd, the last item (which will be unpaired) is ignored.
-	 *
-	 * @param pairs an array or varargs of alternating K, Number, K, Number... elements
-	 */
-	@SuppressWarnings("unchecked")
-	public void putPairs(Object... pairs) {
-		if(pairs != null) {
-			for (int i = 1; i < pairs.length; i += 2) {
-				try {
-					put((K) pairs[i - 1], ((Number)pairs[i]).longValue());
-				} catch (ClassCastException ignored) {
-				}
-			}
-		}
-	}
-
-	/**
 	 * Constructs an empty map given the key type as a generic type argument.
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
