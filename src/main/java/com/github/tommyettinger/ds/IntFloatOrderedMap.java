@@ -955,9 +955,7 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	public static IntFloatOrderedMap with (Number key0, Number value0, Number... rest) {
 		IntFloatOrderedMap map = new IntFloatOrderedMap(1 + (rest.length >>> 1));
 		map.put(key0.intValue(), value0.floatValue());
-		for (int i = 1; i < rest.length; i += 2) {
-			map.put(rest[i - 1].intValue(), rest[i].floatValue());
-		}
+		map.putPairs(rest);
 		return map;
 	}
 

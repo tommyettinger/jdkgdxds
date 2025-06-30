@@ -1700,7 +1700,8 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	/**
 	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
 	 * another key, another value, and so on until another pair cannot be drawn.  All keys and values must be some type
-	 * of boxed Number, such as {@link Integer} or {@link Double}, and will be converted to primitive {@code long}s.
+	 * of boxed Number, such as {@link Integer} or {@link Double}, and will be converted to primitive {@code long}s and
+	 * {@code int}s.
 	 * <br>
 	 * If any item in {@code pairs} cannot be cast to the appropriate Number type for its position in the
 	 * arguments, that pair is ignored and neither that key nor value is put into the map. If any key is null, that pair
