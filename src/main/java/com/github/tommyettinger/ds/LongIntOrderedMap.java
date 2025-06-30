@@ -954,9 +954,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	public static LongIntOrderedMap with (Number key0, Number value0, Number... rest) {
 		LongIntOrderedMap map = new LongIntOrderedMap(1 + (rest.length >>> 1));
 		map.put(key0.longValue(), value0.intValue());
-		for (int i = 1; i < rest.length; i += 2) {
-			map.put(rest[i - 1].longValue(), rest[i].intValue());
-		}
+		map.putPairs(rest);
 		return map;
 	}
 
