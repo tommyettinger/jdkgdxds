@@ -1713,7 +1713,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		if(pairs != null) {
 			for (int i = 1; i < pairs.length; i += 2) {
 				try {
-					if(pairs[i-1] != null)
+					if(pairs[i-1] != null && pairs[i] != null)
 						put(pairs[i - 1].longValue(), pairs[i].intValue());
 				} catch (ClassCastException ignored) {
 				}

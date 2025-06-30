@@ -1612,7 +1612,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		if(pairs != null) {
 			for (int i = 1; i < pairs.length; i += 2) {
 				try {
-					put((K) pairs[i - 1], ((Number)pairs[i]).longValue());
+					if(pairs[i-1] != null && pairs[i] != null)
+						put((K) pairs[i - 1], ((Number)pairs[i]).longValue());
 				} catch (ClassCastException ignored) {
 				}
 			}

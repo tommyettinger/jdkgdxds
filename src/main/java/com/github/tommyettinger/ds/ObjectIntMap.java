@@ -1611,7 +1611,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		if(pairs != null) {
 			for (int i = 1; i < pairs.length; i += 2) {
 				try {
-					put((K) pairs[i - 1], ((Number)pairs[i]).intValue());
+					if(pairs[i-1] != null && pairs[i] != null)
+						put((K) pairs[i - 1], ((Number)pairs[i]).intValue());
 				} catch (ClassCastException ignored) {
 				}
 			}

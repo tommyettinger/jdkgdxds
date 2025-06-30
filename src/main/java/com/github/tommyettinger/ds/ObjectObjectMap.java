@@ -1650,7 +1650,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		if(pairs != null) {
 			for (int i = 1; i < pairs.length; i += 2) {
 				try {
-					put((K) pairs[i - 1], (V) pairs[i]);
+					if(pairs[i-1] != null)
+						put((K) pairs[i - 1], (V) pairs[i]);
 				} catch (ClassCastException ignored) {
 				}
 			}
