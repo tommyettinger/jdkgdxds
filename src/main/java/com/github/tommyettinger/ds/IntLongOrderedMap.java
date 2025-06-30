@@ -950,9 +950,7 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 	public static IntLongOrderedMap with (Number key0, Number value0, Number... rest) {
 		IntLongOrderedMap map = new IntLongOrderedMap(1 + (rest.length >>> 1));
 		map.put(key0.intValue(), value0.longValue());
-		for (int i = 1; i < rest.length; i += 2) {
-			map.put(rest[i - 1].intValue(), rest[i].longValue());
-		}
+		map.putPairs(rest);
 		return map;
 	}
 
