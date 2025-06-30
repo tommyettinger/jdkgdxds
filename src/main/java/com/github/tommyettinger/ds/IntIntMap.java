@@ -1694,10 +1694,32 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	public static IntIntMap with (Number key0, Number value0, Number... rest) {
 		IntIntMap map = new IntIntMap(1 + (rest.length >>> 1));
 		map.put(key0.intValue(), value0.intValue());
-		for (int i = 1; i < rest.length; i += 2) {
-			map.put(rest[i - 1].intValue(), rest[i].intValue());
-		}
+		map.putPairs(rest);
 		return map;
+	}
+
+	/**
+	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
+	 * another key, another value, and so on until another pair cannot be drawn.  All keys and values must be some type
+	 * of boxed Number, such as {@link Integer} or {@link Double}, and will be converted to primitive {@code int}s.
+	 * <br>
+	 * If any item in {@code pairs} cannot be cast to the appropriate Number type for its position in the
+	 * arguments, that pair is ignored and neither that key nor value is put into the map. If any key is null, that pair
+	 * is ignored, as well. If {@code pairs} is a Number array that is null, the entire call to putPairs() is ignored.
+	 * If the length of {@code pairs} is odd, the last item (which will be unpaired) is ignored.
+	 *
+	 * @param pairs an array or varargs of Number elements
+	 */
+	public void putPairs(Number... pairs) {
+		if(pairs != null) {
+			for (int i = 1; i < pairs.length; i += 2) {
+				try {
+					if(pairs[i-1] != null && pairs[i] != null)
+						put(pairs[i - 1].intValue(), pairs[i].intValue());
+				} catch (ClassCastException ignored) {
+				}
+			}
+		}
 	}
 
 	/**
