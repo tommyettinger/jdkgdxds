@@ -943,12 +943,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	public static <V> IntObjectOrderedMap<V> with (Number key0, V value0, Object... rest) {
 		IntObjectOrderedMap<V> map = new IntObjectOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0.intValue(), value0);
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put(((Number)rest[i - 1]).intValue(), (V)rest[i]);
-			} catch (ClassCastException ignored) {
-			}
-		}
+		map.putPairs(rest);
 		return map;
 	}
 

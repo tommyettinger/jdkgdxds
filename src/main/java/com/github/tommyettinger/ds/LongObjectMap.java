@@ -1729,7 +1729,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
 	 * another key, another value, and so on until another pair cannot be drawn.  All keys must be some type of boxed
 	 * Number, such as {@link Integer} or {@link Double}, and will be converted to primitive {@code long}s. Any keys
-	 * keys that aren't {@code Number}s or values that don't have V as their type have that entry skipped.
+	 * that aren't {@code Number}s or values that don't have V as their type have that entry skipped.
 	 * <br>
 	 * If any item in {@code pairs} cannot be cast to the appropriate Number or V type for its position in the
 	 * arguments, that pair is ignored and neither that key nor value is put into the map. If any key is null, that pair
