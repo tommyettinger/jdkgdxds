@@ -2409,7 +2409,6 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 * @return the element at the specified position in this deque
 	 * @throws NoSuchElementException if the deque is empty
 	 */
-	@Override
 	public @Nullable T get (int index) {
 		if (index <= 0)
 			return getFirst();
@@ -2545,7 +2544,6 @@ public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	@Override
 	public @NonNull ObjectDequeIterator<T> descendingIterator () {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new ObjectDequeIterator<>(this, true);
