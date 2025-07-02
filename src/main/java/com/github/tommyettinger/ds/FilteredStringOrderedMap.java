@@ -444,12 +444,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	public static <V> FilteredStringOrderedMap<V> with (CharFilter filter, String key0, V value0, Object... rest) {
 		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(filter, 1 + (rest.length >>> 1));
 		map.put(key0, value0);
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put((String)rest[i - 1], (V)rest[i]);
-			} catch (ClassCastException ignored) {
-			}
-		}
+		map.putPairs(rest);
 		return map;
 	}
 }

@@ -210,12 +210,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	public static <K, V> IdentityObjectMap<K, V> with (K key0, V value0, Object... rest) {
 		IdentityObjectMap<K, V> map = new IdentityObjectMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put((K)rest[i - 1], (V)rest[i]);
-			} catch (ClassCastException ignored) {
-			}
-		}
+		map.putPairs(rest);
 		return map;
 	}
 }

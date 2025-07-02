@@ -416,12 +416,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0, Object... rest) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 1 + (rest.length >>> 1));
 		map.put(key0, value0);
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put((String)rest[i - 1], (V)rest[i]);
-			} catch (ClassCastException ignored) {
-			}
-		}
+		map.putPairs(rest);
 		return map;
 	}
 }

@@ -232,12 +232,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	public static <K, V> IdentityObjectOrderedMap<K, V> with (K key0, V value0, Object... rest) {
 		IdentityObjectOrderedMap<K, V> map = new IdentityObjectOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put((K)rest[i - 1], (V)rest[i]);
-			} catch (ClassCastException ignored) {
-			}
-		}
+		map.putPairs(rest);
 		return map;
 	}
 }

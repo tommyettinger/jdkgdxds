@@ -334,12 +334,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	public static <V> CaseInsensitiveOrderedMap<V> with (CharSequence key0, V value0, Object... rest) {
 		CaseInsensitiveOrderedMap<V> map = new CaseInsensitiveOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put((CharSequence)rest[i - 1], (V)rest[i]);
-			} catch (ClassCastException ignored) {
-			}
-		}
+		map.putPairs(rest);
 		return map;
 	}
 }

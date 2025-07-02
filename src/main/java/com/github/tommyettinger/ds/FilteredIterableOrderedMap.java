@@ -459,12 +459,7 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	public static <K, I extends Iterable<K>, V> FilteredIterableOrderedMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, Object... rest) {
 		FilteredIterableOrderedMap<K, I, V> map = new FilteredIterableOrderedMap<>(filter, editor, 1 + (rest.length >>> 1));
 		map.put(key0, value0);
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put((I)rest[i - 1], (V)rest[i]);
-			} catch (ClassCastException ignored) {
-			}
-		}
+		map.putPairs(rest);
 		return map;
 	}
 }
