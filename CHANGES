@@ -1,5 +1,13 @@
 [1.10.1]
 - Dependency on digital updated to 0.7.0; this version change doesn't directly affect jdkgdxds, but calls to `TrigTools` methods may have very slightly different results because its lookup tables are calculated differently (now they are fully deterministic).
+- Instead of creating a method reference to StringBuilder::append, which allocates on Android due to a flaw in R8, each primitive Appender now stores one method reference, DEFAULT, that is equivalent to StringBuilder::append .
+- In addition to DEFAULT in each primitive Appender interface, there is also DENSE, which produces non-human-readable but tightly-packed BASE90 strings. These are also easier to read.
+- Each PrimitiveCollection type can now use toDenseString(), denseAppendTo(), addDense(), readDense(), and readArrayDense(). These work on the aforementioned BASE90 strings.
+- Each PrimitiveCollection type, and also EnhancedCollection somewhat, can use addVarargs() to add 0 or more items, or an array. These could be used by with() methods taking varargs, but it isn't needed.
+- As a counterpart to with() taking varargs in various map types, there is now a putPairs() method that acts like that with() and takes an Object array, Number array, or something like that, organized as key, value, key, value...
+- EnhancedCollection now can add arrays to the collection using addAll(), a bizarre omission from earlier versions.
+- Null checks have been added for most places in case Checker Framework annotations aren't sufficient.
+- GWT works again; Lisque and Deque had used `<@Nullable T>` as their generic type, which GWT can't handle (TeaVM has no trouble either way).
 
 [1.10.0]
 - Most hashed collections switched back from the xor-rotate-xor-rotate approach and use the earlier multiply-shift implementation for place(). This differs from before in that hashMultiplier is usually determined now by the map's/set's shift value, unless setHashMultiplier() changed it.

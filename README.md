@@ -161,15 +161,15 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:1.10.0"
+api "com.github.tommyettinger:jdkgdxds:1.10.1"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
 `mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on [digital](https://github.com/tommyettinger/digital)
 (which provides common math code meant for use by multiple projects), [funderby](https://github.com/tommyettinger/funderby)
 (Java 8 functional interfaces for primitive types), and for annotations only, [checker-qual](https://github.com/typetools/checker-framework). The
-version for the `digital` dependency is 0.6.2 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.6.2"`). Funderby has only changed a bit since its initial release, and is on version
+version for the `digital` dependency is 0.7.0 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.7.0"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`). The version for
 `checker-qual` is 3.42.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes.
 Earlier versions of jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to
@@ -179,8 +179,8 @@ mention that JSR305 is currently unmaintained). You can manually specify a `chec
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.6.2:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.10.0:sources"
+implementation "com.github.tommyettinger:digital:0.7.0:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.10.1:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -227,16 +227,16 @@ for that library -- both digital and juniper were both mostly drawn from code in
 The version for funderby is expected to stay at or around 0.1.2, since it is a relatively small library and is probably complete.
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/4ab2119ad9).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/0f0fd7e85c).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:4ab2119ad9'` or `api 'com.github.tommyettinger:jdkgdxds:4ab2119ad9'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:0f0fd7e85c'` or `api 'com.github.tommyettinger:jdkgdxds:0f0fd7e85c'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.6.2:sources"
-implementation "com.github.tommyettinger:jdkgdxds:4ab2119ad9:sources"
+implementation "com.github.tommyettinger:digital:0.7.0:sources"
+implementation "com.github.tommyettinger:jdkgdxds:0f0fd7e85c:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -245,7 +245,7 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="com.github.tommyettinger.digital" />
 <inherits name="com.github.tommyettinger.jdkgdxds" />
 ```
-in with the other `inherits` lines. `4ab2119ad9` is an example of a recent commit, and can be
+in with the other `inherits` lines. `0f0fd7e85c` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
 
 There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to
@@ -262,9 +262,7 @@ Dependency information is provided in the kryo-more README.md .
 You can also use [Apache Fury](https://fury.apache.org) to serialize these data structures by using
 [tantrum](https://github.com/tommyettinger/tantrum). The tantrum README.md has dependency information. Fury can be
 faster than Kryo, and despite being "Incubating" at the Apache Foundation, I have so-far encountered no bugs with it in
-practice. I have found a mystery bug in Kryo 5.0 and up, with a specific type that overwrites the start of the
-serialized data file, making it invalid. Actually, I've found it twice, for two unrelated types. That is what caused me
-to seek out alternatives to Kryo, and Fury works well. 
+practice that persisted more than 2 weeks before being fixed in a release.
 
 ## Updating to 1.0.1
 
