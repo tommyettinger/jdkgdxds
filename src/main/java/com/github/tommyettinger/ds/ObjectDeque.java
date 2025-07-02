@@ -69,7 +69,7 @@ import java.util.RandomAccess;
  * should usually be much faster than {@link LinkedList}, as well; only periodic resizing and modifications in the
  * middle of the List using an iterator should be typically faster for {@link LinkedList}.
  */
-public class ObjectDeque<@Nullable T> extends AbstractList<T> implements Deque<T>, List<T>, Lisque<T>, Collection<T>,
+public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		RandomAccess, Arrangeable, EnhancedCollection<T>, Arrangeable.ArrangeableList<T> {
 
 	/**

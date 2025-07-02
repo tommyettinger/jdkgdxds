@@ -1639,13 +1639,33 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	public static EnumFloatMap with (Enum<?> key0, Number value0, Object... rest) {
 		EnumFloatMap map = new EnumFloatMap();
 		map.put(key0, value0.floatValue());
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put((Enum<?>)rest[i - 1], ((Number)rest[i]).floatValue());
-			} catch (ClassCastException ignored) {
+		map.putPairs(rest);
+		return map;
+	}
+
+	/**
+	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
+	 * another key, another value, and so on until another pair cannot be drawn.  All values must be some type of boxed
+	 * Number, such as {@link Integer} or {@link Double}, and will be converted to primitive {@code float}s. Any keys
+	 * that don't have some Enum as their type or values that aren't {@code Number}s have that entry skipped.
+	 * <br>
+	 * If any item in {@code pairs} cannot be cast to the Enum or Number type for its position in the
+	 * arguments, that pair is ignored and neither that key nor value is put into the map. If any key is null, that pair
+	 * is ignored, as well. If {@code pairs} is an Object array that is null, the entire call to putPairs() is ignored.
+	 * If the length of {@code pairs} is odd, the last item (which will be unpaired) is ignored.
+	 *
+	 * @param pairs an array or varargs of alternating Enum, Number, Enum, Number... elements
+	 */
+	public void putPairs(Object... pairs) {
+		if(pairs != null) {
+			for (int i = 1; i < pairs.length; i += 2) {
+				try {
+					if(pairs[i-1] != null && pairs[i] != null)
+						put((Enum<?>) pairs[i - 1], ((Number)pairs[i]).floatValue());
+				} catch (ClassCastException ignored) {
+				}
 			}
 		}
-		return map;
 	}
 
 	/**

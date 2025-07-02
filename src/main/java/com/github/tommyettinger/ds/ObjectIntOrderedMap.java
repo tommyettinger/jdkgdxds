@@ -832,7 +832,6 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param <K>    the type of keys, inferred from key0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <K> ObjectIntOrderedMap<K> with (K key0, Number value0, Object... rest) {
 		ObjectIntOrderedMap<K> map = new ObjectIntOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0.intValue());

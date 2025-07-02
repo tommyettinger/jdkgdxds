@@ -1930,7 +1930,6 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <V> EnumMap<V> with (Enum<?> key0, V value0, Object... rest) {
 		EnumMap<V> map = new EnumMap<>();
 		map.put(key0, value0);

@@ -901,7 +901,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <V> EnumOrderedMap<V> with (Enum<?> key0, V value0, Object... rest) {
 		EnumOrderedMap<V> map = new EnumOrderedMap<>();
 		map.put(key0, value0);

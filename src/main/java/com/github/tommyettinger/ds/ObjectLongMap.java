@@ -1586,7 +1586,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param <K>    the type of keys, inferred from key0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <K> ObjectLongMap<K> with (K key0, Number value0, Object... rest) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0.longValue());

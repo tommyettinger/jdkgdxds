@@ -24,7 +24,7 @@ import java.util.*;
  * A combination List/Deque with some expanded features based on Deque's mix of exceptional and non-exceptional methods.
  * @param <T> the generic type of items
  */
-public interface Lisque<@Nullable T> extends List<T>, Deque<T>, Collection<T> {
+public interface Lisque<T> extends List<T>, Deque<T>, Collection<T> {
     boolean add(@Nullable T t);
 
     void add(int index, @Nullable T element);

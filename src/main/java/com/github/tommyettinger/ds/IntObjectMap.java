@@ -1711,7 +1711,6 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <V> IntObjectMap<V> with (Number key0, V value0, Object... rest) {
 		IntObjectMap<V> map = new IntObjectMap<>(1 + (rest.length >>> 1));
 		map.put(key0.intValue(), value0);

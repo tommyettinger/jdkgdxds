@@ -869,7 +869,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <K, V> ObjectObjectOrderedMap<K, V> with (K key0, V value0, Object... rest) {
 		ObjectObjectOrderedMap<K, V> map = new ObjectObjectOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);

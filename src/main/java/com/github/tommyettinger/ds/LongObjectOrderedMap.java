@@ -939,7 +939,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <V> LongObjectOrderedMap<V> with (Number key0, V value0, Object... rest) {
 		LongObjectOrderedMap<V> map = new LongObjectOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0.longValue(), value0);

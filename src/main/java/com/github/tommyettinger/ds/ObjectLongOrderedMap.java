@@ -832,7 +832,6 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 * @param <K>    the type of keys, inferred from key0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <K> ObjectLongOrderedMap<K> with (K key0, Number value0, Object... rest) {
 		ObjectLongOrderedMap<K> map = new ObjectLongOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0.longValue());

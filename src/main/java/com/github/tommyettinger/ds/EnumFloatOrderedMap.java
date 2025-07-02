@@ -863,12 +863,7 @@ public class EnumFloatOrderedMap extends EnumFloatMap implements Ordered<Enum<?>
 	public static EnumFloatOrderedMap with (Enum<?> key0, Number value0, Object... rest) {
 		EnumFloatOrderedMap map = new EnumFloatOrderedMap();
 		map.put(key0, value0.floatValue());
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put((Enum<?>)rest[i - 1], ((Number)rest[i]).floatValue());
-			} catch (ClassCastException ignored) {
-			}
-		}
+		map.putPairs(rest);
 		return map;
 	}
 

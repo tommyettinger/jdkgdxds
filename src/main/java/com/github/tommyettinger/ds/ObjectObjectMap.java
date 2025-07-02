@@ -1625,7 +1625,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <K, V> ObjectObjectMap<K, V> with (K key0, V value0, Object... rest) {
 		ObjectObjectMap<K, V> map = new ObjectObjectMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);

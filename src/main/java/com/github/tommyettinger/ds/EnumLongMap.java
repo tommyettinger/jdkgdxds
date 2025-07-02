@@ -1662,7 +1662,6 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 *
 	 * @param pairs an array or varargs of alternating Enum, Number, Enum, Number... elements
 	 */
-	@SuppressWarnings("unchecked")
 	public void putPairs(Object... pairs) {
 		if(pairs != null) {
 			for (int i = 1; i < pairs.length; i += 2) {
