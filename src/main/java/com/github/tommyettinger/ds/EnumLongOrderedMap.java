@@ -869,12 +869,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	public static EnumLongOrderedMap with (Enum<?> key0, Number value0, Object... rest) {
 		EnumLongOrderedMap map = new EnumLongOrderedMap();
 		map.put(key0, value0.longValue());
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put((Enum<?>)rest[i - 1], ((Number)rest[i]).longValue());
-			} catch (ClassCastException ignored) {
-			}
-		}
+		map.putPairs(rest);
 		return map;
 	}
 
