@@ -60,24 +60,29 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	/**
 	 * Creates an IntOrderedSet with the option to use an IntDeque for keeping order.
-	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (boolean useDequeOrder) {
-		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor(), useDequeOrder);
+	public LongOrderedSet (OrderType ordering) {
+		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor(), ordering);
 	}
 
 	public LongOrderedSet (int initialCapacity, float loadFactor) {
-		this(initialCapacity, loadFactor, false);
+		this(initialCapacity, loadFactor, OrderType.LIST);
 	}
 
-	public LongOrderedSet (int initialCapacity, float loadFactor, boolean useDequeOrder) {
+	public LongOrderedSet (int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-		if(useDequeOrder) items = new LongDeque(initialCapacity);
-		else items = new LongList(initialCapacity);
+		switch (ordering){
+			case DEQUE: items = new LongDeque(initialCapacity);
+			break;
+			case BAG: items = new LongBag(initialCapacity);
+			break;
+			default: items = new LongList(initialCapacity);
+		}
 	}
 
 	public LongOrderedSet (int initialCapacity) {
-		this(initialCapacity, Utilities.getDefaultLoadFactor(), false);
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
 	}
 
 	/**
@@ -93,6 +98,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	public LongOrderedSet (LongOrderedSet set) {
 		super(set);
 		if(set.items instanceof LongDeque) items = new LongDeque((LongDeque) set.items);
+		else if(set.items instanceof LongBag) items = new LongBag(set.items);
 		else items = new LongList(set.items);
 	}
 
@@ -101,16 +107,16 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param set a LongSet without an order
 	 */
 	public LongOrderedSet (LongSet set) {
-		this(set, false);
+		this(set, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code set}.
 	 * @param set a LongSet without an order
-	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (LongSet set, boolean useDequeOrder) {
-		this(set.size(), set.loadFactor, useDequeOrder);
+	public LongOrderedSet (LongSet set, OrderType ordering) {
+		this(set.size(), set.loadFactor, ordering);
 		hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
@@ -119,16 +125,16 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
 	public LongOrderedSet (OfLong coll) {
-		this(coll, false);
+		this(coll, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 * @param coll any {@link PrimitiveCollection.OfInt}
-	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (OfLong coll, boolean useDequeOrder) {
-		this(coll.size(), Utilities.getDefaultLoadFactor(), useDequeOrder);
+	public LongOrderedSet (OfLong coll, OrderType ordering) {
+		this(coll.size(), Utilities.getDefaultLoadFactor(), ordering);
 		addAll(coll);
 	}
 
@@ -141,7 +147,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param count  how many items to copy from other
 	 */
 	public LongOrderedSet (Ordered.OfLong other, int offset, int count) {
-		this(other, offset, count, false);
+		this(other, offset, count, OrderType.LIST);
 	}
 
 	/**
@@ -151,10 +157,10 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param other  another Ordered.OfInt
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
-	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (Ordered.OfLong other, int offset, int count, boolean useDequeOrder) {
-		this(count, Utilities.getDefaultLoadFactor(), useDequeOrder);
+	public LongOrderedSet (Ordered.OfLong other, int offset, int count, OrderType ordering) {
+		this(count, Utilities.getDefaultLoadFactor(), ordering);
 		addAll(0, other, offset, count);
 	}
 
@@ -166,7 +172,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
 	public LongOrderedSet (long[] array, int offset, int length) {
-		this(array, offset, length, false);
+		this(array, offset, length, OrderType.LIST);
 	}
 
 	/**
@@ -175,10 +181,10 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param array  an array to draw items from
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
-	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (long[] array, int offset, int length, boolean useDequeOrder) {
-		this(length, Utilities.getDefaultLoadFactor(), useDequeOrder);
+	public LongOrderedSet (long[] array, int offset, int length, OrderType ordering) {
+		this(length, Utilities.getDefaultLoadFactor(), ordering);
 		addAll(array, offset, length);
 	}
 
@@ -188,17 +194,17 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param items an array that will be used in full, except for duplicate items
 	 */
 	public LongOrderedSet (long[] items) {
-		this(items, 0, items.length, false);
+		this(items, 0, items.length, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code items}.
 	 *
 	 * @param items an array that will be used in full, except for duplicate items
-	 * @param useDequeOrder if true, {@link #order()} will internally be an {@link IntDeque}; otherwise, it will be an {@link IntList}
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (long[] items, boolean useDequeOrder) {
-		this(items, 0, items.length, useDequeOrder);
+	public LongOrderedSet (long[] items, OrderType ordering) {
+		this(items, 0, items.length, ordering);
 	}
 
 	@Override
