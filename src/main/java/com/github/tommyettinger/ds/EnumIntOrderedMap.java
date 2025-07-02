@@ -863,12 +863,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	public static EnumIntOrderedMap with (Enum<?> key0, Number value0, Object... rest) {
 		EnumIntOrderedMap map = new EnumIntOrderedMap();
 		map.put(key0, value0.intValue());
-		for (int i = 1; i < rest.length; i += 2) {
-			try {
-				map.put((Enum<?>)rest[i - 1], ((Number)rest[i]).intValue());
-			} catch (ClassCastException ignored) {
-			}
-		}
+		map.putPairs(rest);
 		return map;
 	}
 
