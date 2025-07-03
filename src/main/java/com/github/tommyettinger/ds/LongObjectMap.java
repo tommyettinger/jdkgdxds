@@ -67,7 +67,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	protected int size;
 
 	protected long[] keyTable;
-	protected V[] valueTable;
+	protected @Nullable V[] valueTable;
 	protected boolean hasZeroValue;
 	@Nullable protected V zeroValue;
 
