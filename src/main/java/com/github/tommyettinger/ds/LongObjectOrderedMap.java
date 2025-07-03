@@ -66,6 +66,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
 	public LongObjectOrderedMap (OrderType ordering) {
 		this(Utilities.getDefaultTableCapacity(), ordering);
@@ -75,6 +76,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
 	public LongObjectOrderedMap (int initialCapacity, OrderType ordering) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
@@ -86,6 +88,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
 	public LongObjectOrderedMap (int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
@@ -114,6 +117,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * Creates a new map identical to the specified map.
 	 *
 	 * @param map the map to copy
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
 	public LongObjectOrderedMap (LongObjectMap<? extends V> map, OrderType ordering) {
 		this(map.size(), map.loadFactor, ordering);
@@ -157,6 +161,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param other  another LongObjectOrderedMap of the same type
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
 	public LongObjectOrderedMap (LongObjectOrderedMap<? extends V> other, int offset, int count, OrderType ordering) {
 		this(count, other.loadFactor, ordering);
@@ -170,6 +175,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 *
 	 * @param keys   an array of keys
 	 * @param values an array of values
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
 	public LongObjectOrderedMap (long[] keys, V[] values, OrderType ordering) {
 		this(Math.min(keys.length, values.length), ordering);
@@ -182,6 +188,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 *
 	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
 	public LongObjectOrderedMap (PrimitiveCollection.OfLong keys, Collection<? extends V> values, OrderType ordering) {
 		this(Math.min(keys.size(), values.size()), ordering);
