@@ -62,18 +62,20 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (boolean useDequeOrder) {
-		this(Utilities.getDefaultTableCapacity(), useDequeOrder);
+	public IntIntOrderedMap (OrderType ordering) {
+		this(Utilities.getDefaultTableCapacity(), ordering);
 	}
 
 	/**
 	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (int initialCapacity, boolean useDequeOrder) {
-		this(initialCapacity, Utilities.getDefaultLoadFactor(), useDequeOrder);
+	public IntIntOrderedMap (int initialCapacity, OrderType ordering) {
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
 	}
 
 	/**
@@ -82,35 +84,17 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (int initialCapacity, float loadFactor, boolean useDequeOrder) {
+	public IntIntOrderedMap (int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-		if(useDequeOrder) keys = new IntDeque(initialCapacity);
-		else keys = new IntList(initialCapacity);
-	}
-
-	/**
-	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
-	 * If keys and values have different lengths, this only uses the length of the smaller array.
-	 *
-	 * @param keys   an array of keys
-	 * @param values an array of values
-	 */
-	public IntIntOrderedMap (int[] keys, int[] values, boolean useDequeOrder) {
-		this(Math.min(keys.length, values.length), useDequeOrder);
-		putAll(keys, values);
-	}
-
-	/**
-	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
-	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 *
-	 * @param keys   a PrimitiveCollection of keys
-	 * @param values a PrimitiveCollection of values
-	 */
-	public IntIntOrderedMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values, boolean useDequeOrder) {
-		this(Math.min(keys.size(), values.size()), useDequeOrder);
-		putAll(keys, values);
+		switch (ordering){
+			case DEQUE: keys = new IntDeque(initialCapacity);
+				break;
+			case BAG: keys = new IntBag(initialCapacity);
+				break;
+			default: keys = new IntList(initialCapacity);
+		}
 	}
 
 	/**
@@ -121,6 +105,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	public IntIntOrderedMap (IntIntOrderedMap map) {
 		super(map);
 		if(map.keys instanceof IntDeque) keys = new IntDeque((IntDeque) map.keys);
+		else if(map.keys instanceof IntBag) keys = new IntBag(map.keys);
 		else keys = new IntList(map.keys);
 	}
 
@@ -128,14 +113,42 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * Creates a new map identical to the specified map.
 	 *
 	 * @param map the map to copy
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (IntIntMap map, boolean useDequeOrder) {
-		this(map.size(), map.loadFactor, useDequeOrder);
+	public IntIntOrderedMap (IntIntMap map, OrderType ordering) {
+		this(map.size(), map.loadFactor, ordering);
+		hashMultiplier = map.hashMultiplier;
 		IntIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			int k = it.nextInt();
 			put(k, map.get(k));
 		}
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 * @param ordering determines what implementation {@link #order()} will use
+	 */
+	public IntIntOrderedMap (int[] keys, int[] values, OrderType ordering) {
+		this(Math.min(keys.length, values.length), ordering);
+		putAll(keys, values);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 *
+	 * @param keys   a PrimitiveCollection of keys
+	 * @param values a PrimitiveCollection of values
+	 * @param ordering determines what implementation {@link #order()} will use
+	 */
+	public IntIntOrderedMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values, OrderType ordering) {
+		this(Math.min(keys.size(), values.size()), ordering);
+		putAll(keys, values);
 	}
 
 	/**
@@ -145,10 +158,39 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param other  another IntIntOrderedMap of the same type
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (IntIntOrderedMap other, int offset, int count, boolean useDequeOrder) {
-		this(count, other.loadFactor, useDequeOrder);
+	public IntIntOrderedMap (IntIntOrderedMap other, int offset, int count, OrderType ordering) {
+		this(count, other.loadFactor, ordering);
+		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
+	}
+
+	/**
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 */
+	public IntIntOrderedMap () {
+		this(OrderType.LIST);
+	}
+
+	/**
+	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public IntIntOrderedMap (int initialCapacity) {
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public IntIntOrderedMap (int initialCapacity, float loadFactor) {
+		this(initialCapacity, loadFactor, OrderType.LIST);
 	}
 
 	/**
@@ -157,7 +199,29 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param map the map to copy
 	 */
 	public IntIntOrderedMap (IntIntMap map) {
-		this(map, false);
+		this(map, OrderType.LIST);
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 */
+	public IntIntOrderedMap (int[] keys, int[] values) {
+		this(keys, values, OrderType.LIST);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 *
+	 * @param keys   a PrimitiveCollection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public IntIntOrderedMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values) {
+		this(keys, values, OrderType.LIST);
 	}
 
 	/**
@@ -169,56 +233,9 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param count  how many items to copy from other
 	 */
 	public IntIntOrderedMap (IntIntOrderedMap other, int offset, int count) {
-		this(other, offset, count, false);
-	}
-
-	/**
-	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
-	 */
-	public IntIntOrderedMap () {
-		this(false);
-	}
-
-	/**
-	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
-	 *
-	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 */
-	public IntIntOrderedMap (int initialCapacity) {
-		this(initialCapacity, Utilities.getDefaultLoadFactor(), false);
-	}
-
-	/**
-	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
-	 * growing the backing table.
-	 *
-	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
-	 */
-	public IntIntOrderedMap (int initialCapacity, float loadFactor) {
-		this(initialCapacity, loadFactor, false);
-	}
-
-	/**
-	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
-	 * If keys and values have different lengths, this only uses the length of the smaller array.
-	 *
-	 * @param keys   an array of keys
-	 * @param values an array of values
-	 */
-	public IntIntOrderedMap (int[] keys, int[] values) {
-		this(keys, values, false);
-	}
-
-	/**
-	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
-	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 *
-	 * @param keys   a PrimitiveCollection of keys
-	 * @param values a PrimitiveCollection of values
-	 */
-	public IntIntOrderedMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values) {
-		this(keys, values, false);
+		this(other, offset, count, other.keys instanceof IntBag ? OrderType.BAG
+				: other.keys instanceof IntDeque ? OrderType.DEQUE
+				: OrderType.LIST);
 	}
 
 	@Override

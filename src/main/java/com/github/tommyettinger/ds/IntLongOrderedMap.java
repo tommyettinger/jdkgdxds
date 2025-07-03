@@ -62,6 +62,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
 public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 
 	protected final IntList keys;
+
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * @param ordering determines what implementation {@link #order()} will use
