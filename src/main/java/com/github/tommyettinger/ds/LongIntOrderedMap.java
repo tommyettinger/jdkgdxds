@@ -65,18 +65,20 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongIntOrderedMap (boolean useDequeOrder) {
-		this(Utilities.getDefaultTableCapacity(), useDequeOrder);
+	public LongIntOrderedMap (OrderType ordering) {
+		this(Utilities.getDefaultTableCapacity(), ordering);
 	}
 
 	/**
 	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongIntOrderedMap (int initialCapacity, boolean useDequeOrder) {
-		this(initialCapacity, Utilities.getDefaultLoadFactor(), useDequeOrder);
+	public LongIntOrderedMap (int initialCapacity, OrderType ordering) {
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
 	}
 
 	/**
@@ -85,11 +87,17 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongIntOrderedMap (int initialCapacity, float loadFactor, boolean useDequeOrder) {
+	public LongIntOrderedMap (int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-		if(useDequeOrder) keys = new LongDeque(initialCapacity);
-		else keys = new LongList(initialCapacity);
+		switch (ordering){
+			case DEQUE: keys = new LongDeque(initialCapacity);
+				break;
+			case BAG: keys = new LongBag(initialCapacity);
+				break;
+			default: keys = new LongList(initialCapacity);
+		}
 	}
 
 	/**
@@ -100,6 +108,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	public LongIntOrderedMap (LongIntOrderedMap map) {
 		super(map);
 		if(map.keys instanceof LongDeque) keys = new LongDeque((LongDeque) map.keys);
+		else if(map.keys instanceof LongBag) keys = new LongBag(map.keys);
 		else keys = new LongList(map.keys);
 	}
 
@@ -107,9 +116,10 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * Creates a new map identical to the specified map.
 	 *
 	 * @param map the map to copy
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongIntOrderedMap (LongIntMap map, boolean useDequeOrder) {
-		this(map.size(), map.loadFactor, useDequeOrder);
+	public LongIntOrderedMap (LongIntMap map, OrderType ordering) {
+		this(map.size(), map.loadFactor, ordering);
 		hashMultiplier = map.hashMultiplier;
 		LongIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
@@ -124,9 +134,10 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 *
 	 * @param keys   an array of keys
 	 * @param values an array of values
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongIntOrderedMap (long[] keys, int[] values, boolean useDequeOrder) {
-		this(Math.min(keys.length, values.length), useDequeOrder);
+	public LongIntOrderedMap (long[] keys, int[] values, OrderType ordering) {
+		this(Math.min(keys.length, values.length), ordering);
 		putAll(keys, values);
 	}
 
@@ -136,9 +147,10 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 *
 	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongIntOrderedMap (PrimitiveCollection.OfLong keys, PrimitiveCollection.OfInt values, boolean useDequeOrder) {
-		this(Math.min(keys.size(), values.size()), useDequeOrder);
+	public LongIntOrderedMap (PrimitiveCollection.OfLong keys, PrimitiveCollection.OfInt values, OrderType ordering) {
+		this(Math.min(keys.size(), values.size()), ordering);
 		putAll(keys, values);
 	}
 
@@ -149,9 +161,10 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * @param other  another LongIntOrderedMap of the same type
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongIntOrderedMap (LongIntOrderedMap other, int offset, int count, boolean useDequeOrder) {
-		this(count, other.loadFactor, useDequeOrder);
+	public LongIntOrderedMap (LongIntOrderedMap other, int offset, int count, OrderType ordering) {
+		this(count, other.loadFactor, ordering);
 		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
@@ -160,7 +173,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public LongIntOrderedMap () {
-		this(false);
+		this(OrderType.LIST);
 	}
 
 	/**
@@ -169,7 +182,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
 	public LongIntOrderedMap (int initialCapacity) {
-		this(initialCapacity, Utilities.getDefaultLoadFactor(), false);
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
 	}
 
 	/**
@@ -180,7 +193,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	public LongIntOrderedMap (int initialCapacity, float loadFactor) {
-		this(initialCapacity, loadFactor, false);
+		this(initialCapacity, loadFactor, OrderType.LIST);
 	}
 
 	/**
@@ -189,7 +202,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * @param map the map to copy
 	 */
 	public LongIntOrderedMap (LongIntMap map) {
-		this(map, false);
+		this(map, OrderType.LIST);
 	}
 
 	/**
@@ -200,7 +213,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * @param values an array of values
 	 */
 	public LongIntOrderedMap (long[] keys, int[] values) {
-		this(keys, values, false);
+		this(keys, values, OrderType.LIST);
 	}
 
 	/**
@@ -211,7 +224,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * @param values a PrimitiveCollection of values
 	 */
 	public LongIntOrderedMap (PrimitiveCollection.OfLong keys, PrimitiveCollection.OfInt values) {
-		this(keys, values, false);
+		this(keys, values, OrderType.LIST);
 	}
 
 	/**
@@ -223,7 +236,9 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * @param count  how many items to copy from other
 	 */
 	public LongIntOrderedMap (LongIntOrderedMap other, int offset, int count) {
-		this(other, offset, count, false);
+		this(other, offset, count, other.keys instanceof LongBag ? OrderType.BAG
+				: other.keys instanceof LongDeque ? OrderType.DEQUE
+				: OrderType.LIST);
 	}
 
 	@Override
