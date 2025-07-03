@@ -16,8 +16,6 @@
 
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.Hasher;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**

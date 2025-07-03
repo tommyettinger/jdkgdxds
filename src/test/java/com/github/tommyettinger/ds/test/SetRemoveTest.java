@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.IntSet;
 import com.github.tommyettinger.ds.ObjectSet;
 import org.junit.Assert;

@@ -18,13 +18,8 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.*;
-import com.github.tommyettinger.ds.ObjectSet;
-import com.github.tommyettinger.ds.support.util.*;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Iterator;
-import java.util.Map;
 
 public class DenseTest {
 	public static final String[] strings = {

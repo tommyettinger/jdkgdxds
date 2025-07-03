@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.digital.BitConversion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

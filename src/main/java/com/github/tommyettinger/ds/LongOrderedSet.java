@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.LongIterator;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -52,7 +51,6 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
 public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	protected final LongList items;
-
 
 	public LongOrderedSet () {
 		this(Utilities.getDefaultTableCapacity());
