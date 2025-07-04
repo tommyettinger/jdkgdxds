@@ -16,10 +16,8 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.Appender;
-import com.github.tommyettinger.ds.support.util.IntAppender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
@@ -832,61 +830,52 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	/**
-	 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without braces.
+	 * Delegates to {@link #toString(String, boolean)} with the given itemSeparator and without braces.
 	 * This is different from {@link #toString()}, which includes braces by default.
 	 *
-	 * @param itemSeparator how to separate entries, such as {@code ", "}
-	 * @return a new String representing this map
+	 * @param itemSeparator how to separate set items, such as {@code ", "}
+	 * @return a new String representing this set
 	 */
 	public String toString (String itemSeparator) {
-		return map.toString(itemSeparator, false);
+		return map.keys.toString(itemSeparator, false);
 	}
 
 	public String toString (String itemSeparator, boolean braces) {
-		return map.appendTo(new StringBuilder(32), itemSeparator, braces).toString();
+		return map.keys.appendTo(new StringBuilder(32), itemSeparator, braces).toString();
 	}
 	/**
-	 * Makes a String from the contents of this NumberedSet, but uses the given {@link Appender} and
-	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
-	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendUnsigned(StringBuilder, int)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
-	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
+	 * Makes a String from the contents of this NumberedSet, but uses the given {@link Appender}
+	 * to convert all set items to a customizable representation and append them
+	 * to a temporary StringBuilder. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
 	 *
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
-	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param entrySeparator how to separate set items, such as {@code ", "}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
 	 * @param keyAppender a function that takes a StringBuilder and a T, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and an int, and returns the modified StringBuilder
-	 * @return a new String representing this map
+	 * @return a new String representing this set
 	 */
-	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
-		Appender<T> keyAppender, IntAppender valueAppender){
-		return map.appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+	public String toString (String entrySeparator, boolean braces, Appender<T> keyAppender){
+		return map.keys.appendTo(new StringBuilder(), entrySeparator, braces, keyAppender).toString();
 	}
 	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
-		return map.appendTo(sb, entrySeparator, "=", braces, StringBuilder::append, StringBuilder::append);
+		return map.keys.appendTo(sb, entrySeparator, braces, StringBuilder::append);
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this NumberedSet, but uses the given {@link Appender} and
-	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
-	 * to a StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendUnsigned(StringBuilder, int)} . To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
-	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
+	 * Appends to a StringBuilder from the contents of this NumberedSet, but uses the given {@link Appender}
+	 * to convert all keys to a customizable representation and append them
+	 * to a StringBuilder. To use
+	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
 	 *
 	 * @param sb a StringBuilder that this can append to
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
-	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param itemSeparator how to separate set items, such as {@code ", "}
 	 * @param braces true to wrap the output in curly braces, or false to omit them
 	 * @param keyAppender a function that takes a StringBuilder and a T, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and an int, and returns the modified StringBuilder
-	 * @return {@code sb}, with the appended keys and values of this map
+	 * @return {@code sb}, with the appended items of this set
 	 */
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
-		Appender<T> keyAppender, IntAppender valueAppender) {
-		return map.appendTo(sb, entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender);
+	public StringBuilder appendTo (StringBuilder sb, String itemSeparator, boolean braces,
+		Appender<T> keyAppender) {
+		return map.keys.appendTo(sb, itemSeparator, braces, keyAppender);
 	}
 
 	/**
