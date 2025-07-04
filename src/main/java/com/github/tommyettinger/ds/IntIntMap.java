@@ -726,7 +726,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
-		return appendTo(sb, entrySeparator, "=", braces, StringBuilder::append, StringBuilder::append);
+		return appendTo(sb, entrySeparator, "=", braces, IntAppender.DEFAULT, IntAppender.DEFAULT);
 	}
 
 	/**

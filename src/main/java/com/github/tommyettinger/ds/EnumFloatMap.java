@@ -596,7 +596,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
-		return appendTo(sb, entrySeparator, "=", braces, (builder, e) -> builder.append(e.name()), StringBuilder::append);
+		return appendTo(sb, entrySeparator, "=", braces, (builder, e) -> builder.append(e.name()), FloatAppender.DEFAULT);
 	}
 
 	/**
