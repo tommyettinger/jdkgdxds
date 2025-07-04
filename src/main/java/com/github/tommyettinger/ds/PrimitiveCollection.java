@@ -3967,12 +3967,12 @@ public interface PrimitiveCollection<T> {
 			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
 			int end = str.indexOf(delimiter, offset+1);
 			while (end != -1 && end + dl < lim) {
-				add(Base.BASE10.readChar(str, offset, end));
+				add(str.charAt(offset));
 				offset = end + dl;
 				end = str.indexOf(delimiter, offset+1);
 			}
 			if(offset < lim){
-				add(Base.BASE10.readChar(str, offset, lim));
+				add(str.charAt(offset));
 			}
 		}
 	}

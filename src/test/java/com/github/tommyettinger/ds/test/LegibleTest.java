@@ -52,55 +52,55 @@ public class LegibleTest {
 	};
 
 //	@Test
-//	public void testObjectListDense() {
+//	public void testObjectListLegible() {
 //		ObjectList<String> data = ObjectList.with(strings), loaded = new ObjectList<>(strings.length);
-//		String dense = data.toString(";");
-//		loaded.addAll(TextTools.split(dense, ";"));
-//		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
+//		String legible = data.toString(";");
+//		loaded.addAll(TextTools.split(legible, ";"));
+//		Assert.assertEquals("Lists were not equal! legible was: " + legible, data, loaded);
 //	}
 //
 //	@Test
-//	public void testObjectDequeDense() {
+//	public void testObjectDequeLegible() {
 //		ObjectDeque<String> data = ObjectDeque.with(strings), loaded = new ObjectDeque<>(strings.length);
-//		String dense = data.toString(";");
-//		loaded.addAll(TextTools.split(dense, ";"));
-//		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
-//	}
-//
-//	@Test
-//	public void testByteListDense() {
-//		ByteList data = ByteList.with(bytes), loaded = new ByteList(bytes.length);
-//		String dense = data.toDenseString();
-//		loaded.addDense(dense);
-//		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
-//	}
-//
-//	@Test
-//	public void testByteDequeDense() {
-//		ByteDeque data = ByteDeque.with(bytes), loaded = new ByteDeque(bytes.length);
-//		String dense = data.toDenseString();
-//		loaded.addDense(dense);
-//		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
-//	}
-//
-//	@Test
-//	public void testShortListDense() {
-//		ShortList data = ShortList.with(shorts), loaded = new ShortList(shorts.length);
-//		String dense = data.toDenseString();
-//		loaded.addDense(dense);
-//		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
-//	}
-//
-//	@Test
-//	public void testShortDequeDense() {
-//		ShortDeque data = ShortDeque.with(shorts), loaded = new ShortDeque(shorts.length);
-//		String dense = data.toDenseString();
-//		loaded.addDense(dense);
-//		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
+//		String legible = data.toString(";");
+//		loaded.addAll(TextTools.split(legible, ";"));
+//		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
 //	}
 
 	@Test
-	public void testIntListDense() {
+	public void testByteListLegible() {
+		ByteList data = ByteList.with(bytes), loaded = new ByteList(bytes.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Lists were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testByteDequeLegible() {
+		ByteDeque data = ByteDeque.with(bytes), loaded = new ByteDeque(bytes.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testShortListLegible() {
+		ShortList data = ShortList.with(shorts), loaded = new ShortList(shorts.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Lists were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testShortDequeLegible() {
+		ShortDeque data = ShortDeque.with(shorts), loaded = new ShortDeque(shorts.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testIntListLegible() {
 		IntList data = IntList.with(ints), loaded = new IntList(ints.length);
 		String legible = data.toString(", ", false);
 		loaded.addLegible(legible, ", ", 0, -1);
@@ -108,7 +108,7 @@ public class LegibleTest {
 	}
 
 	@Test
-	public void testIntDequeDense() {
+	public void testIntDequeLegible() {
 		IntDeque data = IntDeque.with(ints), loaded = new IntDeque(ints.length);
 		String legible = data.toString(", ", false);
 		loaded.addLegible(legible, ", ", 0, -1);
@@ -116,7 +116,7 @@ public class LegibleTest {
 	}
 
 	@Test
-	public void testLongListDense() {
+	public void testLongListLegible() {
 		LongList data = LongList.with(longs), loaded = new LongList(longs.length);
 		String legible = data.toString(", ", false);
 		loaded.addLegible(legible, ", ", 0, -1);
@@ -124,7 +124,7 @@ public class LegibleTest {
 	}
 
 	@Test
-	public void testLongDequeDense() {
+	public void testLongDequeLegible() {
 		LongDeque data = LongDeque.with(longs), loaded = new LongDeque(longs.length);
 		String legible = data.toString(", ", false);
 		loaded.addLegible(legible, ", ", 0, -1);
@@ -132,7 +132,7 @@ public class LegibleTest {
 	}
 
 	@Test
-	public void testFloatListDense() {
+	public void testFloatListLegible() {
 		FloatList data = FloatList.with(floats), loaded = new FloatList(floats.length);
 		String legible = data.toString(", ", false);
 		loaded.addLegible(legible, ", ", 0, -1);
@@ -140,58 +140,58 @@ public class LegibleTest {
 	}
 
 	@Test
-	public void testFloatDequeDense() {
+	public void testFloatDequeLegible() {
 		FloatDeque data = FloatDeque.with(floats), loaded = new FloatDeque(floats.length);
 		String legible = data.toString(", ", false);
 		loaded.addLegible(legible, ", ", 0, -1);
 		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
 	}
-//
-//	@Test
-//	public void testDoubleListDense() {
-//		DoubleList data = DoubleList.with(doubles), loaded = new DoubleList(doubles.length);
-//		String dense = data.toDenseString();
-//		loaded.addDense(dense);
-//		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
-//	}
-//
-//	@Test
-//	public void testDoubleDequeDense() {
-//		DoubleDeque data = DoubleDeque.with(doubles), loaded = new DoubleDeque(doubles.length);
-//		String dense = data.toDenseString();
-//		loaded.addDense(dense);
-//		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
-//	}
-//
-//	@Test
-//	public void testCharListDense() {
-//		CharList data = CharList.with(chars), loaded = new CharList(chars.length);
-//		String dense = data.toDenseString();
-//		loaded.addDense(dense);
-//		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
-//	}
-//
-//	@Test
-//	public void testCharDequeDense() {
-//		CharDeque data = CharDeque.with(chars), loaded = new CharDeque(chars.length);
-//		String dense = data.toDenseString();
-//		loaded.addDense(dense);
-//		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
-//	}
-//
-//	@Test
-//	public void testBooleanListDense() {
-//		BooleanList data = BooleanList.with(booleans), loaded = new BooleanList(booleans.length);
-//		String dense = data.toDenseString();
-//		loaded.addDense(dense);
-//		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
-//	}
-//
-//	@Test
-//	public void testBooleanDequeDense() {
-//		BooleanDeque data = BooleanDeque.with(booleans), loaded = new BooleanDeque(booleans.length);
-//		String dense = data.toDenseString();
-//		loaded.addDense(dense);
-//		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
-//	}
+
+	@Test
+	public void testDoubleListLegible() {
+		DoubleList data = DoubleList.with(doubles), loaded = new DoubleList(doubles.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Lists were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testDoubleDequeLegible() {
+		DoubleDeque data = DoubleDeque.with(doubles), loaded = new DoubleDeque(doubles.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testCharListLegible() {
+		CharList data = CharList.with(chars), loaded = new CharList(chars.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Lists were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testCharDequeLegible() {
+		CharDeque data = CharDeque.with(chars), loaded = new CharDeque(chars.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testBooleanListLegible() {
+		BooleanList data = BooleanList.with(booleans), loaded = new BooleanList(booleans.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Lists were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testBooleanDequeLegible() {
+		BooleanDeque data = BooleanDeque.with(booleans), loaded = new BooleanDeque(booleans.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
+	}
 }
