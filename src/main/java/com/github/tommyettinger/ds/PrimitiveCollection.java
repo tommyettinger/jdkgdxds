@@ -2307,6 +2307,45 @@ public interface PrimitiveCollection<T> {
 			}
 			return buffer;
 		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+		 * of characters will ruin the parsing, so increase offset by 1 and
+		 * reduce length by 2 if the original String had brackets added to it.
+		 * @param str a String containing BASE10 chars
+		 * @param delimiter the String separating every item in str
+		 */
+		default void addLegible(String str, String delimiter) {
+			addLegible(str, delimiter, 0, -1);
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+		 * of characters will ruin the parsing, so increase offset by 1 and
+		 * reduce length by 2 if the original String had brackets added to it.
+		 * @param str a String containing BASE10 chars
+		 * @param delimiter the String separating every item in str
+		 * @param offset the first position to read BASE10 chars from in {@code str}
+		 * @param length how many chars to read; -1 is treated as maximum length
+		 */
+		default void addLegible(String str, String delimiter, int offset, int length) {
+			int sl, dl;
+			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
+			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			int end = str.indexOf(delimiter, offset+1);
+			while (end != -1 && end + dl < lim) {
+				add(Base.BASE10.readDouble(str, offset, end));
+				offset = end + dl;
+				end = str.indexOf(delimiter, offset+1);
+			}
+			if(offset < lim){
+				add(Base.BASE10.readDouble(str, offset, lim));
+			}
+		}
 	}
 
 	/**
@@ -2811,6 +2850,45 @@ public interface PrimitiveCollection<T> {
 			}
 			return buffer;
 		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+		 * of characters will ruin the parsing, so increase offset by 1 and
+		 * reduce length by 2 if the original String had brackets added to it.
+		 * @param str a String containing BASE10 chars
+		 * @param delimiter the String separating every item in str
+		 */
+		default void addLegible(String str, String delimiter) {
+			addLegible(str, delimiter, 0, -1);
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+		 * of characters will ruin the parsing, so increase offset by 1 and
+		 * reduce length by 2 if the original String had brackets added to it.
+		 * @param str a String containing BASE10 chars
+		 * @param delimiter the String separating every item in str
+		 * @param offset the first position to read BASE10 chars from in {@code str}
+		 * @param length how many chars to read; -1 is treated as maximum length
+		 */
+		default void addLegible(String str, String delimiter, int offset, int length) {
+			int sl, dl;
+			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
+			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			int end = str.indexOf(delimiter, offset+1);
+			while (end != -1 && end + dl < lim) {
+				add(Base.BASE10.readShort(str, offset, end));
+				offset = end + dl;
+				end = str.indexOf(delimiter, offset+1);
+			}
+			if(offset < lim){
+				add(Base.BASE10.readShort(str, offset, lim));
+			}
+		}
 	}
 
 	/**
@@ -3313,6 +3391,45 @@ public interface PrimitiveCollection<T> {
 				}
 			}
 			return buffer;
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+		 * of characters will ruin the parsing, so increase offset by 1 and
+		 * reduce length by 2 if the original String had brackets added to it.
+		 * @param str a String containing BASE10 chars
+		 * @param delimiter the String separating every item in str
+		 */
+		default void addLegible(String str, String delimiter) {
+			addLegible(str, delimiter, 0, -1);
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+		 * of characters will ruin the parsing, so increase offset by 1 and
+		 * reduce length by 2 if the original String had brackets added to it.
+		 * @param str a String containing BASE10 chars
+		 * @param delimiter the String separating every item in str
+		 * @param offset the first position to read BASE10 chars from in {@code str}
+		 * @param length how many chars to read; -1 is treated as maximum length
+		 */
+		default void addLegible(String str, String delimiter, int offset, int length) {
+			int sl, dl;
+			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
+			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			int end = str.indexOf(delimiter, offset+1);
+			while (end != -1 && end + dl < lim) {
+				add(Base.BASE10.readByte(str, offset, end));
+				offset = end + dl;
+				end = str.indexOf(delimiter, offset+1);
+			}
+			if(offset < lim){
+				add(Base.BASE10.readByte(str, offset, lim));
+			}
 		}
 	}
 
@@ -3818,6 +3935,45 @@ public interface PrimitiveCollection<T> {
 				}
 			}
 			return buffer;
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+		 * of characters will ruin the parsing, so increase offset by 1 and
+		 * reduce length by 2 if the original String had brackets added to it.
+		 * @param str a String containing BASE10 chars
+		 * @param delimiter the String separating every item in str
+		 */
+		default void addLegible(String str, String delimiter) {
+			addLegible(str, delimiter, 0, -1);
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+		 * of characters will ruin the parsing, so increase offset by 1 and
+		 * reduce length by 2 if the original String had brackets added to it.
+		 * @param str a String containing BASE10 chars
+		 * @param delimiter the String separating every item in str
+		 * @param offset the first position to read BASE10 chars from in {@code str}
+		 * @param length how many chars to read; -1 is treated as maximum length
+		 */
+		default void addLegible(String str, String delimiter, int offset, int length) {
+			int sl, dl;
+			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
+			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			int end = str.indexOf(delimiter, offset+1);
+			while (end != -1 && end + dl < lim) {
+				add(Base.BASE10.readChar(str, offset, end));
+				offset = end + dl;
+				end = str.indexOf(delimiter, offset+1);
+			}
+			if(offset < lim){
+				add(Base.BASE10.readChar(str, offset, lim));
+			}
 		}
 	}
 
@@ -4326,6 +4482,45 @@ public interface PrimitiveCollection<T> {
 				}
 			}
 			return buffer;
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item should be "true" or "false", making it
+		 * human-readable. Any brackets inside the given range
+		 * of characters will ruin the parsing, so increase offset by 1 and
+		 * reduce length by 2 if the original String had brackets added to it.
+		 * @param str a String containing "true" and "false" separated by delimiter
+		 * @param delimiter the String separating every item in str
+		 */
+		default void addLegible(String str, String delimiter) {
+			addLegible(str, delimiter, 0, -1);
+		}
+
+		/**
+		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item should be "true" or "false", making it
+		 * human-readable. Any brackets inside the given range
+		 * of characters will ruin the parsing, so increase offset by 1 and
+		 * reduce length by 2 if the original String had brackets added to it.
+		 * @param str a String containing "true" and "false" separated by delimiter
+		 * @param delimiter the String separating every item in str
+		 * @param offset the first position to read "true" and "false" from in {@code str}
+		 * @param length how many chars to read; -1 is treated as maximum length
+		 */
+		default void addLegible(String str, String delimiter, int offset, int length) {
+			int sl, dl;
+			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
+			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			int end = str.indexOf(delimiter, offset+1);
+			while (end != -1 && end + dl < lim) {
+				add(str.charAt(offset) == 't');
+				offset = end + dl;
+				end = str.indexOf(delimiter, offset+1);
+			}
+			if(offset < lim){
+				add(str.charAt(offset) == 't');
+			}
 		}
 	}
 }
