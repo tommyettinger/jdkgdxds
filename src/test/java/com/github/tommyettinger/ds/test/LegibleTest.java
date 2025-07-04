@@ -98,22 +98,22 @@ public class LegibleTest {
 //		loaded.addDense(dense);
 //		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
 //	}
-//
-//	@Test
-//	public void testIntListDense() {
-//		IntList data = IntList.with(ints), loaded = new IntList(ints.length);
-//		String dense = data.toDenseString(true);
-//		loaded.addDense(dense, 1, -1);
-//		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
-//	}
-//
-//	@Test
-//	public void testIntDequeDense() {
-//		IntDeque data = IntDeque.with(ints), loaded = new IntDeque(ints.length);
-//		String dense = data.toDenseString();
-//		loaded.addAll(PrimitiveCollection.OfInt.readArrayDense(dense));
-//		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
-//	}
+
+	@Test
+	public void testIntListDense() {
+		IntList data = IntList.with(ints), loaded = new IntList(ints.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Lists were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testIntDequeDense() {
+		IntDeque data = IntDeque.with(ints), loaded = new IntDeque(ints.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
+	}
 
 	@Test
 	public void testLongListDense() {
@@ -131,21 +131,21 @@ public class LegibleTest {
 		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
 	}
 
-//	@Test
-//	public void testFloatListDense() {
-//		FloatList data = FloatList.with(floats), loaded = new FloatList(floats.length);
-//		String dense = data.toDenseString(true);
-//		loaded.addDense(dense, 1, -1);
-//		Assert.assertEquals("Lists were not equal! dense was: " + dense, data, loaded);
-//	}
-//
-//	@Test
-//	public void testFloatDequeDense() {
-//		FloatDeque data = FloatDeque.with(floats), loaded = new FloatDeque(floats.length);
-//		String dense = data.toDenseString();
-//		loaded.addAll(PrimitiveCollection.OfFloat.readArrayDense(dense));
-//		Assert.assertEquals("Deques were not equal! dense was: " + dense, data, loaded);
-//	}
+	@Test
+	public void testFloatListDense() {
+		FloatList data = FloatList.with(floats), loaded = new FloatList(floats.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Lists were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testFloatDequeDense() {
+		FloatDeque data = FloatDeque.with(floats), loaded = new FloatDeque(floats.length);
+		String legible = data.toString(", ", false);
+		loaded.addLegible(legible, ", ", 0, -1);
+		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
+	}
 //
 //	@Test
 //	public void testDoubleListDense() {
