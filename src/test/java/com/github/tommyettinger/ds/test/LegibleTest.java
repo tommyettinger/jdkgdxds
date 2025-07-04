@@ -194,4 +194,12 @@ public class LegibleTest {
 		loaded.addLegible(legible, ", ", 0, -1);
 		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
 	}
+
+	@Test
+	public void testLongFloatMapLegible() {
+		LongFloatMap data = new LongFloatMap(longs, floats), loaded = new LongFloatMap(longs.length);
+		String legible = data.toString(", ", false);
+		loaded.putLegible(legible);
+		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
+	}
 }
