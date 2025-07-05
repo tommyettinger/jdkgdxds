@@ -1762,7 +1762,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	}
 
 	/**
-	 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
 	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
 	 * {@code ", "}, and every key should be followed by {@code "="} before the value (which
 	 * {@link #toString()} does).
@@ -1777,7 +1777,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	}
 
 	/**
-	 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
 	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
 	 * {@code entrySeparator}, and every key should be followed by "=" before the value (which
 	 * {@link #toString(String)} does).
@@ -1793,7 +1793,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	}
 
 	/**
-	 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
 	 * {@link #appendTo(StringBuilder, String, String, boolean, LongAppender, FloatAppender)}. Each item can vary
 	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
