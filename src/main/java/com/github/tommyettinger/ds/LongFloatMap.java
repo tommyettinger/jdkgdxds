@@ -1844,7 +1844,6 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		}
 	}
 
-
 	/**
 	 * Constructs an empty map.
 	 * This is usually less useful than just using the constructor, but can be handy
