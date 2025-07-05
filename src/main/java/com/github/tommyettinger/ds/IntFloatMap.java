@@ -19,13 +19,13 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.FloatAppender;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.IntFloatBiConsumer;
 import com.github.tommyettinger.function.IntFloatToFloatBiFunction;
 import com.github.tommyettinger.function.IntToFloatFunction;
-import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -1759,6 +1759,89 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 				} catch (ClassCastException ignored) {
 				}
 			}
+		}
+	}
+
+	/**
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@code ", "}, and every key should be followed by {@code "="} before the value (which
+	 * {@link #toString()} does).
+	 * Each item can vary significantly in length, and should use
+	 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+	 * of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 * @param str a String containing BASE10 chars
+	 */
+	public void putLegible(String str) {
+		putLegible(str, ", ", "=", 0, -1);
+	}
+
+	/**
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@code entrySeparator}, and every key should be followed by "=" before the value (which
+	 * {@link #toString(String)} does).
+	 * Each item can vary significantly in length, and should use
+	 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+	 * of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 * @param str a String containing BASE10 chars
+	 * @param entrySeparator the String separating every key-value pair
+	 */
+	public void putLegible(String str, String entrySeparator) {
+		putLegible(str, entrySeparator, "=", 0, -1);
+	}
+
+	/**
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, String, boolean, IntAppender, FloatAppender)}. Each item can vary
+	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
+	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 * @param str a String containing BASE10 chars
+	 * @param entrySeparator the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 */
+	public void putLegible(String str, String entrySeparator, String keyValueSeparator) {
+		putLegible(str, entrySeparator, keyValueSeparator, 0, -1);
+	}
+
+	/**
+	 * Puts key-value pairs into this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, String, boolean, IntAppender, FloatAppender)}. Each item can vary
+	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
+	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 * @param str a String containing BASE10 chars
+	 * @param entrySeparator the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param offset the first position to read BASE10 chars from in {@code str}
+	 * @param length how many chars to read; -1 is treated as maximum length
+	 */
+	public void putLegible(String str, String entrySeparator, String keyValueSeparator, int offset, int length) {
+		int sl, el, kvl;
+		if(str == null || entrySeparator == null || keyValueSeparator == null
+				|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
+				|| offset < 0 || offset > sl - 1) return;
+		final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+		int end = str.indexOf(keyValueSeparator, offset+1);
+		int k = 0;
+		boolean incomplete = false;
+		while (end != -1 && end + kvl < lim) {
+			k = Base.BASE10.readInt(str, offset, end);
+			offset = end + kvl;
+			end = str.indexOf(entrySeparator, offset+1);
+			if(end != -1 && end + el < lim){
+				put(k, Base.BASE10.readFloat(str, offset, end));
+				offset = end + el;
+				end = str.indexOf(keyValueSeparator, offset+1);
+			} else {
+				incomplete = true;
+			}
+		}
+		if(incomplete && offset < lim){
+			put(k, Base.BASE10.readFloat(str, offset, lim));
 		}
 	}
 
