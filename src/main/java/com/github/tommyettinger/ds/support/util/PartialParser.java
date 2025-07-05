@@ -27,25 +27,25 @@ import com.github.tommyettinger.function.ObjSupplier;
  */
 public interface PartialParser<R> {
     /**
-     * Creates or obtains an {@code R} object by parsing a section of {@code text} starting at {@code offset} and
-     * extending for {@code length} characters in text.
+     * Creates or obtains an {@code R} object by parsing a section of {@code text} starting at {@code start} (inclusive)
+     * and ending at {@code end} (exclusive) in text.
      * @param text a String containing a section that will be parsed
-     * @param offset the first character index to parse in text
-     * @param length how many characters to parse in text, starting at offset
+     * @param start the first character index to parse in text, inclusive
+     * @param end the last character index to parse in text, exclusive
      * @return a (typically new) {@code R} object loaded from the given section of text
      */
-    R parse(String text, int offset, int length);
+    R parse(String text, int start, int end);
 
     /**
      * Wraps {@link String#substring(int, int)}.
      */
-    PartialParser<String> DEFAULT_STRING = (String text, int offset, int length) -> text.substring(offset, offset + length);
+    PartialParser<String> DEFAULT_STRING =String::substring;
 
 
     /**
      * Wraps {@link Junction#parse(String, int, int)}.
      */
-    PartialParser<Junction<String>> DEFAULT_JUNCTION_STRING = (String text, int offset, int length) -> Junction.parse(text, offset, offset + length);
+    PartialParser<Junction<String>> DEFAULT_JUNCTION_STRING = Junction::parse;
 
     /**
      * Creates a PartialParser that can parse a section of text with multiple int items separated by {@code delimiter},
@@ -57,9 +57,9 @@ public interface PartialParser<R> {
      * @param <C> a PrimitiveCollection.OfInt type such as IntList
      */
     static <C extends PrimitiveCollection.OfInt> PartialParser<C> intCollectionParser(final ObjSupplier<C> supplier, final String delimiter) {
-        return (String text, int offset, int length) -> {
+        return (String text, int start, int end) -> {
             final C coll = supplier.get();
-            coll.addLegible(text, delimiter, offset, length);
+            coll.addLegible(text, delimiter, start, end - start);
             return coll;
         };
     }
@@ -74,9 +74,9 @@ public interface PartialParser<R> {
      * @param <C> a PrimitiveCollection.OfLong type such as LongList
      */
     static <C extends PrimitiveCollection.OfLong> PartialParser<C> longCollectionParser(final ObjSupplier<C> supplier, final String delimiter) {
-        return (String text, int offset, int length) -> {
+        return (String text, int start, int end) -> {
             final C coll = supplier.get();
-            coll.addLegible(text, delimiter, offset, length);
+            coll.addLegible(text, delimiter, start, end - start);
             return coll;
         };
     }
@@ -91,9 +91,9 @@ public interface PartialParser<R> {
      * @param <C> a PrimitiveCollection.OfFloat type such as FloatList
      */
     static <C extends PrimitiveCollection.OfFloat> PartialParser<C> floatCollectionParser(final ObjSupplier<C> supplier, final String delimiter) {
-        return (String text, int offset, int length) -> {
+        return (String text, int start, int end) -> {
             final C coll = supplier.get();
-            coll.addLegible(text, delimiter, offset, length);
+            coll.addLegible(text, delimiter, start, end - start);
             return coll;
         };
     }
@@ -108,9 +108,9 @@ public interface PartialParser<R> {
      * @param <C> a PrimitiveCollection.OfDouble type such as DoubleList
      */
     static <C extends PrimitiveCollection.OfDouble> PartialParser<C> doubleCollectionParser(final ObjSupplier<C> supplier, final String delimiter) {
-        return (String text, int offset, int length) -> {
+        return (String text, int start, int end) -> {
             final C coll = supplier.get();
-            coll.addLegible(text, delimiter, offset, length);
+            coll.addLegible(text, delimiter, start, end - start);
             return coll;
         };
     }
@@ -125,9 +125,9 @@ public interface PartialParser<R> {
      * @param <C> a PrimitiveCollection.OfShort type such as ShortList
      */
     static <C extends PrimitiveCollection.OfShort> PartialParser<C> shortCollectionParser(final ObjSupplier<C> supplier, final String delimiter) {
-        return (String text, int offset, int length) -> {
+        return (String text, int start, int end) -> {
             final C coll = supplier.get();
-            coll.addLegible(text, delimiter, offset, length);
+            coll.addLegible(text, delimiter, start, end - start);
             return coll;
         };
     }
@@ -142,9 +142,9 @@ public interface PartialParser<R> {
      * @param <C> a PrimitiveCollection.OfByte type such as ByteList
      */
     static <C extends PrimitiveCollection.OfByte> PartialParser<C> byteCollectionParser(final ObjSupplier<C> supplier, final String delimiter) {
-        return (String text, int offset, int length) -> {
+        return (String text, int start, int end) -> {
             final C coll = supplier.get();
-            coll.addLegible(text, delimiter, offset, length);
+            coll.addLegible(text, delimiter, start, end - start);
             return coll;
         };
     }
@@ -159,13 +159,13 @@ public interface PartialParser<R> {
      * @param <C> a PrimitiveCollection.OfChar type such as CharList
      */
     static <C extends PrimitiveCollection.OfChar> PartialParser<C> charCollectionParser(final ObjSupplier<C> supplier, final String delimiter) {
-        return (String text, int offset, int length) -> {
+        return (String text, int start, int end) -> {
             final C coll = supplier.get();
-            coll.addLegible(text, delimiter, offset, length);
+            coll.addLegible(text, delimiter, start, end - start);
             return coll;
         };
     }
-    
+
     /**
      * Creates a PartialParser that can parse a section of text with multiple boolean items separated by {@code delimiter},
      * creates a PrimitiveCollection using the given supplier, populates it with
@@ -176,9 +176,9 @@ public interface PartialParser<R> {
      * @param <C> a PrimitiveCollection.OfBoolean type such as BooleanList
      */
     static <C extends PrimitiveCollection.OfBoolean> PartialParser<C> booleanCollectionParser(final ObjSupplier<C> supplier, final String delimiter) {
-        return (String text, int offset, int length) -> {
+        return (String text, int start, int end) -> {
             final C coll = supplier.get();
-            coll.addLegible(text, delimiter, offset, length);
+            coll.addLegible(text, delimiter, start, end - start);
             return coll;
         };
     }
