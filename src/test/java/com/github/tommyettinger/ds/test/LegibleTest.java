@@ -228,6 +228,14 @@ public class LegibleTest {
 	}
 
 	@Test
+	public void testIntIntMapLegible() {
+		IntIntMap data = new IntIntMap(ints, ints), loaded = new IntIntMap(ints.length);
+		String legible = data.toString(", ", true);
+		loaded.putLegible(legible, ", ", "=", 1, legible.length() - 2);
+		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
 	public void testIntLongMapLegible() {
 		IntLongMap data = new IntLongMap(ints, longs), loaded = new IntLongMap(ints.length);
 		String legible = data.toString(", ", true);
