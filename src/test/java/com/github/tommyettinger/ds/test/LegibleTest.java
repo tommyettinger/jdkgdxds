@@ -220,6 +220,22 @@ public class LegibleTest {
 	}
 
 	@Test
+	public void testLongObjectMapLegible() {
+		long[] longs = new long[]{1L, 2L, 3L};
+		int size = longs.length;
+		DoubleList nums = DoubleList.with(doubles);
+		ObjectList<DoubleList> lists = new ObjectList<>(size);
+		for (int i = 0; i < size; i++) {
+			lists.add(nums);
+		}
+		LongObjectMap<DoubleList> data = new LongObjectMap<>(LongList.with(longs), lists), loaded = new LongObjectMap<>(size);
+		String legible = data.toString(";;", false);
+		loaded.putLegible(legible, ";;", (text, start, end) ->
+		{ DoubleList list = new DoubleList(); list.addLegible(text, ", ", start + 1, end - start - 2); return list; } );
+		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
 	public void testIntFloatMapLegible() {
 		IntFloatMap data = new IntFloatMap(ints, floats), loaded = new IntFloatMap(ints.length);
 		String legible = data.toString(", ", true);
@@ -244,18 +260,18 @@ public class LegibleTest {
 	}
 
 	@Test
-	public void testLongObjectMapLegible() {
-		long[] longs = new long[]{1L, 2L, 3L};
-		int size = longs.length;
-		IntList nums = IntList.with(ints);
-		ObjectList<IntList> lists = new ObjectList<>(size);
+	public void testIntObjectMapLegible() {
+		int[] ints = new int[]{1, 2, 3};
+		int size = ints.length;
+		DoubleList nums = DoubleList.with(doubles);
+		ObjectList<DoubleList> lists = new ObjectList<>(size);
 		for (int i = 0; i < size; i++) {
 			lists.add(nums);
 		}
-		LongObjectMap<IntList> data = new LongObjectMap<>(LongList.with(longs), lists), loaded = new LongObjectMap<>(size);
+		IntObjectMap<DoubleList> data = new IntObjectMap<>(IntList.with(ints), lists), loaded = new IntObjectMap<>(size);
 		String legible = data.toString(";;", false);
 		loaded.putLegible(legible, ";;", (text, start, end) ->
-		{ IntList list = new IntList(); list.addLegible(text, ", ", start + 1, end - start - 2); return list; } );
+		{ DoubleList list = new DoubleList(); list.addLegible(text, ", ", start + 1, end - start - 2); return list; } );
 		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
 	}
 }
