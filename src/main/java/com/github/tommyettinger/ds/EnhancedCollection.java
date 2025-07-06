@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.PartialParser;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -466,4 +467,44 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return sb;
 	}
 
+	/**
+	 * Adds items to this EnhancedCollection drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, boolean)}.
+	 * A PartialParser will be used to parse items from sections of {@code str}. Any brackets inside the given range
+	 * of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 * @param str a String containing string representations of items
+	 * @param delimiter the String separating every item in str
+	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
+	 */
+	default void addLegible(String str, String delimiter, PartialParser<T> parser) {
+		addLegible(str, delimiter, parser, 0, -1);
+	}
+
+	/**
+	 * Adds items to this EnhancedCollection drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, boolean)}.
+	 * A PartialParser will be used to parse items from sections of {@code str}. Any brackets inside the given range
+	 * of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 * @param str a String containing string representations of items
+	 * @param delimiter the String separating every item in str
+	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param offset the first position to read items from in {@code str}
+	 * @param length how many chars to read; -1 is treated as maximum length
+	 */
+	default void addLegible(String str, String delimiter, PartialParser<T> parser, int offset, int length) {
+		int sl, dl;
+		if(str == null || delimiter == null || parser == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
+		final int lim = length < 0 ? sl : Math.min(offset + length, sl);
+		int end = str.indexOf(delimiter, offset+1);
+		while (end != -1 && end + dl < lim) {
+			add(parser.parse(str, offset, end));
+			offset = end + dl;
+			end = str.indexOf(delimiter, offset+1);
+		}
+		if(offset < lim){
+			add(parser.parse(str, offset, lim));
+		}
+	}
 }
