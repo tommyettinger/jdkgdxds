@@ -658,7 +658,7 @@ public interface PrimitiveCollection<T> {
 		default void addLegible(String str, String delimiter, int offset, int length) {
 			int sl, dl;
 			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
-			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			final int lim = length < 0 ? sl : Math.min(offset + length, sl);
 			int end = str.indexOf(delimiter, offset+1);
 			while (end != -1 && end + dl < lim) {
 				add(Base.BASE10.readInt(str, offset, end));
@@ -1236,7 +1236,7 @@ public interface PrimitiveCollection<T> {
 		default void addLegible(String str, String delimiter, int offset, int length) {
 			int sl, dl;
 			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
-			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			final int lim = length < 0 ? sl : Math.min(offset + length, sl);
 			int end = str.indexOf(delimiter, offset+1);
 			while (end != -1 && end + dl < lim) {
 				add(Base.BASE10.readLong(str, offset, end));
@@ -1783,7 +1783,7 @@ public interface PrimitiveCollection<T> {
 		default void addLegible(String str, String delimiter, int offset, int length) {
 			int sl, dl;
 			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
-			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			final int lim = length < 0 ? sl : Math.min(offset + length, sl);
 			int end = str.indexOf(delimiter, offset+1);
 			while (end != -1 && end + dl < lim) {
 				add(Base.BASE10.readFloat(str, offset, end));
@@ -2335,7 +2335,7 @@ public interface PrimitiveCollection<T> {
 		default void addLegible(String str, String delimiter, int offset, int length) {
 			int sl, dl;
 			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
-			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			final int lim = length < 0 ? sl : Math.min(offset + length, sl);
 			int end = str.indexOf(delimiter, offset+1);
 			while (end != -1 && end + dl < lim) {
 				add(Base.BASE10.readDouble(str, offset, end));
@@ -2878,7 +2878,7 @@ public interface PrimitiveCollection<T> {
 		default void addLegible(String str, String delimiter, int offset, int length) {
 			int sl, dl;
 			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
-			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			final int lim = length < 0 ? sl : Math.min(offset + length, sl);
 			int end = str.indexOf(delimiter, offset+1);
 			while (end != -1 && end + dl < lim) {
 				add(Base.BASE10.readShort(str, offset, end));
@@ -3420,7 +3420,7 @@ public interface PrimitiveCollection<T> {
 		default void addLegible(String str, String delimiter, int offset, int length) {
 			int sl, dl;
 			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
-			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			final int lim = length < 0 ? sl : Math.min(offset + length, sl);
 			int end = str.indexOf(delimiter, offset+1);
 			while (end != -1 && end + dl < lim) {
 				add(Base.BASE10.readByte(str, offset, end));
@@ -3964,7 +3964,7 @@ public interface PrimitiveCollection<T> {
 		default void addLegible(String str, String delimiter, int offset, int length) {
 			int sl, dl;
 			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
-			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			final int lim = length < 0 ? sl : Math.min(offset + length, sl);
 			int end = str.indexOf(delimiter, offset+1);
 			while (end != -1 && end + dl < lim) {
 				add(str.charAt(offset));
@@ -4511,7 +4511,7 @@ public interface PrimitiveCollection<T> {
 		default void addLegible(String str, String delimiter, int offset, int length) {
 			int sl, dl;
 			if(str == null || delimiter == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
-			final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+			final int lim = length < 0 ? sl : Math.min(offset + length, sl);
 			int end = str.indexOf(delimiter, offset+1);
 			while (end != -1 && end + dl < lim) {
 				add(str.charAt(offset) == 't');
