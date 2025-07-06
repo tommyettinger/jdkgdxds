@@ -1824,7 +1824,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		if(str == null || entrySeparator == null || keyValueSeparator == null
 				|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
 				|| offset < 0 || offset > sl - 1) return;
-		final int lim = Math.min(length & 0x7FFFFFFF, sl - offset);
+		final int lim = length < 0 ? sl : Math.min(offset + length, sl);
 		int end = str.indexOf(keyValueSeparator, offset+1);
 		int k = 0;
 		boolean incomplete = false;

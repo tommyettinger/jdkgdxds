@@ -198,8 +198,32 @@ public class LegibleTest {
 	@Test
 	public void testLongFloatMapLegible() {
 		LongFloatMap data = new LongFloatMap(longs, floats), loaded = new LongFloatMap(longs.length);
-		String legible = data.toString(", ", false);
-		loaded.putLegible(legible);
+		String legible = data.toString(", ", true);
+		loaded.putLegible(legible, ", ", "=", 1, legible.length() - 2);
+		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testLongIntMapLegible() {
+		LongIntMap data = new LongIntMap(longs, ints), loaded = new LongIntMap(longs.length);
+		String legible = data.toString(", ", true);
+		loaded.putLegible(legible, ", ", "=", 1, legible.length() - 2);
+		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testLongLongMapLegible() {
+		LongLongMap data = new LongLongMap(longs, longs), loaded = new LongLongMap(longs.length);
+		String legible = data.toString(", ", true);
+		loaded.putLegible(legible, ", ", "=", 1, legible.length() - 2);
+		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testIntFloatMapLegible() {
+		IntFloatMap data = new IntFloatMap(ints, floats), loaded = new IntFloatMap(ints.length);
+		String legible = data.toString(", ", true);
+		loaded.putLegible(legible, ", ", "=", 1, legible.length() - 2);
 		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
 	}
 
