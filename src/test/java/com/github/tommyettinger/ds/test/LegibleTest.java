@@ -228,6 +228,14 @@ public class LegibleTest {
 	}
 
 	@Test
+	public void testIntLongMapLegible() {
+		IntLongMap data = new IntLongMap(ints, longs), loaded = new IntLongMap(ints.length);
+		String legible = data.toString(", ", true);
+		loaded.putLegible(legible, ", ", "=", 1, legible.length() - 2);
+		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
 	public void testLongObjectMapLegible() {
 		long[] longs = new long[]{1L, 2L, 3L};
 		int size = longs.length;
@@ -238,8 +246,6 @@ public class LegibleTest {
 		}
 		LongObjectMap<IntList> data = new LongObjectMap<>(LongList.with(longs), lists), loaded = new LongObjectMap<>(size);
 		String legible = data.toString(";;", false);
-		System.out.println(legible);
-		System.out.println();
 		loaded.putLegible(legible, ";;", (text, start, end) ->
 		{ IntList list = new IntList(); list.addLegible(text, ", ", start + 1, end - start - 2); return list; } );
 		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
