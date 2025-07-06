@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.*;
+import com.github.tommyettinger.ds.support.util.PartialParser;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -270,8 +271,21 @@ public class LegibleTest {
 		}
 		IntObjectMap<DoubleList> data = new IntObjectMap<>(IntList.with(ints), lists), loaded = new IntObjectMap<>(size);
 		String legible = data.toString(";;", false);
-		loaded.putLegible(legible, ";;", (text, start, end) ->
-		{ DoubleList list = new DoubleList(); list.addLegible(text, ", ", start + 1, end - start - 2); return list; } );
+		loaded.putLegible(legible, ";;",PartialParser.doubleCollectionParser(DoubleList::new, ", ", true));
+		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testObjectObjectMapLegible() {
+		int size = strings.length;
+		DoubleList nums = DoubleList.with(doubles);
+		ObjectList<DoubleList> lists = new ObjectList<>(size);
+		for (int i = 0; i < size; i++) {
+			lists.add(nums);
+		}
+		ObjectObjectMap<String, DoubleList> data = new ObjectObjectMap<>(ObjectList.with(strings), lists), loaded = new ObjectObjectMap<>(size);
+		String legible = data.toString(";;", false);
+		loaded.putLegible(legible, ";;", PartialParser.DEFAULT_STRING, PartialParser.doubleCollectionParser(DoubleList::new, ", ", true));
 		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
 	}
 }
