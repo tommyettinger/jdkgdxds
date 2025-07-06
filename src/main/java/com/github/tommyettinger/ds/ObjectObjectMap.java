@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -1654,6 +1655,97 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 				} catch (ClassCastException ignored) {
 				}
 			}
+		}
+	}
+
+	/**
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@code ", "}, and every key should be followed by {@code "="} before the value (which
+	 * {@link #toString()} does).
+	 * A PartialParser will be used to parse keys from sections of {@code str}, and a different PartialParser to
+	 * parse values. Any brackets inside the given range
+	 * of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 * @param str a String containing BASE10 chars
+	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+	 */
+	public void putLegible(String str, PartialParser<K> keyParser, PartialParser<V> valueParser) {
+		putLegible(str, ", ", "=", keyParser, valueParser, 0, -1);
+	}
+
+	/**
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@code entrySeparator}, and every key should be followed by "=" before the value (which
+	 * {@link #toString(String)} does).
+	 * A PartialParser will be used to parse keys from sections of {@code str}, and a different PartialParser to
+	 * parse values. Any brackets inside the given range
+	 * of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 * @param str a String containing BASE10 chars
+	 * @param entrySeparator the String separating every key-value pair
+	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+	 */
+	public void putLegible(String str, String entrySeparator, PartialParser<K> keyParser, PartialParser<V> valueParser) {
+		putLegible(str, entrySeparator, "=", keyParser, valueParser, 0, -1);
+	}
+
+	/**
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, String, boolean, Appender, Appender)}. A PartialParser will be used to
+	 * parse keys from sections of {@code str}, and a different PartialParser to parse values. Any brackets
+	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 * @param str a String containing BASE10 chars
+	 * @param entrySeparator the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+	 */
+	public void putLegible(String str, String entrySeparator, String keyValueSeparator, PartialParser<K> keyParser, PartialParser<V> valueParser) {
+		putLegible(str, entrySeparator, keyValueSeparator, keyParser, valueParser, 0, -1);
+	}
+
+	/**
+	 * Puts key-value pairs into this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, String, boolean, Appender, Appender)}. A PartialParser will be used
+	 * to parse keys from sections of {@code str}, and a different PartialParser to parse values. Any brackets
+	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 * @param str a String containing BASE10 chars
+	 * @param entrySeparator the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+	 * @param offset the first position to read BASE10 chars from in {@code str}
+	 * @param length how many chars to read; -1 is treated as maximum length
+	 */
+	public void putLegible(String str, String entrySeparator, String keyValueSeparator, PartialParser<K> keyParser, PartialParser<V> valueParser, int offset, int length) {
+		int sl, el, kvl;
+		if(str == null || entrySeparator == null || keyValueSeparator == null || valueParser == null
+				|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
+				|| offset < 0 || offset > sl - 1) return;
+		final int lim = length < 0 ? sl : Math.min(offset + length, sl);
+		int end = str.indexOf(keyValueSeparator, offset+1);
+		K k = null;
+		boolean incomplete = false;
+		while (end != -1 && end + kvl < lim) {
+			k = keyParser.parse(str, offset, end);
+			offset = end + kvl;
+			end = str.indexOf(entrySeparator, offset+1);
+			if(end != -1 && end + el < lim){
+				put(k, valueParser.parse(str, offset, end));
+				offset = end + el;
+				end = str.indexOf(keyValueSeparator, offset+1);
+			} else {
+				incomplete = true;
+			}
+		}
+		if(incomplete && offset < lim){
+			put(k, valueParser.parse(str, offset, lim));
 		}
 	}
 }
