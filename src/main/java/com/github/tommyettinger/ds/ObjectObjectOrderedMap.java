@@ -88,11 +88,11 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 */
 	public ObjectObjectOrderedMap (int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-		switch (ordering){
-			case BAG: keys = new ObjectBag<>(initialCapacity);
-				break;
-			default: keys = new ObjectList<>(initialCapacity);
-		}
+        if (ordering == OrderType.BAG) {
+            keys = new ObjectBag<>(initialCapacity);
+        } else {
+            keys = new ObjectList<>(initialCapacity);
+        }
 	}
 
 	/**
