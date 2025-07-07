@@ -65,20 +65,20 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public ObjectIntOrderedMap () {
-		super();
-		keys = new ObjectList<>();
+	public ObjectIntOrderedMap (OrderType ordering) {
+		this(Utilities.getDefaultTableCapacity(), ordering);
 	}
 
 	/**
 	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public ObjectIntOrderedMap (int initialCapacity) {
-		super(initialCapacity);
-		keys = new ObjectList<>(initialCapacity);
+	public ObjectIntOrderedMap (int initialCapacity, OrderType ordering) {
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
 	}
 
 	/**
@@ -87,10 +87,15 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public ObjectIntOrderedMap (int initialCapacity, float loadFactor) {
+	public ObjectIntOrderedMap (int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-		keys = new ObjectList<>(initialCapacity);
+		if (ordering == OrderType.BAG) {
+			keys = new ObjectBag<>(initialCapacity);
+		} else {
+			keys = new ObjectList<>(initialCapacity);
+		}
 	}
 
 	/**
@@ -100,44 +105,22 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 */
 	public ObjectIntOrderedMap (ObjectIntOrderedMap<? extends K> map) {
 		super(map);
-		keys = new ObjectList<>(map.keys);
+		if(map.keys instanceof ObjectBag) keys = new ObjectBag<>(map.keys);
+		else keys = new ObjectList<>(map.keys);
 	}
 
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
 	 * @param map the map to copy
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public ObjectIntOrderedMap (ObjectIntMap<? extends K> map) {
-		this(map.size(), map.loadFactor);
+	public ObjectIntOrderedMap (ObjectIntMap<? extends K> map, OrderType ordering) {
+		this(map.size(), map.loadFactor, ordering);
 		hashMultiplier = map.hashMultiplier;
-		for (K k : map.keySet()) {
+		for(K k : map.keySet()) {
 			put(k, map.get(k));
 		}
-	}
-
-	/**
-	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
-	 * If keys and values have different lengths, this only uses the length of the smaller array.
-	 *
-	 * @param keys   an array of keys
-	 * @param values an array of values
-	 */
-	public ObjectIntOrderedMap (K[] keys, int[] values) {
-		this(Math.min(keys.length, values.length));
-		putAll(keys, values);
-	}
-
-	/**
-	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
-	 * If keys and values have different lengths, this only uses the length of the smaller collection.
-	 *
-	 * @param keys   a Collection of keys
-	 * @param values a PrimitiveCollection of values
-	 */
-	public ObjectIntOrderedMap (Collection<? extends K> keys, PrimitiveCollection.OfInt values) {
-		this(Math.min(keys.size(), values.size()));
-		putAll(keys, values);
 	}
 
 	/**
@@ -149,9 +132,109 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param count  how many items to copy from other
 	 */
 	public ObjectIntOrderedMap (ObjectIntOrderedMap<? extends K> other, int offset, int count) {
-		this(count, other.loadFactor);
+		this(other, offset, count,
+				other.keys instanceof ObjectBag ? OrderType.BAG
+						: OrderType.LIST);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public ObjectIntOrderedMap (ObjectIntMap<? extends K> map) {
+		this(map, OrderType.LIST);
+
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given ObjectIntOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 *
+	 * @param other  another ObjectIntOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 * @param ordering determines what implementation {@link #order()} will use
+	 */
+	public ObjectIntOrderedMap (ObjectIntOrderedMap<? extends K> other, int offset, int count, OrderType ordering) {
+		this(count, other.loadFactor, ordering);
 		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 * @param ordering determines what implementation {@link #order()} will use
+	 */
+	public ObjectIntOrderedMap (K[] keys, int[] values, OrderType ordering) {
+		this(Math.min(keys.length, values.length), ordering);
+		putAll(keys, values);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 *
+	 * @param keys   a Collection of keys
+	 * @param values a PrimitiveCollection of values
+	 * @param ordering determines what implementation {@link #order()} will use
+	 */
+	public ObjectIntOrderedMap (Collection<? extends K> keys, PrimitiveCollection.OfInt values, OrderType ordering) {
+		this(Math.min(keys.size(), values.size()), ordering);
+		putAll(keys, values);
+	}
+
+	/**
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 */
+	public ObjectIntOrderedMap () {
+		this(OrderType.LIST);
+	}
+
+	/**
+	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public ObjectIntOrderedMap (int initialCapacity) {
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public ObjectIntOrderedMap (int initialCapacity, float loadFactor) {
+		this(initialCapacity, loadFactor, OrderType.LIST);
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 */
+	public ObjectIntOrderedMap (K[] keys, int[] values) {
+		this(keys, values, OrderType.LIST);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 *
+	 * @param keys   a Collection of keys
+	 * @param values a PrimitiveCollection of values
+	 */
+	public ObjectIntOrderedMap (Collection<? extends K> keys, PrimitiveCollection.OfInt values) {
+		this(keys, values, OrderType.LIST);
 	}
 
 	@Override
