@@ -17,8 +17,10 @@
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.ds.Junction;
+import com.github.tommyettinger.ds.OrderType;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.function.ObjSupplier;
+import com.github.tommyettinger.function.ObjToObjFunction;
 
 /**
  * A functional interface to parse part of a String and obtain a {@code R} instance as a result.
@@ -41,6 +43,27 @@ public interface PartialParser<R> {
      */
     PartialParser<String> DEFAULT_STRING = String::substring;
 
+    /**
+     * Given an enum type's {@code valueOf} as a method reference, this creates a PartialParser that tries to obtain
+     * an enum of the given type using that valueOf on a substring of the parsed text. This should be useful with the
+     * {@link com.github.tommyettinger.ds.EnumSet#addLegible(String, String, PartialParser)} method and any putLegible
+     * methods in Enum-keyed maps.
+     * <br>
+     * Note that this allocates a short-lived string using {@link String#substring(int, int)}, though it may be interned
+     * because it is the name of an enum constant (if it produces a result at all).
+     * <br>
+     * An example of using this exists for {@link OrderType}:
+     * {@code PartialParser<Enum<?>> DEFAULT_ORDER_TYPE = enumParser(OrderType::valueOf);}
+     */
+    static <E extends Enum<?>> PartialParser<E> enumParser(ObjToObjFunction<String, E> valueOfMethod) {
+        return (String text, int start, int end) -> valueOfMethod.apply(text.substring(start, end));
+    }
+
+    /**
+     * An example of using {@link #enumParser(ObjToObjFunction)} for {@link OrderType}, this is simply the result of
+     * passing {@code OrderType::valueOf} to {@code PartialParser.enumParser()}.
+     */
+    PartialParser<Enum<?>> DEFAULT_ORDER_TYPE = enumParser(OrderType::valueOf);
 
     /**
      * Wraps {@link Junction#parse(String, int, int)}.

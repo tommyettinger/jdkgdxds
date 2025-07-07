@@ -52,21 +52,30 @@ public class LegibleTest {
 		'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
 	};
 
-//	@Test
-//	public void testObjectListLegible() {
-//		ObjectList<String> data = ObjectList.with(strings), loaded = new ObjectList<>(strings.length);
-//		String legible = data.toString(";");
-//		loaded.addAll(TextTools.split(legible, ";"));
-//		Assert.assertEquals("Lists were not equal! legible was: " + legible, data, loaded);
-//	}
-//
-//	@Test
-//	public void testObjectDequeLegible() {
-//		ObjectDeque<String> data = ObjectDeque.with(strings), loaded = new ObjectDeque<>(strings.length);
-//		String legible = data.toString(";");
-//		loaded.addAll(TextTools.split(legible, ";"));
-//		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
-//	}
+	@Test
+	public void testObjectListLegible() {
+		ObjectList<String> data = ObjectList.with(strings), loaded = new ObjectList<>(strings.length);
+		String legible = data.toString(";");
+		loaded.addLegible(legible, ";", PartialParser.DEFAULT_STRING);
+		Assert.assertEquals("Lists were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testObjectDequeLegible() {
+		ObjectDeque<String> data = ObjectDeque.with(strings), loaded = new ObjectDeque<>(strings.length);
+		String legible = data.toString(";");
+		loaded.addLegible(legible, ";", PartialParser.DEFAULT_STRING, 0, -1);
+		Assert.assertEquals("Deques were not equal! legible was: " + legible, data, loaded);
+	}
+
+	@Test
+	public void testEnumSetLegible() {
+		OrderType[] universe = OrderType.values();
+		EnumSet data = EnumSet.allOf(universe), loaded = EnumSet.noneOf(universe);
+		String legible = data.toString(";");
+		loaded.addLegible(legible, ";", PartialParser.DEFAULT_ORDER_TYPE);
+		Assert.assertEquals("Sets were not equal! legible was: " + legible, data, loaded);
+	}
 
 	@Test
 	public void testByteListLegible() {
