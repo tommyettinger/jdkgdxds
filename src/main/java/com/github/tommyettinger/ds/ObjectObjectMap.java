@@ -1667,7 +1667,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * parse values. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing BASE10 chars
+	 * @param str a String containing parseable text
 	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
 	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
@@ -1684,7 +1684,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * parse values. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing BASE10 chars
+	 * @param str a String containing parseable text
 	 * @param entrySeparator the String separating every key-value pair
 	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
 	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
@@ -1699,7 +1699,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * parse keys from sections of {@code str}, and a different PartialParser to parse values. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing BASE10 chars
+	 * @param str a String containing parseable text
 	 * @param entrySeparator the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
 	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
@@ -1715,17 +1715,17 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * to parse keys from sections of {@code str}, and a different PartialParser to parse values. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing BASE10 chars
+	 * @param str a String containing parseable text
 	 * @param entrySeparator the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
 	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
 	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
-	 * @param offset the first position to read BASE10 chars from in {@code str}
+	 * @param offset the first position to read parseable text from in {@code str}
 	 * @param length how many chars to read; -1 is treated as maximum length
 	 */
 	public void putLegible(String str, String entrySeparator, String keyValueSeparator, PartialParser<K> keyParser, PartialParser<V> valueParser, int offset, int length) {
 		int sl, el, kvl;
-		if(str == null || entrySeparator == null || keyValueSeparator == null || valueParser == null
+		if(str == null || entrySeparator == null || keyValueSeparator == null || keyParser == null || valueParser == null
 				|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
 				|| offset < 0 || offset > sl - 1) return;
 		final int lim = length < 0 ? sl : Math.min(offset + length, sl);
