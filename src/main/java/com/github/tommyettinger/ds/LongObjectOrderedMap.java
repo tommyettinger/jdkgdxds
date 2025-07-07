@@ -242,7 +242,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	public LongObjectOrderedMap (PrimitiveCollection.OfLong keys, Collection<? extends V> values) {
 		this(keys, values, OrderType.LIST);
 	}
-
 	
 	@Override
 	public V put (long key, @Nullable V value) {
