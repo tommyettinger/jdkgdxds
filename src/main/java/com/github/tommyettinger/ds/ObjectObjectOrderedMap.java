@@ -99,11 +99,13 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * Creates a new map identical to the specified map.
 	 *
 	 * @param map the map to copy
+	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public ObjectObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> map) {
-		super(map);
-		if(map.keys instanceof ObjectBag) keys = new ObjectBag<>(map.keys);
-		else keys = new ObjectList<>(map.keys);
+	public ObjectObjectOrderedMap (Map<? extends K, ? extends V> map, OrderType ordering) {
+		this(map.size(), Utilities.getDefaultLoadFactor(), ordering);
+		for(K k : map.keySet()) {
+			put(k, map.get(k));
+		}
 	}
 
 	/**
@@ -118,30 +120,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		for(K k : map.keySet()) {
 			put(k, map.get(k));
 		}
-	}
-
-	/**
-	 * Creates a new set by copying {@code count} items from the given ObjectObjectOrderedMap, starting at {@code offset} in that Map,
-	 * into this.
-	 *
-	 * @param other  another ObjectObjectOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
-	 */
-	public ObjectObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> other, int offset, int count) {
-		this(other, offset, count,
-				other.keys instanceof ObjectBag ? OrderType.BAG
-						: OrderType.LIST);
-	}
-
-	/**
-	 * Creates a new map identical to the specified map.
-	 *
-	 * @param map the map to copy
-	 */
-	public ObjectObjectOrderedMap (ObjectObjectMap<? extends K, ? extends V> map) {
-		this(map, OrderType.LIST);
-
 	}
 
 	/**
@@ -210,6 +188,48 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 */
 	public ObjectObjectOrderedMap (int initialCapacity, float loadFactor) {
 		this(initialCapacity, loadFactor, OrderType.LIST);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public ObjectObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> map) {
+		super(map);
+		if(map.keys instanceof ObjectBag) keys = new ObjectBag<>(map.keys);
+		else keys = new ObjectList<>(map.keys);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given ObjectObjectOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 *
+	 * @param other  another ObjectObjectOrderedMap of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public ObjectObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> other, int offset, int count) {
+		this(other, offset, count,
+				other.keys instanceof ObjectBag ? OrderType.BAG
+						: OrderType.LIST);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public ObjectObjectOrderedMap (ObjectObjectMap<? extends K, ? extends V> map) {
+		this(map, OrderType.LIST);
+	}
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map the map to copy
+	 */
+	public ObjectObjectOrderedMap (Map<? extends K, ? extends V> map) {
+		this(map, OrderType.LIST);
 	}
 
 	/**
