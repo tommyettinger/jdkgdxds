@@ -97,7 +97,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 
 	/**
 	 * Creates a new map identical to the specified EnumOrderedMap. This will share a key universe with the given EnumOrderedMap, if non-null.
-	 * This overload allows specifying the OrderType independently of the one used in {@code other}.
+	 * This overload allows specifying the OrderType independently of the one used in {@code map}.
 	 *
 	 * @param map an EnumMap to copy
 	 */
