@@ -60,8 +60,99 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * Empty constructor; using this will postpone creating the key universe and allocating the value table until {@link #put} is
 	 * first called (potentially indirectly). You can also use {@link #clearToUniverse} to set the key universe and value table.
 	 */
+	public EnumIntOrderedMap(OrderType type) {
+		ordering = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
+	}
+
+	/**
+	 * Initializes this map so that it has exactly enough capacity as needed to contain each Enum constant defined in
+	 * {@code universe}, assuming universe stores every possible constant in one Enum type. This map will start empty.
+	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
+	 * reference to one Enum array across many EnumIntOrderedMap instances if you don't modify the shared array. Sharing the same
+	 * universe helps save some memory if you have (very) many EnumIntOrderedMap instances.
+	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 */
+	public EnumIntOrderedMap(Enum<?> @Nullable [] universe, OrderType type) {
+		if(universe == null) {
+			ordering = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
+			return;
+		}
+		this.keys = EnumSet.noneOf(universe);
+		valueTable = new int[universe.length];
+		ordering = type == OrderType.BAG ? new ObjectBag<>(universe.length) : new ObjectList<>(universe.length);
+	}
+
+	/**
+	 * Initializes this map so that it has exactly enough capacity as needed to contain each Enum constant defined by the
+	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumIntOrderedMap(Enum[])}
+	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
+	 * if you use {@link #EnumIntOrderedMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
+	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
+	 */
+	public EnumIntOrderedMap(@Nullable Class<? extends Enum<?>> universeClass, OrderType type) {
+		this(universeClass == null ? null : universeClass.getEnumConstants(), type);
+	}
+
+	/**
+	 * Creates a new map identical to the specified EnumIntOrderedMap. This will share a key universe with the given EnumIntOrderedMap, if non-null.
+	 * This overload allows specifying the OrderType independently of the one used in {@code map}.
+	 *
+	 * @param map an EnumIntOrderedMap to copy
+	 */
+	public EnumIntOrderedMap(EnumIntOrderedMap map, OrderType type) {
+		this.keys = map.keys;
+		if(map.valueTable != null)
+			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
+		defaultValue = map.defaultValue;
+		ordering = type == OrderType.BAG ? new ObjectBag<>(map.ordering) : new ObjectList<>(map.ordering);
+
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of Enum keys, one of int values, this constructs a map and inserts each pair of key and
+	 * value into it. If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys   an array of Enum keys
+	 * @param values an array of int values
+	 */
+	public EnumIntOrderedMap(Enum<?>[] keys, int[] values, OrderType type) {
+		this(type);
+		putAll(keys, values);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of Enum keys, one of int values, this constructs a map and inserts each pair of key
+	 * and value into it. If keys and values have different lengths, this only uses the length of the smaller collection.
+	 *
+	 * @param keys   a Collection of Enum keys
+	 * @param values a PrimitiveCollection of int values
+	 */
+	public EnumIntOrderedMap(Collection<? extends Enum<?>> keys, PrimitiveCollection.OfInt values, OrderType type) {
+		this(type);
+		putAll(keys, values);
+	}
+
+	/**
+	 * Creates a new map by copying {@code count} items from the given EnumIntOrderedMap, starting at {@code offset} in that Map,
+	 * into this. This overload allows specifying the OrderType independently of the one used in {@code other}.
+	 *
+	 * @param other  another EnumIntOrderedMap
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public EnumIntOrderedMap(@NonNull EnumIntOrderedMap other, int offset, int count, OrderType type) {
+		this(other.keys == null ? null : other.keys.universe, type);
+		putAll(0, other, offset, count);
+	}
+
+	// using default order type
+
+	/**
+	 * Empty constructor; using this will postpone creating the key universe and allocating the value table until {@link #put} is
+	 * first called (potentially indirectly). You can also use {@link #clearToUniverse} to set the key universe and value table.
+	 */
 	public EnumIntOrderedMap() {
-		ordering = new ObjectList<>();
+		this(OrderType.LIST);
 	}
 
 	/**
@@ -73,28 +164,23 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 */
 	public EnumIntOrderedMap(Enum<?> @Nullable [] universe) {
-		if(universe == null) {
-			ordering = new ObjectList<>();
-			return;
-		}
-		this.keys = EnumSet.noneOf(universe);
-		valueTable = new int[universe.length];
-		ordering = new ObjectList<>(universe.length);
+		this(universe, OrderType.LIST);
 	}
 
 	/**
-	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined by the
+	 * Initializes this map so that it has exactly enough capacity as needed to contain each Enum constant defined by the
 	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumIntOrderedMap(Enum[])}
 	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
 	 * if you use {@link #EnumIntOrderedMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
 	public EnumIntOrderedMap(@Nullable Class<? extends Enum<?>> universeClass) {
-		this(universeClass == null ? null : universeClass.getEnumConstants());
+		this(universeClass, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new map identical to the specified EnumIntOrderedMap. This will share a key universe with the given EnumIntOrderedMap, if non-null.
+	 * This overload uses the OrderType of the given map.
 	 *
 	 * @param map an EnumIntOrderedMap to copy
 	 */
@@ -103,7 +189,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 		if(map.valueTable != null)
 			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
 		defaultValue = map.defaultValue;
-		ordering = new ObjectList<>(map.ordering);
+		ordering = map.ordering instanceof ObjectBag ? new ObjectBag<>(map.ordering) : new ObjectList<>(map.ordering);
 	}
 
 	/**
@@ -114,8 +200,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param values an array of int values
 	 */
 	public EnumIntOrderedMap(Enum<?>[] keys, int[] values) {
-		this();
-		putAll(keys, values);
+		this(keys, values, OrderType.LIST);
 	}
 
 	/**
@@ -126,37 +211,19 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param values a PrimitiveCollection of int values
 	 */
 	public EnumIntOrderedMap(Collection<? extends Enum<?>> keys, PrimitiveCollection.OfInt values) {
-		this();
-		putAll(keys, values);
+		this(keys, values, OrderType.LIST);
 	}
 
 	/**
-	 * Given two side-by-side collections, one of Enum keys, one of int values, this inserts each pair of key and
-	 * value into this map with put().
-	 *
-	 * @param keys   a Collection of Enum keys
-	 * @param values a PrimitiveCollection of int values
-	 */
-	public void putAll (Collection<? extends Enum<?>> keys, PrimitiveCollection.OfInt values) {
-		Enum<?> key;
-		Iterator<? extends Enum<?>> ki = keys.iterator();
-		IntIterator vi = values.iterator();
-		while (ki.hasNext() && vi.hasNext()) {
-			key = ki.next();
-			put(key, vi.nextInt());
-		}
-	}
-
-	/**
-	 * Creates a new set by copying {@code count} items from the given EnumIntOrderedMap, starting at {@code offset} in that Map,
-	 * into this.
+	 * Creates a new map by copying {@code count} items from the given EnumIntOrderedMap, starting at {@code offset} in that Map,
+	 * into this. This overload uses the OrderType of the given map.
 	 *
 	 * @param other  another EnumIntOrderedMap
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
 	public EnumIntOrderedMap(@NonNull EnumIntOrderedMap other, int offset, int count) {
-		this(other.keys == null ? null : other.keys.universe);
+		this(other.keys == null ? null : other.keys.universe, other.ordering instanceof ObjectBag ? OrderType.BAG : OrderType.LIST);
 		putAll(0, other, offset, count);
 	}
 
