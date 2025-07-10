@@ -55,39 +55,39 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 
 	protected final ObjectList<T> items;
 
-	public ObjectOrderedSet () {
-		items = new ObjectList<>();
+	public ObjectOrderedSet (OrderType ordering) {
+		items = ordering == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
 	}
 
-	public ObjectOrderedSet (int initialCapacity, float loadFactor) {
+	public ObjectOrderedSet (int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-		items = new ObjectList<>(initialCapacity);
+		items = ordering == OrderType.BAG ? new ObjectBag<>(initialCapacity) : new ObjectList<>(initialCapacity);
 	}
 
-	public ObjectOrderedSet (int initialCapacity) {
+	public ObjectOrderedSet (int initialCapacity, OrderType ordering) {
 		super(initialCapacity);
-		items = new ObjectList<>(initialCapacity);
+		items = ordering == OrderType.BAG ? new ObjectBag<>(initialCapacity) : new ObjectList<>(initialCapacity);
 	}
 	/**
 	 * Creates a new instance containing the items in the specified iterator.
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public ObjectOrderedSet (Iterator<? extends T> coll) {
-		this();
+	public ObjectOrderedSet (Iterator<? extends T> coll, OrderType ordering) {
+		this(ordering);
 		addAll(coll);
 	}
 
-	public ObjectOrderedSet (ObjectOrderedSet<? extends T> set) {
+	public ObjectOrderedSet (ObjectOrderedSet<? extends T> set, OrderType ordering) {
 		super(set);
-		items = new ObjectList<>(set.items);
+		items = ordering == OrderType.BAG ? new ObjectBag<>(set.items) : new ObjectList<>(set.items);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code set}.
 	 */
-	public ObjectOrderedSet (ObjectSet<? extends T> set) {
-		this(set.size(), set.loadFactor);
+	public ObjectOrderedSet (ObjectSet<? extends T> set, OrderType ordering) {
+		this(set.size(), set.loadFactor, ordering);
 		hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
@@ -96,8 +96,8 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public ObjectOrderedSet (Collection<? extends T> coll) {
-		this(coll.size());
+	public ObjectOrderedSet (Collection<? extends T> coll, OrderType ordering) {
+		this(coll.size(), ordering);
 		addAll(coll);
 	}
 
@@ -108,8 +108,8 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public ObjectOrderedSet (T[] array, int offset, int length) {
-		this(length);
+	public ObjectOrderedSet (T[] array, int offset, int length, OrderType ordering) {
+		this(length, ordering);
 		addAll(array, offset, length);
 	}
 
@@ -118,8 +118,8 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 *
 	 * @param items an array that will be used in full, except for duplicate items
 	 */
-	public ObjectOrderedSet (T[] items) {
-		this(items.length);
+	public ObjectOrderedSet (T[] items, OrderType ordering) {
+		this(items.length, ordering);
 		addAll(items);
 	}
 
@@ -131,9 +131,83 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
+	public ObjectOrderedSet (Ordered<T> other, int offset, int count, OrderType ordering) {
+		this(count, ordering);
+		addAll(other, offset, count);
+	}
+
+	// default order type
+
+	public ObjectOrderedSet () {
+		this(OrderType.LIST);
+	}
+
+	public ObjectOrderedSet (int initialCapacity, float loadFactor) {
+		this(initialCapacity, loadFactor, OrderType.LIST);
+	}
+
+	public ObjectOrderedSet (int initialCapacity) {
+		this(initialCapacity, OrderType.LIST);
+	}
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public ObjectOrderedSet (Iterator<? extends T> coll) {
+		this(coll, OrderType.LIST);
+	}
+
+	public ObjectOrderedSet (ObjectOrderedSet<? extends T> set) {
+		super(set);
+		items = set.items instanceof ObjectBag ? new ObjectBag<>(set.items) : new ObjectList<>(set.items);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code set}.
+	 */
+	public ObjectOrderedSet (ObjectSet<? extends T> set) {
+		this(set, OrderType.LIST);
+	}
+
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code coll}.
+	 */
+	public ObjectOrderedSet (Collection<? extends T> coll) {
+		this(coll, OrderType.LIST);
+	}
+
+	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 *
+	 * @param array  an array to draw items from
+	 * @param offset the first index in array to draw an item from
+	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 */
+	public ObjectOrderedSet (T[] array, int offset, int length) {
+		this(array, offset, length, OrderType.LIST);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code items}.
+	 *
+	 * @param items an array that will be used in full, except for duplicate items
+	 */
+	public ObjectOrderedSet (T[] items) {
+		this(items, OrderType.LIST);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this.
+	 *
+	 * @param other  another Ordered of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
 	public ObjectOrderedSet (Ordered<T> other, int offset, int count) {
-		this(count);
-		addAll(0, other, offset, count);
+		this(other, offset, count, OrderType.LIST);
 	}
 
 	@Override
