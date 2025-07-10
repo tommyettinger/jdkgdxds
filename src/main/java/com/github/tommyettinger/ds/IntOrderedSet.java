@@ -57,7 +57,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	}
 
 	/**
-	 * Creates an IntOrderedSet with the option to use an IntDeque for keeping order.
+	 * Creates an IntOrderedSet with the option to use an IntDeque or IntBag for keeping order.
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
 	public IntOrderedSet (OrderType ordering) {
@@ -79,8 +79,22 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 		}
 	}
 
+	public IntOrderedSet (int initialCapacity, OrderType ordering) {
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
+	}
+
 	public IntOrderedSet (int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public IntOrderedSet (IntIterator coll, OrderType ordering) {
+		this(ordering);
+		addAll(coll);
 	}
 
 	/**
@@ -91,6 +105,17 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	public IntOrderedSet (IntIterator coll) {
 		this();
 		addAll(coll);
+	}
+
+	public IntOrderedSet (IntOrderedSet set, OrderType ordering) {
+		super(set);
+		switch (ordering){
+			case DEQUE: items = new IntDeque(set.items.iterator());
+				break;
+			case BAG: items = new IntBag(set.items);
+				break;
+			default: items = new IntList(set.items);
+		}
 	}
 
 	public IntOrderedSet (IntOrderedSet set) {

@@ -57,7 +57,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	}
 
 	/**
-	 * Creates an IntOrderedSet with the option to use an IntDeque for keeping order.
+	 * Creates an LongOrderedSet with the option to use an LongDeque or LongBag for keeping order.
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
 	public LongOrderedSet (OrderType ordering) {
@@ -79,6 +79,10 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		}
 	}
 
+	public LongOrderedSet (int initialCapacity, OrderType ordering) {
+		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
+	}
+
 	public LongOrderedSet (int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
 	}
@@ -91,6 +95,17 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	public LongOrderedSet (LongIterator coll) {
 		this();
 		addAll(coll);
+	}
+
+	public LongOrderedSet (LongOrderedSet set, OrderType ordering) {
+		super(set);
+		switch (ordering){
+			case DEQUE: items = new LongDeque(set.items.iterator());
+			break;
+			case BAG: items = new LongBag(set.items);
+			break;
+			default: items = new LongList(set.items);
+		}
 	}
 
 	public LongOrderedSet (LongOrderedSet set) {
@@ -128,7 +143,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
-	 * @param coll any {@link PrimitiveCollection.OfInt}
+	 * @param coll any {@link PrimitiveCollection.OfLong}
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
 	public LongOrderedSet (OfLong coll, OrderType ordering) {
@@ -140,7 +155,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 *
-	 * @param other  another Ordered.OfInt
+	 * @param other  another Ordered.OfLong
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
@@ -152,7 +167,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 *
-	 * @param other  another Ordered.OfInt
+	 * @param other  another Ordered.OfLong
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 * @param ordering determines what implementation {@link #order()} will use
