@@ -50,14 +50,168 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 
 	protected final ObjectList<@NonNull Enum<?>> ordering;
 
+	/**
+	 * Only specifies an OrderType; using this will postpone allocating any internal arrays until {@link #add(Enum)} is
+	 * first called (potentially indirectly).
+	 *
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public EnumOrderedSet (OrderType type) {
+		super();
+		ordering = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
+	}
+
+	/**
+	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined in
+	 * {@code universe}, assuming universe stores every possible constant in one Enum type.
+	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
+	 * reference to one Enum array across many EnumSet instances if you don't modify the shared array. Sharing the same
+	 * universe helps save some memory if you have (very) many EnumSet instances.
+	 * <br>
+	 * Because the {@code boolean} parameter here is easy to forget, you may want to prefer calling {@link #noneOf(Enum[])}
+	 * instead of using this directly.
+	 *
+	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 * @param ignoredToDistinguish an ignored boolean that differentiates this constructor, which defined a key universe,
+	 *                               from one that takes contents
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public EnumOrderedSet (Enum<?>@Nullable [] universe, boolean ignoredToDistinguish, OrderType type) {
+		super();
+		if(universe == null) {
+			ordering = new ObjectList<>();
+			return;
+		}
+		this.universe = universe;
+		table = new int[universe.length + 31 >>> 5];
+		ordering = type == OrderType.BAG ? new ObjectBag<>(universe.length) : new ObjectList<>(universe.length);
+	}
+
+	/**
+	 * Initializes this set so that it has exactly enough capacity as needed to contain each Enum constant defined by the
+	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumOrderedSet(Enum[], boolean)}
+	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
+	 * if you use {@link #EnumOrderedSet(Enum[], boolean)} (or its equivalent, {@link #noneOf(Enum[])}), you can reuse an
+	 * unmodified array to reduce allocations.
+	 *
+	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public EnumOrderedSet (@Nullable Class<? extends Enum<?>> universeClass, OrderType type) {
+		this(universeClass == null ? null : universeClass.getEnumConstants(), true, type);
+	}
+
+	/**
+	 * Initializes this set so that it holds the given Enum values, with the universe of possible Enum constants this can hold
+	 * determined by the type of the first Enum in {@code contents}.
+	 *
+	 * @param contents a Collection of Enum items to place into this set
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public EnumOrderedSet (@NonNull Iterator<? extends Enum<?>> contents, OrderType type) {
+		this(type);
+		addAll(contents);
+	}
+
+	/**
+	 * Initializes this set so that it holds the given Enum values, with the universe of possible Enum constants this can hold
+	 * determined by the type of the first Enum in {@code contents}.
+	 *
+	 * @param contents a Collection of Enum items to place into this set
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public EnumOrderedSet (@NonNull Collection<? extends Enum<?>> contents, OrderType type) {
+		this(type);
+		addAll(contents);
+	}
+
+	/**
+	 * Copy constructor; uses a direct reference to the enum values that may be cached in {@code other}, but copies other fields.
+	 * @param other another EnumSet that will have most of its data copied, but its cached {@code values()} results will be used directly
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public EnumOrderedSet (@NonNull EnumSet other, OrderType type) {
+		if(other.table != null)
+			this.table = Arrays.copyOf(other.table, other.table.length);
+		this.universe = other.universe;
+		ordering = type == OrderType.BAG ? new ObjectBag<>(other.size()) : new ObjectList<>(other.size());
+		this.addAll(other);
+	}
+
+	/**
+	 * Copies {@code other} but allows specifying an OrderType independently of {@code other}'s ordering.
+	 * @param other another EnumOrderedSet that will have its contents copied
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public EnumOrderedSet(@NonNull EnumOrderedSet other, OrderType type) {
+		this.size = other.size;
+		if(other.table != null)
+			this.table = Arrays.copyOf(other.table, other.table.length);
+		this.universe = other.universe;
+		ordering = type == OrderType.BAG ? new ObjectBag<>(other.ordering) : new ObjectList<>(other.ordering);
+	}
+
+	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 *
+	 * @param array  an array to draw items from
+	 * @param offset the first index in array to draw an item from
+	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public EnumOrderedSet(Enum<?>[] array, int offset, int length, OrderType type) {
+		this(type);
+		addAll(array, offset, length);
+	}
+
+	/**
+	 * Initializes this set so that it holds the given Enum values, with the universe of possible Enum constants this can hold
+	 * determined by the type of the first Enum in {@code contents}.
+	 * <br>
+	 * This is different from {@link #EnumOrderedSet(Enum[], boolean)} in that this takes constants and puts them in the set, while the other
+	 * constructor takes all possible Enum constants, usually from calling {@code values()}. You can also specify the contents of a
+	 * new EnumSet conveniently using {@link #with(Enum[])}, which allows passing items as varargs.
+	 *
+	 * @param contents an array of Enum items to place into this set
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public EnumOrderedSet (Enum<?> @NonNull [] contents, OrderType type) {
+		this(type);
+		addAll(contents);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this.
+	 *
+	 * @param other  another Ordered of the same type
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public EnumOrderedSet(Ordered<Enum<?>> other, int offset, int count, OrderType type) {
+		this(type);
+		addAll(0, other, offset, count);
+	}
+
+	// Default order type.
 
 	/**
 	 * Empty constructor; using this will postpone allocating any internal arrays until {@link #add(Enum)} is first called
 	 * (potentially indirectly).
 	 */
 	public EnumOrderedSet () {
-		super();
-		ordering = new ObjectList<>();
+		this(OrderType.LIST);
 	}
 
 	/**
@@ -75,14 +229,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 *                               from one that takes contents
 	 */
 	public EnumOrderedSet (Enum<?>@Nullable [] universe, boolean ignoredToDistinguish) {
-		super();
-		if(universe == null) {
-			ordering = new ObjectList<>();
-			return;
-		}
-		this.universe = universe;
-		table = new int[universe.length + 31 >>> 5];
-		ordering = new ObjectList<>(universe.length);
+		this(universe, ignoredToDistinguish, OrderType.LIST);
 	}
 
 	/**
@@ -95,7 +242,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
 	public EnumOrderedSet (@Nullable Class<? extends Enum<?>> universeClass) {
-		this(universeClass == null ? null : universeClass.getEnumConstants(), true);
+		this(universeClass, OrderType.LIST);
 	}
 
 	/**
@@ -105,8 +252,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param contents a Collection of Enum items to place into this set
 	 */
 	public EnumOrderedSet (@NonNull Iterator<? extends Enum<?>> contents) {
-		this();
-		addAll(contents);
+		this(contents, OrderType.LIST);
 	}
 
 	/**
@@ -116,8 +262,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param contents a Collection of Enum items to place into this set
 	 */
 	public EnumOrderedSet (@NonNull Collection<? extends Enum<?>> contents) {
-		this();
-		addAll(contents);
+		this(contents, OrderType.LIST);
 	}
 
 	/**
@@ -125,19 +270,19 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param other another EnumSet that will have most of its data copied, but its cached {@code values()} results will be used directly
 	 */
 	public EnumOrderedSet (@NonNull EnumSet other) {
-		if(other.table != null)
-			this.table = Arrays.copyOf(other.table, other.table.length);
-		this.universe = other.universe;
-		ordering = new ObjectList<>(other.size());
-		this.addAll(other);
+		this(other, OrderType.LIST);
 	}
 
+	/**
+	 * Copies the entirety of {@code other}, including using the same OrderType.
+	 * @param other another EnumOrderedSet that will have its contents and ordering copied
+	 */
 	public EnumOrderedSet(@NonNull EnumOrderedSet other) {
 		this.size = other.size;
 		if(other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
 		this.universe = other.universe;
-		ordering = new ObjectList<>(other.ordering);
+		ordering = other.ordering instanceof ObjectBag ? new ObjectBag<>(other.ordering) : new ObjectList<>(other.ordering);
 	}
 
 	/**
@@ -148,8 +293,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
 	public EnumOrderedSet(Enum<?>[] array, int offset, int length) {
-		this();
-		addAll(array, offset, length);
+		this(array, offset, length, OrderType.LIST);
 	}
 
 	/**
@@ -163,8 +307,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param contents an array of Enum items to place into this set
 	 */
 	public EnumOrderedSet (Enum<?> @NonNull [] contents) {
-		this();
-		addAll(contents);
+		this(contents, OrderType.LIST);
 	}
 
 	/**
@@ -176,8 +319,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param count  how many items to copy from other
 	 */
 	public EnumOrderedSet(Ordered<Enum<?>> other, int offset, int count) {
-		this();
-		addAll(0, other, offset, count);
+		this(other, offset, count, OrderType.LIST);
 	}
 
 	@Override

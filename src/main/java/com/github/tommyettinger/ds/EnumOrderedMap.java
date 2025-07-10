@@ -58,7 +58,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 
 
 	/**
-	 * Empty constructor; using this will postpone creating the key universe and allocating the value table until {@link #put} is
+	 * Constructor that only specifies an OrderType; using this will postpone creating the key universe and allocating the value table until {@link #put} is
 	 * first called (potentially indirectly). You can also use {@link #clearToUniverse} to set the key universe and value table.
 	 */
 	public EnumOrderedMap (OrderType type) {
