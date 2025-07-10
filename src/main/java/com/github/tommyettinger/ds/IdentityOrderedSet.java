@@ -37,6 +37,49 @@ import java.util.Iterator;
  * You might prefer this to {@link IdentitySet} if you need to ensure fast iteration or want access by index.
  */
 public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
+	public IdentityOrderedSet (OrderType type) {
+		super(type);
+	}
+
+	public IdentityOrderedSet (int initialCapacity, OrderType type) {
+		super(initialCapacity, type);
+	}
+
+	public IdentityOrderedSet (int initialCapacity, float loadFactor, OrderType type) {
+		super(initialCapacity, loadFactor, type);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 */
+	public IdentityOrderedSet (Iterator<? extends T> coll, OrderType type) {
+		super(coll, type);
+	}
+
+	public IdentityOrderedSet (ObjectOrderedSet<? extends T> set, OrderType type) {
+		super(set, type);
+	}
+
+	public IdentityOrderedSet (Collection<? extends T> coll, OrderType type) {
+		super(coll, type);
+	}
+
+	public IdentityOrderedSet (T[] array, int offset, int length, OrderType type) {
+		super(array, offset, length, type);
+	}
+
+	public IdentityOrderedSet (T[] array, OrderType type) {
+		super(array, type);
+	}
+
+	public IdentityOrderedSet (Ordered<T> other, int offset, int count, OrderType type) {
+		super(other, offset, count, type);
+	}
+
+	// default order type
+
 	public IdentityOrderedSet () {
 		super();
 	}
