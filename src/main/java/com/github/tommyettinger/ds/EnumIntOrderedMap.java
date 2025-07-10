@@ -57,8 +57,11 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	protected final ObjectList<Enum<?>> ordering;
 
 	/**
-	 * Empty constructor; using this will postpone creating the key universe and allocating the value table until {@link #put} is
+	 * Constructor that only specifies an OrderType; using this will postpone creating the key universe and allocating the value table until {@link #put} is
 	 * first called (potentially indirectly). You can also use {@link #clearToUniverse} to set the key universe and value table.
+	 *
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public EnumIntOrderedMap(OrderType type) {
 		ordering = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
@@ -70,7 +73,10 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
 	 * reference to one Enum array across many EnumIntOrderedMap instances if you don't modify the shared array. Sharing the same
 	 * universe helps save some memory if you have (very) many EnumIntOrderedMap instances.
+	 *
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public EnumIntOrderedMap(Enum<?> @Nullable [] universe, OrderType type) {
 		if(universe == null) {
@@ -87,7 +93,10 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumIntOrderedMap(Enum[])}
 	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
 	 * if you use {@link #EnumIntOrderedMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
+	 *
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public EnumIntOrderedMap(@Nullable Class<? extends Enum<?>> universeClass, OrderType type) {
 		this(universeClass == null ? null : universeClass.getEnumConstants(), type);
@@ -98,6 +107,8 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * This overload allows specifying the OrderType independently of the one used in {@code map}.
 	 *
 	 * @param map an EnumIntOrderedMap to copy
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public EnumIntOrderedMap(EnumIntOrderedMap map, OrderType type) {
 		this.keys = map.keys;
@@ -114,6 +125,8 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 *
 	 * @param keys   an array of Enum keys
 	 * @param values an array of int values
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public EnumIntOrderedMap(Enum<?>[] keys, int[] values, OrderType type) {
 		this(type);
@@ -126,6 +139,8 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 *
 	 * @param keys   a Collection of Enum keys
 	 * @param values a PrimitiveCollection of int values
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public EnumIntOrderedMap(Collection<? extends Enum<?>> keys, PrimitiveCollection.OfInt values, OrderType type) {
 		this(type);
@@ -139,6 +154,8 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param other  another EnumIntOrderedMap
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public EnumIntOrderedMap(@NonNull EnumIntOrderedMap other, int offset, int count, OrderType type) {
 		this(other.keys == null ? null : other.keys.universe, type);
