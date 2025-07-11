@@ -162,6 +162,12 @@ public interface Ordered<T> extends Arrangeable {
 		order().removeRange(start, end);
 	}
 
+	default OrderType getOrderType() {
+		ObjectList<T> o = order();
+		if(o instanceof ObjectBag) return OrderType.BAG;
+		return OrderType.LIST;
+	}
+
 	/**
 	 * A primitive specialization of {@link Ordered} for collections of int values instead of objects.
 	 */
@@ -278,6 +284,13 @@ public interface Ordered<T> extends Arrangeable {
 		 */
 		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
+		}
+
+		default OrderType getOrderType() {
+			IntList o = order();
+			if(o instanceof IntBag) return OrderType.BAG;
+			if(o instanceof IntDeque) return OrderType.DEQUE;
+			return OrderType.LIST;
 		}
 	}
 
@@ -398,6 +411,13 @@ public interface Ordered<T> extends Arrangeable {
 		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
+
+		default OrderType getOrderType() {
+			LongList o = order();
+			if(o instanceof LongBag) return OrderType.BAG;
+			if(o instanceof LongDeque) return OrderType.DEQUE;
+			return OrderType.LIST;
+		}
 	}
 
 	/**
@@ -516,6 +536,13 @@ public interface Ordered<T> extends Arrangeable {
 		 */
 		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
+		}
+
+		default OrderType getOrderType() {
+			FloatList o = order();
+			if(o instanceof FloatBag) return OrderType.BAG;
+			if(o instanceof FloatDeque) return OrderType.DEQUE;
+			return OrderType.LIST;
 		}
 	}
 
@@ -636,6 +663,13 @@ public interface Ordered<T> extends Arrangeable {
 		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
+
+		default OrderType getOrderType() {
+			DoubleList o = order();
+			if(o instanceof DoubleBag) return OrderType.BAG;
+			if(o instanceof DoubleDeque) return OrderType.DEQUE;
+			return OrderType.LIST;
+		}
 	}
 
 	interface OfShort extends Arrangeable {
@@ -751,6 +785,13 @@ public interface Ordered<T> extends Arrangeable {
 		 */
 		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
+		}
+
+		default OrderType getOrderType() {
+			ShortList o = order();
+			if(o instanceof ShortBag) return OrderType.BAG;
+			if(o instanceof ShortDeque) return OrderType.DEQUE;
+			return OrderType.LIST;
 		}
 	}
 
@@ -868,6 +909,13 @@ public interface Ordered<T> extends Arrangeable {
 		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
+
+		default OrderType getOrderType() {
+			ByteList o = order();
+			if(o instanceof ByteBag) return OrderType.BAG;
+			if(o instanceof ByteDeque) return OrderType.DEQUE;
+			return OrderType.LIST;
+		}
 	}
 
 	interface OfChar extends Arrangeable {
@@ -984,6 +1032,13 @@ public interface Ordered<T> extends Arrangeable {
 		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
 		}
+
+		default OrderType getOrderType() {
+			CharList o = order();
+			if(o instanceof CharBag) return OrderType.BAG;
+			if(o instanceof CharDeque) return OrderType.DEQUE;
+			return OrderType.LIST;
+		}
 	}
 
 	interface OfBoolean extends Arrangeable {
@@ -1099,6 +1154,13 @@ public interface Ordered<T> extends Arrangeable {
 		 */
 		default void removeRange (int start, int end) {
 			order().removeRange(start, end);
+		}
+
+		default OrderType getOrderType() {
+			BooleanList o = order();
+			if(o instanceof BooleanBag) return OrderType.BAG;
+			if(o instanceof BooleanDeque) return OrderType.DEQUE;
+			return OrderType.LIST;
 		}
 	}
 }
