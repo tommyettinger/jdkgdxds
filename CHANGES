@@ -1,3 +1,9 @@
+[1.11.0]
+- [BREAKING] The constructors in any and all Ordered types that took a `boolean useDequeOrder`, if present, now take an `OrderType` enum, which allows specifying the default LIST ordering, the optimized-removal-and-insertion-at-ends DEQUE ordering, or now the unreliable-but-fast-deletion BAG ordering.
+- OrderType is new, and all Ordered types can have their order type queried with `getOrderType()` . This is not stored in the types except by the specific subclass that their `order()` returns.
+- `EnhancedCollection`s and `PrimitiveCollection`s can now `addLegible()` to add the contents of a `toString()` call to that data structure. All maps where it is relevant can call `putLegible()`, as well.
+- Where reading in the result of `toString()` is not obvious to the library, you can supply a `PartialParser` implementation that reads a section of a String and returns an Object of the desired type.
+
 [1.10.1]
 - Dependency on digital updated to 0.7.0; this version change doesn't directly affect jdkgdxds, but calls to `TrigTools` methods may have very slightly different results because its lookup tables are calculated differently (now they are fully deterministic).
 - Instead of creating a method reference to StringBuilder::append, which allocates on Android due to a flaw in R8, each primitive Appender now stores one method reference, DEFAULT, that is equivalent to StringBuilder::append .
