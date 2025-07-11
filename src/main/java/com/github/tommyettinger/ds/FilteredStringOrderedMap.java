@@ -61,6 +61,143 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
+	public FilteredStringOrderedMap (OrderType type) {
+		super(type);
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This map will hold initialCapacity items before growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredStringOrderedMap (int initialCapacity, OrderType type) {
+		super(initialCapacity, type);
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public FilteredStringOrderedMap (int initialCapacity, float loadFactor, OrderType type) {
+		super(initialCapacity, loadFactor, type);
+	}
+
+	/**
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 */
+	public FilteredStringOrderedMap (CharFilter filter, OrderType type) {
+		super(type);
+		this.filter = filter;
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and th default load factor. This map will hold initialCapacity items
+	 * before growing the backing table.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredStringOrderedMap (CharFilter filter, int initialCapacity, OrderType type) {
+		super(initialCapacity, type);
+		this.filter = filter;
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public FilteredStringOrderedMap (CharFilter filter, int initialCapacity, float loadFactor, OrderType type) {
+		super(initialCapacity, loadFactor, type);
+		this.filter = filter;
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map an FilteredStringOrderedMap to copy
+	 */
+	public FilteredStringOrderedMap (FilteredStringOrderedMap<? extends V> map, OrderType type) {
+		super(map.size(), map.loadFactor, type);
+		filter = map.filter;
+		this.hashMultiplier = map.hashMultiplier;
+		putAll(map);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param map    a Map to copy; ObjectObjectOrderedMap and subclasses of it will be faster to load from
+	 */
+	public FilteredStringOrderedMap (CharFilter filter, Map<String, ? extends V> map, OrderType type) {
+		this(filter, map.size(), type);
+		for (String k : map.keySet()) {
+			put(k, map.get(k));
+		}
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param keys   an array of keys
+	 * @param values an array of values
+	 */
+	public FilteredStringOrderedMap (CharFilter filter, String[] keys, V[] values, OrderType type) {
+		this(filter, Math.min(keys.length, values.length), type);
+		putAll(keys, values);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param keys   a Collection of keys
+	 * @param values a Collection of values
+	 */
+	public FilteredStringOrderedMap (CharFilter filter, Collection<String> keys, Collection<? extends V> values, OrderType type) {
+		this(filter, Math.min(keys.size(), values.size()), type);
+		putAll(keys, values);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given ObjectObjectOrderedMap (or a subclass, such as
+	 * CaseInsensitiveOrderedMap), starting at {@code offset} in that Map, into this.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param other  another ObjectObjectOrderedMap of the same types (key must be String)
+	 * @param offset the first index in other's ordering to draw an item from
+	 * @param count  how many items to copy from other
+	 */
+	public FilteredStringOrderedMap (CharFilter filter, ObjectObjectOrderedMap<String, ? extends V> other, int offset, int count, OrderType type) {
+		this(filter, count, other.loadFactor, type);
+		hashMultiplier = other.hashMultiplier;
+		putAll(0, other, offset, count);
+	}
+
+	// default order type
+
+	/**
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 */
 	public FilteredStringOrderedMap () {
 		super();
 	}
@@ -130,7 +267,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param map an FilteredStringOrderedMap to copy
 	 */
 	public FilteredStringOrderedMap (FilteredStringOrderedMap<? extends V> map) {
-		super(map.size(), map.loadFactor);
+		super(map.size(), map.loadFactor, map.getOrderType());
 		filter = map.filter;
 		this.hashMultiplier = map.hashMultiplier;
 		putAll(map);
@@ -188,7 +325,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param count  how many items to copy from other
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, ObjectObjectOrderedMap<String, ? extends V> other, int offset, int count) {
-		this(filter, count, other.loadFactor);
+		this(filter, count, other.loadFactor, other.getOrderType());
 		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
