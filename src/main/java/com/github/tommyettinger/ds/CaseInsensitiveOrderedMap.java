@@ -57,6 +57,94 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
+	 * @param ordering determines what implementation {@link #order()} will use
+	 */
+	public CaseInsensitiveOrderedMap(OrderType ordering) {
+		super(ordering);
+	}
+
+	/**
+	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param ordering        determines what implementation {@link #order()} will use
+	 */
+	public CaseInsensitiveOrderedMap(int initialCapacity, OrderType ordering) {
+		super(initialCapacity, ordering);
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param ordering        determines what implementation {@link #order()} will use
+	 */
+	public CaseInsensitiveOrderedMap(int initialCapacity, float loadFactor, OrderType ordering) {
+		super(initialCapacity, loadFactor, ordering);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map      the map to copy
+	 * @param ordering determines what implementation {@link #order()} will use
+	 */
+	public CaseInsensitiveOrderedMap(Map<? extends CharSequence, ? extends V> map, OrderType ordering) {
+		super(map, ordering);
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map      the map to copy
+	 * @param ordering determines what implementation {@link #order()} will use
+	 */
+	public CaseInsensitiveOrderedMap(ObjectObjectMap<? extends CharSequence, ? extends V> map, OrderType ordering) {
+		super(map, ordering);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given ObjectObjectOrderedMap, starting at {@code offset} in that Map,
+	 * into this.
+	 *
+	 * @param other    another ObjectObjectOrderedMap of the same type
+	 * @param offset   the first index in other's ordering to draw an item from
+	 * @param count    how many items to copy from other
+	 * @param ordering determines what implementation {@link #order()} will use
+	 */
+	public CaseInsensitiveOrderedMap(ObjectObjectOrderedMap<? extends CharSequence, ? extends V> other, int offset, int count, OrderType ordering) {
+		super(other, offset, count, ordering);
+	}
+
+	/**
+	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller array.
+	 *
+	 * @param keys     an array of keys
+	 * @param values   an array of values
+	 * @param ordering determines what implementation {@link #order()} will use
+	 */
+	public CaseInsensitiveOrderedMap(CharSequence[] keys, V[] values, OrderType ordering) {
+		super(keys, values, ordering);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 *
+	 * @param keys     a Collection of keys
+	 * @param values   a Collection of values
+	 * @param ordering determines what implementation {@link #order()} will use
+	 */
+	public CaseInsensitiveOrderedMap(Collection<? extends CharSequence> keys, Collection<? extends V> values, OrderType ordering) {
+		super(keys, values, ordering);
+	}
+
+	/**
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public CaseInsensitiveOrderedMap () {
 		super();

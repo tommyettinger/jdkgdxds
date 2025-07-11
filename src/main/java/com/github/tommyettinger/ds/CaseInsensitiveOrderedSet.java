@@ -53,6 +53,86 @@ import java.util.Iterator;
  * handles {@link Character#isLetter(char)} for ASCII letters; the library RegExodus offers replacements in Category.
  */
 public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
+	public CaseInsensitiveOrderedSet(OrderType ordering) {
+		super(ordering);
+	}
+
+	public CaseInsensitiveOrderedSet(int initialCapacity, float loadFactor, OrderType ordering) {
+		super(initialCapacity, loadFactor, ordering);
+	}
+
+	public CaseInsensitiveOrderedSet(int initialCapacity, OrderType ordering) {
+		super(initialCapacity, ordering);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll     an iterator that will have its remaining contents added to this
+	 * @param ordering
+	 */
+	public CaseInsensitiveOrderedSet(Iterator<? extends CharSequence> coll, OrderType ordering) {
+		super(coll, ordering);
+	}
+
+	public CaseInsensitiveOrderedSet(ObjectOrderedSet<? extends CharSequence> set, OrderType ordering) {
+		super(set, ordering);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code set}.
+	 *
+	 * @param set
+	 * @param ordering
+	 */
+	public CaseInsensitiveOrderedSet(ObjectSet<? extends CharSequence> set, OrderType ordering) {
+		super(set, ordering);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code coll}.
+	 *
+	 * @param coll
+	 * @param ordering
+	 */
+	public CaseInsensitiveOrderedSet(Collection<? extends CharSequence> coll, OrderType ordering) {
+		super(coll, ordering);
+	}
+
+	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 *
+	 * @param array    an array to draw items from
+	 * @param offset   the first index in array to draw an item from
+	 * @param length   how many items to take from array; bounds-checking is the responsibility of the using code
+	 * @param ordering
+	 */
+	public CaseInsensitiveOrderedSet(CharSequence[] array, int offset, int length, OrderType ordering) {
+		super(array, offset, length, ordering);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code items}.
+	 *
+	 * @param items    an array that will be used in full, except for duplicate items
+	 * @param ordering
+	 */
+	public CaseInsensitiveOrderedSet(CharSequence[] items, OrderType ordering) {
+		super(items, ordering);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this.
+	 *
+	 * @param other    another Ordered of the same type
+	 * @param offset   the first index in other's ordering to draw an item from
+	 * @param count    how many items to copy from other
+	 * @param ordering
+	 */
+	public CaseInsensitiveOrderedSet(Ordered<CharSequence> other, int offset, int count, OrderType ordering) {
+		super(other, offset, count, ordering);
+	}
 
 	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
