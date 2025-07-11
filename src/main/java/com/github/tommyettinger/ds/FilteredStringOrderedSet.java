@@ -59,6 +59,140 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all characters in a String key and does not edit them.
 	 */
+	public FilteredStringOrderedSet (OrderType type) {
+		super(type);
+	}
+
+	/**
+	 * Creates a new set with the specified initial capacity a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This set will hold initialCapacity items before growing the backing table.
+	 * This considers all characters in a String key and does not edit them.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredStringOrderedSet (int initialCapacity, OrderType type) {
+		super(initialCapacity, type);
+	}
+
+	/**
+	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
+	 * growing the backing table.
+	 * This considers all characters in a String key and does not edit them.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public FilteredStringOrderedSet (int initialCapacity, float loadFactor, OrderType type) {
+		super(initialCapacity, loadFactor, type);
+	}
+
+	/**
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 */
+	public FilteredStringOrderedSet (CharFilter filter, OrderType type) {
+		super(type);
+		this.filter = filter;
+	}
+
+	/**
+	 * Creates a new set with the specified initial capacity and the default load factor. This set will hold initialCapacity items
+	 * before growing the backing table.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredStringOrderedSet (CharFilter filter, int initialCapacity, OrderType type) {
+		super(initialCapacity, type);
+		this.filter = filter;
+	}
+
+	/**
+	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
+	 * growing the backing table.
+	 * This uses the specified CharFilter.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public FilteredStringOrderedSet (CharFilter filter, int initialCapacity, float loadFactor, OrderType type) {
+		super(initialCapacity, loadFactor, type);
+		this.filter = filter;
+	}
+
+	/**
+	 * Creates a new set identical to the specified set.
+	 *
+	 * @param set another FilteredStringOrderedSet to copy
+	 */
+	public FilteredStringOrderedSet (FilteredStringOrderedSet set, OrderType type) {
+		super(set.size(), set.loadFactor, type);
+		filter = set.filter;
+		this.hashMultiplier = set.hashMultiplier;
+		addAll(set);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code coll}.
+	 * This uses the specified CharFilter, including while it enters the items in coll.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredStringOrderedSet
+	 */
+	public FilteredStringOrderedSet (CharFilter filter, Collection<? extends String> coll, OrderType type) {
+		this(filter, coll.size(), type);
+		addAll(coll);
+	}
+
+	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 * This uses the specified CharFilter, including while it enters the items in array.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param array  an array to draw items from
+	 * @param offset the first index in array to draw an item from
+	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 */
+	public FilteredStringOrderedSet (CharFilter filter, String[] array, int offset, int length, OrderType type) {
+		this(filter, length, type);
+		addAll(array, offset, length);
+	}
+
+	/**
+	 * Creates a new set containing all the items in the given array.
+	 * This uses the specified CharFilter, including while it enters the items in array.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param array an array that will be used in full, except for duplicate items
+	 */
+	public FilteredStringOrderedSet (CharFilter filter, String[] array, OrderType type) {
+		this(filter, array, 0, array.length, type);
+	}
+
+	/**
+	 * Creates a new set using {@code count} items from the given {@code ordered}, starting at {@code} offset (inclusive).
+	 * This uses the specified CharFilter, including while it enters the items in ordered.
+	 *
+	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param ordered  an ordered to draw items from
+	 * @param offset the first index in ordered to draw an item from
+	 * @param count  how many items to take from ordered; bounds-checking is the responsibility of the using code
+	 */
+	public FilteredStringOrderedSet (CharFilter filter, Ordered<String> ordered, int offset, int count, OrderType type) {
+		this(filter, count, type);
+		addAll(0, ordered, offset, count);
+	}
+
+	// default order type
+
+	/**
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This considers all characters in a String key and does not edit them.
+	 */
 	public FilteredStringOrderedSet () {
 		super();
 	}
@@ -130,7 +264,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 * @param set another FilteredStringOrderedSet to copy
 	 */
 	public FilteredStringOrderedSet (FilteredStringOrderedSet set) {
-		super(set.size(), set.loadFactor);
+		super(set.size(), set.loadFactor, set.getOrderType());
 		filter = set.filter;
 		this.hashMultiplier = set.hashMultiplier;
 		addAll(set);
@@ -183,7 +317,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 * @param count  how many items to take from ordered; bounds-checking is the responsibility of the using code
 	 */
 	public FilteredStringOrderedSet (CharFilter filter, Ordered<String> ordered, int offset, int count) {
-		this(filter, count);
+		this(filter, count, ordered.getOrderType());
 		addAll(0, ordered, offset, count);
 	}
 
