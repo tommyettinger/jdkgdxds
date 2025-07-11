@@ -57,6 +57,139 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
 	 */
+	public FilteredIterableOrderedMap (OrderType type) {
+		super(type);
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This set will hold initialCapacity keys before growing the backing table.
+	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredIterableOrderedMap (int initialCapacity, OrderType type) {
+		super(initialCapacity, type);
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This set will hold initialCapacity keys before
+	 * growing the backing table.
+	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public FilteredIterableOrderedMap (int initialCapacity, float loadFactor, OrderType type) {
+		super(initialCapacity, loadFactor, type);
+	}
+
+	/**
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This uses the specified filter and editor.
+	 *
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 */
+	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, OrderType type) {
+		super(type);
+		this.filter = filter;
+		this.editor = editor;
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This set will hold initialCapacity keys before growing the backing table.
+	 * This uses the specified filter and editor.
+	 *
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, int initialCapacity, OrderType type) {
+		super(initialCapacity, type);
+		this.filter = filter;
+		this.editor = editor;
+	}
+
+	/**
+	 * Creates a new map with the specified initial capacity and load factor. This set will hold initialCapacity keys before
+	 * growing the backing table.
+	 * This uses the specified filter and editor.
+	 *
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, int initialCapacity, float loadFactor, OrderType type) {
+		super(initialCapacity, loadFactor, type);
+		this.filter = filter;
+		this.editor = editor;
+	}
+
+	/**
+	 * Creates a new map identical to the specified map.
+	 *
+	 * @param map another FilteredIterableMap to copy
+	 */
+	public FilteredIterableOrderedMap (FilteredIterableOrderedMap<K, ? extends I, ? extends V> map, OrderType type) {
+		super(map.size(), map.loadFactor, type);
+		filter = map.filter;
+		editor = map.editor;
+		this.hashMultiplier = map.hashMultiplier;
+		putAll(map);
+	}
+
+	/**
+	 * Creates a new map with the given filter and editor, and attempts to insert every entry from the given {@code map}
+	 * into the new data structure. Not all keys from {@code map} might be entered if the filter and editor consider
+	 * some as equal.
+	 *
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param map a Map to copy
+	 */
+	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, Map<? extends I, ? extends V> map, OrderType type) {
+		this(filter, editor, map.size(), type);
+		putAll(map);
+	}
+
+	/**
+	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
+	 * If keys and values have different lengths, this only uses the length of the smaller collection.
+	 * This uses the specified filter and editor, including while it enters the keys and values.
+	 *
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param keys a Collection of keys
+	 * @param values a Collection of values
+	 */
+	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, Collection<? extends I> keys, Collection<? extends V> values, OrderType type) {
+		this(filter, editor, keys.size(), type);
+		putAll(keys, values);
+	}
+
+	/**
+	 * Creates a new map using all the keys from the given {@code keys} and {@code values}.
+	 * This uses the specified filter and editor, including while it enters the keys and values.
+	 *
+	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param keys  an array to draw keys from
+	 * @param values  an array to draw values from
+	 */
+	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I[] keys, V[] values, OrderType type) {
+		this(filter, editor, Math.min(keys.length, values.length), type);
+		putAll(keys, values);
+	}
+
+	// default order type
+
+	/**
+	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
+	 */
 	public FilteredIterableOrderedMap () {
 		super();
 	}
@@ -134,7 +267,7 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * @param map another FilteredIterableMap to copy
 	 */
 	public FilteredIterableOrderedMap (FilteredIterableOrderedMap<K, ? extends I, ? extends V> map) {
-		super(map.size(), map.loadFactor);
+		super(map.size(), map.loadFactor, map.getOrderType());
 		filter = map.filter;
 		editor = map.editor;
 		this.hashMultiplier = map.hashMultiplier;
