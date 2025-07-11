@@ -63,6 +63,130 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}. This does not set the
 	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(ObjToObjFunction)} is called with
 	 * a valid ObjToObjFunction that gets K keys from T items.
+	 *
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public HolderOrderedSet (OrderType type) {
+		super();
+		items = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
+	}
+
+	/**
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
+	 * @param extractor a function that will be used to extract K keys from the T items put into this
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, OrderType type) {
+		super(extractor);
+		items = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
+	}
+
+	/**
+	 * Creates a new set with a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
+	 * @param extractor       a function that will be used to extract K keys from the T items put into this
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, int initialCapacity, OrderType type) {
+		super(extractor, initialCapacity);
+		items = type == OrderType.BAG ? new ObjectBag<>(initialCapacity) : new ObjectList<>(initialCapacity);
+
+	}
+
+	/**
+	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
+	 * growing the backing table.
+	 *
+	 * @param extractor       a function that will be used to extract K keys from the T items put into this
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, int initialCapacity, float loadFactor, OrderType type) {
+		super(extractor, initialCapacity, loadFactor);
+		items = type == OrderType.BAG ? new ObjectBag<>(initialCapacity) : new ObjectList<>(initialCapacity);
+	}
+
+	/**
+	 * Creates a new instance containing the items in the specified iterator.
+	 *
+	 * @param coll an iterator that will have its remaining contents added to this
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public HolderOrderedSet (@NonNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll, OrderType type) {
+		this(extractor, type);
+		addAll(coll);
+	}
+
+	/**
+	 * Creates a new set identical to the specified set.
+	 * This doesn't copy the extractor; instead it references the same ObjToObjFunction from the argument.
+	 * This can have issues if the extractor causes side effects or is stateful.
+	 *
+	 * @param set another HolderOrderedSet which will have its contents copied
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public HolderOrderedSet (HolderOrderedSet<T, K> set, OrderType type) {
+		super(set);
+		items = type == OrderType.BAG ? new ObjectBag<>(set.items) : new ObjectList<>(set.items);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code coll}, using {@code extractor} to get the keys that determine distinctness.
+	 *
+	 * @param extractor a function that will be used to extract K keys from the T items in coll
+	 * @param coll      a Collection of T items; depending on extractor, some different T items may not be added because their K key is equal
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, Collection<? extends T> coll, OrderType type) {
+		this(extractor, coll.size(), type);
+		addAll(coll);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code items}, using {@code extractor} to get the keys that determine distinctness.
+	 *
+	 * @param extractor a function that will be used to extract K keys from the T items in coll
+	 * @param items     an array of T items; depending on extractor, some different T items may not be added because their K key is equal
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, T[] items, OrderType type) {
+		this(extractor, items.length, type);
+		addAll(items);
+	}
+
+	/**
+	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
+	 * into this, using {@code extractor} to get the keys that determine distinctness.
+	 *
+	 * @param extractor a function that will be used to extract K keys from the T items in coll
+	 * @param other     another Ordered of the same type
+	 * @param offset    the first index in other's ordering to draw an item from
+	 * @param count     how many items to copy from other
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 */
+	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, Ordered<T> other, int offset, int count, OrderType type) {
+		this(extractor, count, type);
+		addAll(0, other, offset, count);
+	}
+
+	// default order type
+
+	/**
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}. This does not set the
+	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(ObjToObjFunction)} is called with
+	 * a valid ObjToObjFunction that gets K keys from T items.
 	 */
 	public HolderOrderedSet () {
 		super();
@@ -120,7 +244,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 */
 	public HolderOrderedSet (HolderOrderedSet<T, K> set) {
 		super(set);
-		items = new ObjectList<>(set.items);
+		items = set.getOrderType() == OrderType.BAG ? new ObjectBag<>(set.items) : new ObjectList<>(set.items);
 	}
 
 	/**
