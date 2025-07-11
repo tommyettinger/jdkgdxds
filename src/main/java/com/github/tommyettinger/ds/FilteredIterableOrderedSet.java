@@ -57,6 +57,9 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
+	 *
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedSet (OrderType type) {
 		super(type);
@@ -68,6 +71,8 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedSet (int initialCapacity, OrderType type) {
 		super(initialCapacity, type);
@@ -80,6 +85,8 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedSet (int initialCapacity, float loadFactor, OrderType type) {
 		super(initialCapacity, loadFactor, type);
@@ -91,6 +98,8 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 *
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, OrderType type) {
 		super(type);
@@ -106,6 +115,8 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, int initialCapacity, OrderType type) {
 		super(initialCapacity, type);
@@ -122,6 +133,8 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, int initialCapacity, float loadFactor, OrderType type) {
 		super(initialCapacity, loadFactor, type);
@@ -133,6 +146,8 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * Creates a new set identical to the specified set.
 	 *
 	 * @param set another FilteredIterableOrderedSet to copy
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedSet (FilteredIterableOrderedSet<T, ? extends I> set, OrderType type) {
 		super(set.size(), set.loadFactor, type);
@@ -149,6 +164,8 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredIterableOrderedSet
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Collection<? extends I> coll, OrderType type) {
 		this(filter, editor, coll.size(), type);
@@ -164,6 +181,8 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param array  an array to draw items from
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array, int offset, int length, OrderType type) {
 		this(filter, editor, length, type);
@@ -177,6 +196,8 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param array an array that will be used in full, except for duplicate items
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array, OrderType type) {
 		this(filter, editor, array, 0, array.length, type);

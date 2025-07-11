@@ -60,6 +60,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredStringOrderedMap (OrderType type) {
 		super(type);
@@ -70,6 +72,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * This map will hold initialCapacity items before growing the backing table.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredStringOrderedMap (int initialCapacity, OrderType type) {
 		super(initialCapacity, type);
@@ -81,6 +85,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredStringOrderedMap (int initialCapacity, float loadFactor, OrderType type) {
 		super(initialCapacity, loadFactor, type);
@@ -91,6 +97,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * This uses the specified CharFilter.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, OrderType type) {
 		super(type);
@@ -104,6 +112,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, int initialCapacity, OrderType type) {
 		super(initialCapacity, type);
@@ -118,6 +128,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, int initialCapacity, float loadFactor, OrderType type) {
 		super(initialCapacity, loadFactor, type);
@@ -128,6 +140,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * Creates a new map identical to the specified map.
 	 *
 	 * @param map an FilteredStringOrderedMap to copy
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredStringOrderedMap (FilteredStringOrderedMap<? extends V> map, OrderType type) {
 		super(map.size(), map.loadFactor, type);
@@ -142,6 +156,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param map    a Map to copy; ObjectObjectOrderedMap and subclasses of it will be faster to load from
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, Map<String, ? extends V> map, OrderType type) {
 		this(filter, map.size(), type);
@@ -158,6 +174,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param keys   an array of keys
 	 * @param values an array of values
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, String[] keys, V[] values, OrderType type) {
 		this(filter, Math.min(keys.length, values.length), type);
@@ -172,6 +190,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, Collection<String> keys, Collection<? extends V> values, OrderType type) {
 		this(filter, Math.min(keys.size(), values.size()), type);
@@ -186,6 +206,8 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param other  another ObjectObjectOrderedMap of the same types (key must be String)
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredStringOrderedMap (CharFilter filter, ObjectObjectOrderedMap<String, ? extends V> other, int offset, int count, OrderType type) {
 		this(filter, count, other.loadFactor, type);

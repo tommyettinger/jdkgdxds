@@ -56,6 +56,9 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
+	 *
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedMap (OrderType type) {
 		super(type);
@@ -67,6 +70,8 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedMap (int initialCapacity, OrderType type) {
 		super(initialCapacity, type);
@@ -79,6 +84,8 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedMap (int initialCapacity, float loadFactor, OrderType type) {
 		super(initialCapacity, loadFactor, type);
@@ -90,6 +97,8 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 *
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, OrderType type) {
 		super(type);
@@ -105,6 +114,8 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, int initialCapacity, OrderType type) {
 		super(initialCapacity, type);
@@ -121,6 +132,8 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, int initialCapacity, float loadFactor, OrderType type) {
 		super(initialCapacity, loadFactor, type);
@@ -132,6 +145,8 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * Creates a new map identical to the specified map.
 	 *
 	 * @param map another FilteredIterableMap to copy
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedMap (FilteredIterableOrderedMap<K, ? extends I, ? extends V> map, OrderType type) {
 		super(map.size(), map.loadFactor, type);
@@ -149,6 +164,8 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param map a Map to copy
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, Map<? extends I, ? extends V> map, OrderType type) {
 		this(filter, editor, map.size(), type);
@@ -164,6 +181,8 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param keys a Collection of keys
 	 * @param values a Collection of values
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, Collection<? extends I> keys, Collection<? extends V> values, OrderType type) {
 		this(filter, editor, keys.size(), type);
@@ -178,6 +197,8 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param keys  an array to draw keys from
 	 * @param values  an array to draw values from
+	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public FilteredIterableOrderedMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I[] keys, V[] values, OrderType type) {
 		this(filter, editor, Math.min(keys.length, values.length), type);
