@@ -58,6 +58,136 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
 	 */
+	public FilteredIterableOrderedSet (OrderType type) {
+		super(type);
+	}
+
+	/**
+	 * Creates a new set with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This set will hold initialCapacity items before growing the backing table.
+	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredIterableOrderedSet (int initialCapacity, OrderType type) {
+		super(initialCapacity, type);
+	}
+
+	/**
+	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
+	 * growing the backing table.
+	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
+	 *
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public FilteredIterableOrderedSet (int initialCapacity, float loadFactor, OrderType type) {
+		super(initialCapacity, loadFactor, type);
+	}
+
+	/**
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This uses the specified filter and editor.
+	 *
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 */
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, OrderType type) {
+		super(type);
+		this.filter = filter;
+		this.editor = editor;
+	}
+
+	/**
+	 * Creates a new set with the specified initial capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This set will hold initialCapacity items before growing the backing table.
+	 * This uses the specified filter and editor.
+	 *
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 */
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, int initialCapacity, OrderType type) {
+		super(initialCapacity, type);
+		this.filter = filter;
+		this.editor = editor;
+	}
+
+	/**
+	 * Creates a new set with the specified initial capacity and load factor. This set will hold initialCapacity items before
+	 * growing the backing table.
+	 * This uses the specified filter and editor.
+	 *
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
+	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
+	 */
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, int initialCapacity, float loadFactor, OrderType type) {
+		super(initialCapacity, loadFactor, type);
+		this.filter = filter;
+		this.editor = editor;
+	}
+
+	/**
+	 * Creates a new set identical to the specified set.
+	 *
+	 * @param set another FilteredIterableOrderedSet to copy
+	 */
+	public FilteredIterableOrderedSet (FilteredIterableOrderedSet<T, ? extends I> set, OrderType type) {
+		super(set.size(), set.loadFactor, type);
+		filter = set.filter;
+		editor = set.editor;
+		this.hashMultiplier = set.hashMultiplier;
+		addAll(set);
+	}
+
+	/**
+	 * Creates a new set that contains all distinct elements in {@code coll}.
+	 * This uses the specified filter and editor, including while it enters the items in coll.
+	 *
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredIterableOrderedSet
+	 */
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, Collection<? extends I> coll, OrderType type) {
+		this(filter, editor, coll.size(), type);
+		addAll(coll);
+	}
+
+	/**
+	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
+	 * This uses the specified filter and editor, including while it enters the items in array.
+	 *
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param array  an array to draw items from
+	 * @param offset the first index in array to draw an item from
+	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 */
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array, int offset, int length, OrderType type) {
+		this(filter, editor, length, type);
+		addAll(array, offset, length);
+	}
+
+	/**
+	 * Creates a new set containing all the items in the given array.
+	 * This uses the specified filter and editor, including while it enters the items in array.
+	 *
+	 * @param filter a ObjPredicate<T> that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a ObjToSameFunction<T> that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param array an array that will be used in full, except for duplicate items
+	 */
+	public FilteredIterableOrderedSet (ObjPredicate<T> filter, ObjToSameFunction<T> editor, I[] array, OrderType type) {
+		this(filter, editor, array, 0, array.length, type);
+	}
+
+	// default order type
+
+	/**
+	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 * This considers all sub-items in an Iterable item and does not edit any sub-items.
+	 */
 	public FilteredIterableOrderedSet () {
 		super();
 	}
@@ -135,7 +265,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param set another FilteredIterableOrderedSet to copy
 	 */
 	public FilteredIterableOrderedSet (FilteredIterableOrderedSet<T, ? extends I> set) {
-		super(set.size(), set.loadFactor);
+		super(set.size(), set.loadFactor, set.getOrderType());
 		filter = set.filter;
 		editor = set.editor;
 		this.hashMultiplier = set.hashMultiplier;
