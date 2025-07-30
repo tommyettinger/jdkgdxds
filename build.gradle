@@ -22,7 +22,7 @@ buildscript {
         gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.31.0'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.34.0'
     }
 }
 
@@ -56,8 +56,7 @@ import com.vanniktech.maven.publish.JavadocJar
 mavenPublishing {
     configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
 }
-
-mavenPlainJavadocJar.archiveBaseName.set("$projectName")
+plainJavadocJar.archiveBaseName.set("$projectName")
 
 java.sourceCompatibility = 1.8
 java.targetCompatibility = 1.8
