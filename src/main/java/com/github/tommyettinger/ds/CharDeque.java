@@ -57,6 +57,7 @@ import java.util.*;
  * middle of the List using an iterator should be typically faster for {@link LinkedList}.
  */
 public class CharDeque extends CharList implements RandomAccess, Arrangeable, PrimitiveCollection.OfChar, Ordered.OfChar {
+		Ordered.OfChar, CharSequence {
 
 	/**
 	 * The value returned when nothing can be obtained from this deque and an exception is not meant to be thrown,
@@ -1866,8 +1867,16 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Returns true if the deque is empty.
 	 */
-	public boolean isEmpty () {
+	@SuppressWarnings("Since15")
+    public boolean isEmpty () {
 		return size == 0;
+	}
+
+	@Override
+	public CharDeque subSequence(int start, int end) {
+		final CharDeque next = new CharDeque(end - start);
+		next.addAll(this, start, end - start);
+		return next;
 	}
 
 	/**

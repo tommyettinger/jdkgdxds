@@ -27,7 +27,7 @@ import java.util.List;
  * Although this won't keep an order during modifications, you can {@link #sort()} the bag to ensure,
  * if no modifications are made later, that the iteration will happen in sorted order.
  */
-public class CharBag extends CharList {
+public class CharBag extends CharList implements CharSequence {
 	/**
 	 * Returns true if this implementation retains order, which it does not.
 	 *
@@ -176,6 +176,13 @@ public class CharBag extends CharList {
 		int i = Math.max(lastIndex, end);
 		System.arraycopy(items, i, items, start, n - i);
 		size = n - count;
+	}
+
+	@Override
+	public CharBag subSequence(int start, int end) {
+		final CharBag next = new CharBag(end - start);
+		next.addAll(this, start, end - start);
+		return next;
 	}
 
 	@Override
