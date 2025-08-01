@@ -18,7 +18,7 @@ package com.github.tommyettinger.ds;
 
 /**
  * This mostly-internal class only exists to help case-insensitive comparisons and hashing.
- * It stores a massive char array in source code that contains transform of every Java char
+ * It stores a massive char array in source code that contains transforms of every Java char
  * after calling {@link Character#toUpperCase(char)}. This data is only accessible via
  * {@link #caseUp(char)}. There is no and will be no caseDown() unless we find we need it
  * for case-insensitive code of some kind.

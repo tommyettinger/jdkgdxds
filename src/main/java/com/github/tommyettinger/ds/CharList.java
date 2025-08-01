@@ -36,7 +36,7 @@ import java.util.Random;
  * @author Tommy Ettinger
  * @see CharBag CharBag is an unordered variant on CharList.
  */
-public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable {
+public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable, CharSequence {
 	/**
 	 * Returns true if this implementation retains order, which it does.
 	 * @return true
@@ -554,14 +554,37 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		return size != 0;
 	}
 
+	@Override
+	public int length() {
+		return size();
+	}
+
+	@Override
+	public char charAt(int index) {
+		return get(index);
+	}
+
 	/**
 	 * Returns true if the list is empty.
 	 *
 	 * @return true if the list is empty, or false if it has any items
 	 */
-	@Override
+	@SuppressWarnings("Since15")
 	public boolean isEmpty () {
 		return size == 0;
+	}
+
+	/**
+	 * Creates a new CharList by copying the given subrange of this CharList.
+	 *
+	 * @param start   the start index, inclusive
+	 * @param end     the end index, exclusive
+	 *
+	 * @return a new CharList copying the given subrange of this CharList
+	 */
+	@Override
+	public CharList subSequence(int start, int end) {
+		return new CharList(items, start, end - start);
 	}
 
 	/**
