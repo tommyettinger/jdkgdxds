@@ -56,7 +56,7 @@ import java.util.*;
  * should usually be much faster than {@link LinkedList}, as well; only periodic resizing and modifications in the
  * middle of the List using an iterator should be typically faster for {@link LinkedList}.
  */
-public class CharDeque extends CharList implements RandomAccess, Arrangeable, PrimitiveCollection.OfChar, Ordered.OfChar {
+public class CharDeque extends CharList implements RandomAccess, Arrangeable, PrimitiveCollection.OfChar,
 		Ordered.OfChar, CharSequence {
 
 	/**
