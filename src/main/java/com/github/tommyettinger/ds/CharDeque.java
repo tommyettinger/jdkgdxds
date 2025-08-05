@@ -23,6 +23,7 @@ import com.github.tommyettinger.function.CharToCharFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -57,7 +58,7 @@ import java.util.*;
  * middle of the List using an iterator should be typically faster for {@link LinkedList}.
  */
 public class CharDeque extends CharList implements RandomAccess, Arrangeable, PrimitiveCollection.OfChar,
-		Ordered.OfChar, CharSequence {
+		Ordered.OfChar, CharSequence, Appendable {
 
 	/**
 	 * The value returned when nothing can be obtained from this deque and an exception is not meant to be thrown,
@@ -1877,6 +1878,31 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 		final CharDeque next = new CharDeque(end - start);
 		next.addAll(this, start, end - start);
 		return next;
+	}
+
+	@Override
+	public CharDeque append(CharSequence csq) {
+		final int len = csq.length();
+		ensureCapacity(len);
+		for (int i = 0; i < len; i++) {
+			add(csq.charAt(i));
+		}
+		return this;
+	}
+
+	@Override
+	public CharDeque append(CharSequence csq, int start, int end) {
+		ensureCapacity(end - start);
+		for (int i = start; i < end; i++) {
+			add(csq.charAt(i));
+		}
+		return this;
+	}
+
+	@Override
+	public CharDeque append(char c) {
+		add(c);
+		return this;
 	}
 
 	/**

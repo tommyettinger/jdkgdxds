@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.CharIterator;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ import java.util.List;
  * Although this won't keep an order during modifications, you can {@link #sort()} the bag to ensure,
  * if no modifications are made later, that the iteration will happen in sorted order.
  */
-public class CharBag extends CharList implements CharSequence {
+public class CharBag extends CharList implements CharSequence, Appendable {
 	/**
 	 * Returns true if this implementation retains order, which it does not.
 	 *
@@ -183,6 +184,31 @@ public class CharBag extends CharList implements CharSequence {
 		final CharBag next = new CharBag(end - start);
 		next.addAll(this, start, end - start);
 		return next;
+	}
+
+	@Override
+	public CharBag append(CharSequence csq) {
+		final int len = csq.length();
+		ensureCapacity(len);
+		for (int i = 0; i < len; i++) {
+			add(csq.charAt(i));
+		}
+		return this;
+	}
+
+	@Override
+	public CharBag append(CharSequence csq, int start, int end) {
+		ensureCapacity(end - start);
+		for (int i = start; i < end; i++) {
+			add(csq.charAt(i));
+		}
+		return this;
+	}
+
+	@Override
+	public CharBag append(char c) {
+		add(c);
+		return this;
 	}
 
 	@Override
