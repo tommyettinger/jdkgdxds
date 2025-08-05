@@ -22,6 +22,7 @@ import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.function.CharToCharFunction;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -36,7 +37,7 @@ import java.util.Random;
  * @author Tommy Ettinger
  * @see CharBag CharBag is an unordered variant on CharList.
  */
-public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable, CharSequence {
+public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable, CharSequence, Appendable {
 	/**
 	 * Returns true if this implementation retains order, which it does.
 	 * @return true
@@ -814,6 +815,31 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		iterator2.valid = true;
 		iterator1.valid = false;
 		return iterator2;
+	}
+
+	@Override
+	public CharList append(CharSequence csq) {
+		final int len = csq.length();
+		ensureCapacity(len);
+		for (int i = 0; i < len; i++) {
+			add(csq.charAt(i));
+		}
+		return this;
+	}
+
+	@Override
+	public CharList append(CharSequence csq, int start, int end) {
+		ensureCapacity(end - start);
+		for (int i = start; i < end; i++) {
+			add(csq.charAt(i));
+		}
+		return this;
+	}
+
+	@Override
+	public CharList append(char c) {
+		add(c);
+		return this;
 	}
 
 	/**
