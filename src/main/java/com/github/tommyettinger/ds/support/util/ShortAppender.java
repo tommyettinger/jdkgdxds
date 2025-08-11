@@ -21,7 +21,7 @@ import com.github.tommyettinger.function.ObjShortToObjBiFunction;
 
 /**
  * A convenience wrapper around an {@link ObjShortToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code short}.
- * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, short)}.
+ * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, short)}.
  */
 public interface ShortAppender extends ObjShortToObjBiFunction<StringBuilder, StringBuilder> {
     /**

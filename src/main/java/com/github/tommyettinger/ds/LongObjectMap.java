@@ -708,7 +708,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Makes a String from the contents of this LongObjectMap, but uses the given {@link LongAppender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendUnsigned(StringBuilder, long)}. To use
+	 * {@link Base#appendReadable(CharSequence, long)} and {@link Base#appendUnsigned(CharSequence, long)}. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the keyAppender.
 	 *
@@ -731,7 +731,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Appends to a StringBuilder from the contents of this LongFloatMap, but uses the given {@link LongAppender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendReadable(StringBuilder, long)} and {@link Base#appendUnsigned(StringBuilder, long)}. To use
+	 * {@link Base#appendReadable(CharSequence, long)} and {@link Base#appendUnsigned(CharSequence, long)}. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the keyAppender.
 	 *

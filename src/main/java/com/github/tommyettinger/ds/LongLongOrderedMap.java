@@ -702,7 +702,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * Appends to a StringBuilder from the contents of this LongLongOrderedMap, but uses the given {@link LongAppender} and
 	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendUnsigned(StringBuilder, long)} and {@link Base#appendUnsigned(StringBuilder, long)}. To use
+	 * {@link Base#appendUnsigned(CharSequence, long)} and {@link Base#appendUnsigned(CharSequence, long)}. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
 	 *

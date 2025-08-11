@@ -22,7 +22,7 @@ import com.github.tommyettinger.function.ObjDoubleToObjBiFunction;
 
 /**
  * A convenience wrapper around an {@link ObjDoubleToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code double}.
- * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, double)}.
+ * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, double)}.
  */
 public interface DoubleAppender extends ObjDoubleToObjBiFunction<StringBuilder, StringBuilder> {
     /**

@@ -21,7 +21,7 @@ import com.github.tommyettinger.function.ObjLongToObjBiFunction;
 
 /**
  * A convenience wrapper around an {@link ObjLongToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code long}.
- * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, long)}.
+ * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, long)}.
  */
 public interface LongAppender extends ObjLongToObjBiFunction<StringBuilder, StringBuilder> {
     /**

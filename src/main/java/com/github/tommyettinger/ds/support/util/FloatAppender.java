@@ -22,7 +22,7 @@ import com.github.tommyettinger.function.ObjFloatToObjBiFunction;
 
 /**
  * A convenience wrapper around an {@link ObjFloatToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code float}.
- * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, float)}.
+ * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, float)}.
  */
 public interface FloatAppender extends ObjFloatToObjBiFunction<StringBuilder, StringBuilder> {
     /**

@@ -706,7 +706,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 * Makes a String from the contents of this IntLongMap, but uses the given {@link IntAppender} and
 	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendReadable(StringBuilder, int)} and {@link Base#appendUnsigned(StringBuilder, long)}. To use
+	 * {@link Base#appendReadable(CharSequence, int)} and {@link Base#appendUnsigned(CharSequence, long)}. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
 	 * <br>
@@ -733,7 +733,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 * Appends to a StringBuilder from the contents of this IntLongMap, but uses the given {@link IntAppender} and
 	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendReadable(StringBuilder, int)} and {@link Base#appendUnsigned(StringBuilder, long)}. To use
+	 * {@link Base#appendReadable(CharSequence, int)} and {@link Base#appendUnsigned(CharSequence, long)}. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
 	 * <br>

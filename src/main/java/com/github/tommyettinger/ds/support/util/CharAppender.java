@@ -21,7 +21,7 @@ import com.github.tommyettinger.function.ObjCharToObjBiFunction;
 
 /**
  * A convenience wrapper around an {@link ObjCharToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code char}.
- * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(StringBuilder, char)}.
+ * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, char)}.
  */
 public interface CharAppender extends ObjCharToObjBiFunction<StringBuilder, StringBuilder> {
     /**
