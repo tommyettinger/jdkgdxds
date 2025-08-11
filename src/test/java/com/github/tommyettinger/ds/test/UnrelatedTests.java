@@ -17,21 +17,51 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.LongSet;
 import com.github.tommyettinger.ds.support.util.LongIterator;
+import org.junit.Test;
 
 public class UnrelatedTests {
     public static void main(String[] args) {
         // 10700330 unique results in mask
 //        testMaskedUniquenessCounter();
         // 16777216 unique results in mask
-        testMaskedUniquenessDeposit();
-        System.out.println(Base.BASE16.unsigned(deposit(1L, 0x9E3779B97F4A7C15L)));
-        System.out.println(Base.BASE16.unsigned(depositPrecomputed(1L, 0x9E3779B97F4A7C15L, 0x003079807F027C04L, 0x80003C0100083E10L, 0x001F00007FC00F80L, 0x3E00000007FF0000L, 0x003FFFF800000000L)));
-        System.out.println(Base.BASE16.unsigned(deposit((1L << 38) - 1L, 0x9E3779B97F4A7C15L)));
-        System.out.println(Base.BASE16.unsigned(depositPrecomputed((1L << 38) - 1L, 0x9E3779B97F4A7C15L, new long[]{0x003079807F027C04L, 0x80003C0100083E10L, 0x001F00007FC00F80L, 0x3E00000007FF0000L, 0x003FFFF800000000L})));
-        System.out.println(Base.BASE16.unsigned(deposit((1L << 57) - 1L, -255L)));
-        System.out.println(Base.BASE16.unsigned(depositPrecomputed((1L << 57) - 1L, -255L)));
+//        testMaskedUniquenessDeposit();
+//        System.out.println(Base.BASE16.unsigned(deposit(1L, 0x9E3779B97F4A7C15L)));
+//        System.out.println(Base.BASE16.unsigned(depositPrecomputed(1L, 0x9E3779B97F4A7C15L, 0x003079807F027C04L, 0x80003C0100083E10L, 0x001F00007FC00F80L, 0x3E00000007FF0000L, 0x003FFFF800000000L)));
+//        System.out.println(Base.BASE16.unsigned(deposit((1L << 38) - 1L, 0x9E3779B97F4A7C15L)));
+//        System.out.println(Base.BASE16.unsigned(depositPrecomputed((1L << 38) - 1L, 0x9E3779B97F4A7C15L, new long[]{0x003079807F027C04L, 0x80003C0100083E10L, 0x001F00007FC00F80L, 0x3E00000007FF0000L, 0x003FFFF800000000L})));
+//        System.out.println(Base.BASE16.unsigned(deposit((1L << 57) - 1L, -255L)));
+//        System.out.println(Base.BASE16.unsigned(depositPrecomputed((1L << 57) - 1L, -255L)));
+
+        // 16777216 unique results in input range up to (1<<24) inputs, all odd
+        // even with mask=1 !
+        // 536870912 unique results in input range up to (1<<29) inputs, all odd
+        // even with mask=4 !
+        testUniquenessFixGamma();
+    }
+    public static long fixGamma(long gamma, int threshold) {
+        gamma |= 1L;
+        long inverse, add = 0L;
+        while (Math.abs(Long.bitCount(gamma) - 32) > threshold
+                || Math.abs(Long.bitCount(gamma ^ gamma >>> 1) - 32) > threshold
+                || Math.abs(Long.bitCount(inverse = MathTools.modularMultiplicativeInverse(gamma)) - 32) > threshold
+                || Math.abs(Long.bitCount(inverse ^ inverse >>> 1) - 32) > threshold) {
+            gamma = gamma * 0xD1342543DE82EF95L + (add += 2L);
+        }
+        return gamma;
+    }
+
+    public static void testUniquenessFixGamma() {
+        LongSet all = new LongSet(1 << 29, 0.75f);
+        final long n = 1L << 30;
+        for (long i = 1; i < n; i += 2L) {
+            if(!all.add(fixGamma(i, 4))){
+                System.out.println("Collision at size " + all.size() + " !");
+            }
+        }
+        System.out.println(all.size());
     }
 
     public static void testMaskedUniquenessCounter() {
@@ -294,5 +324,18 @@ public class UnrelatedTests {
             mk = mk & ~mp;
         }
         return bits;
+    }
+
+    @Test
+    public void testBaseAppend() {
+        StringBuilder sb = new StringBuilder();
+        Base.BASE10.appendSigned(sb, 1);
+        System.out.println("sb should contain '1', and have length 1");
+        System.out.println("sb is             '" + sb + "', and has length  " + sb.length());
+        sb.setLength(0);
+        Base.BASE16.appendUnsigned(sb, 1);
+        System.out.println("sb should contain '00000001', and have length 8");
+        System.out.println("sb is             '" + sb + "', and has length  " + sb.length());
+        sb.setLength(0);
     }
 }
