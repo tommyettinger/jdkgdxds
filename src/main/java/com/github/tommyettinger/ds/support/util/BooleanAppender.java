@@ -17,19 +17,31 @@
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.function.ObjBooleanToObjBiFunction;
+
+import java.io.IOException;
 
 /**
- * A convenience wrapper around an {@link ObjBooleanToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code boolean}.
+ * A functional interface that takes and returns an object that is a CharSequence and is Appendable, appending
+ * a {@code boolean} item to it.
  * This is not typically a method reference to anything in {@link Base}, which is different from other Appender types.
  */
-public interface BooleanAppender extends ObjBooleanToObjBiFunction<StringBuilder, StringBuilder> {
+public interface BooleanAppender {
+	/**
+	 * Appends {@code item} to {@code sb} and returns {@code sb} for chaining.
+	 *
+	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
+	 * @param item the item to append
+	 * @return {@code first}, after modification
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
+	<S extends CharSequence & Appendable> S apply(S sb, boolean item);
+
 	/**
 	 * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
 	 * {@code StringBuilder::append} is present at a call-site. This should be used in place of
 	 * {@link StringBuilder#append(boolean)} when you want to use that as a BooleanAppender.
 	 */
-	BooleanAppender DEFAULT = StringBuilder::append;
+	BooleanAppender DEFAULT = BooleanAppender::append;
 
 	/**
 	 * An alternative BooleanAppender constant that appends {@code '1'} when the given boolean item is
@@ -40,5 +52,23 @@ public interface BooleanAppender extends ObjBooleanToObjBiFunction<StringBuilder
 	 * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
 	 * this lambda would be present at a call-site.
 	 */
-	BooleanAppender BINARY = (StringBuilder sb, boolean item) -> sb.append(item ? '1' : '0');
+	BooleanAppender BINARY = BooleanAppender::appendBinary;
+
+	static <S extends CharSequence & Appendable> S append(S sb, boolean item) {
+		try {
+			sb.append(item ? "true" : "false");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return sb;
+	}
+
+	static <S extends CharSequence & Appendable> S appendBinary(S sb, boolean item) {
+		try {
+			sb.append(item ? '1' : '0');
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return sb;
+	}
 }

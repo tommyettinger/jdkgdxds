@@ -17,13 +17,26 @@
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.function.ObjCharToObjBiFunction;
+
+import java.io.IOException;
 
 /**
- * A convenience wrapper around an {@link ObjCharToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code char}.
+ * A functional interface that takes and returns an object that is a CharSequence and is Appendable, appending
+ * a {@code byte} item to it.
  * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, char)}.
  */
-public interface CharAppender extends ObjCharToObjBiFunction<StringBuilder, StringBuilder> {
+public interface CharAppender {
+
+	/**
+	 * Appends {@code item} to {@code sb} and returns {@code sb} for chaining.
+	 *
+	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
+	 * @param item the item to append
+	 * @return {@code first}, after modification
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
+	<S extends CharSequence & Appendable> S apply(S sb, char item);
+
 	/**
 	 * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
 	 * {@code StringBuilder::append} is present at a call-site. This should be used in place of
@@ -32,5 +45,20 @@ public interface CharAppender extends ObjCharToObjBiFunction<StringBuilder, Stri
 	 * This functional interface doesn't have a {@code DENSE} method reference because appending one shown char per char
 	 * item is really as dense as you can get already.
 	 */
-	CharAppender DEFAULT = StringBuilder::append;
+	CharAppender DEFAULT = CharAppender::append;
+
+	/**
+	 * Appends the given char in single quotes, with a backslash-escape if it would be necessary in Java sources.
+	 */
+	CharAppender QUOTED = Base::appendReadable;
+
+	static <S extends CharSequence & Appendable> S append(S sb, char item) {
+		try {
+			sb.append(item);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return sb;
+	}
+
 }
