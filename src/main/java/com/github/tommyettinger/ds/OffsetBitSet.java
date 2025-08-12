@@ -22,6 +22,7 @@ import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -754,21 +755,26 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 * @return {@code sb}, with the appended items of this PrimitiveCollection
 	 */
 	@Override
-	public StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets, IntAppender appender) {
-		if (isEmpty()) {
-			return brackets ? sb.append("[]") : sb;
-		}
-		if (brackets) {
-			sb.append('[');
-		}
-		int curr = nextSetBit(offset);
-		appender.apply(sb, curr);
-		while ((curr = nextSetBit(curr + 1)) != offset - 1) {
-			sb.append(separator);
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, IntAppender appender) {
+		try {
+			if (isEmpty()) {
+				if(brackets) sb.append("[]");
+				return sb;
+			}
+			if (brackets) {
+				sb.append('[');
+			}
+			int curr = nextSetBit(offset);
 			appender.apply(sb, curr);
-		}
-		if (brackets) {
-			sb.append(']');
+			while ((curr = nextSetBit(curr + 1)) != offset - 1) {
+				sb.append(separator);
+				appender.apply(sb, curr);
+			}
+			if (brackets) {
+				sb.append(']');
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		return sb;
 	}

@@ -18,7 +18,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.support.util.BooleanAppender;
 import com.github.tommyettinger.ds.support.util.ByteAppender;
 import com.github.tommyettinger.ds.support.util.CharAppender;
@@ -46,6 +45,7 @@ import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 
+import java.io.IOException;
 import java.util.Iterator;
 
 import com.github.tommyettinger.function.DoubleConsumer;
@@ -442,7 +442,7 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Delegates to {@link #appendTo(StringBuilder, String, boolean)} using a new StringBuilder and converts it to
+		 * Delegates to {@link #appendTo(CharSequence, String, boolean)} using a new StringBuilder and converts it to
 		 * a new String.
 		 *
 		 * @param separator how to separate entries, such as {@code ", "}
@@ -470,15 +470,16 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Delegates to {@link #appendTo(StringBuilder, String, boolean, IntAppender)} using
-		 * {@link StringBuilder#append(int)} to append int items.
+		 * Delegates to {@link #appendTo(CharSequence, String, boolean, IntAppender)} using
+		 * {@link IntAppender#DEFAULT} to append int items.
 		 *
-		 * @param sb        a StringBuilder that this can append to
+		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
-		default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets) {
+		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, IntAppender.DEFAULT);
 		}
 
@@ -488,24 +489,32 @@ public interface PrimitiveCollection<T> {
 		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
 		 * use {@link IntAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
-		 * @param sb        a StringBuilder that this can append to
+		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
 		 * @param appender  a function that takes a StringBuilder and an int, and returns the modified StringBuilder
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
-		default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets, IntAppender appender) {
-			if (isEmpty()) return brackets ? sb.append("[]") : sb;
-			if (brackets) sb.append('[');
-			IntIterator it = iterator();
-			if (it.hasNext()) {
-				while (true) {
-					appender.apply(sb, it.nextInt());
-					if (it.hasNext()) sb.append(separator);
-					else break;
+		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, IntAppender appender) {
+			try {
+				if (isEmpty()){
+					if(brackets) sb.append("[]");
+					return sb;
 				}
+				if (brackets) sb.append('[');
+				IntIterator it = iterator();
+				if (it.hasNext()) {
+					while (true) {
+						appender.apply(sb, it.nextInt());
+						if (it.hasNext()) sb.append(separator);
+						else break;
+					}
+				}
+				if (brackets) sb.append(']');
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
-			if (brackets) sb.append(']');
 			return sb;
 		}
 
@@ -539,7 +548,7 @@ public interface PrimitiveCollection<T> {
 		 * @param brackets if true, square brackets will surround the appended text
 		 * @return {@code sb}, for chaining
 		 */
-		default StringBuilder denseAppendTo(StringBuilder sb, boolean brackets) {
+		default <S extends CharSequence & Appendable> S denseAppendTo(S sb, boolean brackets) {
 			return appendTo(sb, "", brackets, IntAppender.DENSE);
 		}
 
@@ -565,7 +574,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
-		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly five characters long and uses the
+		 * {@link #denseAppendTo(CharSequence, boolean)}. Each item is exactly five characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. No surrounding brackets should be
 		 * present in {@code cs} (they will be treated as digits).
 		 *
@@ -577,7 +586,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toDenseString()} or
-		 * {@link #denseAppendTo(StringBuilder, boolean)}. Each item is exactly five characters long and uses the
+		 * {@link #denseAppendTo(CharSequence, boolean)}. Each item is exactly five characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable. Any brackets inside the given range
 		 * of characters will be interpreted as BASE90 digits, not as visual wrappers, so increase offset by 1 and
 		 * reduce length by 2 if the original CharSequence had brackets added to it.
@@ -597,7 +606,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Reads zero or more items from the result of {@link #toDenseString()} or
-		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in a new int array
+		 * {@link #denseAppendTo(CharSequence, boolean)} and assigns them to consecutive items in a new int array
 		 * sized to {@code cs.length() / 5}. Each item is exactly five characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable.
 		 * <br>
@@ -614,7 +623,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Reads zero or more items from the result of {@link #toDenseString()} or
-		 * {@link #denseAppendTo(StringBuilder, boolean)} and assigns them to consecutive items in {@code buffer},
+		 * {@link #denseAppendTo(CharSequence, boolean)} and assigns them to consecutive items in {@code buffer},
 		 * starting at {@code bufferIndex}. Each item is exactly five characters long and uses the
 		 * {@link Base#BASE90} digits, which are not meant to be human-readable.
 		 * <br>
@@ -643,7 +652,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item can vary significantly in length, and should use
 		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
@@ -657,7 +666,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item can vary significantly in length, and should use
 		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
